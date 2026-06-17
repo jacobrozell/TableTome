@@ -168,6 +168,13 @@ public enum CombatMatchupBuffCatalog {
         return result
     }
 
+    public static func suggestedWardBuffIds(for defender: SpearheadUnit?) -> Set<String> {
+        guard let defender else { return [] }
+        let wardBuffs = buffs(for: defender, side: .defender).filter { $0.wardTarget != nil && !$0.isGeneric }
+        guard let best = wardBuffs.min(by: { ($0.wardTarget ?? 99) < ($1.wardTarget ?? 99) }) else { return [] }
+        return [best.id]
+    }
+
     public static func aggregateModifiers(
         from buffs: [CombatMatchupBuff],
         enabledIds: Set<String>

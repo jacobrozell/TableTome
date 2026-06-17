@@ -112,6 +112,16 @@ public struct TriggeredAbility: Codable, Sendable, Identifiable, Equatable {
     public var isPassive: Bool {
         usageLimit == .passive
     }
+
+    public var suggestsCombatResolution: Bool {
+        let combatPhases: Set<BattleTurnPhase> = [.shooting, .charge, .combat, .anyCombat]
+        if phases.contains(where: combatPhases.contains) { return true }
+        let text = effect.lowercased()
+        return text.contains("attack")
+            || text.contains("hit roll")
+            || text.contains("wound roll")
+            || text.contains("damage")
+    }
 }
 
 public struct SpearheadUnit: Codable, Sendable, Identifiable, Equatable {

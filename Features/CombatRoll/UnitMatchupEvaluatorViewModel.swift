@@ -114,9 +114,9 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
         attackerArmyId = armyId
         if defenderArmyId == armyId {
             defenderArmyId = armies.first { $0.id != armyId }?.id ?? ""
-            defenderUnitId = selectedDefenderArmy?.units.first?.id ?? ""
+            restoreDefenderSelection(for: defenderArmyId)
         }
-        selectDefaultAttackerUnit()
+        restoreAttackerSelection(for: armyId)
         syncProfileFromSelection()
         refreshEvaluation()
     }
@@ -125,10 +125,11 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
         defenderArmyId = armyId
         if attackerArmyId == armyId {
             attackerArmyId = armies.first { $0.id != armyId }?.id ?? ""
-            selectDefaultAttackerUnit()
+            restoreAttackerSelection(for: attackerArmyId)
         }
-        defenderUnitId = selectedDefenderArmy?.units.first?.id ?? ""
+        restoreDefenderSelection(for: armyId)
         pruneDisabledBuffs()
+        applySuggestedDefenderWards()
         syncProfileFromSelection()
         refreshEvaluation()
     }
@@ -136,6 +137,11 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
     func setAttackerUnit(_ unitId: String) {
         attackerUnitId = unitId
         selectDefaultAttackerWeapon()
+        MatchupSelectionMemory.saveAttacker(
+            armyId: attackerArmyId,
+            unitId: unitId,
+            weaponId: attackerWeaponId.isEmpty ? nil : attackerWeaponId
+        )
         pruneDisabledBuffs()
         syncProfileFromSelection()
         refreshEvaluation()
@@ -143,15 +149,42 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
 
     func setDefenderUnit(_ unitId: String) {
         defenderUnitId = unitId
+        MatchupSelectionMemory.saveDefender(armyId: defenderArmyId, unitId: unitId)
         pruneDisabledBuffs()
+        applySuggestedDefenderWards()
         syncProfileFromSelection()
         refreshEvaluation()
     }
 
     func setAttackerWeapon(_ weaponId: String) {
         attackerWeaponId = weaponId
+        MatchupSelectionMemory.saveAttacker(
+            armyId: attackerArmyId,
+            unitId: attackerUnitId,
+            weaponId: weaponId.isEmpty ? nil : weaponId
+        )
         syncProfileFromSelection()
         refreshEvaluation()
+    }
+
+    func prefillAttackerUnit(unitId: String) {
+        guard selectedAttackerArmy?.units.contains(where: { $0.id == unitId }) == true else { return }
+        setAttackerUnit(unitId)
+    }
+
+    var defenderWoundKey: String? {
+        guard !defenderArmyId.isEmpty, !defenderUnitId.isEmpty else { return nil }
+        return UnitWoundTracker.unitKey(armyId: defenderArmyId, unitId: defenderUnitId)
+    }
+
+    func applySuggestedDefenderWards() {
+        enabledBuffIds.formUnion(
+            CombatMatchupBuffCatalog.suggestedWardBuffIds(for: selectedDefenderUnit)
+        )
+    }
+
+    var hasSuggestedWardBuffs: Bool {
+        !CombatMatchupBuffCatalog.suggestedWardBuffIds(for: selectedDefenderUnit).isEmpty
     }
 
     func toggleBuff(_ buff: CombatMatchupBuff, enabled: Bool) {
@@ -313,6 +346,7 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
 
         selectDefaultAttackerWeapon()
         pruneDisabledBuffs()
+        applySuggestedDefenderWards()
         syncProfileFromSelection()
         refreshEvaluation()
     }
@@ -320,6 +354,39 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
     private func selectDefaultAttackerUnit() {
         attackerUnitId = selectedAttackerArmy?.units.first?.id ?? ""
         selectDefaultAttackerWeapon()
+    }
+
+    private func restoreAttackerSelection(for armyId: String) {
+        guard let army = armies.first(where: { $0.id == armyId }) else {
+            selectDefaultAttackerUnit()
+            return
+        }
+        if let saved = MatchupSelectionMemory.attackerSelection(for: armyId),
+           army.units.contains(where: { $0.id == saved.unitId }) {
+            attackerUnitId = saved.unitId
+            if let weaponId = saved.weaponId,
+               army.units.first(where: { $0.id == saved.unitId })?
+                .weapons.contains(where: { $0.id == weaponId && $0.isRollEvaluable }) == true {
+                attackerWeaponId = weaponId
+            } else {
+                selectDefaultAttackerWeapon()
+            }
+        } else {
+            selectDefaultAttackerUnit()
+        }
+    }
+
+    private func restoreDefenderSelection(for armyId: String) {
+        guard let army = armies.first(where: { $0.id == armyId }) else {
+            defenderUnitId = ""
+            return
+        }
+        if let saved = MatchupSelectionMemory.defenderUnitId(for: armyId),
+           army.units.contains(where: { $0.id == saved }) {
+            defenderUnitId = saved
+        } else {
+            defenderUnitId = army.units.first?.id ?? ""
+        }
     }
 
     private func selectDefaultAttackerWeapon() {

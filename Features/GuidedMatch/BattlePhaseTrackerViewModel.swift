@@ -231,6 +231,22 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
         persist()
     }
 
+    func applyDamageToUnit(armyId: String, unitId: String, damage: Int) {
+        guard damage > 0 else { return }
+        let key = UnitWoundTracker.unitKey(armyId: armyId, unitId: unitId)
+        let current = trackerState.unitWoundsRemaining[key] ?? 0
+        trackerState.unitWoundsRemaining[key] = max(0, current - damage)
+        persist()
+    }
+
+    func unitId(matchingSource source: String, in army: SpearheadArmy?) -> String? {
+        guard let army else { return nil }
+        let normalized = source.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        return army.units.first {
+            $0.name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == normalized
+        }?.id
+    }
+
     func setDeploymentStep(_ step: DeploymentChecklistStep, complete: Bool) {
         if complete {
             trackerState.completedDeploymentSteps.insert(step.rawValue)

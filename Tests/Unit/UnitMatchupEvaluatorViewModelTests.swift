@@ -121,4 +121,30 @@ final class UnitMatchupEvaluatorViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.attackerArmyId, "gnawfeast-clawpack")
         XCTAssertEqual(viewModel.defenderArmyId, "vigilant-brotherhood")
     }
+
+    func testRemembersUnitSelectionsPerArmy() async throws {
+        MatchupSelectionMemory.resetAll()
+        defer { MatchupSelectionMemory.resetAll() }
+
+        let viewModel = UnitMatchupEvaluatorViewModel(
+            catalogRepository: BundledSpearheadCatalogRepository(bundle: Bundle(for: type(of: self)))
+        )
+        await viewModel.load()
+
+        viewModel.setAttackerArmy("vigilant-brotherhood")
+        viewModel.setAttackerUnit("liberators")
+        viewModel.setAttackerWeapon("warhammer")
+        viewModel.setDefenderArmy("gnawfeast-clawpack")
+        viewModel.setDefenderUnit("grey-seer")
+
+        viewModel.setAttackerArmy("gnawfeast-clawpack")
+        viewModel.setDefenderArmy("vigilant-brotherhood")
+
+        viewModel.setAttackerArmy("vigilant-brotherhood")
+        viewModel.setDefenderArmy("gnawfeast-clawpack")
+
+        XCTAssertEqual(viewModel.attackerUnitId, "liberators")
+        XCTAssertEqual(viewModel.attackerWeaponId, "warhammer")
+        XCTAssertEqual(viewModel.defenderUnitId, "grey-seer")
+    }
 }

@@ -4,6 +4,7 @@ import TabletomeDomain
 struct CombatOutcomeBanner: View {
     let evaluation: AttackRollEvaluation
     let matchupTitle: String?
+    var usesCompactStyle: Bool = false
     var accessibilityId: String = "combatOutcome.banner"
 
     private var accentColor: Color {
@@ -35,10 +36,25 @@ struct CombatOutcomeBanner: View {
                 }
             }
         }
-        .surfaceCard()
+        .modifier(CombatOutcomeBannerCardStyle(compact: usesCompactStyle))
         .accessibilityElement(children: .combine)
         .accessibilityLabel(evaluation.outcomeHeadline)
         .accessibilityIdentifier(accessibilityId)
+    }
+}
+
+private struct CombatOutcomeBannerCardStyle: ViewModifier {
+    let compact: Bool
+
+    func body(content: Content) -> some View {
+        if compact {
+            content
+                .padding(DesignTokens.Spacing.md)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        } else {
+            content.surfaceCard()
+        }
     }
 }
 

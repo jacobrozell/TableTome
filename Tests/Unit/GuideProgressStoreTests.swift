@@ -2,8 +2,14 @@ import XCTest
 @testable import TabletomeDomain
 
 final class GuideProgressStoreTests: XCTestCase {
-    private let gameSystemId = "aos-spearhead"
-    private let stepId = "pick-army"
+    private let gameSystemId = "aos-spearhead-test"
+    private var stepId = ""
+
+    override func setUp() {
+        super.setUp()
+        stepId = "test-step-\(UUID().uuidString)"
+        GuideProgressStore.setComplete(false, gameSystemId: gameSystemId, stepId: stepId)
+    }
 
     override func tearDown() {
         GuideProgressStore.setComplete(false, gameSystemId: gameSystemId, stepId: stepId)
@@ -15,18 +21,17 @@ final class GuideProgressStoreTests: XCTestCase {
 
         GuideProgressStore.setComplete(true, gameSystemId: gameSystemId, stepId: stepId)
         XCTAssertTrue(GuideProgressStore.isComplete(gameSystemId: gameSystemId, stepId: stepId))
-
-        // Simulates relaunch: fresh read from UserDefaults should restore state.
         XCTAssertTrue(GuideProgressStore.isComplete(gameSystemId: gameSystemId, stepId: stepId))
     }
 
     func testResetAllClearsGuideProgress() {
+        let otherStepId = "other-step-\(UUID().uuidString)"
         GuideProgressStore.setComplete(true, gameSystemId: gameSystemId, stepId: stepId)
-        GuideProgressStore.setComplete(true, gameSystemId: gameSystemId, stepId: "choose-realm")
+        GuideProgressStore.setComplete(true, gameSystemId: gameSystemId, stepId: otherStepId)
 
         GuideProgressStore.resetAll()
 
         XCTAssertFalse(GuideProgressStore.isComplete(gameSystemId: gameSystemId, stepId: stepId))
-        XCTAssertFalse(GuideProgressStore.isComplete(gameSystemId: gameSystemId, stepId: "choose-realm"))
+        XCTAssertFalse(GuideProgressStore.isComplete(gameSystemId: gameSystemId, stepId: otherStepId))
     }
 }

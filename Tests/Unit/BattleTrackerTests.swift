@@ -48,6 +48,19 @@ final class BattleTrackerTests: XCTestCase {
         )
         XCTAssertTrue(ability.matches(phase: .combat))
         XCTAssertFalse(ability.matches(phase: .hero))
+        XCTAssertTrue(ability.suggestsCombatResolution)
+    }
+
+    func testShootingAbilitySuggestsCombatResolution() {
+        let ability = TriggeredAbility(
+            id: "test-shoot",
+            name: "Volley",
+            source: "Archers",
+            phases: [.shooting],
+            usageLimit: .eachTurn,
+            effect: "Shoot."
+        )
+        XCTAssertTrue(ability.suggestsCombatResolution)
     }
 
     func testBattleTrackerStoreRoundTrip() {

@@ -13,8 +13,10 @@ struct BattleTrackerCombatResolverSection: View {
     let attackerName: String
     let defenderName: String
     let deploymentIsComplete: Bool
+    let defenderWoundsRemaining: Int?
     let ruleSections: [RuleSection]
     let onSyncMultiAttack: () -> Void
+    var onApplyDamage: ((Int) -> Void)?
 
     var body: some View {
         if ReleaseSurface.showsRollEvaluator {
@@ -29,7 +31,9 @@ struct BattleTrackerCombatResolverSection: View {
                     presentation: .embeddedInBattleTracker,
                     attackerPlayerName: attackerName,
                     defenderPlayerName: defenderName,
-                    onSyncMultiAttack: onSyncMultiAttack
+                    defenderWoundsRemaining: defenderWoundsRemaining,
+                    onSyncMultiAttack: onSyncMultiAttack,
+                    onApplyDamage: onApplyDamage
                 )
                 .padding(.top, DesignTokens.Spacing.sm)
             } label: {

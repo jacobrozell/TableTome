@@ -43,4 +43,17 @@ final class CombatMatchupBuffCatalogTests: XCTestCase {
 
         XCTAssertTrue(buffs.contains { $0.id == "generic-defender-ward-5" })
     }
+
+    func testSuggestedWardBuffIdsPicksBestWard() {
+        let unit = SpearheadUnit(
+            id: "grey-seer",
+            name: "Grey Seer",
+            save: 5,
+            keywords: ["Ward (6+)"]
+        )
+
+        let suggested = CombatMatchupBuffCatalog.suggestedWardBuffIds(for: unit)
+
+        XCTAssertEqual(suggested, ["grey-seer-ward-6"])
+    }
 }

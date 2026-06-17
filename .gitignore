@@ -34,6 +34,7 @@ credentials.json
 # Agent tooling artifacts
 agent-tools/
 tmp/
+build/
 .xcodebuildmcp/
 
 # Fastlane

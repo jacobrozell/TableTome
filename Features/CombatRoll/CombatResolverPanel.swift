@@ -17,7 +17,9 @@ struct CombatResolverPanel: View {
     let presentation: Presentation
     var attackerPlayerName: String?
     var defenderPlayerName: String?
+    var defenderWoundsRemaining: Int?
     let onSyncMultiAttack: () -> Void
+    var onApplyDamage: ((Int) -> Void)?
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
@@ -53,6 +55,13 @@ struct CombatResolverPanel: View {
             multiAttackSection
             if presentation == .standalone {
                 referenceLinksSection
+            }
+        }
+        .onChange(of: viewModel.defenderUnitId) { _, _ in
+            guard isEmbedded else { return }
+            viewModel.applySuggestedDefenderWards()
+            if viewModel.hasSuggestedWardBuffs {
+                showsAdvancedOptions = true
             }
         }
     }
@@ -195,164 +204,32 @@ struct CombatResolverPanel: View {
 
     @ViewBuilder
     private var resultsSection: some View {
-        if let evaluation = viewModel.evaluation {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                CombatOutcomeBanner(
-                    evaluation: evaluation,
-                    matchupTitle: viewModel.matchupTitle,
-                    accessibilityId: "\(accessibilityPrefix).outcomeBanner"
-                )
-                DisclosureGroup(String(localized: "Step-by-step breakdown")) {
-                    ForEach(evaluation.steps) { step in
-                        RollStepCard(step: step)
-                    }
-                }
-                .font(.subheadline.weight(.semibold))
-            }
-            .accessibilityIdentifier("\(accessibilityPrefix).results")
-        } else if !viewModel.canEvaluate {
-            Text(String(localized: "Choose both units and a weapon to resolve attacks."))
-                .font(.callout)
-                .foregroundStyle(.secondary)
-                .modifier(ConditionalResolverCard(enabled: !isEmbedded))
-        }
-    }
-
-    private var diceSection: some View {
-        VStack(alignment: .leading, spacing: isEmbedded ? DesignTokens.Spacing.sm : DesignTokens.Spacing.md) {
-            if isEmbedded {
-                Text(String(localized: "Your Dice"))
-                    .font(.subheadline.weight(.semibold))
-            } else {
-                SectionHeader(title: String(localized: "Your Dice"), systemImage: "dice.fill")
-            }
-
-            if let weapon = viewModel.selectedAttackerWeapon {
-                diceField(
-                    label: String(localized: "Hit roll (\(weapon.hit)+)"),
-                    value: $viewModel.hitRoll,
-                    accessibilityId: "\(accessibilityPrefix).hitRoll",
-                    rollAccessibilityId: "\(accessibilityPrefix).roll.hit",
-                    onRoll: { viewModel.rollHit() }
-                )
-                diceField(
-                    label: String(localized: "Wound roll (\(weapon.wound)+)"),
-                    value: $viewModel.woundRoll,
-                    accessibilityId: "\(accessibilityPrefix).woundRoll",
-                    rollAccessibilityId: "\(accessibilityPrefix).roll.wound",
-                    onRoll: { viewModel.rollWound() }
-                )
-            }
-            if let save = viewModel.selectedDefenderUnit?.save {
-                diceField(
-                    label: String(localized: "Save roll (\(save)+)"),
-                    value: $viewModel.saveRoll,
-                    accessibilityId: "\(accessibilityPrefix).saveRoll",
-                    rollAccessibilityId: "\(accessibilityPrefix).roll.save",
-                    onRoll: { viewModel.rollSave() }
-                )
-            }
-            if let ward = viewModel.activeWardTarget {
-                diceField(
-                    label: String(localized: "Ward roll (\(ward)+)"),
-                    value: $viewModel.wardRoll,
-                    accessibilityId: "\(accessibilityPrefix).wardRoll",
-                    rollAccessibilityId: "\(accessibilityPrefix).roll.ward",
-                    onRoll: { viewModel.rollWard() }
-                )
-            }
-
-            if case .variable(let kind) = viewModel.selectedAttackerWeapon?.damageKind {
-                Stepper(
-                    String(localized: "Damage rolled (\(kind.rawValue)): \(viewModel.damage)"),
-                    value: $viewModel.damage,
-                    in: 1...12
-                )
-                .accessibilityIdentifier("\(accessibilityPrefix).damage")
-            }
-        }
-        .modifier(ConditionalResolverCard(enabled: !isEmbedded))
-    }
-
-    private func diceField(
-        label: String,
-        value: Binding<Int>,
-        accessibilityId: String,
-        rollAccessibilityId: String,
-        onRoll: @escaping () -> Void
-    ) -> some View {
-        SimulatedDiceFieldRow(
-            label: label,
-            value: value,
-            accessibilityId: accessibilityId,
-            rollAccessibilityId: rollAccessibilityId,
-            isSimulated: isSimulated,
-            onRoll: onRoll
+        CombatResolverResultsSection(
+            viewModel: viewModel,
+            isEmbedded: isEmbedded,
+            accessibilityPrefix: accessibilityPrefix,
+            defenderWoundsRemaining: defenderWoundsRemaining,
+            onApplyDamage: onApplyDamage
         )
     }
 
-    @ViewBuilder
-    private var optionsSection: some View {
-        DisclosureGroup(isExpanded: $showsAdvancedOptions) {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                DiceInputModePicker(mode: Binding(
-                    get: { diceInputMode },
-                    set: { diceInputMode = $0 }
-                ))
-
-                if !viewModel.matchupBuffs.isEmpty {
-                    if !viewModel.attackerBuffs.isEmpty {
-                        buffGroup(title: String(localized: "Attacker"), buffs: viewModel.attackerBuffs)
-                    }
-                    if !viewModel.defenderBuffs.isEmpty {
-                        buffGroup(title: String(localized: "Defender"), buffs: viewModel.defenderBuffs)
-                    }
-                }
-
-                Toggle(isOn: Binding(
-                    get: { viewModel.rollOptions.mortalDamage },
-                    set: {
-                        viewModel.rollOptions.mortalDamage = $0
-                        viewModel.refreshEvaluation()
-                    }
-                )) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(String(localized: "Mortal damage"))
-                            .font(.subheadline.weight(.semibold))
-                        Text(String(localized: "Skip the save roll — damage applies on a successful wound."))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-                .toggleStyle(.switch)
-                .accessibilityIdentifier("\(accessibilityPrefix).mortalDamage")
-            }
-            .padding(.top, DesignTokens.Spacing.sm)
-        } label: {
-            if isEmbedded {
-                Text(String(localized: "Abilities & Options"))
-                    .font(.subheadline.weight(.semibold))
-            } else {
-                SectionHeader(title: String(localized: "Abilities & Options"), systemImage: "sparkles")
-            }
-        }
-        .modifier(ConditionalResolverCard(enabled: !isEmbedded))
+    private var diceSection: some View {
+        CombatResolverDiceSection(
+            viewModel: viewModel,
+            isEmbedded: isEmbedded,
+            isSimulated: isSimulated,
+            accessibilityPrefix: accessibilityPrefix
+        )
     }
 
-    private func buffGroup(title: String, buffs: [CombatMatchupBuff]) -> some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            Text(title)
-                .font(.subheadline.bold())
-                .foregroundStyle(.secondary)
-            ForEach(buffs) { buff in
-                CombatBuffToggleRow(
-                    buff: buff,
-                    isOn: viewModel.enabledBuffIds.contains(buff.id)
-                ) { enabled in
-                    viewModel.toggleBuff(buff, enabled: enabled)
-                }
-            }
-        }
+    private var optionsSection: some View {
+        CombatResolverOptionsSection(
+            viewModel: viewModel,
+            showsAdvancedOptions: $showsAdvancedOptions,
+            diceInputModeRaw: $diceInputModeRaw,
+            isEmbedded: isEmbedded,
+            accessibilityPrefix: accessibilityPrefix
+        )
     }
 
     @ViewBuilder
@@ -374,25 +251,14 @@ struct CombatResolverPanel: View {
 
     @ViewBuilder
     private var multiAttackSection: some View {
-        if viewModel.selectedAttackerWeapon != nil, viewModel.selectedDefenderUnit?.save != nil {
-            DisclosureGroup(isExpanded: $showsMultiAttack) {
-                MultiAttackEvaluatorView(
-                    viewModel: multiAttackViewModel,
-                    weaponName: viewModel.selectedAttackerWeapon?.name ?? "",
-                    ruleSections: ruleSections,
-                    isSimulated: isSimulated
-                )
-                .padding(.top, DesignTokens.Spacing.sm)
-            } label: {
-                if isEmbedded {
-                    Text(String(localized: "Multiple Attacks"))
-                        .font(.subheadline.weight(.semibold))
-                } else {
-                    SectionHeader(title: String(localized: "Multiple Attacks"), systemImage: "repeat")
-                }
-            }
-            .modifier(ConditionalResolverCard(enabled: !isEmbedded))
-        }
+        CombatResolverMultiAttackSection(
+            viewModel: viewModel,
+            multiAttackViewModel: multiAttackViewModel,
+            showsMultiAttack: $showsMultiAttack,
+            ruleSections: ruleSections,
+            isEmbedded: isEmbedded,
+            isSimulated: isSimulated
+        )
     }
 
     @ViewBuilder
@@ -425,7 +291,7 @@ struct CombatResolverPanel: View {
     }
 }
 
-private struct ConditionalResolverCard: ViewModifier {
+struct ConditionalResolverCard: ViewModifier {
     let enabled: Bool
 
     func body(content: Content) -> some View {

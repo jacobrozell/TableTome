@@ -8,6 +8,8 @@ struct UnitAbilityCard: View {
     let onMarkUsed: (() -> Void)?
     var ruleSections: [RuleSection] = []
     var showsRollTools: Bool = false
+    var showsEmbeddedCombatTools: Bool = false
+    var onResolveAttack: (() -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -41,6 +43,17 @@ struct UnitAbilityCard: View {
                 labeledBlock(title: String(localized: "Effect"), body: ability.effect)
 
                 GlossaryChipsRow(text: ability.effect)
+
+                if showsEmbeddedCombatTools, ability.suggestsCombatResolution, let onResolveAttack {
+                    Button(action: onResolveAttack) {
+                        Label(String(localized: "Resolve This Attack"), systemImage: "dice.fill")
+                            .font(.subheadline.weight(.semibold))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .frame(minHeight: DesignTokens.minTouchTarget)
+                    .accessibilityIdentifier("battleTracker.resolveAttack.\(ability.id)")
+                }
 
                 if showsRollTools {
                     rollToolLinks

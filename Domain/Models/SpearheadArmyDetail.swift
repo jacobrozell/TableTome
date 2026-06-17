@@ -25,12 +25,14 @@ public enum SpearheadContentCoverage: String, Codable, Sendable, CaseIterable, C
     case roster
     case matchSetup
     case battleTracker
+    case warscrolls
 
     private var rank: Int {
         switch self {
         case .roster: 0
         case .matchSetup: 1
         case .battleTracker: 2
+        case .warscrolls: 3
         }
     }
 
@@ -43,6 +45,7 @@ public enum SpearheadContentCoverage: String, Codable, Sendable, CaseIterable, C
         case .roster: String(localized: "Roster")
         case .matchSetup: String(localized: "Match Setup")
         case .battleTracker: String(localized: "Battle Tracker")
+        case .warscrolls: String(localized: "Warscrolls")
         }
     }
 
@@ -51,6 +54,7 @@ public enum SpearheadContentCoverage: String, Codable, Sendable, CaseIterable, C
         case .roster: String(localized: "Army list only")
         case .matchSetup: String(localized: "Setup ready")
         case .battleTracker: String(localized: "Rules reminders ready")
+        case .warscrolls: String(localized: "Full tabletop support")
         }
     }
 
@@ -59,24 +63,30 @@ public enum SpearheadContentCoverage: String, Codable, Sendable, CaseIterable, C
         case .roster: "list.bullet"
         case .matchSetup: "flag.checkered"
         case .battleTracker: "checkmark.seal.fill"
+        case .warscrolls: "star.fill"
         }
     }
 }
 
 extension SpearheadArmy {
     public var contentCoverage: SpearheadContentCoverage {
-        let abilities = BattleAbilityCatalog.abilities(for: self)
-        let hasTrackerContent = !units.isEmpty
-            || abilities.contains { ability in
-                !ability.phases.isEmpty && (!ability.isPassive || ability.declare != nil)
-            }
-        if hasTrackerContent { return .battleTracker }
+        let hasWarscrolls = units.contains { $0.hasWarscroll }
+        if hasWarscrolls && hasBattleTrackerContent { return .warscrolls }
+        if hasBattleTrackerContent { return .battleTracker }
         if !regimentAbilities.isEmpty && !enhancements.isEmpty { return .matchSetup }
         return .roster
     }
 
     public var supportsBattleTracker: Bool {
-        contentCoverage >= .battleTracker
+        hasBattleTrackerContent
+    }
+
+    private var hasBattleTrackerContent: Bool {
+        let abilities = BattleAbilityCatalog.abilities(for: self)
+        return !units.isEmpty
+            || abilities.contains { ability in
+                !ability.phases.isEmpty && (!ability.isPassive || ability.declare != nil)
+            }
     }
 }
 

@@ -108,11 +108,36 @@ public struct TriggeredAbility: Codable, Sendable, Identifiable, Equatable {
 public struct SpearheadUnit: Codable, Sendable, Identifiable, Equatable {
     public let id: String
     public let name: String
+    public let move: String?
+    public let save: Int?
+    public let health: Int?
+    public let control: Int?
+    public let keywords: [String]
+    public let notes: String?
+    public let weapons: [SpearheadWeapon]
     public let abilities: [TriggeredAbility]
 
-    public init(id: String, name: String, abilities: [TriggeredAbility] = []) {
+    public init(
+        id: String,
+        name: String,
+        move: String? = nil,
+        save: Int? = nil,
+        health: Int? = nil,
+        control: Int? = nil,
+        keywords: [String] = [],
+        notes: String? = nil,
+        weapons: [SpearheadWeapon] = [],
+        abilities: [TriggeredAbility] = []
+    ) {
         self.id = id
         self.name = name
+        self.move = move
+        self.save = save
+        self.health = health
+        self.control = control
+        self.keywords = keywords
+        self.notes = notes
+        self.weapons = weapons
         self.abilities = abilities
     }
 
@@ -120,7 +145,18 @@ public struct SpearheadUnit: Codable, Sendable, Identifiable, Equatable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
+        move = try container.decodeIfPresent(String.self, forKey: .move)
+        save = try container.decodeIfPresent(Int.self, forKey: .save)
+        health = try container.decodeIfPresent(Int.self, forKey: .health)
+        control = try container.decodeIfPresent(Int.self, forKey: .control)
+        keywords = try container.decodeIfPresent([String].self, forKey: .keywords) ?? []
+        notes = try container.decodeIfPresent(String.self, forKey: .notes)
+        weapons = try container.decodeIfPresent([SpearheadWeapon].self, forKey: .weapons) ?? []
         abilities = try container.decodeIfPresent([TriggeredAbility].self, forKey: .abilities) ?? []
+    }
+
+    public var hasWarscroll: Bool {
+        save != nil || !weapons.isEmpty
     }
 }
 

@@ -58,6 +58,35 @@
           "effect": "For the rest of the turn, add 1 to hit rolls for combat attacks made by friendly units targeting enemies contesting that objective.",
           "kind": "ability"
         }
+      ],
+      "move": "12\"",
+      "save": 3,
+      "health": 8,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Cavalry"
+      ],
+      "weapons": [
+        {
+          "id": "hallowed-greataxe",
+          "name": "Hallowed Greataxe",
+          "attacks": "5",
+          "hit": 3,
+          "wound": 3,
+          "rend": 2,
+          "damage": "2"
+        },
+        {
+          "id": "gryph-stalker",
+          "name": "Gryph-stalker's Beak and Talons",
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2",
+          "ability": "Companion"
+        }
       ]
     },
     {
@@ -94,6 +123,36 @@
           "effect": "This unit's Gryph-crow is a token. The unit has Ward (5+) while its Gryph-crow is on the battlefield. If you roll an unmodified 1 on a ward roll, remove the Gryph-crow.",
           "kind": "passive"
         }
+      ],
+      "move": "5\"",
+      "save": 3,
+      "health": 6,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Priest",
+        "Infantry"
+      ],
+      "weapons": [
+        {
+          "id": "staff-abjuration",
+          "name": "Staff of Abjuration",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "3"
+        },
+        {
+          "id": "judgement-blade",
+          "name": "Judgement Blade",
+          "attacks": "3",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3",
+          "ability": "Anti-Wizard, Anti-Priest"
+        }
       ]
     },
     {
@@ -111,6 +170,36 @@
           "usageLimit": "passive",
           "effect": "When you make a charge roll for this unit, roll 1 additional dice.",
           "kind": "passive"
+        }
+      ],
+      "move": "12\"",
+      "save": 3,
+      "health": 2,
+      "control": 1,
+      "keywords": [
+        "Infantry",
+        "Fly",
+        "Reinforcements"
+      ],
+      "weapons": [
+        {
+          "id": "javelin-ranged",
+          "name": "Stormcall Javelin (Ranged)",
+          "rangeInches": 10,
+          "attacks": "1",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "javelin-melee",
+          "name": "Stormcall Javelin (Melee)",
+          "attacks": "3",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
         }
       ]
     },
@@ -150,6 +239,37 @@
           "usageLimit": "passive",
           "effect": "This unit has a coherency range of 2\".",
           "kind": "passive"
+        }
+      ],
+      "move": "5\"",
+      "save": 3,
+      "health": 2,
+      "control": 1,
+      "keywords": [
+        "Infantry",
+        "Reinforcements"
+      ],
+      "notes": "4 Liberators with Warhammer, 1 with Grandhammer.",
+      "weapons": [
+        {
+          "id": "warhammer",
+          "name": "Warhammer",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1",
+          "ability": "Crit (Mortal)"
+        },
+        {
+          "id": "grandhammer",
+          "name": "Grandhammer",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2",
+          "ability": "Crit (Mortal)"
         }
       ]
     }

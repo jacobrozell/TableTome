@@ -49,6 +49,47 @@
           "effect": "While this unit is damaged, add 3 to the Attacks characteristic of its Warpforged Halberd.",
           "kind": "passive"
         }
+      ],
+      "move": "9\"",
+      "save": 4,
+      "health": 7,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Cavalry",
+        "Ward (6+)"
+      ],
+      "weapons": [
+        {
+          "id": "ratling-pistol",
+          "name": "Ratling Pistol",
+          "rangeInches": 10,
+          "attacks": "D6",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1",
+          "ability": "Crit (Auto-wound), Shoot in Combat"
+        },
+        {
+          "id": "warpforged-halberd",
+          "name": "Warpforged Halberd",
+          "attacks": "5",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "chisel-fangs",
+          "name": "Gnaw-beast's Chisel Fangs",
+          "attacks": "4",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3",
+          "ability": "Companion"
+        }
       ]
     },
     {
@@ -59,7 +100,7 @@
           "id": "will-of-horned-rat",
           "name": "Will of the Horned Rat",
           "source": "Grey Seer",
-          "flavor": "None among the Skaven clans may defy the commands of a Grey Seer \u2014 openly, at least\u2026",
+          "flavor": "None among the Skaven clans may defy the commands of a Grey Seer — openly, at least…",
           "phases": [
             "hero"
           ],
@@ -80,6 +121,26 @@
           "declare": "Pick a visible enemy unit within 13\", then make a casting roll of 2D6.",
           "effect": "On a 6+, inflict D3 mortal damage on the target.",
           "kind": "spell"
+        }
+      ],
+      "move": "6\"",
+      "save": 6,
+      "health": 5,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Wizard",
+        "Infantry"
+      ],
+      "weapons": [
+        {
+          "id": "warpstone-staff",
+          "name": "Warpstone Staff",
+          "attacks": "3",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "D3"
         }
       ]
     },
@@ -111,6 +172,36 @@
           "effect": "Roll a dice. On a 2+, set the Damage of its Warplock Musket to 3 this phase. On a 1, inflict D3 mortal damage on this unit.",
           "kind": "ability"
         }
+      ],
+      "move": "6\"",
+      "save": 5,
+      "health": 4,
+      "control": 1,
+      "keywords": [
+        "Hero",
+        "Infantry"
+      ],
+      "weapons": [
+        {
+          "id": "warplock-musket",
+          "name": "Warplock Musket",
+          "rangeInches": 24,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 2,
+          "damage": "D3",
+          "ability": "Crit (Auto-wound)"
+        },
+        {
+          "id": "warpforged-dagger",
+          "name": "Warpforged Dagger",
+          "attacks": "3",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "2"
+        }
       ]
     },
     {
@@ -128,6 +219,49 @@
           "usageLimit": "eachTurn",
           "effect": "You can return D3 slain models to this unit.",
           "kind": "ability"
+        }
+      ],
+      "move": "6\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [
+        "Infantry",
+        "Reinforcements"
+      ],
+      "weapons": [
+        {
+          "id": "rusty-blade",
+          "name": "Rusty Blade",
+          "attacks": "2",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        }
+      ]
+    },
+    {
+      "id": "rat-ogors",
+      "name": "Rat Ogors",
+      "abilities": [],
+      "move": "6\"",
+      "save": 5,
+      "health": 5,
+      "control": 1,
+      "keywords": [
+        "Infantry"
+      ],
+      "notes": "2 Rat Ogors with Claws, Blades and Fangs; 1 with Warpfire Gun and Claws, Blades and Fangs.",
+      "weapons": [
+        {
+          "id": "claws-blades-fangs",
+          "name": "Claws, Blades and Fangs",
+          "attacks": "5",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
         }
       ]
     }

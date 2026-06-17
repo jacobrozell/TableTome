@@ -13,6 +13,14 @@ struct GameSystemDetailView: View {
         Group {
             if let gameSystem {
                 List {
+                    if gameSystemId == "aos-spearhead" {
+                        Section {
+                            NewPlayerStartHereCard()
+                        }
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Color.clear)
+                    }
+
                     if gameSystemId == "aos-spearhead", !featuredArmies.isEmpty {
                         Section {
                             ForEach(featuredArmies) { army in
@@ -37,34 +45,55 @@ struct GameSystemDetailView: View {
                         }
                     }
 
-                    Section(String(localized: "Play")) {
+                    Section {
+                        NavigationLink {
+                            GettingStartedView(gameSystem: gameSystem)
+                        } label: {
+                            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                                Label(String(localized: "Getting Started"), systemImage: "map")
+                                Text(String(localized: "Five-minute read — what you need and how a battle works"))
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                        }
+                        .accessibilityIdentifier("guide.gettingStarted.\(gameSystemId)")
+
                         NavigationLink {
                             GuidedMatchView(
                                 viewModel: dependencies.makeGuidedMatchViewModel(),
                                 ruleSections: gameSystem.ruleSections
                             )
                         } label: {
-                            Label(String(localized: "Guided Match"), systemImage: "flag.checkered")
-                                .frame(minHeight: DesignTokens.minTouchTarget)
+                            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                                Label(String(localized: "Guided Match"), systemImage: "flag.checkered")
+                                Text(String(localized: "Interactive setup and battle tracker — start with Use Starter Matchup"))
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
                         }
                         .accessibilityIdentifier("guide.guidedMatch.\(gameSystemId)")
-
-                        NavigationLink {
-                            GettingStartedView(gameSystem: gameSystem)
-                        } label: {
-                            Label(String(localized: "Getting Started"), systemImage: "map")
-                                .frame(minHeight: DesignTokens.minTouchTarget)
-                        }
-                        .accessibilityIdentifier("guide.gettingStarted.\(gameSystemId)")
 
                         if ReleaseSurface.showsRollEvaluator {
                             NavigationLink {
                                 UnitMatchupEvaluatorView(ruleSections: gameSystem.ruleSections)
                             } label: {
-                                Label(String(localized: "Combat Resolver"), systemImage: "dice.fill")
-                                    .frame(minHeight: DesignTokens.minTouchTarget)
+                                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                                    Label(String(localized: "Combat Resolver"), systemImage: "dice.fill")
+                                    Text(String(localized: "Practice attack dice math between games"))
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
                             }
                             .accessibilityIdentifier("guide.combatResolver.\(gameSystemId)")
+                        }
+                    } header: {
+                        Text(String(localized: "Play"))
+                    } footer: {
+                        if gameSystemId == "aos-spearhead" {
+                            Text(String(localized: "New to a term? Open Rules Glossary under Table Reference."))
                         }
                     }
 

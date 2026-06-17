@@ -20,6 +20,8 @@ struct MatchStepDetailView: View {
                     .font(.body)
                     .fixedSize(horizontal: false, vertical: true)
 
+                GlossaryChipsRow(text: step.body)
+
                 stepSpecificContent
 
                 if let relatedSection {

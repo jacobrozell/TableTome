@@ -47,30 +47,54 @@ struct UnitWarscrollCard: View {
     }
 
     private var statsRow: some View {
-        HStack(spacing: DesignTokens.Spacing.lg) {
-            if let move = unit.move {
-                statItem(label: String(localized: "Move"), value: move)
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            HStack(spacing: DesignTokens.Spacing.lg) {
+                if let move = unit.move {
+                    statItem(
+                        label: String(localized: "Move"),
+                        value: move,
+                        hint: String(localized: "Max distance in inches")
+                    )
+                }
+                if let save = unit.save {
+                    statItem(
+                        label: String(localized: "Save"),
+                        value: "\(save)+",
+                        hint: String(localized: "Roll this or higher on D6 to block damage")
+                    )
+                }
+                if let health = unit.health {
+                    statItem(
+                        label: String(localized: "Health"),
+                        value: "\(health)",
+                        hint: String(localized: "Wounds per model")
+                    )
+                }
+                if let control = unit.control {
+                    statItem(
+                        label: String(localized: "Control"),
+                        value: "\(control)",
+                        hint: String(localized: "Strength when contesting objectives")
+                    )
+                }
             }
-            if let save = unit.save {
-                statItem(label: String(localized: "Save"), value: "\(save)+")
-            }
-            if let health = unit.health {
-                statItem(label: String(localized: "Health"), value: "\(health)")
-            }
-            if let control = unit.control {
-                statItem(label: String(localized: "Control"), value: "\(control)")
-            }
+            .font(.caption)
         }
-        .font(.caption)
     }
 
-    private func statItem(label: String, value: String) -> some View {
+    private func statItem(label: String, value: String, hint: String) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(label)
                 .foregroundStyle(.secondary)
             Text(value)
                 .font(.subheadline.bold())
+            Text(hint)
+                .font(.caption2)
+                .foregroundStyle(.tertiary)
+                .fixedSize(horizontal: false, vertical: true)
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(label) \(value). \(hint)")
     }
 
     private var weaponsSection: some View {
@@ -110,6 +134,10 @@ struct UnitWarscrollCard: View {
             Text(weaponStatLine(weapon))
                 .font(.caption)
                 .foregroundStyle(.secondary)
+            Text(String(localized: "A = attacks · Hit/Wound = roll this or higher on D6 · Rend lowers save · Dmg = damage dealt"))
+                .font(.caption2)
+                .foregroundStyle(.tertiary)
+                .fixedSize(horizontal: false, vertical: true)
             if let ability = weapon.ability {
                 Text(ability)
                     .font(.caption2)
@@ -121,16 +149,7 @@ struct UnitWarscrollCard: View {
     }
 
     private func weaponStatLine(_ weapon: SpearheadWeapon) -> String {
-        var parts: [String] = []
-        if let range = weapon.rangeInches {
-            parts.append("Range \(range)\"")
-        }
-        parts.append("A \(weapon.attacks)")
-        parts.append("Hit \(weapon.hit)+")
-        parts.append("Wound \(weapon.wound)+")
-        parts.append("Rend \(weapon.rend)")
-        parts.append("Dmg \(weapon.damage)")
-        return parts.joined(separator: " · ")
+        WarscrollStatSummary.weaponCombatProfile(weapon)
     }
 
     private var evaluableWeapons: [SpearheadWeapon] {

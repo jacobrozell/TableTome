@@ -19,10 +19,10 @@ struct RootTabView: View {
                 HomeView(viewModel: dependencies.makeHomeViewModel())
             }
             .tabItem {
-                Label(String(localized: "Learn"), systemImage: "book.fill")
+                Label(String(localized: "Play"), systemImage: "play.circle.fill")
             }
             .tag(AppTab.learn)
-            .accessibilityIdentifier("tab.learn")
+            .accessibilityIdentifier("tab.play")
 
             NavigationStack {
                 RulesReferenceView(viewModel: dependencies.makeRulesReferenceViewModel())

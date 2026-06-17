@@ -57,7 +57,7 @@ struct SettingsView: View {
                         .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
                 }
                 .accessibilityIdentifier("settings.replayBattleTrackerTips")
-                .accessibilityHint(String(localized: "Shows first-battle coach and combat roll help again"))
+                .accessibilityHint(String(localized: "Shows first-battle coach, combat roll help, and expanded guided match setup again"))
             }
 
             Section(String(localized: "Support & Legal")) {

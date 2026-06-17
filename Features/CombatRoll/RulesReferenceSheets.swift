@@ -9,18 +9,34 @@ struct RulesGlossaryView: View {
     }
 
     var body: some View {
-        List(SpearheadRulesGlossary.entries) { entry in
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                Text(entry.term)
-                    .font(.headline)
-                Text(entry.definition)
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
+        List {
+            Section {
+                Text(
+                    String(
+                        localized: """
+                        Tap a term for a plain-language definition. These appear throughout guides and the battle tracker.
+                        """
+                    )
+                )
+                .font(.callout)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+                .listRowBackground(Color.clear)
             }
-            .padding(.vertical, DesignTokens.Spacing.sm)
-            .listRowBackground(entry.id == highlightedEntryId ? Color.accentColor.opacity(0.08) : nil)
-            .accessibilityIdentifier("glossary.entry.\(entry.id)")
+
+            ForEach(SpearheadRulesGlossary.entries) { entry in
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                    Text(entry.term)
+                        .font(.headline)
+                    Text(entry.definition)
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(.vertical, DesignTokens.Spacing.sm)
+                .listRowBackground(entry.id == highlightedEntryId ? Color.accentColor.opacity(0.08) : nil)
+                .accessibilityIdentifier("glossary.entry.\(entry.id)")
+            }
         }
         .listStyle(.insetGrouped)
         .tabBarScrollInset()

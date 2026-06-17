@@ -10,6 +10,30 @@ struct GettingStartedView: View {
 
     var body: some View {
         List {
+            if gameSystem.id == "aos-spearhead" {
+                Section {
+                    WhatYouNeedCard()
+                }
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(Color.clear)
+
+                Section {
+                    NavigationLink {
+                        SampleTurnWalkthroughView()
+                    } label: {
+                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                            Label(String(localized: "Preview a Turn"), systemImage: "play.circle")
+                                .font(.headline)
+                            Text(String(localized: "~2 minutes — movement, shooting, dice, and scoring"))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                    }
+                    .accessibilityIdentifier("guide.gettingStarted.sampleTurn")
+                }
+            }
+
             ForEach(Array(sortedSteps.enumerated()), id: \.element.id) { index, step in
                 NavigationLink {
                     GuideStepDetailView(

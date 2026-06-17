@@ -69,7 +69,7 @@ struct VictoryPointsCard: View {
             .accessibilityIdentifier(isPlayerOne ? "battleTracker.vp.playerOne" : "battleTracker.vp.playerTwo")
 
             HStack(spacing: DesignTokens.Spacing.xs) {
-                quickButton(label: String(localized: "+1 obj"), isPlayerOne: isPlayerOne, amount: 1)
+                quickButton(label: String(localized: "+1 objective"), isPlayerOne: isPlayerOne, amount: 1)
                 quickButton(label: String(localized: "+1 tactic"), isPlayerOne: isPlayerOne, amount: 1)
             }
         }

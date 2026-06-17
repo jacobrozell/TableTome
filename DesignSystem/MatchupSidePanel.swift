@@ -20,6 +20,10 @@ struct MatchupSidePanel: View {
     let onUnitChange: (String) -> Void
     let onWeaponChange: (String) -> Void
 
+    private var selectedUnit: SpearheadUnit? {
+        units.first(where: { $0.id == unitId })
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: usesCompactStyle ? DesignTokens.Spacing.sm : DesignTokens.Spacing.md) {
             if usesCompactStyle {
@@ -43,42 +47,73 @@ struct MatchupSidePanel: View {
                     .foregroundStyle(usesCompactStyle ? .secondary : .primary)
             }
 
-            Picker(String(localized: "Unit"), selection: $unitId) {
-                ForEach(units) { unit in
-                    Text(unitPickerLabel(for: unit)).tag(unit.id)
-                }
-            }
-            .pickerStyle(.menu)
-            .onChange(of: unitId) { _, newValue in onUnitChange(newValue) }
+            unitSelection
 
             if showsWeaponPicker, !weapons.isEmpty {
-                Picker(String(localized: "Weapon"), selection: $weaponId) {
-                    ForEach(weapons) { weapon in
-                        Text(weapon.name).tag(weapon.id)
-                    }
-                }
-                .pickerStyle(.menu)
-                .onChange(of: weaponId) { _, newValue in onWeaponChange(newValue) }
+                weaponSelection
             }
 
-            if let unit = units.first(where: { $0.id == unitId }) {
-                if usesCompactStyle {
-                    UnitQuickStatsRow(unit: unit, woundsRemaining: woundsRemaining)
-                } else {
-                    Divider()
-                    unitSummary(unit)
-                }
+            if let unit = selectedUnit, !usesCompactStyle {
+                Divider()
+                unitSummary(unit)
             }
         }
         .modifier(ConditionalSurfaceCard(enabled: !usesCompactStyle))
     }
 
-    private func unitPickerLabel(for unit: SpearheadUnit) -> String {
-        guard let remaining = unitWoundsRemaining?(unit.id) else { return unit.name }
-        if remaining == 0 {
-            return String(localized: "\(unit.name) (Destroyed)")
+    private var unitSelection: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+            HStack(alignment: .center, spacing: 0) {
+                Picker(String(localized: "Unit"), selection: $unitId) {
+                    ForEach(units) { unit in
+                        Text(unitPickerLabel(for: unit)).tag(unit.id)
+                    }
+                }
+                .pickerStyle(.menu)
+                .onChange(of: unitId) { _, newValue in onUnitChange(newValue) }
+
+                if let unit = selectedUnit, !armyId.isEmpty {
+                    WarscrollInfoButton(
+                        armyId: armyId,
+                        unit: unit,
+                        accessibilityId: "matchup.unit.warscroll.\(unit.id)"
+                    )
+                }
+            }
+
+            if let unit = selectedUnit,
+               let subtext = WarscrollStatSummary.unitChoiceSubtext(unit, woundsRemaining: woundsRemaining) {
+                Text(subtext)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .accessibilityIdentifier("matchup.unit.subtext.\(unit.id)")
+            }
         }
-        return unit.name
+    }
+
+    private var weaponSelection: some View {
+        HStack(alignment: .center, spacing: 0) {
+            Picker(String(localized: "Weapon"), selection: $weaponId) {
+                ForEach(weapons) { weapon in
+                    Text(weapon.name).tag(weapon.id)
+                }
+            }
+            .pickerStyle(.menu)
+            .onChange(of: weaponId) { _, newValue in onWeaponChange(newValue) }
+
+            if let unit = selectedUnit, !armyId.isEmpty {
+                WarscrollInfoButton(
+                    armyId: armyId,
+                    unit: unit,
+                    accessibilityId: "matchup.weapon.warscroll.\(unit.id)"
+                )
+            }
+        }
+    }
+
+    private func unitPickerLabel(for unit: SpearheadUnit) -> String {
+        let destroyed = unitWoundsRemaining?(unit.id) == 0
+        return WarscrollStatSummary.unitPickerLabel(unit, destroyed: destroyed)
     }
 
     @ViewBuilder
@@ -87,11 +122,6 @@ struct MatchupSidePanel: View {
             Text(armyName)
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(.secondary)
-            if let save = unit.save {
-                Text(String(localized: "Save \(save)+ · Health \(unit.health ?? 0)"))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
             if !unit.keywords.isEmpty {
                 Text(unit.keywords.joined(separator: " · "))
                     .font(.caption2)

@@ -33,9 +33,19 @@ public enum BattleRoundChecklistStep: String, CaseIterable, Codable, Sendable, I
         case .identifyUnderdog:
             String(localized: "The player with fewer victory points is the underdog this round.")
         case .drawTwistCard:
-            String(localized: "Draw from the twist deck matching your realm side. Twist cards favour the underdog.")
+            String(
+                localized: """
+                Take the twist deck from your box that matches your board side (e.g. Fire or Jade for Aqshy/Ghyran). \
+                Draw one card — twist effects favour the underdog.
+                """
+            )
         case .drawBattleTactics:
-            String(localized: "Discard any number of battle tactic cards face up, then draw back to three. Each card: complete the tactic at end of turn OR use the command — not both.")
+            String(
+                localized: """
+                Each player uses their battle tactic deck from the box. Discard any number face up, draw back to three. \
+                Each card: complete the tactic at end of turn OR use the command during the battle — not both.
+                """
+            )
         case .startOfRoundAbilities:
             String(localized: "Resolve any Start of Battle Round abilities before turns begin.")
         }

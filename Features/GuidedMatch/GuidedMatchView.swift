@@ -8,7 +8,11 @@ struct GuidedMatchView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @State private var selectedDestination: GuidedMatchDestination?
+    @State private var showsAllSetupSteps = NewPlayerTipsStore.hasExpandedGuidedMatchSetup
 
+    private var usesCompactSetupLayout: Bool {
+        !NewPlayerTipsStore.hasExpandedGuidedMatchSetup
+    }
     init(viewModel: GuidedMatchViewModel, ruleSections: [RuleSection] = []) {
         _viewModel = StateObject(wrappedValue: viewModel)
         self.ruleSections = ruleSections
@@ -146,6 +150,27 @@ struct GuidedMatchView: View {
 
     @ViewBuilder
     private func guidedMatchSections(catalog: SpearheadCatalog, useSplitSelection: Bool) -> some View {
+        if usesCompactSetupLayout {
+            compactGuidedMatchSections(catalog: catalog, useSplitSelection: useSplitSelection)
+        } else {
+            expandedGuidedMatchSections(catalog: catalog, useSplitSelection: useSplitSelection)
+        }
+    }
+
+    @ViewBuilder
+    private func compactGuidedMatchSections(catalog: SpearheadCatalog, useSplitSelection: Bool) -> some View {
+        matchupSection
+        sampleTurnSection
+        playersSection(catalog: catalog, useSplitSelection: useSplitSelection)
+        setupProgressSection
+        continueSetupSection(catalog: catalog, useSplitSelection: useSplitSelection)
+        battleTrackerSection(catalog: catalog, useSplitSelection: useSplitSelection)
+        collapsedMatchSetupSection(catalog: catalog, useSplitSelection: useSplitSelection)
+        resetSection
+    }
+
+    @ViewBuilder
+    private func expandedGuidedMatchSections(catalog: SpearheadCatalog, useSplitSelection: Bool) -> some View {
         matchupSection
         setupProgressSection
         continueSetupSection(catalog: catalog, useSplitSelection: useSplitSelection)
@@ -153,6 +178,92 @@ struct GuidedMatchView: View {
         battleTrackerSection(catalog: catalog, useSplitSelection: useSplitSelection)
         matchSetupSection(catalog: catalog, useSplitSelection: useSplitSelection)
         resetSection
+    }
+
+    @ViewBuilder
+    private var sampleTurnSection: some View {
+        Section {
+            NavigationLink {
+                SampleTurnWalkthroughView()
+            } label: {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                    Label(String(localized: "Preview a Turn"), systemImage: "play.circle")
+                        .font(.headline)
+                    Text(String(localized: "Two-minute tour — movement, shooting, dice, and scoring"))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+            }
+            .accessibilityIdentifier("guidedMatch.sampleTurn")
+        }
+    }
+
+    @ViewBuilder
+    private func collapsedMatchSetupSection(catalog: SpearheadCatalog, useSplitSelection: Bool) -> some View {
+        let stepCount = viewModel.sortedMatchSteps.count
+        Section {
+            DisclosureGroup(isExpanded: $showsAllSetupSteps) {
+                matchSetupRows(catalog: catalog, useSplitSelection: useSplitSelection)
+            } label: {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                    Text(String(localized: "All Setup Steps"))
+                        .font(.headline)
+                    Text(String(localized: "\(stepCount) steps — army pick, attacker roll, abilities, deployment, and battle"))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .onChange(of: showsAllSetupSteps) { _, expanded in
+                guard expanded else { return }
+                NewPlayerTipsStore.markGuidedMatchSetupExpanded()
+            }
+            .accessibilityIdentifier("guidedMatch.allSetupSteps")
+        } footer: {
+            Text(String(localized: "Up Next above shows your next step. Expand to browse every setup step."))
+        }
+    }
+
+    @ViewBuilder
+    private func matchSetupRows(catalog: SpearheadCatalog, useSplitSelection: Bool) -> some View {
+        ForEach(Array(viewModel.sortedMatchSteps.enumerated()), id: \.element.id) { index, step in
+            if useSplitSelection {
+                GuideStepCard(
+                    stepNumber: index + 1,
+                    title: step.title,
+                    summary: step.summary,
+                    isComplete: viewModel.matchState.completedStepIds.contains(step.id),
+                    accessibilityId: "guidedMatch.step.\(step.id)"
+                )
+                .tag(GuidedMatchDestination.step(step.id))
+                .listRowInsets(GuideStepCard.listRowInsets)
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
+                .disabled(!viewModel.matchState.hasBothArmies && step.id != "choose-armies")
+            } else {
+                NavigationLink {
+                    MatchStepDetailView(
+                        step: step,
+                        stepNumber: index + 1,
+                        viewModel: viewModel,
+                        ruleSections: ruleSections
+                    )
+                } label: {
+                    GuideStepCard(
+                        stepNumber: index + 1,
+                        title: step.title,
+                        summary: step.summary,
+                        isComplete: viewModel.matchState.completedStepIds.contains(step.id),
+                        showsDisclosureIndicator: false,
+                        accessibilityId: "guidedMatch.step.\(step.id)"
+                    )
+                }
+                .disabled(!viewModel.matchState.hasBothArmies && step.id != "choose-armies")
+                .listRowInsets(GuideStepCard.listRowInsets)
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
+            }
+        }
     }
 
     @ViewBuilder
@@ -384,44 +495,7 @@ struct GuidedMatchView: View {
     @ViewBuilder
     private func matchSetupSection(catalog: SpearheadCatalog, useSplitSelection: Bool) -> some View {
         Section(String(localized: "Match Setup")) {
-            ForEach(Array(viewModel.sortedMatchSteps.enumerated()), id: \.element.id) { index, step in
-                if useSplitSelection {
-                    GuideStepCard(
-                        stepNumber: index + 1,
-                        title: step.title,
-                        summary: step.summary,
-                        isComplete: viewModel.matchState.completedStepIds.contains(step.id),
-                        accessibilityId: "guidedMatch.step.\(step.id)"
-                    )
-                    .tag(GuidedMatchDestination.step(step.id))
-                    .listRowInsets(GuideStepCard.listRowInsets)
-                    .listRowBackground(Color.clear)
-                    .listRowSeparator(.hidden)
-                    .disabled(!viewModel.matchState.hasBothArmies && step.id != "choose-armies")
-                } else {
-                    NavigationLink {
-                        MatchStepDetailView(
-                            step: step,
-                            stepNumber: index + 1,
-                            viewModel: viewModel,
-                            ruleSections: ruleSections
-                        )
-                    } label: {
-                        GuideStepCard(
-                            stepNumber: index + 1,
-                            title: step.title,
-                            summary: step.summary,
-                            isComplete: viewModel.matchState.completedStepIds.contains(step.id),
-                            showsDisclosureIndicator: false,
-                            accessibilityId: "guidedMatch.step.\(step.id)"
-                        )
-                    }
-                    .disabled(!viewModel.matchState.hasBothArmies && step.id != "choose-armies")
-                    .listRowInsets(GuideStepCard.listRowInsets)
-                    .listRowBackground(Color.clear)
-                    .listRowSeparator(.hidden)
-                }
-            }
+            matchSetupRows(catalog: catalog, useSplitSelection: useSplitSelection)
         }
     }
 

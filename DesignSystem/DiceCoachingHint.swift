@@ -97,7 +97,10 @@ struct BattleTrackerRoundOpenerBanner: View {
                         .font(.subheadline.weight(.semibold))
                     Text(
                         String(
-                            localized: "Next up: \(nextStepTitle). Finish priority, twists, and battle tactics before turns begin."
+                            localized: """
+                            Next up: \(nextStepTitle). Use the physical card decks from your box — \
+                            twist deck for your board side, then battle tactic cards.
+                            """
                         )
                     )
                     .font(.caption)

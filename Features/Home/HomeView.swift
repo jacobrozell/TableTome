@@ -21,18 +21,30 @@ struct HomeView: View {
                     action: { Task { await viewModel.load() } }
                 )
             } else {
-                List(viewModel.gameSystems) { system in
-                    NavigationLink(value: system.id) {
-                        gameSystemRow(system)
+                List {
+                    if viewModel.gameSystems.count == 1,
+                       let system = viewModel.gameSystems.first,
+                       system.id == "aos-spearhead" {
+                        Section {
+                            HomeWelcomeCard()
+                        }
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Color.clear)
                     }
-                    .accessibilityIdentifier("home.gameSystem.\(system.id)")
+
+                    ForEach(viewModel.gameSystems) { system in
+                        NavigationLink(value: system.id) {
+                            gameSystemRow(system)
+                        }
+                        .accessibilityIdentifier("home.gameSystem.\(system.id)")
+                    }
                 }
                 .listStyle(.insetGrouped)
                 .tabBarScrollInset()
                 .accessibilityIdentifier("home.gameSystemList")
             }
         }
-        .navigationTitle(String(localized: "Learn"))
+        .navigationTitle(String(localized: "Play"))
         .navigationDestination(for: String.self) { systemId in
             GameSystemDetailView(gameSystemId: systemId)
         }
@@ -42,6 +54,9 @@ struct HomeView: View {
         .navigationDestination(for: GuidedMatchLink.self) { link in
             GuidedMatchDestinationView(gameSystemId: link.gameSystemId)
         }
+        .navigationDestination(for: SampleTurnLink.self) { _ in
+            SampleTurnWalkthroughView()
+        }
         .task { await viewModel.load() }
         .refreshable { await viewModel.load() }
     }
@@ -50,7 +65,7 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
             Text(system.name)
                 .font(.headline)
-            Text(system.tagline)
+            Text(newcomerTagline(for: system))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
             Text(system.edition)
@@ -59,6 +74,13 @@ struct HomeView: View {
         }
         .padding(.vertical, DesignTokens.Spacing.xs)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(system.name). \(system.tagline). \(system.edition)")
+        .accessibilityLabel("\(system.name). \(newcomerTagline(for: system)). \(system.edition)")
+    }
+
+    private func newcomerTagline(for system: GameSystem) -> String {
+        if system.id == "aos-spearhead" {
+            return String(localized: "Learn and play with your starter-set armies")
+        }
+        return system.tagline
     }
 }

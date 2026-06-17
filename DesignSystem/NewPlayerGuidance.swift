@@ -51,6 +51,7 @@ struct BattleTrackerCoachCard: View {
                 Text(String(localized: "First battle?"))
                     .font(.headline)
                 Spacer()
+                WalkthroughProgressDots(current: step, total: steps.count)
                 Button {
                     onDismiss()
                 } label: {
@@ -59,9 +60,6 @@ struct BattleTrackerCoachCard: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(String(localized: "Dismiss tips"))
-                Text(String(localized: "\(step + 1) of \(steps.count)"))
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.secondary)
             }
 
             Label {

@@ -31,6 +31,21 @@ enum OnboardingContent {
         ),
         OnboardingPage(
             id: 1,
+            symbol: "figure.2",
+            title: String(localized: "What is Spearhead?"),
+            subtitle: String(localized: "A beginner-friendly wargame"),
+            body: String(
+                localized: """
+                Two players command armies of miniatures on a board. You move models, roll dice to fight, \
+                and score points by holding objectives. Games last about 60–90 minutes.
+
+                You need a Spearhead starter box, dice, and an opponent. Tabletome guides setup and \
+                tracks the battle on this device — pass the phone when turns change.
+                """
+            )
+        ),
+        OnboardingPage(
+            id: 2,
             symbol: "lock.iphone",
             title: String(localized: "Stays on your device"),
             subtitle: String(localized: "No account required"),
@@ -42,19 +57,19 @@ enum OnboardingContent {
             )
         ),
         OnboardingPage(
-            id: 2,
+            id: 3,
             symbol: "map.fill",
             title: String(localized: "Learn as you play"),
             subtitle: String(localized: "Guides and match tools"),
             body: String(
                 localized: """
-                Follow the Getting Started walkthrough, run a Guided Match from army pick to \
-                deployment, and track battle phases with unit reminders.
+                Try Preview a Turn for a two-minute tour, follow Getting Started, run a Guided Match from army pick to \
+                deployment, and track battle phases with on-screen tips.
                 """
             )
         ),
         OnboardingPage(
-            id: 3,
+            id: 4,
             symbol: "doc.text.fill",
             title: String(localized: "Rules at your fingertips"),
             subtitle: String(localized: "Searchable reference"),
@@ -66,14 +81,13 @@ enum OnboardingContent {
             )
         ),
         OnboardingPage(
-            id: 4,
+            id: 5,
             symbol: "flag.checkered",
             title: String(localized: "Ready for battle"),
             subtitle: String(localized: "New to Spearhead?"),
             body: String(
                 localized: """
-                Jump straight into a Guided Match, or explore the app on your own. \
-                You can replay this tour anytime in Settings.
+                Try Preview a Turn first, or jump into a Guided Match. You can replay this tour anytime in Settings.
                 """
             )
         )
@@ -82,9 +96,9 @@ enum OnboardingContent {
     static let tabTourItems: [OnboardingTabTourItem] = [
         OnboardingTabTourItem(
             id: "learn",
-            symbol: "book.fill",
-            title: String(localized: "Learn"),
-            body: String(localized: "Guided Match, Getting Started, and starter army rosters")
+            symbol: "play.circle.fill",
+            title: String(localized: "Play"),
+            body: String(localized: "Preview a Turn, Guided Match, Getting Started, and army rosters")
         ),
         OnboardingTabTourItem(
             id: "rules",

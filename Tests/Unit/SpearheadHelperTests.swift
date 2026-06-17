@@ -57,6 +57,20 @@ final class SpearheadRulesGlossaryTests: XCTestCase {
         XCTAssertTrue(entries.contains { $0.id == "contest" })
     }
 
+    func testFindsNewPlayerTerms() {
+        let entries = SpearheadRulesGlossary.entriesReferenced(
+            in: "Review your warscroll, pick a regiment ability, and draw a twist card for victory points."
+        )
+        XCTAssertTrue(entries.contains { $0.id == "warscroll" })
+        XCTAssertTrue(entries.contains { $0.id == "regiment-ability" })
+        XCTAssertTrue(entries.contains { $0.id == "twist-card" })
+        XCTAssertTrue(entries.contains { $0.id == "victory-points" })
+    }
+
+    func testGlossaryHasNewcomerEntries() {
+        XCTAssertGreaterThanOrEqual(SpearheadRulesGlossary.entries.count, 16)
+    }
+
     func testBattleTacticsReferenceHasSections() {
         XCTAssertFalse(SpearheadBattleTacticsReference.sections.isEmpty)
     }

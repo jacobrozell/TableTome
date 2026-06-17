@@ -53,6 +53,66 @@ public enum SpearheadRulesGlossary {
             id: "battle-tactic",
             term: "Battle Tactic",
             definition: "A card drawn each round. Complete the tactic at end of turn OR use the command during the battle — not both."
+        ),
+        RulesGlossaryEntry(
+            id: "warscroll",
+            term: "Warscroll",
+            definition: "The stat card for a unit — Move, Save, Health, weapons, and abilities. In Spearhead, each box-set army comes with fixed warscrolls."
+        ),
+        RulesGlossaryEntry(
+            id: "objective",
+            term: "Objective",
+            definition: "A marker on the board you fight over. Holding objectives at the end of your turn scores victory points."
+        ),
+        RulesGlossaryEntry(
+            id: "battle-round",
+            term: "Battle Round",
+            definition: "Spearhead games last four battle rounds. Each round both players take a full turn — priority, twist cards, then alternating phases."
+        ),
+        RulesGlossaryEntry(
+            id: "coherency",
+            term: "Coherency",
+            definition: "Models in a unit must stay within a set distance of each other (usually 1\"). A unit out of coherency cannot act until fixed."
+        ),
+        RulesGlossaryEntry(
+            id: "d6",
+            term: "D6",
+            definition: "A standard six-sided die. Spearhead uses D6s for almost every roll — you do not need special dice."
+        ),
+        RulesGlossaryEntry(
+            id: "general",
+            term: "General",
+            definition: "Your army's leader. In Spearhead you pick one enhancement to upgrade your general before the battle."
+        ),
+        RulesGlossaryEntry(
+            id: "regiment-ability",
+            term: "Regiment Ability",
+            definition: "A pre-battle choice from two options on your army sheet — passive bonuses or once-per-battle actions for your whole army."
+        ),
+        RulesGlossaryEntry(
+            id: "enhancement",
+            term: "Enhancement",
+            definition: "A pre-battle upgrade for your general only, chosen from four options on your army sheet."
+        ),
+        RulesGlossaryEntry(
+            id: "twist-card",
+            term: "Twist Card",
+            definition: "A card drawn at the start of each battle round from the deck matching your board side. Twist effects favour the underdog."
+        ),
+        RulesGlossaryEntry(
+            id: "priority-roll",
+            term: "Priority Roll",
+            definition: "From battle round 2 onward, both players roll off. The winner chooses who takes the first turn that round."
+        ),
+        RulesGlossaryEntry(
+            id: "victory-points",
+            term: "Victory Points",
+            definition: "Points scored for holding objectives and completing battle tactics. The player with more VP at the end of round 4 wins."
+        ),
+        RulesGlossaryEntry(
+            id: "spearhead",
+            term: "Spearhead",
+            definition: "A compact Age of Sigmar format with fixed box-set armies, realm boards, twist cards, and battle tactics — Core Rules only."
         )
     ]
 
@@ -63,10 +123,40 @@ public enum SpearheadRulesGlossary {
 
     public static func entriesReferenced(in text: String) -> [RulesGlossaryEntry] {
         let lower = text.lowercased()
-        return entries.filter { entry in
-            lower.contains(entry.term.lowercased())
-                || (entry.id == "wholly-within" && lower.contains("wholly within"))
+        return entries.filter { matches(entry: $0, in: lower) }
+    }
+
+    private static let aliasPatterns: [String: [String]] = [
+        "wholly-within": ["wholly within"],
+        "warscroll": ["warscroll"],
+        "regiment-ability": ["regiment abilit"],
+        "twist-card": ["twist card", "twist deck"],
+        "battle-tactic": ["battle tactic"],
+        "victory-points": ["victory point", " vp"],
+        "priority-roll": ["priority roll", "priority note"],
+        "battle-round": ["battle round"],
+        "objective": ["objective"],
+        "coherency": ["coherency", "coherence"],
+        "d6": ["d6", "six-sided"],
+        "enhancement": ["enhancement"],
+        "general": ["general"],
+        "spearhead": ["spearhead"],
+        "underdog": ["underdog"],
+        "mortal-damage": ["mortal damage"],
+        "rend": ["rend"],
+        "ward": ["ward"],
+        "visible": ["visible"],
+        "contest": ["contest"]
+    ]
+
+    private static func matches(entry: RulesGlossaryEntry, in lower: String) -> Bool {
+        if lower.contains(entry.term.lowercased()) {
+            return true
         }
+        guard let patterns = aliasPatterns[entry.id] else {
+            return false
+        }
+        return patterns.contains { lower.contains($0) }
     }
 }
 

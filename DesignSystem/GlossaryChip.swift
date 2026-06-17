@@ -21,6 +21,7 @@ struct GlossaryChip: View {
 
 struct GlossaryChipsRow: View {
     let text: String
+    var label: String? = String(localized: "Key terms")
 
     private var entries: [RulesGlossaryEntry] {
         SpearheadRulesGlossary.entriesReferenced(in: text)
@@ -28,10 +29,17 @@ struct GlossaryChipsRow: View {
 
     var body: some View {
         if !entries.isEmpty {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: DesignTokens.Spacing.sm) {
-                    ForEach(entries) { entry in
-                        GlossaryChip(entry: entry)
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                if let label {
+                    Text(label)
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                }
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: DesignTokens.Spacing.sm) {
+                        ForEach(entries) { entry in
+                            GlossaryChip(entry: entry)
+                        }
                     }
                 }
             }

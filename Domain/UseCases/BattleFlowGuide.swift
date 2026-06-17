@@ -147,9 +147,18 @@ public enum BattleFlowGuide {
         case .identifyUnderdog:
             extra = String(localized: "Compare victory points on the tracker below. The player with fewer points is the underdog.")
         case .drawTwistCard:
-            extra = String(localized: "Draw from the twist deck matching your realm side. Twist cards favour the underdog.")
+            extra = String(
+                localized: """
+                Take the twist deck from your starter box that matches your board side. Draw one card — \
+                twist effects favour the underdog.
+                """
+            )
         case .drawBattleTactics:
-            extra = String(localized: "Each player may discard tactics face up, then draw back to three cards.")
+            extra = String(
+                localized: """
+                Each player uses their battle tactic deck from the box. Discard tactics face up if you want, then draw back to three.
+                """
+            )
         case .startOfRoundAbilities:
             extra = String(localized: "Resolve any Start of Battle Round abilities before the first turn begins.")
         }

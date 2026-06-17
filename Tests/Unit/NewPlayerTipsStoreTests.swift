@@ -27,10 +27,21 @@ final class NewPlayerTipsStoreTests: XCTestCase {
     func testResetAllClearsTips() {
         NewPlayerTipsStore.markBattleTrackerCoachSeen()
         NewPlayerTipsStore.dismissCombatSequencePrimer()
+        NewPlayerTipsStore.markGuidedMatchSetupExpanded()
 
         NewPlayerTipsStore.resetAll()
 
         XCTAssertFalse(NewPlayerTipsStore.hasSeenBattleTrackerCoach)
         XCTAssertFalse(NewPlayerTipsStore.hasDismissedCombatSequencePrimer)
+        XCTAssertFalse(NewPlayerTipsStore.hasExpandedGuidedMatchSetup)
+    }
+
+    func testGuidedMatchSetupExpandedDefaultsToCollapsed() {
+        XCTAssertFalse(NewPlayerTipsStore.hasExpandedGuidedMatchSetup)
+    }
+
+    func testMarksGuidedMatchSetupExpanded() {
+        NewPlayerTipsStore.markGuidedMatchSetupExpanded()
+        XCTAssertTrue(NewPlayerTipsStore.hasExpandedGuidedMatchSetup)
     }
 }

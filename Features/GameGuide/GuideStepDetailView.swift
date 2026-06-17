@@ -15,6 +15,12 @@ struct GuideStepDetailView: View {
                     .font(.body)
                     .fixedSize(horizontal: false, vertical: true)
 
+                GlossaryChipsRow(text: step.body)
+
+                if step.id == "pick-army", gameSystemId == "aos-spearhead" {
+                    WhatYouNeedCard()
+                }
+
                 if let relatedSection {
                     NavigationLink {
                         RuleSectionDetailView(section: relatedSection, allSections: ruleSections)
@@ -39,6 +45,7 @@ struct GuideStepDetailView: View {
                                 .foregroundStyle(.secondary)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
+                        GlossaryChipsRow(text: step.tips.joined(separator: " "))
                     }
                     .padding(DesignTokens.Spacing.md)
                     .frame(maxWidth: .infinity, alignment: .leading)

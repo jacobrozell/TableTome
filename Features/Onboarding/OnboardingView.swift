@@ -96,7 +96,7 @@ struct OnboardingView: View {
             .padding(.vertical, widePageLayout ? 8 : 0)
             .padding(.bottom, 8)
 
-            if item.id == 2 {
+            if item.id == 3 {
                 tabTourCards(twoColumn: widePageLayout)
                     .frame(maxWidth: contentMaxWidth)
                     .frame(maxWidth: .infinity)

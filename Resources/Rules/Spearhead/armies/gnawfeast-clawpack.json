@@ -90,7 +90,8 @@
           "damage": "D3",
           "ability": "Companion"
         }
-      ]
+      ],
+      "modelCount": 1
     },
     {
       "id": "grey-seer",
@@ -100,7 +101,7 @@
           "id": "will-of-horned-rat",
           "name": "Will of the Horned Rat",
           "source": "Grey Seer",
-          "flavor": "None among the Skaven clans may defy the commands of a Grey Seer — openly, at least…",
+          "flavor": "None among the Skaven clans may defy the commands of a Grey Seer \u2014 openly, at least\u2026",
           "phases": [
             "hero"
           ],
@@ -142,7 +143,8 @@
           "rend": 1,
           "damage": "D3"
         }
-      ]
+      ],
+      "modelCount": 1
     },
     {
       "id": "warlock-engineer",
@@ -202,7 +204,8 @@
           "rend": 0,
           "damage": "2"
         }
-      ]
+      ],
+      "modelCount": 1
     },
     {
       "id": "clanrats",
@@ -239,7 +242,8 @@
           "rend": 0,
           "damage": "1"
         }
-      ]
+      ],
+      "modelCount": 20
     },
     {
       "id": "rat-ogors",
@@ -263,7 +267,8 @@
           "rend": 1,
           "damage": "2"
         }
-      ]
+      ],
+      "modelCount": 3
     }
   ]
 }

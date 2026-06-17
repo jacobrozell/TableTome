@@ -31,6 +31,30 @@ final class GuidedMatchViewModelTests: XCTestCase {
         XCTAssertEqual(SpearheadContentCoverage.battleTracker.playerFacingTitle, "Rules reminders ready")
         XCTAssertEqual(SpearheadContentCoverage.warscrolls.playerFacingTitle, "Full tabletop support")
     }
+
+    func testApplyStarterMatchupResetsBattleTracker() async throws {
+        let catalog = try await BundledSpearheadCatalogRepository(
+            bundle: Bundle(for: GuidedMatchViewModelTests.self)
+        ).loadCatalog()
+
+        var tracker = BattleTrackerState()
+        tracker.battleRound = 3
+        tracker.playerOneVictoryPoints = 5
+        BattleTrackerStore.save(tracker)
+        defer { BattleTrackerStore.reset() }
+
+        let viewModel = GuidedMatchViewModel(
+            catalogRepository: StubSpearheadCatalogRepository(catalog: catalog),
+            initialState: GuidedMatchState()
+        )
+        await viewModel.load()
+        viewModel.applyStarterMatchup()
+
+        let loaded = BattleTrackerStore.load()
+        XCTAssertEqual(loaded.battleRound, 1)
+        XCTAssertEqual(loaded.playerOneVictoryPoints, 0)
+        XCTAssertTrue(viewModel.matchState.hasBothArmies)
+    }
 }
 
 private struct StubSpearheadCatalogRepository: SpearheadCatalogRepository {

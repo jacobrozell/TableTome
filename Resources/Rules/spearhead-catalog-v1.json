@@ -40,12 +40,14 @@
               "id": "strike-where-needed",
               "name": "Strike Where Needed",
               "summary": "When a unit uses Retreat, it takes no mortal damage and may still use Charge abilities this turn.",
+              "newPlayerHint": "Good when you want mobile Prosecutors or hit-and-run Liberators.",
               "timing": "Once per battle, reaction to Retreat"
             },
             {
               "id": "blaze-of-glory",
               "name": "Blaze of Glory",
               "summary": "Pick a unit in combat; when its models are slain, roll D6 per slain model — on 4+ inflict 1 mortal on an enemy in combat with that unit.",
+              "newPlayerHint": "Good when you expect your infantry to trade on an objective.",
               "timing": "Once per battle, Any Combat Phase"
             }
           ],
@@ -54,24 +56,28 @@
               "id": "hallowed-scrolls",
               "name": "Hallowed Scrolls",
               "summary": "Your general has Ward (5+).",
+              "newPlayerHint": "Safest pick — keeps your Lord-Vigilant alive longer.",
               "timing": "Passive"
             },
             {
               "id": "morrdas-talon",
               "name": "Morrda's Talon",
               "summary": "Your general's Hallowed Greataxe has Crit (Mortal).",
+              "newPlayerHint": "Aggressive pick if you plan to seek combat with your general.",
               "timing": "Passive"
             },
             {
               "id": "quicksilver-draught",
               "name": "Quicksilver Draught",
               "summary": "Your general has Strike-first this phase.",
+              "newPlayerHint": "Save for a decisive combat phase when you need to strike first.",
               "timing": "Once per battle, Any Combat Phase"
             },
             {
               "id": "null-pendant",
               "name": "Null Pendant",
               "summary": "Roll for each enemy contesting the same objective as your general; on 2+ subtract the roll from their control score this turn.",
+              "newPlayerHint": "Objective play — use when contesting a key point late game.",
               "timing": "Once per battle, End of Any Turn"
             }
           ]
@@ -183,12 +189,14 @@
               "id": "warpstone-laced-bullets",
               "name": "Warpstone-Laced Bullets",
               "summary": "Pick a friendly unit's ranged weapon; it has Crit (Mortal) this phase.",
+              "newPlayerHint": "Best with Warlock Engineer or ranged attacks before a charge.",
               "timing": "Once per battle, Your Shooting Phase"
             },
             {
               "id": "too-quick-to-hit",
               "name": "Too Quick to Hit-Hit",
               "summary": "No mortal damage is inflicted on friendly units when they use Retreat abilities.",
+              "newPlayerHint": "Reliable pick — Clanrats can retreat from trouble without losing models.",
               "timing": "Passive"
             }
           ],
@@ -197,24 +205,28 @@
               "id": "lead-seething-horde",
               "name": "Lead the Seething Horde",
               "summary": "When using Call for Reinforcements, the replacement unit can be set up wholly within 13\" of your general and not in combat.",
+              "newPlayerHint": "Pairs well with Clanrats — bring reinforcements closer to the fight.",
               "timing": "Reaction: Call for Reinforcements"
             },
             {
               "id": "warpstone-charm",
               "name": "Warpstone Charm",
               "summary": "Subtract 1 from save rolls for enemy units in combat with your general.",
+              "newPlayerHint": "Aggressive — your Clawlord wants to be in melee.",
               "timing": "Passive"
             },
             {
               "id": "skryre-connections",
               "name": "Skryre Connections",
               "summary": "Your general's Ratling Pistol has Attacks 2D6 instead of D6.",
+              "newPlayerHint": "More shots from the Clawlord's pistol — risky but fun.",
               "timing": "Passive"
             },
             {
               "id": "cloak-stitched-victories",
               "name": "Cloak of Stitched Victories",
               "summary": "Your general has Ward (5+).",
+              "newPlayerHint": "Safest pick — protects your Clawlord.",
               "timing": "Passive"
             }
           ]

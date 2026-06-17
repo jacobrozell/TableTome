@@ -100,6 +100,7 @@ public struct ArmyRuleOption: Codable, Sendable, Identifiable, Equatable {
     public let id: String
     public let name: String
     public let summary: String
+    public let newPlayerHint: String?
     public let timing: String?
     public let flavor: String?
     public let declare: String?
@@ -112,6 +113,7 @@ public struct ArmyRuleOption: Codable, Sendable, Identifiable, Equatable {
         id: String,
         name: String,
         summary: String,
+        newPlayerHint: String? = nil,
         timing: String? = nil,
         flavor: String? = nil,
         declare: String? = nil,
@@ -123,6 +125,7 @@ public struct ArmyRuleOption: Codable, Sendable, Identifiable, Equatable {
         self.id = id
         self.name = name
         self.summary = summary
+        self.newPlayerHint = newPlayerHint
         self.timing = timing
         self.flavor = flavor
         self.declare = declare
@@ -137,6 +140,7 @@ public struct ArmyRuleOption: Codable, Sendable, Identifiable, Equatable {
         id = try container.decode(String.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
         summary = try container.decode(String.self, forKey: .summary)
+        newPlayerHint = try container.decodeIfPresent(String.self, forKey: .newPlayerHint)
         timing = try container.decodeIfPresent(String.self, forKey: .timing)
         flavor = try container.decodeIfPresent(String.self, forKey: .flavor)
         declare = try container.decodeIfPresent(String.self, forKey: .declare)

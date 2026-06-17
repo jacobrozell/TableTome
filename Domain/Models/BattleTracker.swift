@@ -114,6 +114,7 @@ public struct SpearheadUnit: Codable, Sendable, Identifiable, Equatable {
     public let control: Int?
     public let keywords: [String]
     public let notes: String?
+    public let modelCount: Int?
     public let weapons: [SpearheadWeapon]
     public let abilities: [TriggeredAbility]
 
@@ -126,6 +127,7 @@ public struct SpearheadUnit: Codable, Sendable, Identifiable, Equatable {
         control: Int? = nil,
         keywords: [String] = [],
         notes: String? = nil,
+        modelCount: Int? = nil,
         weapons: [SpearheadWeapon] = [],
         abilities: [TriggeredAbility] = []
     ) {
@@ -137,6 +139,7 @@ public struct SpearheadUnit: Codable, Sendable, Identifiable, Equatable {
         self.control = control
         self.keywords = keywords
         self.notes = notes
+        self.modelCount = modelCount
         self.weapons = weapons
         self.abilities = abilities
     }
@@ -151,6 +154,7 @@ public struct SpearheadUnit: Codable, Sendable, Identifiable, Equatable {
         control = try container.decodeIfPresent(Int.self, forKey: .control)
         keywords = try container.decodeIfPresent([String].self, forKey: .keywords) ?? []
         notes = try container.decodeIfPresent(String.self, forKey: .notes)
+        modelCount = try container.decodeIfPresent(Int.self, forKey: .modelCount)
         weapons = try container.decodeIfPresent([SpearheadWeapon].self, forKey: .weapons) ?? []
         abilities = try container.decodeIfPresent([TriggeredAbility].self, forKey: .abilities) ?? []
     }
@@ -166,19 +170,48 @@ public struct BattleTrackerState: Codable, Sendable, Equatable {
     public var currentPhase: BattleTurnPhase
     public var showAllAbilities: Bool
     public var usedOncePerBattleAbilityIds: Set<String>
+    public var playerOneVictoryPoints: Int
+    public var playerTwoVictoryPoints: Int
+    public var completedRoundChecklistSteps: [String: Set<String>]
+    public var unitWoundsRemaining: [String: Int]
+    public var completedDeploymentSteps: Set<String>
 
     public init(
         battleRound: Int = 1,
         activePlayerIsOne: Bool = true,
         currentPhase: BattleTurnPhase = .hero,
         showAllAbilities: Bool = false,
-        usedOncePerBattleAbilityIds: Set<String> = []
+        usedOncePerBattleAbilityIds: Set<String> = [],
+        playerOneVictoryPoints: Int = 0,
+        playerTwoVictoryPoints: Int = 0,
+        completedRoundChecklistSteps: [String: Set<String>] = [:],
+        unitWoundsRemaining: [String: Int] = [:],
+        completedDeploymentSteps: Set<String> = []
     ) {
         self.battleRound = battleRound
         self.activePlayerIsOne = activePlayerIsOne
         self.currentPhase = currentPhase
         self.showAllAbilities = showAllAbilities
         self.usedOncePerBattleAbilityIds = usedOncePerBattleAbilityIds
+        self.playerOneVictoryPoints = playerOneVictoryPoints
+        self.playerTwoVictoryPoints = playerTwoVictoryPoints
+        self.completedRoundChecklistSteps = completedRoundChecklistSteps
+        self.unitWoundsRemaining = unitWoundsRemaining
+        self.completedDeploymentSteps = completedDeploymentSteps
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        battleRound = try container.decodeIfPresent(Int.self, forKey: .battleRound) ?? 1
+        activePlayerIsOne = try container.decodeIfPresent(Bool.self, forKey: .activePlayerIsOne) ?? true
+        currentPhase = try container.decodeIfPresent(BattleTurnPhase.self, forKey: .currentPhase) ?? .hero
+        showAllAbilities = try container.decodeIfPresent(Bool.self, forKey: .showAllAbilities) ?? false
+        usedOncePerBattleAbilityIds = try container.decodeIfPresent(Set<String>.self, forKey: .usedOncePerBattleAbilityIds) ?? []
+        playerOneVictoryPoints = try container.decodeIfPresent(Int.self, forKey: .playerOneVictoryPoints) ?? 0
+        playerTwoVictoryPoints = try container.decodeIfPresent(Int.self, forKey: .playerTwoVictoryPoints) ?? 0
+        completedRoundChecklistSteps = try container.decodeIfPresent([String: Set<String>].self, forKey: .completedRoundChecklistSteps) ?? [:]
+        unitWoundsRemaining = try container.decodeIfPresent([String: Int].self, forKey: .unitWoundsRemaining) ?? [:]
+        completedDeploymentSteps = try container.decodeIfPresent(Set<String>.self, forKey: .completedDeploymentSteps) ?? []
     }
 }
 

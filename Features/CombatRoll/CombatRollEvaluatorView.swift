@@ -21,6 +21,7 @@ struct CombatRollEvaluatorView: View {
                 weaponProfileSection
                 diceSection
                 modifiersSection
+                weaponOptionsSection
                 evaluateButton
                 NavigationLink {
                     UnitMatchupEvaluatorView(ruleSections: ruleSections)
@@ -37,6 +38,7 @@ struct CombatRollEvaluatorView: View {
             .readableContentWidth()
             .padding(DesignTokens.Spacing.md)
         }
+        .tabBarScrollInset()
         .navigationTitle(String(localized: "Roll Evaluator"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -153,6 +155,31 @@ struct CombatRollEvaluatorView: View {
                 id: "rollEvaluator.saveModifier"
             )
         }
+    }
+
+    private var weaponOptionsSection: some View {
+        formSection(title: String(localized: "Weapon Rules")) {
+            rollOptionToggle(String(localized: "Crit (Auto-wound)"), keyPath: \.critAutoWound, id: "rollEvaluator.critAutoWound")
+            rollOptionToggle(String(localized: "Crit (Mortal)"), keyPath: \.critMortal, id: "rollEvaluator.critMortal")
+            rollOptionToggle(String(localized: "Mortal damage (skip save)"), keyPath: \.mortalDamage, id: "rollEvaluator.mortalDamage")
+        }
+    }
+
+    private func rollOptionToggle(
+        _ label: String,
+        keyPath: WritableKeyPath<CombatRollOptions, Bool>,
+        id: String
+    ) -> some View {
+        Toggle(isOn: Binding(
+            get: { viewModel.rollOptions[keyPath: keyPath] },
+            set: {
+                viewModel.rollOptions[keyPath: keyPath] = $0
+                viewModel.clearResults()
+            }
+        )) {
+            Text(label)
+        }
+        .accessibilityIdentifier(id)
     }
 
     private var evaluateButton: some View {

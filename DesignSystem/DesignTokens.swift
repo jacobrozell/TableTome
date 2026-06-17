@@ -16,4 +16,7 @@ public enum DesignTokens {
     }
 
     public static let minTouchTarget: CGFloat = 44
+
+    /// Scroll content inset so the last rows clear the floating tab bar on iPhone.
+    public static let tabBarScrollBottomInset: CGFloat = 64
 }

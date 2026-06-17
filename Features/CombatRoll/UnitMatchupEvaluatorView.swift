@@ -4,6 +4,7 @@ import TabletomeData
 
 struct UnitMatchupEvaluatorView: View {
     @StateObject private var viewModel: UnitMatchupEvaluatorViewModel
+    @StateObject private var multiAttackViewModel = MultiAttackEvaluatorViewModel()
     let ruleSections: [RuleSection]
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
@@ -51,6 +52,18 @@ struct UnitMatchupEvaluatorView: View {
         .onChange(of: viewModel.saveRoll) { _, _ in viewModel.clearResults() }
         .onChange(of: viewModel.wardRoll) { _, _ in viewModel.clearResults() }
         .onChange(of: viewModel.damage) { _, _ in viewModel.clearResults() }
+        .onChange(of: viewModel.attackerWeaponId) { _, _ in syncMultiAttack() }
+        .onChange(of: viewModel.defenderUnitId) { _, _ in syncMultiAttack() }
+    }
+
+    private func syncMultiAttack() {
+        guard let weapon = viewModel.selectedAttackerWeapon,
+              let unit = viewModel.selectedAttackerUnit,
+              let save = viewModel.selectedDefenderUnit?.save else { return }
+        multiAttackViewModel.apply(weapon: weapon, saveTarget: save, unitId: unit.id)
+        multiAttackViewModel.bind(weapon: weapon, unitId: unit.id)
+        multiAttackViewModel.hitModifier = 0
+        multiAttackViewModel.damage = viewModel.damage
     }
 
     private var matchupContent: some View {
@@ -60,14 +73,17 @@ struct UnitMatchupEvaluatorView: View {
                 matchupPanels
                 buffsSection
                 profileSection
+                weaponOptionsSection
                 diceSection
                 evaluateButton
                 resultsSection
-                ruleLinkSection
+                multiAttackSection
+                referenceLinksSection
             }
             .readableContentWidth()
             .padding(DesignTokens.Spacing.md)
         }
+        .tabBarScrollInset()
     }
 
     private var introSection: some View {
@@ -175,29 +191,86 @@ struct UnitMatchupEvaluatorView: View {
     @ViewBuilder
     private var profileSection: some View {
         if let weapon = viewModel.selectedAttackerWeapon,
-           let profile = weapon.numericRollProfile,
            let save = viewModel.selectedDefenderUnit?.save {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 Text(String(localized: "Attack Profile"))
                     .font(.title3.bold())
                 Text(
-                    "Hit \(profile.hit)+ · Wound \(profile.wound)+ · Rend \(profile.rend) · "
+                    "Hit \(weapon.hit)+ · Wound \(weapon.wound)+ · Rend \(weapon.rend) · "
                         + "Damage \(viewModel.damage) vs Save \(save)+"
                 )
                 .font(.callout)
                 .foregroundStyle(.secondary)
-                if weapon.damage != "\(viewModel.damage)" {
-                    Stepper(
-                        String(localized: "Damage \(viewModel.damage)"),
-                        value: $viewModel.damage,
-                        in: 1...6
-                    )
-                    .accessibilityIdentifier("matchup.damage")
+                if case .variable(let kind) = weapon.damageKind {
+                    Text("Rolled \(kind.rawValue) damage — set the result below.")
+                        .font(.caption)
+                        .foregroundStyle(.orange)
                 }
+                Stepper(
+                    "Damage \(viewModel.damage)",
+                    value: $viewModel.damage,
+                    in: 1...12
+                )
+                .accessibilityIdentifier("matchup.damage")
             }
             .padding(DesignTokens.Spacing.md)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+            .onAppear { syncMultiAttack() }
+        }
+    }
+
+    private var weaponOptionsSection: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            Text(String(localized: "Weapon Rules"))
+                .font(.headline)
+            rollOptionToggle(
+                String(localized: "Crit (Auto-wound)"),
+                keyPath: \.critAutoWound,
+                id: "matchup.critAutoWound"
+            )
+            rollOptionToggle(
+                String(localized: "Crit (Mortal)"),
+                keyPath: \.critMortal,
+                id: "matchup.critMortal"
+            )
+            rollOptionToggle(
+                String(localized: "Mortal damage (skip save)"),
+                keyPath: \.mortalDamage,
+                id: "matchup.mortalDamage"
+            )
+        }
+        .padding(DesignTokens.Spacing.md)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+    }
+
+    private func rollOptionToggle(
+        _ label: String,
+        keyPath: WritableKeyPath<CombatRollOptions, Bool>,
+        id: String
+    ) -> some View {
+        Toggle(isOn: Binding(
+            get: { viewModel.rollOptions[keyPath: keyPath] },
+            set: {
+                viewModel.rollOptions[keyPath: keyPath] = $0
+                viewModel.clearResults()
+            }
+        )) {
+            Text(label)
+                .font(.subheadline)
+        }
+        .accessibilityIdentifier(id)
+    }
+
+    @ViewBuilder
+    private var multiAttackSection: some View {
+        if viewModel.selectedAttackerWeapon != nil, viewModel.selectedDefenderUnit?.save != nil {
+            MultiAttackEvaluatorView(
+                viewModel: multiAttackViewModel,
+                weaponName: viewModel.selectedAttackerWeapon?.name ?? "",
+                ruleSections: ruleSections
+            )
         }
     }
 
@@ -259,7 +332,7 @@ struct UnitMatchupEvaluatorView: View {
     }
 
     @ViewBuilder
-    private var ruleLinkSection: some View {
+    private var referenceLinksSection: some View {
         if let combatSection = ruleSections.first(where: { $0.id == "combat-sequence" }) {
             NavigationLink {
                 RuleSectionDetailView(section: combatSection, allSections: ruleSections)
@@ -271,6 +344,15 @@ struct UnitMatchupEvaluatorView: View {
             }
             .accessibilityIdentifier("matchup.relatedRule")
         }
+        NavigationLink {
+            RulesGlossaryView()
+        } label: {
+            Label(String(localized: "Rules Glossary"), systemImage: "book.fill")
+                .font(.headline)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(minHeight: DesignTokens.minTouchTarget)
+        }
+        .accessibilityIdentifier("matchup.glossary")
     }
 
     private func opposingArmies(forAttackerId attackerId: String) -> [SpearheadArmy] {

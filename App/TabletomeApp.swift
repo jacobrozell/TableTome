@@ -3,11 +3,13 @@ import SwiftUI
 @main
 struct TabletomeApp: App {
     @StateObject private var dependencies = AppDependencies()
+    @StateObject private var learnNavigationCoordinator = LearnNavigationCoordinator()
 
     var body: some Scene {
         WindowGroup {
             RootTabView()
                 .environmentObject(dependencies)
+                .environmentObject(learnNavigationCoordinator)
                 .preferredColorScheme(colorScheme)
         }
     }

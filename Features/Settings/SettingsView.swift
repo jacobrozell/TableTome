@@ -2,8 +2,10 @@ import SwiftUI
 import TabletomeDomain
 
 struct SettingsView: View {
+    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
     @AppStorage("appearance") private var appearance = "system"
     @State private var showResetConfirmation = false
+    @State private var showsOnboarding = false
 
     var body: some View {
         List {
@@ -30,6 +32,17 @@ struct SettingsView: View {
                 }
                 .accessibilityIdentifier("settings.appearance")
                 .accessibilityHint(String(localized: "Changes app color scheme"))
+            }
+
+            Section(String(localized: "App Tour")) {
+                Button {
+                    showsOnboarding = true
+                } label: {
+                    Label(String(localized: "View App Tour"), systemImage: "book.pages")
+                        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                }
+                .accessibilityIdentifier("settings.viewOnboarding")
+                .accessibilityHint(String(localized: "Replays the first-launch welcome tour"))
             }
 
             Section(String(localized: "Support & Legal")) {
@@ -103,6 +116,14 @@ struct SettingsView: View {
             Button(String(localized: "Cancel"), role: .cancel) {}
         } message: {
             Text(String(localized: "This removes all Getting Started checkmarks. This cannot be undone."))
+        }
+        .fullScreenCover(isPresented: $showsOnboarding) {
+            OnboardingView(mode: .replay) { completion in
+                showsOnboarding = false
+                if case .openGettingStarted(let gameSystemId) = completion {
+                    learnNavigationCoordinator.openGettingStarted(gameSystemId: gameSystemId)
+                }
+            }
         }
     }
 

@@ -47,12 +47,11 @@ public struct GuideStepCard: View {
             }
             Spacer(minLength: 0)
             Image(systemName: "chevron.right")
-                .font(.caption)
-                .foregroundStyle(.tertiary)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.quaternary)
                 .accessibilityHidden(true)
         }
-        .padding(DesignTokens.Spacing.md)
-        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .surfaceCard()
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(title). \(summary)")
         .accessibilityHint(isComplete ? "Completed step" : "Opens step details")

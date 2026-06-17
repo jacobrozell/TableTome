@@ -87,7 +87,8 @@
           "damage": "2",
           "ability": "Companion"
         }
-      ]
+      ],
+      "modelCount": 1
     },
     {
       "id": "lord-veritant",
@@ -153,7 +154,8 @@
           "damage": "D3",
           "ability": "Anti-Wizard, Anti-Priest"
         }
-      ]
+      ],
+      "modelCount": 1
     },
     {
       "id": "prosecutors",
@@ -201,7 +203,8 @@
           "rend": 1,
           "damage": "1"
         }
-      ]
+      ],
+      "modelCount": 3
     },
     {
       "id": "liberators",
@@ -271,7 +274,8 @@
           "damage": "2",
           "ability": "Crit (Mortal)"
         }
-      ]
+      ],
+      "modelCount": 5
     }
   ]
 }

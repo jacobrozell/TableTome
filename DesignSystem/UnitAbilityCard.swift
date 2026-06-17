@@ -6,6 +6,8 @@ struct UnitAbilityCard: View {
     let phase: BattleTurnPhase
     let isUsed: Bool
     let onMarkUsed: (() -> Void)?
+    var ruleSections: [RuleSection] = []
+    var showsRollTools: Bool = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -17,7 +19,7 @@ struct UnitAbilityCard: View {
                         Text(ability.source.uppercased())
                             .font(.caption2.weight(.semibold))
                             .foregroundStyle(.secondary)
-                        Text(ability.name.uppercased())
+                        Text(ability.name)
                             .font(.headline)
                             .fixedSize(horizontal: false, vertical: true)
                     }
@@ -37,6 +39,12 @@ struct UnitAbilityCard: View {
                 }
 
                 labeledBlock(title: String(localized: "Effect"), body: ability.effect)
+
+                GlossaryChipsRow(text: ability.effect)
+
+                if showsRollTools {
+                    rollToolLinks
+                }
 
                 if ability.usageLimit == .oncePerBattle, let onMarkUsed {
                     Button(isUsed ? String(localized: "Used this battle") : String(localized: "Mark as used")) {
@@ -97,6 +105,27 @@ struct UnitAbilityCard: View {
     private var accessibilityActionHint: String? {
         guard ability.usageLimit == .oncePerBattle, onMarkUsed != nil, !isUsed else { return nil }
         return String(localized: "Double tap to mark as used")
+    }
+
+    private var rollToolLinks: some View {
+        HStack(spacing: DesignTokens.Spacing.sm) {
+            NavigationLink {
+                CombatRollEvaluatorView(ruleSections: ruleSections)
+            } label: {
+                Label(String(localized: "Roll Evaluator"), systemImage: "dice.fill")
+                    .font(.caption.weight(.semibold))
+            }
+            .buttonStyle(.bordered)
+            NavigationLink {
+                UnitMatchupEvaluatorView(ruleSections: ruleSections)
+            } label: {
+                Label(String(localized: "Unit Matchup"), systemImage: "arrow.left.arrow.right")
+                    .font(.caption.weight(.semibold))
+            }
+            .buttonStyle(.bordered)
+        }
+        .frame(minHeight: DesignTokens.minTouchTarget)
+        .accessibilityIdentifier("battleTracker.rollTools.\(ability.id)")
     }
 
     private var phaseBanner: some View {

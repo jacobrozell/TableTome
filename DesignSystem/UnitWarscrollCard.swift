@@ -89,7 +89,7 @@ struct UnitWarscrollCard: View {
                 Text(weapon.name)
                     .font(.subheadline.weight(.semibold))
                 Spacer()
-                if weapon.numericRollProfile != nil {
+                if weapon.numericRollProfile != nil || weapon.isRollEvaluable {
                     NavigationLink {
                         CombatRollEvaluatorView(
                             ruleSections: ruleSections,
@@ -130,7 +130,7 @@ struct UnitWarscrollCard: View {
     }
 
     private var evaluableWeapons: [SpearheadWeapon] {
-        unit.weapons.filter { $0.numericRollProfile != nil }
+        unit.weapons.filter(\.isRollEvaluable)
     }
 
     private var matchupLink: some View {

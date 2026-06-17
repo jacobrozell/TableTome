@@ -14,6 +14,7 @@ final class CombatRollEvaluatorViewModel: ObservableObject {
     @Published var hitModifier = 0
     @Published var woundModifier = 0
     @Published var saveModifier = 0
+    @Published var rollOptions = CombatRollOptions()
     @Published private(set) var evaluation: AttackRollEvaluation?
 
     func evaluate() {
@@ -29,7 +30,10 @@ final class CombatRollEvaluatorViewModel: ObservableObject {
                 saveRoll: saveRoll,
                 hitModifier: hitModifier,
                 woundModifier: woundModifier,
-                saveModifier: saveModifier
+                saveModifier: saveModifier,
+                critAutoWound: rollOptions.critAutoWound,
+                critMortal: rollOptions.critMortal,
+                mortalDamage: rollOptions.mortalDamage
             )
         )
     }
@@ -50,16 +54,19 @@ final class CombatRollEvaluatorViewModel: ObservableObject {
         hitModifier = 0
         woundModifier = 0
         saveModifier = 0
+        rollOptions = CombatRollOptions()
         evaluation = nil
     }
 
     func apply(weapon: SpearheadWeapon, defaultSave: Int = 4) {
-        guard let profile = weapon.numericRollProfile else { return }
-        hitTarget = profile.hit
-        woundTarget = profile.wound
-        rend = profile.rend
-        damage = profile.damage
+        hitTarget = weapon.hit
+        woundTarget = weapon.wound
+        rend = weapon.rend
         saveTarget = defaultSave
+        if case .fixed(let value) = weapon.damageKind {
+            damage = value
+        }
+        rollOptions = CombatRollOptions.from(weapon: weapon)
         evaluation = nil
     }
 }

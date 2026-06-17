@@ -121,11 +121,18 @@ public enum CombatMatchupBuffCatalog {
         }
     }
 
-    public static func matchupBuffs(attacker: SpearheadUnit?, defender: SpearheadUnit?) -> [CombatMatchupBuff] {
+    public static func matchupBuffs(
+        attacker: SpearheadUnit?,
+        defender: SpearheadUnit?,
+        weapon: SpearheadWeapon? = nil
+    ) -> [CombatMatchupBuff] {
         var result: [CombatMatchupBuff] = []
         if let attacker {
             result.append(contentsOf: buffs(for: attacker, side: .attacker))
             result.append(contentsOf: genericBuffs(for: .attacker))
+            if let weapon {
+                result.append(contentsOf: weapon.weaponBuffs(unitId: attacker.id))
+            }
         }
         if let defender {
             result.append(contentsOf: buffs(for: defender, side: .defender))

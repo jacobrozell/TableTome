@@ -16,6 +16,7 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
     @Published var woundRoll = 4
     @Published var saveRoll = 4
     @Published var wardRoll = 4
+    @Published var rollOptions = CombatRollOptions()
     @Published private(set) var evaluation: AttackRollEvaluation?
 
     private let catalogRepository: any SpearheadCatalogRepository
@@ -33,7 +34,7 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
     }
 
     var canEvaluate: Bool {
-        selectedAttackerWeapon != nil && selectedDefenderUnit?.save != nil
+        selectedAttackerWeapon?.isRollEvaluable == true && selectedDefenderUnit?.save != nil
     }
 
     var matchupTitle: String? {
@@ -43,7 +44,7 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
 
     var evaluateDamageButtonTitle: String {
         guard let title = matchupTitle else { return String(localized: "Evaluate Damage") }
-        return String(localized: "Evaluate Damage: \(title)")
+        return "Evaluate Damage: \(title)"
     }
 
     var selectedAttackerArmy: SpearheadArmy? {
@@ -71,13 +72,14 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
     }
 
     var evaluableWeapons: [SpearheadWeapon] {
-        selectedAttackerUnit?.weapons.filter { $0.numericRollProfile != nil } ?? []
+        selectedAttackerUnit?.weapons.filter(\.isRollEvaluable) ?? []
     }
 
     var matchupBuffs: [CombatMatchupBuff] {
         CombatMatchupBuffCatalog.matchupBuffs(
             attacker: selectedAttackerUnit,
-            defender: selectedDefenderUnit
+            defender: selectedDefenderUnit,
+            weapon: selectedAttackerWeapon
         )
     }
 
@@ -162,16 +164,16 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
 
     func evaluate() {
         guard let weapon = selectedAttackerWeapon,
-              let profile = weapon.numericRollProfile,
               let save = selectedDefenderUnit?.save else { return }
 
         let mods = CombatMatchupBuffCatalog.aggregateModifiers(from: matchupBuffs, enabledIds: enabledBuffIds)
+        let options = resolvedRollOptions()
         evaluation = CombatRollEngine.evaluate(
             AttackRollInput(
-                hitTarget: profile.hit,
-                woundTarget: profile.wound,
+                hitTarget: weapon.hit,
+                woundTarget: weapon.wound,
                 saveTarget: save,
-                rend: profile.rend,
+                rend: weapon.rend,
                 damage: damage,
                 hitRoll: hitRoll,
                 woundRoll: woundRoll,
@@ -180,7 +182,10 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
                 woundModifier: mods.wound,
                 saveModifier: mods.save,
                 wardTarget: mods.wardTarget,
-                wardRoll: mods.wardTarget == nil ? nil : wardRoll
+                wardRoll: mods.wardTarget == nil ? nil : wardRoll,
+                critAutoWound: options.critAutoWound,
+                critMortal: options.critMortal,
+                mortalDamage: options.mortalDamage
             )
         )
     }
@@ -194,10 +199,21 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
         woundRoll = 4
         saveRoll = 4
         wardRoll = 4
+        rollOptions = CombatRollOptions()
         enabledBuffIds = []
         evaluation = nil
         applyInitialSelection()
         syncProfileFromSelection()
+    }
+
+    func resolvedRollOptions() -> CombatRollOptions {
+        var options = rollOptions
+        guard let weapon = selectedAttackerWeapon, let unit = selectedAttackerUnit else { return options }
+        for buff in weapon.weaponBuffs(unitId: unit.id) where enabledBuffIds.contains(buff.id) {
+            if buff.name.contains("Auto-wound") { options.critAutoWound = true }
+            if buff.name.contains("Crit (Mortal)") { options.critMortal = true }
+        }
+        return options
     }
 
     private func applyInitialSelection() {
@@ -235,8 +251,15 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
     }
 
     private func syncProfileFromSelection() {
-        if let profile = selectedAttackerWeapon?.numericRollProfile {
-            damage = profile.damage
+        guard let weapon = selectedAttackerWeapon else { return }
+        if case .fixed(let value) = weapon.damageKind {
+            damage = value
+        } else if case .variable(let kind) = weapon.damageKind {
+            damage = kind == .d3 ? 2 : 3
+        }
+        rollOptions = CombatRollOptions.from(weapon: weapon)
+        if let unit = selectedAttackerUnit {
+            enabledBuffIds.formUnion(weapon.weaponBuffs(unitId: unit.id).map(\.id))
         }
     }
 

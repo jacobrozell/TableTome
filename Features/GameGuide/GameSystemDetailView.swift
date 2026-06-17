@@ -3,6 +3,7 @@ import TabletomeDomain
 
 struct GameSystemDetailView: View {
     let gameSystemId: String
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @EnvironmentObject private var dependencies: AppDependencies
     @State private var gameSystem: GameSystem?
     @State private var featuredArmies: [SpearheadArmy] = []
@@ -75,6 +76,23 @@ struct GameSystemDetailView: View {
                         }
                     }
 
+                    if gameSystemId == "aos-spearhead" {
+                        Section(String(localized: "Table Reference")) {
+                            NavigationLink {
+                                BattleTacticsReferenceView(ruleSections: gameSystem.ruleSections)
+                            } label: {
+                                Label(String(localized: "Battle Tactics & Twists"), systemImage: "rectangle.stack")
+                                    .frame(minHeight: DesignTokens.minTouchTarget)
+                            }
+                            NavigationLink {
+                                RulesGlossaryView()
+                            } label: {
+                                Label(String(localized: "Rules Glossary"), systemImage: "book.fill")
+                                    .frame(minHeight: DesignTokens.minTouchTarget)
+                            }
+                        }
+                    }
+
                     if let links = gameSystem.externalLinks, !links.isEmpty {
                         Section(String(localized: "Official Resources")) {
                             ForEach(links) { link in
@@ -87,6 +105,7 @@ struct GameSystemDetailView: View {
                     }
                 }
                 .listStyle(.insetGrouped)
+                .tabBarScrollInset()
             } else if let errorMessage {
                 EmptyStateView(title: String(localized: "Not Found"), message: errorMessage)
             } else {
@@ -94,7 +113,7 @@ struct GameSystemDetailView: View {
             }
         }
         .navigationTitle(gameSystem?.name ?? String(localized: "Game Guide"))
-        .navigationBarTitleDisplayMode(.large)
+        .navigationBarTitleDisplayMode(horizontalSizeClass == .regular ? .large : .inline)
         .task { await load() }
     }
 

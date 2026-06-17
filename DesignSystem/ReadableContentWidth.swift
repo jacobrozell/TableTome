@@ -24,4 +24,9 @@ public extension View {
     func readableContentWidth() -> some View {
         modifier(ReadableContentWidthModifier())
     }
+
+    /// Extra bottom margin on scrollable content so it is not hidden behind the tab bar.
+    func tabBarScrollInset() -> some View {
+        contentMargins(.bottom, DesignTokens.tabBarScrollBottomInset, for: .scrollContent)
+    }
 }

@@ -85,8 +85,48 @@ struct MatchStepDetailView: View {
                 )
                 loadoutSummarySection(showRegiment: true, showEnhancement: true)
             }
+        case "realm-battlefield":
+            deploymentSetupSection
+        case "fight-battle":
+            battleStartLinks
         default:
             EmptyView()
+        }
+    }
+
+    private var deploymentSetupSection: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            DeploymentChecklistCard(
+                completedSteps: BattleTrackerStore.load().completedDeploymentSteps,
+                onToggle: { step, complete in
+                    var state = BattleTrackerStore.load()
+                    if complete {
+                        state.completedDeploymentSteps.insert(step.rawValue)
+                    } else {
+                        state.completedDeploymentSteps.remove(step.rawValue)
+                    }
+                    BattleTrackerStore.save(state)
+                }
+            )
+            NavigationLink {
+                BattleTacticsReferenceView(ruleSections: ruleSections)
+            } label: {
+                Label(String(localized: "Battle Tactics & Twists"), systemImage: "rectangle.stack")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(minHeight: DesignTokens.minTouchTarget)
+            }
+        }
+    }
+
+    private var battleStartLinks: some View {
+        NavigationLink {
+            BattleTacticsReferenceView(ruleSections: ruleSections)
+        } label: {
+            Label(String(localized: "Battle Tactics & Twists"), systemImage: "rectangle.stack")
+                .font(.headline)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(minHeight: DesignTokens.minTouchTarget)
         }
     }
 

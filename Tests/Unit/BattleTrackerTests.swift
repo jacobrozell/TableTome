@@ -55,6 +55,10 @@ final class BattleTrackerTests: XCTestCase {
         state.battleRound = 2
         state.currentPhase = .shooting
         state.usedOncePerBattleAbilityIds = ["storm-charge"]
+        state.playerOneVictoryPoints = 3
+        state.playerTwoVictoryPoints = 1
+        state.completedRoundChecklistSteps = ["round-2": ["drawTwistCard"]]
+        state.unitWoundsRemaining = ["vigilant-brotherhood:liberators": 7]
 
         BattleTrackerStore.save(state)
         let loaded = BattleTrackerStore.load()
@@ -62,5 +66,9 @@ final class BattleTrackerTests: XCTestCase {
         XCTAssertEqual(loaded.battleRound, 2)
         XCTAssertEqual(loaded.currentPhase, .shooting)
         XCTAssertTrue(loaded.usedOncePerBattleAbilityIds.contains("storm-charge"))
+        XCTAssertEqual(loaded.playerOneVictoryPoints, 3)
+        XCTAssertEqual(loaded.playerTwoVictoryPoints, 1)
+        XCTAssertEqual(loaded.completedRoundChecklistSteps["round-2"], ["drawTwistCard"])
+        XCTAssertEqual(loaded.unitWoundsRemaining["vigilant-brotherhood:liberators"], 7)
     }
 }

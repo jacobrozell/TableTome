@@ -24,6 +24,12 @@ public struct ArmyRuleOptionCard: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
+                if let hint = option.newPlayerHint {
+                    Label(hint, systemImage: "lightbulb.fill")
+                        .font(.caption)
+                        .foregroundStyle(.orange)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
             Spacer(minLength: 0)
             if isSelected {

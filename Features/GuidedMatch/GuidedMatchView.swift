@@ -118,6 +118,7 @@ struct GuidedMatchView: View {
             guidedMatchSections(catalog: catalog, useSplitSelection: false)
         }
         .listStyle(.insetGrouped)
+        .tabBarScrollInset()
         .readableContentWidth()
     }
 
@@ -135,29 +136,42 @@ struct GuidedMatchView: View {
 
     @ViewBuilder
     private var matchupSection: some View {
-        Section(String(localized: "Starter Set")) {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                Text(SpearheadFeaturedArmies.starterMatchupTitle)
-                    .font(.headline)
+        Section {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                Label {
+                    Text(SpearheadFeaturedArmies.starterMatchupTitle)
+                        .font(.headline)
+                } icon: {
+                    Image(systemName: "flag.2.crossed.fill")
+                        .foregroundStyle(Color.accentColor)
+                }
                 Text(String(localized: "Quick-start the Skaventide / Ultimate Starter Set matchup with full warscrolls, setup, and battle tools."))
-                    .font(.caption)
+                    .font(.callout)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
                 Button(String(localized: "Use Starter Matchup")) {
                     viewModel.applyStarterMatchup()
                 }
                 .buttonStyle(.borderedProminent)
-                .frame(minHeight: DesignTokens.minTouchTarget)
+                .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
                 .accessibilityIdentifier("guidedMatch.starterMatchup")
             }
+            .padding(.vertical, DesignTokens.Spacing.xs)
+        } header: {
+            Text(String(localized: "Starter Set"))
         }
 
         if let summary = viewModel.matchupSummary {
             Section(String(localized: "Today's Match")) {
-                Text(summary)
-                    .font(.headline)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .accessibilityIdentifier("guidedMatch.matchupSummary")
+                Label {
+                    Text(summary)
+                        .font(.subheadline.weight(.medium))
+                        .fixedSize(horizontal: false, vertical: true)
+                } icon: {
+                    Image(systemName: "person.2.fill")
+                        .foregroundStyle(.secondary)
+                }
+                .accessibilityIdentifier("guidedMatch.matchupSummary")
             }
         }
     }
@@ -167,14 +181,22 @@ struct GuidedMatchView: View {
         if viewModel.matchState.hasBothArmies, viewModel.setupProgress.total > 0 {
             Section(String(localized: "Setup Progress")) {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    Text(
-                        String(
-                            localized: "\(viewModel.setupProgress.completed) of \(viewModel.setupProgress.total) steps complete"
+                    HStack {
+                        Text(
+                            String(
+                                localized: "\(viewModel.setupProgress.completed) of \(viewModel.setupProgress.total) steps complete"
+                            )
                         )
-                    )
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        Spacer()
+                        ProgressBadge(
+                            done: viewModel.setupProgress.completed,
+                            total: viewModel.setupProgress.total
+                        )
+                    }
                     ProgressView(value: viewModel.setupProgressFraction)
+                        .tint(.accentColor)
                         .accessibilityLabel(String(localized: "Match setup progress"))
                 }
                 .accessibilityIdentifier("guidedMatch.setupProgress")

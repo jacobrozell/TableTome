@@ -19,6 +19,9 @@ public struct AttackRollInput: Sendable, Equatable {
     public let saveModifier: Int
     public let wardTarget: Int?
     public let wardRoll: Int?
+    public let critAutoWound: Bool
+    public let critMortal: Bool
+    public let mortalDamage: Bool
 
     public init(
         hitTarget: Int,
@@ -33,7 +36,10 @@ public struct AttackRollInput: Sendable, Equatable {
         woundModifier: Int = 0,
         saveModifier: Int = 0,
         wardTarget: Int? = nil,
-        wardRoll: Int? = nil
+        wardRoll: Int? = nil,
+        critAutoWound: Bool = false,
+        critMortal: Bool = false,
+        mortalDamage: Bool = false
     ) {
         self.hitTarget = hitTarget
         self.woundTarget = woundTarget
@@ -48,6 +54,9 @@ public struct AttackRollInput: Sendable, Equatable {
         self.saveModifier = saveModifier
         self.wardTarget = wardTarget
         self.wardRoll = wardRoll
+        self.critAutoWound = critAutoWound
+        self.critMortal = critMortal
+        self.mortalDamage = mortalDamage
     }
 }
 
@@ -84,13 +93,19 @@ public enum CombatRollEngine: Sendable {
 
         let cappedHitMod = capped(input.hitModifier)
         let effectiveHit = input.hitRoll + cappedHitMod
-        let hitSuccess = input.hitRoll != 1 && effectiveHit >= input.hitTarget
+        let criticalHit = input.hitRoll == 6 && input.critAutoWound
+        let hitSuccess = input.hitRoll != 1 && (effectiveHit >= input.hitTarget || criticalHit)
         steps.append(
             AttackRollStep(
                 id: "hit",
                 name: "Hit Roll",
                 outcome: hitSuccess ? .success : .failure,
-                explanation: hitExplanation(input: input, effective: effectiveHit, cappedMod: cappedHitMod)
+                explanation: hitExplanation(
+                    input: input,
+                    effective: effectiveHit,
+                    cappedMod: cappedHitMod,
+                    criticalHit: criticalHit
+                )
             )
         )
 
@@ -100,13 +115,21 @@ public enum CombatRollEngine: Sendable {
 
         let cappedWoundMod = capped(input.woundModifier)
         let effectiveWound = input.woundRoll + cappedWoundMod
-        let woundSuccess = input.woundRoll != 1 && effectiveWound >= input.woundTarget
+        let criticalWound = input.woundRoll == 6 && input.critMortal
+        let woundSuccess = criticalHit
+            || (input.woundRoll != 1 && effectiveWound >= input.woundTarget)
         steps.append(
             AttackRollStep(
                 id: "wound",
                 name: "Wound Roll",
                 outcome: woundSuccess ? .success : .failure,
-                explanation: woundExplanation(input: input, effective: effectiveWound, cappedMod: cappedWoundMod)
+                explanation: woundExplanation(
+                    input: input,
+                    effective: effectiveWound,
+                    cappedMod: cappedWoundMod,
+                    criticalHit: criticalHit,
+                    criticalWound: criticalWound
+                )
             )
         )
 
@@ -114,22 +137,35 @@ public enum CombatRollEngine: Sendable {
             return AttackRollEvaluation(steps: steps, damageDealt: 0)
         }
 
-        let effectiveSave = input.saveRoll + input.saveModifier - input.rend
-        let saveSuccess = input.saveRoll != 1 && effectiveSave >= input.saveTarget
-        steps.append(
-            AttackRollStep(
-                id: "save",
-                name: "Save Roll",
-                outcome: saveSuccess ? .success : .failure,
-                explanation: saveExplanation(input: input, effective: effectiveSave)
+        let skipSave = input.mortalDamage || criticalWound
+        if skipSave {
+            steps.append(
+                AttackRollStep(
+                    id: "save",
+                    name: "Save Roll",
+                    outcome: .failure,
+                    explanation: criticalWound
+                        ? "Crit (Mortal) — unmodified wound roll of 6. No save roll; mortal damage."
+                        : "Mortal damage — no save roll."
+                )
             )
-        )
-
-        guard !saveSuccess else {
-            return AttackRollEvaluation(steps: steps, damageDealt: 0)
+        } else {
+            let effectiveSave = input.saveRoll + input.saveModifier - input.rend
+            let saveSuccess = input.saveRoll != 1 && effectiveSave >= input.saveTarget
+            steps.append(
+                AttackRollStep(
+                    id: "save",
+                    name: "Save Roll",
+                    outcome: saveSuccess ? .success : .failure,
+                    explanation: saveExplanation(input: input, effective: effectiveSave)
+                )
+            )
+            guard !saveSuccess else {
+                return AttackRollEvaluation(steps: steps, damageDealt: 0)
+            }
         }
 
-        if let wardTarget = input.wardTarget, let wardRoll = input.wardRoll {
+        if let wardTarget = input.wardTarget, let wardRoll = input.wardRoll, !skipSave {
             let wardSuccess = wardRoll != 1 && wardRoll >= wardTarget
             steps.append(
                 AttackRollStep(
@@ -146,12 +182,13 @@ public enum CombatRollEngine: Sendable {
 
         let damage = input.damage
         if damage > 0 {
+            let mortalNote = skipSave ? " (mortal)" : ""
             steps.append(
                 AttackRollStep(
                     id: "damage",
                     name: "Damage",
                     outcome: .success,
-                    explanation: "Save failed — \(damage) damage point\(damage == 1 ? "" : "s") to allocate."
+                    explanation: "\(damage) damage point\(damage == 1 ? "" : "s")\(mortalNote) to allocate."
                 )
             )
         }
@@ -163,17 +200,37 @@ public enum CombatRollEngine: Sendable {
         min(max(modifier, -modifierCap), modifierCap)
     }
 
-    private static func hitExplanation(input: AttackRollInput, effective: Int, cappedMod: Int) -> String {
+    private static func hitExplanation(
+        input: AttackRollInput,
+        effective: Int,
+        cappedMod: Int,
+        criticalHit: Bool
+    ) -> String {
         if input.hitRoll == 1 {
             return "Unmodified roll of 1 always fails."
+        }
+        if criticalHit {
+            return "Unmodified roll of 6 with Crit (Auto-wound) — automatic wound."
         }
         let modNote = cappedMod == 0 ? "" : " (modifier capped to \(cappedMod >= 0 ? "+" : "")\(cappedMod))"
         return "Rolled \(input.hitRoll)\(modNote) vs Hit \(input.hitTarget)+ — \(effective >= input.hitTarget ? "hit" : "miss")."
     }
 
-    private static func woundExplanation(input: AttackRollInput, effective: Int, cappedMod: Int) -> String {
+    private static func woundExplanation(
+        input: AttackRollInput,
+        effective: Int,
+        cappedMod: Int,
+        criticalHit: Bool,
+        criticalWound: Bool
+    ) -> String {
+        if criticalHit {
+            return "Crit (Auto-wound) from hit roll — wound succeeded automatically."
+        }
         if input.woundRoll == 1 {
             return "Unmodified roll of 1 always fails."
+        }
+        if criticalWound {
+            return "Unmodified roll of 6 with Crit (Mortal) — wound succeeds; damage will be mortal."
         }
         let modNote = cappedMod == 0 ? "" : " (modifier capped to \(cappedMod >= 0 ? "+" : "")\(cappedMod))"
         return "Rolled \(input.woundRoll)\(modNote) vs Wound \(input.woundTarget)+ — \(effective >= input.woundTarget ? "wound" : "no wound")."

@@ -45,9 +45,7 @@ struct LoadoutSummaryCard: View {
                     .foregroundStyle(.tertiary)
             }
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .surfaceCard()
     }
 
     private func loadoutRow(title: String, option: ArmyRuleOption) -> some View {

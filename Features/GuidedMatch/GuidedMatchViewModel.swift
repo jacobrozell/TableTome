@@ -103,6 +103,7 @@ final class GuidedMatchViewModel: ObservableObject {
 
     func applyStarterMatchup() {
         SpearheadFeaturedArmies.applyStarterMatchup(to: &matchState)
+        BattleTrackerStore.reset()
         persist()
     }
 

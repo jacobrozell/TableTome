@@ -1,16 +1,27 @@
 import SwiftUI
 
+enum AppTab: Hashable {
+    case learn
+    case rules
+    case settings
+}
+
 struct RootTabView: View {
     @EnvironmentObject private var dependencies: AppDependencies
+    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
+    @State private var showsOnboarding = false
+    @State private var selectedTab: AppTab = .learn
+    @State private var learnPath = NavigationPath()
 
     var body: some View {
-        TabView {
-            NavigationStack {
+        TabView(selection: $selectedTab) {
+            NavigationStack(path: $learnPath) {
                 HomeView(viewModel: dependencies.makeHomeViewModel())
             }
             .tabItem {
                 Label(String(localized: "Learn"), systemImage: "book.fill")
             }
+            .tag(AppTab.learn)
             .accessibilityIdentifier("tab.learn")
 
             NavigationStack {
@@ -19,6 +30,7 @@ struct RootTabView: View {
             .tabItem {
                 Label(String(localized: "Rules"), systemImage: "doc.text.fill")
             }
+            .tag(AppTab.rules)
             .accessibilityIdentifier("tab.rules")
 
             NavigationStack {
@@ -27,7 +39,42 @@ struct RootTabView: View {
             .tabItem {
                 Label(String(localized: "Settings"), systemImage: "gearshape.fill")
             }
+            .tag(AppTab.settings)
             .accessibilityIdentifier("tab.settings")
         }
+        .fullScreenCover(isPresented: $showsOnboarding) {
+            OnboardingView(mode: .firstLaunch, onFinished: handleOnboardingCompletion)
+        }
+        .task {
+            if OnboardingStore.shouldPresentOnLaunch, !showsOnboarding {
+                showsOnboarding = true
+            }
+        }
+        .onChange(of: learnNavigationCoordinator.pendingAction) { _, _ in
+            applyPendingLearnNavigation()
+        }
+    }
+
+    private func handleOnboardingCompletion(_ completion: OnboardingCompletion) {
+        showsOnboarding = false
+        switch completion {
+        case .exploreApp:
+            break
+        case .openGettingStarted(let gameSystemId):
+            openGettingStarted(gameSystemId: gameSystemId)
+        }
+    }
+
+    private func applyPendingLearnNavigation() {
+        guard let action = learnNavigationCoordinator.consumePendingAction() else { return }
+        switch action {
+        case .openGettingStarted(let gameSystemId):
+            openGettingStarted(gameSystemId: gameSystemId)
+        }
+    }
+
+    private func openGettingStarted(gameSystemId: String) {
+        selectedTab = .learn
+        learnPath = NavigationPath([GettingStartedLink(gameSystemId: gameSystemId)])
     }
 }

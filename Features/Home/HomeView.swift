@@ -28,12 +28,16 @@ struct HomeView: View {
                     .accessibilityIdentifier("home.gameSystem.\(system.id)")
                 }
                 .listStyle(.insetGrouped)
+                .tabBarScrollInset()
                 .accessibilityIdentifier("home.gameSystemList")
             }
         }
         .navigationTitle(String(localized: "Learn"))
         .navigationDestination(for: String.self) { systemId in
             GameSystemDetailView(gameSystemId: systemId)
+        }
+        .navigationDestination(for: GettingStartedLink.self) { link in
+            GettingStartedDestinationView(gameSystemId: link.gameSystemId)
         }
         .task { await viewModel.load() }
         .refreshable { await viewModel.load() }

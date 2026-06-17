@@ -5,6 +5,7 @@ struct VictoryPointsCard: View {
     let playerTwoName: String
     let playerOneVP: Int
     let playerTwoVP: Int
+    var highlightsScoring: Bool = false
     let onAdjust: (Bool, Int) -> Void
     let onQuickAdd: (Bool, Int) -> Void
 
@@ -12,6 +13,16 @@ struct VictoryPointsCard: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Text(String(localized: "Victory Points"))
                 .font(.headline)
+
+            if highlightsScoring {
+                Label(
+                    String(localized: "Score objectives and battle tactics for the active player before ending the turn."),
+                    systemImage: "star.circle.fill"
+                )
+                .font(.caption)
+                .foregroundStyle(Color.accentColor)
+                .fixedSize(horizontal: false, vertical: true)
+            }
 
             HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
                 vpColumn(name: playerOneName, vp: playerOneVP, isPlayerOne: true)
@@ -24,6 +35,13 @@ struct VictoryPointsCard: View {
                 .foregroundStyle(.secondary)
         }
         .surfaceCard()
+        .overlay {
+            if highlightsScoring {
+                RoundedRectangle(cornerRadius: DesignTokens.Radius.lg)
+                    .strokeBorder(Color.accentColor.opacity(0.35), lineWidth: 1.5)
+            }
+        }
+        .id("victoryPoints")
         .accessibilityIdentifier("battleTracker.victoryPoints")
     }
 

@@ -3,7 +3,7 @@ import Foundation
 /// Persists whether the user has finished the first-launch app tour.
 enum OnboardingStore: Sendable {
     static let completedKey = "onboarding_completed"
-    static let skipLaunchArgument = "-skip_onboarding"
+    static let skipLaunchArgument = AppLaunchArguments.skipOnboarding
 
     private static var isEnabled: Bool {
         !ProcessInfo.processInfo.arguments.contains(skipLaunchArgument)

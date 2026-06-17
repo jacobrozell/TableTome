@@ -33,6 +33,13 @@ struct BattleTrackerCoachCard: View {
                 localized: "After resolving, tap Apply Damage to update the wound tracker — no need to leave the battle tracker."
             ),
             systemImage: "heart.fill"
+        ),
+        CoachMarkStep(
+            title: String(localized: "Score at end of turn"),
+            detail: String(
+                localized: "In the End phase, add victory points for objectives and battle tactics using the quick-add buttons, then pass the phone."
+            ),
+            systemImage: "star.circle.fill"
         )
     ]
 
@@ -105,26 +112,47 @@ struct BattleTrackerCoachCard: View {
 struct PhaseGuidanceBar: View {
     let phase: BattleTurnPhase
 
+    private var quickTips: [String] {
+        PhaseContextCoach.quickTips(for: phase)
+    }
+
     var body: some View {
-        HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
-            Image(systemName: "lightbulb.fill")
-                .font(.caption)
-                .foregroundStyle(.yellow)
-                .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                Text(phase.title)
-                    .font(.caption.weight(.semibold))
-                Text(phase.newPlayerSummary)
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
+                Image(systemName: "lightbulb.fill")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
+                    .foregroundStyle(.yellow)
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                    Text(phase.title)
+                        .font(.caption.weight(.semibold))
+                    Text(phase.newPlayerSummary)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+
+            if !quickTips.isEmpty {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                    ForEach(Array(quickTips.enumerated()), id: \.offset) { _, tip in
+                        HStack(alignment: .top, spacing: DesignTokens.Spacing.xs) {
+                            Text("•")
+                                .font(.caption.weight(.bold))
+                                .foregroundStyle(.secondary)
+                            Text(tip)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                }
             }
         }
         .padding(DesignTokens.Spacing.sm)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(phase.title). \(phase.newPlayerSummary)")
         .accessibilityIdentifier("battleTracker.phaseGuidance.\(phase.id)")
     }
 }

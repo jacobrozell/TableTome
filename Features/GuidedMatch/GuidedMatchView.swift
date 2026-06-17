@@ -6,6 +6,7 @@ struct GuidedMatchView: View {
     let ruleSections: [RuleSection]
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     @State private var selectedDestination: GuidedMatchDestination?
 
     init(viewModel: GuidedMatchViewModel, ruleSections: [RuleSection] = []) {
@@ -29,8 +30,22 @@ struct GuidedMatchView: View {
         }
         .navigationTitle(String(localized: "Guided Match"))
         .navigationBarTitleDisplayMode(horizontalSizeClass == .regular ? .inline : .large)
-        .task { await viewModel.load() }
+        .task {
+            await viewModel.load()
+            guard AppLaunchArguments.shouldApplyStarterMatchup else { return }
+            viewModel.applyStarterMatchup()
+            if horizontalSizeClass == .regular {
+                selectedDestination = .battleTracker
+            }
+        }
         .accessibilityIdentifier("guidedMatch.screen")
+    }
+
+    private var isPadLandscape: Bool {
+        TabletomeLayout.isPadLandscape(
+            horizontalSizeClass: horizontalSizeClass,
+            verticalSizeClass: verticalSizeClass
+        )
     }
 
     // MARK: - iPad
@@ -43,9 +58,18 @@ struct GuidedMatchView: View {
             }
             .listStyle(.sidebar)
             .navigationTitle(String(localized: "Guided Match"))
+            .navigationSplitViewColumnWidth(
+                min: isPadLandscape ? 220 : 260,
+                ideal: isPadLandscape ? 260 : 300,
+                max: isPadLandscape ? 300 : 340
+            )
         } detail: {
             guidedMatchDetail(catalog: catalog)
-                .readableContentWidth()
+                .modifier(GuidedMatchDetailWidth(destination: selectedDestination))
+        }
+        .onChange(of: viewModel.matchState.hasBothArmies) { _, hasBoth in
+            guard hasBoth, horizontalSizeClass == .regular, selectedDestination == nil else { return }
+            selectedDestination = .battleTracker
         }
     }
 
@@ -148,6 +172,9 @@ struct GuidedMatchView: View {
                     .fixedSize(horizontal: false, vertical: true)
                 Button(String(localized: "Use Starter Matchup")) {
                     viewModel.applyStarterMatchup()
+                    if horizontalSizeClass == .regular {
+                        selectedDestination = .battleTracker
+                    }
                 }
                 .buttonStyle(.borderedProminent)
                 .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
@@ -463,5 +490,17 @@ private struct PlayerArmyRow: View {
             return String(localized: "Tap to choose faction and army")
         }
         return "\(faction.name) — \(army.name)"
+    }
+}
+
+private struct GuidedMatchDetailWidth: ViewModifier {
+    let destination: GuidedMatchDestination?
+
+    func body(content: Content) -> some View {
+        if destination == .battleTracker {
+            content.frame(maxWidth: .infinity, alignment: .leading)
+        } else {
+            content.readableContentWidth()
+        }
     }
 }

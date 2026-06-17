@@ -48,6 +48,8 @@ struct RootTabView: View {
         .task {
             if OnboardingStore.shouldPresentOnLaunch, !showsOnboarding {
                 showsOnboarding = true
+            } else if AppLaunchArguments.shouldOpenGuidedMatch {
+                openGuidedMatch(gameSystemId: OnboardingCompletion.defaultGameSystemId)
             }
         }
         .onChange(of: learnNavigationCoordinator.pendingAction) { _, _ in

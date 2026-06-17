@@ -29,6 +29,13 @@ struct BattleGuideCard: View {
                 ) {
                     onAction()
                 }
+            } else {
+                PrimaryButton(
+                    title: String(localized: "Got it"),
+                    accessibilityId: "battleGuide.complete"
+                ) {
+                    onAction()
+                }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

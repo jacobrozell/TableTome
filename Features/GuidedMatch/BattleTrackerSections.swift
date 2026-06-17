@@ -105,46 +105,6 @@ struct BattleTrackerBothLoadoutsSection: View {
     }
 }
 
-struct BattleTrackerWoundTrackerSection: View {
-    let playerOneName: String
-    let playerTwoName: String
-    let playerOneArmy: SpearheadArmy?
-    let playerTwoArmy: SpearheadArmy?
-    let woundsRemaining: [String: Int]
-    let onChange: (String, Int) -> Void
-
-    var body: some View {
-        DisclosureGroup {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                if let army = playerOneArmy {
-                    UnitWoundTrackerSection(
-                        title: playerOneName,
-                        armyId: army.id,
-                        units: army.units,
-                        woundsRemaining: woundsRemaining,
-                        onChange: onChange
-                    )
-                }
-                if let army = playerTwoArmy {
-                    UnitWoundTrackerSection(
-                        title: playerTwoName,
-                        armyId: army.id,
-                        units: army.units,
-                        woundsRemaining: woundsRemaining,
-                        onChange: onChange
-                    )
-                }
-            }
-            .padding(.top, DesignTokens.Spacing.sm)
-        } label: {
-            Label(String(localized: "Wound Tracker"), systemImage: "heart.fill")
-                .font(.headline)
-        }
-        .surfaceCard()
-        .accessibilityIdentifier("battleTracker.woundTracker")
-    }
-}
-
 struct BattleTrackerControlPanel: View {
     @ObservedObject var viewModel: BattlePhaseTrackerViewModel
 
@@ -299,6 +259,7 @@ struct BattleTrackerRoundAndScoreSection: View {
                 playerTwoName: viewModel.playerTwoName,
                 playerOneVP: viewModel.trackerState.playerOneVictoryPoints,
                 playerTwoVP: viewModel.trackerState.playerTwoVictoryPoints,
+                highlightsScoring: viewModel.trackerState.currentPhase == .endOfTurn,
                 onAdjust: { viewModel.adjustVictoryPoints(playerIsOne: $0, delta: $1) },
                 onQuickAdd: { viewModel.adjustVictoryPoints(playerIsOne: $0, delta: $1) }
             )

@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "armyId": "gnawfeast-clawpack",
+  "battleTraits": [
+    {
+      "id": "lurking-vermintide",
+      "name": "The Lurking Vermintide",
+      "summary": "Pick an undeployed unit; it starts in the tunnels below. Units still there after round 3 without using Gnawhole Ambush are destroyed.",
+      "timing": "Once per battle, Deployment Phase",
+      "phases": [
+        "deployment"
+      ],
+      "usageLimit": "oncePerBattle",
+      "declare": "Pick a friendly unit that has not been deployed.",
+      "effect": "The target is set up in reserve in the tunnels below. Units still in the tunnels after round 3 without using Gnawhole Ambush are destroyed."
+    },
+    {
+      "id": "gnawhole-ambush",
+      "name": "Gnawhole Ambush",
+      "summary": "Pick a unit in the tunnels below; set it up within 6\" of a battlefield corner and more than 9\" from all enemy units.",
+      "timing": "Your Movement Phase, Keywords: Core",
+      "phases": [
+        "movement"
+      ],
+      "usageLimit": "eachTurn",
+      "declare": "Pick a friendly unit in the tunnels below.",
+      "effect": "Set up that unit wholly within 6\" of a battlefield corner and more than 9\" from all enemy units."
+    }
+  ],
+  "units": [
+    {
+      "id": "clawlord",
+      "name": "Clawlord on Gnaw-beast",
+      "abilities": [
+        {
+          "id": "cornered-rat",
+          "name": "Cornered Rat",
+          "source": "Clawlord on Gnaw-beast",
+          "flavor": "A Clawlord in fear for their life fights with rabid ferocity.",
+          "phases": [
+            "hero",
+            "movement",
+            "shooting",
+            "charge",
+            "combat",
+            "endOfTurn"
+          ],
+          "usageLimit": "passive",
+          "effect": "While this unit is damaged, add 3 to the Attacks characteristic of its Warpforged Halberd.",
+          "kind": "passive"
+        }
+      ]
+    },
+    {
+      "id": "grey-seer",
+      "name": "Grey Seer",
+      "abilities": [
+        {
+          "id": "will-of-horned-rat",
+          "name": "Will of the Horned Rat",
+          "source": "Grey Seer",
+          "flavor": "None among the Skaven clans may defy the commands of a Grey Seer \u2014 openly, at least\u2026",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 13\" of this unit, then roll a dice.",
+          "effect": "On a 3+, add the roll to the target's control score until the start of your next turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "wither",
+          "name": "Wither",
+          "source": "Grey Seer",
+          "flavor": "The Grey Seer hurls a glowing green globe of magical energy at the foe. Anyone touched by the globe starts to shrivel and wither away.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible enemy unit within 13\", then make a casting roll of 2D6.",
+          "effect": "On a 6+, inflict D3 mortal damage on the target.",
+          "kind": "spell"
+        }
+      ]
+    },
+    {
+      "id": "warlock-engineer",
+      "name": "Warlock Engineer",
+      "abilities": [
+        {
+          "id": "unleashed-warp-fury",
+          "name": "Unleashed Warp-Fury",
+          "source": "Warlock Engineer",
+          "flavor": "Warpstone hammered into their flesh drives them into a frenzy.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "oncePerBattle",
+          "effect": "Inflict D3 mortal damage on this unit. Then add 1 to the Attacks characteristic of its melee weapons this phase.",
+          "kind": "ability"
+        },
+        {
+          "id": "more-more-warp-energy",
+          "name": "More-More Warp Energy!",
+          "source": "Warlock Engineer",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "reaction",
+          "declare": "You declared a Shoot ability for this unit and it has not moved this turn.",
+          "effect": "Roll a dice. On a 2+, set the Damage of its Warplock Musket to 3 this phase. On a 1, inflict D3 mortal damage on this unit.",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "clanrats",
+      "name": "Clanrats",
+      "abilities": [
+        {
+          "id": "seething-swarm",
+          "name": "Seething Swarm",
+          "source": "Clanrats",
+          "flavor": "Clanrats overwhelm enemies with seemingly limitless numbers.",
+          "phases": [
+            "endOfAnyTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "effect": "You can return D3 slain models to this unit.",
+          "kind": "ability"
+        }
+      ]
+    }
+  ]
+}

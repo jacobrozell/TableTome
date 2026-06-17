@@ -1,0 +1,833 @@
+{
+  "schemaVersion": 1,
+  "factions": [
+    {
+      "id": "stormcast-eternals",
+      "name": "Stormcast Eternals",
+      "alliance": "order",
+      "armies": [
+        {
+          "id": "vigilant-brotherhood",
+          "name": "Vigilant Brotherhood",
+          "general": "Lord-Vigilant on Gryph-stalker",
+          "tagline": "Ruination-chamber elite from Skaventide / Ultimate Starter Set",
+          "playstyle": "Prosecutors flank at speed while Liberators hold objectives. Holy Orders offers a run-and-charge trick and a once-per-battle Ward (5+).",
+          "unitCount": 4,
+          "roster": [
+            "Lord-Veritant",
+            "3 Prosecutors",
+            "5 Liberators"
+          ],
+          "battleTraitName": "Holy Orders",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/stormcast-eternals-spearhead/eng_stormcast_eternals_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "storm-charge",
+              "name": "Storm Charge",
+              "summary": "Pick a unit not in combat; it may use Charge abilities this turn even if it used a Run ability.",
+              "timing": "Once per battle, Your Charge Phase"
+            },
+            {
+              "id": "shield-of-azyr",
+              "name": "Shield of Azyr",
+              "summary": "Pick a friendly unit; it has Ward (5+) until the start of your next turn.",
+              "timing": "Once per battle, Your Hero Phase"
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "strike-where-needed",
+              "name": "Strike Where Needed",
+              "summary": "When a unit uses Retreat, it takes no mortal damage and may still use Charge abilities this turn.",
+              "timing": "Once per battle, reaction to Retreat"
+            },
+            {
+              "id": "blaze-of-glory",
+              "name": "Blaze of Glory",
+              "summary": "Pick a unit in combat; when its models are slain, roll D6 per slain model \u2014 on 4+ inflict 1 mortal on an enemy in combat with that unit.",
+              "timing": "Once per battle, Any Combat Phase"
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "hallowed-scrolls",
+              "name": "Hallowed Scrolls",
+              "summary": "Your general has Ward (5+).",
+              "timing": "Passive"
+            },
+            {
+              "id": "morrdas-talon",
+              "name": "Morrda's Talon",
+              "summary": "Your general's Hallowed Greataxe has Crit (Mortal).",
+              "timing": "Passive"
+            },
+            {
+              "id": "quicksilver-draught",
+              "name": "Quicksilver Draught",
+              "summary": "Your general has Strike-first this phase.",
+              "timing": "Once per battle, Any Combat Phase"
+            },
+            {
+              "id": "null-pendant",
+              "name": "Null Pendant",
+              "summary": "Roll for each enemy contesting the same objective as your general; on 2+ subtract the roll from their control score this turn.",
+              "timing": "Once per battle, End of Any Turn"
+            }
+          ]
+        },
+        {
+          "id": "yndrastas-spearhead",
+          "name": "Yndrasta's Spearhead",
+          "general": "Yndrasta, the Celestial Spear",
+          "tagline": "Lightning-strike force from the original AoS starter set",
+          "playstyle": "Yndrasta and Annihilators arrive from round 3. Vanquishers and a Stormstrike Chariot hit first; Yndrasta finishes the biggest threats.",
+          "unitCount": 6,
+          "roster": [
+            "Knight-Vexillor",
+            "3 Annihilators",
+            "5 Vanquishers",
+            "5 Vanquishers",
+            "Stormstrike Chariot"
+          ],
+          "battleTraitName": "Scions of the Storm",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/stormcast-eternals-spearhead/eng_stormcast_eternals_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "lightning-strike-arrival",
+              "name": "Lightning-Strike Arrival",
+              "summary": "Yndrasta and Annihilators are not deployed. From battle round 3, set them up anywhere more than 6\" from all enemy units.",
+              "timing": "From round 3, Keywords: Core"
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "drive-them-back",
+              "name": "Drive Them Back",
+              "summary": "Pick units contesting an objective and in combat; each can pile-in, then roll D6 per adjacent enemy \u2014 on 4+ inflict 1 mortal.",
+              "timing": "Once per battle, Your Movement Phase"
+            },
+            {
+              "id": "defend-to-the-last",
+              "name": "Defend to the Last",
+              "summary": "Friendly units have Ward (6+) while contesting an objective you control.",
+              "timing": "Passive"
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "prime-huntress",
+              "name": "The Prime Huntress",
+              "summary": "Thengavar has Damage 2D6 against Monster targets.",
+              "timing": "Passive"
+            },
+            {
+              "id": "dazzling-radiance",
+              "name": "Dazzling Radiance",
+              "summary": "If your general was set up this phase, return 1 slain model to each friendly unit wholly within 12\" of them.",
+              "timing": "Once per battle, Your Movement Phase"
+            },
+            {
+              "id": "tempests-rage",
+              "name": "Strike with the Tempest's Rage",
+              "summary": "Your general has Strike-first if they charged this turn.",
+              "timing": "Passive"
+            },
+            {
+              "id": "hawk-celestial-skies",
+              "name": "Hawk of the Celestial Skies",
+              "summary": "Add 1 to hit rolls for friendly units wholly within 12\" of your general this phase.",
+              "timing": "Once per battle, End of Any Turn"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "skaven",
+      "name": "Skaven",
+      "alliance": "chaos",
+      "armies": [
+        {
+          "id": "gnawfeast-clawpack",
+          "name": "Gnawfeast Clawpack",
+          "general": "Clawlord on Gnaw-beast",
+          "tagline": "Swarm melee from Skaventide / Ultimate Starter Set",
+          "playstyle": "Tunnel reserves and Gnawhole Ambush threaten the back line. Clanrats swarm objectives while Rat Ogors and heroes deliver the killing blow.",
+          "unitCount": 6,
+          "roster": [
+            "Grey Seer",
+            "Warlock Engineer",
+            "10 Clanrats",
+            "10 Clanrats",
+            "3 Rat Ogors"
+          ],
+          "battleTraitName": "Gnawfeast Clawpack",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/skaven-spearhead/eng_skaven_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "lurking-vermintide",
+              "name": "The Lurking Vermintide",
+              "summary": "Pick an undeployed unit; it starts in the tunnels below. Units still there after round 3 without using Gnawhole Ambush are destroyed.",
+              "timing": "Once per battle, Deployment Phase"
+            },
+            {
+              "id": "gnawhole-ambush",
+              "name": "Gnawhole Ambush",
+              "summary": "Pick a unit in the tunnels below; set it up within 6\" of a battlefield corner and more than 9\" from all enemy units.",
+              "timing": "Your Movement Phase, Keywords: Core"
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "warpstone-laced-bullets",
+              "name": "Warpstone-Laced Bullets",
+              "summary": "Pick a friendly unit's ranged weapon; it has Crit (Mortal) this phase.",
+              "timing": "Once per battle, Your Shooting Phase"
+            },
+            {
+              "id": "too-quick-to-hit",
+              "name": "Too Quick to Hit-Hit",
+              "summary": "No mortal damage is inflicted on friendly units when they use Retreat abilities.",
+              "timing": "Passive"
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "lead-seething-horde",
+              "name": "Lead the Seething Horde",
+              "summary": "When using Call for Reinforcements, the replacement unit can be set up wholly within 13\" of your general and not in combat.",
+              "timing": "Reaction: Call for Reinforcements"
+            },
+            {
+              "id": "warpstone-charm",
+              "name": "Warpstone Charm",
+              "summary": "Subtract 1 from save rolls for enemy units in combat with your general.",
+              "timing": "Passive"
+            },
+            {
+              "id": "skryre-connections",
+              "name": "Skryre Connections",
+              "summary": "Your general's Ratling Pistol has Attacks 2D6 instead of D6.",
+              "timing": "Passive"
+            },
+            {
+              "id": "cloak-stitched-victories",
+              "name": "Cloak of Stitched Victories",
+              "summary": "Your general has Ward (5+).",
+              "timing": "Passive"
+            }
+          ]
+        },
+        {
+          "id": "warpspark-clawpack",
+          "name": "Warpspark Clawpack",
+          "general": "Grey Seer",
+          "tagline": "Skryre shooting and Stormfiends",
+          "playstyle": "Clanrats screen for Stormfiends and a Warp Lightning Cannon. Always Three Clawsteps Ahead lets you reposition in the enemy movement phase.",
+          "unitCount": 5,
+          "roster": [
+            "3 Stormfiends",
+            "Warp Lightning Cannon",
+            "10 Clanrats",
+            "10 Clanrats"
+          ],
+          "battleTraitName": "Warpspark Clawpack",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/skaven-spearhead/eng_skaven_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "three-clawsteps-ahead",
+              "name": "Always Three Clawsteps Ahead",
+              "summary": "Pick a friendly unit not in combat; it can use Normal Move as if it were your movement phase.",
+              "timing": "Once per phase, Enemy Movement Phase"
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "warpstone-laced-armour",
+              "name": "Warpstone-Laced Armour",
+              "summary": "When an attack targets your Stormfiends, they have Ward (5+) for the rest of the turn.",
+              "timing": "Once per battle, reaction to attack on Stormfiends"
+            },
+            {
+              "id": "endless-swarm-rats",
+              "name": "Endless Swarm of Rats",
+              "summary": "When Clanrats use Seething Swarm, return D6 slain models instead of D3.",
+              "timing": "Passive"
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "skilled-manipulator",
+              "name": "Skilled Manipulator",
+              "summary": "Your general has Ward (4+) while within 1\" of any friendly Clanrats units.",
+              "timing": "Passive"
+            },
+            {
+              "id": "cage-warp-lightning",
+              "name": "Cage of Warp Lightning",
+              "summary": "Pick an enemy within 6\" and roll: on 2+ they have Strike-last; on 1 inflict 1 mortal on your general.",
+              "timing": "Once per battle, Any Combat Phase"
+            },
+            {
+              "id": "skitterleap",
+              "name": "Skitterleap",
+              "summary": "Casting roll 2D6; on 6+ remove your general and set up more than 6\" from enemies. Cannot move next movement phase.",
+              "timing": "Your Hero Phase"
+            },
+            {
+              "id": "scurry-away",
+              "name": "Scurry Away",
+              "summary": "Roll a dice; on 3+ your general may Retreat immediately with no mortal damage.",
+              "timing": "Any Combat Phase"
+            }
+          ]
+        },
+        {
+          "id": "crixxits-kill-pack",
+          "name": "Crixxit's Kill-Pack",
+          "general": "Master Moulder",
+          "tagline": "Fast assassination and crit mortals",
+          "playstyle": "Glass cannon with teleporting heroes and reinforced infantry. Fragile but explosive.",
+          "unitCount": 6
+        }
+      ]
+    },
+    {
+      "id": "cities-of-sigmar",
+      "name": "Cities of Sigmar",
+      "alliance": "order",
+      "armies": [
+        {
+          "id": "castelite-company",
+          "name": "Castelite Company",
+          "general": "Freeguild Cavalier-Marshal",
+          "tagline": "Defensive combined-arms infantry",
+          "playstyle": "Sturdy infantry lines with solid saves. Dependable but slower to close games.",
+          "unitCount": 4
+        },
+        {
+          "id": "fusil-platoon",
+          "name": "Fusil Platoon",
+          "general": "Fusil-Major on Ogor Warhulk",
+          "tagline": "Sand & Bone \u2014 ranged firepower",
+          "playstyle": "Strong shooting with limited frontline durability. Controls space from range.",
+          "unitCount": 5
+        },
+        {
+          "id": "sentinels-embergard",
+          "name": "Sentinels of Embergard",
+          "general": "Freeguild Marshal on Griffon",
+          "tagline": "Combo-focused support heroes",
+          "playstyle": "Positioning-heavy synergies. Gallants hit hard with setup but the army is fragile.",
+          "unitCount": 5
+        }
+      ]
+    },
+    {
+      "id": "daughters-of-khaine",
+      "name": "Daughters of Khaine",
+      "alliance": "order",
+      "armies": [
+        {
+          "id": "heartflayer-troupe",
+          "name": "Heartflayer Troupe",
+          "general": "Melusai Ironscale",
+          "tagline": "Fast melee strikers",
+          "playstyle": "Strike first, hit hard, die fast. Aggressive and unforgiving.",
+          "unitCount": 5
+        },
+        {
+          "id": "khainite-shadow-coven",
+          "name": "Khainite Shadow Coven",
+          "general": "Bloodwrack Shrine",
+          "tagline": "Board-control prison army",
+          "playstyle": "Many units, movement tricks, and defensive manipulation. High skill ceiling.",
+          "unitCount": 7
+        }
+      ]
+    },
+    {
+      "id": "fyreslayers",
+      "name": "Fyreslayers",
+      "alliance": "order",
+      "armies": [
+        {
+          "id": "saga-axeband",
+          "name": "Saga Axeband",
+          "general": "Battlesmith",
+          "tagline": "Berzerker aggression",
+          "playstyle": "Headlong charges and Awaken the Runes. Surprisingly durable despite low saves.",
+          "unitCount": 6
+        }
+      ]
+    },
+    {
+      "id": "kharadron-overlords",
+      "name": "Kharadron Overlords",
+      "alliance": "order",
+      "armies": [
+        {
+          "id": "skyhammer-task-force",
+          "name": "Skyhammer Task Force",
+          "general": "Arkanaut Admiral",
+          "tagline": "Long-range mobile shooting",
+          "playstyle": "Positioning and precision fire. Controls the board from range.",
+          "unitCount": 5
+        },
+        {
+          "id": "grundstok-trailblazers",
+          "name": "Grundstok Trailblazers",
+          "general": "Endrinmaster with Dirigible Suit",
+          "tagline": "Tough flyers with strong shooting",
+          "playstyle": "Flying 3+ saves, Endrinrigger reinforcements, and a dominant general.",
+          "unitCount": 4
+        }
+      ]
+    },
+    {
+      "id": "idoneth-deepkin",
+      "name": "Idoneth Deepkin",
+      "alliance": "order",
+      "armies": [
+        {
+          "id": "soulraid-hunt",
+          "name": "Soulraid Hunt",
+          "general": "Isharann Soulscryer",
+          "tagline": "Fast strike force",
+          "playstyle": "Excellent mobility and burst damage. One of the most dangerous Spearheads.",
+          "unitCount": 5
+        },
+        {
+          "id": "akhelian-tide-guard",
+          "name": "Akhelian Tide Guard",
+          "general": "Akhelian King",
+          "tagline": "Eel cavalry hammer",
+          "playstyle": "Fast with double eel units. King buffs saves; Reavers provide ranged pressure.",
+          "unitCount": 4
+        }
+      ]
+    },
+    {
+      "id": "lumineth-realm-lords",
+      "name": "Lumineth Realm-lords",
+      "alliance": "order",
+      "armies": [
+        {
+          "id": "glittering-phalanx",
+          "name": "Glittering Phalanx",
+          "general": "Scinari Cathallar",
+          "tagline": "Precision strike infantry",
+          "playstyle": "Hits hard but fragile. Rewards precise play; getting charged hurts.",
+          "unitCount": 5
+        },
+        {
+          "id": "hurakan-vanguard",
+          "name": "Hurakan Vanguard",
+          "general": "Hurakan Tempest Lord",
+          "tagline": "Reactive movement control",
+          "playstyle": "Windchargers and fox aura frustrate enemy hammer units. Strong board control.",
+          "unitCount": 5
+        }
+      ]
+    },
+    {
+      "id": "seraphon",
+      "name": "Seraphon",
+      "alliance": "order",
+      "armies": [
+        {
+          "id": "starscale-warhost",
+          "name": "Starscale Warhost",
+          "general": "Saurus Oldblood on Carnosaur",
+          "tagline": "Durable all-rounder",
+          "playstyle": "Tough Saurus Warriors and a devastating Carnosaur charge.",
+          "unitCount": 4
+        },
+        {
+          "id": "sunblooded-prowlers",
+          "name": "Sunblooded Prowlers",
+          "general": "Sunblood Priest",
+          "tagline": "Sand & Bone \u2014 fast glass cannon",
+          "playstyle": "Hard-hitting and fast but extremely fragile. High skill cap.",
+          "unitCount": 5
+        }
+      ]
+    },
+    {
+      "id": "sylvaneth",
+      "name": "Sylvaneth",
+      "alliance": "order",
+      "armies": [
+        {
+          "id": "bitterbark-copse",
+          "name": "Bitterbark Copse",
+          "general": "Branchwych",
+          "tagline": "Woodland ambushers",
+          "playstyle": "Tough units with staying power. Clever positioning is key.",
+          "unitCount": 4
+        }
+      ]
+    },
+    {
+      "id": "blades-of-khorne",
+      "name": "Blades of Khorne",
+      "alliance": "chaos",
+      "armies": [
+        {
+          "id": "bloodbound-gore-pilgrims",
+          "name": "Bloodbound Gore Pilgrims",
+          "general": "Slaughterpriest",
+          "tagline": "Elite melee bruisers",
+          "playstyle": "Excellent saves and brutal melee. Dominates most matchups.",
+          "unitCount": 5
+        },
+        {
+          "id": "fangs-of-the-blood-god",
+          "name": "Fangs of the Blood God",
+          "general": "Bloodmaster",
+          "tagline": "Fast glass cannon",
+          "playstyle": "Reinforced keyword for hitting power. Must finish fights quickly.",
+          "unitCount": 5
+        }
+      ]
+    },
+    {
+      "id": "disciples-of-tzeentch",
+      "name": "Disciples of Tzeentch",
+      "alliance": "chaos",
+      "armies": [
+        {
+          "id": "fluxblade-coven",
+          "name": "Fluxblade Coven",
+          "general": "Magister on Disc of Tzeentch",
+          "tagline": "Magical damage and tricks",
+          "playstyle": "Unpredictable spell use and positioning. Fragile but potent in skilled hands.",
+          "unitCount": 6
+        }
+      ]
+    },
+    {
+      "id": "hedonites-of-slaanesh",
+      "name": "Hedonites of Slaanesh",
+      "alliance": "chaos",
+      "armies": [
+        {
+          "id": "blades-lurid-dream",
+          "name": "Blades of the Lurid Dream",
+          "general": "Shardspeaker of Slaanesh",
+          "tagline": "Fast and flashy",
+          "playstyle": "Races across the board and hits hard but cannot take punishment.",
+          "unitCount": 5
+        }
+      ]
+    },
+    {
+      "id": "maggotkin-of-nurgle",
+      "name": "Maggotkin of Nurgle",
+      "alliance": "chaos",
+      "armies": [
+        {
+          "id": "bleak-host",
+          "name": "Bleak Host",
+          "general": "Spoilpox Scrivener",
+          "tagline": "Durable grindy force",
+          "playstyle": "Shrugs off chip damage with surprising mobility for Nurgle.",
+          "unitCount": 6
+        }
+      ]
+    },
+    {
+      "id": "slaves-to-darkness",
+      "name": "Slaves to Darkness",
+      "alliance": "chaos",
+      "armies": [
+        {
+          "id": "bloodwind-legion",
+          "name": "Bloodwind Legion",
+          "general": "Chaos Lord",
+          "tagline": "Balanced offence and defence",
+          "playstyle": "Strong leadership buffs. Hits hard and holds objectives well.",
+          "unitCount": 5
+        },
+        {
+          "id": "darkoath-raiders",
+          "name": "Darkoath Raiders",
+          "general": "Darkoath Warqueen",
+          "tagline": "Fast aggressive raiders",
+          "playstyle": "Early objective grabs and melee pressure. Light armour limits prolonged fights.",
+          "unitCount": 4
+        }
+      ]
+    },
+    {
+      "id": "helsmiths-of-hashut",
+      "name": "Helsmiths of Hashut",
+      "alliance": "chaos",
+      "armies": [
+        {
+          "id": "helforge-host",
+          "name": "Helforge Host",
+          "general": "Infernal Castellan",
+          "tagline": "Slow but devastating",
+          "playstyle": "Daemonic Power buffs, 2+ saves, and a bull-centaur monster. Grinds opponents down.",
+          "unitCount": 4
+        }
+      ]
+    },
+    {
+      "id": "gloomspite-gitz",
+      "name": "Gloomspite Gitz",
+      "alliance": "destruction",
+      "armies": [
+        {
+          "id": "bad-moon-madmob",
+          "name": "Bad Moon Madmob",
+          "general": "Loonboss",
+          "tagline": "Classic Gitz chaos",
+          "playstyle": "Great board presence and objective play. Random and swingy.",
+          "unitCount": 6
+        },
+        {
+          "id": "snarlpack-huntaz",
+          "name": "Snarlpack Huntaz",
+          "general": "Snarlfang Boss on Gnasttoof",
+          "tagline": "Gitmob speed demons",
+          "playstyle": "Movement 12\" and retreat-and-charge tricks. Can lock the board if going first.",
+          "unitCount": 6
+        }
+      ]
+    },
+    {
+      "id": "orruk-warclans",
+      "name": "Orruk Warclans",
+      "alliance": "destruction",
+      "armies": [
+        {
+          "id": "ironjawz-bigmob",
+          "name": "Ironjawz Bigmob",
+          "general": "Megaboss",
+          "tagline": "Slow heavy infantry",
+          "playstyle": "Mass 3+ saves and -1 rend. Get stuck in and smash face.",
+          "unitCount": 5
+        },
+        {
+          "id": "swampskulka-gang",
+          "name": "Swampskulka Gang",
+          "general": "Killaboss on Great Gnashtoof",
+          "tagline": "Kruleboyz from the original starter",
+          "playstyle": "Poisoned weapons and sneaky tricks. Different feel from Ironjawz.",
+          "unitCount": 6
+        }
+      ]
+    },
+    {
+      "id": "ogor-mawtribes",
+      "name": "Ogor Mawtribes",
+      "alliance": "destruction",
+      "armies": [
+        {
+          "id": "tyrants-bellow",
+          "name": "Tyrant's Bellow",
+          "general": "Tyrant",
+          "tagline": "Brutal mid-game power spike",
+          "playstyle": "Good saves, brutal damage, surprising mobility. Dominates by turn 3\u20134.",
+          "unitCount": 6
+        },
+        {
+          "id": "scrapglutt",
+          "name": "Scrapglutt",
+          "general": "Tyrant",
+          "tagline": "Sand & Bone \u2014 steady bruisers",
+          "playstyle": "Consistent damage without Tyrant's Bellow's explosive peak.",
+          "unitCount": 5
+        }
+      ]
+    },
+    {
+      "id": "sons-of-behemat",
+      "name": "Sons of Behemat",
+      "alliance": "destruction",
+      "armies": [
+        {
+          "id": "wallsmasher-stomp",
+          "name": "Wallsmasher Stomp",
+          "general": "Mancrusher Gargant",
+          "tagline": "Gargant stomp",
+          "playstyle": "Few models but massive impact. Simple and devastating.",
+          "unitCount": 3
+        }
+      ]
+    },
+    {
+      "id": "flesh-eater-courts",
+      "name": "Flesh-Eater Courts",
+      "alliance": "death",
+      "armies": [
+        {
+          "id": "carrion-retainers",
+          "name": "Carrion Retainers",
+          "general": "Abhorrant Archregent",
+          "tagline": "Fast high-risk court",
+          "playstyle": "Delusion mechanics and 6+ ward. Sneaky objective grabs.",
+          "unitCount": 4
+        },
+        {
+          "id": "charnel-watch",
+          "name": "Charnel Watch",
+          "general": "Abhorrant Gorewarden",
+          "tagline": "Sand & Bone \u2014 glass cannon court",
+          "playstyle": "Random delusions and hard-hitting charges. Fragile but fun.",
+          "unitCount": 4
+        }
+      ]
+    },
+    {
+      "id": "nighthaunt",
+      "name": "Nighthaunt",
+      "alliance": "death",
+      "armies": [
+        {
+          "id": "slasher-host",
+          "name": "Slasher Host",
+          "general": "Knight of Shroud",
+          "tagline": "Fast harassers",
+          "playstyle": "Charge potential and objective harassment. Lacks staying power.",
+          "unitCount": 6
+        },
+        {
+          "id": "cursed-shacklehorde",
+          "name": "Cursed Shacklehorde",
+          "general": "Spirit Torment",
+          "tagline": "Flying horde ghosts",
+          "playstyle": "Many units, Fly everywhere, 5+ ward. Hit-and-fade with resilience.",
+          "unitCount": 7
+        }
+      ]
+    },
+    {
+      "id": "ossiarch-bonereapers",
+      "name": "Ossiarch Bonereapers",
+      "alliance": "death",
+      "armies": [
+        {
+          "id": "tithe-reaper-echelon",
+          "name": "Tithe-Reaper Echelon",
+          "general": "Mortisan Soulreaper",
+          "tagline": "Resilient grind force",
+          "playstyle": "Synergy between units. Grinds through sheer resilience.",
+          "unitCount": 5
+        },
+        {
+          "id": "mortisan-elite",
+          "name": "Mortisan Elite",
+          "general": "Mortisan Boneshaper",
+          "tagline": "Sand & Bone \u2014 support and magic",
+          "playstyle": "Powerful support pieces. Fragile if key heroes are removed.",
+          "unitCount": 4
+        },
+        {
+          "id": "kavalos-vanguard",
+          "name": "Kavalos Vanguard",
+          "general": "Lieutenant on Morrgoth",
+          "tagline": "Mobile tempo army",
+          "playstyle": "Free retreats, Fly, and charge-blocking. Wins through movement control.",
+          "unitCount": 5
+        }
+      ]
+    },
+    {
+      "id": "soulblight-gravelords",
+      "name": "Soulblight Gravelords",
+      "alliance": "death",
+      "armies": [
+        {
+          "id": "bloodcrave-hunt",
+          "name": "Bloodcrave Hunt",
+          "general": "Vampire Lord",
+          "tagline": "Fast relentless predators",
+          "playstyle": "Excellent mobility, recursion, and objective control.",
+          "unitCount": 5
+        },
+        {
+          "id": "deathrattle-tomb-host",
+          "name": "Deathrattle Tomb Host",
+          "general": "Wight King on Skeletal Steed",
+          "tagline": "Methodical board control",
+          "playstyle": "Defensive with reinforcements. Wight King must stay near troops for 5+ ward.",
+          "unitCount": 6
+        }
+      ]
+    }
+  ],
+  "matchSteps": [
+    {
+      "id": "choose-armies",
+      "order": 1,
+      "title": "Choose Spearhead Armies",
+      "summary": "Each player picks their faction and specific Spearhead army.",
+      "body": "Spearhead armies are fixed box-set rosters \u2014 you cannot change unit composition. Many factions have multiple Spearhead options with different playstyles. Pick the army each player is fielding today.",
+      "tips": [
+        "Check which Spearhead box your models came from if you're unsure.",
+        "Download free faction Spearhead packs from Warhammer Community for warscrolls."
+      ]
+    },
+    {
+      "id": "roll-attacker",
+      "order": 2,
+      "title": "Roll for Attacker & Defender",
+      "summary": "Winner chooses attacker or defender.",
+      "body": "Roll off to determine who picks attacker and defender. The attacker picks regiment abilities and enhancements first, then the defender. The defender also chooses which realm side of the battlefield to fight on.",
+      "tips": [
+        "Going first in round 1 lets the attacker choose who takes the first turn.",
+        "Consider your army's strengths when choosing attacker vs defender."
+      ],
+      "relatedRuleSectionId": "spearhead-overview"
+    },
+    {
+      "id": "regiment-abilities",
+      "order": 3,
+      "title": "Pick Regiment Abilities",
+      "summary": "Attacker picks first, then defender.",
+      "body": "Each Spearhead army offers two regiment abilities. The attacker picks one, then the defender picks one. These range from passive bonuses to once-per-battle actions that can shift the game.",
+      "tips": [
+        "Some abilities counter specific opponents \u2014 study the enemy army before choosing.",
+        "Passive abilities are reliable; once-per-battle abilities can be game-swinging."
+      ]
+    },
+    {
+      "id": "enhancements",
+      "order": 4,
+      "title": "Pick General Enhancements",
+      "summary": "Attacker picks first, then defender.",
+      "body": "Each army has four enhancements for its general. The attacker picks one, then the defender. Enhancements upgrade your general only \u2014 protect them accordingly.",
+      "tips": [
+        "Ward enhancements help fragile generals survive longer.",
+        "Offensive enhancements can turn your general into a linchpin \u2014 but losing them hurts."
+      ]
+    },
+    {
+      "id": "realm-battlefield",
+      "order": 5,
+      "title": "Set Up the Battlefield",
+      "summary": "Defender chooses realm side; place terrain and objectives.",
+      "body": "The defender chooses which side of the realm battlefield to use (e.g. Aqshy or Ghyran from Fire and Jade). Set up terrain \u2014 two large and two small features. Objectives are printed on the board.",
+      "tips": [
+        "The whole objective circle counts, not just the centre symbol.",
+        "Match your twist deck to the realm side you are fighting on."
+      ],
+      "relatedRuleSectionId": "spearhead-overview"
+    },
+    {
+      "id": "fight-battle",
+      "order": 6,
+      "title": "Fight the Battle",
+      "summary": "Four battle rounds \u2014 score victory points to win.",
+      "body": "Deploy armies, then play four battle rounds (~60\u201390 minutes). Each round: priority roll, identify underdog, draw twist card, draw battle tactic cards, then alternate turns. Score VP for objectives and completed battle tactics.",
+      "tips": [
+        "Twist cards favour the underdog \u2014 comebacks are built in.",
+        "Each battle tactic card offers a tactic OR a command \u2014 not both."
+      ],
+      "relatedRuleSectionId": "spearhead-scoring"
+    }
+  ]
+}

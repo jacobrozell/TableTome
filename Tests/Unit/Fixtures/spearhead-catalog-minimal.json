@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "factions": [
+    {
+      "id": "test-faction",
+      "name": "Test Faction",
+      "alliance": "order",
+      "armies": [
+        {
+          "id": "stub-army",
+          "name": "Stub Army",
+          "general": "Test General",
+          "tagline": "Minimal roster for decoder tests",
+          "playstyle": "Placeholder playstyle summary.",
+          "unitCount": 4
+        }
+      ]
+    }
+  ],
+  "matchSteps": [
+    {
+      "id": "choose-armies",
+      "order": 1,
+      "title": "Choose Armies",
+      "summary": "Pick armies.",
+      "body": "Each player picks a Spearhead army."
+    }
+  ]
+}

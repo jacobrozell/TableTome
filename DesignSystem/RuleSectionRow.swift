@@ -1,5 +1,5 @@
 import SwiftUI
-import SpearheadDomain
+import TabletomeDomain
 
 public struct RuleSectionRow: View {
     let title: String

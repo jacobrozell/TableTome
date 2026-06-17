@@ -1,5 +1,5 @@
 ---
-description: Spearhead iOS agent conventions — architecture, git, accessibility
+description: Tabletome iOS agent conventions — architecture, git, accessibility
 globs:
   - "**/*.swift"
   - "**/project.yml"
@@ -7,7 +7,7 @@ globs:
   - "docs/**"
 ---
 
-# Spearhead iOS Agent Rules
+# Tabletome iOS Agent Rules
 
 Read `docs/agent-build-checklist.md` for phase workflow.
 

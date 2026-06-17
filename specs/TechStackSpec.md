@@ -16,7 +16,7 @@
 |------|---------|
 | XcodeGen | `project.yml` → `.xcodeproj` (gitignored) |
 | SwiftLint | Style + CI pre-build |
-| xcodebuild | CI build/test (`SpearheadCI` scheme) |
+| xcodebuild | CI build/test (`TabletomeCI` scheme) |
 | XcodeBuildMCP | Agent builds (`.cursor/mcp.json`) |
 
 ## Third-Party SDKs (v1)

@@ -1,7 +1,7 @@
 import XCTest
-@testable import Spearhead
-@testable import SpearheadData
-@testable import SpearheadDomain
+@testable import Tabletome
+@testable import TabletomeData
+@testable import TabletomeDomain
 
 final class BundledRulesRepositoryTests: XCTestCase {
     private var testRepository: BundledRulesRepository {

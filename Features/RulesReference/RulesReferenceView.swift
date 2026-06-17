@@ -1,5 +1,5 @@
 import SwiftUI
-import SpearheadDomain
+import TabletomeDomain
 
 struct RulesReferenceView: View {
     @StateObject private var viewModel: RulesReferenceViewModel

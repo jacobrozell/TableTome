@@ -1,6 +1,6 @@
 import SwiftUI
-import SpearheadDomain
-import SpearheadData
+import TabletomeDomain
+import TabletomeData
 
 @MainActor
 final class AppDependencies: ObservableObject {

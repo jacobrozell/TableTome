@@ -1,5 +1,5 @@
 import SwiftUI
-import SpearheadDomain
+import TabletomeDomain
 
 struct GuideStepDetailView: View {
     let gameSystemId: String

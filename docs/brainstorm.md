@@ -1,4 +1,4 @@
-# Brainstorm — Spearhead Guide (non-authoritative)
+# Brainstorm — Tabletome (non-authoritative)
 
 > Ideas and product direction. Promote to `specs/` when behavior is locked.
 
@@ -72,8 +72,8 @@ Pattern-matching on bundled rule graph first; optional on-device LLM later behin
 
 | Decision | Choice |
 |----------|--------|
-| App name | Table Tome |
-| Bundle ID | `com.tabletome.app` |
+| App name | Tabletome |
+| Bundle ID | `com.jacobrozell.tabletome` |
 | Min iOS | 17.0 |
 | Locales | English only (v1) |
 | Telemetry | Off in Release; stub logger only |

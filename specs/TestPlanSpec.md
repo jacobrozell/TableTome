@@ -1,11 +1,11 @@
 # Test Plan Spec
 
-## CI Scheme: SpearheadCI
+## CI Scheme: TabletomeCI
 
 PR gate: unit tests only (~minutes).
 
 ```bash
-xcodebuild test -scheme SpearheadCI -destination 'platform=iOS Simulator,name=iPhone 16'
+xcodebuild test -scheme TabletomeCI -destination 'platform=iOS Simulator,name=iPhone 17'
 ```
 
 ## Unit Tests (v0.1)

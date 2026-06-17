@@ -1,5 +1,5 @@
 import SwiftUI
-import SpearheadDomain
+import TabletomeDomain
 
 struct SettingsView: View {
     @AppStorage("appearance") private var appearance = "system"

@@ -32,7 +32,7 @@ Layered modules — **Features → Domain / Data → bundled JSON**. Domain neve
 ## Tests
 
 ```bash
-xcodebuild test -scheme SpearheadCI -destination 'platform=iOS Simulator,name=iPhone 16'
+xcodebuild test -scheme TabletomeCI -destination 'platform=iOS Simulator,name=iPhone 17'
 ```
 
 Place unit tests in `Tests/Unit/`. Name tests for scenarios, not types.

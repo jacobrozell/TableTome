@@ -16,10 +16,10 @@ Domain (Models, UseCases, Engines) — no SwiftUI
 
 | Target | Contents |
 |--------|----------|
-| Spearhead | App, Features, DesignSystem, Support |
-| SpearheadDomain | Domain |
-| SpearheadData | Data |
-| SpearheadTests | Tests/Unit |
+| Tabletome | App, Features, DesignSystem, Support |
+| TabletomeDomain | Domain |
+| TabletomeData | Data |
+| TabletomeTests | Tests/Unit |
 
 ## Dependency Rules
 
@@ -36,7 +36,7 @@ Domain (Models, UseCases, Engines) — no SwiftUI
 
 ## DI
 
-`AppDependencies` created in `SpearheadApp`, injected via SwiftUI `environment`.
+`AppDependencies` created in `TabletomeApp`, injected via SwiftUI `environment`.
 
 ## Verification
 
@@ -45,4 +45,4 @@ Domain (Models, UseCases, Engines) — no SwiftUI
 | Target release | v0.1 |
 | Last verified | 2026-06-17 |
 | Commit | (initial scaffold) |
-| Code paths | `App/SpearheadApp.swift`, `App/AppDependencies.swift` |
+| Code paths | `App/TabletomeApp.swift`, `App/AppDependencies.swift` |

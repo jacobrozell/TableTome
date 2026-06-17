@@ -1,5 +1,5 @@
 import SwiftUI
-import SpearheadDomain
+import TabletomeDomain
 
 struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel

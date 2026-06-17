@@ -1,4 +1,4 @@
-# Table Tome
+# Tabletome
 
 Offline-first iOS reference and rules companion for Warhammer tabletop games, starting with **Age of Sigmar: Spearhead**.
 
@@ -12,13 +12,13 @@ xcodegen generate
 
 # Build
 xcodebuild build \
-  -scheme SpearheadCI \
+  -scheme TabletomeCI \
   -destination 'platform=iOS Simulator,name=iPhone 17' \
   -quiet
 
 # Unit tests
 xcodebuild test \
-  -scheme SpearheadCI \
+  -scheme TabletomeCI \
   -destination 'platform=iOS Simulator,name=iPhone 17' \
   -quiet
 ```

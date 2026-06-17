@@ -1,5 +1,5 @@
 import SwiftUI
-import SpearheadDomain
+import TabletomeDomain
 
 struct GameSystemDetailView: View {
     let gameSystemId: String

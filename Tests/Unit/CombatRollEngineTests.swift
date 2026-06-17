@@ -1,6 +1,6 @@
 import XCTest
-@testable import Spearhead
-@testable import SpearheadDomain
+@testable import Tabletome
+@testable import TabletomeDomain
 
 final class CombatRollEngineTests: XCTestCase {
     func testHitFailsOnUnmodifiedOne() {

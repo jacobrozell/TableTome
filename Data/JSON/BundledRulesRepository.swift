@@ -1,5 +1,5 @@
 import Foundation
-import SpearheadDomain
+import TabletomeDomain
 
 public final class BundledRulesRepository: RulesRepository, @unchecked Sendable {
     private let bundle: Bundle

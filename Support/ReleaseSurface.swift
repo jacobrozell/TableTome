@@ -1,5 +1,5 @@
 import Foundation
-import SpearheadDomain
+import TabletomeDomain
 
 public enum ReleaseSurface {
     private static var fullSurfaceEnabled: Bool {

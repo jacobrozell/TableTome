@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct SpearheadApp: App {
+struct TabletomeApp: App {
     @StateObject private var dependencies = AppDependencies()
 
     var body: some Scene {

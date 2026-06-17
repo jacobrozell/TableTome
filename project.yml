@@ -1,4 +1,4 @@
-name: Spearhead
+name: Tabletome
 options:
   bundleIdPrefix: com.jacobrozell
   deploymentTarget:
@@ -19,7 +19,7 @@ configs:
   Release: release
 
 targets:
-  Spearhead:
+  Tabletome:
     type: application
     platform: iOS
     sources:
@@ -32,12 +32,12 @@ targets:
       - path: Resources/Assets.xcassets
         buildPhase: resources
     dependencies:
-      - target: SpearheadDomain
-      - target: SpearheadData
+      - target: TabletomeDomain
+      - target: TabletomeData
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.tabletome
-        INFOPLIST_KEY_CFBundleDisplayName: Table Tome
+        INFOPLIST_KEY_CFBundleDisplayName: Tabletome
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
@@ -53,7 +53,7 @@ targets:
           fi
         basedOnDependencyAnalysis: false
 
-  SpearheadDomain:
+  TabletomeDomain:
     type: framework
     platform: iOS
     sources:
@@ -63,19 +63,19 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.tabletome.domain
         GENERATE_INFOPLIST_FILE: YES
 
-  SpearheadData:
+  TabletomeData:
     type: framework
     platform: iOS
     sources:
       - path: Data
     dependencies:
-      - target: SpearheadDomain
+      - target: TabletomeDomain
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.tabletome.data
         GENERATE_INFOPLIST_FILE: YES
 
-  SpearheadTests:
+  TabletomeTests:
     type: bundle.unit-test
     platform: iOS
     sources:
@@ -85,33 +85,33 @@ targets:
       - path: Resources/Rules
         buildPhase: resources
     dependencies:
-      - target: Spearhead
-      - target: SpearheadDomain
-      - target: SpearheadData
+      - target: Tabletome
+      - target: TabletomeDomain
+      - target: TabletomeData
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.tabletome.tests
         GENERATE_INFOPLIST_FILE: YES
 
 schemes:
-  Spearhead:
+  Tabletome:
     build:
       targets:
-        Spearhead: all
-        SpearheadTests: [test]
+        Tabletome: all
+        TabletomeTests: [test]
     test:
       targets:
-        - SpearheadTests
+        - TabletomeTests
     run:
       config: Debug
 
-  SpearheadCI:
+  TabletomeCI:
     build:
       targets:
-        Spearhead: all
-        SpearheadTests: [test]
+        Tabletome: all
+        TabletomeTests: [test]
     test:
       targets:
-        - SpearheadTests
+        - TabletomeTests
     run:
       config: Debug

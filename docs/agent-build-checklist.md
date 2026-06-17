@@ -1,8 +1,8 @@
-# Agent Build Checklist — Spearhead Guide
+# Agent Build Checklist — Tabletome
 
 Living checklist for iOS app delivery. See the full prompt library in the original spec document.
 
-**App:** Table Tome · **Bundle ID:** `com.tabletome.app` · **MVP:** AoS Spearhead offline guide
+**App:** Tabletome · **Bundle ID:** `com.jacobrozell.tabletome` · **MVP:** AoS Spearhead offline guide
 
 ## Progress log
 

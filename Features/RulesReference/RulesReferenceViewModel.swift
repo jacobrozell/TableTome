@@ -1,5 +1,5 @@
 import Foundation
-import SpearheadDomain
+import TabletomeDomain
 
 @MainActor
 final class RulesReferenceViewModel: ObservableObject {

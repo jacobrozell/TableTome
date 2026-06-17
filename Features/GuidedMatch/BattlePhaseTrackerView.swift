@@ -18,6 +18,7 @@ struct BattlePhaseTrackerView: View {
     @State var roundOpenerNotice: RoundOpenerNotice?
     @State var scoringReminderNotice: ScoringReminderNotice?
     @State var scrollToVictoryPoints = false
+    @State var scrollToRoundChecklist = false
     @State private var handoffBaselineEstablished = false
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
@@ -65,13 +66,20 @@ struct BattlePhaseTrackerView: View {
                 } else if oldPhase == .endOfTurn {
                     scoringReminderNotice = nil
                 }
+                if phase == .hero {
+                    presentRoundOpenerNudgeIfNeeded()
+                }
                 if handoffBaselineEstablished {
                     presentTurnHandoff(from: oldPhase, to: phase, playerChanged: false)
                 }
             }
             .onChange(of: viewModel.trackerState.battleRound) { oldRound, round in
-                guard round > oldRound, handoffBaselineEstablished else { return }
-                presentRoundOpenerNudge(round: round)
+                guard round > oldRound else { return }
+                presentRoundOpenerNudgeIfNeeded()
+            }
+            .onChange(of: viewModel.focusedDeploymentStep) { oldStep, newStep in
+                guard oldStep != nil, newStep == nil else { return }
+                presentRoundOpenerNudgeIfNeeded()
             }
             .onChange(of: viewModel.trackerState.activePlayerIsOne) { oldValue, _ in
                 syncCombatContext()
@@ -148,6 +156,14 @@ struct BattlePhaseTrackerView: View {
                 scrollToVictoryPoints = false
                 scoringReminderNotice = nil
             }
+            .onChange(of: scrollToRoundChecklist) { _, shouldScroll in
+                guard shouldScroll else { return }
+                withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.35)) {
+                    proxy.scrollTo("roundChecklist", anchor: .top)
+                }
+                scrollToRoundChecklist = false
+                roundOpenerNotice = nil
+            }
         }
         .safeAreaInset(edge: .bottom, spacing: 0) {
             if supportsBattleTracker, viewModel.trackerState.currentPhase.isCombatRelated {
@@ -176,6 +192,7 @@ struct BattlePhaseTrackerView: View {
             Task {
                 try? await Task.sleep(for: .milliseconds(400))
                 handoffBaselineEstablished = true
+                presentRoundOpenerNudgeIfNeeded()
             }
         }
         .task {

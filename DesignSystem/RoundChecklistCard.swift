@@ -46,6 +46,7 @@ struct RoundChecklistCard: View {
             }
         }
         .surfaceCard()
+        .id("roundChecklist")
         .accessibilityIdentifier("battleTracker.roundChecklist")
     }
 

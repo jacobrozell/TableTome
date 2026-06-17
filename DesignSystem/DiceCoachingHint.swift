@@ -82,18 +82,50 @@ struct BattleTrackerTurnHandoffBanner: View {
 
 struct BattleTrackerRoundOpenerBanner: View {
     let round: Int
+    let nextStepTitle: String
+    let onJumpToChecklist: () -> Void
     let onDismiss: () -> Void
 
     var body: some View {
-        BattleTrackerNoticeBanner(
-            systemImage: "flag.checkered.2.crossed",
-            title: String(localized: "Round \(round) setup"),
-            detail: String(
-                localized: "Work through the round checklist above — priority, underdog, twists, and battle tactics before the first turn."
-            ),
-            onDismiss: onDismiss,
-            accessibilityIdentifier: "battleTracker.roundOpener"
-        )
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
+                Image(systemName: "flag.checkered.2.crossed")
+                    .font(.title3)
+                    .foregroundStyle(Color.accentColor)
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                    Text(String(localized: "Round \(round) setup"))
+                        .font(.subheadline.weight(.semibold))
+                    Text(
+                        String(
+                            localized: "Next up: \(nextStepTitle). Finish priority, twists, and battle tactics before turns begin."
+                        )
+                    )
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 0)
+                Button(action: onDismiss) {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundStyle(.secondary)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(String(localized: "Dismiss"))
+            }
+
+            Button(String(localized: "Jump to checklist"), action: onJumpToChecklist)
+                .buttonStyle(.borderedProminent)
+                .controlSize(.small)
+                .accessibilityIdentifier("battleTracker.roundOpener.jump")
+        }
+        .padding(DesignTokens.Spacing.md)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.accentColor.opacity(0.1), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .overlay {
+            RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
+                .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
+        }
+        .accessibilityIdentifier("battleTracker.roundOpener")
     }
 }
 

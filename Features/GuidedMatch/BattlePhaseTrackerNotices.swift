@@ -14,6 +14,7 @@ struct DamageUndoNotice: Equatable {
 
 struct RoundOpenerNotice: Equatable {
     let round: Int
+    let nextStepTitle: String
 }
 
 struct ScoringReminderNotice: Equatable {
@@ -61,11 +62,16 @@ extension BattlePhaseTrackerView {
     @ViewBuilder
     var roundOpenerSection: some View {
         if let notice = roundOpenerNotice {
-            BattleTrackerRoundOpenerBanner(round: notice.round) {
-                withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) {
-                    roundOpenerNotice = nil
+            BattleTrackerRoundOpenerBanner(
+                round: notice.round,
+                nextStepTitle: notice.nextStepTitle,
+                onJumpToChecklist: { scrollToRoundChecklist = true },
+                onDismiss: {
+                    withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) {
+                        roundOpenerNotice = nil
+                    }
                 }
-            }
+            )
             .transition(.opacity.combined(with: .move(edge: .top)))
         }
     }
@@ -86,10 +92,14 @@ extension BattlePhaseTrackerView {
         }
     }
 
-    func presentRoundOpenerNudge(round: Int) {
-        guard viewModel.focusedRoundOpenerStep != nil else { return }
+    func presentRoundOpenerNudgeIfNeeded() {
+        guard let step = viewModel.focusedRoundOpenerStep else { return }
+        let round = viewModel.trackerState.battleRound
         withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) {
-            roundOpenerNotice = RoundOpenerNotice(round: round)
+            roundOpenerNotice = RoundOpenerNotice(
+                round: round,
+                nextStepTitle: step.title(round: round)
+            )
         }
     }
 

@@ -5,9 +5,14 @@ import TabletomeData
 @MainActor
 final class AppDependencies: ObservableObject {
     let rulesRepository: any RulesRepository
+    let spearheadCatalogRepository: any SpearheadCatalogRepository
 
-    init(rulesRepository: any RulesRepository = BundledRulesRepository()) {
+    init(
+        rulesRepository: any RulesRepository = BundledRulesRepository(),
+        spearheadCatalogRepository: any SpearheadCatalogRepository = BundledSpearheadCatalogRepository()
+    ) {
         self.rulesRepository = rulesRepository
+        self.spearheadCatalogRepository = spearheadCatalogRepository
     }
 
     func makeHomeViewModel() -> HomeViewModel {
@@ -16,5 +21,9 @@ final class AppDependencies: ObservableObject {
 
     func makeRulesReferenceViewModel() -> RulesReferenceViewModel {
         RulesReferenceViewModel(rulesRepository: rulesRepository)
+    }
+
+    func makeGuidedMatchViewModel() -> GuidedMatchViewModel {
+        GuidedMatchViewModel(catalogRepository: spearheadCatalogRepository)
     }
 }

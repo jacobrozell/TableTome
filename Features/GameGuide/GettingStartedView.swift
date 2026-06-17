@@ -12,7 +12,11 @@ struct GettingStartedView: View {
         List {
             ForEach(Array(sortedSteps.enumerated()), id: \.element.id) { index, step in
                 NavigationLink {
-                    GuideStepDetailView(gameSystemId: gameSystem.id, step: step)
+                    GuideStepDetailView(
+                        gameSystemId: gameSystem.id,
+                        step: step,
+                        ruleSections: gameSystem.ruleSections
+                    )
                 } label: {
                     GuideStepCard(
                         stepNumber: index + 1,

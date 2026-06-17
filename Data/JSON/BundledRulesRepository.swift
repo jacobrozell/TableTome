@@ -15,7 +15,7 @@ public final class BundledRulesRepository: RulesRepository, @unchecked Sendable 
         if let cachedBundle {
             return cachedBundle
         }
-        guard let url = bundle.url(forResource: resourceName, withExtension: "json") else {
+        guard let url = rulesURL() else {
             throw RulesRepositoryError.bundleNotFound
         }
         let data = try Data(contentsOf: url)
@@ -39,5 +39,14 @@ public final class BundledRulesRepository: RulesRepository, @unchecked Sendable 
 
     public func availableGameSystems() async throws -> [GameSystem] {
         try await loadBundle().gameSystems
+    }
+
+    private func rulesURL() -> URL? {
+        for subdirectory in [nil as String?, "Rules"] {
+            if let url = bundle.url(forResource: resourceName, withExtension: "json", subdirectory: subdirectory) {
+                return url
+            }
+        }
+        return nil
     }
 }

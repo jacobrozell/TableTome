@@ -29,6 +29,8 @@ targets:
       - path: Support
       - path: Resources/Rules
         buildPhase: resources
+        type: folder
+        type: folder
       - path: Resources/Assets.xcassets
         buildPhase: resources
     dependencies:
@@ -82,8 +84,12 @@ targets:
       - path: Tests/Unit
         excludes:
           - "**/Fixtures/**"
+      - path: Tests/Unit/Fixtures
+        buildPhase: resources
       - path: Resources/Rules
         buildPhase: resources
+        type: folder
+        type: folder
     dependencies:
       - target: Tabletome
       - target: TabletomeDomain

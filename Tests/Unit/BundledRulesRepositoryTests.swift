@@ -22,6 +22,20 @@ final class BundledRulesRepositoryTests: XCTestCase {
         XCTAssertEqual(system.gettingStartedSteps.count, 5)
     }
 
+    func testSpearheadHasV01RuleSections() async throws {
+        let system = try await testRepository.gameSystem(id: "aos-spearhead")
+        XCTAssertEqual(system.ruleSections.count, 7)
+        XCTAssertEqual(Set(system.ruleSections.map(\.id)), [
+            "combat-sequence",
+            "attack-modifiers",
+            "damage-sequence",
+            "spearhead-overview",
+            "spearhead-scoring",
+            "spearhead-battle-round",
+            "glossary-contest"
+        ])
+    }
+
     func testGameSystemNotFound() async {
         do {
             _ = try await testRepository.gameSystem(id: "missing")

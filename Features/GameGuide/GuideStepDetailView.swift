@@ -4,6 +4,7 @@ import TabletomeDomain
 struct GuideStepDetailView: View {
     let gameSystemId: String
     let step: GuideStep
+    let ruleSections: [RuleSection]
     @State private var isComplete = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -13,6 +14,20 @@ struct GuideStepDetailView: View {
                 Text(step.body)
                     .font(.body)
                     .fixedSize(horizontal: false, vertical: true)
+
+                if let relatedSection {
+                    NavigationLink {
+                        RuleSectionDetailView(section: relatedSection, allSections: ruleSections)
+                    } label: {
+                        Label(relatedSection.title, systemImage: "doc.text")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .frame(minHeight: DesignTokens.minTouchTarget)
+                    }
+                    .accessibilityLabel(String(localized: "Related rule: \(relatedSection.title)"))
+                    .accessibilityHint(String(localized: "Opens this rule section"))
+                    .accessibilityIdentifier("guide.relatedRule.\(step.id)")
+                }
 
                 if !step.tips.isEmpty {
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
@@ -48,5 +63,10 @@ struct GuideStepDetailView: View {
             isComplete = GuideProgressStore.isComplete(gameSystemId: gameSystemId, stepId: step.id)
         }
         .animation(reduceMotion ? nil : .default, value: isComplete)
+    }
+
+    private var relatedSection: RuleSection? {
+        guard let sectionId = step.relatedRuleSectionId else { return nil }
+        return ruleSections.first { $0.id == sectionId }
     }
 }

@@ -11,11 +11,22 @@ struct GameSystemDetailView: View {
         Group {
             if let gameSystem {
                 List {
-                    Section(String(localized: "Getting Started")) {
+                    Section(String(localized: "Play")) {
+                        NavigationLink {
+                            GuidedMatchView(
+                                viewModel: dependencies.makeGuidedMatchViewModel(),
+                                ruleSections: gameSystem.ruleSections
+                            )
+                        } label: {
+                            Label(String(localized: "Guided Match"), systemImage: "flag.checkered")
+                                .frame(minHeight: DesignTokens.minTouchTarget)
+                        }
+                        .accessibilityIdentifier("guide.guidedMatch.\(gameSystemId)")
+
                         NavigationLink {
                             GettingStartedView(gameSystem: gameSystem)
                         } label: {
-                            Label(String(localized: "Walkthrough"), systemImage: "map")
+                            Label(String(localized: "Getting Started"), systemImage: "map")
                                 .frame(minHeight: DesignTokens.minTouchTarget)
                         }
                         .accessibilityIdentifier("guide.gettingStarted.\(gameSystemId)")

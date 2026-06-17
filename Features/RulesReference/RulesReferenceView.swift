@@ -10,7 +10,10 @@ struct RulesReferenceView: View {
 
     var body: some View {
         Group {
-            if let error = viewModel.errorMessage {
+            if viewModel.isLoading && viewModel.sections.isEmpty {
+                ProgressView(String(localized: "Loading rules…"))
+                    .accessibilityIdentifier("rules.loading")
+            } else if let error = viewModel.errorMessage {
                 EmptyStateView(
                     title: String(localized: "Unable to Load"),
                     message: error,
@@ -26,6 +29,7 @@ struct RulesReferenceView: View {
                                 Text(categoryLabel(category)).tag(Optional(category))
                             }
                         }
+                        .accessibilityHint(String(localized: "Filters rule sections by category"))
                         .accessibilityIdentifier("rules.categoryPicker")
                     }
 
@@ -77,15 +81,24 @@ struct RuleSectionDetailView: View {
                 Text(section.content)
                     .font(.body)
                     .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier("rules.sectionContent.\(section.id)")
 
-                if !section.relatedSectionIds.isEmpty {
+                if !relatedSections.isEmpty {
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                         Text(String(localized: "Related"))
                             .font(.headline)
                         ForEach(relatedSections) { related in
-                            Text("• \(related.title)")
-                                .font(.callout)
-                                .foregroundStyle(.secondary)
+                            NavigationLink {
+                                RuleSectionDetailView(section: related, allSections: allSections)
+                            } label: {
+                                Label(related.title, systemImage: "doc.text")
+                                    .font(.callout)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .frame(minHeight: DesignTokens.minTouchTarget)
+                            }
+                            .accessibilityLabel(related.title)
+                            .accessibilityHint(String(localized: "Opens related rule section"))
+                            .accessibilityIdentifier("rules.related.\(related.id)")
                         }
                     }
                 }

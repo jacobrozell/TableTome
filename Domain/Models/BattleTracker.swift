@@ -41,6 +41,47 @@ public enum BattleTurnPhase: String, Codable, Sendable, CaseIterable, Identifiab
             false
         }
     }
+
+    public var newPlayerSummary: String {
+        switch self {
+        case .deployment:
+            String(
+                localized: "Set up terrain and deploy units. The defender picks a board side first, then players alternate placing units."
+            )
+        case .hero:
+            String(
+                localized: "Use heroic abilities, spells, and prayers. Pick which player goes first if it is round 1."
+            )
+        case .movement:
+            String(
+                localized: "Move units up to their Move characteristic. Stay within coherency and 3\" of terrain features you want to use."
+            )
+        case .shooting:
+            String(
+                localized: "Pick a unit that can shoot, choose targets in range, then roll to hit and wound. Resolve saves in the combat resolver."
+            )
+        case .charge:
+            String(
+                localized: "Try to charge enemy units within 12\". Roll 2D6 for charge distance — pick a unit, declare a target, then roll."
+            )
+        case .combat, .anyCombat:
+            String(
+                localized: "Fight with units in combat. Pick attacker and defender, roll hit and wound dice, then saves and wards."
+            )
+        case .endOfTurn:
+            String(
+                localized: "Score victory points from objectives and battle tactics, then pass play to your opponent."
+            )
+        case .enemyMovement:
+            String(
+                localized: "Some abilities trigger when enemy units move. Check your passive and reaction abilities now."
+            )
+        case .endOfAnyTurn:
+            String(
+                localized: "Abilities that fire at the end of either player's turn. Check both armies' end-of-turn effects."
+            )
+        }
+    }
 }
 
 public enum AbilityUsageLimit: String, Codable, Sendable {

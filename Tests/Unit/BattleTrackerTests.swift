@@ -63,6 +63,13 @@ final class BattleTrackerTests: XCTestCase {
         XCTAssertTrue(ability.suggestsCombatResolution)
     }
 
+    func testHeroPhaseHasNewPlayerSummary() {
+        XCTAssertFalse(BattleTurnPhase.hero.newPlayerSummary.isEmpty)
+        XCTAssertTrue(
+            BattleTurnPhase.shooting.newPlayerSummary.localizedCaseInsensitiveContains("shoot")
+        )
+    }
+
     func testBattleTrackerStoreRoundTrip() {
         var state = BattleTrackerState()
         state.battleRound = 2

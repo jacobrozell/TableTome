@@ -49,6 +49,15 @@ struct SettingsView: View {
                 }
                 .accessibilityIdentifier("settings.viewOnboarding")
                 .accessibilityHint(String(localized: "Replays the first-launch welcome tour"))
+
+                Button {
+                    NewPlayerTipsStore.resetAll()
+                } label: {
+                    Label(String(localized: "Replay Battle Tracker Tips"), systemImage: "sparkles")
+                        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                }
+                .accessibilityIdentifier("settings.replayBattleTrackerTips")
+                .accessibilityHint(String(localized: "Shows first-battle coach and combat roll help again"))
             }
 
             Section(String(localized: "Support & Legal")) {
@@ -118,10 +127,11 @@ struct SettingsView: View {
         ) {
             Button(String(localized: "Reset"), role: .destructive) {
                 GuideProgressStore.resetAll()
+                NewPlayerTipsStore.resetAll()
             }
             Button(String(localized: "Cancel"), role: .cancel) {}
         } message: {
-            Text(String(localized: "This removes all Getting Started checkmarks. This cannot be undone."))
+            Text(String(localized: "This removes Getting Started checkmarks and battle tracker tips. This cannot be undone."))
         }
         .fullScreenCover(isPresented: $showsOnboarding) {
             OnboardingView(mode: .replay) { completion in

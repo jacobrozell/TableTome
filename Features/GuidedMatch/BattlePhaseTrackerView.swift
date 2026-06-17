@@ -11,6 +11,7 @@ struct BattlePhaseTrackerView: View {
     @State private var showsAdvancedOptions = false
     @State private var showsMultiAttack = false
     @State private var scrollToCombatResolver = false
+    @State private var showsBattleTrackerCoach = false
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     let ruleSections: [RuleSection]
 
@@ -81,6 +82,9 @@ struct BattlePhaseTrackerView: View {
             }
         }
         .accessibilityIdentifier("battleTracker.screen")
+        .onAppear {
+            showsBattleTrackerCoach = supportsBattleTracker && !NewPlayerTipsStore.hasSeenBattleTrackerCoach
+        }
         .task {
             await combatViewModel.load()
             syncCombatContext()
@@ -105,6 +109,7 @@ struct BattlePhaseTrackerView: View {
 
     private var compactLayout: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            coachSection
             guideSection
             roundAndScoreSection
             BattleTrackerControlPanel(viewModel: viewModel)
@@ -113,12 +118,14 @@ struct BattlePhaseTrackerView: View {
             deploymentSection
             secondarySections
         }
+        .animation(.easeInOut(duration: 0.25), value: showsBattleTrackerCoach)
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var regularLayout: some View {
         HStack(alignment: .top, spacing: DesignTokens.Spacing.lg) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                coachSection
                 guideSection
                 deploymentSection
                 roundAndScoreSection
@@ -133,6 +140,19 @@ struct BattlePhaseTrackerView: View {
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    @ViewBuilder
+    private var coachSection: some View {
+        if supportsBattleTracker, showsBattleTrackerCoach {
+            BattleTrackerCoachCard {
+                withAnimation(.easeInOut(duration: 0.25)) {
+                    NewPlayerTipsStore.markBattleTrackerCoachSeen()
+                    showsBattleTrackerCoach = false
+                }
+            }
+            .transition(.opacity.combined(with: .move(edge: .top)))
+        }
     }
 
     @ViewBuilder

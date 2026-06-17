@@ -23,6 +23,7 @@ struct PhaseChip: View {
         .buttonStyle(.plain)
         .frame(minHeight: DesignTokens.minTouchTarget)
         .accessibilityLabel(phase.title)
+        .accessibilityHint(String(localized: "Shows what to do in this phase"))
         .accessibilityAddTraits(isSelected ? .isSelected : [])
         .accessibilityIdentifier("battleTracker.phase.\(phase.id)")
     }
@@ -48,30 +49,39 @@ struct PhaseChipRow: View {
     let selectedPhase: BattleTurnPhase
     let showAllAbilities: Bool
     var style: PhaseChip.Style = .primary
+    var showsPhaseGuidance: Bool = false
     let onSelect: (BattleTurnPhase) -> Void
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     var body: some View {
-        Group {
-            if horizontalSizeClass == .regular {
-                LazyVGrid(
-                    columns: [GridItem(.adaptive(minimum: 72), spacing: DesignTokens.Spacing.sm)],
-                    spacing: DesignTokens.Spacing.sm
-                ) {
-                    phaseChips
-                }
-            } else {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: DesignTokens.Spacing.sm) {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            Group {
+                if horizontalSizeClass == .regular {
+                    LazyVGrid(
+                        columns: [GridItem(.adaptive(minimum: 72), spacing: DesignTokens.Spacing.sm)],
+                        spacing: DesignTokens.Spacing.sm
+                    ) {
                         phaseChips
                     }
+                } else {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: DesignTokens.Spacing.sm) {
+                            phaseChips
+                        }
+                    }
+                    .accessibilityElement(children: .contain)
+                    .accessibilityLabel(String(localized: "Battle phases"))
+                    .accessibilityHint(String(localized: "Swipe to browse all phases"))
                 }
-                .accessibilityElement(children: .contain)
-                .accessibilityLabel(String(localized: "Battle phases"))
-                .accessibilityHint(String(localized: "Swipe to browse all phases"))
+            }
+
+            if showsPhaseGuidance, !showAllAbilities {
+                PhaseGuidanceBar(phase: selectedPhase)
+                    .transition(.opacity.combined(with: .move(edge: .top)))
             }
         }
+        .animation(.easeInOut(duration: 0.2), value: selectedPhase)
     }
 
     @ViewBuilder

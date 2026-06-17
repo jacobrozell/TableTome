@@ -190,7 +190,8 @@ private struct BattleTrackerPhaseControls: View {
             PhaseChipRow(
                 phases: BattleTurnPhase.mainTurnPhases,
                 selectedPhase: viewModel.trackerState.currentPhase,
-                showAllAbilities: viewModel.trackerState.showAllAbilities
+                showAllAbilities: viewModel.trackerState.showAllAbilities,
+                showsPhaseGuidance: true
             ) { phase in
                 viewModel.trackerState.showAllAbilities = false
                 viewModel.setPhase(phase)

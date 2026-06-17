@@ -22,6 +22,7 @@ struct CombatResolverPanel: View {
     var onApplyDamage: ((Int) -> Void)?
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @State private var showsCombatSequencePrimer = true
 
     private var diceInputMode: DiceInputMode {
         get { DiceInputMode(rawValue: diceInputModeRaw) ?? .physical }
@@ -40,6 +41,7 @@ struct CombatResolverPanel: View {
             }
             if isEmbedded {
                 embeddedContextBar
+                combatSequencePrimerSection
             }
             matchupPanels
             attackProfileBar
@@ -63,6 +65,10 @@ struct CombatResolverPanel: View {
             if viewModel.hasSuggestedWardBuffs {
                 showsAdvancedOptions = true
             }
+        }
+        .onAppear {
+            guard isEmbedded, NewPlayerTipsStore.hasDismissedCombatSequencePrimer else { return }
+            showsCombatSequencePrimer = false
         }
     }
 
@@ -90,6 +96,17 @@ struct CombatResolverPanel: View {
                 String(localized: "\(attackerPlayerName) attacks \(defenderPlayerName)")
             )
         }
+    }
+
+    @ViewBuilder
+    private var combatSequencePrimerSection: some View {
+        CombatSequencePrimer(
+            isExpanded: $showsCombatSequencePrimer,
+            showsDismissButton: !NewPlayerTipsStore.hasDismissedCombatSequencePrimer,
+            onDismiss: {
+                NewPlayerTipsStore.dismissCombatSequencePrimer()
+            }
+        )
     }
 
     private var introSection: some View {

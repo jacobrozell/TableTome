@@ -45,6 +45,22 @@ public enum SpearheadContentCoverage: String, Codable, Sendable, CaseIterable, C
         case .battleTracker: String(localized: "Battle Tracker")
         }
     }
+
+    public var playerFacingTitle: String {
+        switch self {
+        case .roster: String(localized: "Army list only")
+        case .matchSetup: String(localized: "Setup ready")
+        case .battleTracker: String(localized: "Rules reminders ready")
+        }
+    }
+
+    public var systemImage: String {
+        switch self {
+        case .roster: "list.bullet"
+        case .matchSetup: "flag.checkered"
+        case .battleTracker: "checkmark.seal.fill"
+        }
+    }
 }
 
 extension SpearheadArmy {

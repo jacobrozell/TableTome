@@ -25,6 +25,18 @@ final class GuidedMatchViewModel: ObservableObject {
         catalog?.matchSteps.sorted { $0.order < $1.order } ?? []
     }
 
+    var setupProgress: (completed: Int, total: Int) {
+        let total = sortedMatchSteps.count
+        let completed = sortedMatchSteps.filter { matchState.completedStepIds.contains($0.id) }.count
+        return (completed, total)
+    }
+
+    var setupProgressFraction: Double {
+        let progress = setupProgress
+        guard progress.total > 0 else { return 0 }
+        return Double(progress.completed) / Double(progress.total)
+    }
+
     var matchupSummary: String? {
         guard matchState.hasBothArmies, let catalog else { return nil }
         let p1 = armyLabel(for: matchState.playerOne, in: catalog)

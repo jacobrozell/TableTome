@@ -3,6 +3,7 @@ import TabletomeDomain
 
 struct BattlePhaseTrackerView: View {
     @StateObject private var viewModel: BattlePhaseTrackerViewModel
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     init(matchState: GuidedMatchState, catalog: SpearheadCatalog) {
         _viewModel = StateObject(wrappedValue: BattlePhaseTrackerViewModel(matchState: matchState, catalog: catalog))
@@ -10,15 +11,14 @@ struct BattlePhaseTrackerView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-                controlPanel
-
-                if !supportsBattleTracker {
-                    emptyState
+            Group {
+                if horizontalSizeClass == .regular {
+                    regularLayout
                 } else {
-                    abilitySections
+                    compactLayout
                 }
             }
+            .readableContentWidth()
             .padding(DesignTokens.Spacing.md)
         }
         .navigationTitle(String(localized: "Battle Tracker"))
@@ -34,26 +34,53 @@ struct BattlePhaseTrackerView: View {
         .accessibilityIdentifier("battleTracker.screen")
     }
 
+    private var compactLayout: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            controlPanel
+            trackerContent
+        }
+    }
+
+    private var regularLayout: some View {
+        HStack(alignment: .top, spacing: DesignTokens.Spacing.lg) {
+            controlPanel
+                .frame(width: 320, alignment: .leading)
+            trackerContent
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    @ViewBuilder
+    private var trackerContent: some View {
+        if !supportsBattleTracker {
+            emptyState
+        } else {
+            abilitySections
+        }
+    }
+
     private var controlPanel: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            HStack {
-                Stepper(
-                    String(localized: "Round \(viewModel.trackerState.battleRound)"),
-                    value: Binding(
-                        get: { viewModel.trackerState.battleRound },
-                        set: { viewModel.setBattleRound($0) }
-                    ),
-                    in: 1...4
-                )
-                .accessibilityIdentifier("battleTracker.round")
-            }
+            Stepper(
+                String(localized: "Round \(viewModel.trackerState.battleRound)"),
+                value: Binding(
+                    get: { viewModel.trackerState.battleRound },
+                    set: { viewModel.setBattleRound($0) }
+                ),
+                in: 1...4
+            )
+            .accessibilityIdentifier("battleTracker.round")
 
             Picker(String(localized: "Active Player"), selection: Binding(
                 get: { viewModel.trackerState.activePlayerIsOne },
                 set: { viewModel.setActivePlayer(isOne: $0) }
             )) {
-                Text(viewModel.playerOneName).tag(true)
-                Text(viewModel.playerTwoName).tag(false)
+                Text(viewModel.playerOneName)
+                    .tag(true)
+                    .accessibilityLabel(viewModel.playerOneName)
+                Text(viewModel.playerTwoName)
+                    .tag(false)
+                    .accessibilityLabel(viewModel.playerTwoName)
             }
             .pickerStyle(.segmented)
             .accessibilityIdentifier("battleTracker.activePlayer")
@@ -66,52 +93,43 @@ struct BattlePhaseTrackerView: View {
                 Text(String(localized: "Current Phase"))
                     .font(.headline)
 
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: DesignTokens.Spacing.sm) {
-                        ForEach(BattleTurnPhase.mainTurnPhases) { phase in
-                            PhaseChip(
-                                phase: phase,
-                                isSelected: viewModel.trackerState.currentPhase == phase && !viewModel.trackerState.showAllAbilities
-                            ) {
-                                viewModel.trackerState.showAllAbilities = false
-                                viewModel.setPhase(phase)
-                            }
-                        }
-                    }
+                PhaseChipRow(
+                    phases: BattleTurnPhase.mainTurnPhases,
+                    selectedPhase: viewModel.trackerState.currentPhase,
+                    showAllAbilities: viewModel.trackerState.showAllAbilities
+                ) { phase in
+                    viewModel.trackerState.showAllAbilities = false
+                    viewModel.setPhase(phase)
                 }
                 .accessibilityIdentifier("battleTracker.phasePicker")
 
                 if !viewModel.specialPhases.isEmpty {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: DesignTokens.Spacing.sm) {
-                            ForEach(viewModel.specialPhases) { phase in
-                                PhaseChip(
-                                    phase: phase,
-                                    isSelected: viewModel.trackerState.currentPhase == phase && !viewModel.trackerState.showAllAbilities,
-                                    style: .secondary
-                                ) {
-                                    viewModel.trackerState.showAllAbilities = false
-                                    viewModel.setPhase(phase)
-                                }
-                            }
-                        }
+                    PhaseChipRow(
+                        phases: viewModel.specialPhases,
+                        selectedPhase: viewModel.trackerState.currentPhase,
+                        showAllAbilities: viewModel.trackerState.showAllAbilities,
+                        style: .secondary
+                    ) { phase in
+                        viewModel.trackerState.showAllAbilities = false
+                        viewModel.setPhase(phase)
                     }
                 }
 
-                HStack {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                     Toggle(String(localized: "Show all abilities"), isOn: Binding(
                         get: { viewModel.trackerState.showAllAbilities },
                         set: { _ in viewModel.toggleShowAll() }
                     ))
                     .accessibilityIdentifier("battleTracker.showAll")
 
-                    Spacer()
-
                     Button {
                         viewModel.advancePhase()
                     } label: {
                         Label(String(localized: "Next Phase"), systemImage: "arrow.right.circle.fill")
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
+                    .buttonStyle(.borderedProminent)
+                    .frame(minHeight: DesignTokens.minTouchTarget)
                     .accessibilityIdentifier("battleTracker.nextPhase")
                 }
             }
@@ -170,10 +188,7 @@ struct BattlePhaseTrackerView: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
             Text(String(localized: "Battle tracker isn't available for this army yet."))
                 .font(.headline)
-            let coverageTitle = viewModel.contentCoverage.title.lowercased()
-            Text(
-                "This army has \(coverageTitle) data. Unit ability reminders are added via per-army detail files — use the official PDF link on the army picker in the meantime."
-            )
+            Text(String(localized: "Ability reminders for this army aren't in Tabletome yet. Use the GW Spearhead PDF link on the army picker for full rules."))
                 .font(.callout)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
@@ -181,45 +196,5 @@ struct BattlePhaseTrackerView: View {
         .padding(DesignTokens.Spacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
-    }
-}
-
-private struct PhaseChip: View {
-    enum Style { case primary, secondary }
-
-    let phase: BattleTurnPhase
-    let isSelected: Bool
-    var style: Style = .primary
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            Text(shortTitle)
-                .font(.caption.weight(.semibold))
-                .padding(.horizontal, DesignTokens.Spacing.sm)
-                .padding(.vertical, DesignTokens.Spacing.xs)
-                .background(isSelected ? Color.accentColor : Color(.tertiarySystemFill), in: Capsule())
-                .foregroundStyle(isSelected ? Color.white : Color.primary)
-        }
-        .buttonStyle(.plain)
-        .frame(minHeight: DesignTokens.minTouchTarget)
-        .accessibilityLabel(phase.title)
-        .accessibilityAddTraits(isSelected ? .isSelected : [])
-        .accessibilityIdentifier("battleTracker.phase.\(phase.id)")
-    }
-
-    private var shortTitle: String {
-        switch phase {
-        case .hero: String(localized: "Hero")
-        case .movement: String(localized: "Move")
-        case .shooting: String(localized: "Shoot")
-        case .charge: String(localized: "Charge")
-        case .combat: String(localized: "Fight")
-        case .endOfTurn: String(localized: "End")
-        case .deployment: String(localized: "Deploy")
-        case .enemyMovement: String(localized: "Enemy")
-        case .endOfAnyTurn: String(localized: "End Any")
-        case .anyCombat: String(localized: "Combat")
-        }
     }
 }

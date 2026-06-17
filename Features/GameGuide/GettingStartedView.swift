@@ -32,6 +32,7 @@ struct GettingStartedView: View {
             }
         }
         .listStyle(.plain)
+        .readableContentWidth()
         .navigationTitle(String(localized: "Getting Started"))
         .accessibilityIdentifier("guide.stepList")
     }

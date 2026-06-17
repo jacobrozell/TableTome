@@ -29,8 +29,8 @@ final class ReleaseSurfaceTests: XCTestCase {
         XCTAssertFalse(ReleaseSurface.isGameSystemVisible(system))
     }
 
-    func testRollEvaluatorGatedOff() {
-        XCTAssertFalse(ReleaseSurface.showsRollEvaluator)
+    func testRollEvaluatorEnabledInRelease() {
+        XCTAssertTrue(ReleaseSurface.showsRollEvaluator)
         XCTAssertFalse(ReleaseSurface.showsRulesAssistant)
     }
 }

@@ -55,6 +55,7 @@ struct GuideStepDetailView: View {
                     GuideProgressStore.setComplete(newValue, gameSystemId: gameSystemId, stepId: step.id)
                 }
             }
+            .readableContentWidth()
             .padding(DesignTokens.Spacing.md)
         }
         .navigationTitle(step.title)

@@ -7,7 +7,7 @@ public enum ReleaseSurface {
     }
 
     public static var shows40kEditions: Bool { fullSurfaceEnabled }
-    public static var showsRollEvaluator: Bool { false }
+    public static var showsRollEvaluator: Bool { true }
     public static var showsRulesAssistant: Bool { false }
 
     public static func isGameSystemVisible(_ system: GameSystem) -> Bool {

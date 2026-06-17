@@ -10,6 +10,9 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
     @Published private(set) var playerOneName = ""
     @Published private(set) var playerTwoName = ""
     @Published private(set) var armyName = ""
+    @Published private(set) var activeRegimentAbility: ArmyRuleOption?
+    @Published private(set) var activeEnhancement: ArmyRuleOption?
+    @Published private(set) var activeArmy: SpearheadArmy?
 
     private let matchState: GuidedMatchState
     private let catalog: SpearheadCatalog
@@ -28,20 +31,26 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
     }
 
     func refreshAbilities() {
-        guard let army = activeArmy else {
+        playerOneName = matchState.playerOne.playerName
+        playerTwoName = matchState.playerTwo.playerName
+
+        guard let army = activeArmySelection else {
             activeAbilities = []
             passiveAbilities = []
             contentCoverage = .roster
-            playerOneName = matchState.playerOne.playerName
-            playerTwoName = matchState.playerTwo.playerName
             armyName = ""
+            activeRegimentAbility = nil
+            activeEnhancement = nil
+            activeArmy = nil
             return
         }
 
-        playerOneName = matchState.playerOne.playerName
-        playerTwoName = matchState.playerTwo.playerName
+        let player = activePlayer
+        activeArmy = army
         armyName = army.name
         contentCoverage = army.contentCoverage
+        activeRegimentAbility = army.regimentAbilities.first { $0.id == player.regimentAbilityId }
+        activeEnhancement = army.enhancements.first { $0.id == player.enhancementId }
         let all = BattleAbilityCatalog.abilities(for: army)
 
         if trackerState.showAllAbilities {
@@ -120,7 +129,12 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
         trackerState.activePlayerIsOne ? matchState.playerOne : matchState.playerTwo
     }
 
-    private var activeArmy: SpearheadArmy? {
+    var activePlayerIsAttacker: Bool {
+        guard let attackerIsPlayerOne = matchState.attackerIsPlayerOne else { return false }
+        return trackerState.activePlayerIsOne == attackerIsPlayerOne
+    }
+
+    private var activeArmySelection: SpearheadArmy? {
         let player = activePlayer
         guard let faction = catalog.factions.first(where: { $0.id == player.factionId }) else { return nil }
         return faction.armies.first { $0.id == player.armyId }

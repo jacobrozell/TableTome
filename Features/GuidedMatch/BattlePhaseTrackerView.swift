@@ -4,9 +4,11 @@ import TabletomeDomain
 struct BattlePhaseTrackerView: View {
     @StateObject private var viewModel: BattlePhaseTrackerViewModel
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    let ruleSections: [RuleSection]
 
-    init(matchState: GuidedMatchState, catalog: SpearheadCatalog) {
+    init(matchState: GuidedMatchState, catalog: SpearheadCatalog, ruleSections: [RuleSection] = []) {
         _viewModel = StateObject(wrappedValue: BattlePhaseTrackerViewModel(matchState: matchState, catalog: catalog))
+        self.ruleSections = ruleSections
     }
 
     var body: some View {
@@ -36,6 +38,7 @@ struct BattlePhaseTrackerView: View {
 
     private var compactLayout: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            loadoutSection
             controlPanel
             trackerContent
         }
@@ -43,10 +46,36 @@ struct BattlePhaseTrackerView: View {
 
     private var regularLayout: some View {
         HStack(alignment: .top, spacing: DesignTokens.Spacing.lg) {
-            controlPanel
-                .frame(width: 320, alignment: .leading)
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                loadoutSection
+                controlPanel
+            }
+            .frame(width: 320, alignment: .leading)
             trackerContent
                 .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    @ViewBuilder
+    private var loadoutSection: some View {
+        if let army = viewModel.activeArmy {
+            LoadoutSummaryCard(
+                playerName: viewModel.trackerState.activePlayerIsOne ? viewModel.playerOneName : viewModel.playerTwoName,
+                armyName: army.name,
+                regimentAbility: viewModel.activeRegimentAbility,
+                enhancement: viewModel.activeEnhancement,
+                isAttacker: viewModel.activePlayerIsAttacker
+            )
+            if army.units.contains(where: \.hasWarscroll) {
+                NavigationLink {
+                    ArmyRosterView(army: army, ruleSections: ruleSections)
+                } label: {
+                    Label(String(localized: "View Warscrolls"), systemImage: "doc.richtext")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .frame(minHeight: DesignTokens.minTouchTarget)
+                }
+                .accessibilityIdentifier("battleTracker.warscrolls")
+            }
         }
     }
 
@@ -188,7 +217,9 @@ struct BattlePhaseTrackerView: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
             Text(String(localized: "Battle tracker isn't available for this army yet."))
                 .font(.headline)
-            Text(String(localized: "Ability reminders for this army aren't in Tabletome yet. Use the GW Spearhead PDF link on the army picker for full rules."))
+            Text(
+                "Ability reminders for this army aren't in Tabletome yet. Use the GW Spearhead PDF link on the army picker for full rules."
+            )
                 .font(.callout)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)

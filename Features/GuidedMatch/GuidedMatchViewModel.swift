@@ -101,12 +101,31 @@ final class GuidedMatchViewModel: ObservableObject {
         BattleTrackerStore.reset()
     }
 
+    func applyStarterMatchup() {
+        SpearheadFeaturedArmies.applyStarterMatchup(to: &matchState)
+        persist()
+    }
+
     func faction(id: String) -> SpearheadFaction? {
         catalog?.factions.first { $0.id == id }
     }
 
     func army(factionId: String, armyId: String) -> SpearheadArmy? {
         faction(id: factionId)?.armies.first { $0.id == armyId }
+    }
+
+    func armyName(for player: PlayerArmySelection) -> String? {
+        army(factionId: player.factionId, armyId: player.armyId)?.name
+    }
+
+    func regimentAbility(for player: PlayerArmySelection) -> ArmyRuleOption? {
+        guard let army = army(factionId: player.factionId, armyId: player.armyId) else { return nil }
+        return army.regimentAbilities.first { $0.id == player.regimentAbilityId }
+    }
+
+    func enhancement(for player: PlayerArmySelection) -> ArmyRuleOption? {
+        guard let army = army(factionId: player.factionId, armyId: player.armyId) else { return nil }
+        return army.enhancements.first { $0.id == player.enhancementId }
     }
 
     func armyLabel(for player: PlayerArmySelection, in catalog: SpearheadCatalog) -> String {

@@ -5,6 +5,8 @@ struct ArmySelectionView: View {
     let title: String
     let selection: PlayerArmySelection
     let factions: [SpearheadFaction]
+    let ruleSections: [RuleSection]
+    var dismissesOnSave: Bool = true
     let onSave: (PlayerArmySelection) -> Void
 
     @State private var playerName: String
@@ -16,11 +18,15 @@ struct ArmySelectionView: View {
         title: String,
         selection: PlayerArmySelection,
         factions: [SpearheadFaction],
+        ruleSections: [RuleSection] = [],
+        dismissesOnSave: Bool = true,
         onSave: @escaping (PlayerArmySelection) -> Void
     ) {
         self.title = title
         self.selection = selection
         self.factions = factions
+        self.ruleSections = ruleSections
+        self.dismissesOnSave = dismissesOnSave
         self.onSave = onSave
         _playerName = State(initialValue: selection.playerName)
         _selectedFactionId = State(initialValue: selection.factionId)
@@ -32,7 +38,12 @@ struct ArmySelectionView: View {
     }
 
     private var sortedArmies: [SpearheadArmy] {
-        selectedFaction?.armies.sorted { $0.name < $1.name } ?? []
+        selectedFaction?.armies.sorted { lhs, rhs in
+            let leftFeatured = SpearheadFeaturedArmies.isFeatured(lhs.id)
+            let rightFeatured = SpearheadFeaturedArmies.isFeatured(rhs.id)
+            if leftFeatured != rightFeatured { return leftFeatured && !rightFeatured }
+            return lhs.name < rhs.name
+        } ?? []
     }
 
     var body: some View {
@@ -66,20 +77,28 @@ struct ArmySelectionView: View {
             if let faction = selectedFaction, !sortedArmies.isEmpty {
                 Section {
                     ForEach(sortedArmies) { army in
-                        ArmyOptionRow(
-                            army: army,
-                            isSelected: army.id == selectedArmyId
-                        )
-                        .contentShape(Rectangle())
-                        .onTapGesture { selectedArmyId = army.id }
+                        Button {
+                            selectedArmyId = army.id
+                        } label: {
+                            ArmyOptionRow(
+                                army: army,
+                                isSelected: army.id == selectedArmyId
+                            )
+                        }
+                        .buttonStyle(.plain)
                         .accessibilityAddTraits(army.id == selectedArmyId ? .isSelected : [])
                         .accessibilityIdentifier("guidedMatch.army.\(army.id)")
                     }
                 } header: {
                     Text(String(localized: "\(faction.name) Spearheads"))
                 } footer: {
-                    if let army = sortedArmies.first(where: { $0.id == selectedArmyId }) {
-                        Text(army.playstyle)
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                        Text(
+                            "Badges show how much rules help is built in: army list, full setup options, or in-battle ability reminders."
+                        )
+                        if let army = sortedArmies.first(where: { $0.id == selectedArmyId }) {
+                            Text(army.playstyle)
+                        }
                     }
                 }
             }
@@ -118,8 +137,21 @@ struct ArmySelectionView: View {
                         .accessibilityIdentifier("guidedMatch.officialRules.\(army.id)")
                     }
                 }
+
+                if army.units.contains(where: \.hasWarscroll) {
+                    Section(String(localized: "Reference")) {
+                        NavigationLink {
+                            ArmyRosterView(army: army, ruleSections: ruleSections)
+                        } label: {
+                            Label(String(localized: "Warscrolls & Abilities"), systemImage: "doc.richtext")
+                                .frame(minHeight: DesignTokens.minTouchTarget)
+                        }
+                        .accessibilityIdentifier("guidedMatch.warscrolls.\(army.id)")
+                    }
+                }
             }
         }
+        .readableContentWidth()
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -135,7 +167,9 @@ struct ArmySelectionView: View {
                     updated.regimentAbilityId = nil
                     updated.enhancementId = nil
                     onSave(updated)
-                    dismiss()
+                    if dismissesOnSave {
+                        dismiss()
+                    }
                 }
                 .disabled(selectedFactionId.isEmpty || selectedArmyId.isEmpty)
                 .accessibilityIdentifier("guidedMatch.saveArmy")
@@ -151,8 +185,19 @@ private struct ArmyOptionRow: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                Text(army.name)
-                    .font(.headline)
+                HStack(spacing: DesignTokens.Spacing.sm) {
+                    Text(army.name)
+                        .font(.headline)
+                        .foregroundStyle(.primary)
+                    if SpearheadFeaturedArmies.isFeatured(army.id) {
+                        Text(String(localized: "Starter Set"))
+                            .font(.caption2.weight(.semibold))
+                            .padding(.horizontal, DesignTokens.Spacing.sm)
+                            .padding(.vertical, 2)
+                            .background(Color.orange.opacity(0.15), in: Capsule())
+                            .foregroundStyle(.orange)
+                    }
+                }
                 Text(army.general)
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -167,7 +212,9 @@ private struct ArmyOptionRow: View {
         }
         .frame(minHeight: DesignTokens.minTouchTarget)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(army.name), general \(army.general)")
+        .accessibilityLabel(
+            "\(army.name), general \(army.general), \(army.contentCoverage.playerFacingTitle)"
+        )
         .accessibilityHint(isSelected ? "Selected" : "Select this army")
     }
 }
@@ -176,12 +223,12 @@ private struct ContentCoverageBadge: View {
     let coverage: SpearheadContentCoverage
 
     var body: some View {
-        Text(coverage.title)
+        Label(coverage.playerFacingTitle, systemImage: coverage.systemImage)
             .font(.caption2.weight(.medium))
             .padding(.horizontal, DesignTokens.Spacing.sm)
             .padding(.vertical, 2)
             .background(coverage >= .battleTracker ? Color.green.opacity(0.15) : Color(.tertiarySystemFill), in: Capsule())
-            .foregroundStyle(coverage >= .battleTracker ? .green : .secondary)
-            .accessibilityLabel(String(localized: "Content: \(coverage.title)"))
+            .foregroundStyle(coverage >= .warscrolls ? .orange : coverage >= .battleTracker ? .green : .secondary)
+            .accessibilityLabel(String(localized: "Content: \(coverage.playerFacingTitle)"))
     }
 }

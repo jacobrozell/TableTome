@@ -8,6 +8,7 @@ struct MatchStepDetailView: View {
     let ruleSections: [RuleSection]
 
     @State private var isComplete = false
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     var body: some View {
         ScrollView {
@@ -45,6 +46,7 @@ struct MatchStepDetailView: View {
                     viewModel.setStepComplete(step.id, complete: newValue)
                 }
             }
+            .readableContentWidth()
             .padding(DesignTokens.Spacing.md)
         }
         .navigationTitle(step.title)
@@ -62,21 +64,27 @@ struct MatchStepDetailView: View {
         case "roll-attacker":
             attackerPicker
         case "regiment-abilities":
-            armyOptionsSection(
-                title: String(localized: "Regiment Abilities"),
-                playerOneKeyPath: \.regimentAbilityId,
-                playerTwoKeyPath: \.regimentAbilityId,
-                options: { army in army.regimentAbilities },
-                onSelect: viewModel.setRegimentAbility
-            )
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                armyOptionsSection(
+                    title: String(localized: "Regiment Abilities"),
+                    playerOneKeyPath: \.regimentAbilityId,
+                    playerTwoKeyPath: \.regimentAbilityId,
+                    options: { army in army.regimentAbilities },
+                    onSelect: viewModel.setRegimentAbility
+                )
+                loadoutSummarySection(showRegiment: true, showEnhancement: false)
+            }
         case "enhancements":
-            armyOptionsSection(
-                title: String(localized: "Enhancements"),
-                playerOneKeyPath: \.enhancementId,
-                playerTwoKeyPath: \.enhancementId,
-                options: { army in army.enhancements },
-                onSelect: viewModel.setEnhancement
-            )
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                armyOptionsSection(
+                    title: String(localized: "Enhancements"),
+                    playerOneKeyPath: \.enhancementId,
+                    playerTwoKeyPath: \.enhancementId,
+                    options: { army in army.enhancements },
+                    onSelect: viewModel.setEnhancement
+                )
+                loadoutSummarySection(showRegiment: true, showEnhancement: true)
+            }
         default:
             EmptyView()
         }
@@ -137,6 +145,58 @@ struct MatchStepDetailView: View {
         )
     }
 
+    private func loadoutSummarySection(showRegiment: Bool, showEnhancement: Bool) -> some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            Text(String(localized: "Loadout Summary"))
+                .font(.headline)
+
+            if horizontalSizeClass == .regular {
+                HStack(alignment: .top, spacing: DesignTokens.Spacing.lg) {
+                    playerLoadoutCard(
+                        player: viewModel.matchState.playerOne,
+                        isAttacker: viewModel.matchState.attackerIsPlayerOne == true,
+                        showRegiment: showRegiment,
+                        showEnhancement: showEnhancement
+                    )
+                    playerLoadoutCard(
+                        player: viewModel.matchState.playerTwo,
+                        isAttacker: viewModel.matchState.attackerIsPlayerOne == false,
+                        showRegiment: showRegiment,
+                        showEnhancement: showEnhancement
+                    )
+                }
+            } else {
+                playerLoadoutCard(
+                    player: viewModel.matchState.playerOne,
+                    isAttacker: viewModel.matchState.attackerIsPlayerOne == true,
+                    showRegiment: showRegiment,
+                    showEnhancement: showEnhancement
+                )
+                playerLoadoutCard(
+                    player: viewModel.matchState.playerTwo,
+                    isAttacker: viewModel.matchState.attackerIsPlayerOne == false,
+                    showRegiment: showRegiment,
+                    showEnhancement: showEnhancement
+                )
+            }
+        }
+    }
+
+    private func playerLoadoutCard(
+        player: PlayerArmySelection,
+        isAttacker: Bool,
+        showRegiment: Bool,
+        showEnhancement: Bool
+    ) -> some View {
+        LoadoutSummaryCard(
+            playerName: player.playerName,
+            armyName: viewModel.armyName(for: player) ?? String(localized: "No army selected"),
+            regimentAbility: showRegiment ? viewModel.regimentAbility(for: player) : nil,
+            enhancement: showEnhancement ? viewModel.enhancement(for: player) : nil,
+            isAttacker: isAttacker
+        )
+    }
+
     private func armyOptionsSection(
         title: String,
         playerOneKeyPath: KeyPath<PlayerArmySelection, String?>,
@@ -148,23 +208,44 @@ struct MatchStepDetailView: View {
             Text(title)
                 .font(.title3.bold())
 
-            playerOptionPicker(
-                player: viewModel.matchState.playerOne,
-                selectedId: viewModel.matchState.playerOne[keyPath: playerOneKeyPath],
-                isAttacker: viewModel.matchState.attackerIsPlayerOne == true,
-                playerIsOne: true,
-                options: options,
-                onSelect: onSelect
-            )
+            if horizontalSizeClass == .regular {
+                HStack(alignment: .top, spacing: DesignTokens.Spacing.lg) {
+                    playerOptionPicker(
+                        player: viewModel.matchState.playerOne,
+                        selectedId: viewModel.matchState.playerOne[keyPath: playerOneKeyPath],
+                        isAttacker: viewModel.matchState.attackerIsPlayerOne == true,
+                        playerIsOne: true,
+                        options: options,
+                        onSelect: onSelect
+                    )
+                    playerOptionPicker(
+                        player: viewModel.matchState.playerTwo,
+                        selectedId: viewModel.matchState.playerTwo[keyPath: playerTwoKeyPath],
+                        isAttacker: viewModel.matchState.attackerIsPlayerOne == false,
+                        playerIsOne: false,
+                        options: options,
+                        onSelect: onSelect
+                    )
+                }
+            } else {
+                playerOptionPicker(
+                    player: viewModel.matchState.playerOne,
+                    selectedId: viewModel.matchState.playerOne[keyPath: playerOneKeyPath],
+                    isAttacker: viewModel.matchState.attackerIsPlayerOne == true,
+                    playerIsOne: true,
+                    options: options,
+                    onSelect: onSelect
+                )
 
-            playerOptionPicker(
-                player: viewModel.matchState.playerTwo,
-                selectedId: viewModel.matchState.playerTwo[keyPath: playerTwoKeyPath],
-                isAttacker: viewModel.matchState.attackerIsPlayerOne == false,
-                playerIsOne: false,
-                options: options,
-                onSelect: onSelect
-            )
+                playerOptionPicker(
+                    player: viewModel.matchState.playerTwo,
+                    selectedId: viewModel.matchState.playerTwo[keyPath: playerTwoKeyPath],
+                    isAttacker: viewModel.matchState.attackerIsPlayerOne == false,
+                    playerIsOne: false,
+                    options: options,
+                    onSelect: onSelect
+                )
+            }
         }
     }
 
@@ -195,11 +276,15 @@ struct MatchStepDetailView: View {
                         .foregroundStyle(.secondary)
                 } else {
                     ForEach(armyOptions) { option in
-                        ArmyRuleOptionCard(
-                            option: option,
-                            isSelected: selectedId == option.id
-                        )
-                        .onTapGesture { onSelect(playerIsOne, option.id) }
+                        Button {
+                            onSelect(playerIsOne, option.id)
+                        } label: {
+                            ArmyRuleOptionCard(
+                                option: option,
+                                isSelected: selectedId == option.id
+                            )
+                        }
+                        .buttonStyle(.plain)
                         .accessibilityAddTraits(selectedId == option.id ? .isSelected : [])
                         .accessibilityIdentifier("guidedMatch.option.\(option.id)")
                     }

@@ -61,6 +61,8 @@ All reference content ships as versioned JSON in `Resources/Rules/`. Loaded at l
 | File | Purpose |
 |------|---------|
 | `Resources/Rules/rules-v1.json` | Production bundle |
+| `Resources/Rules/spearhead-catalog-v1.json` | Spearhead factions, armies, match steps |
+| `Resources/Rules/Spearhead/armies/{army-id}.json` | Optional per-army battle-tracker overlay |
 | `Tests/Unit/Fixtures/rules-v1-minimal.json` | Test fixture |
 
 ## Verification

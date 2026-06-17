@@ -56,9 +56,47 @@ struct UnitAbilityCard: View {
                 .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
         )
         .opacity(isUsed ? 0.55 : 1)
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(ability.name). \(ability.effect)")
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilitySummary)
+        .accessibilityValue(accessibilityStatus)
+        .modifier(OptionalAccessibilityHint(hint: accessibilityActionHint))
+        .accessibilityAddTraits(isUsed ? .isSelected : [])
         .accessibilityIdentifier("battleTracker.ability.\(ability.id)")
+    }
+
+    private var accessibilitySummary: String {
+        var parts = ["\(ability.name)", ability.source]
+        parts.append(displayPhase.title)
+        if let declare = ability.declare, !declare.isEmpty {
+            parts.append(String(localized: "Declare: \(declare)"))
+        }
+        parts.append(String(localized: "Effect: \(ability.effect)"))
+        return parts.joined(separator: ". ")
+    }
+
+    private var accessibilityStatus: String {
+        if isUsed {
+            return String(localized: "Used this battle")
+        }
+        switch ability.usageLimit {
+        case .oncePerBattle:
+            return String(localized: "Once per battle, not used")
+        case .eachTurn:
+            return String(localized: "Each turn")
+        case .passive:
+            return String(localized: "Passive")
+        case .eachPhase:
+            return String(localized: "Each phase")
+        case .oncePerPhase:
+            return String(localized: "Once per phase")
+        case .reaction:
+            return String(localized: "Reaction")
+        }
+    }
+
+    private var accessibilityActionHint: String? {
+        guard ability.usageLimit == .oncePerBattle, onMarkUsed != nil, !isUsed else { return nil }
+        return String(localized: "Double tap to mark as used")
     }
 
     private var phaseBanner: some View {
@@ -126,6 +164,18 @@ struct UnitAbilityCard: View {
             Text(body)
                 .font(.subheadline)
                 .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
+private struct OptionalAccessibilityHint: ViewModifier {
+    let hint: String?
+
+    func body(content: Content) -> some View {
+        if let hint {
+            content.accessibilityHint(hint)
+        } else {
+            content
         }
     }
 }

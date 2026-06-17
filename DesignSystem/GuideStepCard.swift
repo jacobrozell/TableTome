@@ -7,6 +7,8 @@ public struct GuideStepCard: View {
     let isComplete: Bool
     let accessibilityId: String
 
+    @ScaledMetric(relativeTo: .subheadline) private var stepCircleSize: CGFloat = 36
+
     public init(stepNumber: Int, title: String, summary: String, isComplete: Bool, accessibilityId: String) {
         self.stepNumber = stepNumber
         self.title = title
@@ -20,7 +22,7 @@ public struct GuideStepCard: View {
             ZStack {
                 Circle()
                     .fill(isComplete ? Color.green.opacity(0.2) : Color.accentColor.opacity(0.15))
-                    .frame(width: 36, height: 36)
+                    .frame(width: stepCircleSize, height: stepCircleSize)
                 if isComplete {
                     Image(systemName: "checkmark")
                         .font(.caption.bold())

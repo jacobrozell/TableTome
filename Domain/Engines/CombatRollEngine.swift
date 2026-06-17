@@ -17,6 +17,8 @@ public struct AttackRollInput: Sendable, Equatable {
     public let hitModifier: Int
     public let woundModifier: Int
     public let saveModifier: Int
+    public let wardTarget: Int?
+    public let wardRoll: Int?
 
     public init(
         hitTarget: Int,
@@ -29,7 +31,9 @@ public struct AttackRollInput: Sendable, Equatable {
         saveRoll: Int,
         hitModifier: Int = 0,
         woundModifier: Int = 0,
-        saveModifier: Int = 0
+        saveModifier: Int = 0,
+        wardTarget: Int? = nil,
+        wardRoll: Int? = nil
     ) {
         self.hitTarget = hitTarget
         self.woundTarget = woundTarget
@@ -42,6 +46,8 @@ public struct AttackRollInput: Sendable, Equatable {
         self.hitModifier = hitModifier
         self.woundModifier = woundModifier
         self.saveModifier = saveModifier
+        self.wardTarget = wardTarget
+        self.wardRoll = wardRoll
     }
 }
 
@@ -119,7 +125,26 @@ public enum CombatRollEngine: Sendable {
             )
         )
 
-        let damage = saveSuccess ? 0 : input.damage
+        guard !saveSuccess else {
+            return AttackRollEvaluation(steps: steps, damageDealt: 0)
+        }
+
+        if let wardTarget = input.wardTarget, let wardRoll = input.wardRoll {
+            let wardSuccess = wardRoll != 1 && wardRoll >= wardTarget
+            steps.append(
+                AttackRollStep(
+                    id: "ward",
+                    name: "Ward Roll",
+                    outcome: wardSuccess ? .success : .failure,
+                    explanation: wardExplanation(wardRoll: wardRoll, wardTarget: wardTarget, success: wardSuccess)
+                )
+            )
+            if wardSuccess {
+                return AttackRollEvaluation(steps: steps, damageDealt: 0)
+            }
+        }
+
+        let damage = input.damage
         if damage > 0 {
             steps.append(
                 AttackRollStep(
@@ -160,5 +185,12 @@ public enum CombatRollEngine: Sendable {
         }
         let rendNote = input.rend == 0 ? "" : " after Rend \(input.rend)"
         return "Rolled \(input.saveRoll) + modifiers\(rendNote) = \(effective) vs Save \(input.saveTarget)+ — \(effective >= input.saveTarget ? "saved" : "failed save")."
+    }
+
+    private static func wardExplanation(wardRoll: Int, wardTarget: Int, success: Bool) -> String {
+        if wardRoll == 1 {
+            return "Unmodified roll of 1 always fails ward."
+        }
+        return "Rolled \(wardRoll) vs Ward \(wardTarget)+ — \(success ? "damage ignored" : "ward failed")."
     }
 }

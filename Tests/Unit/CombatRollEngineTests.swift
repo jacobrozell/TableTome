@@ -44,4 +44,26 @@ final class CombatRollEngineTests: XCTestCase {
         XCTAssertEqual(result.damageDealt, 0)
         XCTAssertEqual(result.steps.last?.id, "save")
     }
+
+    func testWardPreventsDamageAfterFailedSave() {
+        let input = AttackRollInput(
+            hitTarget: 3, woundTarget: 3, saveTarget: 6, rend: 0, damage: 2,
+            hitRoll: 4, woundRoll: 4, saveRoll: 3,
+            wardTarget: 5, wardRoll: 5
+        )
+        let result = CombatRollEngine.evaluate(input)
+        XCTAssertEqual(result.damageDealt, 0)
+        XCTAssertEqual(result.steps.last?.id, "ward")
+    }
+
+    func testWardFailureDealsDamage() {
+        let input = AttackRollInput(
+            hitTarget: 3, woundTarget: 3, saveTarget: 6, rend: 0, damage: 2,
+            hitRoll: 4, woundRoll: 4, saveRoll: 3,
+            wardTarget: 5, wardRoll: 3
+        )
+        let result = CombatRollEngine.evaluate(input)
+        XCTAssertEqual(result.damageDealt, 2)
+        XCTAssertEqual(result.steps.last?.id, "damage")
+    }
 }

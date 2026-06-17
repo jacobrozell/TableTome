@@ -3,13 +3,13 @@ import Foundation
 @MainActor
 final class LearnNavigationCoordinator: ObservableObject {
     enum Action: Equatable {
-        case openGettingStarted(gameSystemId: String)
+        case openGuidedMatch(gameSystemId: String)
     }
 
     @Published private(set) var pendingAction: Action?
 
-    func openGettingStarted(gameSystemId: String = OnboardingCompletion.defaultGettingStartedGameSystemId) {
-        pendingAction = .openGettingStarted(gameSystemId: gameSystemId)
+    func openGuidedMatch(gameSystemId: String = OnboardingCompletion.defaultGameSystemId) {
+        pendingAction = .openGuidedMatch(gameSystemId: gameSystemId)
     }
 
     func consumePendingAction() -> Action? {

@@ -41,4 +41,34 @@ final class CombatRollEvaluatorViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.hitRoll, 4)
         XCTAssertNil(viewModel.evaluation)
     }
+
+    func testRollAttackPopulatesDiceAndEvaluates() {
+        let viewModel = CombatRollEvaluatorViewModel()
+        viewModel.rollAttack()
+        XCTAssertFalse(viewModel.lastRolls.isEmpty)
+        XCTAssertNotNil(viewModel.evaluation)
+        XCTAssertGreaterThanOrEqual(viewModel.hitRoll, 1)
+        XCTAssertLessThanOrEqual(viewModel.hitRoll, 6)
+        XCTAssertEqual(
+            viewModel.evaluation?.damageDealt,
+            CombatRollEngine.evaluate(
+                CombatRollResolution.input(
+                    from: SimulatedAttackRollSupport.rollParameters(from: viewModel),
+                    hitRoll: viewModel.hitRoll,
+                    woundRoll: viewModel.woundRoll,
+                    saveRoll: viewModel.saveRoll,
+                    wardRoll: nil,
+                    damage: viewModel.damage
+                )
+            ).damageDealt
+        )
+    }
+
+    func testClearSimulatedRollsResetsLogAndResults() {
+        let viewModel = CombatRollEvaluatorViewModel()
+        viewModel.rollAttack()
+        viewModel.clearSimulatedRolls()
+        XCTAssertTrue(viewModel.lastRolls.isEmpty)
+        XCTAssertNil(viewModel.evaluation)
+    }
 }

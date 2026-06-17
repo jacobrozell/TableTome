@@ -12,21 +12,34 @@ struct MatchupSidePanel: View {
     var weapons: [SpearheadWeapon] = []
     @Binding var weaponId: String
     var showsWeaponPicker: Bool = false
+    var showsArmyPicker: Bool = true
+    var usesCompactStyle: Bool = false
     let onArmyChange: (String) -> Void
     let onUnitChange: (String) -> Void
     let onWeaponChange: (String) -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            SectionHeader(title: title, systemImage: systemImage)
-
-            Picker(String(localized: "Army"), selection: $armyId) {
-                ForEach(armies) { army in
-                    Text(army.name).tag(army.id)
-                }
+        VStack(alignment: .leading, spacing: usesCompactStyle ? DesignTokens.Spacing.sm : DesignTokens.Spacing.md) {
+            if usesCompactStyle {
+                Text(title)
+                    .font(.subheadline.weight(.semibold))
+            } else {
+                SectionHeader(title: title, systemImage: systemImage)
             }
-            .pickerStyle(.menu)
-            .onChange(of: armyId) { _, newValue in onArmyChange(newValue) }
+
+            if showsArmyPicker {
+                Picker(String(localized: "Army"), selection: $armyId) {
+                    ForEach(armies) { army in
+                        Text(army.name).tag(army.id)
+                    }
+                }
+                .pickerStyle(.menu)
+                .onChange(of: armyId) { _, newValue in onArmyChange(newValue) }
+            } else {
+                Text(armyName)
+                    .font(usesCompactStyle ? .caption.weight(.semibold) : .subheadline.weight(.semibold))
+                    .foregroundStyle(usesCompactStyle ? .secondary : .primary)
+            }
 
             Picker(String(localized: "Unit"), selection: $unitId) {
                 ForEach(units) { unit in
@@ -46,12 +59,12 @@ struct MatchupSidePanel: View {
                 .onChange(of: weaponId) { _, newValue in onWeaponChange(newValue) }
             }
 
-            if let unit = units.first(where: { $0.id == unitId }) {
+            if !usesCompactStyle, let unit = units.first(where: { $0.id == unitId }) {
                 Divider()
                 unitSummary(unit)
             }
         }
-        .surfaceCard()
+        .modifier(ConditionalSurfaceCard(enabled: !usesCompactStyle))
     }
 
     @ViewBuilder
@@ -70,6 +83,18 @@ struct MatchupSidePanel: View {
                     .font(.caption2)
                     .foregroundStyle(.tertiary)
             }
+        }
+    }
+}
+
+private struct ConditionalSurfaceCard: ViewModifier {
+    let enabled: Bool
+
+    func body(content: Content) -> some View {
+        if enabled {
+            content.surfaceCard()
+        } else {
+            content
         }
     }
 }

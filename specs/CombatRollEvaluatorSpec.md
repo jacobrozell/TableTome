@@ -80,9 +80,9 @@ Entry points (when `ReleaseSurface.showsRollEvaluator`):
 | Release (v0.2) | ✅ |
 | `-enable_full_product_surface` | ✅ |
 
-## Simulated dice (planned)
+## Simulated dice
 
-Manual dice entry via `DiceValuePicker` is the current v0.2 behavior. **v1:** roll simulator (tap to roll d6, feed combat engine) — [DiceRollerSpec.md](DiceRollerSpec.md). **Future:** dice tray with animation and roll log.
+Manual dice entry via `DiceValuePicker` remains available. **Roll in app** mode adds simulated d6 rolls — see [DiceRollerSpec.md](DiceRollerSpec.md). Dice tray (animation) is future work.
 
 ## Verification
 

@@ -22,20 +22,55 @@ public enum DeploymentChecklistStep: String, CaseIterable, Codable, Sendable, Id
     public var detail: String {
         switch self {
         case .chooseRealmSide:
-            String(localized: "Pick Aqshy or Ghyran (Fire and Jade board). Match your twist deck to this side.")
+            String(
+                localized: """
+                Pick which physical board you are using, then which side to fight on. \
+                Fire and Jade (Aqshy or Ghyran), Sand and Bone (Ossia or Dolorum), and City of Ash \
+                (Ashen Bastion or Shattered Crossroads) each have their own twist deck — use the deck \
+                that matches your chosen side.
+                """
+            )
         case .setupTerrain:
-            String(localized: "Place two large and two small terrain features on the battlefield.")
+            String(
+                localized: """
+                Place two large and two small terrain features. Spread them across the board, \
+                keep deployment zones clear, and avoid blocking the printed objective circles.
+                """
+            )
         case .placeObjectives:
-            String(localized: "Objectives are printed on the board. The whole circle counts, not just the centre symbol.")
+            String(
+                localized: """
+                Objectives are already printed on the board — no extra markers needed. \
+                A model contests an objective while wholly or partially on the circle; \
+                the entire circle counts, not just the centre symbol.
+                """
+            )
         case .deployArmies:
-            String(localized: "Follow the deployment map for your chosen realm side.")
+            String(
+                localized: """
+                Use the deployment map for your chosen realm side. Deploy within the shaded zones \
+                on your half of the board, starting with the defender, then alternate with your opponent.
+                """
+            )
         case .deploymentAbilities:
-            String(localized: "Resolve once-per-battle deployment abilities (e.g. Skaven units in the tunnels below).")
+            String(
+                localized: """
+                Before the first turn, check each army for once-per-battle deployment abilities — \
+                for example, Skaven can hide a unit in the tunnels below, and some armies can set up \
+                reinforcements from a battlefield edge.
+                """
+            )
         }
     }
 }
 
 public enum DeploymentChecklist {
+    public static let overview: String = String(
+        localized: """
+        Deployment happens after regiment abilities and enhancements are chosen. Work through these \
+        five steps in order before round 1 — the defender leads on board side and terrain.
+        """
+    )
     public static func isComplete(step: DeploymentChecklistStep, completedSteps: Set<String>) -> Bool {
         completedSteps.contains(step.rawValue)
     }

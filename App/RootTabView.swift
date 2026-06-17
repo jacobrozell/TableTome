@@ -60,21 +60,21 @@ struct RootTabView: View {
         switch completion {
         case .exploreApp:
             break
-        case .openGettingStarted(let gameSystemId):
-            openGettingStarted(gameSystemId: gameSystemId)
+        case .openGuidedMatch(let gameSystemId):
+            openGuidedMatch(gameSystemId: gameSystemId)
         }
     }
 
     private func applyPendingLearnNavigation() {
         guard let action = learnNavigationCoordinator.consumePendingAction() else { return }
         switch action {
-        case .openGettingStarted(let gameSystemId):
-            openGettingStarted(gameSystemId: gameSystemId)
+        case .openGuidedMatch(let gameSystemId):
+            openGuidedMatch(gameSystemId: gameSystemId)
         }
     }
 
-    private func openGettingStarted(gameSystemId: String) {
+    private func openGuidedMatch(gameSystemId: String) {
         selectedTab = .learn
-        learnPath = NavigationPath([GettingStartedLink(gameSystemId: gameSystemId)])
+        learnPath = NavigationPath([GuidedMatchLink(gameSystemId: gameSystemId)])
     }
 }

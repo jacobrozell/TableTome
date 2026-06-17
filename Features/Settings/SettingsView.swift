@@ -24,6 +24,12 @@ struct SettingsView: View {
                 Text(String(localized: "About"))
             }
 
+            Section(String(localized: "Dice Roller")) {
+                Text(String(localized: "Simulated dice use your device's secure random number generator. For casual play."))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
             Section(String(localized: "Appearance")) {
                 Picker(String(localized: "Theme"), selection: $appearance) {
                     Text(String(localized: "System")).tag("system")
@@ -120,8 +126,8 @@ struct SettingsView: View {
         .fullScreenCover(isPresented: $showsOnboarding) {
             OnboardingView(mode: .replay) { completion in
                 showsOnboarding = false
-                if case .openGettingStarted(let gameSystemId) = completion {
-                    learnNavigationCoordinator.openGettingStarted(gameSystemId: gameSystemId)
+                if case .openGuidedMatch(let gameSystemId) = completion {
+                    learnNavigationCoordinator.openGuidedMatch(gameSystemId: gameSystemId)
                 }
             }
         }

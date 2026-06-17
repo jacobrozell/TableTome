@@ -2,7 +2,7 @@ import Foundation
 
 enum OnboardingCompletion: Sendable, Equatable {
     case exploreApp
-    case openGettingStarted(gameSystemId: String)
+    case openGuidedMatch(gameSystemId: String)
 
-    static let defaultGettingStartedGameSystemId = "aos-spearhead"
+    static let defaultGameSystemId = "aos-spearhead"
 }

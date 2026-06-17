@@ -32,6 +32,15 @@ public enum BattleTurnPhase: String, Codable, Sendable, CaseIterable, Identifiab
     public static let mainTurnPhases: [BattleTurnPhase] = [
         .hero, .movement, .shooting, .charge, .combat, .endOfTurn
     ]
+
+    public var isCombatRelated: Bool {
+        switch self {
+        case .shooting, .charge, .combat, .anyCombat:
+            true
+        default:
+            false
+        }
+    }
 }
 
 public enum AbilityUsageLimit: String, Codable, Sendable {

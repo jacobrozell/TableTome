@@ -247,13 +247,13 @@ struct OnboardingView: View {
                         Spacer(minLength: 0)
                     }
 
-                    Button(String(localized: "Open Getting Started")) {
-                        complete(.openGettingStarted(gameSystemId: OnboardingCompletion.defaultGettingStartedGameSystemId))
+                    Button(String(localized: "Start a Match")) {
+                        complete(.openGuidedMatch(gameSystemId: OnboardingCompletion.defaultGameSystemId))
                     }
                     .buttonStyle(.borderedProminent)
                     .controlSize(.regular)
                     .frame(maxWidth: .infinity)
-                    .accessibilityIdentifier("onboarding.openGettingStarted")
+                    .accessibilityIdentifier("onboarding.startGuidedMatch")
 
                     Button(String(localized: "Explore the app")) {
                         complete(.exploreApp)
@@ -280,10 +280,10 @@ struct OnboardingView: View {
         } else {
             VStack(spacing: 10) {
                 PrimaryButton(
-                    title: String(localized: "Open Getting Started"),
-                    accessibilityId: "onboarding.openGettingStarted"
+                    title: String(localized: "Start a Match"),
+                    accessibilityId: "onboarding.startGuidedMatch"
                 ) {
-                    complete(.openGettingStarted(gameSystemId: OnboardingCompletion.defaultGettingStartedGameSystemId))
+                    complete(.openGuidedMatch(gameSystemId: OnboardingCompletion.defaultGameSystemId))
                 }
 
                 Button(String(localized: "Explore the app")) {

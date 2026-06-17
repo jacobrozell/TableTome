@@ -55,7 +55,7 @@ struct VictoryPointsCard: View {
                 quickButton(label: String(localized: "+1 tactic"), isPlayerOne: isPlayerOne, amount: 1)
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
     }
 
     private func quickButton(label: String, isPlayerOne: Bool, amount: Int) -> some View {

@@ -23,10 +23,11 @@ struct GettingStartedView: View {
                         title: step.title,
                         summary: step.summary,
                         isComplete: GuideProgressStore.isComplete(gameSystemId: gameSystem.id, stepId: step.id),
+                        showsDisclosureIndicator: false,
                         accessibilityId: "guide.step.\(step.id)"
                     )
                 }
-                .listRowInsets(EdgeInsets())
+                .listRowInsets(GuideStepCard.listRowInsets)
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
             }

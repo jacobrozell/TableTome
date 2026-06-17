@@ -24,10 +24,11 @@
           "id": "realm-battlefield",
           "order": 2,
           "title": "Choose a Realm Battlefield",
-          "summary": "Agree on a realm board and matching Spearhead deck.",
-          "body": "Spearhead battles use a 30\"×22\" double-sided realm battlefield. Fire and Jade features Aqshy (Realm of Fire) and Ghyran (Realm of Life). Each side has its own twist deck. You also need two battle tactic decks (one per player) and terrain: two large and two small features.",
+          "summary": "Agree on a board, side, and matching twist deck.",
+          "body": "Spearhead battles use 30\"×22\" realm battlefields. Fire and Jade (Aqshy or Ghyran) is the original board; Sand and Bone (Ossia or Dolorum) and City of Ash (Ashen Bastion or Shattered Crossroads) add more options. Each side has its own deployment map and twist deck — use the deck that matches the side you fight on.\n\nYou also need two battle tactic decks (one per player) and terrain: two large and two small features placed before armies deploy. Objectives are printed on the board.",
           "tips": [
-            "The defender chooses which realm side to fight on.",
+            "The defender chooses which battlefield and which side to use.",
+            "Match your twist deck to the realm side — Fire/Jade, Sand/Bone, or City of Ash.",
             "Objectives are printed on the board — the whole circle counts, not just the centre symbol."
           ],
           "relatedRuleSectionId": "spearhead-overview"
@@ -98,7 +99,7 @@
           "title": "Spearhead Overview",
           "category": "spearhead",
           "order": 10,
-          "content": "Spearhead is a compact AoS 4th Edition mode using Core Rules only (no Advanced Rules modules). Armies are fixed box-set rosters. Battles use realm battlefields, twist cards, and battle tactic cards instead of the standard Battle Tactics and Commands modules.\n\nPre-battle: roll for attacker/defender → pick regiment abilities and enhancements → defender chooses realm side and deployment map → set up terrain → deploy armies.",
+          "content": "Spearhead is a compact AoS 4th Edition mode using Core Rules only (no Advanced Rules modules). Armies are fixed box-set rosters. Battles use realm battlefields, twist cards, and battle tactic cards instead of the standard Battle Tactics and Commands modules.\n\nPre-battle: roll for attacker/defender → pick regiment abilities and enhancements → deployment phase (defender chooses battlefield and side, set up terrain, confirm objectives, deploy armies, resolve deployment abilities) → start battle round 1.",
           "relatedSectionIds": ["spearhead-battle-round", "spearhead-scoring"]
         },
         {

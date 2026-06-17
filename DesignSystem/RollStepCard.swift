@@ -1,6 +1,47 @@
 import SwiftUI
 import TabletomeDomain
 
+struct CombatOutcomeBanner: View {
+    let evaluation: AttackRollEvaluation
+    let matchupTitle: String?
+    var accessibilityId: String = "combatOutcome.banner"
+
+    private var accentColor: Color {
+        evaluation.attackSucceeded ? .orange : .green
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            if let matchupTitle {
+                Text(matchupTitle)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+            }
+            HStack(spacing: DesignTokens.Spacing.sm) {
+                Image(systemName: evaluation.attackSucceeded ? "bolt.fill" : "shield.fill")
+                    .font(.title3)
+                    .foregroundStyle(accentColor)
+                    .accessibilityHidden(true)
+                Text(evaluation.outcomeHeadline)
+                    .font(.title3.bold())
+                    .fixedSize(horizontal: false, vertical: true)
+                Spacer()
+                if evaluation.damageDealt > 0 {
+                    Text("\(evaluation.damageDealt)")
+                        .font(.largeTitle.bold())
+                        .monospacedDigit()
+                        .foregroundStyle(accentColor)
+                        .contentTransition(.numericText())
+                }
+            }
+        }
+        .surfaceCard()
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(evaluation.outcomeHeadline)
+        .accessibilityIdentifier(accessibilityId)
+    }
+}
+
 struct RollStepCard: View {
     let step: AttackRollStep
 

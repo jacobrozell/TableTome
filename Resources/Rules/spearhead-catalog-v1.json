@@ -822,11 +822,13 @@
       "id": "realm-battlefield",
       "order": 5,
       "title": "Set Up the Battlefield",
-      "summary": "Defender chooses realm side; place terrain and objectives.",
-      "body": "The defender chooses which side of the realm battlefield to use (e.g. Aqshy or Ghyran from Fire and Jade). Set up terrain — two large and two small features. Objectives are printed on the board.",
+      "summary": "Defender chooses board and side; terrain, objectives, deploy armies.",
+      "body": "Deployment is the last step before round 1. The defender chooses which Spearhead battlefield you are using — Fire and Jade (Aqshy or Ghyran), Sand and Bone (Ossia or Dolorum), or City of Ash (Ashen Bastion or Shattered Crossroads) — and which side of that board to fight on. Each side has its own deployment map and twist deck, so match the deck to the side you pick.\n\nNext, set up terrain: two large and two small features, spread across the board without blocking deployment zones or objectives. Objectives are already printed on the board — the whole circle counts when contesting, not just the centre symbol.\n\nDeploy armies within the shaded zones on the deployment map, defender first then alternating. Before the first turn, resolve any once-per-battle deployment abilities on your army sheets (for example, Skaven hiding a unit in the tunnels below).",
       "tips": [
-        "The whole objective circle counts, not just the centre symbol.",
-        "Match your twist deck to the realm side you are fighting on."
+        "Use the coin flip in the checklist below if neither player cares which side you play on.",
+        "Fire and Jade is the classic Spearhead board; Sand and Bone and City of Ash add new maps and twists.",
+        "Check both army sheets for Deployment Phase abilities — they are easy to forget in a first game.",
+        "The whole objective circle counts, not just the centre symbol."
       ],
       "relatedRuleSectionId": "spearhead-overview"
     },

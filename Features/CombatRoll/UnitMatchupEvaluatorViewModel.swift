@@ -17,6 +17,7 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
     @Published var saveRoll = 4
     @Published var wardRoll = 4
     @Published var rollOptions = CombatRollOptions()
+    @Published private(set) var lastRolls: [DiceRollResult] = []
     @Published private(set) var evaluation: AttackRollEvaluation?
 
     private let catalogRepository: any SpearheadCatalogRepository
@@ -117,7 +118,7 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
         }
         selectDefaultAttackerUnit()
         syncProfileFromSelection()
-        clearResults()
+        refreshEvaluation()
     }
 
     func setDefenderArmy(_ armyId: String) {
@@ -129,7 +130,7 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
         defenderUnitId = selectedDefenderArmy?.units.first?.id ?? ""
         pruneDisabledBuffs()
         syncProfileFromSelection()
-        clearResults()
+        refreshEvaluation()
     }
 
     func setAttackerUnit(_ unitId: String) {
@@ -137,20 +138,20 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
         selectDefaultAttackerWeapon()
         pruneDisabledBuffs()
         syncProfileFromSelection()
-        clearResults()
+        refreshEvaluation()
     }
 
     func setDefenderUnit(_ unitId: String) {
         defenderUnitId = unitId
         pruneDisabledBuffs()
         syncProfileFromSelection()
-        clearResults()
+        refreshEvaluation()
     }
 
     func setAttackerWeapon(_ weaponId: String) {
         attackerWeaponId = weaponId
         syncProfileFromSelection()
-        clearResults()
+        refreshEvaluation()
     }
 
     func toggleBuff(_ buff: CombatMatchupBuff, enabled: Bool) {
@@ -159,12 +160,35 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
         } else {
             enabledBuffIds.remove(buff.id)
         }
-        clearResults()
+        refreshEvaluation()
+    }
+
+    func syncBattleContext(
+        activePlayerIsOne: Bool,
+        playerOneArmyId: String?,
+        playerTwoArmyId: String?
+    ) {
+        guard let playerOneArmyId, let playerTwoArmyId,
+              armies.contains(where: { $0.id == playerOneArmyId }),
+              armies.contains(where: { $0.id == playerTwoArmyId }) else { return }
+
+        let attackerArmy = activePlayerIsOne ? playerOneArmyId : playerTwoArmyId
+        let defenderArmy = activePlayerIsOne ? playerTwoArmyId : playerOneArmyId
+
+        if attackerArmyId != attackerArmy {
+            setAttackerArmy(attackerArmy)
+        }
+        if defenderArmyId != defenderArmy {
+            setDefenderArmy(defenderArmy)
+        }
     }
 
     func evaluate() {
         guard let weapon = selectedAttackerWeapon,
-              let save = selectedDefenderUnit?.save else { return }
+              let save = selectedDefenderUnit?.save else {
+            evaluation = nil
+            return
+        }
 
         let mods = CombatMatchupBuffCatalog.aggregateModifiers(from: matchupBuffs, enabledIds: enabledBuffIds)
         let options = resolvedRollOptions()
@@ -190,8 +214,50 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
         )
     }
 
+    func refreshEvaluation() {
+        guard canEvaluate else {
+            evaluation = nil
+            return
+        }
+        evaluate()
+    }
+
+    func rollAttack() {
+        guard let parameters = SimulatedAttackRollSupport.rollParameters(from: self) else { return }
+        clearResults()
+        let result = CombatRollSimulator.rollAndEvaluate(parameters: parameters)
+        apply(result.rolls)
+        result.rolls.rolls.forEach { SimulatedAttackRollSupport.announceRoll($0) }
+        evaluation = result.evaluation
+    }
+
+    func rollHit() {
+        SimulatedAttackRollSupport.rollField(.hit, currentValue: &hitRoll, lastRolls: &lastRolls)
+        refreshEvaluation()
+    }
+
+    func rollWound() {
+        SimulatedAttackRollSupport.rollField(.wound, currentValue: &woundRoll, lastRolls: &lastRolls)
+        refreshEvaluation()
+    }
+
+    func rollSave() {
+        SimulatedAttackRollSupport.rollField(.save, currentValue: &saveRoll, lastRolls: &lastRolls)
+        refreshEvaluation()
+    }
+
+    func rollWard() {
+        SimulatedAttackRollSupport.rollField(.ward, currentValue: &wardRoll, lastRolls: &lastRolls)
+        refreshEvaluation()
+    }
+
     func clearResults() {
         evaluation = nil
+    }
+
+    func clearSimulatedRolls() {
+        lastRolls = []
+        clearResults()
     }
 
     func resetAll() {
@@ -201,6 +267,7 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
         wardRoll = 4
         rollOptions = CombatRollOptions()
         enabledBuffIds = []
+        lastRolls = []
         evaluation = nil
         applyInitialSelection()
         syncProfileFromSelection()
@@ -221,7 +288,11 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
 
         if let attackerPrefill, armies.contains(where: { $0.id == attackerPrefill.armyId }) {
             attackerArmyId = attackerPrefill.armyId
-            attackerUnitId = attackerPrefill.unitId
+            if attackerPrefill.unitId.isEmpty {
+                attackerUnitId = armies.first { $0.id == attackerPrefill.armyId }?.units.first?.id ?? ""
+            } else {
+                attackerUnitId = attackerPrefill.unitId
+            }
             attackerWeaponId = attackerPrefill.weaponId ?? ""
         } else {
             attackerArmyId = armies[0].id
@@ -230,7 +301,11 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
 
         if let defenderPrefill, armies.contains(where: { $0.id == defenderPrefill.armyId }) {
             defenderArmyId = defenderPrefill.armyId
-            defenderUnitId = defenderPrefill.unitId
+            if defenderPrefill.unitId.isEmpty {
+                defenderUnitId = armies.first { $0.id == defenderPrefill.armyId }?.units.first?.id ?? ""
+            } else {
+                defenderUnitId = defenderPrefill.unitId
+            }
         } else {
             defenderArmyId = armies.first { $0.id != attackerArmyId }?.id ?? armies[0].id
             defenderUnitId = selectedDefenderArmy?.units.first?.id ?? ""
@@ -239,6 +314,7 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
         selectDefaultAttackerWeapon()
         pruneDisabledBuffs()
         syncProfileFromSelection()
+        refreshEvaluation()
     }
 
     private func selectDefaultAttackerUnit() {
@@ -266,5 +342,16 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
     private func pruneDisabledBuffs() {
         let validIds = Set(matchupBuffs.map(\.id))
         enabledBuffIds = enabledBuffIds.intersection(validIds)
+    }
+
+    private func apply(_ simulated: SimulatedAttackRolls) {
+        hitRoll = simulated.hitRoll
+        woundRoll = simulated.woundRoll
+        saveRoll = simulated.saveRoll
+        damage = simulated.damage
+        if let wardRoll = simulated.wardRoll {
+            self.wardRoll = wardRoll
+        }
+        lastRolls = simulated.rolls
     }
 }

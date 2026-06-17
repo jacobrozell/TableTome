@@ -72,7 +72,7 @@ enum OnboardingContent {
             subtitle: String(localized: "New to Spearhead?"),
             body: String(
                 localized: """
-                Jump straight into the Getting Started walkthrough, or explore the app on your own. \
+                Jump straight into a Guided Match, or explore the app on your own. \
                 You can replay this tour anytime in Settings.
                 """
             )
@@ -84,7 +84,7 @@ enum OnboardingContent {
             id: "learn",
             symbol: "book.fill",
             title: String(localized: "Learn"),
-            body: String(localized: "Getting Started, Guided Match, and starter army rosters")
+            body: String(localized: "Guided Match, Getting Started, and starter army rosters")
         ),
         OnboardingTabTourItem(
             id: "rules",

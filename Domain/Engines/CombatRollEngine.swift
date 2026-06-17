@@ -82,19 +82,31 @@ public struct AttackRollEvaluation: Sendable, Equatable {
         self.steps = steps
         self.damageDealt = damageDealt
     }
+
+    public var outcomeHeadline: String {
+        if damageDealt > 0 {
+            return String(localized: "\(damageDealt) damage to allocate")
+        }
+        if let failedStep = steps.first(where: { $0.outcome == .failure }) {
+            return String(localized: "Attack stopped — \(failedStep.name) failed")
+        }
+        return String(localized: "No damage dealt")
+    }
+
+    public var attackSucceeded: Bool {
+        damageDealt > 0
+    }
 }
 
 /// Evaluates a single attack per AoS Core Rules combat sequence (simplified v1).
 public enum CombatRollEngine: Sendable {
-    private static let modifierCap = 1
-
     public static func evaluate(_ input: AttackRollInput) -> AttackRollEvaluation {
         var steps: [AttackRollStep] = []
 
-        let cappedHitMod = capped(input.hitModifier)
-        let effectiveHit = input.hitRoll + cappedHitMod
-        let criticalHit = input.hitRoll == 6 && input.critAutoWound
-        let hitSuccess = input.hitRoll != 1 && (effectiveHit >= input.hitTarget || criticalHit)
+        let cappedHitMod = CombatRollResolution.cappedHitModifier(input)
+        let effectiveHit = CombatRollResolution.effectiveHit(input)
+        let criticalHit = CombatRollResolution.criticalHit(input)
+        let hitSuccess = CombatRollResolution.hitSucceeded(input)
         steps.append(
             AttackRollStep(
                 id: "hit",
@@ -113,11 +125,10 @@ public enum CombatRollEngine: Sendable {
             return AttackRollEvaluation(steps: steps, damageDealt: 0)
         }
 
-        let cappedWoundMod = capped(input.woundModifier)
-        let effectiveWound = input.woundRoll + cappedWoundMod
-        let criticalWound = input.woundRoll == 6 && input.critMortal
-        let woundSuccess = criticalHit
-            || (input.woundRoll != 1 && effectiveWound >= input.woundTarget)
+        let cappedWoundMod = CombatRollResolution.cappedWoundModifier(input)
+        let effectiveWound = CombatRollResolution.effectiveWound(input)
+        let criticalWound = CombatRollResolution.criticalWound(input)
+        let woundSuccess = CombatRollResolution.woundSucceeded(input)
         steps.append(
             AttackRollStep(
                 id: "wound",
@@ -137,7 +148,7 @@ public enum CombatRollEngine: Sendable {
             return AttackRollEvaluation(steps: steps, damageDealt: 0)
         }
 
-        let skipSave = input.mortalDamage || criticalWound
+        let skipSave = CombatRollResolution.skipsSaveRoll(input)
         if skipSave {
             steps.append(
                 AttackRollStep(
@@ -150,8 +161,8 @@ public enum CombatRollEngine: Sendable {
                 )
             )
         } else {
-            let effectiveSave = input.saveRoll + input.saveModifier - input.rend
-            let saveSuccess = input.saveRoll != 1 && effectiveSave >= input.saveTarget
+            let effectiveSave = CombatRollResolution.effectiveSave(input)
+            let saveSuccess = CombatRollResolution.saveSucceeded(input)
             steps.append(
                 AttackRollStep(
                     id: "save",
@@ -166,7 +177,7 @@ public enum CombatRollEngine: Sendable {
         }
 
         if let wardTarget = input.wardTarget, let wardRoll = input.wardRoll, !skipSave {
-            let wardSuccess = wardRoll != 1 && wardRoll >= wardTarget
+            let wardSuccess = CombatRollResolution.wardSucceeded(input)
             steps.append(
                 AttackRollStep(
                     id: "ward",
@@ -194,10 +205,6 @@ public enum CombatRollEngine: Sendable {
         }
 
         return AttackRollEvaluation(steps: steps, damageDealt: damage)
-    }
-
-    private static func capped(_ modifier: Int) -> Int {
-        min(max(modifier, -modifierCap), modifierCap)
     }
 
     private static func hitExplanation(
@@ -240,7 +247,7 @@ public enum CombatRollEngine: Sendable {
         if input.saveRoll == 1 {
             return "Unmodified roll of 1 always fails."
         }
-        let rendNote = input.rend == 0 ? "" : " after Rend \(input.rend)"
+        let rendNote = input.rend == 0 ? "" : " (Rend \(input.rend >= 0 ? "+" : "")\(input.rend))"
         return "Rolled \(input.saveRoll) + modifiers\(rendNote) = \(effective) vs Save \(input.saveTarget)+ — \(effective >= input.saveTarget ? "saved" : "failed save")."
     }
 

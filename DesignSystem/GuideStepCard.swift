@@ -1,19 +1,35 @@
 import SwiftUI
 
 public struct GuideStepCard: View {
+    public static let listRowInsets = EdgeInsets(
+        top: DesignTokens.Spacing.xs,
+        leading: DesignTokens.Spacing.md,
+        bottom: DesignTokens.Spacing.xs,
+        trailing: DesignTokens.Spacing.md
+    )
+
     let stepNumber: Int
     let title: String
     let summary: String
     let isComplete: Bool
+    let showsDisclosureIndicator: Bool
     let accessibilityId: String
 
     @ScaledMetric(relativeTo: .subheadline) private var stepCircleSize: CGFloat = 36
 
-    public init(stepNumber: Int, title: String, summary: String, isComplete: Bool, accessibilityId: String) {
+    public init(
+        stepNumber: Int,
+        title: String,
+        summary: String,
+        isComplete: Bool,
+        showsDisclosureIndicator: Bool = true,
+        accessibilityId: String
+    ) {
         self.stepNumber = stepNumber
         self.title = title
         self.summary = summary
         self.isComplete = isComplete
+        self.showsDisclosureIndicator = showsDisclosureIndicator
         self.accessibilityId = accessibilityId
     }
 
@@ -46,10 +62,12 @@ public struct GuideStepCard: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
             Spacer(minLength: 0)
-            Image(systemName: "chevron.right")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.quaternary)
-                .accessibilityHidden(true)
+            if showsDisclosureIndicator {
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.quaternary)
+                    .accessibilityHidden(true)
+            }
         }
         .surfaceCard()
         .accessibilityElement(children: .combine)

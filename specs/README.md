@@ -18,7 +18,7 @@ Authoritative behavior contracts. Brainstorm (`docs/brainstorm.md`) is **not** a
 | [SpearheadContentSpec.md](SpearheadContentSpec.md) | Scalable Spearhead army content pipeline |
 | [CombatRollEvaluatorSpec.md](CombatRollEvaluatorSpec.md) | Hit/wound/save attack roll wizard |
 | [DiceRollerSpec.md](DiceRollerSpec.md) | Roll simulator (v1) + dice tray future work |
-| [CoinFlipSpec.md](CoinFlipSpec.md) | Realm side (Aqshy/Ghyran) coin flip for deployment |
+| [CoinFlipSpec.md](CoinFlipSpec.md) | Board side coin flip (Fire/Jade and Sand/Bone) |
 | [RulesReferenceSpec.md](RulesReferenceSpec.md) | Offline rules browser |
 
 ## Governance

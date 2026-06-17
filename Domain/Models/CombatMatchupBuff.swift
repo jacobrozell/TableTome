@@ -116,6 +116,33 @@ public enum CombatMatchupBuffCatalog {
                     saveModifier: -1,
                     source: String(localized: "Table modifier"),
                     isGeneric: true
+                ),
+                CombatMatchupBuff(
+                    id: "generic-defender-ward-6",
+                    name: "Ward (6+)",
+                    summary: "After a failed save, roll ward — on 6+ ignore damage.",
+                    side: .defender,
+                    wardTarget: 6,
+                    source: String(localized: "Active ability"),
+                    isGeneric: true
+                ),
+                CombatMatchupBuff(
+                    id: "generic-defender-ward-5",
+                    name: "Ward (5+)",
+                    summary: "After a failed save, roll ward — on 5+ ignore damage.",
+                    side: .defender,
+                    wardTarget: 5,
+                    source: String(localized: "Active ability"),
+                    isGeneric: true
+                ),
+                CombatMatchupBuff(
+                    id: "generic-defender-ward-4",
+                    name: "Ward (4+)",
+                    summary: "After a failed save, roll ward — on 4+ ignore damage.",
+                    side: .defender,
+                    wardTarget: 4,
+                    source: String(localized: "Active ability"),
+                    isGeneric: true
                 )
             ]
         }
@@ -167,12 +194,6 @@ public enum CombatMatchupBuffCatalog {
         }
     }
 
-    private static func parseWardThreshold(_ keyword: String) -> Int? {
-        let pattern = /Ward \((\d+)\+\)/
-        guard let match = keyword.firstMatch(of: pattern), let value = Int(match.1) else { return nil }
-        return value
-    }
-
     private static func parseAbilityBuffs(
         _ ability: TriggeredAbility,
         unit: SpearheadUnit,
@@ -220,7 +241,26 @@ public enum CombatMatchupBuffCatalog {
             )
         }
 
+        if let ward = parseWardThreshold(ability.effect) {
+            buffs.append(
+                CombatMatchupBuff(
+                    id: "\(unit.id)-\(ability.id)-ward",
+                    name: "\(ability.name) — Ward (\(ward)+)",
+                    summary: ability.effect,
+                    side: side,
+                    wardTarget: ward,
+                    source: unit.name
+                )
+            )
+        }
+
         return buffs
+    }
+
+    private static func parseWardThreshold(_ text: String) -> Int? {
+        let pattern = /[Ww]ard\s*\((\d+)\+\)/
+        guard let match = text.firstMatch(of: pattern), let value = Int(match.1) else { return nil }
+        return value
     }
 }
 

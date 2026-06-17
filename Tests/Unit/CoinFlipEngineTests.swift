@@ -2,11 +2,27 @@ import XCTest
 @testable import TabletomeDomain
 
 final class CoinFlipEngineTests: XCTestCase {
-    func testFlipReturnsValidSide() {
+    func testFlipReturnsValidSideForFireAndJade() {
         var generator = LCG(seed: 42)
         for _ in 0..<100 {
-            let side = CoinFlipEngine.flip(generator: &generator)
-            XCTAssertTrue(RealmSide.allCases.contains(side))
+            let side = CoinFlipEngine.flip(for: .fireAndJade, generator: &generator)
+            XCTAssertTrue(BattlefieldSide.sides(for: .fireAndJade).contains(side))
+        }
+    }
+
+    func testFlipReturnsValidSideForSandAndBone() {
+        var generator = LCG(seed: 42)
+        for _ in 0..<100 {
+            let side = CoinFlipEngine.flip(for: .sandAndBone, generator: &generator)
+            XCTAssertTrue(BattlefieldSide.sides(for: .sandAndBone).contains(side))
+        }
+    }
+
+    func testFlipReturnsValidSideForCityOfAsh() {
+        var generator = LCG(seed: 42)
+        for _ in 0..<100 {
+            let side = CoinFlipEngine.flip(for: .cityOfAsh, generator: &generator)
+            XCTAssertTrue(BattlefieldSide.sides(for: .cityOfAsh).contains(side))
         }
     }
 
@@ -14,15 +30,22 @@ final class CoinFlipEngineTests: XCTestCase {
         var generatorA = LCG(seed: 123)
         var generatorB = LCG(seed: 123)
         XCTAssertEqual(
-            CoinFlipEngine.flip(generator: &generatorA),
-            CoinFlipEngine.flip(generator: &generatorB)
+            CoinFlipEngine.flip(for: .fireAndJade, generator: &generatorA),
+            CoinFlipEngine.flip(for: .fireAndJade, generator: &generatorB)
         )
     }
 
-    func testFlipProducesBothSides() {
-        var generator = LCG(seed: 7)
-        let results = Set((0..<64).map { _ in CoinFlipEngine.flip(generator: &generator) })
-        XCTAssertEqual(results, Set(RealmSide.allCases))
+    func testFlipProducesBothSidesForEachBattlefield() {
+        for battlefield in SpearheadBattlefield.allCases {
+            let seed: UInt64 = switch battlefield {
+            case .fireAndJade: 7
+            case .sandAndBone: 99
+            case .cityOfAsh: 17
+            }
+            var generator = LCG(seed: seed)
+            let results = Set((0..<64).map { _ in CoinFlipEngine.flip(for: battlefield, generator: &generator) })
+            XCTAssertEqual(results, Set(BattlefieldSide.sides(for: battlefield)))
+        }
     }
 }
 

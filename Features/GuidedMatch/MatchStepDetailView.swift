@@ -7,8 +7,11 @@ struct MatchStepDetailView: View {
     @ObservedObject var viewModel: GuidedMatchViewModel
     let ruleSections: [RuleSection]
 
-    @State private var isComplete = false
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
+    private var isComplete: Bool {
+        viewModel.matchState.completedStepIds.contains(step.id)
+    }
 
     var body: some View {
         ScrollView {
@@ -35,17 +38,7 @@ struct MatchStepDetailView: View {
                     TipsCard(tips: step.tips)
                 }
 
-                Toggle(isOn: $isComplete) {
-                    Text(String(localized: "Mark step complete"))
-                        .font(.headline)
-                }
-                .toggleStyle(.switch)
-                .frame(minHeight: DesignTokens.minTouchTarget)
-                .surfaceCard()
-                .accessibilityIdentifier("guidedMatch.stepComplete.\(step.id)")
-                .onChange(of: isComplete) { _, newValue in
-                    viewModel.setStepComplete(step.id, complete: newValue)
-                }
+                stepCompletionStatus
             }
             .readableContentWidth()
             .padding(DesignTokens.Spacing.md)
@@ -54,8 +47,27 @@ struct MatchStepDetailView: View {
         .navigationTitle(step.title)
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            isComplete = viewModel.matchState.completedStepIds.contains(step.id)
+            viewModel.syncAutoCompletions()
         }
+    }
+
+    @ViewBuilder
+    private var stepCompletionStatus: some View {
+        HStack(spacing: DesignTokens.Spacing.sm) {
+            Image(systemName: isComplete ? "checkmark.circle.fill" : "circle")
+                .foregroundStyle(isComplete ? .green : .secondary)
+            Text(
+                isComplete
+                    ? String(localized: "Step complete")
+                    : String(localized: "Complete the actions above — this step checks off automatically.")
+            )
+            .font(.subheadline)
+            .foregroundStyle(isComplete ? .primary : .secondary)
+            .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .surfaceCard()
+        .accessibilityIdentifier("guidedMatch.stepComplete.\(step.id)")
     }
 
     @ViewBuilder
@@ -100,16 +112,11 @@ struct MatchStepDetailView: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             RealmSideCoinFlipCard()
             DeploymentChecklistCard(
-                completedSteps: BattleTrackerStore.load().completedDeploymentSteps,
-                onToggle: { step, complete in
-                    var state = BattleTrackerStore.load()
-                    if complete {
-                        state.completedDeploymentSteps.insert(step.rawValue)
-                    } else {
-                        state.completedDeploymentSteps.remove(step.rawValue)
-                    }
-                    BattleTrackerStore.save(state)
-                }
+                completedSteps: viewModel.deploymentCompletedSteps,
+                focusedStep: BattleFlowGuide.nextIncompleteDeploymentStep(
+                    in: viewModel.deploymentCompletedSteps
+                ),
+                onToggle: viewModel.setDeploymentStep
             )
             ReferenceLinksGroup {
                 NavigationLink {

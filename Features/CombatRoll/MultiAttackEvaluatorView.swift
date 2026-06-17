@@ -5,6 +5,19 @@ struct MultiAttackEvaluatorView: View {
     @ObservedObject var viewModel: MultiAttackEvaluatorViewModel
     let weaponName: String
     let ruleSections: [RuleSection]
+    let isSimulated: Bool
+
+    init(
+        viewModel: MultiAttackEvaluatorViewModel,
+        weaponName: String,
+        ruleSections: [RuleSection],
+        isSimulated: Bool = false
+    ) {
+        self.viewModel = viewModel
+        self.weaponName = weaponName
+        self.ruleSections = ruleSections
+        self.isSimulated = isSimulated
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
@@ -12,11 +25,31 @@ struct MultiAttackEvaluatorView: View {
             if !viewModel.isSequenceComplete {
                 diceSection
                 weaponOptionsSection
-                PrimaryButton(
-                    title: String(localized: "Evaluate Attack \(viewModel.results.count + 1) of \(viewModel.attackCount)"),
-                    accessibilityId: "multiAttack.evaluate"
-                ) {
-                    viewModel.evaluateCurrentAttack()
+                if isSimulated {
+                    PrimaryButton(
+                        title: String(
+                            localized: "Roll Attack \(viewModel.results.count + 1) of \(viewModel.attackCount)"
+                        ),
+                        accessibilityId: "multiAttack.roll.attack"
+                    ) {
+                        viewModel.rollCurrentAttack()
+                    }
+                    Button(
+                        String(localized: "Evaluate Attack \(viewModel.results.count + 1) of \(viewModel.attackCount)")
+                    ) {
+                        viewModel.evaluateCurrentAttack()
+                    }
+                    .buttonStyle(.bordered)
+                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+                    .accessibilityIdentifier("multiAttack.evaluate")
+                    .accessibilityHint(String(localized: "Uses current dice values without rolling again"))
+                } else {
+                    PrimaryButton(
+                        title: String(localized: "Evaluate Attack \(viewModel.results.count + 1) of \(viewModel.attackCount)"),
+                        accessibilityId: "multiAttack.evaluate"
+                    ) {
+                        viewModel.evaluateCurrentAttack()
+                    }
                 }
             }
             if let last = viewModel.lastEvaluation, viewModel.results.count == viewModel.currentAttackIndex {
@@ -51,10 +84,53 @@ struct MultiAttackEvaluatorView: View {
     private var diceSection: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             SectionHeader(title: String(localized: "Dice for Next Attack"), systemImage: "dice.fill")
-            DiceValuePicker(label: String(localized: "Hit"), value: $viewModel.hitRoll, accessibilityId: "multiAttack.hitRoll")
-            DiceValuePicker(label: String(localized: "Wound"), value: $viewModel.woundRoll, accessibilityId: "multiAttack.woundRoll")
-            DiceValuePicker(label: String(localized: "Save"), value: $viewModel.saveRoll, accessibilityId: "multiAttack.saveRoll")
-            Stepper(String(localized: "Damage \(viewModel.damage)"), value: $viewModel.damage, in: 1...12)
+            if isSimulated {
+                SimulatedDiceHint()
+                if !viewModel.lastRolls.isEmpty {
+                    SimulatedRollSummaryView(rolls: viewModel.lastRolls)
+                }
+            }
+            SimulatedDiceFieldRow(
+                label: String(localized: "Hit"),
+                value: $viewModel.hitRoll,
+                accessibilityId: "multiAttack.hitRoll",
+                rollAccessibilityId: "multiAttack.roll.hit",
+                isSimulated: isSimulated,
+                onRoll: { viewModel.rollHit() }
+            )
+            SimulatedDiceFieldRow(
+                label: String(localized: "Wound"),
+                value: $viewModel.woundRoll,
+                accessibilityId: "multiAttack.woundRoll",
+                rollAccessibilityId: "multiAttack.roll.wound",
+                isSimulated: isSimulated,
+                onRoll: { viewModel.rollWound() }
+            )
+            SimulatedDiceFieldRow(
+                label: String(localized: "Save"),
+                value: $viewModel.saveRoll,
+                accessibilityId: "multiAttack.saveRoll",
+                rollAccessibilityId: "multiAttack.roll.save",
+                isSimulated: isSimulated,
+                onRoll: { viewModel.rollSave() }
+            )
+            if viewModel.wardTarget != nil {
+                SimulatedDiceFieldRow(
+                    label: String(localized: "Ward"),
+                    value: $viewModel.wardRoll,
+                    accessibilityId: "multiAttack.wardRoll",
+                    rollAccessibilityId: "multiAttack.roll.ward",
+                    isSimulated: isSimulated,
+                    onRoll: { viewModel.rollWard() }
+                )
+            }
+            if viewModel.hasFixedDamage {
+                Stepper(String(localized: "Damage \(viewModel.damage)"), value: $viewModel.damage, in: 1...12)
+            } else if isSimulated {
+                Text(String(localized: "Damage is rolled when the attack succeeds."))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
         .surfaceCard()
     }

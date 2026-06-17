@@ -83,10 +83,6 @@ struct GuidedMatchView: View {
                     message: String(localized: "Choose both player armies to open the battle tracker.")
                 )
             }
-        case .rollEvaluator:
-            CombatRollEvaluatorView(ruleSections: ruleSections)
-        case .unitMatchup:
-            UnitMatchupEvaluatorView(ruleSections: ruleSections)
         case .step(let stepId):
             if let step = viewModel.sortedMatchSteps.first(where: { $0.id == stepId }),
                let index = viewModel.sortedMatchSteps.firstIndex(where: { $0.id == stepId }) {
@@ -128,6 +124,7 @@ struct GuidedMatchView: View {
     private func guidedMatchSections(catalog: SpearheadCatalog, useSplitSelection: Bool) -> some View {
         matchupSection
         setupProgressSection
+        continueSetupSection(catalog: catalog, useSplitSelection: useSplitSelection)
         playersSection(catalog: catalog, useSplitSelection: useSplitSelection)
         battleTrackerSection(catalog: catalog, useSplitSelection: useSplitSelection)
         matchSetupSection(catalog: catalog, useSplitSelection: useSplitSelection)
@@ -205,6 +202,57 @@ struct GuidedMatchView: View {
     }
 
     @ViewBuilder
+    private func continueSetupSection(catalog: SpearheadCatalog, useSplitSelection: Bool) -> some View {
+        if viewModel.matchState.hasBothArmies,
+           let next = viewModel.nextIncompleteStep,
+           let index = viewModel.sortedMatchSteps.firstIndex(where: { $0.id == next.id }) {
+            Section {
+                if useSplitSelection {
+                    GuideStepCard(
+                        stepNumber: index + 1,
+                        title: next.title,
+                        summary: next.summary,
+                        isComplete: false,
+                        accessibilityId: "guidedMatch.continue.\(next.id)"
+                    )
+                    .tag(GuidedMatchDestination.step(next.id))
+                    .listRowInsets(GuideStepCard.listRowInsets)
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                } else {
+                    NavigationLink {
+                        MatchStepDetailView(
+                            step: next,
+                            stepNumber: index + 1,
+                            viewModel: viewModel,
+                            ruleSections: ruleSections
+                        )
+                    } label: {
+                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                            Text(String(localized: "Continue Setup"))
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(Color.accentColor)
+                            GuideStepCard(
+                                stepNumber: index + 1,
+                                title: next.title,
+                                summary: next.summary,
+                                isComplete: false,
+                                showsDisclosureIndicator: false,
+                                accessibilityId: "guidedMatch.continue.\(next.id)"
+                            )
+                        }
+                    }
+                    .listRowInsets(GuideStepCard.listRowInsets)
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                }
+            } header: {
+                Text(String(localized: "Up Next"))
+            }
+        }
+    }
+
+    @ViewBuilder
     private func playersSection(catalog: SpearheadCatalog, useSplitSelection: Bool) -> some View {
         Section(String(localized: "Players")) {
             if useSplitSelection {
@@ -260,35 +308,10 @@ struct GuidedMatchView: View {
 
     @ViewBuilder
     private func battleTrackerSection(catalog: SpearheadCatalog, useSplitSelection: Bool) -> some View {
-        Section {
-            if ReleaseSurface.showsRollEvaluator {
-                if useSplitSelection {
-                    Label(String(localized: "Roll Evaluator"), systemImage: "dice.fill")
-                        .frame(minHeight: DesignTokens.minTouchTarget)
-                        .tag(GuidedMatchDestination.rollEvaluator)
-                        .accessibilityIdentifier("guidedMatch.rollEvaluator")
-                    Label(String(localized: "Unit Matchup"), systemImage: "arrow.left.arrow.right")
-                        .frame(minHeight: DesignTokens.minTouchTarget)
-                        .tag(GuidedMatchDestination.unitMatchup)
-                        .accessibilityIdentifier("guidedMatch.unitMatchup")
-                } else {
-                    NavigationLink {
-                        CombatRollEvaluatorView(ruleSections: ruleSections)
-                    } label: {
-                        Label(String(localized: "Roll Evaluator"), systemImage: "dice.fill")
-                            .frame(minHeight: DesignTokens.minTouchTarget)
-                    }
-                    .accessibilityIdentifier("guidedMatch.rollEvaluator")
-                    NavigationLink {
-                        UnitMatchupEvaluatorView(ruleSections: ruleSections)
-                    } label: {
-                        Label(String(localized: "Unit Matchup"), systemImage: "arrow.left.arrow.right")
-                            .frame(minHeight: DesignTokens.minTouchTarget)
-                    }
-                    .accessibilityIdentifier("guidedMatch.unitMatchup")
-                }
-            }
+        let setupComplete = viewModel.setupProgress.completed == viewModel.setupProgress.total
+            && viewModel.setupProgress.total > 0
 
+        Section {
             if useSplitSelection {
                 Label(String(localized: "Battle Phase Tracker"), systemImage: "list.bullet.rectangle")
                     .frame(minHeight: DesignTokens.minTouchTarget)
@@ -303,8 +326,19 @@ struct GuidedMatchView: View {
                         ruleSections: ruleSections
                     )
                 } label: {
-                    Label(String(localized: "Battle Phase Tracker"), systemImage: "list.bullet.rectangle")
-                        .frame(minHeight: DesignTokens.minTouchTarget)
+                    if setupComplete {
+                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                            Label(String(localized: "Start the Battle"), systemImage: "flag.checkered")
+                                .font(.headline)
+                            Text(String(localized: "Setup is complete. Open the guided battle tracker."))
+                                .font(.callout)
+                                .foregroundStyle(.secondary)
+                        }
+                        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                    } else {
+                        Label(String(localized: "Battle Phase Tracker"), systemImage: "list.bullet.rectangle")
+                            .frame(minHeight: DesignTokens.minTouchTarget)
+                    }
                 }
                 .disabled(!viewModel.matchState.hasBothArmies)
                 .accessibilityIdentifier("guidedMatch.battleTracker")
@@ -314,6 +348,8 @@ struct GuidedMatchView: View {
         } footer: {
             if !viewModel.matchState.hasBothArmies {
                 Text(String(localized: "Choose both player armies to open the battle tracker."))
+            } else if setupComplete {
+                Text(String(localized: "The battle tracker walks you through deployment, each round, and every phase."))
             }
         }
     }
@@ -331,7 +367,7 @@ struct GuidedMatchView: View {
                         accessibilityId: "guidedMatch.step.\(step.id)"
                     )
                     .tag(GuidedMatchDestination.step(step.id))
-                    .listRowInsets(EdgeInsets())
+                    .listRowInsets(GuideStepCard.listRowInsets)
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
                     .disabled(!viewModel.matchState.hasBothArmies && step.id != "choose-armies")
@@ -349,11 +385,12 @@ struct GuidedMatchView: View {
                             title: step.title,
                             summary: step.summary,
                             isComplete: viewModel.matchState.completedStepIds.contains(step.id),
+                            showsDisclosureIndicator: false,
                             accessibilityId: "guidedMatch.step.\(step.id)"
                         )
                     }
                     .disabled(!viewModel.matchState.hasBothArmies && step.id != "choose-armies")
-                    .listRowInsets(EdgeInsets())
+                    .listRowInsets(GuideStepCard.listRowInsets)
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
                 }

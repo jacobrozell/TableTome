@@ -91,12 +91,16 @@ struct UnitWarscrollCard: View {
                 Spacer()
                 if weapon.numericRollProfile != nil || weapon.isRollEvaluable {
                     NavigationLink {
-                        CombatRollEvaluatorView(
+                        UnitMatchupEvaluatorView(
                             ruleSections: ruleSections,
-                            prefilledWeapon: weapon
+                            attackerPrefill: MatchupUnitPrefill(
+                                armyId: army.id,
+                                unitId: unit.id,
+                                weaponId: weapon.id
+                            )
                         )
                     } label: {
-                        Label(String(localized: "Roll"), systemImage: "dice.fill")
+                        Label(String(localized: "Resolve"), systemImage: "dice.fill")
                             .font(.caption.weight(.semibold))
                     }
                     .buttonStyle(.bordered)
@@ -144,7 +148,7 @@ struct UnitWarscrollCard: View {
                 )
             )
         } label: {
-            Label(String(localized: "Evaluate vs Unit…"), systemImage: "arrow.left.arrow.right")
+            Label(String(localized: "Resolve vs Unit…"), systemImage: "arrow.left.arrow.right")
                 .font(.subheadline.weight(.semibold))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .frame(minHeight: DesignTokens.minTouchTarget)

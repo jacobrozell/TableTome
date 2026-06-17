@@ -108,22 +108,13 @@ struct UnitAbilityCard: View {
     }
 
     private var rollToolLinks: some View {
-        HStack(spacing: DesignTokens.Spacing.sm) {
-            NavigationLink {
-                CombatRollEvaluatorView(ruleSections: ruleSections)
-            } label: {
-                Label(String(localized: "Roll Evaluator"), systemImage: "dice.fill")
-                    .font(.caption.weight(.semibold))
-            }
-            .buttonStyle(.bordered)
-            NavigationLink {
-                UnitMatchupEvaluatorView(ruleSections: ruleSections)
-            } label: {
-                Label(String(localized: "Unit Matchup"), systemImage: "arrow.left.arrow.right")
-                    .font(.caption.weight(.semibold))
-            }
-            .buttonStyle(.bordered)
+        NavigationLink {
+            UnitMatchupEvaluatorView(ruleSections: ruleSections)
+        } label: {
+            Label(String(localized: "Combat Resolver"), systemImage: "dice.fill")
+                .font(.caption.weight(.semibold))
         }
+        .buttonStyle(.bordered)
         .frame(minHeight: DesignTokens.minTouchTarget)
         .accessibilityIdentifier("battleTracker.rollTools.\(ability.id)")
     }

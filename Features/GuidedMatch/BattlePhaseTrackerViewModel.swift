@@ -28,7 +28,24 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
         self.matchState = matchState
         self.catalog = catalog
         self.trackerState = initialState
+        syncAutoCompletions()
         refreshAbilities()
+    }
+
+    var currentGuideStep: BattleFlowGuideStep? {
+        BattleFlowGuide.currentStep(matchState: matchState, trackerState: trackerState)
+    }
+
+    var focusedDeploymentStep: DeploymentChecklistStep? {
+        guard trackerState.battleRound == 1 else { return nil }
+        return BattleFlowGuide.nextIncompleteDeploymentStep(in: trackerState.completedDeploymentSteps)
+    }
+
+    var focusedRoundOpenerStep: BattleRoundChecklistStep? {
+        BattleFlowGuide.nextIncompleteRoundOpenerStep(
+            round: trackerState.battleRound,
+            completedSteps: trackerState.completedRoundChecklistSteps
+        )
     }
 
     var specialPhases: [BattleTurnPhase] {
@@ -104,6 +121,50 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
         refreshAbilities()
     }
 
+    func completeCurrentGuideStep() {
+        guard let step = currentGuideStep else { return }
+        switch step.kind {
+        case .deployment(let deploymentStep):
+            setDeploymentStep(deploymentStep, complete: true)
+        case .roundOpener(let openerStep):
+            setRoundChecklistStep(openerStep, complete: true)
+        case .turnPhase(let phase):
+            if phase == .endOfTurn {
+                if trackerState.battleRound >= 4 {
+                    return
+                }
+                trackerState.activePlayerIsOne.toggle()
+                trackerState.currentPhase = .hero
+                persist()
+                refreshAbilities()
+            } else {
+                advancePhase()
+            }
+        case .startNextRound(let round):
+            setBattleRound(round + 1)
+            setPhase(.hero)
+        case .battleComplete:
+            break
+        }
+    }
+
+    func syncAutoCompletions() {
+        let suggested = BattleChecklistCompletionEvaluator.suggestedRoundCompletions(
+            round: trackerState.battleRound,
+            playerOneVictoryPoints: trackerState.playerOneVictoryPoints,
+            playerTwoVictoryPoints: trackerState.playerTwoVictoryPoints
+        )
+        let key = BattleRoundChecklist.storageKey(round: trackerState.battleRound)
+        var steps = trackerState.completedRoundChecklistSteps[key] ?? []
+        let before = steps
+        for step in suggested {
+            steps.insert(step.rawValue)
+        }
+        guard steps != before else { return }
+        trackerState.completedRoundChecklistSteps[key] = steps
+        persist()
+    }
+
     func setBattleRound(_ round: Int) {
         trackerState.battleRound = min(4, max(1, round))
         persist()
@@ -162,6 +223,7 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
             trackerState.playerTwoVictoryPoints = max(0, trackerState.playerTwoVictoryPoints + delta)
         }
         persist()
+        syncAutoCompletions()
     }
 
     func setUnitWounds(key: String, remaining: Int) {

@@ -39,6 +39,9 @@ struct HomeView: View {
         .navigationDestination(for: GettingStartedLink.self) { link in
             GettingStartedDestinationView(gameSystemId: link.gameSystemId)
         }
+        .navigationDestination(for: GuidedMatchLink.self) { link in
+            GuidedMatchDestinationView(gameSystemId: link.gameSystemId)
+        }
         .task { await viewModel.load() }
         .refreshable { await viewModel.load() }
     }

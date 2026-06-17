@@ -29,6 +29,19 @@ Manual entry via `DiceValuePicker` stays available. Simulated mode adds roll but
 4. **Optional** — Physical pickers remain; simulated is opt-in per screen.
 5. **Integrated** — Rolls feed `CombatRollEngine` unchanged; no parallel combat path.
 
+### Trust guarantees
+
+| Guarantee | Mechanism |
+|-----------|-----------|
+| One evaluation path | `CombatRollSimulator.rollAndEvaluate()` rolls then evaluates via `CombatRollResolution` + `CombatRollEngine` |
+| No logic drift | Hit/wound/save/ward predicates live only in `CombatRollResolution`; sequence roller and engine both call it |
+| Simulator ↔ engine parity | `CombatSimulatorTrustTests` fixture matrix with deterministic dice queues |
+| Rend correctness | Negative rend worsens save (`saveRoll + modifiers + rend` vs save target) |
+| Early termination | Failed hit/wound/save/ward stops rolling — matches manual step order |
+| ViewModel parity | `CombatRollEvaluatorViewModelTests` asserts rolled attack matches engine on same inputs |
+
+**Do not** call `evaluate()` on stale default pickers in simulated mode without rolling — use **Roll Attack** as the primary action.
+
 ---
 
 ## User stories (v1)
@@ -354,5 +367,5 @@ See git history of this spec for full VTT wireframes and timing tables.
 | Target release | v0.3 (roll simulator only) |
 | Dice tray | Future — not scheduled |
 | Last verified | 2026-06-17 |
-| Status | **Plan — not implemented** |
-| Code paths (planned) | `Domain/Engines/DiceRollerEngine.swift`, `DesignSystem/DiceRollButton.swift`, `Features/CombatRoll/`, `Tests/Unit/DiceRollerEngineTests.swift` |
+| Status | **Implemented** |
+| Code paths | `Domain/Engines/CombatRollSimulator.swift`, `Domain/Engines/CombatRollResolution.swift`, `Domain/Engines/DiceRollerEngine.swift`, `Domain/Engines/AttackRollSequenceRoller.swift`, `Features/CombatRoll/`, `Tests/Unit/CombatSimulatorTrustTests.swift`, `Tests/Unit/DiceRollerEngineTests.swift` |

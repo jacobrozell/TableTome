@@ -48,24 +48,61 @@ final class GuidedMatchViewModel: ObservableObject {
         do {
             catalog = try await catalogRepository.loadCatalog()
             errorMessage = nil
+            syncAutoCompletions()
         } catch {
             errorMessage = String(localized: "Spearhead armies could not be loaded.")
         }
     }
 
+    var nextIncompleteStep: MatchSetupStep? {
+        sortedMatchSteps.first { !matchState.completedStepIds.contains($0.id) }
+    }
+
+    var deploymentCompletedSteps: Set<String> {
+        BattleTrackerStore.load().completedDeploymentSteps
+    }
+
+    func setDeploymentStep(_ step: DeploymentChecklistStep, complete: Bool) {
+        var tracker = BattleTrackerStore.load()
+        if complete {
+            tracker.completedDeploymentSteps.insert(step.rawValue)
+        } else {
+            tracker.completedDeploymentSteps.remove(step.rawValue)
+        }
+        BattleTrackerStore.save(tracker)
+        objectWillChange.send()
+        syncAutoCompletions()
+    }
+
+    func syncAutoCompletions() {
+        guard let catalog else { return }
+        let auto = MatchSetupCompletionEvaluator.autoCompletedStepIds(
+            state: matchState,
+            catalog: catalog,
+            deploymentSteps: BattleTrackerStore.load().completedDeploymentSteps
+        )
+        let merged = matchState.completedStepIds.union(auto)
+        guard merged != matchState.completedStepIds else { return }
+        matchState.completedStepIds = merged
+        persist()
+    }
+
     func updatePlayerOne(_ selection: PlayerArmySelection) {
         matchState.playerOne = selection
         persist()
+        syncAutoCompletions()
     }
 
     func updatePlayerTwo(_ selection: PlayerArmySelection) {
         matchState.playerTwo = selection
         persist()
+        syncAutoCompletions()
     }
 
     func setAttacker(isPlayerOne: Bool) {
         matchState.attackerIsPlayerOne = isPlayerOne
         persist()
+        syncAutoCompletions()
     }
 
     func setRegimentAbility(playerIsOne: Bool, abilityId: String) {
@@ -75,6 +112,7 @@ final class GuidedMatchViewModel: ObservableObject {
             matchState.playerTwo.regimentAbilityId = abilityId
         }
         persist()
+        syncAutoCompletions()
     }
 
     func setEnhancement(playerIsOne: Bool, enhancementId: String) {
@@ -84,6 +122,7 @@ final class GuidedMatchViewModel: ObservableObject {
             matchState.playerTwo.enhancementId = enhancementId
         }
         persist()
+        syncAutoCompletions()
     }
 
     func setStepComplete(_ stepId: String, complete: Bool) {
@@ -93,6 +132,7 @@ final class GuidedMatchViewModel: ObservableObject {
             matchState.completedStepIds.remove(stepId)
         }
         persist()
+        syncAutoCompletions()
     }
 
     func resetMatch() {

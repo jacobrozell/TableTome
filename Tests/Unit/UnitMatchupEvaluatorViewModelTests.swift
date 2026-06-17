@@ -60,4 +60,65 @@ final class UnitMatchupEvaluatorViewModelTests: XCTestCase {
         XCTAssertNotNil(viewModel.evaluation)
         XCTAssertEqual(viewModel.evaluation?.damageDealt, 1)
     }
+
+    func testRefreshEvaluationAutoResolvesLiberatorVsClanrat() async throws {
+        let viewModel = UnitMatchupEvaluatorViewModel(
+            catalogRepository: BundledSpearheadCatalogRepository(bundle: Bundle(for: type(of: self))),
+            attackerPrefill: MatchupUnitPrefill(
+                armyId: "vigilant-brotherhood",
+                unitId: "liberators",
+                weaponId: "warhammer"
+            ),
+            defenderPrefill: MatchupUnitPrefill(
+                armyId: "gnawfeast-clawpack",
+                unitId: "clanrats"
+            )
+        )
+        await viewModel.load()
+        viewModel.hitRoll = 6
+        viewModel.woundRoll = 6
+        viewModel.saveRoll = 1
+
+        viewModel.refreshEvaluation()
+
+        XCTAssertEqual(viewModel.attackerUnitId, "liberators")
+        XCTAssertEqual(viewModel.defenderUnitId, "clanrats")
+        XCTAssertNotNil(viewModel.evaluation)
+        XCTAssertEqual(viewModel.evaluation?.damageDealt, 1)
+    }
+
+    func testRefreshEvaluationClearsWhenIncomplete() async throws {
+        let viewModel = UnitMatchupEvaluatorViewModel(
+            catalogRepository: BundledSpearheadCatalogRepository(bundle: Bundle(for: type(of: self)))
+        )
+        await viewModel.load()
+        viewModel.attackerUnitId = ""
+
+        viewModel.refreshEvaluation()
+
+        XCTAssertNil(viewModel.evaluation)
+    }
+
+    func testSyncBattleContextSwapsArmiesWithActivePlayer() async throws {
+        let viewModel = UnitMatchupEvaluatorViewModel(
+            catalogRepository: BundledSpearheadCatalogRepository(bundle: Bundle(for: type(of: self)))
+        )
+        await viewModel.load()
+
+        viewModel.syncBattleContext(
+            activePlayerIsOne: true,
+            playerOneArmyId: "vigilant-brotherhood",
+            playerTwoArmyId: "gnawfeast-clawpack"
+        )
+        XCTAssertEqual(viewModel.attackerArmyId, "vigilant-brotherhood")
+        XCTAssertEqual(viewModel.defenderArmyId, "gnawfeast-clawpack")
+
+        viewModel.syncBattleContext(
+            activePlayerIsOne: false,
+            playerOneArmyId: "vigilant-brotherhood",
+            playerTwoArmyId: "gnawfeast-clawpack"
+        )
+        XCTAssertEqual(viewModel.attackerArmyId, "gnawfeast-clawpack")
+        XCTAssertEqual(viewModel.defenderArmyId, "vigilant-brotherhood")
+    }
 }

@@ -3,14 +3,14 @@ import XCTest
 
 @MainActor
 final class LearnNavigationCoordinatorTests: XCTestCase {
-    func testOpenGettingStartedQueuesAction() {
+    func testOpenGuidedMatchQueuesAction() {
         let coordinator = LearnNavigationCoordinator()
 
-        coordinator.openGettingStarted(gameSystemId: "aos-spearhead")
+        coordinator.openGuidedMatch(gameSystemId: "aos-spearhead")
 
         XCTAssertEqual(
             coordinator.consumePendingAction(),
-            .openGettingStarted(gameSystemId: "aos-spearhead")
+            .openGuidedMatch(gameSystemId: "aos-spearhead")
         )
         XCTAssertNil(coordinator.consumePendingAction())
     }

@@ -59,20 +59,12 @@ struct GameSystemDetailView: View {
 
                         if ReleaseSurface.showsRollEvaluator {
                             NavigationLink {
-                                CombatRollEvaluatorView(ruleSections: gameSystem.ruleSections)
-                            } label: {
-                                Label(String(localized: "Roll Evaluator"), systemImage: "dice.fill")
-                                    .frame(minHeight: DesignTokens.minTouchTarget)
-                            }
-                            .accessibilityIdentifier("guide.rollEvaluator.\(gameSystemId)")
-
-                            NavigationLink {
                                 UnitMatchupEvaluatorView(ruleSections: gameSystem.ruleSections)
                             } label: {
-                                Label(String(localized: "Unit Matchup"), systemImage: "arrow.left.arrow.right")
+                                Label(String(localized: "Combat Resolver"), systemImage: "dice.fill")
                                     .frame(minHeight: DesignTokens.minTouchTarget)
                             }
-                            .accessibilityIdentifier("guide.unitMatchup.\(gameSystemId)")
+                            .accessibilityIdentifier("guide.combatResolver.\(gameSystemId)")
                         }
                     }
 

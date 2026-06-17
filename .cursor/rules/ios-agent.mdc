@@ -1,0 +1,37 @@
+---
+description: Spearhead iOS agent conventions — architecture, git, accessibility
+globs:
+  - "**/*.swift"
+  - "**/project.yml"
+  - "specs/**"
+  - "docs/**"
+---
+
+# Spearhead iOS Agent Rules
+
+Read `docs/agent-build-checklist.md` for phase workflow.
+
+## Architecture
+- Domain (`Domain/`) must not import SwiftUI or UIKit.
+- Features depend on repository protocols, never concrete JSON loaders.
+- Gate unfinished features in `Support/ReleaseSurface.swift`.
+
+## Git
+- Do not commit `.xcodeproj` or secrets.
+- Do not push unless explicitly asked.
+- Run `xcodegen generate` after `project.yml` changes.
+
+## Accessibility
+- Every interactive control: `accessibilityLabel`, `accessibilityHint`, `accessibilityIdentifier`.
+- Minimum 44×44 pt touch targets.
+- Use semantic Dynamic Type text styles.
+
+## UI Tests
+- Identifiers: `screen.element.action` (e.g. `home.gameSystem.aosSpearhead`).
+
+## Specs
+- Behavior changes require updating the matching spec Verification block.
+- Brainstorm in `docs/brainstorm.md` is non-authoritative.
+
+## Layout
+- Use `UIDevice.current.userInterfaceIdiom` for phone vs pad — not horizontal size class alone.

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT"
+
+PATTERNS=(
+  'GoogleService-Info\.plist'
+  'Secrets\.plist'
+  '\.env(\.|$)'
+  'credentials\.json'
+  '-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----'
+  'AIza[0-9A-Za-z_-]{35}'
+)
+
+STAGED=$(git diff --cached --name-only --diff-filter=ACM || true)
+
+for file in $STAGED; do
+  for pattern in "${PATTERNS[@]}"; do
+    if [[ "$file" =~ $pattern ]] || grep -qE "$pattern" "$file" 2>/dev/null; then
+      echo "pre-commit: blocked — possible secret in $file (pattern: $pattern)"
+      exit 1
+    fi
+  done
+done
+
+exit 0

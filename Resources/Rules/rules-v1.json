@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "gameSystems": [
+    {
+      "id": "aos-spearhead",
+      "name": "Age of Sigmar: Spearhead",
+      "tagline": "Fast-paced tactical battles in the Mortal Realms",
+      "edition": "4th Edition — Spearhead",
+      "availability": "available",
+      "gettingStartedSteps": [
+        {
+          "id": "pick-army",
+          "order": 1,
+          "title": "Pick a Spearhead Army",
+          "summary": "Choose a pre-made army from a Spearhead box set.",
+          "body": "In Spearhead, each player commands a fixed Spearhead army tied to a box set. Army composition cannot be changed — units, general, and faction rules are defined on the faction's Spearhead sheet. Download free faction packs from Warhammer Community if you need warscrolls on your phone.",
+          "tips": [
+            "Each Spearhead box is a complete army — no extra purchases required to play.",
+            "Read your army's battle traits before the game; they apply every battle."
+          ],
+          "relatedRuleSectionId": "spearhead-overview"
+        },
+        {
+          "id": "realm-battlefield",
+          "order": 2,
+          "title": "Choose a Realm Battlefield",
+          "summary": "Agree on a realm board and matching Spearhead deck.",
+          "body": "Spearhead battles use a 30\"×22\" double-sided realm battlefield. Fire and Jade features Aqshy (Realm of Fire) and Ghyran (Realm of Life). Each side has its own twist deck. You also need two battle tactic decks (one per player) and terrain: two large and two small features.",
+          "tips": [
+            "The defender chooses which realm side to fight on.",
+            "Objectives are printed on the board — the whole circle counts, not just the centre symbol."
+          ],
+          "relatedRuleSectionId": "spearhead-overview"
+        },
+        {
+          "id": "regiment-enhancement",
+          "order": 3,
+          "title": "Pick Regiment Ability & Enhancement",
+          "summary": "Attacker chooses first, then defender.",
+          "body": "After rolling for attacker and defender, the attacker picks one regiment ability (from two options) and one enhancement for their general (from four options). The defender then makes their picks. These choices shape your strategy — some options counter specific opponents.",
+          "tips": [
+            "Regiment abilities range from passive bonuses to once-per-battle actions.",
+            "Enhancements upgrade your general only — protect them accordingly."
+          ]
+        },
+        {
+          "id": "warscrolls",
+          "order": 4,
+          "title": "Prepare Your Warscrolls",
+          "summary": "Review unit profiles, weapons, and keywords.",
+          "body": "Each unit has a Spearhead warscroll with Move, Save, Health, weapons (Range/Attacks/Hit/Wound/Rend/Damage), abilities, and keywords (HERO, WIZARD, MONSTER, INFANTRY, etc.). Spearhead does not use the Magic advanced module — spells and prayers resolve like normal abilities with no miscast or unbind rolls.",
+          "tips": [
+            "Look for REINFORCEMENTS keyword — destroyed units can return once per game.",
+            "Wizards and Priests still cast, just without the Advanced Magic rules."
+          ],
+          "relatedRuleSectionId": "combat-sequence"
+        },
+        {
+          "id": "fight-battle",
+          "order": 5,
+          "title": "Fight the Battle",
+          "summary": "Four battle rounds — score victory points to win.",
+          "body": "Games last four battle rounds (~60–90 minutes). Each round: determine turn order (attacker picks first round; later rounds use priority roll), identify the underdog, draw a twist card, draw battle tactic cards, then play turns. Score VP for objectives and completed battle tactics. Each battle tactic card offers a tactic OR a command — not both.",
+          "tips": [
+            "Seizing initiative from a priority roll may prevent drawing battle tactic cards unless you're the underdog by 5+ VP.",
+            "Twist cards favour the underdog — comebacks are built into the mode."
+          ],
+          "relatedRuleSectionId": "spearhead-scoring"
+        }
+      ],
+      "ruleSections": [
+        {
+          "id": "combat-sequence",
+          "title": "Combat Attack Sequence",
+          "category": "core",
+          "order": 1,
+          "content": "When a model attacks, resolve each attack:\n\n1. Hit Roll — roll a dice; meet or exceed the weapon's Hit characteristic. Unmodified 1s always fail.\n\n2. Wound Roll — if the hit succeeds, roll to meet or exceed the Wound characteristic. Unmodified 1s always fail.\n\n3. Save Roll — the target's commander rolls a dice, subtracting Rend from the roll. Meet or exceed the Save characteristic to save. Unmodified 1s always fail.\n\n4. Damage — if the save fails, inflict damage points equal to the weapon's Damage characteristic into the target unit's damage pool, then follow the damage sequence.",
+          "relatedSectionIds": ["attack-modifiers", "damage-sequence"]
+        },
+        {
+          "id": "attack-modifiers",
+          "title": "Attack Roll Modifiers",
+          "category": "core",
+          "order": 2,
+          "content": "Positive and negative modifiers to hit and wound rolls are capped at +1 and -1 after summing all applicable modifiers.\n\nSave rolls sum all modifiers and subtract Rend — there is no cap on how much can be subtracted from save rolls.\n\nRoll all hits, then all wounds, then all saves when a weapon makes multiple attacks.",
+          "relatedSectionIds": ["combat-sequence"]
+        },
+        {
+          "id": "damage-sequence",
+          "title": "Damage Sequence",
+          "category": "core",
+          "order": 3,
+          "content": "After damage points are added to a unit's pool:\n\n1. Resolve ward saves for all damage in the pool.\n2. Allocate remaining damage to models in the unit.\n3. Remove slain models.\n\nSome abilities inflict mortal damage — add those points directly to the damage pool.",
+          "relatedSectionIds": ["combat-sequence"]
+        },
+        {
+          "id": "spearhead-overview",
+          "title": "Spearhead Overview",
+          "category": "spearhead",
+          "order": 10,
+          "content": "Spearhead is a compact AoS 4th Edition mode using Core Rules only (no Advanced Rules modules). Armies are fixed box-set rosters. Battles use realm battlefields, twist cards, and battle tactic cards instead of the standard Battle Tactics and Commands modules.\n\nPre-battle: roll for attacker/defender → pick regiment abilities and enhancements → defender chooses realm side and deployment map → set up terrain → deploy armies.",
+          "relatedSectionIds": ["spearhead-battle-round", "spearhead-scoring"]
+        },
+        {
+          "id": "spearhead-battle-round",
+          "title": "Start of Battle Round",
+          "category": "spearhead",
+          "order": 11,
+          "content": "At the start of each battle round:\n\n• Round 1: attacker chooses who takes the first turn.\n• Round 2+: priority roll — winner chooses first turn.\n• Determine the underdog (player with fewer VP).\n• Draw a twist card (underdog benefits).\n• Draw battle tactic cards (see scoring section).\n• Resolve Start of Battle Round abilities.",
+          "relatedSectionIds": ["spearhead-scoring"]
+        },
+        {
+          "id": "spearhead-scoring",
+          "title": "Victory Points in Spearhead",
+          "category": "spearhead",
+          "order": 12,
+          "content": "At the end of your turn, score:\n• 1 VP if you hold any objective.\n• 1 VP if you hold two or more objectives.\n• 1 VP if you hold more objectives than your opponent.\n• 1 VP per battle tactic completed.\n\nBattle tactics: start with 3 cards; each round discard any number face-up, then draw back to 3. Each card: complete the tactic at end of turn OR use the command during the battle — not both.\n\nPriority note: if you win priority and choose first turn when you went second last round, you cannot draw battle tactic cards unless you are the underdog and VP deficit is 5+.",
+          "relatedSectionIds": ["spearhead-battle-round", "glossary-contest"]
+        },
+        {
+          "id": "glossary-contest",
+          "title": "Contesting Objectives",
+          "category": "glossary",
+          "order": 20,
+          "content": "In Spearhead, a model contests an objective while wholly or partially on it. Objectives are named after godbeasts and are printed on the realm battlefield board.",
+          "relatedSectionIds": ["spearhead-scoring"]
+        }
+      ],
+      "externalLinks": [
+        {
+          "id": "core-rules-pdf",
+          "title": "Official Core Rules (PDF)",
+          "url": "https://assets.warhammer-community.com/ageofsigmar_corerules&keydownloads_therules_eng_24.09-tbf4egjql3.pdf"
+        },
+        {
+          "id": "spearhead-reference",
+          "title": "Spearhead Quick Reference (PDF)",
+          "url": "https://assets.warhammer-community.com/ageofsigmar_corerules&keydownloads_spearheadreferece_eng_24.09-jrpbcnzwuu.pdf"
+        },
+        {
+          "id": "spearhead-hub",
+          "title": "Spearhead on ageofsigmar.com",
+          "url": "https://ageofsigmar.com/spearhead/"
+        }
+      ]
+    },
+    {
+      "id": "wh40k-10e",
+      "name": "Warhammer 40,000",
+      "tagline": "10th Edition rules companion",
+      "edition": "10th Edition",
+      "availability": "comingSoon",
+      "gettingStartedSteps": [],
+      "ruleSections": []
+    },
+    {
+      "id": "wh40k-11e",
+      "name": "Warhammer 40,000",
+      "tagline": "11th Edition rules companion",
+      "edition": "11th Edition",
+      "availability": "comingSoon",
+      "gettingStartedSteps": [],
+      "ruleSections": []
+    }
+  ]
+}

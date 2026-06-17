@@ -9,6 +9,7 @@ Authoritative behavior contracts. Brainstorm (`docs/brainstorm.md`) is **not** a
 | [DataSchemaSpec.md](DataSchemaSpec.md) | Bundled JSON schema & migrations |
 | [DesignSystemSpec.md](DesignSystemSpec.md) | Tokens, typography, components |
 | [AccessibilitySpec.md](AccessibilitySpec.md) | WCAG targets, orientations |
+| [iPhoneLandscapePlan.md](iPhoneLandscapePlan.md) | iPhone landscape + large text rollout (all screens) |
 | [LocalizationSpec.md](LocalizationSpec.md) | String policy, locales |
 | [TestPlanSpec.md](TestPlanSpec.md) | CI gates, test matrix |
 | [ReleaseSurfaceSpec.md](ReleaseSurfaceSpec.md) | Feature gating |

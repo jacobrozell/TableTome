@@ -33,5 +33,5 @@ As a player at the table, I browse offline rule sections for Spearhead and core 
 |-------|-------|
 | Target release | v0.1 |
 | Last verified | 2026-06-17 |
-| Commit | (initial scaffold) |
-| Code paths | `Features/RulesReference/` |
+| Commit | (rules reference complete) |
+| Code paths | `Features/RulesReference/`, `Tests/Unit/RulesReferenceViewModelTests.swift` |

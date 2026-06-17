@@ -13,6 +13,9 @@ Authoritative behavior contracts. Brainstorm (`docs/brainstorm.md`) is **not** a
 | [TestPlanSpec.md](TestPlanSpec.md) | CI gates, test matrix |
 | [ReleaseSurfaceSpec.md](ReleaseSurfaceSpec.md) | Feature gating |
 | [GameGuideSpec.md](GameGuideSpec.md) | Getting Started walkthrough |
+| [GuidedMatchSpec.md](GuidedMatchSpec.md) | Spearhead army selection & match setup |
+| [GuidedMatchUXPolishPlan.md](GuidedMatchUXPolishPlan.md) | iPad, landscape, accessibility polish for Guided Match |
+| [SpearheadContentSpec.md](SpearheadContentSpec.md) | Scalable Spearhead army content pipeline |
 | [RulesReferenceSpec.md](RulesReferenceSpec.md) | Offline rules browser |
 
 ## Governance

@@ -5,7 +5,7 @@
 PR gate: unit tests only (~minutes).
 
 ```bash
-xcodebuild test -scheme TabletomeCI -destination 'platform=iOS Simulator,name=iPhone 17'
+xcodebuild test -scheme TabletomeCI -destination 'platform=iOS Simulator,name=Tabletome'
 ```
 
 ## Unit Tests (v0.1)

@@ -5,5 +5,6 @@
 - [ ] Offline — airplane mode smoke
 - [ ] VoiceOver pass on Learn + Rules tabs
 - [ ] Dynamic Type AXXXL on step detail
-- [ ] Settings legal links open
+- [ ] Settings legal links open (GitHub Pages)
+- [ ] Buy Me a Coffee link opens from Settings
 - [ ] Reset guide progress works

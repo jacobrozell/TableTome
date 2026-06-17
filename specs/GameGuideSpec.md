@@ -41,5 +41,5 @@ Home (game systems)
 |-------|-------|
 | Target release | v0.1 |
 | Last verified | 2026-06-17 |
-| Commit | (initial scaffold) |
-| Code paths | `Features/GameGuide/`, `Features/Home/` |
+| Commit | (guide rule cross-links) |
+| Code paths | `Features/GameGuide/`, `Features/Home/`, `Features/RulesReference/`, `Tests/Unit/GuideProgressStoreTests.swift` |

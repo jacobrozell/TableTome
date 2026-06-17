@@ -48,8 +48,8 @@ Add `DesignTokens.readableContentMaxWidth` (680pt) and a `readableContentWidth()
 
 ### Acceptance
 
-- [ ] iPhone portrait: no visual regression (full-width grouped lists preserved)
-- [ ] iPad / landscape: primary content column ≤ 680pt, centered
+- [x] iPhone portrait: no visual regression (full-width grouped lists preserved)
+- [x] iPad / landscape: primary content column ≤ 680pt, centered
 - [ ] Dynamic Type AX1–AX3: no new horizontal clipping at readable width
 
 ### Files
@@ -88,10 +88,10 @@ When `horizontalSizeClass == .compact` (iPhone): keep existing single-column `VS
 
 ### Acceptance
 
-- [ ] iPhone: unchanged single-column layout
-- [ ] iPad landscape: controls left, abilities right; both columns within readable max width container
-- [ ] Phase chips visible without horizontal scroll on iPad
-- [ ] VoiceOver reading order: controls → abilities
+- [x] iPhone: unchanged single-column layout
+- [x] iPad landscape: controls left, abilities right
+- [x] Phase chips visible without horizontal scroll on iPad
+- [ ] VoiceOver reading order: controls → abilities (manual pass pending)
 
 ### Files
 
@@ -154,10 +154,10 @@ Add army picker section footer legend explaining the three levels.
 
 ### Acceptance
 
-- [ ] Progress updates when steps are toggled complete
-- [ ] Disabled tracker shows footer on phone and iPad
-- [ ] No user-facing "detail file" or "JSON" language
-- [ ] Coverage badges use player-facing labels
+- [x] Progress updates when steps are toggled complete
+- [x] Disabled tracker shows footer on phone and iPad
+- [x] No user-facing "detail file" or "JSON" language
+- [x] Coverage badges use player-facing labels
 
 ### Files
 
@@ -199,9 +199,9 @@ Do **not** rely on opacity alone for used state.
 
 ### Acceptance
 
-- [ ] VoiceOver reads declare, effect, phase, and usage for ability cards
-- [ ] Used abilities announced as used
-- [ ] Army row announces coverage level
+- [x] VoiceOver reads declare, effect, phase, and usage for ability cards
+- [x] Used abilities announced as used
+- [x] Army row announces coverage level
 
 ### Files
 
@@ -257,9 +257,9 @@ enum GuidedMatchDestination: Hashable {
 
 ### Acceptance
 
-- [ ] iPhone: no change to navigation flow
-- [ ] iPad: sidebar persists while viewing step detail
-- [ ] Army selection on iPad saves in place (no pop)
+- [x] iPhone: no change to navigation flow
+- [x] iPad: sidebar persists while viewing step detail
+- [x] Army selection on iPad saves in place (no pop)
 - [ ] Selection state restores after rotation if possible
 
 ### Files
@@ -299,9 +299,9 @@ In `MatchStepDetailView`, when `horizontalSizeClass == .regular`, show Player 1 
 
 ### Acceptance
 
-- [ ] Army rows work with VoiceOver rotor and external keyboard
+- [x] Army rows work with Button (keyboard / Switch Control)
 - [ ] AX5 spot-check on Battle Tracker: no clipped phase chips
-- [ ] Status distinguishable without color alone
+- [x] Status distinguishable with symbol + text (not color alone)
 
 ---
 

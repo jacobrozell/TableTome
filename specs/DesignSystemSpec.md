@@ -7,6 +7,11 @@ Defined in `DesignSystem/DesignTokens.swift`:
 - **Spacing:** xs=4, sm=8, md=16, lg=24, xl=32
 - **Corner radius:** sm=8, md=12, lg=16
 - **Min touch target:** 44pt
+- **Readable content max width:** 680pt (iPad / regular horizontal size class)
+
+## Layout
+
+`readableContentWidth()` (`DesignSystem/ReadableContentWidth.swift`) centers content in a max-width column on iPad while leaving iPhone layouts full width.
 
 ## Colors
 
@@ -37,6 +42,12 @@ Use `@ScaledMetric` for icon sizes tied to text scale.
 | RuleSectionRow | `DesignSystem/RuleSectionRow.swift` |
 | PrimaryButton | `DesignSystem/PrimaryButton.swift` |
 | EmptyStateView | `DesignSystem/EmptyStateView.swift` |
+| UnitAbilityCard | `DesignSystem/UnitAbilityCard.swift` |
+| ArmyRuleOptionCard | `DesignSystem/ArmyRuleOptionCard.swift` |
+| PhaseChip / PhaseChipRow | `DesignSystem/PhaseChip.swift` |
+| RollStepCard | `DesignSystem/RollStepCard.swift` |
+| DiceValuePicker | `DesignSystem/DiceValuePicker.swift` |
+| ReadableContentWidth | `DesignSystem/ReadableContentWidth.swift` |
 
 All ship with accessibility labels and identifiers.
 

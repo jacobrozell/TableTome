@@ -82,6 +82,44 @@ Resources ship as a `Rules/` folder reference in the app bundle (`Rules/spearhea
 | `roster` | Name, general, playstyle — pickable in guided match |
 | `matchSetup` | + regiment abilities and enhancements |
 | `battleTracker` | + unit abilities or phased battle traits (detail file) |
+| `warscrolls` | + unit stats and weapon profiles in detail file |
+
+## Featured starter armies (v0.2)
+
+| Army ID | Faction |
+|---------|---------|
+| `vigilant-brotherhood` | Stormcast Eternals |
+| `gnawfeast-clawpack` | Skaven |
+
+These armies ship full detail overlays: battle traits, unit abilities, warscroll stats, and weapons. Use **Use Starter Matchup** in Guided Match for a one-tap Vigilant vs Gnawfeast setup.
+
+Unit warscroll fields in detail JSON:
+
+```json
+{
+  "id": "liberators",
+  "name": "Liberators",
+  "move": "5\"",
+  "save": 3,
+  "health": 2,
+  "control": 1,
+  "keywords": ["Infantry", "Reinforcements"],
+  "weapons": [
+    {
+      "id": "warhammer",
+      "name": "Warhammer",
+      "attacks": "2",
+      "hit": 3,
+      "wound": 3,
+      "rend": 1,
+      "damage": "1",
+      "ability": "Crit (Mortal)"
+    }
+  ]
+}
+```
+
+Weapons with numeric `damage` link to the Roll Evaluator with prefilled hit/wound/rend/damage.
 
 ## Validation (CI)
 

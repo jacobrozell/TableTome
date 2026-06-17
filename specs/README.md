@@ -16,6 +16,7 @@ Authoritative behavior contracts. Brainstorm (`docs/brainstorm.md`) is **not** a
 | [GuidedMatchSpec.md](GuidedMatchSpec.md) | Spearhead army selection & match setup |
 | [GuidedMatchUXPolishPlan.md](GuidedMatchUXPolishPlan.md) | iPad, landscape, accessibility polish for Guided Match |
 | [SpearheadContentSpec.md](SpearheadContentSpec.md) | Scalable Spearhead army content pipeline |
+| [CombatRollEvaluatorSpec.md](CombatRollEvaluatorSpec.md) | Hit/wound/save attack roll wizard |
 | [RulesReferenceSpec.md](RulesReferenceSpec.md) | Offline rules browser |
 
 ## Governance

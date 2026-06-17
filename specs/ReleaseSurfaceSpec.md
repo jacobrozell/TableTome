@@ -16,7 +16,7 @@
 |---------|---------|--------------|
 | AoS Spearhead guide | ✅ | ✅ |
 | 40k 10th / 11th | ❌ | ✅ (coming soon cards) |
-| Roll evaluator | ❌ | ❌ (stub) |
+| Roll evaluator | ✅ | ✅ |
 | Rules Q&A | ❌ | ❌ (stub) |
 
 ## Verification

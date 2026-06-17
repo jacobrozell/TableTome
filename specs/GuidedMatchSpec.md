@@ -31,6 +31,7 @@ Spearhead detail
 ```
 Guided Match (armies selected)
   → Battle Phase Tracker
+  → Roll Evaluator (hit / wound / save wizard)
   → Pick round, active player, current phase
   → See abilities available now (Declare / Effect cards)
   → Mark once-per-battle abilities as used
@@ -56,6 +57,16 @@ Unit ability content is loaded from optional per-army detail files. See `Spearhe
 - Player rows: `guidedMatch.playerOne`, `guidedMatch.playerTwo`
 - Army options: `guidedMatch.army.{armyId}`
 - Steps: `guidedMatch.step.{stepId}`
+
+## iPad & Layout Polish
+
+See `GuidedMatchUXPolishPlan.md`. Implemented:
+
+- Readable content width (680pt) on scroll views and forms
+- `NavigationSplitView` on regular horizontal size class
+- Battle Tracker two-column layout on iPad
+- Setup progress indicator
+- Player-facing coverage badges and richer VoiceOver on ability cards
 
 ## Verification
 

@@ -2,11 +2,62 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Tabletome accessibility statement — VoiceOver, Dynamic Type, and touch targets.">
   <title>Tabletome — Accessibility</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Accessibility Statement</h1>
-  <p>Last updated: 2026-06-17</p>
-  <p>Tabletome targets VoiceOver support, Dynamic Type, and 44pt minimum touch targets on core flows.</p>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <h1>Tabletome</h1>
+    <p>Accessibility Statement</p>
+  </header>
+
+  <nav class="site-nav" aria-label="Site">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="privacy.html">Privacy</a></li>
+      <li><a href="support.html">Support</a></li>
+      <li><a href="accessibility.html" aria-current="page">Accessibility</a></li>
+    </ul>
+  </nav>
+
+  <main id="main">
+    <p class="meta">Last updated: 17 June 2026</p>
+
+    <h2>Our commitment</h2>
+    <p>
+      Tabletome targets WCAG 2.1 AA engineering practices on core v0.1 flows:
+      Learn (Getting Started), Rules reference, and Settings.
+    </p>
+
+    <h3>Built-in iOS accessibility</h3>
+    <ul>
+      <li><strong>VoiceOver</strong> — labels, hints, and identifiers on interactive controls in Learn, Rules, and Settings.</li>
+      <li><strong>Dynamic Type</strong> — semantic text styles scale with your system font size.</li>
+      <li><strong>Touch targets</strong> — minimum 44×44 pt on primary controls.</li>
+      <li><strong>Reduce Motion</strong> — guide step completion animations respect the system setting.</li>
+      <li><strong>Dark Mode</strong> — system, light, and dark appearance in Settings.</li>
+    </ul>
+
+    <h3>Known limitations (v0.1)</h3>
+    <ul>
+      <li>English only.</li>
+      <li>Manual VoiceOver audit pending before App Store release.</li>
+      <li>External PDF and web links open in Safari / system viewers outside the app.</li>
+    </ul>
+
+    <h3>Feedback</h3>
+    <p>
+      If you encounter an accessibility barrier, please file an issue with the screen name and iOS version:
+      <a href="https://github.com/jacobrozell/Tabletome/issues">GitHub Issues</a>
+    </p>
+  </main>
+
+  <footer class="site-footer">
+    <p><a href="index.html">Tabletome home</a> · <a href="support.html">Support</a></p>
+  </footer>
 </body>
 </html>

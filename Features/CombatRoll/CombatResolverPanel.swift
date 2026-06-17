@@ -18,6 +18,7 @@ struct CombatResolverPanel: View {
     var attackerPlayerName: String?
     var defenderPlayerName: String?
     var defenderWoundsRemaining: Int?
+    var unitWoundsRemaining: [String: Int] = [:]
     let onSyncMultiAttack: () -> Void
     var onApplyDamage: ((Int) -> Void)?
 
@@ -170,6 +171,8 @@ struct CombatResolverPanel: View {
             showsWeaponPicker: true,
             showsArmyPicker: !locksArmies,
             usesCompactStyle: isEmbedded,
+            woundsRemaining: attackerWoundsRemaining,
+            unitWoundsRemaining: unitWoundsLookup(for: viewModel.attackerArmyId),
             onArmyChange: viewModel.setAttackerArmy,
             onUnitChange: viewModel.setAttackerUnit,
             onWeaponChange: viewModel.setAttackerWeapon
@@ -189,6 +192,8 @@ struct CombatResolverPanel: View {
             weaponId: .constant(""),
             showsArmyPicker: !locksArmies,
             usesCompactStyle: isEmbedded,
+            woundsRemaining: defenderWoundsRemaining,
+            unitWoundsRemaining: unitWoundsLookup(for: viewModel.defenderArmyId),
             onArmyChange: viewModel.setDefenderArmy,
             onUnitChange: viewModel.setDefenderUnit,
             onWeaponChange: { _ in }
@@ -305,6 +310,19 @@ struct CombatResolverPanel: View {
 
     private func opposingArmies(forAttackerId attackerId: String) -> [SpearheadArmy] {
         viewModel.armies.filter { $0.id != attackerId }
+    }
+
+    private var attackerWoundsRemaining: Int? {
+        guard !viewModel.attackerArmyId.isEmpty, !viewModel.attackerUnitId.isEmpty else { return nil }
+        let key = UnitWoundTracker.unitKey(armyId: viewModel.attackerArmyId, unitId: viewModel.attackerUnitId)
+        return unitWoundsRemaining[key]
+    }
+
+    private func unitWoundsLookup(for armyId: String) -> ((String) -> Int?)? {
+        guard !armyId.isEmpty, !unitWoundsRemaining.isEmpty else { return nil }
+        return { unitId in
+            unitWoundsRemaining[UnitWoundTracker.unitKey(armyId: armyId, unitId: unitId)]
+        }
     }
 }
 

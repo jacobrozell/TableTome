@@ -14,6 +14,7 @@ struct BattleTrackerCombatResolverSection: View {
     let defenderName: String
     let deploymentIsComplete: Bool
     let defenderWoundsRemaining: Int?
+    let unitWoundsRemaining: [String: Int]
     let ruleSections: [RuleSection]
     let onSyncMultiAttack: () -> Void
     var onApplyDamage: ((Int) -> Void)?
@@ -32,6 +33,7 @@ struct BattleTrackerCombatResolverSection: View {
                     attackerPlayerName: attackerName,
                     defenderPlayerName: defenderName,
                     defenderWoundsRemaining: defenderWoundsRemaining,
+                    unitWoundsRemaining: unitWoundsRemaining,
                     onSyncMultiAttack: onSyncMultiAttack,
                     onApplyDamage: onApplyDamage
                 )

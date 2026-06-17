@@ -11,14 +11,32 @@ struct UnitWoundTrackerRow: View {
         UnitWoundCapacity.capacity(for: unit)
     }
 
+    private var isDestroyed: Bool {
+        woundsRemaining == 0
+    }
+
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
-                Text(unit.name)
-                    .font(.subheadline.weight(.semibold))
-                Text(String(localized: "Max \(capacity) wounds"))
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
+                HStack(spacing: DesignTokens.Spacing.sm) {
+                    Text(unit.name)
+                        .font(.subheadline.weight(.semibold))
+                    if isDestroyed {
+                        Text(String(localized: "Destroyed"))
+                            .font(.caption2.weight(.bold))
+                            .padding(.horizontal, DesignTokens.Spacing.sm)
+                            .padding(.vertical, 2)
+                            .background(Color.red.opacity(0.15), in: Capsule())
+                            .foregroundStyle(.red)
+                    }
+                }
+                Text(
+                    isDestroyed
+                        ? String(localized: "Unit removed from play")
+                        : String(localized: "Max \(capacity) wounds")
+                )
+                .font(.caption2)
+                .foregroundStyle(.secondary)
             }
             Spacer()
             Stepper(
@@ -32,6 +50,7 @@ struct UnitWoundTrackerRow: View {
             .accessibilityIdentifier("battleTracker.wounds.\(armyId).\(unit.id)")
         }
         .frame(minHeight: DesignTokens.minTouchTarget)
+        .opacity(isDestroyed ? 0.55 : 1)
     }
 }
 

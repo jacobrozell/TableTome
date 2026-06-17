@@ -12,6 +12,8 @@ struct BattlePhaseTrackerView: View {
     @State private var showsMultiAttack = false
     @State private var scrollToCombatResolver = false
     @State private var showsBattleTrackerCoach = false
+    @State private var turnHandoffNotice: TurnHandoffNotice?
+    @State private var handoffBaselineEstablished = false
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     let ruleSections: [RuleSection]
 
@@ -43,14 +45,36 @@ struct BattlePhaseTrackerView: View {
             }
             .scrollBounceBehavior(.basedOnSize, axes: .vertical)
             .tabBarScrollInset()
-            .onChange(of: viewModel.trackerState.currentPhase) { _, phase in
+            .onChange(of: viewModel.trackerState.currentPhase) { oldPhase, phase in
                 if phase.isCombatRelated {
                     requestCombatResolverFocus(using: proxy)
                 }
+                if handoffBaselineEstablished {
+                    presentTurnHandoff(from: oldPhase, to: phase, playerChanged: false)
+                }
             }
-            .onChange(of: viewModel.trackerState.activePlayerIsOne) { _, _ in
+            .onChange(of: viewModel.trackerState.activePlayerIsOne) { oldValue, _ in
                 syncCombatContext()
                 requestCombatResolverFocus(using: proxy)
+                if handoffBaselineEstablished {
+                    presentTurnHandoff(
+                        from: viewModel.trackerState.currentPhase,
+                        to: viewModel.trackerState.currentPhase,
+                        playerChanged: oldValue != viewModel.trackerState.activePlayerIsOne
+                    )
+                }
+            }
+            .onChange(of: turnHandoffNotice) { _, notice in
+                guard notice != nil else { return }
+                let current = notice
+                Task {
+                    try? await Task.sleep(for: .seconds(5))
+                    if turnHandoffNotice == current {
+                        withAnimation(.easeInOut(duration: 0.25)) {
+                            turnHandoffNotice = nil
+                        }
+                    }
+                }
             }
             .onChange(of: scrollToCombatResolver) { _, shouldScroll in
                 guard shouldScroll else { return }
@@ -84,6 +108,10 @@ struct BattlePhaseTrackerView: View {
         .accessibilityIdentifier("battleTracker.screen")
         .onAppear {
             showsBattleTrackerCoach = supportsBattleTracker && !NewPlayerTipsStore.hasSeenBattleTrackerCoach
+            Task {
+                try? await Task.sleep(for: .milliseconds(400))
+                handoffBaselineEstablished = true
+            }
         }
         .task {
             await combatViewModel.load()
@@ -110,6 +138,7 @@ struct BattlePhaseTrackerView: View {
     private var compactLayout: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             coachSection
+            turnHandoffSection
             guideSection
             roundAndScoreSection
             BattleTrackerControlPanel(viewModel: viewModel)
@@ -126,6 +155,7 @@ struct BattlePhaseTrackerView: View {
         HStack(alignment: .top, spacing: DesignTokens.Spacing.lg) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                 coachSection
+                turnHandoffSection
                 guideSection
                 deploymentSection
                 roundAndScoreSection
@@ -140,6 +170,22 @@ struct BattlePhaseTrackerView: View {
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    @ViewBuilder
+    private var turnHandoffSection: some View {
+        if let notice = turnHandoffNotice {
+            BattleTrackerTurnHandoffBanner(
+                title: notice.title,
+                detail: notice.detail,
+                onDismiss: {
+                    withAnimation(.easeInOut(duration: 0.25)) {
+                        turnHandoffNotice = nil
+                    }
+                }
+            )
+            .transition(.opacity.combined(with: .move(edge: .top)))
+        }
     }
 
     @ViewBuilder
@@ -179,6 +225,7 @@ struct BattlePhaseTrackerView: View {
                 defenderName: combatDefenderName,
                 deploymentIsComplete: deploymentIsComplete,
                 defenderWoundsRemaining: defenderWoundsRemaining,
+                unitWoundsRemaining: viewModel.trackerState.unitWoundsRemaining,
                 ruleSections: ruleSections,
                 onSyncMultiAttack: syncMultiAttack,
                 onApplyDamage: applyCombatDamage
@@ -345,6 +392,46 @@ struct BattlePhaseTrackerView: View {
             proxy.scrollTo("combatResolver", anchor: .top)
         }
     }
+
+    private func presentTurnHandoff(
+        from previousPhase: BattleTurnPhase,
+        to phase: BattleTurnPhase,
+        playerChanged: Bool
+    ) {
+        let activeName = viewModel.trackerState.activePlayerIsOne
+            ? viewModel.playerOneName
+            : viewModel.playerTwoName
+        let notice: TurnHandoffNotice?
+        if phase == .endOfTurn {
+            notice = TurnHandoffNotice(
+                title: String(localized: "End of \(activeName)'s turn"),
+                detail: String(
+                    localized: "Score any victory points, update battle tactics, then pass the phone."
+                )
+            )
+        } else if phase == .hero, playerChanged || previousPhase == .endOfTurn {
+            notice = TurnHandoffNotice(
+                title: String(localized: "Pass to \(activeName)"),
+                detail: String(localized: "Hero phase — start of their turn.")
+            )
+        } else if playerChanged {
+            notice = TurnHandoffNotice(
+                title: String(localized: "Pass to \(activeName)"),
+                detail: String(localized: "\(phase.title) phase.")
+            )
+        } else {
+            notice = nil
+        }
+        guard let notice else { return }
+        withAnimation(.easeInOut(duration: 0.25)) {
+            turnHandoffNotice = notice
+        }
+    }
+}
+
+private struct TurnHandoffNotice: Equatable {
+    let title: String
+    let detail: String
 }
 
 private extension String {

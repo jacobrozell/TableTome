@@ -7,13 +7,19 @@ struct SimulatedDiceFieldRow: View {
     let accessibilityId: String
     let rollAccessibilityId: String
     let isSimulated: Bool
+    var coachingHint: DiceRollCoach.Hint?
     let onRoll: () -> Void
 
     var body: some View {
-        HStack(spacing: DesignTokens.Spacing.sm) {
-            DiceValuePicker(label: label, value: $value, accessibilityId: accessibilityId)
-            if isSimulated {
-                DiceRollButton(label: label, accessibilityId: rollAccessibilityId, action: onRoll)
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+            HStack(spacing: DesignTokens.Spacing.sm) {
+                DiceValuePicker(label: label, value: $value, accessibilityId: accessibilityId)
+                if isSimulated {
+                    DiceRollButton(label: label, accessibilityId: rollAccessibilityId, action: onRoll)
+                }
+            }
+            if let coachingHint {
+                DiceCoachingHint(hint: coachingHint)
             }
         }
     }

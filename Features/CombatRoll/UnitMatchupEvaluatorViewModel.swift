@@ -216,35 +216,38 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
         }
     }
 
-    func evaluate() {
+    var rollCoachingInput: AttackRollInput? {
         guard let weapon = selectedAttackerWeapon,
-              let save = selectedDefenderUnit?.save else {
-            evaluation = nil
-            return
-        }
+              let save = selectedDefenderUnit?.save else { return nil }
 
         let mods = CombatMatchupBuffCatalog.aggregateModifiers(from: matchupBuffs, enabledIds: enabledBuffIds)
         let options = resolvedRollOptions()
-        evaluation = CombatRollEngine.evaluate(
-            AttackRollInput(
-                hitTarget: weapon.hit,
-                woundTarget: weapon.wound,
-                saveTarget: save,
-                rend: weapon.rend,
-                damage: damage,
-                hitRoll: hitRoll,
-                woundRoll: woundRoll,
-                saveRoll: saveRoll,
-                hitModifier: mods.hit,
-                woundModifier: mods.wound,
-                saveModifier: mods.save,
-                wardTarget: mods.wardTarget,
-                wardRoll: mods.wardTarget == nil ? nil : wardRoll,
-                critAutoWound: options.critAutoWound,
-                critMortal: options.critMortal,
-                mortalDamage: options.mortalDamage
-            )
+        return AttackRollInput(
+            hitTarget: weapon.hit,
+            woundTarget: weapon.wound,
+            saveTarget: save,
+            rend: weapon.rend,
+            damage: damage,
+            hitRoll: hitRoll,
+            woundRoll: woundRoll,
+            saveRoll: saveRoll,
+            hitModifier: mods.hit,
+            woundModifier: mods.wound,
+            saveModifier: mods.save,
+            wardTarget: mods.wardTarget,
+            wardRoll: mods.wardTarget == nil ? nil : wardRoll,
+            critAutoWound: options.critAutoWound,
+            critMortal: options.critMortal,
+            mortalDamage: options.mortalDamage
         )
+    }
+
+    func evaluate() {
+        guard let input = rollCoachingInput else {
+            evaluation = nil
+            return
+        }
+        evaluation = CombatRollEngine.evaluate(input)
     }
 
     func refreshEvaluation() {

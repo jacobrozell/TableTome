@@ -14,6 +14,8 @@ struct MatchupSidePanel: View {
     var showsWeaponPicker: Bool = false
     var showsArmyPicker: Bool = true
     var usesCompactStyle: Bool = false
+    var woundsRemaining: Int?
+    var unitWoundsRemaining: ((String) -> Int?)?
     let onArmyChange: (String) -> Void
     let onUnitChange: (String) -> Void
     let onWeaponChange: (String) -> Void
@@ -43,7 +45,7 @@ struct MatchupSidePanel: View {
 
             Picker(String(localized: "Unit"), selection: $unitId) {
                 ForEach(units) { unit in
-                    Text(unit.name).tag(unit.id)
+                    Text(unitPickerLabel(for: unit)).tag(unit.id)
                 }
             }
             .pickerStyle(.menu)
@@ -59,12 +61,24 @@ struct MatchupSidePanel: View {
                 .onChange(of: weaponId) { _, newValue in onWeaponChange(newValue) }
             }
 
-            if !usesCompactStyle, let unit = units.first(where: { $0.id == unitId }) {
-                Divider()
-                unitSummary(unit)
+            if let unit = units.first(where: { $0.id == unitId }) {
+                if usesCompactStyle {
+                    UnitQuickStatsRow(unit: unit, woundsRemaining: woundsRemaining)
+                } else {
+                    Divider()
+                    unitSummary(unit)
+                }
             }
         }
         .modifier(ConditionalSurfaceCard(enabled: !usesCompactStyle))
+    }
+
+    private func unitPickerLabel(for unit: SpearheadUnit) -> String {
+        guard let remaining = unitWoundsRemaining?(unit.id) else { return unit.name }
+        if remaining == 0 {
+            return String(localized: "\(unit.name) (Destroyed)")
+        }
+        return unit.name
     }
 
     @ViewBuilder

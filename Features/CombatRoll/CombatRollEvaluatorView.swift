@@ -23,15 +23,17 @@ struct CombatRollEvaluatorView: View {
                 modifiersSection
                 weaponOptionsSection
                 evaluateButton
-                NavigationLink {
-                    UnitMatchupEvaluatorView(ruleSections: ruleSections)
-                } label: {
-                    Label(String(localized: "Unit Matchup"), systemImage: "arrow.left.arrow.right")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .frame(minHeight: DesignTokens.minTouchTarget)
+                ReferenceLinksGroup {
+                    NavigationLink {
+                        UnitMatchupEvaluatorView(ruleSections: ruleSections)
+                    } label: {
+                        ReferenceLinkRow(
+                            title: String(localized: "Unit Matchup"),
+                            systemImage: "arrow.left.arrow.right"
+                        )
+                    }
+                    .accessibilityIdentifier("rollEvaluator.unitMatchup")
                 }
-                .accessibilityIdentifier("rollEvaluator.unitMatchup")
                 resultsSection
                 ruleLinkSection
             }
@@ -64,17 +66,15 @@ struct CombatRollEvaluatorView: View {
     }
 
     private var introSection: some View {
-        Text(
-            "Enter your weapon profile and the dice you rolled. "
-                + "Tabletome walks through hit, wound, save, and damage per the core combat sequence."
+        IntroCallout(
+            text: "Enter your weapon profile and the dice you rolled. "
+                + "Tabletome walks through hit, wound, save, and damage per the core combat sequence.",
+            systemImage: "dice.fill"
         )
-        .font(.callout)
-        .foregroundStyle(.secondary)
-        .fixedSize(horizontal: false, vertical: true)
     }
 
     private var weaponProfileSection: some View {
-        formSection(title: String(localized: "Weapon Profile")) {
+        formSection(title: String(localized: "Weapon Profile"), systemImage: "hammer.fill") {
             profileStepper(
                 label: String(localized: "Hit"),
                 value: $viewModel.hitTarget,
@@ -114,7 +114,7 @@ struct CombatRollEvaluatorView: View {
     }
 
     private var diceSection: some View {
-        formSection(title: String(localized: "Dice Rolled")) {
+        formSection(title: String(localized: "Dice Rolled"), systemImage: "dice.fill") {
             DiceValuePicker(
                 label: String(localized: "Hit roll"),
                 value: $viewModel.hitRoll,
@@ -134,7 +134,7 @@ struct CombatRollEvaluatorView: View {
     }
 
     private var modifiersSection: some View {
-        formSection(title: String(localized: "Modifiers")) {
+        formSection(title: String(localized: "Modifiers"), systemImage: "plusminus") {
             Text(String(localized: "Hit and wound modifiers are capped at +1 / −1 after summing all sources."))
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -158,7 +158,7 @@ struct CombatRollEvaluatorView: View {
     }
 
     private var weaponOptionsSection: some View {
-        formSection(title: String(localized: "Weapon Rules")) {
+        formSection(title: String(localized: "Weapon Rules"), systemImage: "bolt.fill") {
             rollOptionToggle(String(localized: "Crit (Auto-wound)"), keyPath: \.critAutoWound, id: "rollEvaluator.critAutoWound")
             rollOptionToggle(String(localized: "Crit (Mortal)"), keyPath: \.critMortal, id: "rollEvaluator.critMortal")
             rollOptionToggle(String(localized: "Mortal damage (skip save)"), keyPath: \.mortalDamage, id: "rollEvaluator.mortalDamage")
@@ -178,7 +178,9 @@ struct CombatRollEvaluatorView: View {
             }
         )) {
             Text(label)
+                .font(.subheadline)
         }
+        .toggleStyle(.switch)
         .accessibilityIdentifier(id)
     }
 
@@ -192,14 +194,13 @@ struct CombatRollEvaluatorView: View {
     private var resultsSection: some View {
         if let evaluation = viewModel.evaluation {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                Text(String(localized: "Result"))
-                    .font(.title3.bold())
+                SectionHeader(title: String(localized: "Result"), systemImage: "checkmark.seal")
 
                 ForEach(evaluation.steps) { step in
                     RollStepCard(step: step)
                 }
 
-                damageSummary(evaluation.damageDealt)
+                DamageSummaryCard(damage: evaluation.damageDealt, accessibilityId: "rollEvaluator.damageSummary")
             }
             .accessibilityIdentifier("rollEvaluator.results")
         }
@@ -208,46 +209,24 @@ struct CombatRollEvaluatorView: View {
     @ViewBuilder
     private var ruleLinkSection: some View {
         if let combatSection = ruleSections.first(where: { $0.id == "combat-sequence" }) {
-            NavigationLink {
-                RuleSectionDetailView(section: combatSection, allSections: ruleSections)
-            } label: {
-                Label(combatSection.title, systemImage: "doc.text")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .frame(minHeight: DesignTokens.minTouchTarget)
+            ReferenceLinksGroup {
+                NavigationLink {
+                    RuleSectionDetailView(section: combatSection, allSections: ruleSections)
+                } label: {
+                    ReferenceLinkRow(title: combatSection.title, systemImage: "doc.text")
+                }
+                .accessibilityLabel(String(localized: "Related rule: \(combatSection.title)"))
+                .accessibilityIdentifier("rollEvaluator.relatedRule")
             }
-            .accessibilityLabel(String(localized: "Related rule: \(combatSection.title)"))
-            .accessibilityIdentifier("rollEvaluator.relatedRule")
         }
     }
 
-    private func damageSummary(_ damage: Int) -> some View {
-        HStack {
-            Image(systemName: damage > 0 ? "bolt.fill" : "shield.fill")
-                .foregroundStyle(damage > 0 ? .orange : .green)
-                .accessibilityHidden(true)
-            Text(
-                damage > 0
-                    ? String(localized: "\(damage) damage to allocate")
-                    : String(localized: "No damage dealt")
-            )
-            .font(.headline)
-        }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
-        .accessibilityIdentifier("rollEvaluator.damageSummary")
-    }
-
-    private func formSection(title: String, @ViewBuilder content: () -> some View) -> some View {
+    private func formSection(title: String, systemImage: String? = nil, @ViewBuilder content: () -> some View) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Text(title)
-                .font(.title3.bold())
+            SectionHeader(title: title, systemImage: systemImage)
             content()
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .surfaceCard()
     }
 
     private func profileStepper(

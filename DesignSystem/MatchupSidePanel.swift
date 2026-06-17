@@ -3,6 +3,7 @@ import TabletomeDomain
 
 struct MatchupSidePanel: View {
     let title: String
+    var systemImage: String = "person.fill"
     let armyName: String
     let armies: [SpearheadArmy]
     @Binding var armyId: String
@@ -17,8 +18,7 @@ struct MatchupSidePanel: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Text(title)
-                .font(.headline)
+            SectionHeader(title: title, systemImage: systemImage)
 
             Picker(String(localized: "Army"), selection: $armyId) {
                 ForEach(armies) { army in
@@ -47,12 +47,11 @@ struct MatchupSidePanel: View {
             }
 
             if let unit = units.first(where: { $0.id == unitId }) {
+                Divider()
                 unitSummary(unit)
             }
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .surfaceCard()
     }
 
     @ViewBuilder
@@ -91,6 +90,7 @@ struct CombatBuffToggleRow: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
+        .toggleStyle(.switch)
         .frame(minHeight: DesignTokens.minTouchTarget)
         .accessibilityIdentifier("matchup.buff.\(buff.id)")
     }

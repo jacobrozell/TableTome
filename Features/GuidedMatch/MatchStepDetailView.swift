@@ -20,27 +20,28 @@ struct MatchStepDetailView: View {
                 stepSpecificContent
 
                 if let relatedSection {
-                    NavigationLink {
-                        RuleSectionDetailView(section: relatedSection, allSections: ruleSections)
-                    } label: {
-                        Label(relatedSection.title, systemImage: "doc.text")
-                            .font(.headline)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .frame(minHeight: DesignTokens.minTouchTarget)
+                    ReferenceLinksGroup {
+                        NavigationLink {
+                            RuleSectionDetailView(section: relatedSection, allSections: ruleSections)
+                        } label: {
+                            ReferenceLinkRow(title: relatedSection.title, systemImage: "doc.text")
+                        }
+                        .accessibilityLabel(String(localized: "Related rule: \(relatedSection.title)"))
+                        .accessibilityIdentifier("guidedMatch.relatedRule.\(step.id)")
                     }
-                    .accessibilityLabel(String(localized: "Related rule: \(relatedSection.title)"))
-                    .accessibilityIdentifier("guidedMatch.relatedRule.\(step.id)")
                 }
 
                 if !step.tips.isEmpty {
-                    tipsSection
+                    TipsCard(tips: step.tips)
                 }
 
                 Toggle(isOn: $isComplete) {
                     Text(String(localized: "Mark step complete"))
                         .font(.headline)
                 }
+                .toggleStyle(.switch)
                 .frame(minHeight: DesignTokens.minTouchTarget)
+                .surfaceCard()
                 .accessibilityIdentifier("guidedMatch.stepComplete.\(step.id)")
                 .onChange(of: isComplete) { _, newValue in
                     viewModel.setStepComplete(step.id, complete: newValue)
@@ -49,6 +50,7 @@ struct MatchStepDetailView: View {
             .readableContentWidth()
             .padding(DesignTokens.Spacing.md)
         }
+        .tabBarScrollInset()
         .navigationTitle(step.title)
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
@@ -96,6 +98,7 @@ struct MatchStepDetailView: View {
 
     private var deploymentSetupSection: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            RealmSideCoinFlipCard()
             DeploymentChecklistCard(
                 completedSteps: BattleTrackerStore.load().completedDeploymentSteps,
                 onToggle: { step, complete in
@@ -108,25 +111,29 @@ struct MatchStepDetailView: View {
                     BattleTrackerStore.save(state)
                 }
             )
-            NavigationLink {
-                BattleTacticsReferenceView(ruleSections: ruleSections)
-            } label: {
-                Label(String(localized: "Battle Tactics & Twists"), systemImage: "rectangle.stack")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .frame(minHeight: DesignTokens.minTouchTarget)
+            ReferenceLinksGroup {
+                NavigationLink {
+                    BattleTacticsReferenceView(ruleSections: ruleSections)
+                } label: {
+                    ReferenceLinkRow(
+                        title: String(localized: "Battle Tactics & Twists"),
+                        systemImage: "rectangle.stack"
+                    )
+                }
             }
         }
     }
 
     private var battleStartLinks: some View {
-        NavigationLink {
-            BattleTacticsReferenceView(ruleSections: ruleSections)
-        } label: {
-            Label(String(localized: "Battle Tactics & Twists"), systemImage: "rectangle.stack")
-                .font(.headline)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .frame(minHeight: DesignTokens.minTouchTarget)
+        ReferenceLinksGroup {
+            NavigationLink {
+                BattleTacticsReferenceView(ruleSections: ruleSections)
+            } label: {
+                ReferenceLinkRow(
+                    title: String(localized: "Battle Tactics & Twists"),
+                    systemImage: "rectangle.stack"
+                )
+            }
         }
     }
 
@@ -134,23 +141,19 @@ struct MatchStepDetailView: View {
         Group {
             if viewModel.matchState.hasBothArmies, let summary = viewModel.matchupSummary {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    Text(String(localized: "Selected Matchup"))
-                        .font(.headline)
+                    SectionHeader(title: String(localized: "Selected Matchup"), systemImage: "person.2.fill")
                     Text(summary)
-                        .font(.body)
+                        .font(.subheadline.weight(.medium))
                         .fixedSize(horizontal: false, vertical: true)
                 }
-                .padding(DesignTokens.Spacing.md)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+                .surfaceCard()
             }
         }
     }
 
     private var attackerPicker: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Text(String(localized: "Who is the attacker?"))
-                .font(.headline)
+            SectionHeader(title: String(localized: "Who is the attacker?"), systemImage: "flag.fill")
 
             Picker(String(localized: "Attacker"), selection: attackerBinding) {
                 Text(String(localized: "Not decided")).tag(Optional<Bool>.none)
@@ -172,6 +175,7 @@ struct MatchStepDetailView: View {
                 .foregroundStyle(.secondary)
             }
         }
+        .surfaceCard()
     }
 
     private var attackerBinding: Binding<Bool?> {
@@ -187,8 +191,7 @@ struct MatchStepDetailView: View {
 
     private func loadoutSummarySection(showRegiment: Bool, showEnhancement: Bool) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Text(String(localized: "Loadout Summary"))
-                .font(.headline)
+            SectionHeader(title: String(localized: "Loadout Summary"), systemImage: "tray.full")
 
             if horizontalSizeClass == .regular {
                 HStack(alignment: .top, spacing: DesignTokens.Spacing.lg) {
@@ -245,8 +248,7 @@ struct MatchStepDetailView: View {
         onSelect: @escaping (Bool, String) -> Void
     ) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-            Text(title)
-                .font(.title3.bold())
+            SectionHeader(title: title, systemImage: "list.bullet")
 
             if horizontalSizeClass == .regular {
                 HStack(alignment: .top, spacing: DesignTokens.Spacing.lg) {
@@ -305,6 +307,9 @@ struct MatchStepDetailView: View {
                     Text(String(localized: "Attacker — picks first"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
+                        .padding(.horizontal, DesignTokens.Spacing.xs)
+                        .padding(.vertical, 2)
+                        .background(Color.accentColor.opacity(0.12), in: Capsule())
                 }
             }
 
@@ -331,25 +336,7 @@ struct MatchStepDetailView: View {
                 }
             }
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
-    }
-
-    private var tipsSection: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            Text(String(localized: "Tips"))
-                .font(.headline)
-            ForEach(step.tips, id: \.self) { tip in
-                Label(tip, systemImage: "lightbulb")
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-        }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .surfaceCard()
     }
 
     private var relatedSection: RuleSection? {

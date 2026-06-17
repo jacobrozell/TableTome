@@ -87,13 +87,11 @@ struct UnitMatchupEvaluatorView: View {
     }
 
     private var introSection: some View {
-        Text(
-            "Pick an attacking unit and weapon, then a defending unit. "
-                + "Toggle active buffs, roll dice, and evaluate a single attack."
+        IntroCallout(
+            text: "Pick an attacking unit and weapon, then a defending unit. "
+                + "Toggle active buffs, roll dice, and evaluate a single attack.",
+            systemImage: "arrow.left.arrow.right"
         )
-        .font(.callout)
-        .foregroundStyle(.secondary)
-        .fixedSize(horizontal: false, vertical: true)
     }
 
     @ViewBuilder
@@ -112,15 +110,13 @@ struct UnitMatchupEvaluatorView: View {
     }
 
     private var vsDivider: some View {
-        Text(String(localized: "VS"))
-            .font(.title3.bold())
-            .foregroundStyle(.secondary)
-            .frame(maxWidth: .infinity)
+        MatchupVersusBadge()
     }
 
     private var attackerPanel: some View {
         MatchupSidePanel(
             title: String(localized: "Attacker"),
+            systemImage: "scope",
             armyName: viewModel.selectedAttackerArmy?.name ?? "",
             armies: viewModel.armies,
             armyId: $viewModel.attackerArmyId,
@@ -139,6 +135,7 @@ struct UnitMatchupEvaluatorView: View {
     private var defenderPanel: some View {
         MatchupSidePanel(
             title: String(localized: "Defender"),
+            systemImage: "shield.fill",
             armyName: viewModel.selectedDefenderArmy?.name ?? "",
             armies: opposingArmies(forAttackerId: viewModel.attackerArmyId),
             armyId: $viewModel.defenderArmyId,
@@ -156,8 +153,7 @@ struct UnitMatchupEvaluatorView: View {
     private var buffsSection: some View {
         if !viewModel.matchupBuffs.isEmpty {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                Text(String(localized: "Active Buffs"))
-                    .font(.title3.bold())
+                SectionHeader(title: String(localized: "Active Buffs"), systemImage: "sparkles")
 
                 if !viewModel.attackerBuffs.isEmpty {
                     buffGroup(title: String(localized: "Attacker"), buffs: viewModel.attackerBuffs)
@@ -166,9 +162,7 @@ struct UnitMatchupEvaluatorView: View {
                     buffGroup(title: String(localized: "Defender"), buffs: viewModel.defenderBuffs)
                 }
             }
-            .padding(DesignTokens.Spacing.md)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+            .surfaceCard()
         }
     }
 
@@ -193,8 +187,7 @@ struct UnitMatchupEvaluatorView: View {
         if let weapon = viewModel.selectedAttackerWeapon,
            let save = viewModel.selectedDefenderUnit?.save {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                Text(String(localized: "Attack Profile"))
-                    .font(.title3.bold())
+                SectionHeader(title: String(localized: "Attack Profile"), systemImage: "target")
                 Text(
                     "Hit \(weapon.hit)+ · Wound \(weapon.wound)+ · Rend \(weapon.rend) · "
                         + "Damage \(viewModel.damage) vs Save \(save)+"
@@ -213,17 +206,14 @@ struct UnitMatchupEvaluatorView: View {
                 )
                 .accessibilityIdentifier("matchup.damage")
             }
-            .padding(DesignTokens.Spacing.md)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+            .surfaceCard()
             .onAppear { syncMultiAttack() }
         }
     }
 
     private var weaponOptionsSection: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            Text(String(localized: "Weapon Rules"))
-                .font(.headline)
+            SectionHeader(title: String(localized: "Weapon Rules"), systemImage: "bolt.fill")
             rollOptionToggle(
                 String(localized: "Crit (Auto-wound)"),
                 keyPath: \.critAutoWound,
@@ -240,9 +230,7 @@ struct UnitMatchupEvaluatorView: View {
                 id: "matchup.mortalDamage"
             )
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .surfaceCard()
     }
 
     private func rollOptionToggle(
@@ -260,6 +248,7 @@ struct UnitMatchupEvaluatorView: View {
             Text(label)
                 .font(.subheadline)
         }
+        .toggleStyle(.switch)
         .accessibilityIdentifier(id)
     }
 
@@ -276,8 +265,7 @@ struct UnitMatchupEvaluatorView: View {
 
     private var diceSection: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Text(String(localized: "Dice Rolled"))
-                .font(.title3.bold())
+            SectionHeader(title: String(localized: "Dice Rolled"), systemImage: "dice.fill")
             DiceValuePicker(
                 label: String(localized: "Hit roll"),
                 value: $viewModel.hitRoll,
@@ -301,9 +289,7 @@ struct UnitMatchupEvaluatorView: View {
                 )
             }
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .surfaceCard()
     }
 
     private var evaluateButton: some View {
@@ -320,12 +306,11 @@ struct UnitMatchupEvaluatorView: View {
     private var resultsSection: some View {
         if let evaluation = viewModel.evaluation {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                Text(String(localized: "Result"))
-                    .font(.title3.bold())
+                SectionHeader(title: String(localized: "Result"), systemImage: "checkmark.seal")
                 ForEach(evaluation.steps) { step in
                     RollStepCard(step: step)
                 }
-                damageSummary(evaluation.damageDealt)
+                DamageSummaryCard(damage: evaluation.damageDealt, accessibilityId: "matchup.damageSummary")
             }
             .accessibilityIdentifier("matchup.results")
         }
@@ -333,46 +318,26 @@ struct UnitMatchupEvaluatorView: View {
 
     @ViewBuilder
     private var referenceLinksSection: some View {
-        if let combatSection = ruleSections.first(where: { $0.id == "combat-sequence" }) {
-            NavigationLink {
-                RuleSectionDetailView(section: combatSection, allSections: ruleSections)
-            } label: {
-                Label(combatSection.title, systemImage: "doc.text")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .frame(minHeight: DesignTokens.minTouchTarget)
+        ReferenceLinksGroup {
+            if let combatSection = ruleSections.first(where: { $0.id == "combat-sequence" }) {
+                NavigationLink {
+                    RuleSectionDetailView(section: combatSection, allSections: ruleSections)
+                } label: {
+                    ReferenceLinkRow(title: combatSection.title, systemImage: "doc.text")
+                }
+                .accessibilityIdentifier("matchup.relatedRule")
+                Divider().padding(.leading, DesignTokens.Spacing.md)
             }
-            .accessibilityIdentifier("matchup.relatedRule")
+            NavigationLink {
+                RulesGlossaryView()
+            } label: {
+                ReferenceLinkRow(title: String(localized: "Rules Glossary"), systemImage: "book.fill")
+            }
+            .accessibilityIdentifier("matchup.glossary")
         }
-        NavigationLink {
-            RulesGlossaryView()
-        } label: {
-            Label(String(localized: "Rules Glossary"), systemImage: "book.fill")
-                .font(.headline)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .frame(minHeight: DesignTokens.minTouchTarget)
-        }
-        .accessibilityIdentifier("matchup.glossary")
     }
 
     private func opposingArmies(forAttackerId attackerId: String) -> [SpearheadArmy] {
         viewModel.armies.filter { $0.id != attackerId }
-    }
-
-    private func damageSummary(_ damage: Int) -> some View {
-        HStack {
-            Image(systemName: damage > 0 ? "bolt.fill" : "shield.fill")
-                .foregroundStyle(damage > 0 ? .orange : .green)
-                .accessibilityHidden(true)
-            Text(
-                damage > 0
-                    ? String(localized: "\(damage) damage to allocate")
-                    : String(localized: "No damage dealt")
-            )
-            .font(.headline)
-        }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
     }
 }

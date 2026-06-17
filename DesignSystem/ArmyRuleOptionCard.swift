@@ -38,7 +38,16 @@ public struct ArmyRuleOptionCard: View {
                     .accessibilityHidden(true)
             }
         }
+        .padding(DesignTokens.Spacing.sm)
         .frame(minHeight: DesignTokens.minTouchTarget, alignment: .top)
+        .background(
+            isSelected ? Color.accentColor.opacity(0.08) : Color(.tertiarySystemFill).opacity(0.5),
+            in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
+                .strokeBorder(isSelected ? Color.accentColor.opacity(0.35) : Color.clear, lineWidth: 1)
+        )
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(option.name). \(option.summary)")
     }

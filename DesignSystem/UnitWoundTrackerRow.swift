@@ -54,6 +54,9 @@ struct UnitWoundTrackerSection: View {
                     .foregroundStyle(.secondary)
                 ForEach(trackableUnits) { unit in
                     let key = UnitWoundTracker.unitKey(armyId: armyId, unitId: unit.id)
+                    if unit.id != trackableUnits.first?.id {
+                        Divider()
+                    }
                     UnitWoundTrackerRow(
                         unit: unit,
                         armyId: armyId,

@@ -399,14 +399,23 @@ private struct PlayerArmyRow: View {
     let selection: PlayerArmySelection
     let catalog: SpearheadCatalog
 
+    private var hasArmySelected: Bool {
+        !selection.factionId.isEmpty && !selection.armyId.isEmpty
+    }
+
     var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-            Text(selection.playerName.isEmpty ? label : selection.playerName)
-                .font(.headline)
-            Text(armySubtitle)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
+        HStack(spacing: DesignTokens.Spacing.md) {
+            Image(systemName: hasArmySelected ? "checkmark.circle.fill" : "circle")
+                .foregroundStyle(hasArmySelected ? Color.accentColor : Color(.tertiaryLabel))
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                Text(selection.playerName.isEmpty ? label : selection.playerName)
+                    .font(.headline)
+                Text(armySubtitle)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
         }
         .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
     }

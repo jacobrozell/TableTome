@@ -72,6 +72,7 @@ struct BattlePhaseTrackerView: View {
     @ViewBuilder
     private var deploymentSection: some View {
         if viewModel.trackerState.battleRound == 1 {
+            RealmSideCoinFlipCard()
             DeploymentChecklistCard(
                 completedSteps: viewModel.trackerState.completedDeploymentSteps,
                 onToggle: viewModel.setDeploymentStep

@@ -85,8 +85,16 @@ From ability cards: open Roll Evaluator or Unit Matchup when relevant.
 - Crit (Mortal), variable damage (D3/D6), Shoot in Combat toggles — Roll Evaluator + Unit Matchup
 - Glossary chips: contest, wholly within, visible — ability cards + Rules Glossary screen
 
+## Tier 3.5 — Roll simulator (planned)
+
+For players without enough physical dice — see [DiceRollerSpec.md](DiceRollerSpec.md):
+
+- **v1 (ship):** Roll buttons in combat resolver; d6 hit/wound/save/ward + D3/D6/2D6 damage; verified RNG
+- **Future:** Dice tray — animations, roll log, standalone polyhedral roller (interactive / fun)
+
 ## Tier 4 — Reference & setup ✅
 
+- Realm side coin flip — fair Aqshy/Ghyran picker on realm setup + battle tracker deployment
 - Deployment / terrain checklist — Battle Tracker (round 1) + realm setup step
 - Battle tactic card reference — Battle Tactics & Twists screen
 - Twist deck reminder copy — included in battle tactics reference

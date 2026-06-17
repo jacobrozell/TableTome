@@ -13,7 +13,7 @@ struct MultiAttackEvaluatorView: View {
                 diceSection
                 weaponOptionsSection
                 PrimaryButton(
-                    title: "Evaluate Attack \(viewModel.results.count + 1) of \(viewModel.attackCount)",
+                    title: String(localized: "Evaluate Attack \(viewModel.results.count + 1) of \(viewModel.attackCount)"),
                     accessibilityId: "multiAttack.evaluate"
                 ) {
                     viewModel.evaluateCurrentAttack()
@@ -31,10 +31,9 @@ struct MultiAttackEvaluatorView: View {
 
     private var headerSection: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            Text("Multi-Attack: \(weaponName)")
-                .font(.headline)
+            SectionHeader(title: String(localized: "Multi-Attack: \(weaponName)"), systemImage: "repeat")
             Stepper(
-                "\(viewModel.attackCount) attacks",
+                String(localized: "\(viewModel.attackCount) attacks"),
                 value: $viewModel.attackCount,
                 in: 1...20
             )
@@ -46,38 +45,29 @@ struct MultiAttackEvaluatorView: View {
             .font(.caption)
             .foregroundStyle(.secondary)
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .surfaceCard()
     }
 
     private var diceSection: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Text(String(localized: "Dice for Next Attack"))
-                .font(.subheadline.bold())
+            SectionHeader(title: String(localized: "Dice for Next Attack"), systemImage: "dice.fill")
             DiceValuePicker(label: String(localized: "Hit"), value: $viewModel.hitRoll, accessibilityId: "multiAttack.hitRoll")
             DiceValuePicker(label: String(localized: "Wound"), value: $viewModel.woundRoll, accessibilityId: "multiAttack.woundRoll")
             DiceValuePicker(label: String(localized: "Save"), value: $viewModel.saveRoll, accessibilityId: "multiAttack.saveRoll")
-            Stepper("Damage \(viewModel.damage)", value: $viewModel.damage, in: 1...12)
+            Stepper(String(localized: "Damage \(viewModel.damage)"), value: $viewModel.damage, in: 1...12)
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .surfaceCard()
     }
 
     @ViewBuilder
     private var weaponOptionsSection: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            Text(String(localized: "Weapon Rules"))
-                .font(.subheadline.bold())
+            SectionHeader(title: String(localized: "Weapon Rules"), systemImage: "bolt.fill")
             rollOptionToggle(String(localized: "Crit (Auto-wound)"), keyPath: \.critAutoWound, id: "multiAttack.critAutoWound")
             rollOptionToggle(String(localized: "Crit (Mortal)"), keyPath: \.critMortal, id: "multiAttack.critMortal")
             rollOptionToggle(String(localized: "Mortal damage (skip save)"), keyPath: \.mortalDamage, id: "multiAttack.mortalDamage")
         }
-        .font(.subheadline)
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .surfaceCard()
     }
 
     private func rollOptionToggle(
@@ -90,17 +80,22 @@ struct MultiAttackEvaluatorView: View {
             set: { viewModel.rollOptions[keyPath: keyPath] = $0 }
         )) {
             Text(label)
+                .font(.subheadline)
         }
+        .toggleStyle(.switch)
         .accessibilityIdentifier(id)
     }
 
     private func attackResult(_ evaluation: AttackRollEvaluation, attackNumber: Int) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            Text("Attack \(attackNumber)")
-                .font(.subheadline.bold())
+            SectionHeader(title: String(localized: "Attack \(attackNumber)"), systemImage: "number")
             ForEach(evaluation.steps) { step in
                 RollStepCard(step: step)
             }
+            DamageSummaryCard(
+                damage: evaluation.damageDealt,
+                accessibilityId: "multiAttack.damage.\(attackNumber)"
+            )
         }
     }
 
@@ -112,10 +107,12 @@ struct MultiAttackEvaluatorView: View {
                 Spacer()
                 Text("\(viewModel.totalDamage)")
                     .font(.title2.bold())
+                    .monospacedDigit()
                     .foregroundStyle(viewModel.totalDamage > 0 ? .orange : .secondary)
+                    .contentTransition(.numericText())
             }
             if viewModel.isSequenceComplete {
-                Text("All \(viewModel.attackCount) attacks resolved.")
+                Text(String(localized: "All \(viewModel.attackCount) attacks resolved."))
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 Button(String(localized: "Roll Again")) {
@@ -125,19 +122,21 @@ struct MultiAttackEvaluatorView: View {
                 .frame(minHeight: DesignTokens.minTouchTarget)
                 .accessibilityIdentifier("multiAttack.reset")
             }
-            ForEach(viewModel.results) { result in
-                HStack {
-                    Text("Attack \(result.id)")
-                    Spacer()
-                    Text("\(result.evaluation.damageDealt) dmg")
-                        .foregroundStyle(.secondary)
+            if viewModel.results.count > 1 {
+                Divider()
+                ForEach(viewModel.results) { result in
+                    HStack {
+                        Text(String(localized: "Attack \(result.id)"))
+                        Spacer()
+                        Text(String(localized: "\(result.evaluation.damageDealt) dmg"))
+                            .foregroundStyle(.secondary)
+                            .monospacedDigit()
+                    }
+                    .font(.caption)
                 }
-                .font(.caption)
             }
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .surfaceCard()
         .accessibilityIdentifier("multiAttack.summary")
     }
 }

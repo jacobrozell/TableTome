@@ -50,6 +50,25 @@ final class DiceRollCoachTests: XCTestCase {
         let input = sampleInput(saveRoll: 4)
         let hint = DiceRollCoach.saveHint(input: input)
         XCTAssertFalse(hint.passed)
+        XCTAssertTrue(hint.text.contains("Rend"))
+        XCTAssertTrue(hint.text.contains("= 3"))
+    }
+
+    func testSaveHintShowsEffectiveTotalWhenRendApplies() {
+        let input = AttackRollInput(
+            hitTarget: 4,
+            woundTarget: 4,
+            saveTarget: 5,
+            rend: 1,
+            damage: 1,
+            hitRoll: 4,
+            woundRoll: 4,
+            saveRoll: 4
+        )
+        let hint = DiceRollCoach.saveHint(input: input)
+        XCTAssertTrue(hint.passed)
+        XCTAssertTrue(hint.text.contains("= 5"))
+        XCTAssertTrue(hint.text.contains("Save 5+"))
     }
 
     func testWardHintWhenPresent() {

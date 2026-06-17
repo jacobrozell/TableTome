@@ -72,12 +72,6 @@ private struct WarscrollTextReference: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            if let subtext = WarscrollStatSummary.unitChoiceSubtext(unit) {
-                Text(subtext)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
-
             if let profile = unitDefensiveProfile.nilIfEmpty {
                 labeledSection(String(localized: "Unit"), text: profile)
             }

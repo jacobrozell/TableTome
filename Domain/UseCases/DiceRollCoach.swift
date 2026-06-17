@@ -53,12 +53,22 @@ public enum DiceRollCoach: Sendable {
         }
         let effective = CombatRollResolution.effectiveSave(input)
         let passed = CombatRollResolution.saveSucceeded(input)
-        return Hint(
-            text: String(
-                localized: "Rolled \(input.saveRoll) — need \(input.saveTarget)+. \(passed ? "Saved" : "Failed save")."
-            ),
-            passed: passed
-        )
+        let outcome = passed ? String(localized: "Saved") : String(localized: "Failed save")
+        let text: String
+        if input.rend == 0, input.saveModifier == 0 {
+            text = String(localized: "Rolled \(input.saveRoll) vs Save \(input.saveTarget)+ — \(outcome).")
+        } else {
+            let rendNote = input.rend == 0 ? "" : " (Rend \(input.rend >= 0 ? "+" : "")\(input.rend))"
+            let saveModNote = input.saveModifier == 0
+                ? ""
+                : " (\(input.saveModifier >= 0 ? "+" : "")\(input.saveModifier) save)"
+            text = String(
+                localized: """
+                Rolled \(input.saveRoll)\(saveModNote)\(rendNote) = \(effective) vs Save \(input.saveTarget)+ — \(outcome).
+                """
+            )
+        }
+        return Hint(text: text, passed: passed)
     }
 
     public static func wardHint(input: AttackRollInput) -> Hint? {

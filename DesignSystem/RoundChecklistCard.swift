@@ -57,45 +57,19 @@ struct RoundChecklistCard: View {
             completedSteps: completedSteps
         )
         let isFocused = focusedStep == step
-        return HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
-            Image(systemName: isComplete ? "checkmark.circle.fill" : (isFocused ? "circle.inset.filled" : "circle"))
-                .font(.body)
-                .foregroundStyle(isComplete ? Color.green : (isFocused ? Color.accentColor : Color.secondary.opacity(0.5)))
-                .accessibilityHidden(true)
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(step.title(round: round))
-                    .font(.subheadline.weight(isFocused ? .bold : .semibold))
-                if isFocused || !isComplete {
-                    Text(step.detail(round: round))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                    if step == .firstTurnOrPriority, round > 1 {
-                        SeizingInitiativeCallout()
-                    }
-                }
-            }
-            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-
-            if !isComplete {
-                Button(String(localized: "Done")) {
-                    onToggle(step, true)
-                }
-                .font(.caption.weight(.semibold))
-                .buttonStyle(.bordered)
-                .controlSize(.small)
-                .accessibilityIdentifier("battleTracker.roundDone.\(round).\(step.id)")
+        return ChecklistStepRow(
+            isComplete: isComplete,
+            isFocused: isFocused,
+            title: step.title(round: round),
+            detail: step.detail(round: round),
+            showsDetail: isFocused || !isComplete,
+            accessibilityIdentifier: "battleTracker.roundCheck.\(round).\(step.id)",
+            doneAccessibilityIdentifier: "battleTracker.roundDone.\(round).\(step.id)",
+            onDone: isComplete ? nil : { onToggle(step, true) }
+        ) {
+            if step == .firstTurnOrPriority, round > 1 {
+                SeizingInitiativeCallout()
             }
         }
-        .padding(.vertical, DesignTokens.Spacing.xs)
-        .padding(.horizontal, isFocused ? DesignTokens.Spacing.xs : 0)
-        .background(
-            isFocused ? Color.accentColor.opacity(0.08) : Color.clear,
-            in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
-        )
-        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-        .accessibilityElement(children: .combine)
-        .accessibilityIdentifier("battleTracker.roundCheck.\(round).\(step.id)")
     }
 }

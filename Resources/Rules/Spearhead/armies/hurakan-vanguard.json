@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "armyId": "hurakan-vanguard",
+  "units": [
+    {
+      "id": "hurakan-windmage",
+      "name": "Hurakan Windmage",
+      "move": "12\"",
+      "save": 5,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "hurakan-windchargers",
+      "name": "Hurakan Windchargers",
+      "move": "14\"",
+      "save": 4,
+      "health": 3,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "vanari-auralan-wardens",
+      "name": "Vanari Auralan Wardens",
+      "move": "6\"",
+      "save": 4,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 10
+    },
+    {
+      "id": "hurakan-spirit-of-the-wind",
+      "name": "Hurakan Spirit of the Wind",
+      "move": "18\"",
+      "save": 4,
+      "health": 8,
+      "control": 5,
+      "keywords": [],
+      "modelCount": 1
+    }
+  ]
+}

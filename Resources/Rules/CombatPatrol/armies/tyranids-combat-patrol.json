@@ -1,0 +1,209 @@
+{
+  "schemaVersion": 1,
+  "armyId": "tyranids-combat-patrol",
+  "units": [
+    {
+      "id": "terror-of-vardenghast",
+      "name": "Terror of Vardenghast",
+      "keywords": ["Character", "Infantry", "Fly", "Synapse", "Great Devourer"],
+      "modelCount": 1,
+      "move": "12\"",
+      "save": 4,
+      "health": 6,
+      "control": 2,
+      "notes": "Winged Tyranid Prime Warlord — Deep Strike. Only Synapse source in this patrol.",
+      "weapons": [
+        {
+          "id": "prime-claws",
+          "name": "Prime Claws and Toxin Injectors",
+          "attacks": "6",
+          "hit": 2,
+          "wound": 3,
+          "rend": 2,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "death-blow",
+          "name": "Death Blow",
+          "source": "Terror of Vardenghast",
+          "effect": "If destroyed by a melee attack before fighting, roll D6 4+ to fight back then remove.",
+          "phases": ["combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        },
+        {
+          "id": "synapse-bubble",
+          "name": "Synapse",
+          "source": "The Vardenghast Swarm",
+          "effect": "Friendly Tyranids within 6\" take Battle-shock tests on 3D6 instead of 2D6.",
+          "phases": ["command"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "psychophage",
+      "name": "Psychophage",
+      "keywords": ["Monster", "Great Devourer"],
+      "modelCount": 1,
+      "move": "8\"",
+      "save": 3,
+      "health": 10,
+      "control": 3,
+      "weapons": [
+        {
+          "id": "psychoclastic-torrent",
+          "name": "Psychoclastic Torrent",
+          "rangeInches": 18,
+          "attacks": "D6+3",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1",
+          "ability": "Psychic"
+        },
+        {
+          "id": "talons-and-teeth",
+          "name": "Talons and Teeth",
+          "attacks": "6",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "psychoclastic-torrent-ability",
+          "name": "Psychoclastic Torrent",
+          "source": "Psychophage",
+          "effect": "Mid-board threat — psychic torrent and melee maw for finishing wounded units.",
+          "phases": ["shooting", "combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "termagants",
+      "name": "Termagants",
+      "keywords": ["Battleline", "Infantry", "Great Devourer"],
+      "modelCount": 20,
+      "move": "6\"",
+      "save": 5,
+      "health": 1,
+      "control": 2,
+      "notes": "Can split into two 10-model units during Declare Formations. Battleline for securing objectives.",
+      "weapons": [
+        {
+          "id": "fleshborer",
+          "name": "Fleshborer",
+          "rangeInches": 18,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "scything-talons",
+          "name": "Scything Talons",
+          "attacks": "2",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "skulking-horrors",
+          "name": "Skulking Horrors",
+          "source": "Termagants",
+          "effect": "React to enemy moves ending within 9\" with a D6\" Normal move.",
+          "phases": ["movement"],
+          "usageLimit": "eachTurn",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "barbgaunts",
+      "name": "Barbgaunts",
+      "keywords": ["Infantry", "Great Devourer"],
+      "modelCount": 5,
+      "move": "6\"",
+      "save": 4,
+      "health": 2,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "barblauncher",
+          "name": "Barblauncher",
+          "rangeInches": 24,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "chitin-barbs",
+          "name": "Chitin-barbed Limbs",
+          "attacks": "3",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "disruption-bombardment",
+          "name": "Disruption Bombardment",
+          "source": "Barbgaunts",
+          "effect": "After shooting, disrupt a hit Infantry unit (-2 Move until opponent's next turn).",
+          "phases": ["shooting"],
+          "usageLimit": "eachTurn",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "von-ryans-leapers",
+      "name": "Von Ryan's Leapers",
+      "keywords": ["Infantry", "Great Devourer"],
+      "modelCount": 3,
+      "move": "10\"",
+      "save": 4,
+      "health": 3,
+      "control": 1,
+      "notes": "Infiltrators — deploy forward and use Heroic Intervention to protect Termagants.",
+      "weapons": [
+        {
+          "id": "leaper-talons",
+          "name": "Scything Talons and Feeder Tendrils",
+          "attacks": "6",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "pouncing-leap",
+          "name": "Pouncing Leap",
+          "source": "Von Ryan's Leapers",
+          "effect": "Heroic Intervention for 0CP; Infiltrators deployment.",
+          "phases": ["movement"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    }
+  ]
+}

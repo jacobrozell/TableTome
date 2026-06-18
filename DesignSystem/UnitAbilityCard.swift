@@ -173,11 +173,14 @@ struct UnitAbilityCard: View {
         switch displayPhase {
         case .hero: "sparkles"
         case .movement: "figure.walk"
+        case .assault: "burst.fill"
         case .shooting: "scope"
         case .charge: "bolt.fill"
         case .combat, .anyCombat: "figure.fencing"
+        case .scoring: "star.circle.fill"
         case .endOfTurn, .endOfAnyTurn: "flag.checkered"
         case .deployment: "map"
+        case .command: "flag.fill"
         case .enemyMovement: "arrow.left.arrow.right"
         }
     }

@@ -22,20 +22,11 @@ struct BattleGuideCard: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
 
-            if step.kind != .battleComplete {
-                PrimaryButton(
-                    title: step.actionLabel,
-                    accessibilityId: "battleGuide.action"
-                ) {
-                    onAction()
-                }
-            } else {
-                PrimaryButton(
-                    title: String(localized: "Got it"),
-                    accessibilityId: "battleGuide.complete"
-                ) {
-                    onAction()
-                }
+            PrimaryButton(
+                title: step.actionLabel,
+                accessibilityId: step.kind == .battleComplete ? "battleGuide.complete" : "battleGuide.action"
+            ) {
+                onAction()
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

@@ -13,9 +13,17 @@ final class RulesReferenceViewModel: ObservableObject {
 
     private let rulesRepository: any RulesRepository
 
-    init(rulesRepository: any RulesRepository, gameSystemId: String = "aos-spearhead") {
+    init(rulesRepository: any RulesRepository, gameSystemId: GameSystemId = .default) {
         self.rulesRepository = rulesRepository
-        self.selectedGameSystemId = gameSystemId
+        self.selectedGameSystemId = gameSystemId.rawValue
+    }
+
+    convenience init(rulesRepository: any RulesRepository, gameSystemId: String) {
+        self.init(rulesRepository: rulesRepository, gameSystemId: GameSystemId(resolving: gameSystemId))
+    }
+
+    var resolvedGameSystemId: GameSystemId {
+        GameSystemId(resolving: selectedGameSystemId)
     }
 
     var showsGameSystemPicker: Bool {
@@ -59,6 +67,10 @@ final class RulesReferenceViewModel: ObservableObject {
         selectedGameSystemId = id
         if let system = gameSystems.first(where: { $0.id == id }) {
             reloadSections(from: system)
+        }
+        if let selectedCategory,
+           !GameSystemRulesLabels.availableCategories(gameSystemId: id).contains(selectedCategory) {
+            self.selectedCategory = nil
         }
     }
 

@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "armyId": "heartflayer-troupe",
+  "units": [
+    {
+      "id": "melusai-ironscale",
+      "name": "Melusai Ironscale",
+      "move": "8\"",
+      "save": 5,
+      "health": 6,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "witch-aelves",
+      "name": "Witch Aelves",
+      "move": "6\"",
+      "save": 6,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "witch-aelves-2",
+      "name": "Witch Aelves",
+      "move": "6\"",
+      "save": 6,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "doomfire-warlocks",
+      "name": "Doomfire Warlocks",
+      "move": "14\"",
+      "save": 5,
+      "health": 3,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "blood-stalkers",
+      "name": "Blood Stalkers",
+      "move": "8\"",
+      "save": 5,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "armyId": "snarlpack-huntaz",
+  "units": [
+    {
+      "id": "snarlboss",
+      "name": "Snarlboss",
+      "move": "12\"",
+      "save": 5,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "wolfgit-retinue",
+      "name": "Wolfgit Retinue",
+      "move": "12\"",
+      "save": 5,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 2
+    },
+    {
+      "id": "snarlpack-cavalry",
+      "name": "Snarlpack Cavalry",
+      "move": "12\"",
+      "save": 4,
+      "health": 3,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "snarlpack-cavalry-2",
+      "name": "Snarlpack Cavalry",
+      "move": "12\"",
+      "save": 4,
+      "health": 3,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "sunsteala-wheelas",
+      "name": "Sunsteala Wheelas",
+      "move": "12\"",
+      "save": 4,
+      "health": 6,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "sunsteala-wheelas-2",
+      "name": "Sunsteala Wheelas",
+      "move": "12\"",
+      "save": 4,
+      "health": 6,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    }
+  ]
+}

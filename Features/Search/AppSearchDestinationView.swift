@@ -6,6 +6,7 @@ struct AppSearchDestinationView: View {
     let ruleSections: [RuleSection]
     let gettingStartedSteps: [GuideStep]
     let armies: [SpearheadArmy]
+    var gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId
     @ObservedObject var dependencies: AppDependencies
 
     var body: some View {
@@ -14,55 +15,73 @@ struct AppSearchDestinationView: View {
             if let section = ruleSections.first(where: { $0.id == result.referenceId }) {
                 RuleSectionDetailView(section: section, allSections: ruleSections)
             } else {
-                AppSearchResultDetailView(result: result)
+                AppSearchResultDetailView(result: result, gameSystemId: gameSystemId, ruleSections: ruleSections)
             }
         case .glossary:
-            RulesGlossaryView(highlightedEntryId: result.referenceId, gameSystemId: GameSystemRulesLabels.defaultGameSystemId)
+            RulesGlossaryView(
+                highlightedEntryId: result.referenceId,
+                gameSystemId: gameSystemId,
+                ruleSections: ruleSections
+            )
         case .gettingStarted:
             if let step = gettingStartedSteps.first(where: { $0.id == result.referenceId }) {
                 GuideStepDetailView(
-                    gameSystemId: "aos-spearhead",
+                    gameSystemId: gameSystemId,
                     step: step,
                     ruleSections: ruleSections
                 )
             } else {
-                AppSearchResultDetailView(result: result)
+                AppSearchResultDetailView(result: result, gameSystemId: gameSystemId, ruleSections: ruleSections)
             }
         case .battleTactics, .cardDeck:
-            BattleTacticsReferenceView(ruleSections: ruleSections)
+            if GameSystemPlayContext.context(for: gameSystemId).isSpearhead {
+                BattleTacticsReferenceView(ruleSections: ruleSections)
+            } else {
+                AppSearchResultDetailView(result: result, gameSystemId: gameSystemId, ruleSections: ruleSections)
+            }
         case .warscroll, .armyRule:
             if let armyId = result.secondaryReferenceId,
                let army = armies.first(where: { $0.id == armyId }) {
-                ArmyRosterView(army: army, ruleSections: ruleSections)
+                ArmyRosterView(army: army, ruleSections: ruleSections, gameSystemId: gameSystemId)
             } else {
-                AppSearchResultDetailView(result: result)
+                AppSearchResultDetailView(result: result, gameSystemId: gameSystemId, ruleSections: ruleSections)
             }
         case .appFeature:
             appFeatureDestination
         case .matchSetup, .deployment, .phaseTip:
-            AppSearchResultDetailView(result: result)
+            AppSearchResultDetailView(result: result, gameSystemId: gameSystemId, ruleSections: ruleSections)
         }
     }
 
     @ViewBuilder
     private var appFeatureDestination: some View {
         if let army = armies.first(where: { $0.id == result.referenceId }) {
-            ArmyRosterView(army: army, ruleSections: ruleSections)
+            ArmyRosterView(army: army, ruleSections: ruleSections, gameSystemId: gameSystemId)
         } else if result.referenceId == "guidedMatch" {
             GuidedMatchView(
-                viewModel: dependencies.makeGuidedMatchViewModel(),
+                viewModel: dependencies.makeGuidedMatchViewModel(
+                    gameSystemId: GameSystemId(resolving: gameSystemId)
+                ),
                 ruleSections: ruleSections
             )
-        } else if result.referenceId == "combatResolver" {
-            UnitMatchupEvaluatorView(ruleSections: ruleSections)
+        } else if result.referenceId == "combatResolver", ReleaseSurface.showsCombatResolver(for: gameSystemId) {
+            UnitMatchupEvaluatorView(
+                ruleSections: ruleSections,
+                gameSystemId: gameSystemId,
+                catalogRepository: dependencies.catalogRepository(
+                    for: GameSystemId(resolving: gameSystemId)
+                )
+            )
         } else {
-            AppSearchResultDetailView(result: result)
+            AppSearchResultDetailView(result: result, gameSystemId: gameSystemId, ruleSections: ruleSections)
         }
     }
 }
 
 struct AppSearchResultDetailView: View {
     let result: AppSearchResult
+    var gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId
+    var ruleSections: [RuleSection] = []
 
     var body: some View {
         ScrollView {
@@ -75,7 +94,11 @@ struct AppSearchResultDetailView: View {
                     .font(.body)
                     .fixedSize(horizontal: false, vertical: true)
 
-                GlossaryChipsRow(text: result.detailBody)
+                GlossaryChipsRow(
+                    text: result.detailBody,
+                    gameSystemId: gameSystemId,
+                    ruleSections: ruleSections
+                )
             }
             .readableContentWidth()
             .padding(DesignTokens.Spacing.md)

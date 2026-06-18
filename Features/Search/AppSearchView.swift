@@ -23,6 +23,10 @@ struct AppSearchView: View {
                 )
             } else {
                 List {
+                    if viewModel.showsGameSystemPicker {
+                        gameSystemPickerSection
+                    }
+
                     if viewModel.isShowingSearchResults {
                         searchResultsContent
                     } else {
@@ -37,23 +41,43 @@ struct AppSearchView: View {
                 .accessibilityIdentifier("search.screen")
             }
         }
-        .navigationTitle(GameSystemRulesLabels.searchNavigationTitle(gameSystemId: viewModel.scopedGameSystemId))
+        .navigationTitle(String(localized: "Rules Search"))
         .task { await viewModel.load() }
         .refreshable { await viewModel.load() }
+    }
+
+    private var gameSystemPickerSection: some View {
+        Section {
+            Picker(String(localized: "Game mode"), selection: $viewModel.selectedGameSystemId) {
+                ForEach(viewModel.gameSystems) { system in
+                    Text(GameSystemRulesLabels.searchGameSystemPickerLabel(system)).tag(system.id)
+                }
+            }
+            .onChange(of: viewModel.selectedGameSystemId) { _, newValue in
+                viewModel.selectGameSystem(newValue)
+            }
+            .accessibilityIdentifier("search.gameSystemPicker")
+        } footer: {
+            Text(
+                String(
+                    localized: "Search only includes rules, units, and guides for the selected game mode."
+                )
+            )
+        }
     }
 
     @ViewBuilder
     private var searchResultsContent: some View {
         if viewModel.searchResults.isEmpty {
             Section {
-                Text(String(localized: "No matches — try fewer words or a glossary term like “rend” or “pile in”."))
+                Text(GameSystemRulesLabels.searchEmptyStateHint(gameSystemId: viewModel.scopedGameSystemId))
                     .foregroundStyle(.secondary)
                     .font(.callout)
                     .fixedSize(horizontal: false, vertical: true)
             }
         } else {
             ForEach(viewModel.groupedSearchResults, id: \.kind) { group in
-                Section(group.kind.sectionLabel) {
+                Section(group.kind.sectionLabel(gameSystemId: viewModel.scopedGameSystemId)) {
                     ForEach(group.results) { result in
                         NavigationLink {
                             AppSearchDestinationView(
@@ -61,6 +85,7 @@ struct AppSearchView: View {
                                 ruleSections: viewModel.ruleSections,
                                 gettingStartedSteps: viewModel.gettingStartedSteps,
                                 armies: viewModel.armies,
+                                gameSystemId: viewModel.scopedGameSystemId,
                                 dependencies: dependencies
                             )
                         } label: {
@@ -83,7 +108,7 @@ struct AppSearchView: View {
         }
 
         Section(String(localized: "Try asking")) {
-            ForEach(AppSearchEngine.suggestedTopics, id: \.self) { topic in
+            ForEach(AppSearchEngine.suggestedTopics(for: viewModel.scopedGameSystemId), id: \.self) { topic in
                 Button {
                     viewModel.searchText = topic
                 } label: {
@@ -98,7 +123,11 @@ struct AppSearchView: View {
 
         Section(String(localized: "Browse")) {
             NavigationLink {
-                RulesReferenceView(viewModel: dependencies.makeRulesReferenceViewModel())
+                RulesReferenceView(
+                    viewModel: dependencies.makeRulesReferenceViewModel(
+                        gameSystemId: GameSystemId(resolving: viewModel.scopedGameSystemId)
+                    )
+                )
             } label: {
                 Label(
                     GameSystemRulesLabels.rulesReferenceLinkTitle(gameSystemId: viewModel.scopedGameSystemId),
@@ -108,33 +137,60 @@ struct AppSearchView: View {
             }
             .accessibilityIdentifier("search.browse.rules")
 
+            if showsGlossaryBrowseLink {
+                NavigationLink {
+                    RulesGlossaryView(
+                        gameSystemId: viewModel.scopedGameSystemId,
+                        ruleSections: viewModel.ruleSections
+                    )
+                } label: {
+                    Label(
+                        GameSystemRulesLabels.glossaryTitle(gameSystemId: viewModel.scopedGameSystemId),
+                        systemImage: "book.fill"
+                    )
+                        .frame(minHeight: DesignTokens.minTouchTarget)
+                }
+                .accessibilityIdentifier("search.browse.glossary")
+            }
+
+            if GameSystemPlayContext.context(for: viewModel.scopedGameSystemId).capabilities.showsBattleTacticDecks {
+                NavigationLink {
+                    BattleTacticsReferenceView(ruleSections: viewModel.ruleSections)
+                } label: {
+                    Label(String(localized: "Card Decks Guide"), systemImage: "rectangle.stack")
+                        .frame(minHeight: DesignTokens.minTouchTarget)
+                }
+                .accessibilityIdentifier("search.browse.cardDecks")
+            }
+
+            if GameSystemPlayContext.context(for: viewModel.scopedGameSystemId).capabilities.showsCombatPatrolMode {
+                NavigationLink {
+                    CombatPatrolMissionsReferenceView(ruleSections: viewModel.ruleSections)
+                } label: {
+                    Label(String(localized: "Missions Reference"), systemImage: "map")
+                        .frame(minHeight: DesignTokens.minTouchTarget)
+                }
+                .accessibilityIdentifier("search.browse.missions")
+            }
+
             NavigationLink {
-                RulesGlossaryView()
+                GameSystemDetailView(gameSystemId: viewModel.scopedGameSystemId)
             } label: {
                 Label(
-                    GameSystemRulesLabels.glossaryTitle(gameSystemId: viewModel.scopedGameSystemId),
-                    systemImage: "book.fill"
+                    GameSystemRulesLabels.gameGuideBrowseTitle(gameSystemId: viewModel.scopedGameSystemId),
+                    systemImage: "play.circle"
                 )
-                    .frame(minHeight: DesignTokens.minTouchTarget)
-            }
-            .accessibilityIdentifier("search.browse.glossary")
-
-            NavigationLink {
-                BattleTacticsReferenceView(ruleSections: viewModel.ruleSections)
-            } label: {
-                Label(String(localized: "Card Decks Guide"), systemImage: "rectangle.stack")
-                    .frame(minHeight: DesignTokens.minTouchTarget)
-            }
-            .accessibilityIdentifier("search.browse.cardDecks")
-
-            NavigationLink {
-                GameSystemDetailView(gameSystemId: "aos-spearhead")
-            } label: {
-                Label(String(localized: "Spearhead Guide"), systemImage: "play.circle")
                     .frame(minHeight: DesignTokens.minTouchTarget)
             }
             .accessibilityIdentifier("search.browse.gameGuide")
         }
+    }
+
+    private var showsGlossaryBrowseLink: Bool {
+        !RulesGlossaryCatalog.entries(
+            gameSystemId: viewModel.scopedGameSystemId,
+            ruleSections: viewModel.ruleSections
+        ).isEmpty
     }
 }
 

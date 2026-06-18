@@ -59,4 +59,50 @@ final class AppSearchEngineTests: XCTestCase {
         XCTAssertTrue(shortQuery.isEmpty)
         XCTAssertFalse(rendQuery.isEmpty)
     }
+
+    func testWh40kIndexExcludesSpearheadOnlyTopics() async throws {
+        let rulesRepository = BundledRulesRepository(bundle: Bundle(for: AppSearchEngineTests.self))
+        let catalogRepository = BundledPlayCatalogRepository(bundle: Bundle(for: AppSearchEngineTests.self))
+        let gameSystem = try await rulesRepository.gameSystem(id: "wh40k-11e")
+        let catalog = try await catalogRepository.loadCatalog(for: "wh40k-11e")
+        let wh40kIndex = AppSearchIndexBuilder.build(gameSystem: gameSystem, catalog: catalog)
+
+        XCTAssertFalse(wh40kIndex.contains { $0.kind == .battleTactics })
+        XCTAssertFalse(wh40kIndex.contains { $0.kind == .cardDeck })
+        XCTAssertFalse(wh40kIndex.contains { $0.referenceId == "pile-in" })
+        XCTAssertFalse(wh40kIndex.contains { $0.title.localizedCaseInsensitiveContains("twist card") })
+    }
+
+    func testStarCraftSuggestedTopicsExcludeSpearheadTerms() {
+        let topics = AppSearchEngine.suggestedTopics(for: "sc-tmg")
+        XCTAssertFalse(topics.contains { $0.localizedCaseInsensitiveContains("battle tactic") })
+        XCTAssertFalse(topics.contains { $0.localizedCaseInsensitiveContains("twist card") })
+        XCTAssertFalse(topics.contains { $0.localizedCaseInsensitiveContains("pile in") })
+        XCTAssertFalse(topics.contains { $0.localizedCaseInsensitiveContains("warpfire") })
+    }
+
+    func testStarCraftIndexExcludesSpearheadOnlyTopics() async throws {
+        let rulesRepository = BundledRulesRepository(bundle: Bundle(for: AppSearchEngineTests.self))
+        let catalogRepository = BundledPlayCatalogRepository(bundle: Bundle(for: AppSearchEngineTests.self))
+        let gameSystem = try await rulesRepository.gameSystem(id: "sc-tmg")
+        let catalog = try await catalogRepository.loadCatalog(for: "sc-tmg")
+        let starCraftIndex = AppSearchIndexBuilder.build(gameSystem: gameSystem, catalog: catalog)
+
+        XCTAssertFalse(starCraftIndex.contains { $0.kind == .battleTactics })
+        XCTAssertFalse(starCraftIndex.contains { $0.kind == .cardDeck })
+        XCTAssertFalse(starCraftIndex.contains { $0.referenceId == "pile-in" })
+        XCTAssertTrue(starCraftIndex.contains { $0.kind == .glossary && $0.referenceId == "glossary-surge" })
+    }
+
+    func testCombatPatrolIndexIncludesStratagemsAndUnitStats() async throws {
+        let rulesRepository = BundledRulesRepository(bundle: Bundle(for: AppSearchEngineTests.self))
+        let catalogRepository = BundledPlayCatalogRepository(bundle: Bundle(for: AppSearchEngineTests.self))
+        let gameSystem = try await rulesRepository.gameSystem(id: "wh40k-10e-cp")
+        let catalog = try await catalogRepository.loadCatalog(for: "wh40k-10e-cp")
+        let cpIndex = AppSearchIndexBuilder.build(gameSystem: gameSystem, catalog: catalog)
+
+        XCTAssertTrue(cpIndex.contains { $0.title == "Duty and Honour" && $0.subtitle.contains("Stratagem") })
+        XCTAssertTrue(cpIndex.contains { $0.title == "Captain Octavius" && $0.kind == .warscroll })
+        XCTAssertTrue(cpIndex.contains { $0.id == "mission:clash-of-patrols" })
+    }
 }

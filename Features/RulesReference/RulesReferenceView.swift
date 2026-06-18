@@ -39,8 +39,19 @@ struct RulesReferenceView: View {
                     Section {
                         Picker(String(localized: "Category"), selection: $viewModel.selectedCategory) {
                             Text(String(localized: "All")).tag(RuleSectionCategory?.none)
-                            ForEach(RuleSectionCategory.allCases, id: \.self) { category in
-                                Text(categoryLabel(category)).tag(Optional(category))
+                            ForEach(
+                                GameSystemRulesLabels.availableCategories(
+                                    gameSystemId: viewModel.selectedGameSystemId
+                                ),
+                                id: \.self
+                            ) { category in
+                                Text(
+                                    GameSystemRulesLabels.categoryLabel(
+                                        category,
+                                        gameSystemId: viewModel.selectedGameSystemId
+                                    )
+                                )
+                                .tag(Optional(category))
                             }
                         }
                         .accessibilityHint(String(localized: "Filters rule sections by category"))
@@ -59,6 +70,7 @@ struct RulesReferenceView: View {
                                     RuleSectionRow(
                                         title: section.title,
                                         category: section.category,
+                                        gameSystemId: viewModel.selectedGameSystemId,
                                         accessibilityId: "rules.section.\(section.id)"
                                     )
                                 }
@@ -79,19 +91,8 @@ struct RulesReferenceView: View {
         .refreshable { await viewModel.load() }
     }
 
-    private func categoryLabel(_ category: RuleSectionCategory) -> String {
-        switch category {
-        case .core: String(localized: "Core")
-        case .spearhead: String(localized: "Spearhead")
-        case .glossary: String(localized: "Glossary")
-        }
-    }
-
     private func gameSystemPickerLabel(_ system: GameSystem) -> String {
-        if system.id == "wh40k-11e" {
-            return String(localized: "Warhammer 40,000 — 11th Edition")
-        }
-        return system.name
+        GameSystemRulesLabels.searchGameSystemPickerLabel(system)
     }
 }
 

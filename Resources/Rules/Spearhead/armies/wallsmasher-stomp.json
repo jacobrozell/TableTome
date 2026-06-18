@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "armyId": "wallsmasher-stomp",
+  "units": [
+    {
+      "id": "mancrusher-gargant",
+      "name": "Mancrusher Gargant",
+      "move": "8\"",
+      "save": 5,
+      "health": 12,
+      "control": 10,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "mancrusher-gargant-2",
+      "name": "Mancrusher Gargant",
+      "move": "8\"",
+      "save": 5,
+      "health": 12,
+      "control": 10,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "mancrusher-gargant-3",
+      "name": "Mancrusher Gargant",
+      "move": "8\"",
+      "save": 5,
+      "health": 12,
+      "control": 10,
+      "keywords": [],
+      "modelCount": 1
+    }
+  ]
+}

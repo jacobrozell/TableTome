@@ -3,6 +3,9 @@ import TabletomeDomain
 
 @MainActor
 final class GuidedMatchViewModel: ObservableObject {
+    let gameSystemId: GameSystemId
+    let featuredArmies: GuidedMatchFeaturedArmies
+
     @Published private(set) var catalog: SpearheadCatalog?
     @Published private(set) var errorMessage: String?
     @Published var matchState: GuidedMatchState
@@ -10,11 +13,16 @@ final class GuidedMatchViewModel: ObservableObject {
     private let catalogRepository: any SpearheadCatalogRepository
 
     init(
+        gameSystemId: GameSystemId = .default,
         catalogRepository: any SpearheadCatalogRepository,
-        initialState: GuidedMatchState = MatchSetupStore.load()
+        featuredArmies: GuidedMatchFeaturedArmies? = nil,
+        initialState: GuidedMatchState? = nil
     ) {
+        self.gameSystemId = gameSystemId
+        self.featuredArmies = featuredArmies ?? GuidedMatchFeaturedArmies.forGameSystem(gameSystemId)
+            ?? SpearheadFeaturedArmies.configuration
         self.catalogRepository = catalogRepository
-        self.matchState = initialState
+        self.matchState = initialState ?? MatchSetupStore.load(gameSystemId: gameSystemId)
     }
 
     var sortedFactions: [SpearheadFaction] {
@@ -50,7 +58,7 @@ final class GuidedMatchViewModel: ObservableObject {
             errorMessage = nil
             syncAutoCompletions()
         } catch {
-            errorMessage = String(localized: "Spearhead armies could not be loaded.")
+            errorMessage = GameSystemPlayContext.context(for: gameSystemId).copy.catalogLoadFailureMessage
         }
     }
 
@@ -59,19 +67,88 @@ final class GuidedMatchViewModel: ObservableObject {
     }
 
     var deploymentCompletedSteps: Set<String> {
-        BattleTrackerStore.load().completedDeploymentSteps
+        BattleTrackerStore.load(gameSystemId: gameSystemId).completedDeploymentSteps
     }
 
     func setDeploymentStep(_ step: DeploymentChecklistStep, complete: Bool) {
-        var tracker = BattleTrackerStore.load()
+        var tracker = BattleTrackerStore.load(gameSystemId: gameSystemId)
         if complete {
             tracker.completedDeploymentSteps.insert(step.rawValue)
         } else {
             tracker.completedDeploymentSteps.remove(step.rawValue)
         }
-        BattleTrackerStore.save(tracker)
+        BattleTrackerStore.save(tracker, gameSystemId: gameSystemId)
         objectWillChange.send()
         syncAutoCompletions()
+    }
+
+    func setWh40kDeploymentStep(_ step: Wh40kDeploymentChecklistStep, complete: Bool) {
+        var tracker = BattleTrackerStore.load(gameSystemId: gameSystemId)
+        if complete {
+            tracker.completedDeploymentSteps.insert(step.rawValue)
+        } else {
+            tracker.completedDeploymentSteps.remove(step.rawValue)
+        }
+        BattleTrackerStore.save(tracker, gameSystemId: gameSystemId)
+        objectWillChange.send()
+        syncAutoCompletions()
+    }
+
+    func setScTmgDeploymentStep(_ step: ScTmgDeploymentChecklistStep, complete: Bool) {
+        var tracker = BattleTrackerStore.load(gameSystemId: gameSystemId)
+        if complete {
+            tracker.completedDeploymentSteps.insert(step.rawValue)
+        } else {
+            tracker.completedDeploymentSteps.remove(step.rawValue)
+        }
+        BattleTrackerStore.save(tracker, gameSystemId: gameSystemId)
+        objectWillChange.send()
+        syncAutoCompletions()
+    }
+
+    func setCombatPatrolDeploymentStep(_ step: CombatPatrolDeploymentChecklistStep, complete: Bool) {
+        var tracker = BattleTrackerStore.load(gameSystemId: gameSystemId)
+        if complete {
+            tracker.completedDeploymentSteps.insert(step.rawValue)
+        } else {
+            tracker.completedDeploymentSteps.remove(step.rawValue)
+        }
+        BattleTrackerStore.save(tracker, gameSystemId: gameSystemId)
+        objectWillChange.send()
+        syncAutoCompletions()
+    }
+
+    func setSelectedMission(_ missionId: String) {
+        matchState.selectedMissionId = missionId
+        persist()
+        syncAutoCompletions()
+        recordMissionSelected(missionId)
+    }
+
+    func setFirstTurn(isPlayerOne: Bool?) {
+        matchState.firstTurnIsPlayerOne = isPlayerOne
+        persist()
+        syncAutoCompletions()
+    }
+
+    func setSecondaryObjective(playerIsOne: Bool, objectiveId: String) {
+        if playerIsOne {
+            matchState.playerOne.secondaryObjectiveId = objectiveId
+        } else {
+            matchState.playerTwo.secondaryObjectiveId = objectiveId
+        }
+        persist()
+        syncAutoCompletions()
+    }
+
+    func secondaryObjective(for player: PlayerArmySelection) -> ArmyRuleOption? {
+        guard let army = army(factionId: player.factionId, armyId: player.armyId) else { return nil }
+        return army.secondaryObjectives.first { $0.id == player.secondaryObjectiveId }
+    }
+
+    func selectedMission(in catalog: SpearheadCatalog) -> CombatPatrolMission? {
+        guard let missionId = matchState.selectedMissionId else { return nil }
+        return catalog.missions.first { $0.id == missionId }
     }
 
     func syncAutoCompletions() {
@@ -79,7 +156,8 @@ final class GuidedMatchViewModel: ObservableObject {
         let auto = MatchSetupCompletionEvaluator.autoCompletedStepIds(
             state: matchState,
             catalog: catalog,
-            deploymentSteps: BattleTrackerStore.load().completedDeploymentSteps
+            deploymentSteps: BattleTrackerStore.load(gameSystemId: gameSystemId).completedDeploymentSteps,
+            gameSystemId: gameSystemId
         )
         let merged = matchState.completedStepIds.union(auto)
         guard merged != matchState.completedStepIds else { return }
@@ -88,19 +166,31 @@ final class GuidedMatchViewModel: ObservableObject {
     }
 
     func updatePlayerOne(_ selection: PlayerArmySelection) {
-        matchState.playerOne = selection
+        var updated = selection
+        if updated.armyId != matchState.playerOne.armyId || updated.factionId != matchState.playerOne.factionId {
+            updated.regimentAbilityId = nil
+            updated.enhancementId = nil
+            updated.secondaryObjectiveId = nil
+        }
+        matchState.playerOne = updated
         persist()
         syncAutoCompletions()
     }
 
     func updatePlayerTwo(_ selection: PlayerArmySelection) {
-        matchState.playerTwo = selection
+        var updated = selection
+        if updated.armyId != matchState.playerTwo.armyId || updated.factionId != matchState.playerTwo.factionId {
+            updated.regimentAbilityId = nil
+            updated.enhancementId = nil
+            updated.secondaryObjectiveId = nil
+        }
+        matchState.playerTwo = updated
         persist()
         syncAutoCompletions()
     }
 
     func reloadFromStore() {
-        matchState = MatchSetupStore.load()
+        matchState = MatchSetupStore.load(gameSystemId: gameSystemId)
         syncAutoCompletions()
     }
 
@@ -133,6 +223,7 @@ final class GuidedMatchViewModel: ObservableObject {
     func setStepComplete(_ stepId: String, complete: Bool) {
         if complete {
             matchState.completedStepIds.insert(stepId)
+            recordSetupStepComplete(stepId)
         } else {
             matchState.completedStepIds.remove(stepId)
         }
@@ -142,14 +233,83 @@ final class GuidedMatchViewModel: ObservableObject {
 
     func resetMatch() {
         matchState = GuidedMatchState()
-        MatchSetupStore.reset()
-        BattleTrackerStore.reset()
+        MatchSetupStore.reset(gameSystemId: gameSystemId)
+        BattleTrackerStore.reset(gameSystemId: gameSystemId)
+        MatchSessionStore.clear(gameSystemId: gameSystemId)
+        MatchLogRecorder.discard(gameSystemId: gameSystemId)
+    }
+
+    func rematchPreservingArmies() {
+        BattleTrackerStore.reset(gameSystemId: gameSystemId)
+        MatchSessionStore.markStartedIfNeeded(gameSystemId: gameSystemId)
+        MatchLogRecorder.ensureSession(gameSystemId: gameSystemId)
+    }
+
+    func archiveCurrentMatch(
+        status: MatchArchiveStatus,
+        playerOneVictoryPoints: Int,
+        playerTwoVictoryPoints: Int,
+        repository: any MatchHistoryRepository
+    ) async throws {
+        guard let catalog else { return }
+        let tracker = BattleTrackerStore.load(gameSystemId: gameSystemId)
+        let record = MatchArchiveBuilder.buildRecord(
+            from: MatchArchiveInput(
+                gameSystemId: gameSystemId.rawValue,
+                gameSystemName: GameSystemRulesLabels.displayName(gameSystemId: gameSystemId),
+                matchState: matchState,
+                trackerState: tracker,
+                status: status,
+                startedAt: MatchSessionStore.startedAt(gameSystemId: gameSystemId),
+                playerOneArmyLabel: armyLabel(for: matchState.playerOne, in: catalog),
+                playerTwoArmyLabel: armyLabel(for: matchState.playerTwo, in: catalog),
+                playerOneVictoryPoints: playerOneVictoryPoints,
+                playerTwoVictoryPoints: playerTwoVictoryPoints
+            )
+        )
+        try await repository.archive(
+            record: record,
+            log: MatchLogRecorder.drainForArchive(gameSystemId: gameSystemId, status: status)
+        )
+    }
+
+    func finishMatch(
+        repository: any MatchHistoryRepository,
+        rematch: Bool,
+        playerOneVictoryPoints: Int,
+        playerTwoVictoryPoints: Int,
+        status: MatchArchiveStatus
+    ) async {
+        guard ReleaseSurface.showsMatchHistory else {
+            if rematch {
+                rematchPreservingArmies()
+            } else {
+                resetMatch()
+            }
+            return
+        }
+        do {
+            try await archiveCurrentMatch(
+                status: status,
+                playerOneVictoryPoints: playerOneVictoryPoints,
+                playerTwoVictoryPoints: playerTwoVictoryPoints,
+                repository: repository
+            )
+        } catch {
+            // Archive failure should not block clearing an ended match at the table.
+        }
+        if rematch {
+            rematchPreservingArmies()
+        } else {
+            resetMatch()
+        }
     }
 
     func applyStarterMatchup() {
-        SpearheadFeaturedArmies.applyStarterMatchup(to: &matchState)
-        BattleTrackerStore.reset()
+        featuredArmies.applyStarterMatchup(to: &matchState)
+        BattleTrackerStore.reset(gameSystemId: gameSystemId)
         persist()
+        syncAutoCompletions()
     }
 
     func faction(id: String) -> SpearheadFaction? {
@@ -183,6 +343,6 @@ final class GuidedMatchViewModel: ObservableObject {
     }
 
     private func persist() {
-        MatchSetupStore.save(matchState)
+        MatchSetupStore.save(matchState, gameSystemId: gameSystemId)
     }
 }

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "armyId": "kavalos-vanguard",
+  "units": [
+    {
+      "id": "liege-kavalos",
+      "name": "Liege-Kavalos",
+      "move": "10\"",
+      "save": 3,
+      "health": 7,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "kavalos-deathriders",
+      "name": "Kavalos Deathriders",
+      "move": "10\"",
+      "save": 4,
+      "health": 3,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "kavalos-deathriders-2",
+      "name": "Kavalos Deathriders",
+      "move": "10\"",
+      "save": 4,
+      "health": 3,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "teratic-cohort",
+      "name": "Teratic Cohort",
+      "move": "7\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 8
+    }
+  ]
+}

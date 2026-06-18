@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "armyId": "deathrattle-tomb-host",
+  "units": [
+    {
+      "id": "wight-king",
+      "name": "Wight King",
+      "move": "4\"",
+      "save": 3,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "barrow-guard",
+      "name": "Barrow Guard",
+      "move": "4\"",
+      "save": 4,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 10
+    },
+    {
+      "id": "barrow-knights",
+      "name": "Barrow Knights",
+      "move": "10\"",
+      "save": 4,
+      "health": 3,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "deathrattle-skeletons",
+      "name": "Deathrattle Skeletons",
+      "move": "4\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 10
+    },
+    {
+      "id": "deathrattle-skeletons-2",
+      "name": "Deathrattle Skeletons",
+      "move": "4\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 10
+    }
+  ]
+}

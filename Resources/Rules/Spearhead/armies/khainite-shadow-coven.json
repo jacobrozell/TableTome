@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "armyId": "khainite-shadow-coven",
+  "units": [
+    {
+      "id": "slaughter-queen-on-cauldron-of-blood",
+      "name": "Slaughter Queen on Cauldron of Blood",
+      "move": "6\"",
+      "save": 4,
+      "health": 12,
+      "control": 5,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "hag-queen",
+      "name": "Hag Queen",
+      "move": "6\"",
+      "save": 5,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "bloodwrack-medusa",
+      "name": "Bloodwrack Medusa",
+      "move": "8\"",
+      "save": 5,
+      "health": 6,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "khainite-shadowstalkers",
+      "name": "Khainite Shadowstalkers",
+      "move": "6\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 9
+    },
+    {
+      "id": "sisters-of-slaughter",
+      "name": "Sisters of Slaughter",
+      "move": "6\"",
+      "save": 6,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "sisters-of-slaughter-2",
+      "name": "Sisters of Slaughter",
+      "move": "6\"",
+      "save": 6,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "armyId": "spitewing-flight",
+  "units": [
+    {
+      "id": "arch-revenant",
+      "name": "Arch-Revenant",
+      "move": "12\"",
+      "save": 4,
+      "health": 6,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "gossamid-archers",
+      "name": "Gossamid Archers",
+      "move": "12\"",
+      "save": 5,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "spiterider-lancers",
+      "name": "Spiterider Lancers",
+      "move": "12\"",
+      "save": 4,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "revenant-seekers",
+      "name": "Revenant Seekers",
+      "move": "12\"",
+      "save": 4,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 3
+    }
+  ]
+}

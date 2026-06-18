@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "armyId": "glittering-phalanx",
+  "units": [
+    {
+      "id": "scinari-cathallar",
+      "name": "Scinari Cathallar",
+      "move": "6\"",
+      "save": 6,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "vanari-auralan-sentinels",
+      "name": "Vanari Auralan Sentinels",
+      "move": "6\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "vanari-auralan-sentinels-2",
+      "name": "Vanari Auralan Sentinels",
+      "move": "6\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "vanari-auralan-wardens",
+      "name": "Vanari Auralan Wardens",
+      "move": "6\"",
+      "save": 4,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 10
+    },
+    {
+      "id": "vanari-bladelords",
+      "name": "Vanari Bladelords",
+      "move": "6\"",
+      "save": 4,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    }
+  ]
+}

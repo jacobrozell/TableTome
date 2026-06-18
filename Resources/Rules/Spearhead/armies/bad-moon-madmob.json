@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "armyId": "bad-moon-madmob",
+  "units": [
+    {
+      "id": "loonboss",
+      "name": "Loonboss",
+      "move": "5\"",
+      "save": 4,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "moonclan-stabbas",
+      "name": "Moonclan Stabbas",
+      "move": "5\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 10
+    },
+    {
+      "id": "moonclan-stabbas-2",
+      "name": "Moonclan Stabbas",
+      "move": "5\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 10
+    },
+    {
+      "id": "squig-hoppers",
+      "name": "Squig Hoppers",
+      "move": "D6+8\"",
+      "save": 6,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "squig-hoppers-2",
+      "name": "Squig Hoppers",
+      "move": "D6+8\"",
+      "save": 6,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "rockgut-troggoths",
+      "name": "Rockgut Troggoths",
+      "move": "6\"",
+      "save": 4,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 3
+    }
+  ]
+}

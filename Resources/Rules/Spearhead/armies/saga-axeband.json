@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "armyId": "saga-axeband",
+  "units": [
+    {
+      "id": "battlesmith",
+      "name": "Battlesmith",
+      "move": "4\"",
+      "save": 5,
+      "health": 5,
+      "control": 5,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "hearthguard-berzerkers",
+      "name": "Hearthguard Berzerkers",
+      "move": "4\"",
+      "save": 6,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "vulkite-berzerkers",
+      "name": "Vulkite Berzerkers",
+      "move": "4\"",
+      "save": 6,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "vulkite-berzerkers-2",
+      "name": "Vulkite Berzerkers",
+      "move": "4\"",
+      "save": 6,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "vulkite-berzerkers-3",
+      "name": "Vulkite Berzerkers",
+      "move": "4\"",
+      "save": 6,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "vulkite-berzerkers-4",
+      "name": "Vulkite Berzerkers",
+      "move": "4\"",
+      "save": 6,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    }
+  ]
+}

@@ -6,6 +6,7 @@ struct BattleTrackerPinnedWarscrollPanel: View {
     let army: SpearheadArmy
     let unit: SpearheadUnit
     let playerName: String
+    var gameSystemId: String = "aos-spearhead"
     let woundsRemaining: Int
     let woundCapacity: Int
     let effectiveHealthPerModel: Int
@@ -35,7 +36,7 @@ struct BattleTrackerPinnedWarscrollPanel: View {
         VStack(alignment: .leading, spacing: 2) {
             Text(unit.name)
                 .font(.subheadline.weight(.semibold))
-                .lineLimit(2)
+                .adaptiveLineLimit(2)
             Text(playerName)
                 .font(.caption2)
                 .foregroundStyle(.secondary)
@@ -99,18 +100,18 @@ struct BattleTrackerPinnedWarscrollPanel: View {
                     HStack(spacing: DesignTokens.Spacing.xs) {
                         Text(weapon.name)
                             .font(.caption.weight(.semibold))
-                            .lineLimit(2)
+                            .adaptiveLineLimit(2)
                         if let loadout = WarscrollStatSummary.weaponLoadoutLabel(
                             weapon,
                             unitModelCount: unit.modelCount
                         ) {
                             Text(loadout)
-                                .font(.system(size: 9, weight: .bold))
+                                .font(.caption2.weight(.bold))
                                 .foregroundStyle(Color.accentColor)
                         }
                     }
-                    Text(WarscrollStatSummary.weaponCombatProfile(weapon))
-                        .font(.system(size: 10))
+                    Text(WarscrollStatSummary.weaponCombatProfile(weapon, gameSystemId: gameSystemId))
+                        .font(.caption2)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }

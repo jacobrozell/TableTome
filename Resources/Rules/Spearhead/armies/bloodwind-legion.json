@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "armyId": "bloodwind-legion",
+  "units": [
+    {
+      "id": "chaos-lord",
+      "name": "Chaos Lord",
+      "move": "5\"",
+      "save": 3,
+      "health": 6,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "chaos-chariot",
+      "name": "Chaos Chariot",
+      "move": "10\"",
+      "save": 4,
+      "health": 7,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "chaos-warriors",
+      "name": "Chaos Warriors",
+      "move": "5\"",
+      "save": 3,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "chaos-warriors-2",
+      "name": "Chaos Warriors",
+      "move": "5\"",
+      "save": 3,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "chaos-knights",
+      "name": "Chaos Knights",
+      "move": "10\"",
+      "save": 3,
+      "health": 4,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    }
+  ]
+}

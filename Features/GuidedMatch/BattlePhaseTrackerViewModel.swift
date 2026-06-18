@@ -19,41 +19,87 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
     @Published private(set) var playerTwoRegimentAbility: ArmyRuleOption?
     @Published private(set) var playerOneEnhancement: ArmyRuleOption?
     @Published private(set) var playerTwoEnhancement: ArmyRuleOption?
+    @Published private(set) var playerOneSecondary: ArmyRuleOption?
+    @Published private(set) var playerTwoSecondary: ArmyRuleOption?
     @Published private(set) var activeGotchas: [SpearheadGotcha] = []
 
-    private var matchState: GuidedMatchState
-    private let catalog: SpearheadCatalog
+    var matchState: GuidedMatchState
+    let catalog: SpearheadCatalog
+    let gameSystemId: GameSystemId
+    let playContext: GameSystemPlayContext
+    private let trackerEngine: any BattleTrackerEngine
 
     private let onMatchStateChange: (() -> Void)?
 
     init(
+        gameSystemId: GameSystemId = .default,
         matchState: GuidedMatchState,
         catalog: SpearheadCatalog,
-        initialState: BattleTrackerState = BattleTrackerStore.load(),
+        initialState: BattleTrackerState? = nil,
+        playContext: GameSystemPlayContext? = nil,
+        trackerEngine: (any BattleTrackerEngine)? = nil,
         onMatchStateChange: (() -> Void)? = nil
     ) {
+        let context = playContext ?? GameSystemPlayContext(gameSystemId: gameSystemId)
+        let engine = trackerEngine ?? BattleTrackerEngineFactory.engine(for: context)
+        self.gameSystemId = gameSystemId
+        self.playContext = context
+        self.trackerEngine = engine
         self.matchState = matchState
         self.catalog = catalog
         self.onMatchStateChange = onMatchStateChange
-        self.trackerState = initialState
+        self.trackerState = initialState ?? BattleTrackerStore.load(gameSystemId: gameSystemId)
+        bootstrapTrackerState(using: context)
         syncAutoCompletions()
         refreshAbilities()
     }
 
+    private func bootstrapTrackerState(using context: GameSystemPlayContext) {
+        trackerEngine.bootstrap(
+            trackerState: &trackerState,
+            matchState: matchState,
+            playContext: context
+        )
+    }
+
     var currentGuideStep: BattleFlowGuideStep? {
-        BattleFlowGuide.currentStep(matchState: matchState, trackerState: trackerState)
+        BattleFlowGuide.currentStep(
+            matchState: matchState,
+            trackerState: trackerState,
+            gameSystemId: gameSystemId
+        )
     }
 
     var focusedDeploymentStep: DeploymentChecklistStep? {
-        guard trackerState.battleRound == 1 else { return nil }
+        guard playContext.isSpearhead, trackerState.battleRound == 1 else { return nil }
         return BattleFlowGuide.nextIncompleteDeploymentStep(in: trackerState.completedDeploymentSteps)
     }
 
+    var focusedWh40kDeploymentStep: Wh40kDeploymentChecklistStep? {
+        guard playContext.isWh40k11e, trackerState.battleRound == 1 else { return nil }
+        return BattleFlowGuide.nextIncompleteWh40kSetupStep(in: trackerState.completedDeploymentSteps)
+    }
+
+    var focusedScTmgDeploymentStep: ScTmgDeploymentChecklistStep? {
+        guard playContext.capabilities.showsActivationBar, trackerState.battleRound == 1 else { return nil }
+        return BattleFlowGuide.nextIncompleteScTmgSetupStep(in: trackerState.completedDeploymentSteps)
+    }
+
+    var isStarCraft: Bool {
+        playContext.capabilities.showsActivationBar
+    }
+
     var focusedRoundOpenerStep: BattleRoundChecklistStep? {
-        BattleFlowGuide.nextIncompleteRoundOpenerStep(
+        guard playContext.isSpearhead else { return nil }
+        return BattleFlowGuide.nextIncompleteRoundOpenerStep(
             round: trackerState.battleRound,
             completedSteps: trackerState.completedRoundChecklistSteps
         )
+    }
+
+    var scFirstPlayerMarkerHolderName: String? {
+        guard let markerIsOne = trackerState.scFirstPlayerMarkerIsPlayerOne else { return nil }
+        return markerIsOne ? playerOneName : playerTwoName
     }
 
     var shootingEligibleUnits: [SpearheadUnit] {
@@ -73,7 +119,8 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
     }
 
     var needsStartOfRoundAbilitiesPrompt: Bool {
-        !BattleRoundChecklist.isComplete(
+        guard playContext.isSpearhead else { return false }
+        return !BattleRoundChecklist.isComplete(
             step: .startOfRoundAbilities,
             round: trackerState.battleRound,
             completedSteps: trackerState.completedRoundChecklistSteps
@@ -96,6 +143,7 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
     }
 
     var underdogIsPlayerOne: Bool? {
+        guard playContext.isSpearhead else { return nil }
         let p1 = trackerState.playerOneVictoryPoints
         let p2 = trackerState.playerTwoVictoryPoints
         if p1 == p2 { return nil }
@@ -119,12 +167,18 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
         playerTwoEnhancement = playerTwoArmy?.enhancements.first {
             $0.id == matchState.playerTwo.enhancementId
         }
+        playerOneSecondary = playerOneArmy?.secondaryObjectives.first {
+            $0.id == matchState.playerOne.secondaryObjectiveId
+        }
+        playerTwoSecondary = playerTwoArmy?.secondaryObjectives.first {
+            $0.id == matchState.playerTwo.secondaryObjectiveId
+        }
         ensureWoundTrackingInitialized()
 
         guard let army = activeArmySelection else {
             activeAbilities = []
             passiveAbilities = []
-            contentCoverage = .roster
+            contentCoverage = playContext.usesGuidedBattleTracker ? .battleTracker : .roster
             armyName = ""
             activeRegimentAbility = nil
             activeEnhancement = nil
@@ -139,7 +193,10 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
         contentCoverage = army.contentCoverage
         activeRegimentAbility = army.regimentAbilities.first { $0.id == player.regimentAbilityId }
         activeEnhancement = army.enhancements.first { $0.id == player.enhancementId }
-        activeGotchas = SpearheadGotchaCatalog.gotchas(for: army.id)
+        activeGotchas = Self.gotchas(for: army.id, gameSystemId: gameSystemId)
+        if playContext.usesGuidedBattleTracker {
+            contentCoverage = .battleTracker
+        }
         let all = BattleAbilityCatalog.abilities(for: army)
 
         if trackerState.showAllAbilities {
@@ -157,39 +214,18 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
     }
 
     func setPhase(_ phase: BattleTurnPhase) {
+        let previous = trackerState.currentPhase
         trackerState.currentPhase = phase
+        if previous != phase {
+            trackerEngine.afterPhaseChange(from: previous, trackerState: &trackerState)
+        }
         persist()
         refreshAbilities()
-    }
-
-    func completeCurrentGuideStep() {
-        guard let step = currentGuideStep else { return }
-        switch step.kind {
-        case .deployment(let deploymentStep):
-            setDeploymentStep(deploymentStep, complete: true)
-        case .roundOpener(let openerStep):
-            setRoundChecklistStep(openerStep, complete: true)
-        case .turnPhase(let phase):
-            if phase == .endOfTurn {
-                if trackerState.battleRound >= SpearheadBattleRules.battleRoundCount {
-                    return
-                }
-                trackerState.activePlayerIsOne.toggle()
-                trackerState.currentPhase = .hero
-                persist()
-                refreshAbilities()
-            } else {
-                advancePhase()
-            }
-        case .startNextRound(let round):
-            setBattleRound(round + 1)
-            setPhase(.hero)
-        case .battleComplete:
-            break
-        }
+        recordPhaseChanged(previousPhase: previous)
     }
 
     func syncAutoCompletions() {
+        guard trackerEngine.usesRoundChecklistAutoCompletion(playContext: playContext) else { return }
         let suggested = BattleChecklistCompletionEvaluator.suggestedRoundCompletions(
             round: trackerState.battleRound,
             playerOneVictoryPoints: trackerState.playerOneVictoryPoints,
@@ -207,20 +243,37 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
     }
 
     func setBattleRound(_ round: Int) {
-        trackerState.battleRound = SpearheadBattleRules.clampBattleRound(round)
+        let previousRound = trackerState.battleRound
+        trackerState.battleRound = BattleRules.clampBattleRound(round, gameSystemId: gameSystemId)
+        trackerEngine.afterBattleRoundChange(trackerState: &trackerState)
         persist()
+        recordRoundAdvanced(previousRound: previousRound)
     }
 
     func toggleActivePlayer() {
+        completeActivation()
+    }
+
+    func completeActivation() {
         trackerState.activePlayerIsOne.toggle()
         persist()
         refreshAbilities()
+        recordActivePlayerChanged()
+    }
+
+    func passActivation() {
+        trackerEngine.passActivation(trackerState: &trackerState)
+        persist()
+        refreshAbilities()
+        recordActivePlayerChanged()
     }
 
     func setActivePlayer(isOne: Bool) {
+        guard trackerState.activePlayerIsOne != isOne else { return }
         trackerState.activePlayerIsOne = isOne
         persist()
         refreshAbilities()
+        recordActivePlayerChanged()
     }
 
     func toggleShowAll() {
@@ -230,7 +283,7 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
     }
 
     func advancePhase() {
-        let phases = BattleTurnPhase.mainTurnPhases
+        let phases = BattleRules.mainPhases(gameSystemId: gameSystemId)
         guard let index = phases.firstIndex(of: trackerState.currentPhase), index < phases.count - 1 else { return }
         setPhase(phases[index + 1])
     }
@@ -239,6 +292,7 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
         trackerState.usedOncePerBattleAbilityIds.insert(ability.id)
         persist()
         refreshAbilities()
+        recordAbilityUsed(ability)
     }
 
     func isUsed(_ ability: TriggeredAbility) -> Bool {
@@ -257,7 +311,11 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
         persist()
     }
 
-    func adjustVictoryPoints(playerIsOne: Bool, delta: Int) {
+    func adjustVictoryPoints(
+        playerIsOne: Bool,
+        delta: Int,
+        reason: MatchVictoryPointsReason = .manual
+    ) {
         if playerIsOne {
             trackerState.playerOneVictoryPoints = max(0, trackerState.playerOneVictoryPoints + delta)
         } else {
@@ -265,11 +323,32 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
         }
         persist()
         syncAutoCompletions()
+        guard delta != 0 else { return }
+        recordVictoryPointsChange(playerIsOne: playerIsOne, delta: delta, reason: reason)
     }
 
     func setUnitWounds(key: String, remaining: Int) {
+        let previous = trackerState.unitWoundsRemaining[key]
         trackerState.unitWoundsRemaining[key] = remaining
         persist()
+        logWoundChange(key: key, previous: previous, remaining: remaining)
+    }
+
+    func applyDamageToUnit(armyId: String, unitId: String, damage: Int) -> Int? {
+        guard damage > 0 else { return nil }
+        let key = UnitWoundTracker.unitKey(armyId: armyId, unitId: unitId)
+        let current = trackerState.unitWoundsRemaining[key] ?? 0
+        let remaining = max(0, current - damage)
+        trackerState.unitWoundsRemaining[key] = remaining
+        persist()
+        recordDamage(
+            armyId: armyId,
+            unitId: unitId,
+            woundsRemoved: damage,
+            woundsRemaining: remaining,
+            source: "combat"
+        )
+        return current
     }
 
     func healthPerModelOverride(for key: String) -> Int? {
@@ -306,15 +385,6 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
         persist()
     }
 
-    func applyDamageToUnit(armyId: String, unitId: String, damage: Int) -> Int? {
-        guard damage > 0 else { return nil }
-        let key = UnitWoundTracker.unitKey(armyId: armyId, unitId: unitId)
-        let current = trackerState.unitWoundsRemaining[key] ?? 0
-        trackerState.unitWoundsRemaining[key] = max(0, current - damage)
-        persist()
-        return current
-    }
-
     func unitId(matchingSource source: String, in army: SpearheadArmy?) -> String? {
         guard let army else { return nil }
         let normalized = source.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
@@ -330,26 +400,32 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
         objectWillChange.send()
     }
 
-    func setDeploymentStep(_ step: DeploymentChecklistStep, complete: Bool) {
-        if complete {
-            trackerState.completedDeploymentSteps.insert(step.rawValue)
-        } else {
-            trackerState.completedDeploymentSteps.remove(step.rawValue)
-        }
+    func setFinalVictoryPoints(playerOne: Int, playerTwo: Int) {
+        trackerState.playerOneVictoryPoints = max(0, playerOne)
+        trackerState.playerTwoVictoryPoints = max(0, playerTwo)
         persist()
     }
 
     func resetTracker() {
         trackerState = BattleTrackerState(
-            activePlayerIsOne: trackerState.activePlayerIsOne
+            activePlayerIsOne: trackerState.activePlayerIsOne,
+            currentPhase: BattleRules.initialPhase(gameSystemId: gameSystemId)
         )
-        BattleTrackerStore.save(trackerState)
+        BattleTrackerStore.save(trackerState, gameSystemId: gameSystemId)
         refreshAbilities()
     }
 
+    var playerOneArmyLabel: String {
+        MatchArmyLabelFormatter.label(for: matchState.playerOne, in: catalog)
+    }
+
+    var playerTwoArmyLabel: String {
+        MatchArmyLabelFormatter.label(for: matchState.playerTwo, in: catalog)
+    }
+
     func reloadFromPersistedStores() {
-        matchState = MatchSetupStore.load()
-        trackerState = BattleTrackerStore.load()
+        matchState = MatchSetupStore.load(gameSystemId: gameSystemId)
+        trackerState = BattleTrackerStore.load(gameSystemId: gameSystemId)
         syncAutoCompletions()
         refreshAbilities()
     }
@@ -400,8 +476,8 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
         if updated { persist() }
     }
 
-    private func persist() {
-        BattleTrackerStore.save(trackerState)
+    func persist() {
+        BattleTrackerStore.save(trackerState, gameSystemId: gameSystemId)
     }
 
     func army(withId armyId: String) -> SpearheadArmy? {

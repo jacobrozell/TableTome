@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "armyId": "yndrastas-spearhead",
+  "units": [
+    {
+      "id": "yndrasta-the-celestial-spear",
+      "name": "Yndrasta the Celestial Spear",
+      "move": "12\"",
+      "save": 3,
+      "health": 8,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "knight-vexillor",
+      "name": "Knight-Vexillor",
+      "move": "5\"",
+      "save": 3,
+      "health": 6,
+      "control": 5,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "annihilators",
+      "name": "Annihilators",
+      "move": "4\"",
+      "save": 2,
+      "health": 3,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "vanquishers",
+      "name": "Vanquishers",
+      "move": "5\"",
+      "save": 3,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "vanquishers-2",
+      "name": "Vanquishers",
+      "move": "5\"",
+      "save": 3,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "stormstrike-chariot",
+      "name": "Stormstrike Chariot",
+      "move": "10\"",
+      "save": 3,
+      "health": 10,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    }
+  ]
+}

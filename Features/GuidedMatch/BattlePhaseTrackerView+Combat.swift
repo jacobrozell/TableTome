@@ -24,7 +24,9 @@ extension BattlePhaseTrackerView {
             saveTarget: save,
             unitId: unit.id,
             deployedModelCount: combatViewModel.attackerDeployedModelCount,
-            wardTarget: combatViewModel.activeWardTarget,
+            wardTarget: CombatRollEngineRouter.usesWh40kRules(gameSystemId: combatViewModel.gameSystemId)
+                ? nil
+                : combatViewModel.activeWardTarget,
             resolvedAttackCount: combatViewModel.resolvedVariableAttackCount
         )
         multiAttackViewModel.bind(
@@ -38,7 +40,10 @@ extension BattlePhaseTrackerView {
         multiAttackViewModel.damage = combatViewModel.damage
     }
 
-    func applyCombatDamage(_ damage: Int) {
+    func applyCombatDamage(_ damage: Int, batchLog: CombatBatchLogContext? = nil) {
+        if let batchLog {
+            viewModel.recordCombatBatchResolved(batchLog)
+        }
         guard let armyId = combatViewModel.defenderArmyId.nilIfEmpty,
               let unitId = combatViewModel.defenderUnitId.nilIfEmpty,
               let defender = combatViewModel.selectedDefenderUnit,
@@ -64,6 +69,7 @@ extension BattlePhaseTrackerView {
         unitId: String,
         preferredWeaponId: String? = nil
     ) {
+        guard ReleaseSurface.showsCombatResolver(for: viewModel.gameSystemId) else { return }
         let playerOneArmyId = viewModel.playerOneArmy?.id
         let playerTwoArmyId = viewModel.playerTwoArmy?.id
         let attackerArmyId = viewModel.trackerState.activePlayerIsOne ? playerOneArmyId : playerTwoArmyId
@@ -85,6 +91,7 @@ extension BattlePhaseTrackerView {
     }
 
     func handleResolveAttack(_ ability: TriggeredAbility) {
+        guard ReleaseSurface.showsCombatResolver(for: viewModel.gameSystemId) else { return }
         if let unitId = viewModel.unitId(matchingSource: ability.source, in: viewModel.activeArmy) {
             combatViewModel.prefillAttackerUnit(unitId: unitId)
         }
@@ -108,7 +115,22 @@ extension BattlePhaseTrackerView {
     }
 
     var deploymentIsComplete: Bool {
-        DeploymentChecklist.completionCount(completedSteps: viewModel.trackerState.completedDeploymentSteps).done
+        if viewModel.usesAlternatingActivation {
+            return ScTmgDeploymentChecklist.completionCount(
+                completedSteps: viewModel.trackerState.completedDeploymentSteps
+            ).done == ScTmgDeploymentChecklistStep.allCases.count
+        }
+        if viewModel.playContext.isCombatPatrol {
+            return CombatPatrolDeploymentChecklist.completionCount(
+                completedSteps: viewModel.trackerState.completedDeploymentSteps
+            ).done == CombatPatrolDeploymentChecklistStep.allCases.count
+        }
+        if viewModel.gameSystemId == .wh40k11e {
+            return Wh40kDeploymentChecklist.completionCount(
+                completedSteps: viewModel.trackerState.completedDeploymentSteps
+            ).done == Wh40kDeploymentChecklistStep.allCases.count
+        }
+        return DeploymentChecklist.completionCount(completedSteps: viewModel.trackerState.completedDeploymentSteps).done
             == DeploymentChecklistStep.allCases.count
     }
 
@@ -133,6 +155,13 @@ extension BattlePhaseTrackerView {
     static func matchupPrefill(for player: PlayerArmySelection) -> MatchupUnitPrefill? {
         guard !player.armyId.isEmpty else { return nil }
         return MatchupUnitPrefill(armyId: player.armyId, unitId: "")
+    }
+
+    static func catalogRepository(for gameSystemId: GameSystemId) -> any SpearheadCatalogRepository {
+        GameSystemCatalogRepository(
+            gameSystemId: gameSystemId.rawValue,
+            repository: BundledPlayCatalogRepository()
+        )
     }
 }
 

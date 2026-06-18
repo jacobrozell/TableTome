@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "armyId": "starscale-warhost",
+  "units": [
+    {
+      "id": "saurus-oldblood-on-carnosaur",
+      "name": "Saurus Oldblood on Carnosaur",
+      "move": "10\"",
+      "save": 4,
+      "health": 14,
+      "control": 5,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "saurus-warriors",
+      "name": "Saurus Warriors",
+      "move": "5\"",
+      "save": 4,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "saurus-warriors-2",
+      "name": "Saurus Warriors",
+      "move": "5\"",
+      "save": 4,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "kroxigor",
+      "name": "Kroxigor",
+      "move": "5\"",
+      "save": 4,
+      "health": 6,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 3
+    }
+  ]
+}

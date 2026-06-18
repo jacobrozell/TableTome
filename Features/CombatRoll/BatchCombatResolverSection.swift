@@ -7,7 +7,7 @@ struct BatchCombatResolverSection: View {
     let accessibilityPrefix: String
     var defenderName: String?
     var defenderWoundsRemaining: Int?
-    var onApplyDamage: ((Int) -> Void)?
+    var onApplyDamage: ((Int, CombatBatchLogContext?) -> Void)?
 
     var body: some View {
         if combatViewModel.canEvaluate {
@@ -142,8 +142,8 @@ struct BatchCombatResolverSection: View {
                     Text(
                         String(
                             localized: """
-                            Save \(batchViewModel.saveTarget)+ with Rend \
-                            \(rendLabel) → roll \(batchViewModel.saveNeededOnDice)+ on each save dice
+                            Save \(batchViewModel.saveTarget)+ with \(penetrationLabel) \
+                            \(penetrationValue) → roll \(batchViewModel.saveNeededOnDice)+ on each save dice
                             """
                         )
                     )
@@ -160,6 +160,21 @@ struct BatchCombatResolverSection: View {
                     .foregroundStyle(.secondary)
             }
         }
+    }
+
+    private var usesWh40kRules: Bool {
+        CombatRollEngineRouter.usesWh40kRules(gameSystemId: combatViewModel.gameSystemId)
+    }
+
+    private var penetrationLabel: String {
+        usesWh40kRules ? String(localized: "AP") : String(localized: "Rend")
+    }
+
+    private var penetrationValue: String {
+        if usesWh40kRules {
+            return "\(batchViewModel.rend)"
+        }
+        return rendLabel
     }
 
     private var rendLabel: String {
@@ -194,7 +209,16 @@ struct BatchCombatResolverSection: View {
                let onApplyDamage,
                let defenderName {
                 Button {
-                    onApplyDamage(evaluation.totalDamage)
+                    let context = CombatBatchLogContext(
+                        attackerUnitName: combatViewModel.selectedAttackerUnit?.name ?? "",
+                        defenderUnitName: defenderName,
+                        weaponName: combatViewModel.selectedAttackerWeapon?.name ?? "",
+                        hits: batchViewModel.successfulHits,
+                        wounds: batchViewModel.successfulWounds,
+                        failedSaves: batchViewModel.failedSaves,
+                        damageDealt: evaluation.totalDamage
+                    )
+                    onApplyDamage(evaluation.totalDamage, context)
                 } label: {
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                         Label(

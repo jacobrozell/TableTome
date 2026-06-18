@@ -21,12 +21,12 @@ struct CombatResolverOptionsSection: View {
                     set: { diceInputMode = $0 }
                 ))
 
-                if !viewModel.matchupBuffs.isEmpty {
-                    if !viewModel.attackerBuffs.isEmpty {
-                        buffGroup(title: String(localized: "Attacker"), buffs: viewModel.attackerBuffs)
+                if !viewModel.resolverMatchupBuffs.isEmpty {
+                    if !viewModel.resolverAttackerBuffs.isEmpty {
+                        buffGroup(title: String(localized: "Attacker"), buffs: viewModel.resolverAttackerBuffs)
                     }
-                    if !viewModel.defenderBuffs.isEmpty {
-                        buffGroup(title: String(localized: "Defender"), buffs: viewModel.defenderBuffs)
+                    if !viewModel.resolverDefenderBuffs.isEmpty {
+                        buffGroup(title: String(localized: "Defender"), buffs: viewModel.resolverDefenderBuffs)
                     }
                 }
 
@@ -92,7 +92,8 @@ struct CombatResolverMultiAttackSection: View {
                     viewModel: multiAttackViewModel,
                     weaponName: viewModel.selectedAttackerWeapon?.name ?? "",
                     ruleSections: ruleSections,
-                    isSimulated: isSimulated
+                    isSimulated: isSimulated,
+                    gameSystemId: viewModel.gameSystemId
                 )
                 .padding(.top, DesignTokens.Spacing.sm)
             } label: {

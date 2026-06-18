@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "armyId": "cursed-shacklehorde",
+  "units": [
+    {
+      "id": "spirit-torment",
+      "name": "Spirit Torment",
+      "move": "8\"",
+      "save": 5,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "chainghasts",
+      "name": "Chainghasts",
+      "move": "8\"",
+      "save": 6,
+      "health": 3,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 2
+    },
+    {
+      "id": "bladegheist-revenants",
+      "name": "Bladegheist Revenants",
+      "move": "8\"",
+      "save": 6,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "bladegheist-revenants-2",
+      "name": "Bladegheist Revenants",
+      "move": "8\"",
+      "save": 6,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "dreadscythe-harridans",
+      "name": "Dreadscythe Harridans",
+      "move": "8\"",
+      "save": 6,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "dreadscythe-harridans-2",
+      "name": "Dreadscythe Harridans",
+      "move": "8\"",
+      "save": 6,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "dreadblade-harrows",
+      "name": "Dreadblade Harrows",
+      "move": "12\"",
+      "save": 6,
+      "health": 3,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 2
+    }
+  ]
+}

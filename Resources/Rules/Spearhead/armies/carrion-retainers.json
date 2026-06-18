@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "armyId": "carrion-retainers",
+  "units": [
+    {
+      "id": "abhorrant-archregent",
+      "name": "Abhorrant Archregent",
+      "move": "6\"",
+      "save": 5,
+      "health": 6,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "cryptguard",
+      "name": "Cryptguard",
+      "move": "6\"",
+      "save": 6,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 10
+    },
+    {
+      "id": "morbheg-knights",
+      "name": "Morbheg Knights",
+      "move": "12\"",
+      "save": 4,
+      "health": 4,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "varghulf-courtier",
+      "name": "Varghulf Courtier",
+      "move": "10\"",
+      "save": 5,
+      "health": 8,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    }
+  ]
+}

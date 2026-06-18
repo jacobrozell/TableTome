@@ -62,20 +62,20 @@ enum OnboardingContent {
             subtitle: String(localized: "Your tabletop companion"),
             body: String(
                 localized: """
-                Offline reference and guided play for Age of Sigmar: Spearhead and Warhammer 40,000: \
-                11th Edition — setup, rules, and in-game reminders in one app.
+                Offline reference and guided play for Spearhead, Warhammer 40,000, Combat Patrol, and StarCraft TMG — \
+                setup, rules, and in-game reminders in one app.
                 """
             )
         ),
         OnboardingPage(
             id: 1,
             symbol: "gamecontroller.fill",
-            title: String(localized: "Two games, one app"),
-            subtitle: String(localized: "Pick the one you're playing"),
+            title: String(localized: "Four ways to play"),
+            subtitle: String(localized: "Pick the game at your table"),
             body: String(
                 localized: """
-                Each game has its own guide, rules reference, and guided match flow. \
-                Choose Spearhead or the new 40k edition below — you can switch anytime from the Play tab.
+                Each game mode has its own guide, searchable rules, and guided match flow. \
+                Choose from the Play tab anytime — Spearhead, 40k, Combat Patrol, or StarCraft TMG.
                 """
             )
         ),
@@ -106,12 +106,12 @@ enum OnboardingContent {
         OnboardingPage(
             id: 4,
             symbol: "doc.text.fill",
-            title: String(localized: "AoS rules at your fingertips"),
-            subtitle: String(localized: "Searchable Spearhead reference"),
+            title: String(localized: "Rules at your fingertips"),
+            subtitle: String(localized: "Searchable offline reference"),
             body: String(
                 localized: """
-                Browse Age of Sigmar Spearhead and core rules offline. Filter, search, and jump \
-                between related sections or back to the guide. More game modes get their own rules tab as they ship.
+                Search rules, glossary terms, warscrolls, and setup steps for the game mode you're playing. \
+                Filter by topic and jump between related sections from the Rules tab.
                 """
             )
         ),
@@ -139,8 +139,8 @@ enum OnboardingContent {
         OnboardingTabTourItem(
             id: "rules",
             symbol: "magnifyingglass",
-            title: String(localized: "AoS Rules"),
-            body: String(localized: "Search Spearhead rules, warscrolls, and glossary offline")
+            title: String(localized: "Rules Search"),
+            body: String(localized: "Search rules, units, glossary terms, and guides for the selected game mode")
         ),
         OnboardingTabTourItem(
             id: "settings",

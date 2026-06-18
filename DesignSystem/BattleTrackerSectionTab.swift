@@ -30,24 +30,65 @@ enum BattleTrackerSectionTab: String, CaseIterable, Identifiable {
     static func suggested(
         phase: BattleTurnPhase,
         deploymentComplete: Bool,
-        roundOpenerIncomplete: Bool
+        roundOpenerIncomplete: Bool,
+        gameSystemId: GameSystemId
     ) -> BattleTrackerSectionTab {
+        suggested(
+            phase: phase,
+            deploymentComplete: deploymentComplete,
+            roundOpenerIncomplete: roundOpenerIncomplete,
+            gameSystemId: gameSystemId.rawValue
+        )
+    }
+
+    static func suggested(
+        phase: BattleTurnPhase,
+        deploymentComplete: Bool,
+        roundOpenerIncomplete: Bool,
+        gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId
+    ) -> BattleTrackerSectionTab {
+        let capabilities = GameSystemPlayContext.context(for: gameSystemId).capabilities
         if !deploymentComplete || roundOpenerIncomplete {
             return .setup
         }
-        if phase.isCombatRelated {
+        if phase.isCombatRelated, capabilities.showsDedicatedCombatTab {
             return .combat
         }
         return .turn
     }
+
+    static func visibleTabs(gameSystemId: GameSystemId) -> [BattleTrackerSectionTab] {
+        visibleTabs(gameSystemId: gameSystemId.rawValue)
+    }
+
+    static func visibleTabs(gameSystemId: String) -> [BattleTrackerSectionTab] {
+        if GameSystemPlayContext.context(for: gameSystemId).capabilities.showsDedicatedCombatTab {
+            return allCases
+        }
+        return [.setup, .turn, .army]
+    }
 }
 
 struct BattleTrackerSectionTabBar: View {
+    let gameSystemId: GameSystemId
     @Binding var selection: BattleTrackerSectionTab
+
+    init(gameSystemId: GameSystemId, selection: Binding<BattleTrackerSectionTab>) {
+        self.gameSystemId = gameSystemId
+        _selection = selection
+    }
+
+    init(gameSystemId: String, selection: Binding<BattleTrackerSectionTab>) {
+        self.init(gameSystemId: GameSystemId(resolving: gameSystemId), selection: selection)
+    }
+
+    private var tabs: [BattleTrackerSectionTab] {
+        BattleTrackerSectionTab.visibleTabs(gameSystemId: gameSystemId)
+    }
 
     var body: some View {
         Picker(String(localized: "Battle tracker section"), selection: $selection) {
-            ForEach(BattleTrackerSectionTab.allCases) { tab in
+            ForEach(tabs) { tab in
                 Label(tab.title, systemImage: tab.systemImage).tag(tab)
             }
         }
@@ -60,23 +101,73 @@ struct StickyPhaseHeader: View {
     let round: Int
     let phaseTitle: String
     let playerName: String
+    var gameSystemId: GameSystemId = .default
+
+    init(
+        round: Int,
+        phaseTitle: String,
+        playerName: String,
+        gameSystemId: GameSystemId = .default
+    ) {
+        self.round = round
+        self.phaseTitle = phaseTitle
+        self.playerName = playerName
+        self.gameSystemId = gameSystemId
+    }
+
+    init(
+        round: Int,
+        phaseTitle: String,
+        playerName: String,
+        gameSystemId: String
+    ) {
+        self.init(
+            round: round,
+            phaseTitle: phaseTitle,
+            playerName: playerName,
+            gameSystemId: GameSystemId(resolving: gameSystemId)
+        )
+    }
+
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
-        HStack(spacing: DesignTokens.Spacing.sm) {
-            Text(SpearheadBattleRules.roundLabel(round: round))
-                .font(.subheadline.weight(.semibold))
-            Text("·")
-                .foregroundStyle(.tertiary)
-            Text(playerName)
-                .font(.subheadline)
-                .lineLimit(1)
-            Spacer(minLength: 0)
-            Text(phaseTitle)
-                .font(.caption.weight(.semibold))
-                .padding(.horizontal, DesignTokens.Spacing.sm)
-                .padding(.vertical, DesignTokens.Spacing.xs)
-                .background(Color.accentColor.opacity(0.15), in: Capsule())
-                .foregroundStyle(Color.accentColor)
+        Group {
+            if dynamicTypeSize.needsLayoutAdaptation {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                    HStack(spacing: DesignTokens.Spacing.sm) {
+                        Text(BattleRules.roundLabel(round: round, gameSystemId: gameSystemId))
+                            .font(.subheadline.weight(.semibold))
+                        Text("·")
+                            .foregroundStyle(.tertiary)
+                        Text(playerName)
+                            .font(.subheadline)
+                    }
+                    Text(phaseTitle)
+                        .font(.caption.weight(.semibold))
+                        .padding(.horizontal, DesignTokens.Spacing.sm)
+                        .padding(.vertical, DesignTokens.Spacing.xs)
+                        .background(Color.accentColor.opacity(0.15), in: Capsule())
+                        .foregroundStyle(Color.accentColor)
+                }
+            } else {
+                HStack(spacing: DesignTokens.Spacing.sm) {
+                    Text(BattleRules.roundLabel(round: round, gameSystemId: gameSystemId))
+                        .font(.subheadline.weight(.semibold))
+                    Text("·")
+                        .foregroundStyle(.tertiary)
+                    Text(playerName)
+                        .font(.subheadline)
+                        .lineLimit(1)
+                    Spacer(minLength: 0)
+                    Text(phaseTitle)
+                        .font(.caption.weight(.semibold))
+                        .padding(.horizontal, DesignTokens.Spacing.sm)
+                        .padding(.vertical, DesignTokens.Spacing.xs)
+                        .background(Color.accentColor.opacity(0.15), in: Capsule())
+                        .foregroundStyle(Color.accentColor)
+                }
+            }
         }
         .padding(.horizontal, DesignTokens.Spacing.md)
         .padding(.vertical, DesignTokens.Spacing.sm)

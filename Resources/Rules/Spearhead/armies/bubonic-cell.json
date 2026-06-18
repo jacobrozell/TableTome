@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "armyId": "bubonic-cell",
+  "units": [
+    {
+      "id": "rotbringer-sorcerer",
+      "name": "Rotbringer Sorcerer",
+      "move": "4\"",
+      "save": 5,
+      "health": 6,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "nurglings",
+      "name": "Nurglings",
+      "move": "4\"",
+      "save": 6,
+      "health": 4,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "nurglings-2",
+      "name": "Nurglings",
+      "move": "4\"",
+      "save": 6,
+      "health": 4,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "beast-of-nurgle",
+      "name": "Beast of Nurgle",
+      "move": "7\"",
+      "save": 5,
+      "health": 8,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "rotmire-creed",
+      "name": "Rotmire Creed",
+      "move": "5\"",
+      "save": 6,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 10
+    }
+  ]
+}

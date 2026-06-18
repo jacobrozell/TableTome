@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "armyId": "fangs-of-the-blood-god",
+  "units": [
+    {
+      "id": "karanak",
+      "name": "Karanak",
+      "move": "8\"",
+      "save": 5,
+      "health": 7,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "flesh-hounds",
+      "name": "Flesh Hounds",
+      "move": "8\"",
+      "save": 6,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "flesh-hounds-2",
+      "name": "Flesh Hounds",
+      "move": "8\"",
+      "save": 6,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "claws-of-karanak",
+      "name": "Claws of Karanak",
+      "move": "6\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 8
+    }
+  ]
+}

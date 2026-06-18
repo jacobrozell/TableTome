@@ -3,6 +3,7 @@ import TabletomeDomain
 
 struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel
+    @EnvironmentObject private var dependencies: AppDependencies
 
     init(viewModel: HomeViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -52,8 +53,21 @@ struct HomeView: View {
         .navigationDestination(for: GuidedMatchLink.self) { link in
             GuidedMatchDestinationView(gameSystemId: link.gameSystemId)
         }
+        .navigationDestination(for: MatchHistoryLink.self) { _ in
+            MatchHistoryListView(viewModel: dependencies.makeMatchHistoryViewModel())
+        }
         .navigationDestination(for: SampleTurnLink.self) { _ in
             SampleTurnWalkthroughView()
+        }
+        .toolbar {
+            if ReleaseSurface.showsMatchHistory {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink(value: MatchHistoryLink()) {
+                        Label(String(localized: "History"), systemImage: "clock.arrow.circlepath")
+                    }
+                    .accessibilityIdentifier("home.matchHistory")
+                }
+            }
         }
         .task { await viewModel.load() }
         .refreshable { await viewModel.load() }
@@ -95,6 +109,12 @@ struct HomeView: View {
         }
         if system.id == "wh40k-11e" {
             return String(localized: "New to 40k or upgrading from 10th? Guided setup and rules")
+        }
+        if system.id == "wh40k-10e-cp" {
+            return String(localized: "Quick box-set battles with guided rules and missions")
+        }
+        if system.id == "sc-tmg" {
+            return String(localized: "Guided match for Terran, Zerg, and Protoss")
         }
         return system.tagline
     }

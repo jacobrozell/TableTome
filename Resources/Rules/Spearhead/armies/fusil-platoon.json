@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "armyId": "fusil-platoon",
+  "units": [
+    {
+      "id": "fusil-major-on-ogor-warhulk",
+      "name": "Fusil-Major on Ogor Warhulk",
+      "move": "5\"",
+      "save": 3,
+      "health": 8,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "alchemite-warforger",
+      "name": "Alchemite Warforger",
+      "move": "5\"",
+      "save": 5,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "freeguild-fusiliers",
+      "name": "Freeguild Fusiliers",
+      "move": "5\"",
+      "save": 4,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "freeguild-fusiliers-2",
+      "name": "Freeguild Fusiliers",
+      "move": "5\"",
+      "save": 4,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "wildercorps-hunters",
+      "name": "Wildercorps Hunters",
+      "move": "5\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 11
+    }
+  ]
+}

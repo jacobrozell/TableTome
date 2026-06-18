@@ -81,6 +81,7 @@ extension BattlePhaseTrackerView {
         if let notice = scoringReminderNotice {
             BattleTrackerScoringReminderBanner(
                 playerName: notice.playerName,
+                gameSystemId: viewModel.gameSystemId,
                 onJumpToScoring: { scrollToVictoryPoints = true },
                 onDismiss: {
                     withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) {
@@ -93,7 +94,7 @@ extension BattlePhaseTrackerView {
     }
 
     func presentRoundOpenerNudgeIfNeeded() {
-        guard let step = viewModel.focusedRoundOpenerStep else { return }
+        guard showsSpearheadBattleChrome, let step = viewModel.focusedRoundOpenerStep else { return }
         let round = viewModel.trackerState.battleRound
         withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) {
             roundOpenerNotice = RoundOpenerNotice(
@@ -104,7 +105,8 @@ extension BattlePhaseTrackerView {
     }
 
     func presentScoringReminderIfNeeded() {
-        guard viewModel.trackerState.currentPhase == .endOfTurn else { return }
+        let scoringPhase: BattleTurnPhase = viewModel.usesAlternatingActivation ? .scoring : .endOfTurn
+        guard viewModel.trackerState.currentPhase == scoringPhase else { return }
         let playerName = viewModel.trackerState.activePlayerIsOne
             ? viewModel.playerOneName
             : viewModel.playerTwoName
@@ -122,19 +124,49 @@ extension BattlePhaseTrackerView {
             ? viewModel.playerOneName
             : viewModel.playerTwoName
         let notice: TurnHandoffNotice?
-        if phase == .endOfTurn {
+        if viewModel.usesAlternatingActivation {
+            if phase == .scoring {
+                notice = TurnHandoffNotice(
+                    title: String(localized: "Scoring phase"),
+                    detail: String(
+                        localized: "Award mission victory points for Supply within 3\", then start the next battle round."
+                    )
+                )
+            } else if playerChanged {
+                notice = TurnHandoffNotice(
+                    title: String(localized: "Pass to \(activeName)"),
+                    detail: String(localized: "\(phase.title) — activate one unit, then Done or Pass.")
+                )
+            } else {
+                notice = nil
+            }
+        } else if phase == .endOfTurn {
             notice = TurnHandoffNotice(
                 title: String(localized: "End of \(activeName)'s turn"),
-                detail: String(
-                    localized: """
-                    Score any victory points, then pass the phone. Battle tactics refresh at the start of the next battle round.
-                    """
-                )
+                detail: viewModel.playContext.usesGuidedBattleTracker
+                    ? String(
+                        localized: """
+                        Score objectives for this turn, then pass the phone. Command Points refresh at the start of \
+                        the next Command phase.
+                        """
+                    )
+                    : String(
+                        localized: """
+                        Score any victory points, then pass the phone. Battle tactics refresh at the start of the \
+                        next battle round.
+                        """
+                    )
             )
         } else if phase == .hero, playerChanged || previousPhase == .endOfTurn {
             notice = TurnHandoffNotice(
                 title: String(localized: "Pass to \(activeName)"),
                 detail: String(localized: "Hero phase — start of their turn.")
+            )
+        } else if phase == .command, viewModel.playContext.isWh40k11e,
+                  playerChanged || previousPhase == .endOfTurn {
+            notice = TurnHandoffNotice(
+                title: String(localized: "Pass to \(activeName)"),
+                detail: String(localized: "Command phase — start of their turn.")
             )
         } else if playerChanged {
             notice = TurnHandoffNotice(

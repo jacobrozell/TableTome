@@ -13,6 +13,7 @@ struct UnitFocusSelection: Equatable, Identifiable {
 }
 
 struct UnitFocusSheet: View {
+    let gameSystemId: GameSystemId
     let army: SpearheadArmy
     let unit: SpearheadUnit
     let playerName: String
@@ -32,6 +33,98 @@ struct UnitFocusSheet: View {
     @Environment(\.dismiss) private var dismiss
     @State private var showsFullWarscroll = false
     @State private var copiedStatReport = false
+
+    init(
+        gameSystemId: GameSystemId,
+        army: SpearheadArmy,
+        unit: SpearheadUnit,
+        playerName: String,
+        woundsRemaining: Int,
+        woundCapacity: Int,
+        catalogHealthPerModel: Int?,
+        effectiveHealthPerModel: Int,
+        hasHealthOverride: Bool,
+        isActivePlayerUnit: Bool,
+        preferredWeaponId: String?,
+        onWoundsChange: @escaping (Int) -> Void,
+        onSetHealthPerModelOverride: @escaping (Int) -> Void,
+        onClearHealthOverride: @escaping () -> Void,
+        onResolveWeapon: @escaping (String) -> Void,
+        onSetAsDefender: @escaping () -> Void
+    ) {
+        self.gameSystemId = gameSystemId
+        self.army = army
+        self.unit = unit
+        self.playerName = playerName
+        self.woundsRemaining = woundsRemaining
+        self.woundCapacity = woundCapacity
+        self.catalogHealthPerModel = catalogHealthPerModel
+        self.effectiveHealthPerModel = effectiveHealthPerModel
+        self.hasHealthOverride = hasHealthOverride
+        self.isActivePlayerUnit = isActivePlayerUnit
+        self.preferredWeaponId = preferredWeaponId
+        self.onWoundsChange = onWoundsChange
+        self.onSetHealthPerModelOverride = onSetHealthPerModelOverride
+        self.onClearHealthOverride = onClearHealthOverride
+        self.onResolveWeapon = onResolveWeapon
+        self.onSetAsDefender = onSetAsDefender
+    }
+
+    init(
+        gameSystemId: String,
+        army: SpearheadArmy,
+        unit: SpearheadUnit,
+        playerName: String,
+        woundsRemaining: Int,
+        woundCapacity: Int,
+        catalogHealthPerModel: Int?,
+        effectiveHealthPerModel: Int,
+        hasHealthOverride: Bool,
+        isActivePlayerUnit: Bool,
+        preferredWeaponId: String?,
+        onWoundsChange: @escaping (Int) -> Void,
+        onSetHealthPerModelOverride: @escaping (Int) -> Void,
+        onClearHealthOverride: @escaping () -> Void,
+        onResolveWeapon: @escaping (String) -> Void,
+        onSetAsDefender: @escaping () -> Void
+    ) {
+        self.init(
+            gameSystemId: GameSystemId(resolving: gameSystemId),
+            army: army,
+            unit: unit,
+            playerName: playerName,
+            woundsRemaining: woundsRemaining,
+            woundCapacity: woundCapacity,
+            catalogHealthPerModel: catalogHealthPerModel,
+            effectiveHealthPerModel: effectiveHealthPerModel,
+            hasHealthOverride: hasHealthOverride,
+            isActivePlayerUnit: isActivePlayerUnit,
+            preferredWeaponId: preferredWeaponId,
+            onWoundsChange: onWoundsChange,
+            onSetHealthPerModelOverride: onSetHealthPerModelOverride,
+            onClearHealthOverride: onClearHealthOverride,
+            onResolveWeapon: onResolveWeapon,
+            onSetAsDefender: onSetAsDefender
+        )
+    }
+
+    private var playContext: GameSystemPlayContext {
+        GameSystemPlayContext.context(for: gameSystemId)
+    }
+
+    private var showsCombatTools: Bool {
+        ReleaseSurface.showsCombatResolver(for: gameSystemId)
+    }
+
+    private var unitDetailTitle: String {
+        if playContext.isWh40k {
+            return String(localized: "Unit details")
+        }
+        if playContext.isStarCraft {
+            return String(localized: "Unit card")
+        }
+        return String(localized: "Full warscroll")
+    }
 
     private var evaluableWeapons: [SpearheadWeapon] {
         unit.weapons.filter(\.isRollEvaluable)
@@ -71,14 +164,16 @@ struct UnitFocusSheet: View {
                     Button(String(localized: "Done")) { dismiss() }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button(String(localized: "Full warscroll")) {
-                        showsFullWarscroll = true
+                    if unit.hasWarscroll || !unit.abilities.isEmpty {
+                        Button(unitDetailTitle) {
+                            showsFullWarscroll = true
+                        }
+                        .accessibilityIdentifier("unitFocus.warscroll.\(unit.id)")
                     }
-                    .accessibilityIdentifier("unitFocus.warscroll.\(unit.id)")
                 }
             }
             .safeAreaInset(edge: .bottom, spacing: 0) {
-                if !isActivePlayerUnit, !evaluableWeapons.isEmpty {
+                if showsCombatTools, !isActivePlayerUnit, !evaluableWeapons.isEmpty {
                     PrimaryButton(
                         title: String(localized: "Set as defender"),
                         accessibilityId: "unitFocus.setDefender.\(unit.id)"
@@ -215,7 +310,7 @@ struct UnitFocusSheet: View {
 
     private func weaponRow(_ weapon: SpearheadWeapon) -> some View {
         let isPreferred = weapon.id == preferredWeaponId
-        let canResolve = isActivePlayerUnit && weapon.isRollEvaluable
+        let canResolve = showsCombatTools && isActivePlayerUnit && weapon.isRollEvaluable
 
         return VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
             HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
@@ -240,7 +335,7 @@ struct UnitFocusSheet: View {
                             .font(.caption.weight(.semibold))
                             .foregroundStyle(Color.accentColor)
                     }
-                    Text(WarscrollStatSummary.weaponCombatProfile(weapon))
+                    Text(WarscrollStatSummary.weaponCombatProfile(weapon, gameSystemId: gameSystemId.rawValue))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     if let ability = weapon.ability, !ability.isEmpty {
@@ -303,13 +398,7 @@ struct UnitFocusSheet: View {
             Text(String(localized: "Match health override"))
                 .font(.subheadline.weight(.semibold))
 
-            Text(
-                String(
-                    localized: """
-                    If your battletome differs from the Spearhead app, set wounds per model for this match only.
-                    """
-                )
-            )
+            Text(matchHealthOverrideDetail)
             .font(.caption)
             .foregroundStyle(.secondary)
             .fixedSize(horizontal: false, vertical: true)
@@ -325,15 +414,11 @@ struct UnitFocusSheet: View {
             .accessibilityIdentifier("unitFocus.healthOverride.\(unit.id)")
 
             if hasHealthOverride, let catalogHealthPerModel {
-                Text(
-                    String(
-                        localized: "Spearhead app: \(catalogHealthPerModel) · Your match: \(effectiveHealthPerModel)"
-                    )
-                )
+                Text("\(catalogHealthValueLabel): \(catalogHealthPerModel) · Your match: \(effectiveHealthPerModel)")
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
-                Button(String(localized: "Use Spearhead value")) {
+                Button(useCatalogHealthValueLabel) {
                     onClearHealthOverride()
                 }
                 .font(.caption.weight(.semibold))
@@ -365,7 +450,7 @@ struct UnitFocusSheet: View {
 
     private var sourceLabel: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-            Text(String(localized: "Source: Spearhead warscroll (bundled PDF data)."))
+            Text(unitSourceLabel)
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
             if hasHealthOverride {
@@ -375,5 +460,57 @@ struct UnitFocusSheet: View {
             }
         }
         .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private var matchHealthOverrideDetail: String {
+        if playContext.isWh40k {
+            return String(
+                localized: """
+                If your datasheet differs from what's bundled here, set wounds per model for this match only.
+                """
+            )
+        }
+        if playContext.isStarCraft {
+            return String(
+                localized: """
+                If your unit card differs from what's bundled here, set health per model for this match only.
+                """
+            )
+        }
+        return String(
+            localized: """
+            If your battletome differs from the Spearhead app, set wounds per model for this match only.
+            """
+        )
+    }
+
+    private var catalogHealthValueLabel: String {
+        if playContext.isWh40k {
+            return String(localized: "Datasheet")
+        }
+        if playContext.isStarCraft {
+            return String(localized: "Unit card")
+        }
+        return String(localized: "Spearhead app")
+    }
+
+    private var useCatalogHealthValueLabel: String {
+        if playContext.isWh40k {
+            return String(localized: "Use datasheet value")
+        }
+        if playContext.isStarCraft {
+            return String(localized: "Use unit card value")
+        }
+        return String(localized: "Use Spearhead value")
+    }
+
+    private var unitSourceLabel: String {
+        if playContext.isWh40k {
+            return String(localized: "Source: bundled unit notes — verify stats on your datasheet.")
+        }
+        if playContext.isStarCraft {
+            return String(localized: "Source: bundled unit card notes — verify stats in Command Center.")
+        }
+        return String(localized: "Source: Spearhead warscroll (bundled PDF data).")
     }
 }

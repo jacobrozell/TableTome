@@ -1,0 +1,460 @@
+{
+  "schemaVersion": 1,
+  "factions": [
+    {
+      "id": "space-marines",
+      "name": "Space Marines",
+      "alliance": "order",
+      "armies": [
+        {
+          "id": "space-marines-combat-patrol",
+          "name": "Strike Force Octavius",
+          "general": "Captain Octavius",
+          "tagline": "Leviathan box Terminator spearhead — Oath of Moment and deep strike",
+          "playstyle": "Terminators and Infernus Marines hold the line while Captain Octavius and Librarian Tantus strike objectives. Oath of Moment lets you focus fire on one priority target each Command phase.",
+          "unitCount": 12,
+          "roster": [
+            "Captain Octavius",
+            "Librarian Tantus",
+            "5 Terminators",
+            "5 Infernus Marines"
+          ],
+          "battleTraitName": "Oath of Moment",
+          "officialRulesURL": "https://warhammer40000.com/wp-content/uploads/2023/06/xw27iUOHPKXBNDnG.pdf",
+          "battleTraits": [
+            {
+              "id": "oath-of-moment",
+              "name": "Oath of Moment",
+              "summary": "In your Command phase, pick one enemy unit. Until your next Command phase, that unit is your Oath of Moment target and you re-roll Hit rolls against it.",
+              "timing": "Each Command phase"
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "champion-duellist",
+              "name": "Champion Duellist",
+              "summary": "Default Warlord upgrade for Captain Octavius — see your patrol datasheet for exact rules.",
+              "newPlayerHint": "Recommended first game — the default Leviathan enhancement.",
+              "timing": "Pre-battle — default Enhancement"
+            },
+            {
+              "id": "oathsworn-determination",
+              "name": "Oathsworn Determination",
+              "summary": "Optional Warlord upgrade — swap from Champion Duellist before battle if you want a different plan.",
+              "newPlayerHint": "Try once you know how Octavius fights on the table.",
+              "timing": "Pre-battle — optional Enhancement"
+            }
+          ],
+          "secondaryObjectives": [
+            {
+              "id": "wrath-of-the-emperor",
+              "name": "Wrath of the Emperor",
+              "summary": "At the end of each phase, score 2 VP if Captain Octavius destroyed one or more enemy models that phase.",
+              "newPlayerHint": "Default pick — send your Captain into the fight.",
+              "timing": "End of each phase"
+            },
+            {
+              "id": "shock-tactics",
+              "name": "Shock Tactics",
+              "summary": "At the end of your turn, score 5 VP if you control one or more objectives your opponent controlled at the start of that turn.",
+              "newPlayerHint": "Objective-flip plan for mobile Terminators.",
+              "timing": "End of your turn"
+            }
+          ],
+          "stratagems": [
+            {
+              "id": "gene-wrought-resilience",
+              "name": "Gene-wrought Resilience",
+              "summary": "When targeted, subtract 1 from Wound rolls if the attack's Strength exceeds your unit's Toughness.",
+              "cpCost": 1,
+              "phase": "Shooting or Fight",
+              "isReactive": true
+            },
+            {
+              "id": "veteran-instincts",
+              "name": "Veteran Instincts",
+              "summary": "Re-roll Wound rolls of 1 in Fight; re-roll all Wounds vs Monsters or Vehicles.",
+              "cpCost": 1,
+              "phase": "Fight"
+            },
+            {
+              "id": "duty-and-honour",
+              "name": "Duty and Honour",
+              "summary": "At end of Command, lock an objective you control even after moving off it.",
+              "cpCost": 1,
+              "phase": "Command"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adepta-sororitas",
+      "name": "Adepta Sororitas",
+      "alliance": "order",
+      "armies": []
+    },
+    {
+      "id": "adeptus-custodes",
+      "name": "Adeptus Custodes",
+      "alliance": "order",
+      "armies": []
+    },
+    {
+      "id": "adeptus-mechanicus",
+      "name": "Adeptus Mechanicus",
+      "alliance": "order",
+      "armies": []
+    },
+    {
+      "id": "astra-militarum",
+      "name": "Astra Militarum",
+      "alliance": "order",
+      "armies": []
+    },
+    {
+      "id": "grey-knights",
+      "name": "Grey Knights",
+      "alliance": "order",
+      "armies": []
+    },
+    {
+      "id": "imperial-agents",
+      "name": "Imperial Agents",
+      "alliance": "order",
+      "armies": []
+    },
+    {
+      "id": "imperial-knights",
+      "name": "Imperial Knights",
+      "alliance": "order",
+      "armies": []
+    },
+    {
+      "id": "chaos-space-marines",
+      "name": "Chaos Space Marines",
+      "alliance": "chaos",
+      "armies": []
+    },
+    {
+      "id": "chaos-daemons",
+      "name": "Chaos Daemons",
+      "alliance": "chaos",
+      "armies": []
+    },
+    {
+      "id": "chaos-knights",
+      "name": "Chaos Knights",
+      "alliance": "chaos",
+      "armies": []
+    },
+    {
+      "id": "death-guard",
+      "name": "Death Guard",
+      "alliance": "chaos",
+      "armies": []
+    },
+    {
+      "id": "emperors-children",
+      "name": "Emperor's Children",
+      "alliance": "chaos",
+      "armies": []
+    },
+    {
+      "id": "thousand-sons",
+      "name": "Thousand Sons",
+      "alliance": "chaos",
+      "armies": []
+    },
+    {
+      "id": "world-eaters",
+      "name": "World Eaters",
+      "alliance": "chaos",
+      "armies": []
+    },
+    {
+      "id": "orks",
+      "name": "Orks",
+      "alliance": "destruction",
+      "armies": []
+    },
+    {
+      "id": "aeldari",
+      "name": "Aeldari",
+      "alliance": "destruction",
+      "armies": []
+    },
+    {
+      "id": "drukhari",
+      "name": "Drukhari",
+      "alliance": "destruction",
+      "armies": []
+    },
+    {
+      "id": "genestealer-cults",
+      "name": "Genestealer Cults",
+      "alliance": "destruction",
+      "armies": []
+    },
+    {
+      "id": "leagues-of-votann",
+      "name": "Leagues of Votann",
+      "alliance": "destruction",
+      "armies": []
+    },
+    {
+      "id": "necrons",
+      "name": "Necrons",
+      "alliance": "destruction",
+      "armies": []
+    },
+    {
+      "id": "tau-empire",
+      "name": "T'au Empire",
+      "alliance": "destruction",
+      "armies": []
+    },
+    {
+      "id": "tyranids",
+      "name": "Tyranids",
+      "alliance": "destruction",
+      "armies": [
+        {
+          "id": "tyranids-combat-patrol",
+          "name": "The Vardenghast Swarm",
+          "general": "Terror of Vardenghast",
+          "tagline": "Leviathan box swarm — Synapse, deep strike, and teeming Termagants",
+          "playstyle": "Termagants and Barbgaunts flood objectives while the Winged Prime and Psychophage hit weak points. Von Ryan's Leapers infiltrate and the Teeming Broods stratagem can recycle Termagants.",
+          "unitCount": 30,
+          "roster": [
+            "Terror of Vardenghast (Winged Tyranid Prime)",
+            "Psychophage",
+            "20 Termagants",
+            "5 Barbgaunts",
+            "3 Von Ryan's Leapers"
+          ],
+          "battleTraitName": "Synapse",
+          "officialRulesURL": "https://warhammer40000.com/wp-content/uploads/2023/06/lbmtxXmWRsCoIL5m.pdf",
+          "battleTraits": [
+            {
+              "id": "synapse",
+              "name": "Synapse",
+              "summary": "Tyranids units within 6\" of a Synapse model take Battle-shock tests on 3D6 instead of 2D6.",
+              "timing": "Passive"
+            },
+            {
+              "id": "shadow-in-the-warp",
+              "name": "Shadow in the Warp",
+              "summary": "Once per battle in either Command phase, each enemy unit takes a Battle-shock test.",
+              "timing": "Once per battle, Command phase"
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "psychostatic-veil",
+              "name": "Psychostatic Veil",
+              "summary": "Default — Terror of Vardenghast gains Lone Operative, 4+ invulnerable save, and -1 to Hit in melee against the bearer.",
+              "newPlayerHint": "Safest first-game pick for a flying Warlord.",
+              "timing": "Pre-battle — default Enhancement"
+            },
+            {
+              "id": "secretion-goad",
+              "name": "Secretion Goad",
+              "summary": "Once per turn, a friendly Tyranids unit within 6\" improves AP by 1 when selected to shoot or fight.",
+              "newPlayerHint": "Aggressive pick when Barbgaunts or Termagants need to punch through.",
+              "timing": "Pre-battle — optional Enhancement"
+            }
+          ],
+          "secondaryObjectives": [
+            {
+              "id": "alpha-xenoform",
+              "name": "Alpha Xenoform",
+              "summary": "At the end of each phase, score 4 VP if your Winged Tyranid Prime destroyed one or more enemy models that phase.",
+              "newPlayerHint": "Default — hunt with the Terror of Vardenghast.",
+              "timing": "End of each phase"
+            },
+            {
+              "id": "chitinous-tide",
+              "name": "Chitinous Tide",
+              "summary": "At the end of your turn, score 5 VP if you control objectives within 6\" of the opponent's deployment zone.",
+              "newPlayerHint": "Push Termagants deep for board control.",
+              "timing": "End of your turn"
+            }
+          ],
+          "stratagems": [
+            {
+              "id": "hyper-reactive",
+              "name": "Hyper-reactive",
+              "summary": "When targeted, subtract 1 from Hit rolls against your Infantry unit.",
+              "cpCost": 1,
+              "phase": "Shooting or Fight",
+              "isReactive": true
+            },
+            {
+              "id": "voracious-assault",
+              "name": "Voracious Assault",
+              "summary": "Re-roll Hit rolls when attacking the closest eligible target in Shooting or Fight.",
+              "cpCost": 1,
+              "phase": "Shooting or Fight"
+            },
+            {
+              "id": "teeming-broods",
+              "name": "Teeming Broods",
+              "summary": "Return D6 Termagant models, or spawn a 2D6-model unit in Reserves if the unit was destroyed.",
+              "cpCost": 1,
+              "phase": "Movement"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "missions": [
+    {
+      "id": "clash-of-patrols",
+      "name": "Clash of Patrols",
+      "d6Result": 1,
+      "recommendedForFirstGame": true,
+      "missionRuleSummary": "Retrieve Intelligence — from round 2, recover data from controlled objectives once each (Warlord on field grants 1CP).",
+      "primaryObjectiveSummary": "Take and Hold — 5 VP per objective you control at end of Command phase (rounds 2–4).",
+      "scoringNotes": "Round 5: second-turn player scores at end of turn."
+    },
+    {
+      "id": "archeotech-recovery",
+      "name": "Archeotech Recovery",
+      "d6Result": 2,
+      "missionRuleSummary": "Irradiated Power Cells — remove No Man's Land markers in rounds 3–5.",
+      "primaryObjectiveSummary": "Recover Archeotech — 5 VP per objective at end of Command phase; +10 VP for last NML objective.",
+      "scoringNotes": "Gamma/Beta markers shift each round — track which objective is hot."
+    },
+    {
+      "id": "forward-outpost",
+      "name": "Forward Outpost",
+      "d6Result": 3,
+      "missionRuleSummary": "Sabotage Enemy Comms — control opponent's deployment objective to block their Command Re-roll.",
+      "primaryObjectiveSummary": "Vital Ground — 5 VP per NML objective + 10 VP for opponent's zone objective.",
+      "scoringNotes": "Round 5 second-turn player scores at end of turn."
+    },
+    {
+      "id": "scorched-earth",
+      "name": "Scorched Earth",
+      "d6Result": 4,
+      "missionRuleSummary": "Raze and Ruin — raze controlled objectives from round 2 (Attacker never A, Defender never B).",
+      "primaryObjectiveSummary": "5 VP if you control any objective; +5 if more than opponent; +10 if you razed this turn.",
+      "scoringNotes": "Round 5 second-turn player scores at end of turn."
+    },
+    {
+      "id": "sweeping-raid",
+      "name": "Sweeping Raid",
+      "d6Result": 5,
+      "missionRuleSummary": "Supply Lines — D6 4+ for 1CP when you control your deployment objective at start of Command.",
+      "primaryObjectiveSummary": "Priority Targets — 5 VP per objective (rounds 2–4); end-game bonus for zone markers.",
+      "scoringNotes": "Attacker scores C/D at battle end; Defender scores A/B."
+    },
+    {
+      "id": "display-of-might",
+      "name": "Display of Might",
+      "d6Result": 6,
+      "missionRuleSummary": "Break Their Spirit + Claim Sites — Insane Bravery only near Warlord; Characters claim NML sites.",
+      "primaryObjectiveSummary": "Symbolic Sites — up to four 5 VP scoring conditions per turn.",
+      "scoringNotes": "Round 5 second-turn player scores at end of turn."
+    }
+  ],
+  "matchSteps": [
+    {
+      "id": "choose-armies",
+      "order": 1,
+      "title": "Choose Combat Patrols",
+      "summary": "Each player picks a faction and fixed patrol roster.",
+      "body": "Combat Patrol armies are fixed box-set rosters — no list building. Pick the patrol each player fields today. Use Starter Matchup for the Leviathan Space Marines vs Tyranids box.",
+      "tips": [
+        "Tap Use Starter Matchup for Strike Force Octavius vs The Vardenghast Swarm.",
+        "Download faction Combat Patrol PDFs from Warhammer Community for full datasheets."
+      ]
+    },
+    {
+      "id": "pick-enhancement",
+      "order": 2,
+      "title": "Pick Enhancement & Secondary",
+      "summary": "Each player picks one Enhancement and one Secondary Objective.",
+      "body": "Every Combat Patrol lists two Enhancements (default and optional) and two Secondary Objectives. Pick one of each per player before setup continues. Defaults are marked on your patrol sheet.",
+      "tips": [
+        "First game? Stick with the default Enhancement and secondary on each patrol sheet.",
+        "Enhancements upgrade your Warlord; secondaries shape how you score beyond the mission primary."
+      ],
+      "relatedRuleSectionId": "cp-pre-battle"
+    },
+    {
+      "id": "determine-mission",
+      "order": 3,
+      "title": "Pick Mission",
+      "summary": "Roll D6 or choose one of six Combat Patrol missions.",
+      "body": "Agree on a mission — roll a D6 or pick Clash of Patrols for your first game. Each mission has its own deployment map, mission rule, and primary objective.",
+      "tips": [
+        "Clash of Patrols is the recommended first mission.",
+        "Open Missions Reference in the Game Guide for securing rules and scoring."
+      ],
+      "relatedRuleSectionId": "cp-missions"
+    },
+    {
+      "id": "setup-battlefield",
+      "order": 4,
+      "title": "Set Up Battlefield",
+      "summary": "Terrain, objectives, attacker and defender.",
+      "body": "Place terrain on a 44\"×30\" board. Set up objective markers from the mission map. Roll off — winner picks attacker or defender. Attacker uses the Attacker deployment zone on the mission map.",
+      "tips": [
+        "Objectives are 40mm markers unless your mission says otherwise.",
+        "Attacker deploys second but chooses who takes first turn later."
+      ],
+      "relatedRuleSectionId": "cp-pre-battle"
+    },
+    {
+      "id": "declare-formations",
+      "order": 5,
+      "title": "Declare Formations",
+      "summary": "Patrol Squads splits, Leaders, Transports, Reserves.",
+      "body": "Split Termagants into two 10-model units if desired. Attach Leaders to Bodyguard units. Set up units in Reserves or Deep Strike as listed on datasheets. No arrivals in battle round 1; arrive by end of round 3 or destroyed.",
+      "tips": [
+        "Captain Octavius and Librarian Tantus can lead the Terminator Squad.",
+        "Von Ryan's Leapers have Infiltrators — set up accordingly."
+      ],
+      "relatedRuleSectionId": "glossary-cp-patrol-squads"
+    },
+    {
+      "id": "deploy-armies",
+      "order": 6,
+      "title": "Deploy Armies",
+      "summary": "Defender deploys first, then attacker.",
+      "body": "Defender sets up wholly within their deployment zone, then the attacker deploys. Units in Reserves are declared now but not placed on the board.",
+      "tips": [
+        "Check mission map for deployment zone boundaries.",
+        "Confirm Battle Ready (+10 VP) with your opponent before the first turn."
+      ],
+      "relatedRuleSectionId": "cp-reserves"
+    },
+    {
+      "id": "roll-first-turn",
+      "order": 7,
+      "title": "Roll for First Turn",
+      "summary": "Attacker rolls — winner picks who goes first.",
+      "body": "The attacker rolls off against the defender. The winner chooses which player takes the first turn. Record the choice — it affects round 5 scoring in many missions.",
+      "tips": [
+        "Going second can score primaries at end of turn on battle round 5.",
+        "Mark first turn in the checklist when decided."
+      ],
+      "relatedRuleSectionId": "10e-turn-overview"
+    },
+    {
+      "id": "fight-battle",
+      "order": 8,
+      "title": "Fight the Battle",
+      "summary": "Five rounds — Command through Fight, score VP to win.",
+      "body": "Play five battle rounds. Each turn: Command, Movement, Shooting, Charge, Fight. Secure objectives with Battleline units in Command phase. Track secondaries, stratagems, and Battle Ready bonus.",
+      "tips": [
+        "Battle-shock tests happen in the Command phase.",
+        "Round 5 scoring reminder: second-turn player may score at end of turn."
+      ],
+      "relatedRuleSectionId": "cp-scoring"
+    }
+  ]
+}

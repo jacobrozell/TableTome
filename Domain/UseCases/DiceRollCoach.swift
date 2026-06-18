@@ -11,9 +11,19 @@ public enum DiceRollCoach: Sendable {
         }
     }
 
-    public static func hitHint(input: AttackRollInput) -> Hint {
+    public static func hitHint(input: AttackRollInput, gameSystemId: String = "aos-spearhead") -> Hint {
         if input.hitRoll == 1 {
             return Hint(text: String(localized: "Natural 1 — always fails."), passed: false)
+        }
+        if CombatRollEngineRouter.usesWh40kRules(gameSystemId: gameSystemId) {
+            if input.hitRoll == 6 {
+                return Hint(text: String(localized: "Unmodified 6 — automatic hit."), passed: true)
+            }
+            let passed = Wh40k10eCombatRollResolution.hitSucceeded(input)
+            return Hint(
+                text: String(localized: "Rolled \(input.hitRoll) — need \(input.hitTarget)+. \(passed ? "Pass" : "Fail")."),
+                passed: passed
+            )
         }
         if CombatRollResolution.criticalHit(input) {
             return Hint(text: String(localized: "Critical hit — automatic wound."), passed: true)
@@ -26,7 +36,20 @@ public enum DiceRollCoach: Sendable {
         )
     }
 
-    public static func woundHint(input: AttackRollInput) -> Hint {
+    public static func woundHint(input: AttackRollInput, gameSystemId: String = "aos-spearhead") -> Hint {
+        if CombatRollEngineRouter.usesWh40kRules(gameSystemId: gameSystemId) {
+            if input.woundRoll == 1 {
+                return Hint(text: String(localized: "Natural 1 — always fails."), passed: false)
+            }
+            if input.woundRoll == 6 {
+                return Hint(text: String(localized: "Unmodified 6 — automatic wound."), passed: true)
+            }
+            let passed = Wh40k10eCombatRollResolution.woundSucceeded(input)
+            return Hint(
+                text: String(localized: "Rolled \(input.woundRoll) — need \(input.woundTarget)+. \(passed ? "Pass" : "Fail")."),
+                passed: passed
+            )
+        }
         if CombatRollResolution.criticalHit(input) {
             return Hint(text: String(localized: "Auto-wound from critical hit."), passed: true)
         }
@@ -44,12 +67,22 @@ public enum DiceRollCoach: Sendable {
         )
     }
 
-    public static func saveHint(input: AttackRollInput) -> Hint {
+    public static func saveHint(input: AttackRollInput, gameSystemId: String = "aos-spearhead") -> Hint {
         if CombatRollResolution.skipsSaveRoll(input) {
             return Hint(text: String(localized: "No save roll — mortal damage."), passed: false)
         }
         if input.saveRoll == 1 {
             return Hint(text: String(localized: "Natural 1 — always fails."), passed: false)
+        }
+        if CombatRollEngineRouter.usesWh40kRules(gameSystemId: gameSystemId) {
+            let needed = Wh40k10eCombatRollResolution.effectiveSaveNeeded(input)
+            let passed = Wh40k10eCombatRollResolution.saveSucceeded(input)
+            let outcome = passed ? String(localized: "Saved") : String(localized: "Failed save")
+            let apNote = input.rend > 0 ? String(localized: " (AP \(input.rend))") : ""
+            return Hint(
+                text: String(localized: "Rolled \(input.saveRoll) vs \(needed)+\(apNote) — \(outcome)."),
+                passed: passed
+            )
         }
         let effective = CombatRollResolution.effectiveSave(input)
         let passed = CombatRollResolution.saveSucceeded(input)
@@ -71,7 +104,8 @@ public enum DiceRollCoach: Sendable {
         return Hint(text: text, passed: passed)
     }
 
-    public static func wardHint(input: AttackRollInput) -> Hint? {
+    public static func wardHint(input: AttackRollInput, gameSystemId: String = "aos-spearhead") -> Hint? {
+        guard !CombatRollEngineRouter.usesWh40kRules(gameSystemId: gameSystemId) else { return nil }
         guard let wardTarget = input.wardTarget, input.wardRoll != nil else { return nil }
         let wardRoll = input.wardRoll ?? 4
         if wardRoll == 1 {

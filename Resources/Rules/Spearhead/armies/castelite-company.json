@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "armyId": "castelite-company",
+  "units": [
+    {
+      "id": "freeguild-cavalier-marshal",
+      "name": "Freeguild Cavalier-Marshal",
+      "move": "10\"",
+      "save": 3,
+      "health": 7,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "freeguild-steelhelms",
+      "name": "Freeguild Steelhelms",
+      "move": "5\"",
+      "save": 4,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "freeguild-steelhelms-2",
+      "name": "Freeguild Steelhelms",
+      "move": "5\"",
+      "save": 4,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "freeguild-cavaliers",
+      "name": "Freeguild Cavaliers",
+      "move": "10\"",
+      "save": 3,
+      "health": 3,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "ironweld-great-cannon",
+      "name": "Ironweld Great Cannon",
+      "move": "3\"",
+      "save": 4,
+      "health": 8,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    }
+  ]
+}

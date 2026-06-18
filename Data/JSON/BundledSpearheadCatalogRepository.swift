@@ -59,6 +59,9 @@ public final class BundledSpearheadCatalogRepository: SpearheadCatalogRepository
     private static let excludedResourceNames: Set<String> = [
         "spearhead-catalog-v1",
         "spearhead-catalog-minimal",
+        "wh40k-catalog-v1",
+        "combat-patrol-catalog-v1",
+        "sc-tmg-catalog-v1",
         "rules-v1"
     ]
 
@@ -103,7 +106,8 @@ public final class BundledSpearheadCatalogRepository: SpearheadCatalogRepository
         return SpearheadCatalog(
             schemaVersion: base.schemaVersion,
             factions: factions,
-            matchSteps: base.matchSteps
+            matchSteps: base.matchSteps,
+            missions: base.missions
         )
     }
 }

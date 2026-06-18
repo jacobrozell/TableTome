@@ -1,3 +1,4 @@
+import SwiftUI
 import XCTest
 @testable import Tabletome
 
@@ -80,5 +81,21 @@ final class TabletomeLayoutTests: XCTestCase {
                 isAccessibilitySize: true
             )
         )
+        XCTAssertFalse(
+            TabletomeLayout.usesSideBySideLayout(
+                idiom: .pad,
+                horizontalSizeClass: .regular,
+                verticalSizeClass: .regular,
+                isAccessibilitySize: DynamicTypeSize.xxxLarge.needsLayoutAdaptation
+            )
+        )
+    }
+
+    func testNeedsLayoutAdaptation() {
+        XCTAssertFalse(DynamicTypeSize.large.needsLayoutAdaptation)
+        XCTAssertFalse(DynamicTypeSize.xxLarge.needsLayoutAdaptation)
+        XCTAssertTrue(DynamicTypeSize.xxxLarge.needsLayoutAdaptation)
+        XCTAssertTrue(DynamicTypeSize.accessibility1.needsLayoutAdaptation)
+        XCTAssertTrue(DynamicTypeSize.accessibility5.needsLayoutAdaptation)
     }
 }

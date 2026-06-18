@@ -55,6 +55,36 @@ final class MatchSyncCodecTests: XCTestCase {
         XCTAssertEqual(decoded.matchState.playerOne.playerName, "Alice")
         XCTAssertEqual(decoded.trackerState.battleRound, 2)
     }
+
+    func testCombatPatrolSyncRoundTripUsesGameSystemId() throws {
+        var tracker = BattleTrackerState()
+        tracker.securedObjectiveIds = ["A", "B"]
+        tracker.usedStratagemIds = ["space-marines-combat-patrol:duty-and-honour"]
+        let snapshot = MatchSyncSnapshot(
+            gameSystemId: "wh40k-10e-cp",
+            matchState: GuidedMatchState(selectedMissionId: "clash-of-patrols"),
+            trackerState: tracker
+        )
+
+        MatchSetupStore.save(snapshot.matchState, gameSystemId: "wh40k-10e-cp", notifySync: false)
+        BattleTrackerStore.save(snapshot.trackerState, gameSystemId: "wh40k-10e-cp", notifySync: false)
+        defer {
+            MatchSetupStore.reset(gameSystemId: "wh40k-10e-cp")
+            BattleTrackerStore.reset(gameSystemId: "wh40k-10e-cp")
+        }
+
+        let code = try XCTUnwrap(MatchSyncCodec.encode(snapshot))
+        MatchSetupStore.reset(gameSystemId: "wh40k-10e-cp")
+        BattleTrackerStore.reset(gameSystemId: "wh40k-10e-cp")
+
+        let decoded = try XCTUnwrap(MatchSyncCodec.decode(code))
+        MatchSyncCodec.apply(decoded)
+
+        XCTAssertEqual(MatchSetupStore.load(gameSystemId: "wh40k-10e-cp").selectedMissionId, "clash-of-patrols")
+        let loaded = BattleTrackerStore.load(gameSystemId: "wh40k-10e-cp")
+        XCTAssertEqual(loaded.securedObjectiveIds, ["A", "B"])
+        XCTAssertTrue(loaded.usedStratagemIds.contains("space-marines-combat-patrol:duty-and-honour"))
+    }
 }
 
 final class WeaponAttackRollCountTests: XCTestCase {
@@ -169,6 +199,14 @@ final class SpearheadGotchaCatalogTests: XCTestCase {
         XCTAssertFalse(SpearheadGotchaCatalog.gotchas(for: "vigilant-brotherhood").isEmpty)
         XCTAssertFalse(SpearheadGotchaCatalog.gotchas(for: "gnawfeast-clawpack").isEmpty)
         XCTAssertTrue(SpearheadGotchaCatalog.gotchas(for: "unknown").isEmpty)
+    }
+}
+
+final class CombatPatrolGotchaCatalogTests: XCTestCase {
+    func testLeviathanArmiesHaveGotchas() {
+        XCTAssertEqual(CombatPatrolGotchaCatalog.gotchas(for: "space-marines-combat-patrol").count, 3)
+        XCTAssertEqual(CombatPatrolGotchaCatalog.gotchas(for: "tyranids-combat-patrol").count, 3)
+        XCTAssertTrue(CombatPatrolGotchaCatalog.gotchas(for: "unknown").isEmpty)
     }
 }
 

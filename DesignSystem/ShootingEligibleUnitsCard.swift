@@ -4,24 +4,65 @@ import TabletomeDomain
 struct ShootingEligibleUnitsCard: View {
     let units: [SpearheadUnit]
     let armyName: String
+    var gameSystemId: GameSystemId = .default
     var onSelectUnit: ((String) -> Void)?
+
+    init(
+        units: [SpearheadUnit],
+        armyName: String,
+        gameSystemId: GameSystemId = .default,
+        onSelectUnit: ((String) -> Void)? = nil
+    ) {
+        self.units = units
+        self.armyName = armyName
+        self.gameSystemId = gameSystemId
+        self.onSelectUnit = onSelectUnit
+    }
+
+    init(
+        units: [SpearheadUnit],
+        armyName: String,
+        gameSystemId: String,
+        onSelectUnit: ((String) -> Void)? = nil
+    ) {
+        self.init(
+            units: units,
+            armyName: armyName,
+            gameSystemId: GameSystemId(resolving: gameSystemId),
+            onSelectUnit: onSelectUnit
+        )
+    }
+
+    private var playContext: GameSystemPlayContext {
+        GameSystemPlayContext.context(for: gameSystemId)
+    }
+
+    private var helperText: String {
+        if playContext.isWh40k {
+            return String(
+                localized: """
+                These \(armyName) units have ranged weapons for the Shooting phase. Tap a unit to open the dice \
+                resolver below.
+                """
+            )
+        }
+        return String(
+            localized: """
+            These \(armyName) units have ranged weapons for the shooting phase. Weapons with Shoot in Combat can \
+            also fire during the fight phase — check the warscroll.
+            """
+        )
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
             Label(String(localized: "Units that can shoot"), systemImage: "scope")
                 .font(.headline)
 
-            Text(
-                String(
-                    localized: """
-                    These \(armyName) units have ranged weapons for the shooting phase. Weapons with \
-                    Shoot in Combat can also fire during the fight phase — check the warscroll.
-                    """
-                )
-            )
-            .font(.caption)
-            .foregroundStyle(.secondary)
-            .fixedSize(horizontal: false, vertical: true)
+            Text(helperText)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
 
             if units.isEmpty {
                 Text(String(localized: "No ranged weapons in this army list."))

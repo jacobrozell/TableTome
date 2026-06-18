@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "armyId": "tithe-reaper-echelon",
+  "units": [
+    {
+      "id": "mortisan-soulreaper",
+      "name": "Mortisan Soulreaper",
+      "move": "5\"",
+      "save": 4,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "mortek-guard",
+      "name": "Mortek Guard",
+      "move": "4\"",
+      "save": 4,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 10
+    },
+    {
+      "id": "mortek-guard-2",
+      "name": "Mortek Guard",
+      "move": "4\"",
+      "save": 4,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 10
+    },
+    {
+      "id": "kavalos-deathriders",
+      "name": "Kavalos Deathriders",
+      "move": "10\"",
+      "save": 4,
+      "health": 3,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "gothizzar-harvester",
+      "name": "Gothizzar Harvester",
+      "move": "6\"",
+      "save": 4,
+      "health": 10,
+      "control": 5,
+      "keywords": [],
+      "modelCount": 1
+    }
+  ]
+}

@@ -27,8 +27,17 @@ struct GameSystemRulesReferenceView: View {
             Section {
                 Picker(String(localized: "Category"), selection: $selectedCategory) {
                     Text(String(localized: "All")).tag(RuleSectionCategory?.none)
-                    ForEach(RuleSectionCategory.allCases, id: \.self) { category in
-                        Text(categoryLabel(category)).tag(Optional(category))
+                    ForEach(
+                        GameSystemRulesLabels.availableCategories(gameSystemId: gameSystem.id),
+                        id: \.self
+                    ) { category in
+                        Text(
+                            GameSystemRulesLabels.categoryLabel(
+                                category,
+                                gameSystemId: gameSystem.id
+                            )
+                        )
+                        .tag(Optional(category))
                     }
                 }
                 .accessibilityIdentifier("guide.rules.categoryPicker.\(gameSystem.id)")
@@ -46,6 +55,7 @@ struct GameSystemRulesReferenceView: View {
                             RuleSectionRow(
                                 title: section.title,
                                 category: section.category,
+                                gameSystemId: gameSystem.id,
                                 accessibilityId: "guide.rules.section.\(section.id)"
                             )
                         }
@@ -57,13 +67,5 @@ struct GameSystemRulesReferenceView: View {
         .searchable(text: $searchText, prompt: GameSystemRulesLabels.rulesSearchPrompt(gameSystemId: gameSystem.id))
         .navigationTitle(GameSystemRulesLabels.rulesReferenceTitle(gameSystemId: gameSystem.id))
         .accessibilityIdentifier("guide.rulesList.\(gameSystem.id)")
-    }
-
-    private func categoryLabel(_ category: RuleSectionCategory) -> String {
-        switch category {
-        case .core: String(localized: "Core")
-        case .spearhead: String(localized: "Spearhead")
-        case .glossary: String(localized: "Glossary")
-        }
     }
 }

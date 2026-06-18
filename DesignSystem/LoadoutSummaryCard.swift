@@ -6,6 +6,7 @@ struct LoadoutSummaryCard: View {
     let armyName: String
     let regimentAbility: ArmyRuleOption?
     let enhancement: ArmyRuleOption?
+    var secondaryObjective: ArmyRuleOption? = nil
     var isAttacker: Bool = false
 
     var body: some View {
@@ -25,7 +26,7 @@ struct LoadoutSummaryCard: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
 
-            if regimentAbility != nil || enhancement != nil {
+            if regimentAbility != nil || enhancement != nil || secondaryObjective != nil {
                 Divider()
                 if let regimentAbility {
                     loadoutRow(
@@ -39,8 +40,14 @@ struct LoadoutSummaryCard: View {
                         option: enhancement
                     )
                 }
+                if let secondaryObjective {
+                    loadoutRow(
+                        title: String(localized: "Secondary Objective"),
+                        option: secondaryObjective
+                    )
+                }
             } else {
-                Text(String(localized: "Pick regiment ability and enhancement in match setup."))
+                Text(String(localized: "Complete loadout choices in match setup."))
                     .font(.caption)
                     .foregroundStyle(.tertiary)
             }

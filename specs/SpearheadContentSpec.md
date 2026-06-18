@@ -142,4 +142,4 @@ Weapons with numeric `damage` link to the Roll Evaluator with prefilled hit/woun
 |-------|-------|
 | Target release | v0.2 |
 | Last verified | 2026-06-17 |
-| Code paths | `Domain/Models/SpearheadArmyDetail.swift`, `Domain/UseCases/SpearheadArmyMerger.swift`, `Domain/UseCases/SpearheadCatalogValidator.swift`, `Data/JSON/BundledSpearheadCatalogRepository.swift`, `Resources/Rules/Spearhead/armies/` |
+| Code paths | `Domain/Models/SpearheadArmyDetail.swift`, `Domain/UseCases/SpearheadArmyMerger.swift`, `Domain/UseCases/SpearheadCatalogValidator.swift`, `Data/JSON/BundledSpearheadCatalogRepository.swift`, `Resources/Rules/Spearhead/armies/`, `Scripts/import_spearhead_from_wahapedia.py`, `Scripts/import_spearhead_warscrolls.py`, `Tests/Unit/SpearheadCatalogCompletenessTests.swift`, `Tests/Unit/SpearheadWarscrollAuditTests.swift` |

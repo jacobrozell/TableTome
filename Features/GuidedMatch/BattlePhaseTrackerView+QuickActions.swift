@@ -6,7 +6,8 @@ extension BattlePhaseTrackerView {
         BattleTrackerSectionTab.suggested(
             phase: viewModel.trackerState.currentPhase,
             deploymentComplete: deploymentIsComplete,
-            roundOpenerIncomplete: viewModel.roundOpenerIsIncomplete
+            roundOpenerIncomplete: viewModel.roundOpenerIsIncomplete,
+            gameSystemId: viewModel.gameSystemId
         )
     }
 
@@ -21,6 +22,7 @@ extension BattlePhaseTrackerView {
             : viewModel.playerTwoName
         return BattleTrackerQuickActions.actions(
             phase: viewModel.trackerState.currentPhase,
+            gameSystemId: viewModel.gameSystemId,
             deploymentComplete: deploymentIsComplete,
             roundOpenerIncomplete: viewModel.roundOpenerIsIncomplete,
             shootingEligibleCount: viewModel.shootingEligibleUnits.count,
@@ -32,11 +34,14 @@ extension BattlePhaseTrackerView {
     @ViewBuilder
     var tabHintSection: some View {
         if showsTabHint {
-            BattleTrackerTabHintBanner(suggestedTab: suggestedSectionTab) {
+            BattleTrackerTabHintBanner(suggestedTab: suggestedSectionTab, gameSystemId: viewModel.gameSystemId) {
                 withAnimation(.easeInOut(duration: 0.25)) {
                     selectedSectionTab = suggestedSectionTab
                 }
-                if suggestedSectionTab == .combat {
+                if suggestedSectionTab == .combat || (
+                    viewModel.playContext.usesGuidedBattleTracker && suggestedSectionTab == .turn
+                    && viewModel.trackerState.currentPhase.isCombatRelated
+                ) {
                     scrollToCombatResolver = true
                 }
             }
@@ -56,10 +61,14 @@ extension BattlePhaseTrackerView {
             selectedSectionTab = tab
             if tab == .combat {
                 scrollToCombatResolver = true
+            } else if tab == .turn,
+                      viewModel.playContext.usesGuidedBattleTracker,
+                      ReleaseSurface.showsCombatResolver(for: viewModel.gameSystemId),
+                      viewModel.trackerState.currentPhase.isCombatRelated {
+                scrollToCombatResolver = true
             }
         case .combatResolver:
-            selectedSectionTab = .combat
-            scrollToCombatResolver = true
+            focusCombatResolverSection()
         case .victoryPoints:
             selectedSectionTab = .turn
             scrollToVictoryPoints = true

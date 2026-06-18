@@ -7,35 +7,68 @@ struct BattleTrackerStickyCombatBar: View {
     var defenderWoundsLabel: String?
     let onTap: () -> Void
 
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     var body: some View {
         Button(action: onTap) {
-            HStack(spacing: DesignTokens.Spacing.sm) {
-                Image(systemName: "dice.fill")
-                    .font(.headline)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(String(localized: "Resolve Combat"))
-                        .font(.subheadline.weight(.semibold))
-                    Text("\(attackerName) → \(defenderName)")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                    if let defenderWoundsLabel {
-                        Text(defenderWoundsLabel)
-                            .font(.caption2.weight(.medium))
+            Group {
+                if dynamicTypeSize.needsLayoutAdaptation {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                        HStack(spacing: DesignTokens.Spacing.sm) {
+                            Image(systemName: "dice.fill")
+                                .font(.headline)
+                            Text(String(localized: "Resolve Combat"))
+                                .font(.subheadline.weight(.semibold))
+                            Spacer(minLength: 0)
+                            Image(systemName: "chevron.up")
+                                .font(.caption.weight(.bold))
+                                .foregroundStyle(.secondary)
+                        }
+                        Text("\(attackerName) → \(defenderName)")
+                            .font(.caption)
                             .foregroundStyle(.secondary)
-                            .lineLimit(1)
+                        if let defenderWoundsLabel {
+                            Text(defenderWoundsLabel)
+                                .font(.caption2.weight(.medium))
+                                .foregroundStyle(.secondary)
+                        }
+                        Text(phaseTitle)
+                            .font(.caption2.weight(.semibold))
+                            .padding(.horizontal, DesignTokens.Spacing.sm)
+                            .padding(.vertical, DesignTokens.Spacing.xs)
+                            .background(Color.accentColor.opacity(0.15), in: Capsule())
+                            .foregroundStyle(Color.accentColor)
+                    }
+                } else {
+                    HStack(spacing: DesignTokens.Spacing.sm) {
+                        Image(systemName: "dice.fill")
+                            .font(.headline)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(String(localized: "Resolve Combat"))
+                                .font(.subheadline.weight(.semibold))
+                            Text("\(attackerName) → \(defenderName)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .lineLimit(1)
+                            if let defenderWoundsLabel {
+                                Text(defenderWoundsLabel)
+                                    .font(.caption2.weight(.medium))
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(1)
+                            }
+                        }
+                        Spacer(minLength: 0)
+                        Text(phaseTitle)
+                            .font(.caption2.weight(.semibold))
+                            .padding(.horizontal, DesignTokens.Spacing.sm)
+                            .padding(.vertical, DesignTokens.Spacing.xs)
+                            .background(Color.accentColor.opacity(0.15), in: Capsule())
+                            .foregroundStyle(Color.accentColor)
+                        Image(systemName: "chevron.up")
+                            .font(.caption.weight(.bold))
+                            .foregroundStyle(.secondary)
                     }
                 }
-                Spacer(minLength: 0)
-                Text(phaseTitle)
-                    .font(.caption2.weight(.semibold))
-                    .padding(.horizontal, DesignTokens.Spacing.sm)
-                    .padding(.vertical, DesignTokens.Spacing.xs)
-                    .background(Color.accentColor.opacity(0.15), in: Capsule())
-                    .foregroundStyle(Color.accentColor)
-                Image(systemName: "chevron.up")
-                    .font(.caption.weight(.bold))
-                    .foregroundStyle(.secondary)
             }
             .padding(.horizontal, DesignTokens.Spacing.md)
             .padding(.vertical, DesignTokens.Spacing.sm)

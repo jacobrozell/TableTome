@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "armyId": "ironjawz-bigmob",
+  "units": [
+    {
+      "id": "megaboss",
+      "name": "Megaboss",
+      "move": "4\"",
+      "save": 3,
+      "health": 8,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "brute-ragerz",
+      "name": "Brute Ragerz",
+      "move": "4\"",
+      "save": 5,
+      "health": 3,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "ardboyz",
+      "name": "Ardboyz",
+      "move": "4\"",
+      "save": 3,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "ardboyz-2",
+      "name": "Ardboyz",
+      "move": "4\"",
+      "save": 3,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "brutes",
+      "name": "Brutes",
+      "move": "4\"",
+      "save": 3,
+      "health": 3,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    }
+  ]
+}

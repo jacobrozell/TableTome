@@ -6,7 +6,7 @@ struct CombatResolverResultsSection: View {
     let isEmbedded: Bool
     let accessibilityPrefix: String
     var defenderWoundsRemaining: Int?
-    var onApplyDamage: ((Int) -> Void)?
+    var onApplyDamage: ((Int, CombatBatchLogContext?) -> Void)?
 
     var body: some View {
         if let evaluation = viewModel.evaluation {
@@ -46,7 +46,7 @@ struct CombatResolverResultsSection: View {
     private func applyDamageButton(damage: Int, defenderName: String, remaining: Int?) -> some View {
         if let onApplyDamage {
             Button {
-                onApplyDamage(damage)
+                onApplyDamage(damage, nil)
             } label: {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                     Label(

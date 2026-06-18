@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "armyId": "tzaangor-warflocks",
+  "units": [
+    {
+      "id": "tzaangor-shaman",
+      "name": "Tzaangor Shaman",
+      "move": "14\"",
+      "save": 5,
+      "health": 6,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "tzaangors",
+      "name": "Tzaangors",
+      "move": "6\"",
+      "save": 5,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 10
+    },
+    {
+      "id": "tzaangor-enlightened",
+      "name": "Tzaangor Enlightened",
+      "move": "14\"",
+      "save": 4,
+      "health": 4,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "tzaangor-skyfires",
+      "name": "Tzaangor Skyfires",
+      "move": "14\"",
+      "save": 4,
+      "health": 4,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 3
+    }
+  ]
+}

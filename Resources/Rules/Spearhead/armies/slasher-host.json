@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "armyId": "slasher-host",
+  "units": [
+    {
+      "id": "knight-of-shrouds",
+      "name": "Knight of Shrouds",
+      "move": "8\"",
+      "save": 4,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "spirit-hosts",
+      "name": "Spirit Hosts",
+      "move": "8\"",
+      "save": 4,
+      "health": 3,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "grimghast-reapers",
+      "name": "Grimghast Reapers",
+      "move": "8\"",
+      "save": 4,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "grimghast-reapers-2",
+      "name": "Grimghast Reapers",
+      "move": "8\"",
+      "save": 4,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "chainrasps",
+      "name": "Chainrasps",
+      "move": "8\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 10
+    },
+    {
+      "id": "chainrasps-2",
+      "name": "Chainrasps",
+      "move": "8\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 10
+    }
+  ]
+}

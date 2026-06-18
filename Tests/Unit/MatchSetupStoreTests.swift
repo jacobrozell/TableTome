@@ -46,4 +46,38 @@ final class MatchSetupStoreTests: XCTestCase {
         let loaded = MatchSetupStore.load()
         XCTAssertFalse(loaded.hasBothArmies)
     }
+
+    func testCombatPatrolRoundTripMatchState() {
+        let cpKey = "guided_match_state_wh40k-10e-cp"
+        defer { UserDefaults.standard.removeObject(forKey: cpKey) }
+
+        var state = GuidedMatchState()
+        state.playerOne = PlayerArmySelection(
+            playerName: "Alex",
+            factionId: "space-marines",
+            armyId: "space-marines-combat-patrol",
+            enhancementId: "champion-duellist",
+            secondaryObjectiveId: "wrath-of-the-emperor"
+        )
+        state.playerTwo = PlayerArmySelection(
+            playerName: "Friend",
+            factionId: "tyranids",
+            armyId: "tyranids-combat-patrol",
+            enhancementId: "psychostatic-veil",
+            secondaryObjectiveId: "alpha-xenoform"
+        )
+        state.selectedMissionId = "clash-of-patrols"
+        state.attackerIsPlayerOne = true
+        state.firstTurnIsPlayerOne = false
+        state.completedStepIds = ["choose-armies", "pick-enhancement"]
+
+        MatchSetupStore.save(state, gameSystemId: "wh40k-10e-cp")
+        let loaded = MatchSetupStore.load(gameSystemId: "wh40k-10e-cp")
+
+        XCTAssertEqual(loaded.playerOne.enhancementId, "champion-duellist")
+        XCTAssertEqual(loaded.playerOne.secondaryObjectiveId, "wrath-of-the-emperor")
+        XCTAssertEqual(loaded.playerTwo.secondaryObjectiveId, "alpha-xenoform")
+        XCTAssertEqual(loaded.selectedMissionId, "clash-of-patrols")
+        XCTAssertEqual(loaded.firstTurnIsPlayerOne, false)
+    }
 }

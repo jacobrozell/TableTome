@@ -6,13 +6,41 @@ import TabletomeData
 struct GuidedMatchView: View {
     @StateObject var viewModel: GuidedMatchViewModel
     @StateObject var matchSyncService = NearbyMatchSyncService()
+    @EnvironmentObject var dependencies: AppDependencies
     let ruleSections: [RuleSection]
+
+    var gameSystemId: GameSystemId { viewModel.gameSystemId }
+    private var featuredArmies: GuidedMatchFeaturedArmies { viewModel.featuredArmies }
+
+    private var setupStepsCaption: String {
+        let stepCount = viewModel.sortedMatchSteps.count
+        switch gameSystemId {
+        case .scTmg:
+            return String(
+                localized: "\(stepCount) steps — armies, mission setup, battlefield, attacker, and battle"
+            )
+        case .wh40k11e:
+            return String(
+                localized: "\(stepCount) steps — army pick, attacker roll, dispositions, deployment, and battle"
+            )
+        case .wh40k10eCp:
+            return String(
+                localized: "\(stepCount) steps — patrol, mission, formations, deployment, and battle"
+            )
+        default:
+            return String(
+                localized: "\(stepCount) steps — army pick, attacker roll, abilities, deployment, and battle"
+            )
+        }
+    }
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
-    @State private var selectedDestination: GuidedMatchDestination?
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @State var selectedDestination: GuidedMatchDestination?
     @State private var showsAllSetupSteps = NewPlayerTipsStore.hasExpandedGuidedMatchSetup
     @State var showsMatchSync = false
+    @State private var showsResetConfirmation = false
 
     private var usesCompactSetupLayout: Bool {
         !NewPlayerTipsStore.hasExpandedGuidedMatchSetup
@@ -40,6 +68,24 @@ struct GuidedMatchView: View {
         .navigationBarTitleDisplayMode(layoutContext.isCompactHeight ? .inline : .large)
         .toolbar { matchSyncToolbar }
         .sheet(isPresented: $showsMatchSync) { matchSyncSheet }
+        .navigationDestination(for: MatchHistoryLink.self) { _ in
+            MatchHistoryListView(viewModel: dependencies.makeMatchHistoryViewModel())
+        }
+        .confirmationDialog(
+            String(localized: "Reset Match"),
+            isPresented: $showsResetConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button(String(localized: "Save and Reset"), role: .destructive) {
+                Task { await resetMatch(saveToHistory: true) }
+            }
+            Button(String(localized: "Discard"), role: .destructive) {
+                Task { await resetMatch(saveToHistory: false) }
+            }
+            Button(String(localized: "Cancel"), role: .cancel) {}
+        } message: {
+            Text(String(localized: "Save this match to history before clearing, or discard it permanently."))
+        }
         .task {
             await viewModel.load()
             guard AppLaunchArguments.shouldApplyStarterMatchup else { return }
@@ -59,7 +105,7 @@ struct GuidedMatchView: View {
     }
 
     private var usesPadSplitNavigation: Bool {
-        layoutContext.usesPadSplitNavigation
+        layoutContext.usesPadSplitNavigation && !dynamicTypeSize.needsLayoutAdaptation
     }
 
     private var isPadLandscape: Bool {
@@ -95,30 +141,36 @@ struct GuidedMatchView: View {
     private func guidedMatchDetail(catalog: SpearheadCatalog) -> some View {
         switch selectedDestination {
         case .playerOne:
-            ArmySelectionView(
-                title: String(localized: "Player 1 Army"),
-                selection: viewModel.matchState.playerOne,
-                factions: viewModel.sortedFactions,
-                ruleSections: ruleSections,
-                dismissesOnSave: false,
-                onSave: viewModel.updatePlayerOne
-            )
+                    ArmySelectionView(
+                        title: String(localized: "Player 1 Army"),
+                        selection: viewModel.matchState.playerOne,
+                        factions: viewModel.sortedFactions,
+                        featuredArmies: featuredArmies,
+                        ruleSections: ruleSections,
+                        gameSystemId: viewModel.gameSystemId,
+                        dismissesOnSave: false,
+                        onSave: viewModel.updatePlayerOne
+                    )
         case .playerTwo:
-            ArmySelectionView(
-                title: String(localized: "Player 2 Army"),
-                selection: viewModel.matchState.playerTwo,
-                factions: viewModel.sortedFactions,
-                ruleSections: ruleSections,
-                dismissesOnSave: false,
-                onSave: viewModel.updatePlayerTwo
-            )
+                    ArmySelectionView(
+                        title: String(localized: "Player 2 Army"),
+                        selection: viewModel.matchState.playerTwo,
+                        factions: viewModel.sortedFactions,
+                        featuredArmies: featuredArmies,
+                        ruleSections: ruleSections,
+                        gameSystemId: viewModel.gameSystemId,
+                        dismissesOnSave: false,
+                        onSave: viewModel.updatePlayerTwo
+                    )
         case .battleTracker:
             if viewModel.matchState.hasBothArmies {
-                BattlePhaseTrackerView(
+                BattlePhaseTrackerShell(
+                    gameSystemId: gameSystemId,
                     matchState: viewModel.matchState,
                     catalog: catalog,
                     ruleSections: ruleSections,
-                    onMatchStateChange: { viewModel.reloadFromStore() }
+                    onMatchStateChange: { viewModel.reloadFromStore() },
+                    onVictoryComplete: handleVictoryComplete
                 )
             } else {
                 guidedMatchPlaceholder(
@@ -197,26 +249,43 @@ struct GuidedMatchView: View {
 
     @ViewBuilder
     private var sampleTurnSection: some View {
-        Section {
-            NavigationLink {
-                SampleTurnWalkthroughView()
-            } label: {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                    Label(String(localized: "Preview a Turn"), systemImage: "play.circle")
-                        .font(.headline)
-                    Text(String(localized: "Two-minute tour — movement, shooting, dice, and scoring"))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+        if gameSystemId == .aosSpearhead {
+            Section {
+                NavigationLink {
+                    SampleTurnWalkthroughView()
+                } label: {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                        Label(String(localized: "Preview a Turn"), systemImage: "play.circle")
+                            .font(.headline)
+                        Text(String(localized: "Two-minute tour — movement, shooting, dice, and scoring"))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
                 }
-                .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                .accessibilityIdentifier("guidedMatch.sampleTurn")
             }
-            .accessibilityIdentifier("guidedMatch.sampleTurn")
+        } else if gameSystemId == .wh40k10eCp {
+            Section {
+                NavigationLink {
+                    CombatPatrolSampleTurnWalkthroughView()
+                } label: {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                        Label(String(localized: "Preview a Turn"), systemImage: "play.circle")
+                            .font(.headline)
+                        Text(String(localized: "Command-first tour — secure objectives, stratagems, and scoring"))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                }
+                .accessibilityIdentifier("guidedMatch.combatPatrolSampleTurn")
+            }
         }
     }
 
     @ViewBuilder
     private func collapsedMatchSetupSection(catalog: SpearheadCatalog, useSplitSelection: Bool) -> some View {
-        let stepCount = viewModel.sortedMatchSteps.count
         Section {
             DisclosureGroup(isExpanded: $showsAllSetupSteps) {
                 matchSetupRows(catalog: catalog, useSplitSelection: useSplitSelection)
@@ -224,7 +293,7 @@ struct GuidedMatchView: View {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                     Text(String(localized: "All Setup Steps"))
                         .font(.headline)
-                    Text(String(localized: "\(stepCount) steps — army pick, attacker roll, abilities, deployment, and battle"))
+                    Text(setupStepsCaption)
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -286,13 +355,13 @@ struct GuidedMatchView: View {
         Section {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                 Label {
-                    Text(SpearheadFeaturedArmies.starterMatchupTitle)
+                    Text(featuredArmies.starterMatchupTitle)
                         .font(.headline)
                 } icon: {
                     Image(systemName: "flag.2.crossed.fill")
                         .foregroundStyle(Color.accentColor)
                 }
-                Text(String(localized: "Quick-start the Skaventide / Ultimate Starter Set matchup with full warscrolls, setup, and battle tools."))
+                Text(featuredArmies.starterSetDescription)
                     .font(.callout)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -427,7 +496,9 @@ struct GuidedMatchView: View {
                         title: String(localized: "Player 1 Army"),
                         selection: viewModel.matchState.playerOne,
                         factions: viewModel.sortedFactions,
+                        featuredArmies: featuredArmies,
                         ruleSections: ruleSections,
+                        gameSystemId: viewModel.gameSystemId,
                         onSave: viewModel.updatePlayerOne
                     )
                 } label: {
@@ -444,7 +515,9 @@ struct GuidedMatchView: View {
                         title: String(localized: "Player 2 Army"),
                         selection: viewModel.matchState.playerTwo,
                         factions: viewModel.sortedFactions,
+                        featuredArmies: featuredArmies,
                         ruleSections: ruleSections,
+                        gameSystemId: viewModel.gameSystemId,
                         onSave: viewModel.updatePlayerTwo
                     )
                 } label: {
@@ -473,11 +546,13 @@ struct GuidedMatchView: View {
                     .accessibilityIdentifier("guidedMatch.battleTracker")
             } else {
                 NavigationLink {
-                    BattlePhaseTrackerView(
+                    BattlePhaseTrackerShell(
+                        gameSystemId: gameSystemId,
                         matchState: viewModel.matchState,
                         catalog: catalog,
                         ruleSections: ruleSections,
-                        onMatchStateChange: { viewModel.reloadFromStore() }
+                        onMatchStateChange: { viewModel.reloadFromStore() },
+                        onVictoryComplete: handleVictoryComplete
                     )
                 } label: {
                     if setupComplete {
@@ -518,8 +593,12 @@ struct GuidedMatchView: View {
     private var resetSection: some View {
         Section {
             Button(role: .destructive) {
-                viewModel.resetMatch()
-                selectedDestination = nil
+                if ReleaseSurface.showsMatchHistory, viewModel.matchState.hasBothArmies {
+                    showsResetConfirmation = true
+                } else {
+                    viewModel.resetMatch()
+                    selectedDestination = nil
+                }
             } label: {
                 Label(String(localized: "Reset Match"), systemImage: "arrow.counterclockwise")
                     .frame(minHeight: DesignTokens.minTouchTarget)

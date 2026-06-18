@@ -15,20 +15,60 @@ public enum AppSearchResultKind: String, Sendable, CaseIterable {
     case phaseTip
     case appFeature
 
-    public var sectionLabel: String {
+    public func sectionLabel(gameSystemId: GameSystemId) -> String {
+        sectionLabel(gameSystemId: gameSystemId.rawValue)
+    }
+
+    public func sectionLabel(gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId) -> String {
+        let playContext = GameSystemPlayContext.context(for: gameSystemId)
         switch self {
-        case .ruleSection: String(localized: "Rules")
-        case .glossary: String(localized: "Glossary")
-        case .gettingStarted: String(localized: "Getting Started")
-        case .matchSetup: String(localized: "Match Setup")
-        case .deployment: String(localized: "Deployment")
-        case .battleTactics: String(localized: "Card Decks")
-        case .cardDeck: String(localized: "Decks")
-        case .warscroll: String(localized: "Warscrolls")
-        case .armyRule: String(localized: "Army Rules")
-        case .phaseTip: String(localized: "Phase Tips")
-        case .appFeature: String(localized: "Features & Armies")
+        case .ruleSection:
+            return GameSystemRulesLabels.searchResultRulesSectionTitle(gameSystemId: gameSystemId)
+        case .glossary:
+            return GameSystemRulesLabels.glossaryTitle(gameSystemId: gameSystemId)
+        case .gettingStarted:
+            return String(localized: "Getting Started")
+        case .matchSetup:
+            return String(localized: "Match Setup")
+        case .deployment:
+            if playContext.capabilities.showsActivationBar {
+                return String(localized: "Battlefield Setup")
+            } else {
+                return String(localized: "Deployment")
+            }
+        case .battleTactics:
+            return String(localized: "Card Decks")
+        case .cardDeck:
+            return String(localized: "Decks")
+        case .warscroll:
+            if playContext.usesGuidedBattleTracker {
+                return String(localized: "Units")
+            } else {
+                return String(localized: "Warscrolls")
+            }
+        case .armyRule:
+            return String(localized: "Army Rules")
+        case .phaseTip:
+            return String(localized: "Phase Tips")
+        case .appFeature:
+            return String(localized: "Features & Armies")
         }
+    }
+
+    public static func visibleKinds(for gameSystemId: GameSystemId) -> [AppSearchResultKind] {
+        visibleKinds(for: gameSystemId.rawValue)
+    }
+
+    public static func visibleKinds(for gameSystemId: String) -> [AppSearchResultKind] {
+        let capabilities = GameSystemPlayContext.context(for: gameSystemId).capabilities
+        var kinds: [AppSearchResultKind] = [
+            .ruleSection, .glossary, .gettingStarted, .matchSetup, .deployment,
+            .warscroll, .armyRule, .phaseTip, .appFeature
+        ]
+        if capabilities.showsBattleTacticDecks {
+            kinds.insert(contentsOf: [.battleTactics, .cardDeck], at: 5)
+        }
+        return kinds
     }
 }
 
@@ -89,18 +129,25 @@ struct AppSearchIndexItem: Sendable {
 
 public enum AppSearchIndexBuilder {
     public static func build(gameSystem: GameSystem, catalog: SpearheadCatalog?) -> [AppSearchResult] {
+        let gameSystemId = gameSystem.id
         var items: [AppSearchIndexItem] = []
         items.append(contentsOf: ruleSectionItems(from: gameSystem.ruleSections))
-        items.append(contentsOf: glossaryItems())
+        items.append(contentsOf: glossaryItems(gameSystemId: gameSystemId, ruleSections: gameSystem.ruleSections))
         items.append(contentsOf: guideStepItems(from: gameSystem.gettingStartedSteps))
         if let catalog {
             items.append(contentsOf: matchSetupItems(from: catalog.matchSteps))
-            items.append(contentsOf: armyItems(from: catalog))
+            items.append(contentsOf: armyItems(from: catalog, gameSystemId: gameSystemId))
+            let capabilities = GameSystemPlayContext.context(for: gameSystemId).capabilities
+            if capabilities.showsCombatPatrolMode {
+                items.append(contentsOf: combatPatrolMissionItems(from: catalog.missions))
+            }
         }
-        items.append(contentsOf: deploymentItems())
-        items.append(contentsOf: battleTacticsItems())
-        items.append(contentsOf: phaseTipItems())
-        items.append(contentsOf: appFeatureItems(gameSystemId: gameSystem.id))
+        items.append(contentsOf: deploymentItems(gameSystemId: gameSystemId))
+        if GameSystemPlayContext.context(for: gameSystemId).capabilities.showsBattleTacticDecks {
+            items.append(contentsOf: battleTacticsItems())
+        }
+        items.append(contentsOf: phaseTipItems(gameSystemId: gameSystemId))
+        items.append(contentsOf: appFeatureItems(gameSystemId: gameSystemId))
 
         return items.map { item in
             item.result(snippet: AppSearchEngine.makeSnippet(from: item.detailBody))
@@ -122,19 +169,46 @@ public enum AppSearchIndexBuilder {
         }
     }
 
-    private static func glossaryItems() -> [AppSearchIndexItem] {
-        SpearheadRulesGlossary.entries.map { entry in
-            AppSearchIndexItem(
-                id: "glossary:\(entry.id)",
-                kind: .glossary,
-                title: entry.term,
-                subtitle: String(localized: "Glossary"),
-                detailBody: entry.definition,
-                referenceId: entry.id,
-                secondaryReferenceId: nil,
-                searchableText: joined([entry.term, entry.definition] + glossaryAliases(for: entry.id))
-            )
+    private static func glossaryItems(
+        gameSystemId: String,
+        ruleSections: [RuleSection]
+    ) -> [AppSearchIndexItem] {
+        let capabilities = GameSystemPlayContext.context(for: gameSystemId).capabilities
+        if capabilities.showsBattleTacticDecks {
+            return SpearheadRulesGlossary.entries.map { glossaryEntryItem($0) }
         }
+        if capabilities.showsCombatPatrolMode {
+            return CombatPatrolRulesGlossary.entries.map { glossaryEntryItem($0) }
+        }
+        return ruleSections
+            .filter { $0.category == .glossary }
+            .map { glossarySectionItem($0) }
+    }
+
+    private static func glossaryEntryItem(_ entry: RulesGlossaryEntry) -> AppSearchIndexItem {
+        AppSearchIndexItem(
+            id: "glossary:\(entry.id)",
+            kind: .glossary,
+            title: entry.term,
+            subtitle: String(localized: "Glossary"),
+            detailBody: entry.definition,
+            referenceId: entry.id,
+            secondaryReferenceId: nil,
+            searchableText: joined([entry.term, entry.definition] + glossaryAliases(for: entry.id))
+        )
+    }
+
+    private static func glossarySectionItem(_ section: RuleSection) -> AppSearchIndexItem {
+        AppSearchIndexItem(
+            id: "glossary:\(section.id)",
+            kind: .glossary,
+            title: section.title,
+            subtitle: String(localized: "Glossary"),
+            detailBody: section.content,
+            referenceId: section.id,
+            secondaryReferenceId: nil,
+            searchableText: joined([section.title, section.content])
+        )
     }
 
     private static func guideStepItems(from steps: [GuideStep]) -> [AppSearchIndexItem] {
@@ -167,7 +241,34 @@ public enum AppSearchIndexBuilder {
         }
     }
 
-    private static func deploymentItems() -> [AppSearchIndexItem] {
+    private static func deploymentItems(gameSystemId: String) -> [AppSearchIndexItem] {
+        switch gameSystemId {
+        case "aos-spearhead":
+            return spearheadDeploymentItems()
+        case "wh40k-11e":
+            return checklistDeploymentItems(
+                prefix: "wh40kDeployment",
+                subtitle: String(localized: "Deployment"),
+                steps: Wh40kDeploymentChecklistStep.allCases.map { ($0.id, $0.title, $0.detail) }
+            )
+        case "wh40k-10e-cp":
+            return checklistDeploymentItems(
+                prefix: "cpDeployment",
+                subtitle: String(localized: "Deployment"),
+                steps: CombatPatrolDeploymentChecklistStep.allCases.map { ($0.id, $0.title, $0.detail) }
+            )
+        case "sc-tmg":
+            return checklistDeploymentItems(
+                prefix: "scDeployment",
+                subtitle: String(localized: "Battlefield Setup"),
+                steps: ScTmgDeploymentChecklistStep.allCases.map { ($0.id, $0.title, $0.detail) }
+            )
+        default:
+            return []
+        }
+    }
+
+    private static func spearheadDeploymentItems() -> [AppSearchIndexItem] {
         var items = [
             AppSearchIndexItem(
                 id: "deployment:overview",
@@ -198,6 +299,45 @@ public enum AppSearchIndexBuilder {
         return items
     }
 
+    private static func checklistDeploymentItems(
+        prefix: String,
+        subtitle: String,
+        steps: [(id: String, title: String, detail: String)]
+    ) -> [AppSearchIndexItem] {
+        steps.map { step in
+            AppSearchIndexItem(
+                id: "\(prefix):\(step.id)",
+                kind: .deployment,
+                title: step.title,
+                subtitle: subtitle,
+                detailBody: step.detail,
+                referenceId: step.id,
+                secondaryReferenceId: nil,
+                searchableText: joined([step.title, step.detail])
+            )
+        }
+    }
+
+    private static func combatPatrolMissionItems(from missions: [CombatPatrolMission]) -> [AppSearchIndexItem] {
+        missions.map { mission in
+            AppSearchIndexItem(
+                id: "mission:\(mission.id)",
+                kind: .matchSetup,
+                title: mission.name,
+                subtitle: String(localized: "Mission"),
+                detailBody: joined([mission.missionRuleSummary, mission.primaryObjectiveSummary, mission.scoringNotes]),
+                referenceId: mission.id,
+                secondaryReferenceId: nil,
+                searchableText: joined([
+                    mission.name,
+                    mission.missionRuleSummary,
+                    mission.primaryObjectiveSummary,
+                    mission.scoringNotes
+                ])
+            )
+        }
+    }
+
     private static func battleTacticsItems() -> [AppSearchIndexItem] {
         var items = SpearheadBattleTacticsReference.sections.map { section in
             AppSearchIndexItem(
@@ -226,9 +366,9 @@ public enum AppSearchIndexBuilder {
         return items
     }
 
-    private static func phaseTipItems() -> [AppSearchIndexItem] {
-        BattleTurnPhase.mainTurnPhases.compactMap { phase in
-            let tips = PhaseContextCoach.quickTips(for: phase)
+    private static func phaseTipItems(gameSystemId: String) -> [AppSearchIndexItem] {
+        BattleRules.mainPhases(gameSystemId: gameSystemId).compactMap { phase in
+            let tips = PhaseContextCoach.quickTips(for: phase, gameSystemId: gameSystemId)
             guard !tips.isEmpty else { return nil }
             return AppSearchIndexItem(
                 id: "phase:\(phase.id)",
@@ -243,7 +383,7 @@ public enum AppSearchIndexBuilder {
         }
     }
 
-    private static func armyItems(from catalog: SpearheadCatalog) -> [AppSearchIndexItem] {
+    private static func armyItems(from catalog: SpearheadCatalog, gameSystemId: String) -> [AppSearchIndexItem] {
         catalog.factions.flatMap(\.armies).flatMap { army in
             var items = [
                 AppSearchIndexItem(
@@ -260,7 +400,11 @@ public enum AppSearchIndexBuilder {
             items.append(contentsOf: (army.battleTraits + army.regimentAbilities + army.enhancements).map {
                 armyRuleItem($0, army: army)
             })
-            items.append(contentsOf: army.units.map { unitItem($0, army: army) })
+            if gameSystemId == "wh40k-10e-cp" {
+                items.append(contentsOf: army.secondaryObjectives.map { secondaryObjectiveItem($0, army: army) })
+                items.append(contentsOf: army.stratagems.map { stratagemItem($0, army: army) })
+            }
+            items.append(contentsOf: army.units.map { unitItem($0, army: army, gameSystemId: gameSystemId) })
             return items
         }
     }
@@ -278,7 +422,49 @@ public enum AppSearchIndexBuilder {
         )
     }
 
-    private static func unitItem(_ unit: SpearheadUnit, army: SpearheadArmy) -> AppSearchIndexItem {
+    private static func secondaryObjectiveItem(_ objective: ArmyRuleOption, army: SpearheadArmy) -> AppSearchIndexItem {
+        AppSearchIndexItem(
+            id: "secondary:\(army.id):\(objective.id)",
+            kind: .armyRule,
+            title: objective.name,
+            subtitle: "\(army.name) · \(String(localized: "Secondary Objective"))",
+            detailBody: joined([objective.summary, objective.newPlayerHint, objective.timing]),
+            referenceId: objective.id,
+            secondaryReferenceId: army.id,
+            searchableText: joined([objective.name, objective.summary, objective.newPlayerHint, objective.timing, army.name, "secondary"])
+        )
+    }
+
+    private static func stratagemItem(_ stratagem: CombatPatrolStratagem, army: SpearheadArmy) -> AppSearchIndexItem {
+        AppSearchIndexItem(
+            id: "stratagem:\(army.id):\(stratagem.id)",
+            kind: .armyRule,
+            title: stratagem.name,
+            subtitle: "\(army.name) · \(String(localized: "Stratagem"))",
+            detailBody: joined([
+                stratagem.summary,
+                stratagem.phase,
+                stratagem.isReactive == true ? String(localized: "Reactive") : nil,
+                "\(stratagem.cpCost)CP"
+            ]),
+            referenceId: stratagem.id,
+            secondaryReferenceId: army.id,
+            searchableText: joined([
+                stratagem.name,
+                stratagem.summary,
+                stratagem.phase,
+                army.name,
+                "stratagem",
+                "CP"
+            ])
+        )
+    }
+
+    private static func unitItem(
+        _ unit: SpearheadUnit,
+        army: SpearheadArmy,
+        gameSystemId: String
+    ) -> AppSearchIndexItem {
         let weaponLines = unit.weapons.map { weapon in
             var parts = [weapon.name, weapon.attacks, weapon.ability]
             if let range = weapon.rangeInches {
@@ -298,11 +484,16 @@ public enum AppSearchIndexBuilder {
             [statLine.joined(separator: " · "), unit.notes] + weaponLines + abilityLines
         )
 
+        let playContext = GameSystemPlayContext.context(for: gameSystemId)
+        let unitKindLabel = playContext.usesGuidedBattleTracker
+            ? String(localized: "Unit")
+            : String(localized: "Warscroll")
+
         return AppSearchIndexItem(
             id: "unit:\(army.id):\(unit.id)",
             kind: .warscroll,
             title: unit.name,
-            subtitle: "\(army.name) · \(String(localized: "Warscroll"))",
+            subtitle: "\(army.name) · \(unitKindLabel)",
             detailBody: detailBody,
             referenceId: unit.id,
             secondaryReferenceId: army.id,
@@ -313,19 +504,15 @@ public enum AppSearchIndexBuilder {
     }
 
     private static func appFeatureItems(gameSystemId: String) -> [AppSearchIndexItem] {
-        guard gameSystemId == "aos-spearhead" else { return [] }
+        guard showsGuidedMatchSearchFeature(for: gameSystemId) else { return [] }
 
-        return [
+        var items: [AppSearchIndexItem] = [
             AppSearchIndexItem(
                 id: "feature:guidedMatch",
                 kind: .appFeature,
                 title: String(localized: "Guided Match"),
                 subtitle: String(localized: "App Feature"),
-                detailBody: String(
-                    localized: """
-                    Interactive match setup and battle tracker with phase flow, army health, combat resolver, and optional two-phone sync.
-                    """
-                ),
+                detailBody: guidedMatchFeatureBody(gameSystemId: gameSystemId),
                 referenceId: "guidedMatch",
                 secondaryReferenceId: nil,
                 searchableText: joined([
@@ -334,34 +521,78 @@ public enum AppSearchIndexBuilder {
                     String(localized: "sync"),
                     String(localized: "setup")
                 ])
-            ),
-            AppSearchIndexItem(
-                id: "feature:combatResolver",
-                kind: .appFeature,
-                title: String(localized: "Combat Resolver"),
-                subtitle: String(localized: "App Feature"),
-                detailBody: String(
-                    localized: """
-                    Step-by-step hit, wound, and save math for practice rolls or resolving attacks at the table.
-                    """
-                ),
-                referenceId: "combatResolver",
-                secondaryReferenceId: nil,
-                searchableText: joined([
-                    String(localized: "Combat Resolver"),
-                    String(localized: "dice"),
-                    String(localized: "hits"),
-                    String(localized: "wounds"),
-                    String(localized: "saves")
-                ])
             )
         ]
+
+        if showsCombatResolverSearchFeature(for: gameSystemId) {
+            items.append(
+                AppSearchIndexItem(
+                    id: "feature:combatResolver",
+                    kind: .appFeature,
+                    title: String(localized: "Combat Resolver"),
+                    subtitle: String(localized: "App Feature"),
+                    detailBody: String(
+                        localized: """
+                        Step-by-step hit, wound, and save math for practice rolls or resolving attacks at the table.
+                        """
+                    ),
+                    referenceId: "combatResolver",
+                    secondaryReferenceId: nil,
+                    searchableText: joined([
+                        String(localized: "Combat Resolver"),
+                        String(localized: "dice"),
+                        String(localized: "hits"),
+                        String(localized: "wounds"),
+                        String(localized: "saves")
+                    ])
+                )
+            )
+        }
+
+        return items
+    }
+
+    private static func guidedMatchFeatureBody(gameSystemId: String) -> String {
+        let playContext = GameSystemPlayContext.context(for: gameSystemId)
+        if playContext.isWh40k11e {
+            return String(
+                localized: """
+                Interactive match setup and battle tracker with Command-phase flow, army health, and optional two-phone sync.
+                """
+            )
+        }
+        if playContext.capabilities.showsActivationBar {
+            return String(
+                localized: """
+                Interactive match setup and battle tracker with alternating activations, Supply scoring, and optional sync.
+                """
+            )
+        }
+        return String(
+            localized: """
+            Interactive match setup and battle tracker with phase flow, army health, combat resolver, and optional two-phone sync.
+            """
+        )
+    }
+
+    private static func showsGuidedMatchSearchFeature(for gameSystemId: String) -> Bool {
+        GameSystemPlayContext.context(for: gameSystemId).capabilities.showsGuidedMatch
+    }
+
+    private static func showsCombatResolverSearchFeature(for gameSystemId: String) -> Bool {
+        let capabilities = GameSystemPlayContext.context(for: gameSystemId).capabilities
+        if capabilities.showsCombatResolver {
+            return true
+        }
+        return ProcessInfo.processInfo.arguments.contains("-enable_wh40k_combat_resolver")
+            && gameSystemId == GameSystemId.wh40k11e.rawValue
     }
 
     private static func ruleSectionSubtitle(_ category: RuleSectionCategory) -> String {
         switch category {
         case .core: String(localized: "Core Rules")
         case .spearhead: String(localized: "Spearhead Rules")
+        case .combatPatrol: String(localized: "Combat Patrol Rules")
         case .glossary: String(localized: "Rules Reference")
         }
     }
@@ -431,16 +662,51 @@ public enum AppSearchIndexBuilder {
 }
 
 public enum AppSearchEngine {
-    public static let suggestedTopics = [
-        "rend",
-        "pile in",
-        "shoot in combat",
-        "battle tactic",
-        "twist card",
-        "warpfire gun",
-        "deployment",
-        "priority roll"
-    ]
+    public static func suggestedTopics(for gameSystemId: String) -> [String] {
+        switch gameSystemId {
+        case "wh40k-11e":
+            return [
+                "command phase",
+                "battle-shock",
+                "objective control",
+                "rend",
+                "deployment",
+                "charge roll",
+                "stratagem"
+            ]
+        case "wh40k-10e-cp":
+            return [
+                "secure objective",
+                "reserves",
+                "battle ready",
+                "mission",
+                "command phase",
+                "deployment"
+            ]
+        case "sc-tmg":
+            return [
+                "supply",
+                "activation",
+                "surge",
+                "objective",
+                "movement",
+                "assault"
+            ]
+        default:
+            return [
+                "rend",
+                "pile in",
+                "shoot in combat",
+                "battle tactic",
+                "twist card",
+                "warpfire gun",
+                "deployment",
+                "priority roll"
+            ]
+        }
+    }
+
+    public static let suggestedTopics = suggestedTopics(for: GameSystemRulesLabels.defaultGameSystemId)
 
     public static func search(query: String, in index: [AppSearchResult]) -> [AppSearchResult] {
         let tokens = tokenize(query)

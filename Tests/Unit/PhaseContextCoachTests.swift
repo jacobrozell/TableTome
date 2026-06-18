@@ -23,4 +23,21 @@ final class PhaseContextCoachTests: XCTestCase {
         XCTAssertTrue(PhaseContextCoach.quickTips(for: .enemyMovement).isEmpty)
         XCTAssertTrue(PhaseContextCoach.quickTips(for: .endOfAnyTurn).isEmpty)
     }
+
+    func testStarCraftHeroPhaseHasNoSpearheadTips() {
+        XCTAssertTrue(PhaseContextCoach.quickTips(for: .hero, gameSystemId: "sc-tmg").isEmpty)
+        XCTAssertTrue(PhaseContextCoach.quickTips(for: .charge, gameSystemId: "sc-tmg").isEmpty)
+    }
+
+    func testCombatPatrolCommandPhaseIncludesSecureObjectives() {
+        let tips = PhaseContextCoach.quickTips(for: .command, gameSystemId: "wh40k-10e-cp")
+        XCTAssertTrue(tips.joined().localizedCaseInsensitiveContains("Battleline"))
+        XCTAssertTrue(tips.joined().localizedCaseInsensitiveContains("stratagem"))
+    }
+
+    func testStarCraftMovementSummaryIsNotSpearhead() {
+        let summary = BattleTurnPhase.movement.playerFacingSummary(gameSystemId: "sc-tmg")
+        XCTAssertTrue(summary.localizedCaseInsensitiveContains("Pass"))
+        XCTAssertFalse(summary.localizedCaseInsensitiveContains("coherency"))
+    }
 }

@@ -34,7 +34,9 @@ extension BattlePhaseTrackerView {
 
     var setupTabContent: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-            if viewModel.trackerState.battleRound > 1, viewModel.roundOpenerIsIncomplete {
+            if viewModel.playContext.capabilities.showsBattleTacticDecks,
+               viewModel.trackerState.battleRound > 1,
+               viewModel.roundOpenerIsIncomplete {
                 NewMainTurnReminderBanner(round: viewModel.trackerState.battleRound)
             }
             startOfRoundHelper
@@ -55,12 +57,19 @@ extension BattlePhaseTrackerView {
             roundAndScoreSection
             BattleTrackerControlPanel(viewModel: viewModel)
             movementPhaseHelper
+            if viewModel.playContext.usesGuidedBattleTracker,
+               ReleaseSurface.showsCombatResolver(for: viewModel.gameSystemId) {
+                damageUndoSection
+                combatResolverSection()
+            }
         }
     }
 
     var combatTabContent: some View {
         Group {
-            if usesPhoneLandscapeCombatSplit {
+            if viewModel.isStarCraft {
+                scCombatTabContent
+            } else if usesPhoneLandscapeCombatSplit {
                 phoneLandscapeCombatSplitLayout
             } else {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
@@ -70,6 +79,12 @@ extension BattlePhaseTrackerView {
                     combatResolverSection()
                 }
             }
+        }
+    }
+
+    private var scCombatTabContent: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            scTrackerPlaceholder
         }
     }
 
@@ -83,14 +98,15 @@ extension BattlePhaseTrackerView {
 
     @ViewBuilder
     var movementPhaseHelper: some View {
-        if viewModel.trackerState.currentPhase == .movement {
+        if showsSpearheadBattleChrome, viewModel.trackerState.currentPhase == .movement {
             MovementActionPicker(action: $movementAction)
         }
     }
 
     @ViewBuilder
     var combatPhaseHelper: some View {
-        if viewModel.trackerState.currentPhase == .combat
+        if showsSpearheadBattleChrome,
+           viewModel.trackerState.currentPhase == .combat
             || viewModel.trackerState.currentPhase == .anyCombat {
             PileInGuideCard()
         }

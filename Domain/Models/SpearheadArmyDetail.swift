@@ -50,11 +50,23 @@ public enum SpearheadContentCoverage: String, Codable, Sendable, CaseIterable, C
     }
 
     public var playerFacingTitle: String {
+        playerFacingTitle(gameSystemId: GameSystemRulesLabels.defaultGameSystemId)
+    }
+
+    public func playerFacingTitle(gameSystemId: String) -> String {
         switch self {
-        case .roster: String(localized: "Army list only")
-        case .matchSetup: String(localized: "Setup ready")
-        case .battleTracker: String(localized: "Rules reminders ready")
-        case .warscrolls: String(localized: "Full tabletop support")
+        case .roster:
+            String(localized: "Army list only")
+        case .matchSetup:
+            String(localized: "Setup ready")
+        case .battleTracker:
+            String(localized: "Rules reminders ready")
+        case .warscrolls:
+            if GameSystemPlayContext.context(for: gameSystemId).isWh40k {
+                String(localized: "Full unit support")
+            } else {
+                String(localized: "Full tabletop support")
+            }
         }
     }
 

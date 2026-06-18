@@ -5,7 +5,7 @@
       "id": "aos-spearhead",
       "name": "Age of Sigmar: Spearhead",
       "tagline": "Fast-paced tactical battles in the Mortal Realms",
-      "edition": "4th Edition — Spearhead",
+      "edition": "4th Edition \u2014 Spearhead",
       "availability": "available",
       "gettingStartedSteps": [
         {
@@ -13,9 +13,9 @@
           "order": 1,
           "title": "Pick a Spearhead Army",
           "summary": "Choose a pre-made army from a Spearhead box set.",
-          "body": "In Spearhead, each player commands a fixed Spearhead army tied to a box set. Army composition cannot be changed — units, general, and faction rules are defined on the faction's Spearhead sheet. Download free faction packs from Warhammer Community if you need warscrolls on your phone.",
+          "body": "In Spearhead, each player commands a fixed Spearhead army tied to a box set. Army composition cannot be changed \u2014 units, general, and faction rules are defined on the faction's Spearhead sheet. Download free faction packs from Warhammer Community if you need warscrolls on your phone.",
           "tips": [
-            "Each Spearhead box is a complete army — no extra purchases required to play.",
+            "Each Spearhead box is a complete army \u2014 no extra purchases required to play.",
             "Read your army's battle traits before the game; they apply every battle."
           ],
           "relatedRuleSectionId": "spearhead-overview"
@@ -25,12 +25,12 @@
           "order": 2,
           "title": "Choose a Realm Battlefield",
           "summary": "Agree on a board, side, and matching twist deck.",
-          "body": "Spearhead battles use 30\"×22\" realm battlefields. Fire and Jade (Aqshy or Ghyran) is the original board; Sand and Bone (Ossia or Dolorum) and City of Ash (Ashen Bastion or Shattered Crossroads) add more options. Each side has its own deployment map and twist deck — use the deck that matches the side you fight on.\n\nYou also need two battle tactic decks (one per player, from each army starter box) and terrain: two large and two small features placed before armies deploy. Objectives are printed on the board.\n\nConfused by the card decks? Open Card Decks Guide under Table Reference — twist cards (shared, from the board) and battle tactic cards (personal, from your army box) are completely different.",
+          "body": "Spearhead battles use 30\"\u00d722\" realm battlefields. Fire and Jade (Aqshy or Ghyran) is the original board; Sand and Bone (Ossia or Dolorum) and City of Ash (Ashen Bastion or Shattered Crossroads) add more options. Each side has its own deployment map and twist deck \u2014 use the deck that matches the side you fight on.\n\nYou also need two battle tactic decks (one per player, from each army starter box) and terrain: two large and two small features placed before armies deploy. Objectives are printed on the board.\n\nConfused by the card decks? Open Card Decks Guide under Table Reference \u2014 twist cards (shared, from the board) and battle tactic cards (personal, from your army box) are completely different.",
           "tips": [
             "The defender chooses which battlefield and which side to use.",
             "Twist deck = battlefield pack, matched to board side (Fire/Jade, Sand/Bone, etc.).",
-            "Battle tactic deck = inside each player's army starter box — one per player.",
-            "Objectives are printed on the board — the whole circle counts, not just the centre symbol."
+            "Battle tactic deck = inside each player's army starter box \u2014 one per player.",
+            "Objectives are printed on the board \u2014 the whole circle counts, not just the centre symbol."
           ],
           "relatedRuleSectionId": "spearhead-overview"
         },
@@ -39,10 +39,10 @@
           "order": 3,
           "title": "Pick Regiment Ability & Enhancement",
           "summary": "Attacker chooses first, then defender.",
-          "body": "After rolling for attacker and defender, the attacker picks one regiment ability (from two options) and one enhancement for their general (from four options). The defender then makes their picks. These choices shape your strategy — some options counter specific opponents.",
+          "body": "After rolling for attacker and defender, the attacker picks one regiment ability (from two options) and one enhancement for their general (from four options). The defender then makes their picks. These choices shape your strategy \u2014 some options counter specific opponents.",
           "tips": [
             "Regiment abilities range from passive bonuses to once-per-battle actions.",
-            "Enhancements upgrade your general only — protect them accordingly."
+            "Enhancements upgrade your general only \u2014 protect them accordingly."
           ]
         },
         {
@@ -50,9 +50,9 @@
           "order": 4,
           "title": "Prepare Your Warscrolls",
           "summary": "Review unit profiles, weapons, and keywords.",
-          "body": "Each unit has a Spearhead warscroll with Move, Save, Health, weapons (Range/Attacks/Hit/Wound/Rend/Damage), abilities, and keywords (HERO, WIZARD, MONSTER, INFANTRY, etc.). Spearhead does not use the Magic advanced module — spells and prayers resolve like normal abilities with no miscast or unbind rolls.",
+          "body": "Each unit has a Spearhead warscroll with Move, Save, Health, weapons (Range/Attacks/Hit/Wound/Rend/Damage), abilities, and keywords (HERO, WIZARD, MONSTER, INFANTRY, etc.). Spearhead does not use the Magic advanced module \u2014 spells and prayers resolve like normal abilities with no miscast or unbind rolls.",
           "tips": [
-            "Look for REINFORCEMENTS keyword — destroyed units can return once per game.",
+            "Look for REINFORCEMENTS keyword \u2014 destroyed units can return once per game.",
             "Wizards and Priests still cast, just without the Advanced Magic rules."
           ],
           "relatedRuleSectionId": "combat-sequence"
@@ -61,14 +61,14 @@
           "id": "fight-battle",
           "order": 5,
           "title": "Fight the Battle",
-          "summary": "Play 4 battle rounds — score victory points to win.",
-          "body": "Spearhead games last exactly four battle rounds (~60–90 minutes). The battle ends after round 4 — compare victory points to find the winner.\n\nEach round: determine turn order (attacker picks first round; later rounds use priority roll), identify the underdog, draw a twist card (shared deck from the battlefield), refresh battle tactic hands (personal deck from each army box), then play turns. Score VP for objectives and completed battle tactics. Each battle tactic card offers a tactic OR a command — not both.",
+          "summary": "Play 4 battle rounds \u2014 score victory points to win.",
+          "body": "Spearhead games last exactly four battle rounds (~60\u201390 minutes). The battle ends after round 4 \u2014 compare victory points to find the winner.\n\nEach round: determine turn order (attacker picks first round; later rounds use priority roll), identify the underdog, draw a twist card (shared deck from the battlefield), refresh battle tactic hands (personal deck from each army box), then play turns. Score VP for objectives and completed battle tactics. Each battle tactic card offers a tactic OR a command \u2014 not both.",
           "tips": [
-            "Twist cards and battle tactic cards are different decks — see Card Decks Guide if unsure.",
-            "Round 1: shuffle your battle tactic deck before the battle, then draw 3 from the top — no mulligan.",
+            "Twist cards and battle tactic cards are different decks \u2014 see Card Decks Guide if unsure.",
+            "Round 1: shuffle your battle tactic deck before the battle, then draw 3 from the top \u2014 no mulligan.",
             "Round 2+: discard unwanted cards face up, draw that many from the top. You always end with 3.",
             "Seizing initiative from a priority roll may block refreshing battle tactic cards unless you're the underdog by 5+ VP.",
-            "Twist cards favour the underdog — comebacks are built into the mode."
+            "Twist cards favour the underdog \u2014 comebacks are built into the mode."
           ],
           "relatedRuleSectionId": "spearhead-scoring"
         }
@@ -79,7 +79,7 @@
           "title": "Combat Attack Sequence",
           "category": "core",
           "order": 1,
-          "content": "When a model attacks, resolve each attack:\n\n1. Hit Roll — roll a dice; meet or exceed the weapon's Hit characteristic. Unmodified 1s always fail. An unmodified hit roll of 6 is a critical hit (may trigger weapon abilities).\n\n2. Wound Roll — if the hit succeeds, roll to meet or exceed the Wound characteristic. Unmodified 1s always fail. Crit (Auto-wound) weapons skip this step on a critical hit.\n\n3. Save Roll — the defender rolls a dice and subtracts Rend from the roll. Meet or exceed the Save characteristic to save. Unmodified 1s always fail. Negative Rend makes saves easier.\n\n4. Damage — if the save fails, add damage points equal to the weapon's Damage characteristic to the target's damage pool. Crit (Mortal) skips the save roll and inflicts mortal damage instead.\n\nAfter all attacks from the ability resolve, follow the damage sequence. Identical attacks against the same target can use fast dice rolling (see Attack Roll Modifiers).",
+          "content": "When a model attacks, resolve each attack:\n\n1. Hit Roll \u2014 roll a dice; meet or exceed the weapon's Hit characteristic. Unmodified 1s always fail. An unmodified hit roll of 6 is a critical hit (may trigger weapon abilities).\n\n2. Wound Roll \u2014 if the hit succeeds, roll to meet or exceed the Wound characteristic. Unmodified 1s always fail. Crit (Auto-wound) weapons skip this step on a critical hit.\n\n3. Save Roll \u2014 the defender rolls a dice and subtracts Rend from the roll. Meet or exceed the Save characteristic to save. Unmodified 1s always fail. Negative Rend makes saves easier.\n\n4. Damage \u2014 if the save fails, add damage points equal to the weapon's Damage characteristic to the target's damage pool. Crit (Mortal) skips the save roll and inflicts mortal damage instead.\n\nAfter all attacks from the ability resolve, follow the damage sequence. Identical attacks against the same target can use fast dice rolling (see Attack Roll Modifiers).",
           "relatedSectionIds": [
             "attack-modifiers",
             "damage-sequence",
@@ -91,7 +91,7 @@
           "title": "Attack Roll Modifiers",
           "category": "core",
           "order": 2,
-          "content": "Hit and wound roll modifiers are capped at +1 and -1 after summing all bonuses and penalties.\n\nSave rolls add all modifiers, then subtract Rend — there is no cap on how much can be subtracted from save rolls. Example: Save 6+ vs Rend +2 needs 4+ on the dice (4+2=6).\n\nFast dice rolling: when every attack has the same Hit, Wound, Rend, Damage, and weapon abilities and targets the same unit, roll all hits, then all wounds, then all saves together. Add total damage to the pool once, then run the damage sequence.",
+          "content": "Hit and wound roll modifiers are capped at +1 and -1 after summing all bonuses and penalties.\n\nSave rolls add all modifiers, then subtract Rend \u2014 there is no cap on how much can be subtracted from save rolls. Example: Save 6+ vs Rend +2 needs 4+ on the dice (4+2=6).\n\nFast dice rolling: when every attack has the same Hit, Wound, Rend, Damage, and weapon abilities and targets the same unit, roll all hits, then all wounds, then all saves together. Add total damage to the pool once, then run the damage sequence.",
           "relatedSectionIds": [
             "combat-sequence",
             "weapon-abilities"
@@ -102,7 +102,7 @@
           "title": "Damage Sequence",
           "category": "core",
           "order": 3,
-          "content": "After an ability adds damage to a unit's pool:\n\n1. Ward saves — if the unit has Ward (X+), roll D6 for each damage point in the pool. On X or higher, remove that point. Use only the best Ward value if a unit has more than one.\n\n2. Allocate damage — assign points one at a time. Each time allocated damage equals a model's Health, slay that model and reset the counter. Leftover points stay on the unit — it is damaged until healed or slain.\n\n3. Remove slain models — after each model is removed, the unit must stay in coherency. If not possible, keep removing models until coherency is restored.\n\nMortal damage skips the attack sequence and goes straight into the damage pool (wards still apply unless the ability says otherwise).",
+          "content": "After an ability adds damage to a unit's pool:\n\n1. Ward saves \u2014 if the unit has Ward (X+), roll D6 for each damage point in the pool. On X or higher, remove that point. Use only the best Ward value if a unit has more than one.\n\n2. Allocate damage \u2014 assign points one at a time. Each time allocated damage equals a model's Health, slay that model and reset the counter. Leftover points stay on the unit \u2014 it is damaged until healed or slain.\n\n3. Remove slain models \u2014 after each model is removed, the unit must stay in coherency. If not possible, keep removing models until coherency is restored.\n\nMortal damage skips the attack sequence and goes straight into the damage pool (wards still apply unless the ability says otherwise).",
           "relatedSectionIds": [
             "combat-sequence",
             "movement-phase"
@@ -124,7 +124,7 @@
           "title": "Abilities & Rules of One",
           "category": "core",
           "order": 5,
-          "content": "Abilities have Declare and Effect steps and a timing (Your Hero Phase, Enemy Charge Phase, Passive, etc.). Passive abilities are always on.\n\nRules of One: each unit can use a maximum of one Core ability per phase. A unit that used Run or Retreat this turn cannot Shoot or Charge. A unit that is in combat cannot Normal Move or Run.\n\nFight abilities are different — see Combat Phase. Spearhead uses Core Rules only: spells, prayers, and manifestations resolve as normal abilities without the Advanced Magic module (no miscast or unbind rolls).",
+          "content": "Abilities have Declare and Effect steps and a timing (Your Hero Phase, Enemy Charge Phase, Passive, etc.). Passive abilities are always on.\n\nRules of One: each unit can use a maximum of one Core ability per phase. A unit that used Run or Retreat this turn cannot Shoot or Charge. A unit that is in combat cannot Normal Move or Run.\n\nFight abilities are different \u2014 see Combat Phase. Spearhead uses Core Rules only: spells, prayers, and manifestations resolve as normal abilities without the Advanced Magic module (no miscast or unbind rolls).",
           "relatedSectionIds": [
             "turn-structure",
             "movement-phase",
@@ -148,7 +148,7 @@
           "title": "Movement Phase",
           "category": "core",
           "order": 7,
-          "content": "Normal Move: a unit not in combat moves up to its Move characteristic. Cannot enter combat during the move.\n\nRun: roll D6, add to Move, but the unit cannot Shoot or Charge this turn.\n\nRetreat: a unit in combat takes D3 mortal damage, then moves up to its Move characteristic. It may move through enemy combat ranges but cannot end within an enemy combat range.\n\nCoherency: after any move, models must form one group — each model within ½\" horizontally of at least one other (two others if the unit has 7+ models). If coherency is impossible, the move cannot be made.\n\nTerrain: move freely over features 1\" or less tall; climb taller features counting vertical distance; jump down from ledges (ends the model's move). Fly units ignore models, terrain, and vertical distance but cannot end in combat unless allowed.",
+          "content": "Normal Move: a unit not in combat moves up to its Move characteristic. Cannot enter combat during the move.\n\nRun: roll D6, add to Move, but the unit cannot Shoot or Charge this turn.\n\nRetreat: a unit in combat takes D3 mortal damage, then moves up to its Move characteristic. It may move through enemy combat ranges but cannot end within an enemy combat range.\n\nCoherency: after any move, models must form one group \u2014 each model within \u00bd\" horizontally of at least one other (two others if the unit has 7+ models). If coherency is impossible, the move cannot be made.\n\nTerrain: move freely over features 1\" or less tall; climb taller features counting vertical distance; jump down from ledges (ends the model's move). Fly units ignore models, terrain, and vertical distance but cannot end in combat unless allowed.",
           "relatedSectionIds": [
             "visibility-combat-range",
             "damage-sequence"
@@ -159,7 +159,7 @@
           "title": "Shooting Phase",
           "category": "core",
           "order": 8,
-          "content": "Shoot: pick a unit that did not Run or Retreat this turn. Pick one or more visible enemy targets in range of the weapons used, then resolve shooting attacks.\n\nRange is measured to the closest part of each target. A unit in combat cannot shoot unless a weapon has Shoot in Combat (see Weapon Abilities).\n\nEach model usually attacks with all ranged weapons on its warscroll. Variable Attacks (D6 / 2D6) are rolled per model with that weapon — not once for the whole unit.\n\nSplit attacks from one model across eligible targets as you wish.",
+          "content": "Shoot: pick a unit that did not Run or Retreat this turn. Pick one or more visible enemy targets in range of the weapons used, then resolve shooting attacks.\n\nRange is measured to the closest part of each target. A unit in combat cannot shoot unless a weapon has Shoot in Combat (see Weapon Abilities).\n\nEach model usually attacks with all ranged weapons on its warscroll. Variable Attacks (D6 / 2D6) are rolled per model with that weapon \u2014 not once for the whole unit.\n\nSplit attacks from one model across eligible targets as you wish.",
           "relatedSectionIds": [
             "combat-sequence",
             "weapon-abilities",
@@ -171,7 +171,7 @@
           "title": "Charge Phase",
           "category": "core",
           "order": 9,
-          "content": "Charge: pick a unit not in combat that did not Run or Retreat this turn. Roll 2D6 for the charge roll. The unit may move up to that distance, passing through enemy combat ranges, and must end within ½\" of a visible enemy unit to successfully charge.\n\nA failed charge (cannot reach a valid target) leaves the unit where it started.\n\nCharging units can Fight in the Combat Phase even if not yet in base contact, and may pile in before attacking.\n\nCounter Charge and similar abilities use the Enemy Charge Phase timing.",
+          "content": "Charge: pick a unit not in combat that did not Run or Retreat this turn. Roll 2D6 for the charge roll. The unit may move up to that distance, passing through enemy combat ranges, and must end within \u00bd\" of a visible enemy unit to successfully charge.\n\nA failed charge (cannot reach a valid target) leaves the unit where it started.\n\nCharging units can Fight in the Combat Phase even if not yet in base contact, and may pile in before attacking.\n\nCounter Charge and similar abilities use the Enemy Charge Phase timing.",
           "relatedSectionIds": [
             "combat-phase-fight",
             "movement-phase"
@@ -182,7 +182,7 @@
           "title": "Combat Phase & Fight",
           "category": "core",
           "order": 10,
-          "content": "Combat Phase order:\n\n1. Active player uses all non-Fight Combat Phase abilities.\n2. Opponent uses all non-Fight Combat Phase abilities.\n3. Players alternate picking one eligible unit at a time to Fight, starting with the active player. Every unit that can Fight must do so.\n\nFight: pick a unit in combat or that charged this turn. It may pile in, then must attack visible enemy units it is in combat with.\n\nPile-in: each model moves up to 3\". If already in combat, pick an enemy target — each model must end no farther from that target and must stay in combat with every enemy it started engaged with. If not in combat (e.g. after charging), models may move 3\" in any direction including into combat ranges.\n\nStrike-first units must Fight before non-Strike-first units. Strike-last units Fight after all other eligible units. A unit with both treats them as neither.",
+          "content": "Combat Phase order:\n\n1. Active player uses all non-Fight Combat Phase abilities.\n2. Opponent uses all non-Fight Combat Phase abilities.\n3. Players alternate picking one eligible unit at a time to Fight, starting with the active player. Every unit that can Fight must do so.\n\nFight: pick a unit in combat or that charged this turn. It may pile in, then must attack visible enemy units it is in combat with.\n\nPile-in: each model moves up to 3\". If already in combat, pick an enemy target \u2014 each model must end no farther from that target and must stay in combat with every enemy it started engaged with. If not in combat (e.g. after charging), models may move 3\" in any direction including into combat ranges.\n\nStrike-first units must Fight before non-Strike-first units. Strike-last units Fight after all other eligible units. A unit with both treats them as neither.",
           "relatedSectionIds": [
             "strike-first-last",
             "combat-sequence",
@@ -194,7 +194,7 @@
           "title": "Weapon Abilities",
           "category": "core",
           "order": 11,
-          "content": "Common weapon abilities in Spearhead:\n\n• Crit (Auto-wound) — unmodified hit 6 auto-wounds; defender still saves.\n• Crit (Mortal) — unmodified hit 6 inflicts mortal damage equal to the weapon's Damage; attack sequence ends.\n• Crit (2 Hits) — unmodified hit 6 counts as 2 hits; roll wounds separately.\n• Shoot in Combat — may shoot while the unit is engaged.\n• Charge (+1 Damage) — +1 Damage if the unit charged this turn.\n• Anti-… (+1 Rend) — +1 Rend vs units matching the Anti condition.\n• Companion — weapon ignores friendly buffs to attacks.\n\nIf multiple Crit abilities apply on one weapon, pick one before rolling. Anti and Charge bonuses stack.",
+          "content": "Common weapon abilities in Spearhead:\n\n\u2022 Crit (Auto-wound) \u2014 unmodified hit 6 auto-wounds; defender still saves.\n\u2022 Crit (Mortal) \u2014 unmodified hit 6 inflicts mortal damage equal to the weapon's Damage; attack sequence ends.\n\u2022 Crit (2 Hits) \u2014 unmodified hit 6 counts as 2 hits; roll wounds separately.\n\u2022 Shoot in Combat \u2014 may shoot while the unit is engaged.\n\u2022 Charge (+1 Damage) \u2014 +1 Damage if the unit charged this turn.\n\u2022 Anti-\u2026 (+1 Rend) \u2014 +1 Rend vs units matching the Anti condition.\n\u2022 Companion \u2014 weapon ignores friendly buffs to attacks.\n\nIf multiple Crit abilities apply on one weapon, pick one before rolling. Anti and Charge bonuses stack.",
           "relatedSectionIds": [
             "combat-sequence",
             "shooting-phase"
@@ -205,7 +205,7 @@
           "title": "Strike-first & Strike-last",
           "category": "core",
           "order": 12,
-          "content": "Strike-first: at the start of the Combat Phase, these units must be picked to Fight before any unit without Strike-first.\n\nStrike-last: cannot Fight until every other eligible unit without Strike-last has Fought.\n\nStrike-first only applies to units already in combat at the start of the phase — a unit pulled into combat later does not gain Strike-first retroactively.\n\nAbilities that let a unit Fight immediately after another still respect Strike-first and Strike-last ordering.",
+          "content": "Strike-first: at the start of the Combat Phase, these units must be picked to Fight before any unit without Strike-first.\n\nStrike-last: cannot Fight until every other eligible unit without Strike-last has Fought.\n\nStrike-first only applies to units already in combat at the start of the phase \u2014 a unit pulled into combat later does not gain Strike-first retroactively.\n\nAbilities that let a unit Fight immediately after another still respect Strike-first and Strike-last ordering.",
           "relatedSectionIds": [
             "combat-phase-fight"
           ]
@@ -227,7 +227,7 @@
           "title": "Spearhead Overview",
           "category": "spearhead",
           "order": 10,
-          "content": "Spearhead is a compact AoS 4th Edition mode using Core Rules only — no Advanced Rules modules (Magic, Manifestations, etc.). Armies are fixed box-set rosters; each roster line is a separate unit on the table.\n\nBattles use 30\"×22\" realm boards, twist cards (from the battlefield pack), and personal battle tactic decks (from each army box).\n\nPre-battle: roll attacker/defender → regiment abilities and enhancements → deployment → four battle rounds.\n\nSpells and prayers on warscrolls work as normal timed abilities. Reinforcement units use the Spearhead Call for Reinforcements rule when eligible.",
+          "content": "Spearhead is a compact AoS 4th Edition mode using Core Rules only \u2014 no Advanced Rules modules (Magic, Manifestations, etc.). Armies are fixed box-set rosters; each roster line is a separate unit on the table.\n\nBattles use 30\"\u00d722\" realm boards, twist cards (from the battlefield pack), and personal battle tactic decks (from each army box).\n\nPre-battle: roll attacker/defender \u2192 regiment abilities and enhancements \u2192 deployment \u2192 four battle rounds.\n\nSpells and prayers on warscrolls work as normal timed abilities. Reinforcement units use the Spearhead Call for Reinforcements rule when eligible.",
           "relatedSectionIds": [
             "spearhead-format",
             "spearhead-deployment",
@@ -240,7 +240,7 @@
           "title": "Spearhead Format Rules",
           "category": "spearhead",
           "order": 11,
-          "content": "Key differences from full Matched Play and from Combat Patrol:\n\n• Exactly four battle rounds — the game always plays through round 4. Wiping an opponent's army does not instantly end the game; compare victory points after round 4.\n• Fixed rosters — no list building. Each line on the army sheet is its own unit; there are no grouped leader/bodyguard units like Combat Patrol.\n• Coherency applies within each unit only, not between separate roster entries.\n• Core Rules only — no command points module, no advanced magic/unbind.\n• Scoring uses printed objectives, twist cards, and battle tactic cards instead of standard battle tactics and commands packs.\n• General = one enhancement on your general's unit, not a separate attached leader unit.",
+          "content": "Key differences from full Matched Play and from Combat Patrol:\n\n\u2022 Exactly four battle rounds \u2014 the game always plays through round 4. Wiping an opponent's army does not instantly end the game; compare victory points after round 4.\n\u2022 Fixed rosters \u2014 no list building. Each line on the army sheet is its own unit; there are no grouped leader/bodyguard units like Combat Patrol.\n\u2022 Coherency applies within each unit only, not between separate roster entries.\n\u2022 Core Rules only \u2014 no command points module, no advanced magic/unbind.\n\u2022 Scoring uses printed objectives, twist cards, and battle tactic cards instead of standard battle tactics and commands packs.\n\u2022 General = one enhancement on your general's unit, not a separate attached leader unit.",
           "relatedSectionIds": [
             "spearhead-overview",
             "spearhead-scoring",
@@ -252,7 +252,7 @@
           "title": "Spearhead Deployment",
           "category": "spearhead",
           "order": 12,
-          "content": "After regiment abilities and enhancements:\n\n1. Defender chooses realm battlefield and side (Fire/Jade, Sand/Bone, City of Ash, etc.) and matching twist deck.\n2. Place two large and two small terrain features; keep deployment zones clear.\n3. Confirm printed objectives on the board — models contest while wholly or partially on the circle.\n4. Deploy within shaded zones on the realm map — defender first, then alternate.\n5. Resolve deployment abilities (e.g. Skaven tunnel reserves) before round 1.\n\nSpearhead Call for Reinforcements: units with the Reinforcements keyword may arrive from a battlefield edge when the rule allows, usually as a reaction when an enemy unit is destroyed.",
+          "content": "After regiment abilities and enhancements:\n\n1. Defender chooses realm battlefield and side (Fire/Jade, Sand/Bone, City of Ash, etc.) and matching twist deck.\n2. Place two large and two small terrain features; keep deployment zones clear.\n3. Confirm printed objectives on the board \u2014 models contest while wholly or partially on the circle.\n4. Deploy within shaded zones on the realm map \u2014 defender first, then alternate.\n5. Resolve deployment abilities (e.g. Skaven tunnel reserves) before round 1.\n\nSpearhead Call for Reinforcements: units with the Reinforcements keyword may arrive from a battlefield edge when the rule allows, usually as a reaction when an enemy unit is destroyed.",
           "relatedSectionIds": [
             "spearhead-overview",
             "glossary-contest"
@@ -263,7 +263,7 @@
           "title": "Start of Battle Round",
           "category": "spearhead",
           "order": 13,
-          "content": "At the start of each battle round:\n\n• Round 1: attacker chooses who takes the first turn.\n• Round 2+: priority roll — winner chooses first turn.\n• Determine the underdog (player with fewer VP).\n• Draw a twist card from the battlefield pack (shared — underdog benefits).\n• Battle tactic cards: round 1 — each player draws 3 from the top of their shuffled deck (no mulligan). Round 2+ — refresh hands (see scoring section).\n• Resolve Start of Battle Round abilities.",
+          "content": "At the start of each battle round:\n\n\u2022 Round 1: attacker chooses who takes the first turn.\n\u2022 Round 2+: priority roll \u2014 winner chooses first turn.\n\u2022 Determine the underdog (player with fewer VP).\n\u2022 Draw a twist card from the battlefield pack (shared \u2014 underdog benefits).\n\u2022 Battle tactic cards: round 1 \u2014 each player draws 3 from the top of their shuffled deck (no mulligan). Round 2+ \u2014 refresh hands (see scoring section).\n\u2022 Resolve Start of Battle Round abilities.",
           "relatedSectionIds": [
             "spearhead-scoring"
           ]
@@ -273,7 +273,7 @@
           "title": "Victory Points in Spearhead",
           "category": "spearhead",
           "order": 14,
-          "content": "At the end of your turn, score:\n• 1 VP if you hold any objective.\n• 1 VP if you hold two or more objectives.\n• 1 VP if you hold more objectives than your opponent.\n• 1 VP per battle tactic completed.\n\nBattle tactics (personal deck from your army box): before the battle, shuffle your deck face down. Round 1 — draw exactly 3 cards from the top; no mulligan and no spreading the deck to pick cards. Round 2+ — discard any number face-up, then draw that many from the top until you have 3 again. Each card: complete the tactic at end of turn OR use the command during the battle — not both.\n\nPriority note: if you win priority and choose first turn when you went second last round, you cannot refresh battle tactic cards unless you are the underdog and VP deficit is 5+.\n\nAfter round 4, total VP — highest wins. Ties are a draw.",
+          "content": "At the end of your turn, score:\n\u2022 1 VP if you hold any objective.\n\u2022 1 VP if you hold two or more objectives.\n\u2022 1 VP if you hold more objectives than your opponent.\n\u2022 1 VP per battle tactic completed.\n\nBattle tactics (personal deck from your army box): before the battle, shuffle your deck face down. Round 1 \u2014 draw exactly 3 cards from the top; no mulligan and no spreading the deck to pick cards. Round 2+ \u2014 discard any number face-up, then draw that many from the top until you have 3 again. Each card: complete the tactic at end of turn OR use the command during the battle \u2014 not both.\n\nPriority note: if you win priority and choose first turn when you went second last round, you cannot refresh battle tactic cards unless you are the underdog and VP deficit is 5+.\n\nAfter round 4, total VP \u2014 highest wins. Ties are a draw.",
           "relatedSectionIds": [
             "spearhead-battle-round",
             "glossary-contest",
@@ -285,7 +285,7 @@
           "title": "Contesting Objectives",
           "category": "glossary",
           "order": 20,
-          "content": "In Spearhead, a model contests an objective while wholly or partially on the printed circle. The entire circle counts — not just the centre symbol. Objectives are named after godbeasts and are printed on the realm battlefield board.\n\nHolding objectives at the end of your turn is how most victory points are scored each turn.",
+          "content": "In Spearhead, a model contests an objective while wholly or partially on the printed circle. The entire circle counts \u2014 not just the centre symbol. Objectives are named after godbeasts and are printed on the realm battlefield board.\n\nHolding objectives at the end of your turn is how most victory points are scored each turn.",
           "relatedSectionIds": [
             "spearhead-scoring",
             "glossary-objective-control"
@@ -296,7 +296,7 @@
           "title": "Objective Control",
           "category": "glossary",
           "order": 21,
-          "content": "A unit's Control characteristic measures how strongly it holds objectives when contesting. In Spearhead scoring, you compare how many objectives each player holds — the player holding more objectives scores an extra VP at end of turn.\n\nOnly models on the objective count. Destroyed units cannot contest.",
+          "content": "A unit's Control characteristic measures how strongly it holds objectives when contesting. In Spearhead scoring, you compare how many objectives each player holds \u2014 the player holding more objectives scores an extra VP at end of turn.\n\nOnly models on the objective count. Destroyed units cannot contest.",
           "relatedSectionIds": [
             "glossary-contest",
             "spearhead-scoring"
@@ -323,13 +323,420 @@
       "editionMigrationSteps": []
     },
     {
-      "id": "wh40k-10e",
-      "name": "Warhammer 40,000",
-      "tagline": "10th Edition rules companion",
-      "edition": "10th Edition",
-      "availability": "comingSoon",
-      "gettingStartedSteps": [],
-      "ruleSections": [],
+      "id": "wh40k-10e-cp",
+      "name": "Warhammer 40,000: Combat Patrol",
+      "tagline": "Quick box-set battles \u2014 guided rules and missions",
+      "edition": "10th Edition \u2014 Combat Patrol",
+      "availability": "available",
+      "externalLinks": [
+        {
+          "id": "cp-rules-pdf",
+          "title": "Combat Patrol Rules (PDF)",
+          "url": "https://assets.warhammer-community.com/warhammer40000_combatpatrol_rules_eng.24.09-rbtns7zwbh.pdf"
+        },
+        {
+          "id": "cp-downloads",
+          "title": "Combat Patrol Faction Downloads",
+          "url": "https://www.warhammer-community.com/en-gb/downloads/warhammer-40000/"
+        },
+        {
+          "id": "10e-core-downloads",
+          "title": "10th Edition Core Rules & Downloads",
+          "url": "https://www.warhammer-community.com/en-gb/downloads/warhammer-40000/"
+        }
+      ],
+      "gettingStartedSteps": [
+        {
+          "id": "pick-patrol",
+          "order": 1,
+          "title": "Pick a Combat Patrol",
+          "summary": "Each player uses a fixed roster from a Combat Patrol box.",
+          "body": "Combat Patrol games use the units listed on your patrol's datasheet \u2014 no points or list building. Each box includes custom datasheets balanced against other patrols. Declare which patrol you are using and which Enhancement (default or optional) before setup.",
+          "tips": [
+            "New players should stick with the default Enhancement until you know the army.",
+            "Leviathan box Space Marines and Tyranids patrols are a great first matchup."
+          ],
+          "relatedRuleSectionId": "cp-overview"
+        },
+        {
+          "id": "pick-mission",
+          "order": 2,
+          "title": "Pick a Mission",
+          "summary": "Choose or roll one of six Combat Patrol missions.",
+          "body": "Missions set deployment maps, objective positions, a mission rule, and a primary scoring objective. Roll a D6 or agree on a mission \u2014 Clash of Patrols is recommended for your first game.",
+          "tips": [
+            "Read the mission rule and primary objective before placing terrain.",
+            "Round 5 scoring often differs for the second-turn player \u2014 check cp-scoring."
+          ],
+          "relatedRuleSectionId": "cp-missions"
+        },
+        {
+          "id": "setup-board",
+          "order": 3,
+          "title": "Set Up the Battlefield",
+          "summary": "44\"\u00d730\" board, terrain, objectives, attacker and defender.",
+          "body": "Combat Patrol uses a 44\" by 30\" battlefield. Place terrain evenly so both sides can use cover. Place objective markers per the mission map. Agree battlefield edges, roll off for attacker and defender, then declare formations: Patrol Squads splits, Leader attachments, Transports, and Reserves.",
+          "tips": [
+            "Defender deploys first, alternating one unit at a time.",
+            "Reserves cannot arrive in battle round 1."
+          ],
+          "relatedRuleSectionId": "cp-pre-battle"
+        },
+        {
+          "id": "declare-formations",
+          "order": 4,
+          "title": "Declare Formations",
+          "summary": "Patrol Squads, Leaders, Transports, and Reserves.",
+          "body": "Secretly note Patrol Squads splits, which Leaders attach to which units, embarked units, and units in Reserves. Reveal to your opponent, then deploy. Roll for first turn and resolve pre-battle abilities (such as Scouts) before the first battle round.",
+          "tips": [
+            "Units in Reserves must arrive by end of battle round 3 or they are destroyed.",
+            "Attached Leaders move and fight with their bodyguard until rules detach them."
+          ],
+          "relatedRuleSectionId": "cp-pre-battle"
+        },
+        {
+          "id": "how-a-turn-works",
+          "order": 5,
+          "title": "How a Turn Works",
+          "summary": "Command, Move, Shoot, Charge, Fight \u2014 five battle rounds.",
+          "body": "Each turn: Command Phase (battle-shock, stratagems, secure objectives, mission actions), Movement, Shooting, Charge, and Fight. Combat Patrol games last five battle rounds unless one army is wiped \u2014 compare victory points at the end.",
+          "tips": [
+            "Battleline units can secure objectives in your Command phase \u2014 see cp-securing.",
+            "Each patrol has three bespoke stratagems on its datasheet."
+          ],
+          "relatedRuleSectionId": "10e-turn-overview"
+        },
+        {
+          "id": "how-you-win",
+          "order": 6,
+          "title": "How You Win",
+          "summary": "Score VP from the mission, your secondary, and Battle Ready.",
+          "body": "Each player picks one of two secondary objectives on their patrol sheet. Score primary VP from the mission (usually from battle round 2 onward), secondary VP from your chosen card, and +10 VP if your army is Battle Ready (fully painted). Most VP wins; a tie is a draw.",
+          "tips": [
+            "Track secured objectives \u2014 they keep scoring even when you move away.",
+            "Round 5: the second-turn player often scores at end of turn, not Command phase."
+          ],
+          "relatedRuleSectionId": "cp-scoring"
+        },
+        {
+          "id": "first-game",
+          "order": 7,
+          "title": "Play Your First Game",
+          "summary": "Clash of Patrols with the Leviathan patrols.",
+          "body": "For a first Combat Patrol, use Clash of Patrols with two patrols from the same or different boxes. Open Missions Reference for the deployment map and scoring reminders, and use the rules reference at the table for phases and combat.",
+          "tips": [
+            "Expect about an hour for five rounds.",
+            "Guided Match with battle tracker arrives in a future app update."
+          ],
+          "relatedRuleSectionId": "cp-mission-clash-of-patrols"
+        }
+      ],
+      "ruleSections": [
+        {
+          "id": "10e-overview",
+          "title": "10th Edition Overview",
+          "category": "core",
+          "order": 1,
+          "content": "Warhammer 40,000 10th Edition uses alternating turns over five battle rounds. Combat Patrol is a compact format: fixed patrol rosters, six missions, and bespoke stratagems per patrol. Standard 10th Edition core rules apply for movement, shooting, charges, and fighting unless a mission or patrol rule overrides them.",
+          "relatedSectionIds": [
+            "10e-turn-overview",
+            "cp-overview"
+          ]
+        },
+        {
+          "id": "10e-turn-overview",
+          "title": "Turn Structure",
+          "category": "core",
+          "order": 2,
+          "content": "Each player turn has five phases in order:\n\n1. Command Phase \u2014 Battle-shock tests, stratagems, abilities; in Combat Patrol missions, secure objectives and mission actions also happen here.\n2. Movement Phase \u2014 Normal moves, Advances, Falls Back.\n3. Shooting Phase \u2014 Ranged attacks.\n4. Charge Phase \u2014 Declare charges within 12\", roll 2D6, move to engage.\n5. Fight Phase \u2014 Pile-in, fight, consolidation.\n\nPlayers alternate turns each battle round. Combat Patrol games use five battle rounds.",
+          "relatedSectionIds": [
+            "10e-command-phase",
+            "10e-charge-fight"
+          ]
+        },
+        {
+          "id": "10e-command-phase",
+          "title": "Command Phase",
+          "category": "core",
+          "order": 3,
+          "content": "Start of Command Phase: resolve start-of-phase abilities. Battle-shocked units and units below Half-strength take Leadership tests; failures apply Battle-shock. Use stratagems and other Command abilities. End of Command Phase: in Combat Patrol missions, secure objectives and score primary VP when the mission says so.",
+          "relatedSectionIds": [
+            "10e-battle-shock",
+            "cp-securing"
+          ]
+        },
+        {
+          "id": "10e-attack-sequence",
+          "title": "Attack Sequence",
+          "category": "core",
+          "order": 4,
+          "content": "When a unit attacks:\n\n1. Select eligible targets.\n2. Roll to hit (BS for shooting, WS for melee).\n3. Roll to wound comparing Strength to Toughness.\n4. Defender rolls saves (Armour then Invulnerable if applicable).\n5. Apply damage; remove destroyed models.\n\nGroup identical weapons together. Critical hits auto-wound on the wound roll.",
+          "relatedSectionIds": [
+            "10e-shooting",
+            "10e-cover-concealment"
+          ]
+        },
+        {
+          "id": "10e-shooting",
+          "title": "Shooting Phase",
+          "category": "core",
+          "order": 5,
+          "content": "Units that Remained Stationary or Advanced with Assault weapons may shoot. Select targets in range and visible unless Indirect Fire rules apply. Cover gives the target Benefit of Cover (+1 to armour save, or -1 to hit in some cases per datasheet). Heavy weapons cannot shoot after Advancing unless rules allow.",
+          "relatedSectionIds": [
+            "10e-cover-concealment"
+          ]
+        },
+        {
+          "id": "10e-charge-fight",
+          "title": "Charge & Fight Phases",
+          "category": "core",
+          "order": 6,
+          "content": "Charge: pick enemy units within 12\", roll 2D6 total for distance, move to within Engagement Range (2\"). Fight: eligible units pile in 3\", then make melee attacks, then consolidate 3\" toward the closest enemy. Alternating fight order follows the core rules sequence.",
+          "relatedSectionIds": [
+            "10e-attack-sequence"
+          ]
+        },
+        {
+          "id": "10e-movement",
+          "title": "Movement Phase",
+          "category": "core",
+          "order": 7,
+          "content": "Units move up to their Move characteristic, or Advance (roll D6\" added to Move, cannot shoot except with Assault). Fall Back moves away from Engagement Range but the unit cannot charge that turn. Models must stay in Unit Coherency.",
+          "relatedSectionIds": [
+            "10e-turn-overview"
+          ]
+        },
+        {
+          "id": "10e-battle-shock",
+          "title": "Battle-shock",
+          "category": "core",
+          "order": 8,
+          "content": "In the Command phase, Battle-shocked units and units at Below Half-strength test Leadership. On a fail, the unit is Battle-shocked until the start of your next Command phase. Battle-shocked units cannot secure objectives in Combat Patrol missions and have other restrictions per core rules.",
+          "relatedSectionIds": [
+            "10e-command-phase",
+            "cp-securing"
+          ]
+        },
+        {
+          "id": "10e-oc",
+          "title": "Objective Control",
+          "category": "core",
+          "order": 9,
+          "content": "A model is within range of an objective marker if any part of its base is within the distance shown on the mission (usually 3\"). Control compares the sum of Objective Control (OC) values of models within range. Higher total controls the marker; equal totals mean neither side controls it.",
+          "relatedSectionIds": [
+            "glossary-oc-10e",
+            "cp-securing"
+          ]
+        },
+        {
+          "id": "10e-cover-concealment",
+          "title": "Cover",
+          "category": "core",
+          "order": 10,
+          "content": "Terrain with the Cover keyword grants Benefit of Cover to infantry models wholly within it when targeted by ranged attacks \u2014 typically +1 to armour saves. Dense ruins and similar features are placed during setup. Combat Patrol missions expect evenly distributed terrain so both patrols can benefit.",
+          "relatedSectionIds": [
+            "10e-shooting"
+          ]
+        },
+        {
+          "id": "cp-overview",
+          "title": "Combat Patrol Overview",
+          "category": "combatPatrol",
+          "order": 11,
+          "content": "Combat Patrol is the fastest way to play Warhammer 40,000: fixed box-set armies, six missions, about one hour, 44\"\u00d730\" boards. Each patrol has custom datasheets, two Enhancements, two Secondary Objectives (pick one), and three Stratagems balanced against every other patrol.",
+          "relatedSectionIds": [
+            "cp-pre-battle",
+            "cp-missions"
+          ]
+        },
+        {
+          "id": "cp-pre-battle",
+          "title": "Pre-battle Sequence",
+          "category": "combatPatrol",
+          "order": 12,
+          "content": "1. Select patrol and Enhancement.\n2. Determine mission (D6 or agree).\n3. Create battlefield \u2014 terrain and objectives per map.\n4. Determine attacker and defender.\n5. Declare formations \u2014 Patrol Squads, Leaders, Transports, Reserves.\n6. Deploy armies \u2014 defender first, alternate units.\n7. Roll for first turn.\n8. Resolve pre-battle rules.\n9. Play five battle rounds.\n10. Compare VP (+ Battle Ready bonus).",
+          "relatedSectionIds": [
+            "cp-missions",
+            "cp-reserves"
+          ]
+        },
+        {
+          "id": "cp-securing",
+          "title": "Securing Objectives",
+          "category": "combatPatrol",
+          "order": 13,
+          "content": "At the end of your Command phase, if you control an objective marker and one or more Battleline units from your army (excluding Battle-shocked units) are within range, that objective is secured by you. While secured, you keep control even without models in range. Securing ends if your opponent controls the marker at the end of a later Command phase.",
+          "relatedSectionIds": [
+            "glossary-cp-secure",
+            "10e-oc"
+          ]
+        },
+        {
+          "id": "cp-reserves",
+          "title": "Reserves in Combat Patrol",
+          "category": "combatPatrol",
+          "order": 14,
+          "content": "Units in Reserves (including Deep Strike) cannot arrive in battle round 1. Any Reserves unit not on the battlefield by the end of battle round 3 is destroyed, as are units embarked within it. Declare Reserves during battle formations before deployment.",
+          "relatedSectionIds": [
+            "glossary-cp-reserves",
+            "cp-pre-battle"
+          ]
+        },
+        {
+          "id": "cp-battle-ready",
+          "title": "Battle Ready",
+          "category": "combatPatrol",
+          "order": 15,
+          "content": "If every model in your Combat Patrol is painted to Battle Ready standard (fully painted with a detailed or textured base), you score an additional 10 VP at the end of the battle. Agree with your opponent before the game whether both armies qualify.",
+          "relatedSectionIds": [
+            "glossary-cp-battle-ready",
+            "cp-scoring"
+          ]
+        },
+        {
+          "id": "cp-missions",
+          "title": "Six Missions",
+          "category": "combatPatrol",
+          "order": 16,
+          "content": "Roll a D6 or pick a mission:\n\n1 \u2014 Clash of Patrols (Retrieve Intelligence + Take and Hold)\n2 \u2014 Archeotech Recovery (Irradiated Power Cells)\n3 \u2014 Forward Outpost (Sabotage Enemy Comms + Vital Ground)\n4 \u2014 Scorched Earth (Raze and Ruin)\n5 \u2014 Sweeping Raid (Supply Lines + Priority Targets)\n6 \u2014 Display of Might (Claim Sites + Symbolic Sites)\n\nEach mission includes a deployment map and objective placement. See individual mission sections for scoring detail.",
+          "relatedSectionIds": [
+            "cp-mission-clash-of-patrols",
+            "cp-scoring"
+          ]
+        },
+        {
+          "id": "cp-mission-clash-of-patrols",
+          "title": "Clash of Patrols",
+          "category": "combatPatrol",
+          "order": 17,
+          "content": "Mission rule \u2014 Retrieve Intelligence: From battle round 2, in your Command phase you may select one objective you control and recover data once (each objective once per game). If your Warlord is on the battlefield, gain 1CP.\n\nPrimary \u2014 Take and Hold: Rounds 2\u20134, score 5 VP per objective you control at end of your Command phase (max 15 VP per turn). Round 5: second-turn player scores at end of turn instead of Command phase.",
+          "relatedSectionIds": [
+            "cp-missions",
+            "cp-scoring"
+          ]
+        },
+        {
+          "id": "cp-mission-archeotech-recovery",
+          "title": "Archeotech Recovery",
+          "category": "combatPatrol",
+          "order": 18,
+          "content": "Mission rule \u2014 Irradiated Power Cells: Round 3 Defender picks a No Man's Land objective as Gamma; round 4 remove Gamma and Attacker picks Beta; round 5 remove Beta.\n\nPrimary \u2014 Recover Archeotech: Score 5 VP per objective controlled at end of Command phase rounds 2\u20135. +10 VP at battle end if you control the last No Man's Land objective.",
+          "relatedSectionIds": [
+            "cp-missions"
+          ]
+        },
+        {
+          "id": "cp-mission-forward-outpost",
+          "title": "Forward Outpost",
+          "category": "combatPatrol",
+          "order": 19,
+          "content": "Mission rule \u2014 Sabotage Enemy Comms: If you control the objective in the opponent's deployment zone at end of your turn, they cannot use Command Re-roll until battle end.\n\nPrimary \u2014 Vital Ground: 5 VP per No Man's Land objective + 10 VP for opponent's deployment zone objective each Command phase (rounds 2\u20134, max 15). Round 5 second-turn player scores at end of turn.",
+          "relatedSectionIds": [
+            "cp-missions"
+          ]
+        },
+        {
+          "id": "cp-mission-scorched-earth",
+          "title": "Scorched Earth",
+          "category": "combatPatrol",
+          "order": 20,
+          "content": "Mission rule \u2014 Raze and Ruin: From round 2, raze a controlled objective (no enemies within 3\"; Attacker never marker A; Defender never marker B) to remove it.\n\nPrimary: 5 VP if you control any objective; +5 if you control more than opponent; +10 if you razed an objective this turn. Round 5 second-turn player scores at end of turn.",
+          "relatedSectionIds": [
+            "cp-missions"
+          ]
+        },
+        {
+          "id": "cp-mission-sweeping-raid",
+          "title": "Sweeping Raid",
+          "category": "combatPatrol",
+          "order": 21,
+          "content": "Mission rule \u2014 Supply Lines: Start of your Command phase, if you control your deployment zone objective, roll D6 \u2014 on 4+ gain 1CP.\n\nPrimary \u2014 Priority Targets: 5 VP per objective at end of Command phase rounds 2\u20134 (max 15). End of battle: Attacker scores for markers C/D; Defender for A/B (5 or 10 VP each).",
+          "relatedSectionIds": [
+            "cp-missions"
+          ]
+        },
+        {
+          "id": "cp-mission-display-of-might",
+          "title": "Display of Might",
+          "category": "combatPatrol",
+          "order": 22,
+          "content": "Mission rule \u2014 Break Their Spirit: Insane Bravery only within 6\" of your Warlord. Claim Sites: Characters claim No Man's Land symbolic sites in Command phase.\n\nPrimary \u2014 Symbolic Sites: Up to four scoring conditions \u00d7 5 VP per turn (control, multi-control, claim, consecutive claim). Round 5 second-turn player scores at end of turn.",
+          "relatedSectionIds": [
+            "cp-missions"
+          ]
+        },
+        {
+          "id": "cp-scoring",
+          "title": "Scoring Summary",
+          "category": "combatPatrol",
+          "order": 23,
+          "content": "Primary VP comes from the mission (usually from battle round 2). Each player selects one Secondary Objective from their patrol sheet. Battle Ready armies gain +10 VP. Most VP wins.\n\nRound 5 note: in many missions the second-turn player scores primary VP at the end of their turn, not at end of Command phase \u2014 so last-turn decisions still matter.",
+          "relatedSectionIds": [
+            "cp-battle-ready",
+            "cp-missions"
+          ]
+        },
+        {
+          "id": "glossary-cp-secure",
+          "title": "Secure",
+          "category": "glossary",
+          "order": 24,
+          "content": "Combat Patrol missions only. At end of your Command phase, Battleline units (not Battle-shocked) within range of an objective you control secure it. Secured objectives stay yours without models in range until lost.",
+          "relatedSectionIds": [
+            "cp-securing"
+          ]
+        },
+        {
+          "id": "glossary-cp-patrol-squads",
+          "title": "Patrol Squads",
+          "category": "glossary",
+          "order": 25,
+          "content": "Some patrol datasheets let you split a unit into smaller units for one battle. Declare splits during battle formations; follow the exact split on the datasheet.",
+          "relatedSectionIds": [
+            "cp-pre-battle"
+          ]
+        },
+        {
+          "id": "glossary-cp-battle-ready",
+          "title": "Battle Ready",
+          "category": "glossary",
+          "order": 26,
+          "content": "Fully painted models with detailed or textured bases. Worth +10 VP at end of a Combat Patrol game.",
+          "relatedSectionIds": [
+            "cp-battle-ready"
+          ]
+        },
+        {
+          "id": "glossary-cp-leaders",
+          "title": "Attached Leaders",
+          "category": "glossary",
+          "order": 27,
+          "content": "Declare which Leader is attached to which Bodyguard before deployment. They act as one unit until detached by rules.",
+          "relatedSectionIds": [
+            "cp-pre-battle"
+          ]
+        },
+        {
+          "id": "glossary-cp-reserves",
+          "title": "Reserves (Combat Patrol)",
+          "category": "glossary",
+          "order": 28,
+          "content": "Cannot arrive round 1. Destroyed if not on board by end of round 3.",
+          "relatedSectionIds": [
+            "cp-reserves"
+          ]
+        },
+        {
+          "id": "glossary-oc-10e",
+          "title": "Objective Control (OC)",
+          "category": "glossary",
+          "order": 29,
+          "content": "Sum OC of models within range of an objective; higher total controls it.",
+          "relatedSectionIds": [
+            "10e-oc"
+          ]
+        }
+      ],
       "editionMigrationSteps": []
     },
     {
@@ -351,12 +758,12 @@
         },
         {
           "id": "chapter-approved-explainer",
-          "title": "Chapter Approved Deck — How It Works",
+          "title": "Chapter Approved Deck \u2014 How It Works",
           "url": "https://www.warhammer-community.com/en-gb/articles/p3i6aa3h/the-chapter-approved-deck-what-is-it-and-how-does-it-work/"
         },
         {
           "id": "armageddon-box",
-          "title": "Warhammer 40,000: Armageddon — What's in the Box",
+          "title": "Warhammer 40,000: Armageddon \u2014 What's in the Box",
           "url": "https://www.warhammer-community.com/en-gb/articles/x2allqya/warhammer-40000-armageddon-whats-in-the-box/"
         },
         {
@@ -376,9 +783,9 @@
           "order": 1,
           "title": "What You Need",
           "summary": "Miniatures, dice, a measuring tool, terrain, and the free core rules.",
-          "body": "Warhammer 40,000 is a two-player miniatures wargame. You need an army of models, six-sided dice, a tape measure (inches), a battlefield with terrain, and the rules. The 11th Edition core rules are free on Warhammer Community. The Armageddon launch box is an optional starter with Space Marines, Orks, mission cards, and a rulebook — about 1,000 points per side.",
+          "body": "Warhammer 40,000 is a two-player miniatures wargame. You need an army of models, six-sided dice, a tape measure (inches), a battlefield with terrain, and the rules. The 11th Edition core rules are free on Warhammer Community. The Armageddon launch box is an optional starter with Space Marines, Orks, mission cards, and a rulebook \u2014 about 1,000 points per side.",
           "tips": [
-            "You do not need every codex on day one — your existing 10th Edition codex still works in 11th.",
+            "You do not need every codex on day one \u2014 your existing 10th Edition codex still works in 11th.",
             "Paint models for the Battle Ready bonus in matched play (+10 VP)."
           ],
           "relatedRuleSectionId": "11e-overview"
@@ -388,7 +795,7 @@
           "order": 2,
           "title": "Build Your First Army",
           "summary": "Pick a faction, a points limit, and spend Detachment Points on detachments.",
-          "body": "Choose an Army Faction and a points limit — Incursion (1,000 pts) is a good first game; Strike Force (2,000 pts) is standard. Instead of one detachment, you spend Detachment Points (2 at 1k, 3 at 2k) on one or more detachments. Each detachment adds rules, stratagems, and a Force Disposition that shapes your missions. Attach Leaders and Support Characters to units when you write the list, not on the table.",
+          "body": "Choose an Army Faction and a points limit \u2014 Incursion (1,000 pts) is a good first game; Strike Force (2,000 pts) is standard. Instead of one detachment, you spend Detachment Points (2 at 1k, 3 at 2k) on one or more detachments. Each detachment adds rules, stratagems, and a Force Disposition that shapes your missions. Attach Leaders and Support Characters to units when you write the list, not on the table.",
           "tips": [
             "Check the Munitorum Field Manual for points and which characters can join which units.",
             "At 2,000 points most armies end up with six or nine stratagems depending on detachments chosen."
@@ -399,8 +806,8 @@
           "id": "set-up-battlefield",
           "order": 3,
           "title": "Set Up the Battlefield",
-          "summary": "Terrain footprints are objectives — not just circles on a mat.",
-          "body": "Place terrain before deployment. In 11th Edition, key locations are often terrain footprints — ruins, fortifications, or areas on the board — rather than round objective markers. Use the Chapter Approved mission deck (in the Armageddon box or as a separate product) to pick deployment and missions from your armies' Force Dispositions.",
+          "summary": "Terrain footprints are objectives \u2014 not just circles on a mat.",
+          "body": "Place terrain before deployment. In 11th Edition, key locations are often terrain footprints \u2014 ruins, fortifications, or areas on the board \u2014 rather than round objective markers. Use the Chapter Approved mission deck (in the Armageddon box or as a separate product) to pick deployment and missions from your armies' Force Dispositions.",
           "tips": [
             "Dense terrain (ruins, woods) interacts with cover, Hidden, and objective control.",
             "Casual play can use simplified terrain maps from the mission deck."
@@ -411,10 +818,10 @@
           "id": "how-a-turn-works",
           "order": 4,
           "title": "How a Turn Works",
-          "summary": "Command, Move, Shoot, Charge, Fight — then score.",
-          "body": "Each battle round, players alternate turns. On your turn you run five phases in order: Command (battle-shock tests, stratagems, abilities), Movement, Shooting, Charge, and Fight. Pass the device when your turn ends. Victory points are scored from primary missions, secondary objectives, and the Battle Ready bonus — mission details come from your Chapter Approved cards.",
+          "summary": "Command, Move, Shoot, Charge, Fight \u2014 then score.",
+          "body": "Each battle round, players alternate turns. On your turn you run five phases in order: Command (battle-shock tests, stratagems, abilities), Movement, Shooting, Charge, and Fight. Pass the device when your turn ends. Victory points are scored from primary missions, secondary objectives, and the Battle Ready bonus \u2014 mission details come from your Chapter Approved cards.",
           "tips": [
-            "Battle-shock tests happen in the Command phase — not only when a unit first breaks.",
+            "Battle-shock tests happen in the Command phase \u2014 not only when a unit first breaks.",
             "Overwatch fires at the end of the enemy Movement phase, not during Charges."
           ],
           "relatedRuleSectionId": "11e-turn-overview"
@@ -423,10 +830,10 @@
           "id": "how-fighting-works",
           "order": 5,
           "title": "How Fighting Works",
-          "summary": "Hit, wound, save, damage — now resolved in fast batches.",
-          "body": "Each attack uses the target's Ballistic Skill (shooting) or Weapon Skill (melee). Roll to hit, then to wound comparing Strength to Toughness, then the defender rolls saves. A wound fails only if it fails both the Armour save (after AP) and the Invulnerable save — invulnerable saves are not optional. Failed saves inflict damage; remove models when wounds are exceeded. Identical attacks are rolled together; the defender sets wound allocation order before saves.",
+          "summary": "Hit, wound, save, damage \u2014 now resolved in fast batches.",
+          "body": "Each attack uses the target's Ballistic Skill (shooting) or Weapon Skill (melee). Roll to hit, then to wound comparing Strength to Toughness, then the defender rolls saves. A wound fails only if it fails both the Armour save (after AP) and the Invulnerable save \u2014 invulnerable saves are not optional. Failed saves inflict damage; remove models when wounds are exceeded. Identical attacks are rolled together; the defender sets wound allocation order before saves.",
           "tips": [
-            "Cover imposes -1 BS on the shooter — not +1 to your armour save.",
+            "Cover imposes -1 BS on the shooter \u2014 not +1 to your armour save.",
             "Engagement range is 2 inches for charges and melee."
           ],
           "relatedRuleSectionId": "11e-attack-sequence"
@@ -436,7 +843,7 @@
           "order": 6,
           "title": "How You Win",
           "summary": "Missions follow your army's Force Disposition.",
-          "body": "Before the game, each player picks a Force Disposition tied to their detachments — Take and Hold, Purge the Foe, Reconnaissance, Disruption, or Priority Assets. Your disposition and your opponent's determine the mission matchup from the Chapter Approved deck. Primary and secondary objectives can differ between players. In matched play, each player can score up to 45 VP from primaries and up to 45 VP from secondaries over the game, with a maximum of 15 VP from each per battle round.",
+          "body": "Before the game, each player picks a Force Disposition tied to their detachments \u2014 Take and Hold, Purge the Foe, Reconnaissance, Disruption, or Priority Assets. Your disposition and your opponent's determine the mission matchup from the Chapter Approved deck. Primary and secondary objectives can differ between players. In matched play, each player can score up to 45 VP from primaries and up to 45 VP from secondaries over the game, with a maximum of 15 VP from each per battle round.",
           "tips": [
             "Tournament players usually lock one Force Disposition for the event.",
             "Twist cards are optional for casual games."
@@ -448,10 +855,10 @@
           "order": 7,
           "title": "Play Your First Game",
           "summary": "Start with Incursion and lean on the rules reference at the table.",
-          "body": "For a first 11th Edition game, try a 1,000-point Incursion using the Armageddon armies or your own lists. Read Getting Started, keep the rules reference handy on this device, and use the official core rules PDF for full detail. Guided Match for 40k is coming in a future app update.",
+          "body": "For a first 11th Edition game, try a 1,000-point Incursion using the Armageddon armies or your own lists. Open Guided Match and tap Use Starter Matchup for Operation Imperator vs Waaagh! Armageddon, then walk through setup and the battle tracker.",
           "tips": [
             "New to wargaming? Read this guide, then try What's New if a friend played 10th Edition.",
-            "Expect the first few games to be slower — Fight phase sequencing is the biggest habit change."
+            "Expect the first few games to be slower \u2014 Fight phase sequencing is the biggest habit change."
           ],
           "relatedRuleSectionId": "11e-overview"
         }
@@ -475,7 +882,7 @@
           "summary": "Spend Detachment Points on one or more detachments.",
           "body": "You no longer pick exactly one detachment. At 2,000 points you typically have three Detachment Points to spend on detachments costing one to three points each. Cheaper detachments offer narrower rules and fewer stratagems; expensive ones affect more of your army. You cannot take two detachments sharing the same keyword. Unused points give no bonus.",
           "tips": [
-            "Enhancement limits still apply — four at 2,000 points, two at 1,000.",
+            "Enhancement limits still apply \u2014 four at 2,000 points, two at 1,000.",
             "List construction now includes attaching Leaders and Support Characters to specific units."
           ],
           "relatedRuleSectionId": "11e-detachments"
@@ -485,7 +892,7 @@
           "order": 3,
           "title": "Missions Follow Your Army",
           "summary": "Force Dispositions replace picking Mission Card A.",
-          "body": "Each detachment ties to a Force Disposition — Take and Hold, Purge the Foe, Reconnaissance, Disruption, or Priority Assets. You choose one disposition per battle (locked in events). Your disposition and your opponent's determine which of 15 mission matchups you play, including deployment and primary objectives. You and your opponent may be scoring different primaries.",
+          "body": "Each detachment ties to a Force Disposition \u2014 Take and Hold, Purge the Foe, Reconnaissance, Disruption, or Priority Assets. You choose one disposition per battle (locked in events). Your disposition and your opponent's determine which of 15 mission matchups you play, including deployment and primary objectives. You and your opponent may be scoring different primaries.",
           "tips": [
             "Secondaries: draw two in your Command phase each turn; score up to 15 VP from secondaries per battle round (45 VP max per game).",
             "Primary missions also cap at 15 VP per battle round (45 VP max per game)."
@@ -497,9 +904,9 @@
           "order": 4,
           "title": "Terrain Is the Objective",
           "summary": "Footprints replace round markers.",
-          "body": "Round objective markers are gone. You contest and control terrain footprints — ruins, strongpoints, and marked areas on the board. Objective Secured is in the core rules. More models can fit a footprint than an old 40mm circle, so Objective Control values matter more.",
+          "body": "Round objective markers are gone. You contest and control terrain footprints \u2014 ruins, strongpoints, and marked areas on the board. Objective Secured is in the core rules. More models can fit a footprint than an old 40mm circle, so Objective Control values matter more.",
           "tips": [
-            "Your old objective tokens still work as table markers if you agree with your opponent — but rules refer to terrain."
+            "Your old objective tokens still work as table markers if you agree with your opponent \u2014 but rules refer to terrain."
           ],
           "relatedRuleSectionId": "11e-terrain-objectives"
         },
@@ -520,9 +927,9 @@
           "order": 6,
           "title": "Charge: Roll First, Target After",
           "summary": "Less stranded charges; 2 inch engagement.",
-          "body": "Declare a charge if an enemy is within 12 inches, roll 2D6, then choose enemy unit(s) you can reach with a charge move. Engagement range is now 2 inches. You need not base models on enemies — ending within 1 inch of targets if possible is the goal. You may decline to move after a good roll if every reachable target is unappealing.",
+          "body": "Declare a charge if an enemy is within 12 inches, roll 2D6, then choose enemy unit(s) you can reach with a charge move. Engagement range is now 2 inches. You need not base models on enemies \u2014 ending within 1 inch of targets if possible is the goal. You may decline to move after a good roll if every reachable target is unappealing.",
           "tips": [
-            "Successful charges grant Fights First — but the active player still picks which Fights First unit goes first.",
+            "Successful charges grant Fights First \u2014 but the active player still picks which Fights First unit goes first.",
             "Deep Strike charges still need 9+ on 2D6 where setup must be more than 8 inches away."
           ],
           "relatedRuleSectionId": "11e-charge-fight"
@@ -532,7 +939,7 @@
           "order": 7,
           "title": "Fight Phase Overhaul",
           "summary": "Pile-in together, active player activates first, consolidate at the end.",
-          "body": "All pile-in moves happen before any fights resolve. The active player selects the first unit to fight (including Fights First). Players alternate until done. Overrun Fights give an extra pile-in if a unit is eligible but not engaged when selected. After all fights, eligible units consolidate 3 inches in a shared step. Supporting Attacks are gone — 2 inch engagement range only.",
+          "body": "All pile-in moves happen before any fights resolve. The active player selects the first unit to fight (including Fights First). Players alternate until done. Overrun Fights give an extra pile-in if a unit is eligible but not engaged when selected. After all fights, eligible units consolidate 3 inches in a shared step. Supporting Attacks are gone \u2014 2 inch engagement range only.",
           "tips": [
             "Fights First is weaker than in 10th because chargers on the active turn swing before defensive Fights First.",
             "Watch for consolidation pulling new enemy units into combat."
@@ -544,7 +951,7 @@
           "order": 8,
           "title": "Sticky Battle-shock",
           "summary": "Test at half strength; pass in Command to recover.",
-          "body": "Units at or below Half-strength test Battle-shock in the Command phase. Battle-shocked units set Objective Control to a null value (\"-\"), cannot be targeted by Stratagems, and cannot perform Actions. Shock does not clear automatically — you must pass a test in a later Command phase. Insane Bravery still auto-passes one test per game but not for a unit already Battle-shocked.",
+          "body": "Units at or below Half-strength test Battle-shock in the Command phase. Battle-shocked units set Objective Control to a null value (\"-\"), cannot be targeted by Stratagems, and cannot perform Actions. Shock does not clear automatically \u2014 you must pass a test in a later Command phase. Insane Bravery still auto-passes one test per game but not for a unit already Battle-shocked.",
           "tips": [
             "Forcing extra Battle-shock tests on an already shocked unit is more valuable than in 10th.",
             "Chaplains and similar effects that remove Battle-shock are more important."
@@ -556,7 +963,7 @@
           "order": 9,
           "title": "Shooting & Overwatch",
           "summary": "Batch saves, indirect nerfs, Overwatch at end of Movement.",
-          "body": "Defenders group models by save profile and allocate lowest save dice first — characters take spillover last. Indirect Fire is weaker: cover to target, no hit re-rolls, and usually hit only on 6+ without a stationary spotter. Overwatch triggers once at the end of the enemy Movement phase (not after each move or in the Charge phase) and cannot re-roll hits.",
+          "body": "Defenders group models by save profile and allocate lowest save dice first \u2014 characters take spillover last. Indirect Fire is weaker: cover to target, no hit re-rolls, and usually hit only on 6+ without a stationary spotter. Overwatch triggers once at the end of the enemy Movement phase (not after each move or in the Charge phase) and cannot re-roll hits.",
           "tips": [
             "Torrent weapons are strong Overwatch picks.",
             "Close-quarters shooting while engaged penalises non-Close-quarters weapons."
@@ -568,9 +975,9 @@
           "order": 10,
           "title": "List Building Tweaks",
           "summary": "9 inch coherency, free rotation, attached characters.",
-          "body": "Unit coherency requires every model to be within 9 inches of every other model in the unit — wide conga lines are harder. Models rotate for free during moves and can move through friendly units. Leaders and Support Characters attach during list building; if the bodyguard is destroyed, the character remains the same unit for resurrection effects. Warlord must match your Army Faction keyword.",
+          "body": "Unit coherency requires every model to be within 9 inches of every other model in the unit \u2014 wide conga lines are harder. Models rotate for free during moves and can move through friendly units. Leaders and Support Characters attach during list building; if the bodyguard is destroyed, the character remains the same unit for resurrection effects. Warlord must match your Army Faction keyword.",
           "tips": [
-            "Some Enhancements are Upgrades on non-characters — still one Enhancement per unit.",
+            "Some Enhancements are Upgrades on non-characters \u2014 still one Enhancement per unit.",
             "Invulnerable saves are no longer optional when taking saves."
           ],
           "relatedRuleSectionId": "11e-overview"
@@ -580,10 +987,10 @@
           "order": 11,
           "title": "What's Not in the Free Core Yet",
           "summary": "Legends, Crusade in codexes, full app-only construction detail.",
-          "body": "Legends rules move to the Warhammer 40,000 app and are not in the launch core bundle. Crusade rules are not in new codexes — the Dominatus narrative deck in Armageddon replaces that lane for now. Full army construction detail and some keyword definitions live in the app and Munitorum Field Manual alongside faction packs.",
+          "body": "Legends rules move to the Warhammer 40,000 app and are not in the launch core bundle. Crusade rules are not in new codexes \u2014 the Dominatus narrative deck in Armageddon replaces that lane for now. Full army construction detail and some keyword definitions live in the app and Munitorum Field Manual alongside faction packs.",
           "tips": [
             "Link out to official downloads for points and detachment metadata.",
-            "Tabletome summarizes core play — not a replacement for GW datacards."
+            "Tabletome summarizes core play \u2014 not a replacement for GW datacards."
           ],
           "relatedRuleSectionId": "11e-overview"
         }
@@ -605,7 +1012,7 @@
           "title": "Turn Structure",
           "category": "core",
           "order": 2,
-          "content": "Each player turn follows five phases:\n\n1. Command Phase — Battle-shock tests, stratagems, abilities; scoring sub-step at phase end.\n2. Movement Phase — Normal moves, Advances, Falls Back, Remain Stationary; Overwatch at phase end.\n3. Shooting Phase — Normal, Assault, Close-quarters, or Indirect shooting modes.\n4. Charge Phase — Declare charges within 12\", roll 2D6, then move to engage targets.\n5. Fight Phase — Pile-in, alternating fights, consolidation.\n\nBattle rounds continue until the mission ends (typically five rounds in matched play).",
+          "content": "Each player turn follows five phases:\n\n1. Command Phase \u2014 Battle-shock tests, stratagems, abilities; scoring sub-step at phase end.\n2. Movement Phase \u2014 Normal moves, Advances, Falls Back, Remain Stationary; Overwatch at phase end.\n3. Shooting Phase \u2014 Normal, Assault, Close-quarters, or Indirect shooting modes.\n4. Charge Phase \u2014 Declare charges within 12\", roll 2D6, then move to engage targets.\n5. Fight Phase \u2014 Pile-in, alternating fights, consolidation.\n\nBattle rounds continue until the mission ends (typically five rounds in matched play).",
           "relatedSectionIds": [
             "11e-command-phase",
             "11e-charge-fight",
@@ -639,7 +1046,7 @@
           "title": "Shooting Phase",
           "category": "core",
           "order": 5,
-          "content": "Eligible units shoot unless they Advanced (except Assault weapons), Fell Back, started an Action, or are blocked by other rules.\n\nShooting modes:\n• Normal — did not Advance; not Engaged.\n• Assault — Advanced; Assault weapons only.\n• Close-quarters — Engaged; Pistols/Close-quarters at engaged foes; Monsters/Vehicles have penalties on non-Close-quarters weapons.\n• Indirect — Indirect Fire weapons at non-visible targets with severe hit penalties unless stationary with a spotter.\n\nCover imposes -1 BS on the attacker. Overwatch occurs at the end of the enemy Movement phase: one unit, visible target within 24\", hit on 6+, no re-rolls.",
+          "content": "Eligible units shoot unless they Advanced (except Assault weapons), Fell Back, started an Action, or are blocked by other rules.\n\nShooting modes:\n\u2022 Normal \u2014 did not Advance; not Engaged.\n\u2022 Assault \u2014 Advanced; Assault weapons only.\n\u2022 Close-quarters \u2014 Engaged; Pistols/Close-quarters at engaged foes; Monsters/Vehicles have penalties on non-Close-quarters weapons.\n\u2022 Indirect \u2014 Indirect Fire weapons at non-visible targets with severe hit penalties unless stationary with a spotter.\n\nCover imposes -1 BS on the attacker. Overwatch occurs at the end of the enemy Movement phase: one unit, visible target within 24\", hit on 6+, no re-rolls.",
           "relatedSectionIds": [
             "11e-cover-hidden",
             "11e-attack-sequence"
@@ -660,7 +1067,7 @@
           "title": "Battle-shock",
           "category": "core",
           "order": 7,
-          "content": "In the Command phase, roll 2D6 for each:\n• Unit at or below Half-strength.\n• Unit that was Battle-shocked when the phase began.\n\nThe test is passed if the result is equal to or greater than the unit's Leadership. If a unit fails, it is Battle-shocked until it passes a later test. While Battle-shocked: Objective Control is \"-\" (a null value that cannot be modified up), cannot be targeted by Stratagems, cannot start or continue Actions. Insane Bravery (once per game) auto-passes one test on a unit that is not already Battle-shocked.",
+          "content": "In the Command phase, roll 2D6 for each:\n\u2022 Unit at or below Half-strength.\n\u2022 Unit that was Battle-shocked when the phase began.\n\nThe test is passed if the result is equal to or greater than the unit's Leadership. If a unit fails, it is Battle-shocked until it passes a later test. While Battle-shocked: Objective Control is \"-\" (a null value that cannot be modified up), cannot be targeted by Stratagems, cannot start or continue Actions. Insane Bravery (once per game) auto-passes one test on a unit that is not already Battle-shocked.",
           "relatedSectionIds": [
             "glossary-oc-11e",
             "11e-command-phase"
@@ -671,7 +1078,7 @@
           "title": "Detachments & Force Dispositions",
           "category": "core",
           "order": 8,
-          "content": "Army construction uses Detachment Points (typically 2 at 1,000 pts, 3 at 2,000 pts) to buy one or more detachments. Each detachment has a point cost, rules, stratagems, enhancements, and a Force Disposition. Dispositions: Take and Hold, Purge the Foe, Reconnaissance, Disruption, Priority Assets. Your chosen disposition and your opponent's set the Chapter Approved mission matchup. See the Munitorum Field Manual and faction packs for detachment costs — not duplicated here.",
+          "content": "Army construction uses Detachment Points (typically 2 at 1,000 pts, 3 at 2,000 pts) to buy one or more detachments. Each detachment has a point cost, rules, stratagems, enhancements, and a Force Disposition. Dispositions: Take and Hold, Purge the Foe, Reconnaissance, Disruption, Priority Assets. Your chosen disposition and your opponent's set the Chapter Approved mission matchup. See the Munitorum Field Manual and faction packs for detachment costs \u2014 not duplicated here.",
           "relatedSectionIds": [
             "11e-scoring-overview"
           ]
@@ -681,7 +1088,7 @@
           "title": "Scoring & Missions",
           "category": "core",
           "order": 9,
-          "content": "Matched play uses the Chapter Approved mission deck. Each player may have different primary objectives from the matchup. Typical caps per player: up to 45 VP from primaries and up to 45 VP from secondaries over the game, with a maximum of 15 VP from primaries and 15 VP from secondaries in any single battle round. Draw two secondary cards in your Command phase each turn and keep unscored cards — there is no hand size limit. Battle Ready awards 10 VP if your army is fully painted. Fixed secondaries (pick two, score up to 20 VP each) remain an option. Twist cards are optional. Full mission text is on physical or digital cards — Tabletome summarizes the system only.",
+          "content": "Matched play uses the Chapter Approved mission deck. Each player may have different primary objectives from the matchup. Typical caps per player: up to 45 VP from primaries and up to 45 VP from secondaries over the game, with a maximum of 15 VP from primaries and 15 VP from secondaries in any single battle round. Draw two secondary cards in your Command phase each turn and keep unscored cards \u2014 there is no hand size limit. Battle Ready awards 10 VP if your army is fully painted. Fixed secondaries (pick two, score up to 20 VP each) remain an option. Twist cards are optional. Full mission text is on physical or digital cards \u2014 Tabletome summarizes the system only.",
           "relatedSectionIds": [
             "11e-detachments",
             "11e-terrain-objectives"
@@ -703,7 +1110,7 @@
           "title": "Cover & Hidden",
           "category": "core",
           "order": 11,
-          "content": "Benefit of Cover: attackers suffer -1 BS when shooting eligible targets in cover (Infantry/Beasts/Swarms in terrain footprints or not fully visible; vehicles/monsters need obscurement). Hidden: eligible Infantry/Beast/Swarm units in a terrain area with at least one Light or Dense feature that have not made ranged attacks this or last turn cannot be targeted from beyond Detection Range (usually 15\"). Gone to Ground reduces Detection Range by 3\" when partially obscured by Solid terrain. Plunging Fire grants +1 BS from height ≥3\".",
+          "content": "Benefit of Cover: attackers suffer -1 BS when shooting eligible targets in cover (Infantry/Beasts/Swarms in terrain footprints or not fully visible; vehicles/monsters need obscurement). Hidden: eligible Infantry/Beast/Swarm units in a terrain area with at least one Light or Dense feature that have not made ranged attacks this or last turn cannot be targeted from beyond Detection Range (usually 15\"). Gone to Ground reduces Detection Range by 3\" when partially obscured by Solid terrain. Plunging Fire grants +1 BS from height \u22653\".",
           "relatedSectionIds": [
             "11e-shooting"
           ]
@@ -713,7 +1120,7 @@
           "title": "Objective Control (OC)",
           "category": "glossary",
           "order": 20,
-          "content": "Objective Control measures how strongly a unit holds objectives. Battle-shocked units set OC to \"-\" — a null value that cannot be increased by abilities. Units need OC 1+ to start most Actions.",
+          "content": "Objective Control measures how strongly a unit holds objectives. Battle-shocked units set OC to \"-\" \u2014 a null value that cannot be increased by abilities. Units need OC 1+ to start most Actions.",
           "relatedSectionIds": [
             "11e-battle-shock",
             "11e-terrain-objectives"
@@ -724,7 +1131,7 @@
           "title": "Armour Penetration (AP)",
           "category": "glossary",
           "order": 21,
-          "content": "AP subtracts from armour save rolls. Invulnerable saves are checked separately; a wound fails only if both the Armour save and Invulnerable save fail. Invulnerable saves are mandatory — you cannot choose to skip them for a worse armour result.",
+          "content": "AP subtracts from armour save rolls. Invulnerable saves are checked separately; a wound fails only if both the Armour save and Invulnerable save fail. Invulnerable saves are mandatory \u2014 you cannot choose to skip them for a worse armour result.",
           "relatedSectionIds": [
             "11e-attack-sequence"
           ]
@@ -767,6 +1174,295 @@
           "content": "When a rule calls for a Hazard test, roll D6: on 1-2 the model suffers 1 mortal wound (3 on Monsters/Vehicles). Used by Hazardous weapons, emergency disembark, and Desperate Escape tests.",
           "relatedSectionIds": [
             "11e-overview"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sc-tmg",
+      "name": "StarCraft: Tabletop Miniatures",
+      "tagline": "Guided setup and battle tracker for Terran, Zerg, and Protoss",
+      "edition": "StarCraft II universe",
+      "availability": "available",
+      "externalLinks": [
+        {
+          "id": "rulebook-pdf",
+          "title": "Official Rulebook (PDF)",
+          "url": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf"
+        },
+        {
+          "id": "rules-article",
+          "title": "How the Game Works (Archon)",
+          "url": "https://starcraft-tmg.com/news/rules/starcraft-tabletop-miniatures-game-rules"
+        },
+        {
+          "id": "downloads",
+          "title": "Downloads & Card Sheets",
+          "url": "https://starcraft-tmg.com/downloads"
+        },
+        {
+          "id": "faq",
+          "title": "FAQ",
+          "url": "https://starcraft-tmg.com/faq"
+        },
+        {
+          "id": "starter-set",
+          "title": "2-Player Founders Edition Sheet",
+          "url": "https://starcraft-tmg.com/files/downloads/StarCraft-2P-Starter-Set-FE_EN.pdf"
+        }
+      ],
+      "gettingStartedSteps": [
+        {
+          "id": "what-you-need",
+          "order": 1,
+          "title": "What You Need",
+          "summary": "Miniatures, dice, measuring tool, terrain, and the free rulebook.",
+          "body": "StarCraft: Tabletop Miniatures Game is a two-player skirmish wargame (2v2 possible later). You need models, custom dice including the S Die, a tape measure, terrain, unit cards, and tactical cards. The full rulebook is free on starcraft-tmg.com. The 2-Player Founders Edition includes Terran and Zerg armies, terrain, and a play mat.",
+          "tips": [
+            "Models come on sprues \u2014 assembly required, painting optional.",
+            "Protoss Founders Edition adds a third faction for one player."
+          ],
+          "relatedRuleSectionId": "sc-overview"
+        },
+        {
+          "id": "battlefield-size",
+          "order": 2,
+          "title": "Battlefield & Game Size",
+          "summary": "Skirmish 36\u00d736 or standard 54\u00d736.",
+          "body": "Skirmish games use 1,000 minerals on a 36\"\u00d736\" board (~1 hour). Standard games use 2,000 minerals on a 54\"\u00d736\" board (~2 hours). Place terrain and assign height tiers before play.",
+          "tips": [
+            "No true line of sight \u2014 range uses base-to-base measurement and height tiers.",
+            "Community maps are available through Archon's Command Center."
+          ],
+          "relatedRuleSectionId": "sc-overview"
+        },
+        {
+          "id": "economy",
+          "order": 3,
+          "title": "Minerals & Vespene",
+          "summary": "Two budgets \u2014 units vs tactical cards.",
+          "body": "Spend minerals recruiting units for your army list. Spend vespene gas only on faction and tactical cards. You receive vespene equal to about 10% of your mineral budget at the start.",
+          "tips": [
+            "Cards can expand unit slot categories \u2014 check your draft before play.",
+            "Living rules online may update points \u2014 check Archon's site before events."
+          ],
+          "relatedRuleSectionId": "sc-supply-economy"
+        },
+        {
+          "id": "how-a-round-works",
+          "order": 4,
+          "title": "How a Round Works",
+          "summary": "Movement \u2192 Assault \u2192 Combat \u2192 Scoring.",
+          "body": "A standard battle lasts five rounds. Each round has four phases. In Movement you deploy from reserves and move. In Assault you shoot and charge. In Combat you resolve melee. In Scoring you tally mission victory points. Within each phase, players alternate activating one unit at a time.",
+          "tips": [
+            "First to Pass in a phase takes the First Player Marker for the next phase.",
+            "Supply pool increases each round \u2014 track it on the battle tracker."
+          ],
+          "relatedRuleSectionId": "sc-turn-overview"
+        },
+        {
+          "id": "supply-reserves",
+          "order": 5,
+          "title": "Supply & Reserves",
+          "summary": "Fog-of-war deployment from reserves.",
+          "body": "No units begin on the table. Your army starts in reserves and deploys during Movement via entry points. Supply limits how much presence you can have on the field. When a unit loses models, its current Supply drops and frees pool space \u2014 call in reinforcements immediately.",
+          "tips": [
+            "Objective control = sum of Current Supply within 3\" of the marker.",
+            "Passing in Movement to bait deploys can win Assault initiative."
+          ],
+          "relatedRuleSectionId": "sc-reserves"
+        },
+        {
+          "id": "how-fighting-works",
+          "order": 6,
+          "title": "How Fighting Works",
+          "summary": "Hits, armour saves, surge, and damage.",
+          "body": "Build an attack pool and roll for hits. The defender rolls armour \u2014 each success removes one attack die. Abilities may grant Evade rolls. Unblocked hits deal damage. If the weapon's Surge Type matches the target's Combat Tag, roll the S Die \u2014 that many hits bypass armour straight to damage.",
+          "tips": [
+            "Light and Armoured are common Surge Types \u2014 check unit cards.",
+            "Counters between unit types matter \u2014 read matchup notes on cards."
+          ],
+          "relatedRuleSectionId": "sc-combat"
+        },
+        {
+          "id": "how-you-win",
+          "order": 7,
+          "title": "How You Win",
+          "summary": "Mission objectives over five rounds.",
+          "body": "Before the game, draft Mission and Deployment cards. Score victory points during each Scoring phase based on your mission \u2014 often map control weighted by Supply on objectives. Most points after five rounds wins.",
+          "tips": [
+            "Use Guided Match to track rounds, phases, activations, and VP.",
+            "Command Center helps design custom missions."
+          ],
+          "relatedRuleSectionId": "sc-scoring"
+        }
+      ],
+      "editionMigrationSteps": [
+        {
+          "id": "rts-apm",
+          "order": 1,
+          "title": "APM \u2192 Activations",
+          "summary": "Alternating unit activations replace macro clicks.",
+          "body": "Instead of controlling everything at once, you and your opponent alternate activating one unit per step within each phase. Passing early claims the First Player Marker \u2014 letting you choose who goes first in the next phase. That is the tabletop equivalent of spending actions to gain initiative.",
+          "tips": [
+            "Baiting an opponent to deploy, then passing, is a core tactic.",
+            "The battle tracker highlights whose activation it is."
+          ],
+          "relatedRuleSectionId": "sc-activations"
+        },
+        {
+          "id": "rts-supply",
+          "order": 2,
+          "title": "Supply Cap \u2192 Pool",
+          "summary": "On-table presence is capped and grows each round.",
+          "body": "RTS supply limits how many units you can field. Here, a supply pool caps total Current Supply on the table. The pool grows each round. Losses free space so you can reinforce from reserves \u2014 like remaking units after losses, but with fog-of-war deployment.",
+          "tips": [
+            "Trading cheap units to free supply for a key reinforcement is valid.",
+            "Objectives count Supply, not model heads."
+          ],
+          "relatedRuleSectionId": "sc-reserves"
+        },
+        {
+          "id": "rts-fog",
+          "order": 3,
+          "title": "Fog of War \u2192 Reserves",
+          "summary": "Armies start off-board.",
+          "body": "You do not deploy your full list at setup. Units arrive from reserves during Movement, reacting to what your opponent revealed. Entry edges and deployment cards shape where reinforcements appear.",
+          "tips": [
+            "Round 1 Movement is about positioning and timing deploys.",
+            "Nydus, dropships, and similar rules come from unit and tactical cards."
+          ],
+          "relatedRuleSectionId": "sc-reserves"
+        },
+        {
+          "id": "rts-economy",
+          "order": 4,
+          "title": "Minerals & Vespene",
+          "summary": "List building mirrors RTS economies.",
+          "body": "Minerals buy units \u2014 like spending on production. Vespene buys tactical cards \u2014 tech structures and powers abstracted into cards you play for gas. You do not mine during the battle; budgets are set at list building.",
+          "tips": [
+            "Tactical cards can change unit slots and deployment options.",
+            "Save gas for the right round \u2014 cards are timing tools."
+          ],
+          "relatedRuleSectionId": "sc-supply-economy"
+        },
+        {
+          "id": "rts-combat",
+          "order": 5,
+          "title": "Combat Rolls",
+          "summary": "Dice replace click damage.",
+          "body": "Attacks use dice pools, armour saves, and Surge against matching Combat Tags \u2014 a compressed version of counter matchups. It is faster than multi-step GW games but still tactical.",
+          "tips": [
+            "Surge bypasses armour \u2014 bring the right counters.",
+            "Use the Combat tab resolver when it ships; until then, unit cards at the table."
+          ],
+          "relatedRuleSectionId": "sc-combat"
+        }
+      ],
+      "ruleSections": [
+        {
+          "id": "sc-overview",
+          "title": "Game Overview",
+          "category": "core",
+          "order": 1,
+          "content": "StarCraft: Tabletop Miniatures Game is a 32mm skirmish wargame licensed from Blizzard. Three factions \u2014 Terran, Zerg, and Protoss \u2014 fight over five battle rounds using alternating activations, a dynamic supply pool, and reserves-based deployment.",
+          "relatedSectionIds": [
+            "sc-turn-overview",
+            "sc-supply-economy"
+          ]
+        },
+        {
+          "id": "sc-turn-overview",
+          "title": "Turn Structure",
+          "category": "core",
+          "order": 2,
+          "content": "Each of five battle rounds has four phases: Movement, Assault, Combat, and Scoring. Within each phase, players alternate activating one eligible unit at a time until both players have passed or finished. The first player to Pass in a phase claims the First Player Marker and chooses who activates first in the next phase.",
+          "relatedSectionIds": [
+            "sc-activations",
+            "sc-reserves"
+          ]
+        },
+        {
+          "id": "sc-activations",
+          "title": "Activations & Passing",
+          "category": "core",
+          "order": 3,
+          "content": "On your unit's activation you perform actions allowed in the current phase \u2014 move, deploy from reserves, shoot, charge, or fight. When you have no more units to activate or choose to stop, Pass. The first Pass in a phase awards the First Player Marker for the next phase. Initiative baiting \u2014 passing in Movement to strike first in Assault \u2014 is a core skill.",
+          "relatedSectionIds": [
+            "sc-turn-overview"
+          ]
+        },
+        {
+          "id": "sc-supply-economy",
+          "title": "Minerals, Vespene & Supply",
+          "category": "core",
+          "order": 4,
+          "content": "Army lists use a mineral budget (1,000 skirmish / 2,000 standard). Vespene gas \u2014 roughly 10% of minerals \u2014 pays for tactical and faction cards only. On the table, each unit has a Supply value based on models remaining. Your supply pool caps total Current Supply you can have deployed. The scenario sets a starting pool that increases each round.",
+          "relatedSectionIds": [
+            "sc-reserves",
+            "sc-scoring"
+          ]
+        },
+        {
+          "id": "sc-reserves",
+          "title": "Reserves & Deployment",
+          "category": "core",
+          "order": 5,
+          "content": "Armies begin entirely in reserves \u2014 the table starts empty aside from terrain. Deploy units during Movement from entry points per your mission and deployment cards. When casualties reduce a unit's Current Supply, that Supply is freed in your pool and you may immediately bring in reinforcements from reserves.",
+          "relatedSectionIds": [
+            "sc-supply-economy"
+          ]
+        },
+        {
+          "id": "sc-combat",
+          "title": "Combat Sequence",
+          "category": "core",
+          "order": 6,
+          "content": "Assault and Combat phases resolve attacks. Build the attack pool, roll hits, then the defender rolls armour saves \u2014 each success removes one attack die. Evade abilities may cancel additional hits. Remaining hits become damage. If the weapon's Surge Type matches the defender's Combat Tag, roll the S Die; that many hits bypass armour.",
+          "relatedSectionIds": [
+            "glossary-surge",
+            "glossary-combat-tag"
+          ]
+        },
+        {
+          "id": "sc-scoring",
+          "title": "Scoring & Objectives",
+          "category": "core",
+          "order": 7,
+          "content": "The Scoring phase each round awards mission victory points. Map control often uses mission markers \u2014 control is determined by the sum of Current Supply of your units within 3\", not by model count. Track VP on the battle tracker.",
+          "relatedSectionIds": [
+            "sc-supply-economy"
+          ]
+        },
+        {
+          "id": "glossary-surge",
+          "title": "Surge",
+          "category": "glossary",
+          "order": 8,
+          "content": "Weapons list a Surge Type (e.g. Light, Armoured). When attacking a target whose Combat Tag matches, roll the S Die. The result is how many hit dice bypass armour saves and go straight to the damage pool.",
+          "relatedSectionIds": [
+            "sc-combat"
+          ]
+        },
+        {
+          "id": "glossary-combat-tag",
+          "title": "Combat Tag",
+          "category": "glossary",
+          "order": 9,
+          "content": "Each unit has a Combat Tag describing its role (e.g. Light, Armoured). Matching tags against an attacker's Surge Type triggers Surge rolls.",
+          "relatedSectionIds": [
+            "sc-combat",
+            "glossary-surge"
+          ]
+        },
+        {
+          "id": "glossary-first-player-marker",
+          "title": "First Player Marker",
+          "category": "glossary",
+          "order": 10,
+          "content": "Awarded to the first player who Passes in a phase. That player chooses who takes the first activation in the following phase.",
+          "relatedSectionIds": [
+            "sc-activations"
           ]
         }
       ]

@@ -3,22 +3,26 @@ import Foundation
 /// Pure abstractions the hobby domain operates over so engines stay free of SwiftData.
 /// SwiftData models in `TabletomeHobbyData` will conform to these once ported in Phase 4.
 
-public protocol PipelineStageLike: Sendable {
-    var key: String { get }
-    var hex: String { get }
-}
-
 public protocol SquadMemberLike: AnyObject {
     var index: Int { get }
     var state: String? { get set }
+    var notes: String? { get }
 }
 
 public protocol UnitLike: AnyObject {
     var state: String { get set }
+    var notes: String { get }
     var modelCount: Int { get }
     var hasSquadMembers: Bool { get }
-    var members: [SquadMemberLike] { get }
-    var orderedMembers: [SquadMemberLike] { get }
+    var members: [any SquadMemberLike] { get }
+    var orderedMembers: [any SquadMemberLike] { get }
+}
+
+extension UnitLike {
+    /// Lookup helper used by member-aware engines. Ported from MiniMuster `unit.member(at:)`.
+    public func member(at index: Int) -> (any SquadMemberLike)? {
+        members.first { $0.index == index }
+    }
 }
 
 public protocol ArmyLike: AnyObject {
@@ -26,7 +30,7 @@ public protocol ArmyLike: AnyObject {
     var game: String { get }
     var crestOverride: String? { get }
     var colorOverrideHex: String? { get }
-    var customPipeline: [PipelineStageLike]? { get }
+    var customPipeline: [PipelineStage]? { get }
 }
 
 /// User-supplied override of a faction's crest/color. Ports `FactionPresetOverride`

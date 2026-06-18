@@ -98,8 +98,8 @@ struct BattleTrackerRoundOpenerBanner: View {
                     Text(
                         String(
                             localized: """
-                            Next up: \(nextStepTitle). Use the physical card decks from your box — \
-                            twist deck for your board side, then battle tactic cards.
+                            Next up: \(nextStepTitle). Two different decks — twist cards from the \
+                            battlefield pack (shared), battle tactic cards from each army box (personal).
                             """
                         )
                     )

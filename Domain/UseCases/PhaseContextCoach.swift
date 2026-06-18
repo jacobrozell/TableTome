@@ -28,6 +28,9 @@ public enum PhaseContextCoach {
         case .combat, .anyCombat:
             [
                 String(localized: "Fight with units in combat — pick targets and strike in order."),
+                String(
+                    localized: "Pile in: models not in base contact can move up to 3\" toward the enemy — only if they end closer to an enemy model."
+                ),
                 String(localized: "After rolling, apply damage to update the Army Health tracker.")
             ]
         case .endOfTurn:

@@ -9,7 +9,7 @@ struct BattleTrackerReferenceLinksSection: View {
             NavigationLink {
                 BattleTacticsReferenceView(ruleSections: ruleSections)
             } label: {
-                referenceLinkLabel(String(localized: "Battle Tactics & Twists"), systemImage: "rectangle.stack")
+                referenceLinkLabel(String(localized: "Card Decks Guide"), systemImage: "rectangle.stack")
             }
             .accessibilityIdentifier("battleTracker.battleTactics")
 
@@ -111,12 +111,12 @@ struct BattleTrackerControlPanel: View {
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Stepper(
-                String(localized: "Round \(viewModel.trackerState.battleRound)"),
+                SpearheadBattleRules.roundLabel(round: viewModel.trackerState.battleRound),
                 value: Binding(
                     get: { viewModel.trackerState.battleRound },
                     set: { viewModel.setBattleRound($0) }
                 ),
-                in: 1...4
+                in: 1...SpearheadBattleRules.battleRoundCount
             )
             .accessibilityIdentifier("battleTracker.round")
 
@@ -130,11 +130,20 @@ struct BattleTrackerControlPanel: View {
             .pickerStyle(.segmented)
             .accessibilityIdentifier("battleTracker.activePlayer")
 
+            AttackerDefenderPickerCard(
+                playerOneName: viewModel.playerOneName,
+                playerTwoName: viewModel.playerTwoName,
+                attackerIsPlayerOne: viewModel.attackerIsPlayerOne,
+                onSelect: viewModel.setAttacker,
+                accessibilityPrefix: "battleTracker"
+            )
+
             Text(viewModel.armyName)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
 
             BattleTrackerPhaseControls(viewModel: viewModel)
+                .id("phaseControls")
         }
     }
 }

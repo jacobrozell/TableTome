@@ -53,11 +53,19 @@ struct PhaseChipRow: View {
     let onSelect: (BattleTurnPhase) -> Void
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+
+    private var usesPhaseGrid: Bool {
+        TabletomeLayout.context(
+            horizontalSizeClass: horizontalSizeClass,
+            verticalSizeClass: verticalSizeClass
+        ) == .padPortrait
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
             Group {
-                if horizontalSizeClass == .regular {
+                if usesPhaseGrid {
                     LazyVGrid(
                         columns: [GridItem(.adaptive(minimum: 72), spacing: DesignTokens.Spacing.sm)],
                         spacing: DesignTokens.Spacing.sm

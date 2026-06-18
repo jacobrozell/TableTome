@@ -27,7 +27,8 @@ public enum DeploymentChecklistStep: String, CaseIterable, Codable, Sendable, Id
                 Pick which physical board you are using, then which side to fight on. \
                 Fire and Jade (Aqshy or Ghyran), Sand and Bone (Ossia or Dolorum), and City of Ash \
                 (Ashen Bastion or Shattered Crossroads) each have their own twist deck — use the deck \
-                that matches your chosen side.
+                that matches your chosen side. Battle tactic decks are separate — each player brings \
+                the deck from their own army starter box.
                 """
             )
         case .setupTerrain:

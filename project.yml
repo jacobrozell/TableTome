@@ -41,8 +41,11 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.tabletome
         INFOPLIST_KEY_CFBundleDisplayName: Tabletome
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
-        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        INFOPLIST_KEY_NSLocalNetworkUsageDescription: "Tabletome uses the local network to sync match state between two nearby devices."
+        INFOPLIST_KEY_NSBonjourServices:
+          - _tabletome-match._tcp
         GENERATE_INFOPLIST_FILE: YES
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
@@ -76,6 +79,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.tabletome.data
         GENERATE_INFOPLIST_FILE: YES
+        SWIFT_STRICT_CONCURRENCY: minimal
 
   TabletomeTests:
     type: bundle.unit-test

@@ -34,4 +34,18 @@ public enum DesignTokens {
 
     /// Scroll content inset so the last rows clear the floating tab bar on iPhone.
     public static let tabBarScrollBottomInset: CGFloat = 64
+
+    /// Horizontal padding on iPhone landscape to preserve vertical space.
+    public static let phoneLandscapeHorizontalPadding: CGFloat = 16
+
+    /// Tighter vertical spacing between sections on iPhone landscape.
+    public static let phoneLandscapeSectionSpacing: CGFloat = 12
+
+    /// Pinned warscroll column in iPhone landscape combat split.
+    public static let phoneLandscapeWarscrollColumnMinWidth: CGFloat = 140
+    public static let phoneLandscapeWarscrollColumnIdealWidth: CGFloat = 180
+    public static let phoneLandscapeWarscrollColumnMaxWidth: CGFloat = 220
+
+    /// Optional readable width cap for prose on iPhone landscape.
+    public static let readableContentMaxWidthPhoneLandscape: CGFloat = 560
 }

@@ -4,10 +4,12 @@ import TabletomeDomain
 struct BattleTrackerCombatResolverSection: View {
     @ObservedObject var combatViewModel: UnitMatchupEvaluatorViewModel
     @ObservedObject var multiAttackViewModel: MultiAttackEvaluatorViewModel
+    @ObservedObject var batchCombatViewModel: BatchCombatEvaluatorViewModel
     @Binding var showsCombatResolver: Bool
     @Binding var diceInputModeRaw: String
     @Binding var showsAdvancedOptions: Bool
     @Binding var showsMultiAttack: Bool
+    @Binding var showsAdvancedSingleAttack: Bool
 
     let trackerState: BattleTrackerState
     let attackerName: String
@@ -18,44 +20,59 @@ struct BattleTrackerCombatResolverSection: View {
     let ruleSections: [RuleSection]
     let onSyncMultiAttack: () -> Void
     var onApplyDamage: ((Int) -> Void)?
+    var usesLandscapeSplitPresentation: Bool = false
 
     var body: some View {
         if ReleaseSurface.showsRollEvaluator {
-            DisclosureGroup(isExpanded: $showsCombatResolver) {
-                CombatResolverPanel(
-                    viewModel: combatViewModel,
-                    multiAttackViewModel: multiAttackViewModel,
-                    diceInputModeRaw: $diceInputModeRaw,
-                    showsAdvancedOptions: $showsAdvancedOptions,
-                    showsMultiAttack: $showsMultiAttack,
-                    ruleSections: ruleSections,
-                    presentation: .embeddedInBattleTracker,
-                    attackerPlayerName: attackerName,
-                    defenderPlayerName: defenderName,
-                    defenderWoundsRemaining: defenderWoundsRemaining,
-                    unitWoundsRemaining: unitWoundsRemaining,
-                    onSyncMultiAttack: onSyncMultiAttack,
-                    onApplyDamage: onApplyDamage
-                )
-                .padding(.top, DesignTokens.Spacing.sm)
-            } label: {
-                header
-            }
-            .surfaceCard()
-            .overlay {
-                if trackerState.currentPhase.isCombatRelated {
-                    RoundedRectangle(cornerRadius: DesignTokens.Radius.lg)
-                        .strokeBorder(Color.accentColor.opacity(0.35), lineWidth: 1.5)
+            Group {
+                if usesLandscapeSplitPresentation {
+                    resolverPanel
+                } else {
+                    DisclosureGroup(isExpanded: $showsCombatResolver) {
+                        resolverPanel
+                    } label: {
+                        header
+                    }
+                    .surfaceCard()
+                    .overlay {
+                        if trackerState.currentPhase.isCombatRelated {
+                            RoundedRectangle(cornerRadius: DesignTokens.Radius.lg)
+                                .strokeBorder(Color.accentColor.opacity(0.35), lineWidth: 1.5)
+                        }
+                    }
                 }
             }
             .id("combatResolver")
             .accessibilityIdentifier("battleTracker.combatResolver")
             .onAppear {
-                if trackerState.currentPhase.isCombatRelated || deploymentIsComplete {
+                if usesLandscapeSplitPresentation
+                    || trackerState.currentPhase.isCombatRelated
+                    || deploymentIsComplete {
                     showsCombatResolver = true
                 }
             }
         }
+    }
+
+    private var resolverPanel: some View {
+        CombatResolverPanel(
+            viewModel: combatViewModel,
+            multiAttackViewModel: multiAttackViewModel,
+            batchViewModel: batchCombatViewModel,
+            diceInputModeRaw: $diceInputModeRaw,
+            showsAdvancedOptions: $showsAdvancedOptions,
+            showsMultiAttack: $showsMultiAttack,
+            showsAdvancedSingleAttack: $showsAdvancedSingleAttack,
+            ruleSections: ruleSections,
+            presentation: .embeddedInBattleTracker,
+            attackerPlayerName: attackerName,
+            defenderPlayerName: defenderName,
+            defenderWoundsRemaining: defenderWoundsRemaining,
+            unitWoundsRemaining: unitWoundsRemaining,
+            onSyncMultiAttack: onSyncMultiAttack,
+            onApplyDamage: onApplyDamage
+        )
+        .padding(.top, usesLandscapeSplitPresentation ? 0 : DesignTokens.Spacing.sm)
     }
 
     private var header: some View {
@@ -74,7 +91,7 @@ struct BattleTrackerCombatResolverSection: View {
             }
             Text(
                 String(
-                    localized: "\(attackerName) attacks \(defenderName) — enter your dice here."
+                    localized: "\(attackerName) attacks \(defenderName) — enter hits, wounds, and failed saves."
                 )
             )
             .font(.caption)

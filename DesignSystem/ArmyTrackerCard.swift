@@ -7,6 +7,7 @@ struct ArmyTrackerCard: View {
     let playerOneArmy: SpearheadArmy?
     let playerTwoArmy: SpearheadArmy?
     let woundsRemaining: [String: Int]
+    let healthPerModelOverrides: [String: Int]
     let activePlayerIsOne: Bool
     var usesWideLayout: Bool = false
     var usesCompactSidebar: Bool = false
@@ -70,7 +71,7 @@ struct ArmyTrackerCard: View {
     private var hasDestroyedUnits: Bool {
         [playerOneArmy, playerTwoArmy].compactMap { army in
             army.flatMap {
-                ArmyHealthCatalog.summary(army: $0, playerName: "", woundsRemaining: woundsRemaining)
+                ArmyHealthCatalog.summary(army: $0, playerName: "", woundsRemaining: woundsRemaining, healthPerModelOverrides: healthPerModelOverrides)
             }
         }
         .contains { $0.destroyedUnitCount > 0 }
@@ -82,7 +83,8 @@ struct ArmyTrackerCard: View {
            let summary = ArmyHealthCatalog.summary(
                army: army,
                playerName: playerName,
-               woundsRemaining: woundsRemaining
+               woundsRemaining: woundsRemaining,
+               healthPerModelOverrides: healthPerModelOverrides
            ) {
             ArmyHealthPanel(
                 summary: summary,
@@ -278,6 +280,6 @@ struct ArmyUnitHealthRow: View {
         }
         .opacity(unit.isDestroyed ? 0.6 : 1)
         .frame(minHeight: usesCompactSidebar ? 40 : DesignTokens.minTouchTarget)
-        .accessibilityHint(onSelect == nil ? "" : String(localized: "Opens this unit in the combat resolver."))
+        .accessibilityHint(onSelect == nil ? "" : String(localized: "Opens unit focus with warscroll and combat options."))
     }
 }

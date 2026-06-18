@@ -99,7 +99,12 @@ final class GuidedMatchViewModel: ObservableObject {
         syncAutoCompletions()
     }
 
-    func setAttacker(isPlayerOne: Bool) {
+    func reloadFromStore() {
+        matchState = MatchSetupStore.load()
+        syncAutoCompletions()
+    }
+
+    func setAttacker(isPlayerOne: Bool?) {
         matchState.attackerIsPlayerOne = isPlayerOne
         persist()
         syncAutoCompletions()

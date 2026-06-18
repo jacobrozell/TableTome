@@ -1,14 +1,18 @@
 import SwiftUI
 import TabletomeDomain
+import TabletomeData
 
+// swiftlint:disable type_body_length
 struct GuidedMatchView: View {
-    @StateObject private var viewModel: GuidedMatchViewModel
+    @StateObject var viewModel: GuidedMatchViewModel
+    @StateObject var matchSyncService = NearbyMatchSyncService()
     let ruleSections: [RuleSection]
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @State private var selectedDestination: GuidedMatchDestination?
     @State private var showsAllSetupSteps = NewPlayerTipsStore.hasExpandedGuidedMatchSetup
+    @State var showsMatchSync = false
 
     private var usesCompactSetupLayout: Bool {
         !NewPlayerTipsStore.hasExpandedGuidedMatchSetup
@@ -21,7 +25,7 @@ struct GuidedMatchView: View {
     var body: some View {
         Group {
             if let catalog = viewModel.catalog {
-                if horizontalSizeClass == .regular {
+                if usesPadSplitNavigation {
                     regularLayout(catalog: catalog)
                 } else {
                     compactLayout(catalog: catalog)
@@ -33,23 +37,33 @@ struct GuidedMatchView: View {
             }
         }
         .navigationTitle(String(localized: "Guided Match"))
-        .navigationBarTitleDisplayMode(horizontalSizeClass == .regular ? .inline : .large)
+        .navigationBarTitleDisplayMode(layoutContext.isCompactHeight ? .inline : .large)
+        .toolbar { matchSyncToolbar }
+        .sheet(isPresented: $showsMatchSync) { matchSyncSheet }
         .task {
             await viewModel.load()
             guard AppLaunchArguments.shouldApplyStarterMatchup else { return }
             viewModel.applyStarterMatchup()
-            if horizontalSizeClass == .regular {
+            if usesPadSplitNavigation {
                 selectedDestination = .battleTracker
             }
         }
         .accessibilityIdentifier("guidedMatch.screen")
     }
 
-    private var isPadLandscape: Bool {
-        TabletomeLayout.isPadLandscape(
+    private var layoutContext: TabletomeLayoutContext {
+        TabletomeLayout.context(
             horizontalSizeClass: horizontalSizeClass,
             verticalSizeClass: verticalSizeClass
         )
+    }
+
+    private var usesPadSplitNavigation: Bool {
+        layoutContext.usesPadSplitNavigation
+    }
+
+    private var isPadLandscape: Bool {
+        layoutContext == .padLandscape
     }
 
     // MARK: - iPad
@@ -72,7 +86,7 @@ struct GuidedMatchView: View {
                 .modifier(GuidedMatchDetailWidth(destination: selectedDestination))
         }
         .onChange(of: viewModel.matchState.hasBothArmies) { _, hasBoth in
-            guard hasBoth, horizontalSizeClass == .regular, selectedDestination == nil else { return }
+            guard hasBoth, usesPadSplitNavigation, selectedDestination == nil else { return }
             selectedDestination = .battleTracker
         }
     }
@@ -103,7 +117,8 @@ struct GuidedMatchView: View {
                 BattlePhaseTrackerView(
                     matchState: viewModel.matchState,
                     catalog: catalog,
-                    ruleSections: ruleSections
+                    ruleSections: ruleSections,
+                    onMatchStateChange: { viewModel.reloadFromStore() }
                 )
             } else {
                 guidedMatchPlaceholder(
@@ -283,7 +298,7 @@ struct GuidedMatchView: View {
                     .fixedSize(horizontal: false, vertical: true)
                 Button(String(localized: "Use Starter Matchup")) {
                     viewModel.applyStarterMatchup()
-                    if horizontalSizeClass == .regular {
+                    if usesPadSplitNavigation {
                         selectedDestination = .battleTracker
                     }
                 }
@@ -461,7 +476,8 @@ struct GuidedMatchView: View {
                     BattlePhaseTrackerView(
                         matchState: viewModel.matchState,
                         catalog: catalog,
-                        ruleSections: ruleSections
+                        ruleSections: ruleSections,
+                        onMatchStateChange: { viewModel.reloadFromStore() }
                     )
                 } label: {
                     if setupComplete {
@@ -566,6 +582,8 @@ private struct PlayerArmyRow: View {
         return "\(faction.name) — \(army.name)"
     }
 }
+
+// swiftlint:enable type_body_length
 
 private struct GuidedMatchDetailWidth: ViewModifier {
     let destination: GuidedMatchDestination?

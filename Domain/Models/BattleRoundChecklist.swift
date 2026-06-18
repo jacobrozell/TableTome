@@ -18,36 +18,58 @@ public enum BattleRoundChecklistStep: String, CaseIterable, Codable, Sendable, I
         case .identifyUnderdog:
             String(localized: "Identify the underdog")
         case .drawTwistCard:
-            String(localized: "Draw a twist card")
+            String(localized: "Draw a twist card (shared deck)")
         case .drawBattleTactics:
-            String(localized: "Draw battle tactic cards")
+            round == 1
+                ? String(localized: "Draw battle tactic hands")
+                : String(localized: "Refresh battle tactic hands")
         case .startOfRoundAbilities:
             String(localized: "Resolve start-of-round abilities")
         }
     }
 
-    public var detail: String {
+    public func detail(round: Int) -> String {
         switch self {
         case .firstTurnOrPriority:
-            String(localized: "Round 1 only: the attacker chooses who takes the first turn. Later rounds use a priority roll.")
+            String(
+                localized: """
+                Round 1 only: the attacker chooses who takes the first turn. Later rounds use a priority roll. \
+                Seizing initiative (choosing to go second when you win priority) may stop you refreshing battle \
+                tactic cards unless you are the underdog by 5+ VP.
+                """
+            )
         case .identifyUnderdog:
             String(localized: "The player with fewer victory points is the underdog this round.")
         case .drawTwistCard:
             String(
                 localized: """
-                Take the twist deck from your box that matches your board side (e.g. Fire or Jade for Aqshy/Ghyran). \
-                Draw one card — twist effects favour the underdog.
+                TWIST DECK — from your battlefield pack, not your army box. Grab the deck labeled for \
+                your board side (e.g. Fire or Jade). Draw one card face up. Twist effects favour the underdog.
                 """
             )
         case .drawBattleTactics:
-            String(
-                localized: """
-                Each player uses their battle tactic deck from the box. Discard any number face up, draw back to three. \
-                Each card: complete the tactic at end of turn OR use the command during the battle — not both.
-                """
-            )
+            if round == 1 {
+                String(
+                    localized: """
+                    BATTLE TACTIC DECK — each player uses the deck from their own army starter box. \
+                    You should have shuffled it face down before the battle. Draw exactly 3 cards from the top — \
+                    no mulligan on round 1. Do not spread the deck and pick; draw blind from the top. \
+                    Each card: complete the tactic for 1 VP OR use the command — not both.
+                    """
+                )
+            } else {
+                String(
+                    localized: """
+                    BATTLE TACTIC DECK — each player uses the deck from their own army starter box. \
+                    Discard any cards you do not want face up, then draw that many from the top of your deck. \
+                    You should end with exactly 3 cards. Each card: complete the tactic for 1 VP OR use the command — not both.
+                    """
+                )
+            }
         case .startOfRoundAbilities:
-            String(localized: "Resolve any Start of Battle Round abilities before turns begin.")
+            String(
+                localized: "Resolve any Start of Battle Round abilities before the first turn begins. Check both armies."
+            )
         }
     }
 
@@ -73,5 +95,17 @@ public enum BattleRoundChecklist {
         let steps = BattleRoundChecklistStep.steps(forRound: round)
         let done = steps.filter { isComplete(step: $0, round: round, completedSteps: completedSteps) }.count
         return (done, steps.count)
+    }
+}
+
+public enum SpearheadBattleRules {
+    public static let battleRoundCount = 4
+
+    public static func roundLabel(round: Int) -> String {
+        String(localized: "Round \(round) of \(battleRoundCount)")
+    }
+
+    public static func clampBattleRound(_ round: Int) -> Int {
+        min(battleRoundCount, max(1, round))
     }
 }

@@ -20,8 +20,7 @@ struct RealmSideCoinFlipCard: View {
                 String(
                     localized: """
                     The defender chooses which battlefield and side to use. Pick the board you own, \
-                    then flip or agree on Aqshy vs Ghyran, Ossia vs Dolorum, or Ashen Bastion vs \
-                    Shattered Crossroads.
+                    tap a side to choose it, or flip a coin if you need a fair tie-break.
                     """
                 )
             )
@@ -78,35 +77,51 @@ struct RealmSideCoinFlipCard: View {
     }
 
     private func sideChip(_ side: BattlefieldSide) -> some View {
-        let isWinner = result == side
-        return VStack(spacing: DesignTokens.Spacing.xs) {
-            Image(systemName: symbolName(for: side))
-                .font(.title2)
-                .symbolRenderingMode(.hierarchical)
-                .foregroundStyle(isWinner ? Color.accentColor : .secondary)
-            Text(side.name)
-                .font(.subheadline.weight(.semibold))
-            Text(side.paletteLabel)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+        let isSelected = result == side
+        return Button {
+            selectSide(side)
+        } label: {
+            VStack(spacing: DesignTokens.Spacing.xs) {
+                Image(systemName: symbolName(for: side))
+                    .font(.title2)
+                    .symbolRenderingMode(.hierarchical)
+                    .foregroundStyle(isSelected ? Color.accentColor : .secondary)
+                Text(side.name)
+                    .font(.subheadline.weight(.semibold))
+                Text(side.paletteLabel)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(DesignTokens.Spacing.sm)
+            .background(
+                isSelected ? Color.accentColor.opacity(0.15) : Color(.tertiarySystemFill),
+                in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
+            )
+            .overlay {
+                RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
+                    .strokeBorder(isSelected ? Color.accentColor : .clear, lineWidth: 2)
+            }
         }
-        .frame(maxWidth: .infinity)
-        .padding(DesignTokens.Spacing.sm)
-        .background(
-            isWinner ? Color.accentColor.opacity(0.15) : Color(.tertiarySystemFill),
-            in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
-        )
-        .overlay {
-            RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
-                .strokeBorder(isWinner ? Color.accentColor : .clear, lineWidth: 2)
-        }
-        .accessibilityElement(children: .combine)
+        .buttonStyle(.plain)
+        .frame(minHeight: DesignTokens.minTouchTarget)
         .accessibilityLabel(
-            isWinner
+            isSelected
                 ? String(localized: "\(side.name), \(side.paletteLabel), selected")
                 : String(localized: "\(side.name), \(side.paletteLabel)")
         )
+        .accessibilityHint(String(localized: "Choose this board side"))
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
         .accessibilityIdentifier("coinFlip.side.\(side.id)")
+    }
+
+    private func selectSide(_ side: BattlefieldSide) {
+        battlefield = side.battlefield
+        result = side
+        UIAccessibility.post(
+            notification: .announcement,
+            argument: side.resultDescription
+        )
     }
 
     private func symbolName(for side: BattlefieldSide) -> String {

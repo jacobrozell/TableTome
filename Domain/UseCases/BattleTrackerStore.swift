@@ -11,9 +11,12 @@ public enum BattleTrackerStore: Sendable {
         return state
     }
 
-    public static func save(_ state: BattleTrackerState) {
+    public static func save(_ state: BattleTrackerState, notifySync: Bool = true) {
         guard let data = try? JSONEncoder().encode(state) else { return }
         UserDefaults.standard.set(data, forKey: stateKey)
+        if notifySync {
+            MatchSyncNotifications.postStateDidChange()
+        }
     }
 
     public static func reset() {

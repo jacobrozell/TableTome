@@ -67,10 +67,13 @@ struct RoundChecklistCard: View {
                 Text(step.title(round: round))
                     .font(.subheadline.weight(isFocused ? .bold : .semibold))
                 if isFocused || !isComplete {
-                    Text(step.detail)
+                    Text(step.detail(round: round))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
+                    if step == .firstTurnOrPriority, round > 1 {
+                        SeizingInitiativeCallout()
+                    }
                 }
             }
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)

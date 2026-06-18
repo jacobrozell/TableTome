@@ -8,6 +8,16 @@ struct MatchStepDetailView: View {
     let ruleSections: [RuleSection]
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    private var usesSideBySideColumns: Bool {
+        TabletomeLayout.usesSideBySideLayout(
+            horizontalSizeClass: horizontalSizeClass,
+            verticalSizeClass: verticalSizeClass,
+            isAccessibilitySize: dynamicTypeSize.isAccessibilitySize
+        )
+    }
 
     private var isComplete: Bool {
         viewModel.matchState.completedStepIds.contains(step.id)
@@ -125,7 +135,7 @@ struct MatchStepDetailView: View {
                     BattleTacticsReferenceView(ruleSections: ruleSections)
                 } label: {
                     ReferenceLinkRow(
-                        title: String(localized: "Battle Tactics & Twists"),
+                        title: String(localized: "Card Decks Guide"),
                         systemImage: "rectangle.stack"
                     )
                 }
@@ -139,7 +149,7 @@ struct MatchStepDetailView: View {
                 BattleTacticsReferenceView(ruleSections: ruleSections)
             } label: {
                 ReferenceLinkRow(
-                    title: String(localized: "Battle Tactics & Twists"),
+                    title: String(localized: "Card Decks Guide"),
                     systemImage: "rectangle.stack"
                 )
             }
@@ -161,40 +171,11 @@ struct MatchStepDetailView: View {
     }
 
     private var attackerPicker: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            SectionHeader(title: String(localized: "Who is the attacker?"), systemImage: "flag.fill")
-
-            Picker(String(localized: "Attacker"), selection: attackerBinding) {
-                Text(String(localized: "Not decided")).tag(Optional<Bool>.none)
-                Text(viewModel.matchState.playerOne.playerName).tag(Optional(true))
-                Text(viewModel.matchState.playerTwo.playerName).tag(Optional(false))
-            }
-            .pickerStyle(.segmented)
-            .accessibilityIdentifier("guidedMatch.attackerPicker")
-
-            if let isPlayerOne = viewModel.matchState.attackerIsPlayerOne {
-                let attacker = isPlayerOne ? viewModel.matchState.playerOne : viewModel.matchState.playerTwo
-                let defender = isPlayerOne ? viewModel.matchState.playerTwo : viewModel.matchState.playerOne
-                Text(
-                    String(
-                        localized: "\(attacker.playerName) attacks. \(defender.playerName) defends and chooses the realm side."
-                    )
-                )
-                .font(.callout)
-                .foregroundStyle(.secondary)
-            }
-        }
-        .surfaceCard()
-    }
-
-    private var attackerBinding: Binding<Bool?> {
-        Binding(
-            get: { viewModel.matchState.attackerIsPlayerOne },
-            set: { newValue in
-                if let isPlayerOne = newValue {
-                    viewModel.setAttacker(isPlayerOne: isPlayerOne)
-                }
-            }
+        AttackerDefenderPickerCard(
+            playerOneName: viewModel.matchState.playerOne.playerName,
+            playerTwoName: viewModel.matchState.playerTwo.playerName,
+            attackerIsPlayerOne: viewModel.matchState.attackerIsPlayerOne,
+            onSelect: viewModel.setAttacker
         )
     }
 
@@ -202,7 +183,7 @@ struct MatchStepDetailView: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             SectionHeader(title: String(localized: "Loadout Summary"), systemImage: "tray.full")
 
-            if horizontalSizeClass == .regular {
+            if usesSideBySideColumns {
                 HStack(alignment: .top, spacing: DesignTokens.Spacing.lg) {
                     playerLoadoutCard(
                         player: viewModel.matchState.playerOne,
@@ -259,7 +240,7 @@ struct MatchStepDetailView: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             SectionHeader(title: title, systemImage: "list.bullet")
 
-            if horizontalSizeClass == .regular {
+            if usesSideBySideColumns {
                 HStack(alignment: .top, spacing: DesignTokens.Spacing.lg) {
                     playerOptionPicker(
                         player: viewModel.matchState.playerOne,

@@ -23,11 +23,12 @@ As a Spearhead defender setting up a game, I flip a fair coin to decide which si
 | Requirement | Detail |
 |-------------|--------|
 | Board picker | Menu: Fire and Jade, Sand and Bone, City of Ash |
-| Odds | Strict 50/50 between the two sides of the selected board |
+| Direct selection | Tap either side chip to choose without flipping |
+| Odds | Strict 50/50 between the two sides of the selected board (coin flip only) |
 | RNG | `SystemRandomNumberGenerator` via `Bool.random(using:)` |
 | Persistence | None — result is session-only; checklist toggle is separate |
 | Re-flip | Allowed; each tap produces a new independent flip |
-| Board change | Clears the current flip result |
+| Board change | Clears the current side selection; picker stays editable after a flip |
 | Checklist | Does **not** auto-complete “Defender chooses realm side” |
 
 ## Flow
@@ -37,7 +38,7 @@ Guided Match → Realm Battlefield step
   or Battle Tracker (round 1 deployment)
   → Board Side coin flip card
   → Select battlefield (Fire and Jade, Sand and Bone, or City of Ash)
-  → Tap “Flip Coin”
+  → Tap a side chip to choose directly, or tap “Flip Coin” for a fair tie-break
   → See result (e.g. Shattered Crossroads)
   → Mark deployment checklist step when done
 ```

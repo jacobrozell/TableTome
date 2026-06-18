@@ -21,6 +21,19 @@ struct GuideStepDetailView: View {
                     WhatYouNeedCard()
                 }
 
+                if step.id == "realm-battlefield" || step.id == "fight-battle", gameSystemId == "aos-spearhead" {
+                    NavigationLink {
+                        BattleTacticsReferenceView(ruleSections: ruleSections)
+                    } label: {
+                        Label(String(localized: "Card Decks Guide"), systemImage: "rectangle.stack")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .frame(minHeight: DesignTokens.minTouchTarget)
+                    }
+                    .accessibilityHint(String(localized: "Which physical deck is twists vs battle tactics"))
+                    .accessibilityIdentifier("guide.cardDecks.\(step.id)")
+                }
+
                 if let relatedSection {
                     NavigationLink {
                         RuleSectionDetailView(section: relatedSection, allSections: ruleSections)

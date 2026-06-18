@@ -23,9 +23,15 @@ extension BattlePhaseTrackerView {
             weapon: weapon,
             saveTarget: save,
             unitId: unit.id,
-            wardTarget: combatViewModel.activeWardTarget
+            deployedModelCount: combatViewModel.attackerDeployedModelCount,
+            wardTarget: combatViewModel.activeWardTarget,
+            resolvedAttackCount: combatViewModel.resolvedVariableAttackCount
         )
-        multiAttackViewModel.bind(weapon: weapon, unitId: unit.id)
+        multiAttackViewModel.bind(
+            weapon: weapon,
+            unitId: unit.id,
+            unitModelCount: unit.modelCount
+        )
         multiAttackViewModel.hitModifier = mods.hit
         multiAttackViewModel.woundModifier = mods.wound
         multiAttackViewModel.saveModifier = mods.save
@@ -45,7 +51,19 @@ extension BattlePhaseTrackerView {
         )
     }
 
-    func handleArmyUnitSelection(armyId: String, unitId: String) {
+    func handleArmyUnitSelection(
+        armyId: String,
+        unitId: String,
+        preferredWeaponId: String? = nil
+    ) {
+        presentUnitFocus(armyId: armyId, unitId: unitId, preferredWeaponId: preferredWeaponId)
+    }
+
+    func applyArmyUnitCombatPrefill(
+        armyId: String,
+        unitId: String,
+        preferredWeaponId: String? = nil
+    ) {
         let playerOneArmyId = viewModel.playerOneArmy?.id
         let playerTwoArmyId = viewModel.playerTwoArmy?.id
         let attackerArmyId = viewModel.trackerState.activePlayerIsOne ? playerOneArmyId : playerTwoArmyId
@@ -53,10 +71,16 @@ extension BattlePhaseTrackerView {
 
         if armyId == attackerArmyId {
             combatViewModel.setAttackerUnit(unitId)
+            if let preferredWeaponId,
+               combatViewModel.evaluableWeapons.contains(where: { $0.id == preferredWeaponId }) {
+                combatViewModel.setAttackerWeapon(preferredWeaponId)
+                syncMultiAttack()
+            }
         } else if armyId == defenderArmyId {
             combatViewModel.setDefenderUnit(unitId)
         }
         showsAdvancedOptions = combatViewModel.hasSuggestedWardBuffs
+        showsCombatResolver = true
         scrollToCombatResolver = true
     }
 
@@ -73,6 +97,42 @@ extension BattlePhaseTrackerView {
         withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.35)) {
             proxy.scrollTo("combatResolver", anchor: .top)
         }
+    }
+
+    var combatAttackerName: String {
+        viewModel.trackerState.activePlayerIsOne ? viewModel.playerOneName : viewModel.playerTwoName
+    }
+
+    var combatDefenderName: String {
+        viewModel.trackerState.activePlayerIsOne ? viewModel.playerTwoName : viewModel.playerOneName
+    }
+
+    var deploymentIsComplete: Bool {
+        DeploymentChecklist.completionCount(completedSteps: viewModel.trackerState.completedDeploymentSteps).done
+            == DeploymentChecklistStep.allCases.count
+    }
+
+    var defenderWoundsRemaining: Int? {
+        guard let key = combatViewModel.defenderWoundKey else { return nil }
+        return viewModel.trackerState.unitWoundsRemaining[key]
+    }
+
+    var defenderWoundsSummaryLabel: String? {
+        guard let defender = combatViewModel.selectedDefenderUnit,
+              let remaining = defenderWoundsRemaining else { return nil }
+        let capacity = viewModel.woundCapacity(
+            for: combatViewModel.defenderArmyId,
+            unit: defender
+        )
+        if remaining == 0 {
+            return String(localized: "\(defender.name): destroyed")
+        }
+        return String(localized: "\(defender.name): \(remaining)/\(capacity) wounds")
+    }
+
+    static func matchupPrefill(for player: PlayerArmySelection) -> MatchupUnitPrefill? {
+        guard !player.armyId.isEmpty else { return nil }
+        return MatchupUnitPrefill(armyId: player.armyId, unitId: "")
     }
 }
 

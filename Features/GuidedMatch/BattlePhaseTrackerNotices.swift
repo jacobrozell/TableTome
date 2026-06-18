@@ -126,7 +126,9 @@ extension BattlePhaseTrackerView {
             notice = TurnHandoffNotice(
                 title: String(localized: "End of \(activeName)'s turn"),
                 detail: String(
-                    localized: "Score any victory points, update battle tactics, then pass the phone."
+                    localized: """
+                    Score any victory points, then pass the phone. Battle tactics refresh at the start of the next battle round.
+                    """
                 )
             )
         } else if phase == .hero, playerChanged || previousPhase == .endOfTurn {

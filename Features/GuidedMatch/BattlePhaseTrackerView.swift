@@ -6,27 +6,50 @@ struct BattlePhaseTrackerView: View {
     @StateObject var viewModel: BattlePhaseTrackerViewModel
     @StateObject var combatViewModel: UnitMatchupEvaluatorViewModel
     @StateObject var multiAttackViewModel = MultiAttackEvaluatorViewModel()
-    @AppStorage("diceInputMode") private var diceInputModeRaw = DiceInputMode.physical.rawValue
+    @StateObject var batchCombatViewModel = BatchCombatEvaluatorViewModel()
+    @AppStorage("diceInputMode") var diceInputModeRaw = DiceInputMode.physical.rawValue
     @State var showsCombatResolver = false
     @State var showsAdvancedOptions = false
-    @State private var showsMultiAttack = false
+    @State var showsMultiAttack = false
+    @State var showsAdvancedSingleAttack = false
+    @State var movementAction: MovementAction = .normal
+    @State var selectedSectionTab: BattleTrackerSectionTab = .turn
+    @State var showsDeploymentSetup = true
     @State var scrollToCombatResolver = false
-    @State private var showsBattleTrackerCoach = false
-    @State private var dismissedBattleCompleteGuide = false
+    @State var showsBattleTrackerCoach = false
+    @State var showsBattleGuideExpanded = true
+    @State var dismissedBattleCompleteGuide = false
     @State var turnHandoffNotice: TurnHandoffNotice?
     @State var damageUndoNotice: DamageUndoNotice?
     @State var roundOpenerNotice: RoundOpenerNotice?
     @State var scoringReminderNotice: ScoringReminderNotice?
     @State var scrollToVictoryPoints = false
     @State var scrollToRoundChecklist = false
-    @State private var handoffBaselineEstablished = false
+    @State var handoffBaselineEstablished = false
+    @State var unitFocusSelection: UnitFocusSelection?
+    @State var lastFocusedUnitSelection: UnitFocusSelection?
+    @State var scrollToPhaseControls = false
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.accessibilityReduceMotion) var reduceMotion
     let ruleSections: [RuleSection]
 
-    init(matchState: GuidedMatchState, catalog: SpearheadCatalog, ruleSections: [RuleSection] = []) {
-        _viewModel = StateObject(wrappedValue: BattlePhaseTrackerViewModel(matchState: matchState, catalog: catalog))
+    let onMatchStateChange: (() -> Void)?
+
+    init(
+        matchState: GuidedMatchState,
+        catalog: SpearheadCatalog,
+        ruleSections: [RuleSection] = [],
+        onMatchStateChange: (() -> Void)? = nil
+    ) {
+        self.onMatchStateChange = onMatchStateChange
+        _viewModel = StateObject(
+            wrappedValue: BattlePhaseTrackerViewModel(
+                matchState: matchState,
+                catalog: catalog,
+                onMatchStateChange: onMatchStateChange
+            )
+        )
         _combatViewModel = StateObject(
             wrappedValue: UnitMatchupEvaluatorViewModel(
                 catalogRepository: BundledSpearheadCatalogRepository(),
@@ -38,260 +61,81 @@ struct BattlePhaseTrackerView: View {
     }
 
     var body: some View {
-        ScrollViewReader { proxy in
-            ScrollView(.vertical) {
-                Group {
-                    if horizontalSizeClass == .regular {
-                        if isPadLandscape {
-                            landscapeLayout
-                        } else {
-                            regularPortraitLayout
-                        }
-                    } else {
-                        compactLayout
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .modifier(BattleTrackerContentWidth(isPadLandscape: isPadLandscape))
-                .padding(isPadLandscape ? DesignTokens.Spacing.sm : DesignTokens.Spacing.md)
+        applyCombatEvaluationSync(to:
+            ScrollViewReader { proxy in
+                trackedScrollView(proxy: proxy)
             }
-            .scrollBounceBehavior(.basedOnSize, axes: .vertical)
-            .tabBarScrollInset()
-            .onChange(of: viewModel.trackerState.currentPhase) { oldPhase, phase in
-                if phase.isCombatRelated {
-                    requestCombatResolverFocus(using: proxy)
+            .safeAreaInset(edge: .top, spacing: 0) {
+                if layoutContext.usesPadSplitNavigation == false, supportsBattleTracker {
+                    VStack(spacing: DesignTokens.Spacing.sm) {
+                        BattleTrackerSectionTabBar(selection: $selectedSectionTab)
+                        StickyPhaseHeader(
+                            round: viewModel.trackerState.battleRound,
+                            phaseTitle: viewModel.trackerState.currentPhase.title,
+                            playerName: viewModel.trackerState.activePlayerIsOne
+                                ? viewModel.playerOneName
+                                : viewModel.playerTwoName
+                        )
+                    }
+                    .padding(.horizontal, DesignTokens.Spacing.md)
+                    .padding(.bottom, DesignTokens.Spacing.xs)
                 }
-                if phase == .endOfTurn, handoffBaselineEstablished {
-                    presentScoringReminderIfNeeded()
-                } else if oldPhase == .endOfTurn {
-                    scoringReminderNotice = nil
+            }
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                if supportsBattleTracker, layoutContext.usesPadSplitNavigation == false {
+                    phaseDock
                 }
-                if phase == .hero {
+            }
+            .navigationTitle(String(localized: "Battle Tracker"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(String(localized: "Reset")) {
+                        viewModel.resetTracker()
+                    }
+                    .accessibilityIdentifier("battleTracker.reset")
+                }
+            }
+            .accessibilityIdentifier("battleTracker.screen")
+            .sheet(item: $unitFocusSelection) { _ in
+                unitFocusSheet
+            }
+            .onAppear {
+                showsBattleTrackerCoach = supportsBattleTracker && !NewPlayerTipsStore.hasSeenBattleTrackerCoach
+                Task {
+                    try? await Task.sleep(for: .milliseconds(400))
+                    handoffBaselineEstablished = true
                     presentRoundOpenerNudgeIfNeeded()
                 }
-                if handoffBaselineEstablished {
-                    presentTurnHandoff(from: oldPhase, to: phase, playerChanged: false)
-                }
             }
-            .onChange(of: viewModel.trackerState.battleRound) { oldRound, round in
-                guard round > oldRound else { return }
-                presentRoundOpenerNudgeIfNeeded()
-            }
-            .onChange(of: viewModel.focusedDeploymentStep) { oldStep, newStep in
-                guard oldStep != nil, newStep == nil else { return }
-                presentRoundOpenerNudgeIfNeeded()
-            }
-            .onChange(of: viewModel.trackerState.activePlayerIsOne) { oldValue, _ in
+            .task {
+                await combatViewModel.load()
                 syncCombatContext()
-                requestCombatResolverFocus(using: proxy)
-                if handoffBaselineEstablished {
-                    presentTurnHandoff(
-                        from: viewModel.trackerState.currentPhase,
-                        to: viewModel.trackerState.currentPhase,
-                        playerChanged: oldValue != viewModel.trackerState.activePlayerIsOne
-                    )
-                }
             }
-            .onChange(of: damageUndoNotice) { _, notice in
-                guard notice != nil else { return }
-                let current = notice
-                Task {
-                    try? await Task.sleep(for: .seconds(6))
-                    if damageUndoNotice == current {
-                        withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) {
-                            damageUndoNotice = nil
-                        }
-                    }
-                }
-            }
-            .onChange(of: turnHandoffNotice) { _, notice in
-                guard notice != nil else { return }
-                let current = notice
-                Task {
-                    try? await Task.sleep(for: .seconds(5))
-                    if turnHandoffNotice == current {
-                        withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) {
-                            turnHandoffNotice = nil
-                        }
-                    }
-                }
-            }
-            .onChange(of: scoringReminderNotice) { _, notice in
-                guard notice != nil else { return }
-                let current = notice
-                Task {
-                    try? await Task.sleep(for: .seconds(8))
-                    if scoringReminderNotice == current {
-                        withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) {
-                            scoringReminderNotice = nil
-                        }
-                    }
-                }
-            }
-            .onChange(of: roundOpenerNotice) { _, notice in
-                guard notice != nil else { return }
-                let current = notice
-                Task {
-                    try? await Task.sleep(for: .seconds(8))
-                    if roundOpenerNotice == current {
-                        withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) {
-                            roundOpenerNotice = nil
-                        }
-                    }
-                }
-            }
-            .onChange(of: scrollToCombatResolver) { _, shouldScroll in
-                guard shouldScroll else { return }
-                showsCombatResolver = true
-                withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.35)) {
-                    proxy.scrollTo("combatResolver", anchor: .top)
-                }
-                scrollToCombatResolver = false
-            }
-            .onChange(of: scrollToVictoryPoints) { _, shouldScroll in
-                guard shouldScroll else { return }
-                withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.35)) {
-                    proxy.scrollTo("victoryPoints", anchor: .top)
-                }
-                scrollToVictoryPoints = false
-                scoringReminderNotice = nil
-            }
-            .onChange(of: scrollToRoundChecklist) { _, shouldScroll in
-                guard shouldScroll else { return }
-                withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.35)) {
-                    proxy.scrollTo("roundChecklist", anchor: .top)
-                }
-                scrollToRoundChecklist = false
-                roundOpenerNotice = nil
-            }
-        }
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            if supportsBattleTracker, viewModel.trackerState.currentPhase.isCombatRelated {
-                BattleTrackerStickyCombatBar(
-                    attackerName: combatAttackerName,
-                    defenderName: combatDefenderName,
-                    phaseTitle: viewModel.trackerState.currentPhase.title,
-                    defenderWoundsLabel: defenderWoundsSummaryLabel,
-                    onTap: { scrollToCombatResolver = true }
-                )
-            }
-        }
-        .navigationTitle(String(localized: "Battle Tracker"))
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button(String(localized: "Reset")) {
-                    viewModel.resetTracker()
-                }
-                .accessibilityIdentifier("battleTracker.reset")
-            }
-        }
-        .accessibilityIdentifier("battleTracker.screen")
-        .onAppear {
-            showsBattleTrackerCoach = supportsBattleTracker && !NewPlayerTipsStore.hasSeenBattleTrackerCoach
-            Task {
-                try? await Task.sleep(for: .milliseconds(400))
-                handoffBaselineEstablished = true
-                presentRoundOpenerNudgeIfNeeded()
-            }
-        }
-        .task {
-            await combatViewModel.load()
-            syncCombatContext()
-        }
-        .onChange(of: diceInputModeRaw) { _, _ in
-            combatViewModel.clearSimulatedRolls()
-            multiAttackViewModel.clearSimulatedRolls()
-        }
-        .onChange(of: combatViewModel.enabledBuffIds) { _, _ in
-            syncMultiAttack()
-            combatViewModel.refreshEvaluation()
-        }
-        .onChange(of: combatViewModel.hitRoll) { _, _ in combatViewModel.refreshEvaluation() }
-        .onChange(of: combatViewModel.woundRoll) { _, _ in combatViewModel.refreshEvaluation() }
-        .onChange(of: combatViewModel.saveRoll) { _, _ in combatViewModel.refreshEvaluation() }
-        .onChange(of: combatViewModel.wardRoll) { _, _ in combatViewModel.refreshEvaluation() }
-        .onChange(of: combatViewModel.damage) { _, _ in combatViewModel.refreshEvaluation() }
-        .onChange(of: combatViewModel.rollOptions) { _, _ in combatViewModel.refreshEvaluation() }
-        .onChange(of: combatViewModel.attackerWeaponId) { _, _ in syncMultiAttack() }
-        .onChange(of: combatViewModel.defenderUnitId) { _, _ in syncMultiAttack() }
+        )
     }
 
-    private var isPadLandscape: Bool {
-        TabletomeLayout.isPadLandscape(
+    var layoutContext: TabletomeLayoutContext {
+        TabletomeLayout.context(
             horizontalSizeClass: horizontalSizeClass,
             verticalSizeClass: verticalSizeClass
         )
     }
 
-    private var transientNoticeSections: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            turnHandoffSection
-            scoringReminderSection
-            roundOpenerSection
-            damageUndoSection
-        }
+    var isPadLandscape: Bool {
+        layoutContext == .padLandscape
     }
 
-    private var compactLayout: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-            coachSection
-            transientNoticeSections
-            guideSection
-            roundAndScoreSection
-            armyTrackerSection(wideLayout: false)
-            BattleTrackerControlPanel(viewModel: viewModel)
-            combatResolverSection
-            trackerContent
-            deploymentSection
-            secondarySections
+    var trackerContentPadding: CGFloat {
+        switch layoutContext {
+        case .padLandscape: DesignTokens.Spacing.sm
+        case .phoneLandscape: DesignTokens.phoneLandscapeHorizontalPadding
+        default: DesignTokens.Spacing.md
         }
-        .animation(.easeInOut(duration: 0.25), value: showsBattleTrackerCoach)
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    private var regularPortraitLayout: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-            coachSection
-            transientNoticeSections
-            guideSection
-            deploymentSection
-            armyTrackerSection(wideLayout: true, compactSidebar: false)
-            HStack(alignment: .top, spacing: DesignTokens.Spacing.lg) {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-                    roundAndScoreSection
-                    BattleTrackerControlPanel(viewModel: viewModel)
-                    secondarySections
-                }
-                .frame(minWidth: 0, maxWidth: DesignTokens.battleTrackerControlColumnMaxWidth, alignment: .leading)
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-                    combatResolverSection
-                    trackerContent
-                }
-                .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-            }
-        }
-        .frame(maxWidth: DesignTokens.battleTrackerRegularMaxWidth)
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    private var landscapeLayout: some View {
-        BattleTrackerLandscapeLayout(
-            coach: coachSection,
-            banners: transientNoticeSections,
-            guide: guideSection,
-            deployment: deploymentSection,
-            roundAndScore: roundAndScoreSection,
-            control: BattleTrackerControlPanel(viewModel: viewModel),
-            combat: combatResolverSection,
-            abilities: trackerContent,
-            army: armyTrackerSection(wideLayout: false, compactSidebar: true),
-            secondary: secondarySections
-        )
     }
 
     @ViewBuilder
-    private var coachSection: some View {
+    var coachSection: some View {
         if supportsBattleTracker, showsBattleTrackerCoach {
             BattleTrackerCoachCard {
                 withAnimation(.easeInOut(duration: 0.25)) {
@@ -304,28 +148,94 @@ struct BattlePhaseTrackerView: View {
     }
 
     @ViewBuilder
-    private var guideSection: some View {
+    var guideSection: some View {
         if !dismissedBattleCompleteGuide, let step = viewModel.currentGuideStep {
-            BattleGuideCard(step: step) {
-                if step.kind == .battleComplete {
-                    dismissedBattleCompleteGuide = true
-                } else {
-                    viewModel.completeCurrentGuideStep()
+            DisclosureGroup(isExpanded: $showsBattleGuideExpanded) {
+                BattleGuideCard(step: step) {
+                    if step.kind == .battleComplete {
+                        dismissedBattleCompleteGuide = true
+                    } else {
+                        viewModel.completeCurrentGuideStep()
+                    }
                 }
+                .padding(.top, DesignTokens.Spacing.sm)
+            } label: {
+                Label(String(localized: "Do this now"), systemImage: "hand.point.right.fill")
+                    .font(.subheadline.weight(.semibold))
             }
+            .padding(DesignTokens.Spacing.md)
+            .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+            .overlay(
+                RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
+                    .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
+            )
+            .accessibilityIdentifier("battleGuide.section")
         }
     }
 
     @ViewBuilder
-    private var combatResolverSection: some View {
+    var startOfRoundHelper: some View {
+        if supportsBattleTracker, viewModel.needsStartOfRoundAbilitiesPrompt {
+            StartOfRoundAbilitiesBanner(abilities: viewModel.startOfRoundAbilities)
+        }
+    }
+
+    @ViewBuilder
+    var shootingPhaseHelper: some View {
+        if supportsBattleTracker, viewModel.trackerState.currentPhase == .shooting {
+            ShootingEligibleUnitsCard(
+                units: viewModel.shootingEligibleUnits,
+                armyName: viewModel.armyName,
+                onSelectUnit: { unitId in
+                    guard let armyId = viewModel.activeArmy?.id else { return }
+                    let shootingWeaponId = viewModel.activeArmy?
+                        .units
+                        .first(where: { $0.id == unitId })?
+                        .shootingWeapons
+                        .first?
+                        .id
+                    handleArmyUnitSelection(
+                        armyId: armyId,
+                        unitId: unitId,
+                        preferredWeaponId: shootingWeaponId
+                    )
+                }
+            )
+        }
+    }
+
+    @ViewBuilder
+    var shootInCombatPhaseHelper: some View {
+        if supportsBattleTracker,
+           viewModel.trackerState.currentPhase == .combat
+               || viewModel.trackerState.currentPhase == .anyCombat,
+           !viewModel.shootInCombatEligibleUnits.isEmpty {
+            ShootInCombatEligibleUnitsCard(
+                units: viewModel.shootInCombatEligibleUnits,
+                onSelectUnit: { unitId, weaponId in
+                    guard let armyId = viewModel.activeArmy?.id else { return }
+                    handleArmyUnitSelection(
+                        armyId: armyId,
+                        unitId: unitId,
+                        preferredWeaponId: weaponId
+                    )
+                }
+            )
+        }
+    }
+
+    @ViewBuilder
+    func combatResolverSection(usesLandscapeSplit: Bool = false) -> some View {
         if supportsBattleTracker {
             BattleTrackerCombatResolverSection(
                 combatViewModel: combatViewModel,
                 multiAttackViewModel: multiAttackViewModel,
+                batchCombatViewModel: batchCombatViewModel,
                 showsCombatResolver: $showsCombatResolver,
                 diceInputModeRaw: $diceInputModeRaw,
                 showsAdvancedOptions: $showsAdvancedOptions,
                 showsMultiAttack: $showsMultiAttack,
+                showsAdvancedSingleAttack: $showsAdvancedSingleAttack,
                 trackerState: viewModel.trackerState,
                 attackerName: combatAttackerName,
                 defenderName: combatDefenderName,
@@ -334,29 +244,42 @@ struct BattlePhaseTrackerView: View {
                 unitWoundsRemaining: viewModel.trackerState.unitWoundsRemaining,
                 ruleSections: ruleSections,
                 onSyncMultiAttack: syncMultiAttack,
-                onApplyDamage: applyCombatDamage
+                onApplyDamage: applyCombatDamage,
+                usesLandscapeSplitPresentation: usesLandscapeSplit
             )
         }
     }
 
     @ViewBuilder
-    private var deploymentSection: some View {
-        if viewModel.trackerState.battleRound == 1, !deploymentIsComplete {
-            RealmSideCoinFlipCard()
-            DeploymentChecklistCard(
-                completedSteps: viewModel.trackerState.completedDeploymentSteps,
-                focusedStep: viewModel.focusedDeploymentStep,
-                onToggle: viewModel.setDeploymentStep
-            )
+    var deploymentSection: some View {
+        if viewModel.trackerState.battleRound == 1 {
+            DisclosureGroup(isExpanded: $showsDeploymentSetup) {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    RealmSideCoinFlipCard()
+                    DeploymentChecklistCard(
+                        completedSteps: viewModel.trackerState.completedDeploymentSteps,
+                        focusedStep: viewModel.focusedDeploymentStep,
+                        onToggle: viewModel.setDeploymentStep
+                    )
+                }
+                .padding(.top, DesignTokens.Spacing.sm)
+            } label: {
+                Label(String(localized: "Battlefield setup"), systemImage: "map")
+                    .font(.headline)
+            }
+            .surfaceCard()
+            .onAppear {
+                showsDeploymentSetup = !deploymentIsComplete
+            }
         }
     }
 
-    private var roundAndScoreSection: some View {
+    var roundAndScoreSection: some View {
         BattleTrackerRoundAndScoreSection(viewModel: viewModel)
     }
 
     @ViewBuilder
-    private func armyTrackerSection(wideLayout: Bool, compactSidebar: Bool = false) -> some View {
+    func armyTrackerSection(wideLayout: Bool, compactSidebar: Bool = false) -> some View {
         if supportsBattleTracker {
             ArmyTrackerCard(
                 playerOneName: viewModel.playerOneName,
@@ -364,17 +287,20 @@ struct BattlePhaseTrackerView: View {
                 playerOneArmy: viewModel.playerOneArmy,
                 playerTwoArmy: viewModel.playerTwoArmy,
                 woundsRemaining: viewModel.trackerState.unitWoundsRemaining,
+                healthPerModelOverrides: viewModel.trackerState.unitHealthPerModelOverrides,
                 activePlayerIsOne: viewModel.trackerState.activePlayerIsOne,
                 usesWideLayout: wideLayout,
                 usesCompactSidebar: compactSidebar,
                 onChange: viewModel.setUnitWounds(key:remaining:),
-                onSelectUnit: handleArmyUnitSelection
+                onSelectUnit: { armyId, unitId in
+                    handleArmyUnitSelection(armyId: armyId, unitId: unitId)
+                }
             )
         }
     }
 
     @ViewBuilder
-    private var secondarySections: some View {
+    var secondarySections: some View {
         BattleTrackerBothLoadoutsSection(
             playerOneName: viewModel.playerOneName,
             playerTwoName: viewModel.playerTwoName,
@@ -394,17 +320,24 @@ struct BattlePhaseTrackerView: View {
     @ViewBuilder
     private var gotchaSection: some View {
         if !viewModel.activeGotchas.isEmpty {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                SectionHeader(title: String(localized: "Army Reminders"), systemImage: "bolt.fill")
-                ForEach(viewModel.activeGotchas) { gotcha in
-                    ArmyGotchaCard(gotcha: gotcha)
+            DisclosureGroup {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                    ForEach(viewModel.activeGotchas) { gotcha in
+                        ArmyGotchaCard(gotcha: gotcha)
+                    }
                 }
+                .padding(.top, DesignTokens.Spacing.sm)
+            } label: {
+                Label(String(localized: "Army Reminders"), systemImage: "bolt.fill")
+                    .font(.headline)
             }
+            .surfaceCard()
+            .accessibilityIdentifier("battleTracker.gotchaSection")
         }
     }
 
     @ViewBuilder
-    private var trackerContent: some View {
+    var trackerContent: some View {
         if !supportsBattleTracker {
             emptyState
         } else {
@@ -416,67 +349,21 @@ struct BattlePhaseTrackerView: View {
         }
     }
 
-    private var supportsBattleTracker: Bool {
+    var supportsBattleTracker: Bool {
         viewModel.contentCoverage >= .battleTracker
-    }
-
-    private var combatAttackerName: String {
-        viewModel.trackerState.activePlayerIsOne ? viewModel.playerOneName : viewModel.playerTwoName
-    }
-
-    private var combatDefenderName: String {
-        viewModel.trackerState.activePlayerIsOne ? viewModel.playerTwoName : viewModel.playerOneName
-    }
-
-    private var deploymentIsComplete: Bool {
-        DeploymentChecklist.completionCount(completedSteps: viewModel.trackerState.completedDeploymentSteps).done
-            == DeploymentChecklistStep.allCases.count
-    }
-
-    private var defenderWoundsRemaining: Int? {
-        guard let key = combatViewModel.defenderWoundKey else { return nil }
-        return viewModel.trackerState.unitWoundsRemaining[key]
-    }
-
-    private var defenderWoundsSummaryLabel: String? {
-        guard let defender = combatViewModel.selectedDefenderUnit,
-              let remaining = defenderWoundsRemaining else { return nil }
-        let capacity = UnitWoundCapacity.capacity(for: defender)
-        if remaining == 0 {
-            return String(localized: "\(defender.name): destroyed")
-        }
-        return String(localized: "\(defender.name): \(remaining)/\(capacity) wounds")
-    }
-
-    private var emptyState: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            Text(String(localized: "Battle tracker isn't available for this army yet."))
-                .font(.headline)
-            Text(
-                "Ability reminders for this army aren't in Tabletome yet. Use the GW Spearhead PDF link on the army picker for full rules."
-            )
-            .font(.callout)
-            .foregroundStyle(.secondary)
-            .fixedSize(horizontal: false, vertical: true)
-        }
-        .surfaceCard()
-    }
-
-    private static func matchupPrefill(for player: PlayerArmySelection) -> MatchupUnitPrefill? {
-        guard !player.armyId.isEmpty else { return nil }
-        return MatchupUnitPrefill(armyId: player.armyId, unitId: "")
     }
 }
 
-private struct BattleTrackerContentWidth: ViewModifier {
-    let isPadLandscape: Bool
-
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+struct BattleTrackerContentWidth: ViewModifier {
+    let layoutContext: TabletomeLayoutContext
 
     func body(content: Content) -> some View {
-        if horizontalSizeClass == .regular || isPadLandscape {
+        switch layoutContext {
+        case .padPortrait, .padLandscape:
             content
-        } else {
+        case .phoneLandscape:
+            content.readableContentWidth()
+        case .phonePortrait:
             content.readableContentWidth()
         }
     }

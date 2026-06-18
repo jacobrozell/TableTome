@@ -41,7 +41,7 @@ public enum BattleFlowGuide {
         }
 
         if trackerState.currentPhase == .endOfTurn {
-            if round >= 4 {
+            if round >= SpearheadBattleRules.battleRoundCount {
                 return BattleFlowGuideStep(
                     kind: .battleComplete,
                     title: String(localized: "Battle Over"),
@@ -53,7 +53,10 @@ public enum BattleFlowGuide {
                 kind: .turnPhase(.endOfTurn),
                 title: String(localized: "End of Turn"),
                 instruction: String(
-                    localized: "Score victory points, resolve end-of-turn abilities, then hand the turn to your opponent or begin the next battle round."
+                    localized: """
+                    Score victory points and resolve end-of-turn abilities, then pass the turn. \
+                    Battle tactic hands refresh at the start of the next battle round — not after each turn.
+                    """
                 ),
                 actionLabel: String(localized: "Next Player's Turn")
             )
@@ -91,8 +94,7 @@ public enum BattleFlowGuide {
             extra = String(
                 localized: """
                 \(defenderName) picks the battlefield pack and side. Agree on Fire and Jade, Sand and Bone, \
-                or City of Ash, then Aqshy/Ghyran, Ossia/Dolorum, or Ashen Bastion/Shattered Crossroads. \
-                Use the coin flip below if you want a fair tie-break.
+                or City of Ash, then tap a side or use the coin flip for a fair tie-break.
                 """
             )
         case .setupTerrain:
@@ -143,29 +145,46 @@ public enum BattleFlowGuide {
         case .firstTurnOrPriority:
             extra = round == 1
                 ? String(localized: "\(attackerName) chooses who takes the first turn this round.")
-                : String(localized: "Roll off for priority — the winner picks who goes first this round.")
+                : String(
+                    localized: """
+                    Roll off for priority — the winner picks who goes first. \
+                    Seizing initiative (going second) may block refreshing battle tactics unless you are the underdog by 5+ VP.
+                    """
+                )
         case .identifyUnderdog:
             extra = String(localized: "Compare victory points on the tracker below. The player with fewer points is the underdog.")
         case .drawTwistCard:
             extra = String(
                 localized: """
-                Take the twist deck from your starter box that matches your board side. Draw one card — \
-                twist effects favour the underdog.
+                This deck comes from your battlefield pack — Fire & Jade, Sand & Bone, or City of Ash. \
+                Match the deck to the side you are fighting on, not your army faction.
                 """
             )
         case .drawBattleTactics:
-            extra = String(
-                localized: """
-                Each player uses their battle tactic deck from the box. Discard tactics face up if you want, then draw back to three.
-                """
-            )
+            extra = round == 1
+                ? String(
+                    localized: """
+                    Each player draws 3 cards from the top of their shuffled battle tactic deck. \
+                    Round 1 has no mulligan — you keep what you draw. \
+                    Open the Card Decks Guide if dealing cards is confusing.
+                    """
+                )
+                : String(
+                    localized: """
+                    Each player grabs their own battle tactic deck from their army starter box. \
+                    Discard unwanted cards face up, draw the same number from the top. \
+                    Open the Card Decks Guide if the mulligan step is confusing.
+                    """
+                )
         case .startOfRoundAbilities:
-            extra = String(localized: "Resolve any Start of Battle Round abilities before the first turn begins.")
+            extra = String(
+                localized: "Resolve any Start of Battle Round abilities before the first turn begins. The tracker lists any found in your army data."
+            )
         }
         return BattleFlowGuideStep(
             kind: .roundOpener(step),
             title: step.title(round: round),
-            instruction: "\(step.detail) \(extra)",
+            instruction: "\(step.detail(round: round)) \(extra)",
             actionLabel: String(localized: "Done — Next Step")
         )
     }

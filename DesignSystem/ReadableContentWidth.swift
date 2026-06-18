@@ -7,20 +7,30 @@ public extension DesignTokens {
 
 private struct ReadableContentWidthModifier: ViewModifier {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
 
     func body(content: Content) -> some View {
-        if horizontalSizeClass == .regular {
+        let layoutContext = TabletomeLayout.context(
+            horizontalSizeClass: horizontalSizeClass,
+            verticalSizeClass: verticalSizeClass
+        )
+        switch layoutContext {
+        case .padPortrait, .padLandscape:
             content
                 .frame(maxWidth: DesignTokens.readableContentMaxWidth)
                 .frame(maxWidth: .infinity)
-        } else {
+        case .phoneLandscape:
+            content
+                .frame(maxWidth: DesignTokens.readableContentMaxWidthPhoneLandscape)
+                .frame(maxWidth: .infinity)
+        case .phonePortrait:
             content
         }
     }
 }
 
 public extension View {
-    /// Centers content in a readable column on regular horizontal size class (iPad).
+    /// Centers content in a readable column on iPad and iPhone landscape.
     func readableContentWidth() -> some View {
         modifier(ReadableContentWidthModifier())
     }

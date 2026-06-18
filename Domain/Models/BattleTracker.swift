@@ -30,7 +30,7 @@ public enum BattleTurnPhase: String, Codable, Sendable, CaseIterable, Identifiab
     }
 
     public static let mainTurnPhases: [BattleTurnPhase] = [
-        .hero, .movement, .shooting, .charge, .combat, .endOfTurn
+        .deployment, .hero, .movement, .shooting, .charge, .combat, .endOfTurn
     ]
 
     public var isCombatRelated: Bool {
@@ -40,6 +40,12 @@ public enum BattleTurnPhase: String, Codable, Sendable, CaseIterable, Identifiab
         default:
             false
         }
+    }
+
+    public var nextMainPhase: BattleTurnPhase? {
+        guard let index = Self.mainTurnPhases.firstIndex(of: self),
+              index < Self.mainTurnPhases.count - 1 else { return nil }
+        return Self.mainTurnPhases[index + 1]
     }
 
     public var newPlayerSummary: String {
@@ -234,18 +240,20 @@ public struct BattleTrackerState: Codable, Sendable, Equatable {
     public var playerTwoVictoryPoints: Int
     public var completedRoundChecklistSteps: [String: Set<String>]
     public var unitWoundsRemaining: [String: Int]
+    public var unitHealthPerModelOverrides: [String: Int]
     public var completedDeploymentSteps: Set<String>
 
     public init(
         battleRound: Int = 1,
         activePlayerIsOne: Bool = true,
-        currentPhase: BattleTurnPhase = .hero,
+        currentPhase: BattleTurnPhase = .deployment,
         showAllAbilities: Bool = false,
         usedOncePerBattleAbilityIds: Set<String> = [],
         playerOneVictoryPoints: Int = 0,
         playerTwoVictoryPoints: Int = 0,
         completedRoundChecklistSteps: [String: Set<String>] = [:],
         unitWoundsRemaining: [String: Int] = [:],
+        unitHealthPerModelOverrides: [String: Int] = [:],
         completedDeploymentSteps: Set<String> = []
     ) {
         self.battleRound = battleRound
@@ -257,6 +265,7 @@ public struct BattleTrackerState: Codable, Sendable, Equatable {
         self.playerTwoVictoryPoints = playerTwoVictoryPoints
         self.completedRoundChecklistSteps = completedRoundChecklistSteps
         self.unitWoundsRemaining = unitWoundsRemaining
+        self.unitHealthPerModelOverrides = unitHealthPerModelOverrides
         self.completedDeploymentSteps = completedDeploymentSteps
     }
 
@@ -271,6 +280,10 @@ public struct BattleTrackerState: Codable, Sendable, Equatable {
         playerTwoVictoryPoints = try container.decodeIfPresent(Int.self, forKey: .playerTwoVictoryPoints) ?? 0
         completedRoundChecklistSteps = try container.decodeIfPresent([String: Set<String>].self, forKey: .completedRoundChecklistSteps) ?? [:]
         unitWoundsRemaining = try container.decodeIfPresent([String: Int].self, forKey: .unitWoundsRemaining) ?? [:]
+        unitHealthPerModelOverrides = try container.decodeIfPresent(
+            [String: Int].self,
+            forKey: .unitHealthPerModelOverrides
+        ) ?? [:]
         completedDeploymentSteps = try container.decodeIfPresent(Set<String>.self, forKey: .completedDeploymentSteps) ?? []
     }
 }

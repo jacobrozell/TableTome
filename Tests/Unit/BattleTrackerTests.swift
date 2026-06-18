@@ -70,6 +70,22 @@ final class BattleTrackerTests: XCTestCase {
         )
     }
 
+    func testMainTurnPhasesIncludeDeployment() {
+        XCTAssertEqual(BattleTurnPhase.mainTurnPhases.first, .deployment)
+        XCTAssertTrue(BattleTurnPhase.mainTurnPhases.contains(.hero))
+    }
+
+    func testDefaultPhaseIsDeployment() {
+        let state = BattleTrackerState()
+        XCTAssertEqual(state.currentPhase, .deployment)
+    }
+
+    func testSpearheadBattleRoundCountIsFour() {
+        XCTAssertEqual(SpearheadBattleRules.battleRoundCount, 4)
+        XCTAssertEqual(SpearheadBattleRules.clampBattleRound(0), 1)
+        XCTAssertEqual(SpearheadBattleRules.clampBattleRound(5), 4)
+    }
+
     func testBattleTrackerStoreRoundTrip() {
         var state = BattleTrackerState()
         state.battleRound = 2
@@ -79,6 +95,7 @@ final class BattleTrackerTests: XCTestCase {
         state.playerTwoVictoryPoints = 1
         state.completedRoundChecklistSteps = ["round-2": ["drawTwistCard"]]
         state.unitWoundsRemaining = ["vigilant-brotherhood:liberators": 7]
+        state.unitHealthPerModelOverrides = ["gnawfeast-clawpack:rat-ogors": 4]
 
         BattleTrackerStore.save(state)
         let loaded = BattleTrackerStore.load()
@@ -90,5 +107,6 @@ final class BattleTrackerTests: XCTestCase {
         XCTAssertEqual(loaded.playerTwoVictoryPoints, 1)
         XCTAssertEqual(loaded.completedRoundChecklistSteps["round-2"], ["drawTwistCard"])
         XCTAssertEqual(loaded.unitWoundsRemaining["vigilant-brotherhood:liberators"], 7)
+        XCTAssertEqual(loaded.unitHealthPerModelOverrides["gnawfeast-clawpack:rat-ogors"], 4)
     }
 }

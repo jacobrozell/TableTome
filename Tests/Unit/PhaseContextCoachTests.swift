@@ -14,6 +14,11 @@ final class PhaseContextCoachTests: XCTestCase {
         XCTAssertTrue(tips.joined().lowercased().contains("victory"))
     }
 
+    func testCombatPhaseIncludesPileInTip() {
+        let tips = PhaseContextCoach.quickTips(for: .combat)
+        XCTAssertTrue(tips.joined().localizedCaseInsensitiveContains("pile in"))
+    }
+
     func testPassiveReactionPhasesHaveNoExtraTips() {
         XCTAssertTrue(PhaseContextCoach.quickTips(for: .enemyMovement).isEmpty)
         XCTAssertTrue(PhaseContextCoach.quickTips(for: .endOfAnyTurn).isEmpty)

@@ -11,9 +11,12 @@ public enum MatchSetupStore: Sendable {
         return state
     }
 
-    public static func save(_ state: GuidedMatchState) {
+    public static func save(_ state: GuidedMatchState, notifySync: Bool = true) {
         guard let data = try? JSONEncoder().encode(state) else { return }
         UserDefaults.standard.set(data, forKey: stateKey)
+        if notifySync {
+            MatchSyncNotifications.postStateDidChange()
+        }
     }
 
     public static func reset() {

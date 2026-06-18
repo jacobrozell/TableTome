@@ -14,4 +14,16 @@ final class LearnNavigationCoordinatorTests: XCTestCase {
         )
         XCTAssertNil(coordinator.consumePendingAction())
     }
+
+    func testOpenGameGuideQueuesAction() {
+        let coordinator = LearnNavigationCoordinator()
+
+        coordinator.openGameGuide(gameSystemId: "wh40k-11e")
+
+        XCTAssertEqual(
+            coordinator.consumePendingAction(),
+            .openGameGuide(gameSystemId: "wh40k-11e")
+        )
+        XCTAssertNil(coordinator.consumePendingAction())
+    }
 }

@@ -15,32 +15,67 @@ struct OnboardingTabTourItem: Identifiable {
     let body: String
 }
 
+struct OnboardingGameHighlight: Identifiable {
+    let id: String
+    let symbol: String
+    let name: String
+    let edition: String
+    let blurb: String
+    let showsNewBadge: Bool
+}
+
 enum OnboardingContent {
+    static let gameHighlights: [OnboardingGameHighlight] = [
+        OnboardingGameHighlight(
+            id: OnboardingCompletion.spearheadGameSystemId,
+            symbol: "shield.lefthalf.filled",
+            name: String(localized: "Age of Sigmar: Spearhead"),
+            edition: String(localized: "4th Edition — Spearhead"),
+            blurb: String(
+                localized: """
+                Fast tactical battles with fixed starter-box armies. Ideal if you own a Spearhead set \
+                or want a compact intro to wargaming.
+                """
+            ),
+            showsNewBadge: false
+        ),
+        OnboardingGameHighlight(
+            id: OnboardingCompletion.wh40k11eGameSystemId,
+            symbol: "scope",
+            name: String(localized: "Warhammer 40,000"),
+            edition: String(localized: "11th Edition"),
+            blurb: String(
+                localized: """
+                The new edition of 40k — guided setup, what's new for 10th players, and rules reference. \
+                New to the hobby or upgrading from 10th Edition.
+                """
+            ),
+            showsNewBadge: true
+        )
+    ]
+
     static let pages: [OnboardingPage] = [
         OnboardingPage(
             id: 0,
             symbol: "book.closed.fill",
             title: String(localized: "Tabletome"),
-            subtitle: String(localized: "Your Spearhead table companion"),
+            subtitle: String(localized: "Your tabletop companion"),
             body: String(
                 localized: """
-                Offline reference and guided play for Age of Sigmar: Spearhead — \
-                setup, rules, and in-game reminders in one app.
+                Offline reference and guided play for Age of Sigmar: Spearhead and Warhammer 40,000: \
+                11th Edition — setup, rules, and in-game reminders in one app.
                 """
             )
         ),
         OnboardingPage(
             id: 1,
-            symbol: "figure.2",
-            title: String(localized: "What is Spearhead?"),
-            subtitle: String(localized: "A beginner-friendly wargame"),
+            symbol: "gamecontroller.fill",
+            title: String(localized: "Two games, one app"),
+            subtitle: String(localized: "Pick the one you're playing"),
             body: String(
                 localized: """
-                Two players command armies of miniatures on a board. You move models, roll dice to fight, \
-                and score points by holding objectives. Games last about 60–90 minutes.
-
-                You need a Spearhead starter box, dice, and an opponent. Tabletome guides setup and \
-                tracks the battle on this device — pass the phone when turns change.
+                Each game has its own guide, rules reference, and guided match flow. \
+                Choose Spearhead or the new 40k edition below — you can switch anytime from the Play tab.
                 """
             )
         ),
@@ -63,8 +98,8 @@ enum OnboardingContent {
             subtitle: String(localized: "Guides and match tools"),
             body: String(
                 localized: """
-                Try Preview a Turn for a two-minute tour, follow Getting Started, run a Guided Match from army pick to \
-                deployment, and track battle phases with on-screen tips.
+                For Spearhead or 40k: preview a turn, follow Getting Started, run a Guided Match from army \
+                pick to deployment, and track battle phases with on-screen tips.
                 """
             )
         ),
@@ -75,8 +110,8 @@ enum OnboardingContent {
             subtitle: String(localized: "Searchable reference"),
             body: String(
                 localized: """
-                Browse Spearhead and core rules offline. Filter, search, and jump between \
-                related sections or back to the guide.
+                Browse Spearhead, 40k 11th Edition, and core rules offline. Filter, search, and jump \
+                between related sections or back to the guide.
                 """
             )
         ),
@@ -84,10 +119,11 @@ enum OnboardingContent {
             id: 5,
             symbol: "flag.checkered",
             title: String(localized: "Ready for battle"),
-            subtitle: String(localized: "New to Spearhead?"),
+            subtitle: String(localized: "Which game are you playing?"),
             body: String(
                 localized: """
-                Try Preview a Turn first, or jump into a Guided Match. You can replay this tour anytime in Settings.
+                Jump straight into the guide for Spearhead or Warhammer 40,000. \
+                You can replay this tour anytime in Settings.
                 """
             )
         )
@@ -98,13 +134,13 @@ enum OnboardingContent {
             id: "learn",
             symbol: "play.circle.fill",
             title: String(localized: "Play"),
-            body: String(localized: "Preview a Turn, Guided Match, Getting Started, and army rosters")
+            body: String(localized: "Spearhead and 40k guides, Guided Match, Getting Started, and army rosters")
         ),
         OnboardingTabTourItem(
             id: "rules",
             symbol: "doc.text.fill",
             title: String(localized: "Rules"),
-            body: String(localized: "Offline Spearhead and core rules with search")
+            body: String(localized: "Offline Spearhead, 40k 11th Edition, and core rules with search")
         ),
         OnboardingTabTourItem(
             id: "settings",

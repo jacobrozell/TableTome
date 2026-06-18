@@ -96,6 +96,14 @@ struct OnboardingView: View {
             .padding(.vertical, widePageLayout ? 8 : 0)
             .padding(.bottom, 8)
 
+            if item.id == 1 {
+                gameHighlightCards(twoColumn: widePageLayout)
+                    .frame(maxWidth: contentMaxWidth)
+                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal, horizontalPadding)
+                    .padding(.bottom, 8)
+            }
+
             if item.id == 3 {
                 tabTourCards(twoColumn: widePageLayout)
                     .frame(maxWidth: contentMaxWidth)
@@ -128,6 +136,68 @@ struct OnboardingView: View {
                 .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity, alignment: alignment == .leading ? .leading : .center)
+    }
+
+    private func gameHighlightCards(twoColumn: Bool) -> some View {
+        Group {
+            if twoColumn {
+                LazyVGrid(
+                    columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)],
+                    alignment: .leading,
+                    spacing: 12
+                ) {
+                    ForEach(OnboardingContent.gameHighlights) { game in
+                        gameHighlightCard(game)
+                    }
+                }
+            } else {
+                VStack(alignment: .leading, spacing: 12) {
+                    ForEach(OnboardingContent.gameHighlights) { game in
+                        gameHighlightCard(game)
+                    }
+                }
+            }
+        }
+        .padding(DesignTokens.Spacing.md)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+    }
+
+    private func gameHighlightCard(_ game: OnboardingGameHighlight) -> some View {
+        HStack(alignment: .top, spacing: DesignTokens.Spacing.sm + 4) {
+            Image(systemName: game.symbol)
+                .font(.title2.weight(.medium))
+                .foregroundStyle(Color.accentColor)
+                .symbolRenderingMode(.hierarchical)
+                .frame(width: DesignTokens.minTouchTarget, height: DesignTokens.minTouchTarget)
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
+                    Text(game.name)
+                        .font(.headline)
+                    if game.showsNewBadge {
+                        Text(String(localized: "NEW"))
+                            .font(.caption2.weight(.bold))
+                            .foregroundStyle(Color.accentColor)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Color.accentColor.opacity(0.14), in: Capsule())
+                            .accessibilityLabel(String(localized: "New edition"))
+                    }
+                }
+                Text(game.edition)
+                    .font(.subheadline.weight(.medium))
+                    .foregroundStyle(.secondary)
+                Text(game.blurb)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("onboarding.game.\(game.id)")
     }
 
     private func tabTourCards(twoColumn: Bool) -> some View {
@@ -247,13 +317,7 @@ struct OnboardingView: View {
                         Spacer(minLength: 0)
                     }
 
-                    Button(String(localized: "Start a Match")) {
-                        complete(.openGuidedMatch(gameSystemId: OnboardingCompletion.defaultGameSystemId))
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.regular)
-                    .frame(maxWidth: .infinity)
-                    .accessibilityIdentifier("onboarding.startGuidedMatch")
+                    gameStartButtons(controlSize: .regular)
 
                     Button(String(localized: "Explore the app")) {
                         complete(.exploreApp)
@@ -279,12 +343,7 @@ struct OnboardingView: View {
                 .accessibilityIdentifier("onboarding.continue")
         } else {
             VStack(spacing: 10) {
-                PrimaryButton(
-                    title: String(localized: "Start a Match"),
-                    accessibilityId: "onboarding.startGuidedMatch"
-                ) {
-                    complete(.openGuidedMatch(gameSystemId: OnboardingCompletion.defaultGameSystemId))
-                }
+                gameStartButtons(controlSize: largeText ? .regular : .large)
 
                 Button(String(localized: "Explore the app")) {
                     complete(.exploreApp)
@@ -294,6 +353,37 @@ struct OnboardingView: View {
                 .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
                 .accessibilityIdentifier("onboarding.exploreApp")
             }
+        }
+    }
+
+    private func gameStartButtons(controlSize: ControlSize) -> some View {
+        VStack(spacing: 10) {
+            Button {
+                complete(.openGuidedMatch(gameSystemId: OnboardingCompletion.spearheadGameSystemId))
+            } label: {
+                Label(String(localized: "Start with Spearhead"), systemImage: "shield.lefthalf.filled")
+                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+            }
+            .buttonStyle(.borderedProminent)
+            .controlSize(controlSize)
+            .accessibilityIdentifier("onboarding.startSpearhead")
+
+            Button {
+                complete(.openGameGuide(gameSystemId: OnboardingCompletion.wh40k11eGameSystemId))
+            } label: {
+                HStack(spacing: DesignTokens.Spacing.sm) {
+                    Label(String(localized: "Start with Warhammer 40,000"), systemImage: "scope")
+                    Text(String(localized: "NEW"))
+                        .font(.caption2.weight(.bold))
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(Color.white.opacity(0.2), in: Capsule())
+                }
+                .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+            }
+            .buttonStyle(.borderedProminent)
+            .controlSize(controlSize)
+            .accessibilityIdentifier("onboarding.startWh40k11e")
         }
     }
 

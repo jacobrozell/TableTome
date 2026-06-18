@@ -28,7 +28,7 @@ struct NewPlayerStartHereCard: View {
                 pathStep(
                     number: 2,
                     title: String(localized: "Read Getting Started"),
-                    detail: String(localized: "Five short steps — what you need, armies, and how a battle works.")
+                    detail: String(localized: "Five setup steps — each battle lasts 4 rounds, not 5.")
                 )
                 pathStep(
                     number: 3,
@@ -84,7 +84,8 @@ struct NewPlayerStartHereCard: View {
 /// Checklist of physical items needed for a first Spearhead game.
 struct WhatYouNeedCard: View {
     private let items: [String] = [
-        String(localized: "A Spearhead starter box — miniatures, board, and card decks"),
+        String(localized: "A Spearhead starter box per player — miniatures, warscrolls, and a personal battle tactic deck"),
+        String(localized: "A realm battlefield pack — board, deployment maps, and twist decks (one per board side)"),
         String(localized: "At least 16 six-sided dice (D6) for rolling at the table"),
         String(localized: "A measuring tape or ruler — distances are in inches"),
         String(localized: "An opponent and about 60–90 minutes"),
@@ -128,8 +129,8 @@ struct HomeWelcomeCard: View {
             Text(
                 String(
                     localized: """
-                    Your offline companion for Age of Sigmar: Spearhead. Preview how a turn works, \
-                    then open the guide below to set up your first match.
+                    Your offline companion for Age of Sigmar: Spearhead and Warhammer 40,000: 11th Edition. \
+                    Pick a game below, follow Getting Started, and use the rules reference at the table.
                     """
                 )
             )

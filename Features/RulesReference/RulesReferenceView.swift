@@ -67,11 +67,14 @@ struct RulesReferenceView: View {
                     }
                 }
                 .listStyle(.insetGrouped)
-                .searchable(text: $viewModel.searchText, prompt: String(localized: "Search rules"))
+                .searchable(
+                    text: $viewModel.searchText,
+                    prompt: GameSystemRulesLabels.rulesSearchPrompt(gameSystemId: viewModel.selectedGameSystemId)
+                )
                 .accessibilityIdentifier("rules.sectionList")
             }
         }
-        .navigationTitle(String(localized: "Rules"))
+        .navigationTitle(GameSystemRulesLabels.rulesReferenceTitle(gameSystemId: viewModel.selectedGameSystemId))
         .task { await viewModel.load() }
         .refreshable { await viewModel.load() }
     }

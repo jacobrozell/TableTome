@@ -32,12 +32,12 @@ struct AppSearchView: View {
                 .listStyle(.insetGrouped)
                 .searchable(
                     text: $viewModel.searchText,
-                    prompt: String(localized: "Rules, units, topics…")
+                    prompt: GameSystemRulesLabels.searchPrompt(gameSystemId: viewModel.scopedGameSystemId)
                 )
                 .accessibilityIdentifier("search.screen")
             }
         }
-        .navigationTitle(String(localized: "Search"))
+        .navigationTitle(GameSystemRulesLabels.searchNavigationTitle(gameSystemId: viewModel.scopedGameSystemId))
         .task { await viewModel.load() }
         .refreshable { await viewModel.load() }
     }
@@ -76,13 +76,7 @@ struct AppSearchView: View {
     @ViewBuilder
     private var browseContent: some View {
         Section {
-            Text(
-                String(
-                    localized: """
-                    Search rules, glossary terms, warscrolls, setup steps, and phase tips across Tabletome.
-                    """
-                )
-            )
+            Text(GameSystemRulesLabels.browseIntro(gameSystemId: viewModel.scopedGameSystemId))
             .font(.callout)
             .foregroundStyle(.secondary)
             .fixedSize(horizontal: false, vertical: true)
@@ -106,7 +100,10 @@ struct AppSearchView: View {
             NavigationLink {
                 RulesReferenceView(viewModel: dependencies.makeRulesReferenceViewModel())
             } label: {
-                Label(String(localized: "Rules Reference"), systemImage: "doc.text")
+                Label(
+                    GameSystemRulesLabels.rulesReferenceLinkTitle(gameSystemId: viewModel.scopedGameSystemId),
+                    systemImage: "doc.text"
+                )
                     .frame(minHeight: DesignTokens.minTouchTarget)
             }
             .accessibilityIdentifier("search.browse.rules")
@@ -114,7 +111,10 @@ struct AppSearchView: View {
             NavigationLink {
                 RulesGlossaryView()
             } label: {
-                Label(String(localized: "Rules Glossary"), systemImage: "book.fill")
+                Label(
+                    GameSystemRulesLabels.glossaryTitle(gameSystemId: viewModel.scopedGameSystemId),
+                    systemImage: "book.fill"
+                )
                     .frame(minHeight: DesignTokens.minTouchTarget)
             }
             .accessibilityIdentifier("search.browse.glossary")

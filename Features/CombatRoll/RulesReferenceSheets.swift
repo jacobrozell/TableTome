@@ -3,9 +3,11 @@ import TabletomeDomain
 
 struct RulesGlossaryView: View {
     let highlightedEntryId: String?
+    let gameSystemId: String
 
-    init(highlightedEntryId: String? = nil) {
+    init(highlightedEntryId: String? = nil, gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId) {
         self.highlightedEntryId = highlightedEntryId
+        self.gameSystemId = gameSystemId
     }
 
     var body: some View {
@@ -40,7 +42,7 @@ struct RulesGlossaryView: View {
         }
         .listStyle(.insetGrouped)
         .tabBarScrollInset()
-        .navigationTitle(String(localized: "Rules Glossary"))
+        .navigationTitle(GameSystemRulesLabels.glossaryTitle(gameSystemId: gameSystemId))
         .navigationBarTitleDisplayMode(.inline)
         .accessibilityIdentifier("glossary.screen")
     }

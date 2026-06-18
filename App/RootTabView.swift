@@ -33,14 +33,19 @@ struct RootTabView: View {
             }
             .tabItem {
                 Label(
-                    ReleaseSurface.showsRulesAssistant
-                        ? String(localized: "Search")
-                        : String(localized: "Rules"),
+                    GameSystemRulesLabels.tabTitle(gameSystemId: GameSystemRulesLabels.defaultGameSystemId),
                     systemImage: ReleaseSurface.showsRulesAssistant ? "magnifyingglass" : "doc.text.fill"
                 )
             }
             .tag(AppTab.search)
-            .accessibilityIdentifier(ReleaseSurface.showsRulesAssistant ? "tab.search" : "tab.rules")
+            .accessibilityLabel(
+                GameSystemRulesLabels.tabAccessibilityTitle(
+                    gameSystemId: GameSystemRulesLabels.defaultGameSystemId
+                )
+            )
+            .accessibilityIdentifier(
+                ReleaseSurface.showsRulesAssistant ? "tab.aosRules" : "tab.rules"
+            )
 
             NavigationStack {
                 SettingsView()

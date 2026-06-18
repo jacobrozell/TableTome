@@ -18,12 +18,14 @@ final class AppSearchViewModel: ObservableObject {
     init(
         rulesRepository: any RulesRepository,
         catalogRepository: any SpearheadCatalogRepository,
-        gameSystemId: String = "aos-spearhead"
+        gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId
     ) {
         self.rulesRepository = rulesRepository
         self.catalogRepository = catalogRepository
         self.gameSystemId = gameSystemId
     }
+
+    var scopedGameSystemId: String { gameSystemId }
 
     var searchResults: [AppSearchResult] {
         AppSearchEngine.search(query: searchText, in: index)

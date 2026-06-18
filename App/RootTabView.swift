@@ -1,6 +1,8 @@
 import SwiftUI
 
 enum AppTab: Hashable {
+    case bench
+    case muster
     case learn
     case search
     case settings
@@ -15,6 +17,24 @@ struct RootTabView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
+            if ReleaseSurface.showsBenchTab {
+                BenchTab()
+                    .tabItem {
+                        Label(String(localized: "Bench"), systemImage: "paintbrush")
+                    }
+                    .tag(AppTab.bench)
+                    .accessibilityIdentifier("tab.bench")
+            }
+
+            if ReleaseSurface.showsMusterTab {
+                MusterTab()
+                    .tabItem {
+                        Label(String(localized: "Muster"), systemImage: "flag.checkered")
+                    }
+                    .tag(AppTab.muster)
+                    .accessibilityIdentifier("tab.muster")
+            }
+
             NavigationStack(path: $learnPath) {
                 HomeView(viewModel: dependencies.makeHomeViewModel())
             }

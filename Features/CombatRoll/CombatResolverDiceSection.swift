@@ -20,7 +20,9 @@ struct CombatResolverDiceSection: View {
                 diceField(
                     label: String(localized: "Hit roll (\(weapon.hit)+)"),
                     value: $viewModel.hitRoll,
-                    coachingHint: viewModel.rollCoachingInput.map(DiceRollCoach.hitHint),
+                    coachingHint: viewModel.rollCoachingInput.map {
+                        DiceRollCoach.hitHint(input: $0, gameSystemId: viewModel.gameSystemId)
+                    },
                     accessibilityId: "\(accessibilityPrefix).hitRoll",
                     rollAccessibilityId: "\(accessibilityPrefix).roll.hit",
                     onRoll: { viewModel.rollHit() }
@@ -28,7 +30,9 @@ struct CombatResolverDiceSection: View {
                 diceField(
                     label: String(localized: "Wound roll (\(weapon.wound)+)"),
                     value: $viewModel.woundRoll,
-                    coachingHint: viewModel.rollCoachingInput.map(DiceRollCoach.woundHint),
+                    coachingHint: viewModel.rollCoachingInput.map {
+                        DiceRollCoach.woundHint(input: $0, gameSystemId: viewModel.gameSystemId)
+                    },
                     accessibilityId: "\(accessibilityPrefix).woundRoll",
                     rollAccessibilityId: "\(accessibilityPrefix).roll.wound",
                     onRoll: { viewModel.rollWound() }
@@ -38,17 +42,23 @@ struct CombatResolverDiceSection: View {
                 diceField(
                     label: String(localized: "Save roll (\(save)+)"),
                     value: $viewModel.saveRoll,
-                    coachingHint: viewModel.rollCoachingInput.map(DiceRollCoach.saveHint),
+                    coachingHint: viewModel.rollCoachingInput.map {
+                        DiceRollCoach.saveHint(input: $0, gameSystemId: viewModel.gameSystemId)
+                    },
                     accessibilityId: "\(accessibilityPrefix).saveRoll",
                     rollAccessibilityId: "\(accessibilityPrefix).roll.save",
                     onRoll: { viewModel.rollSave() }
                 )
             }
-            if let ward = viewModel.activeWardTarget {
+            if viewModel.activeWardTarget != nil,
+               !CombatRollEngineRouter.usesWh40kRules(gameSystemId: viewModel.gameSystemId),
+               let ward = viewModel.activeWardTarget {
                 diceField(
                     label: String(localized: "Ward roll (\(ward)+)"),
                     value: $viewModel.wardRoll,
-                    coachingHint: viewModel.rollCoachingInput.flatMap(DiceRollCoach.wardHint),
+                    coachingHint: viewModel.rollCoachingInput.flatMap {
+                        DiceRollCoach.wardHint(input: $0, gameSystemId: viewModel.gameSystemId)
+                    },
                     accessibilityId: "\(accessibilityPrefix).wardRoll",
                     rollAccessibilityId: "\(accessibilityPrefix).roll.ward",
                     onRoll: { viewModel.rollWard() }

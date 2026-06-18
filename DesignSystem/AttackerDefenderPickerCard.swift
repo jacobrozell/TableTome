@@ -5,11 +5,13 @@ struct AttackerDefenderPickerCard: View {
     let playerTwoName: String
     let attackerIsPlayerOne: Bool?
     let onSelect: (Bool?) -> Void
+    var title: String = String(localized: "Who is the attacker?")
+    var decidedCaption: ((Bool) -> String)? = nil
     var accessibilityPrefix: String = "guidedMatch"
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            SectionHeader(title: String(localized: "Who is the attacker?"), systemImage: "flag.fill")
+            SectionHeader(title: title, systemImage: "flag.fill")
 
             Picker(String(localized: "Attacker"), selection: attackerBinding) {
                 Text(String(localized: "Not decided")).tag(Optional<Bool>.none)
@@ -20,18 +22,21 @@ struct AttackerDefenderPickerCard: View {
             .accessibilityIdentifier("\(accessibilityPrefix).attackerPicker")
 
             if let isPlayerOne = attackerIsPlayerOne {
-                let attacker = isPlayerOne ? playerOneName : playerTwoName
-                let defender = isPlayerOne ? playerTwoName : playerOneName
-                Text(
-                    String(
-                        localized: "\(attacker) attacks. \(defender) defends and chooses the realm side."
-                    )
-                )
-                .font(.callout)
-                .foregroundStyle(.secondary)
+                let caption = decidedCaption?(isPlayerOne) ?? defaultCaption(isPlayerOne: isPlayerOne)
+                Text(caption)
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
             }
         }
         .surfaceCard()
+    }
+
+    private func defaultCaption(isPlayerOne: Bool) -> String {
+        let attacker = isPlayerOne ? playerOneName : playerTwoName
+        let defender = isPlayerOne ? playerTwoName : playerOneName
+        return String(
+            localized: "\(attacker) attacks. \(defender) defends and chooses the realm side."
+        )
     }
 
     private var attackerBinding: Binding<Bool?> {

@@ -2,11 +2,14 @@ import Foundation
 
 public enum BattleTurnPhase: String, Codable, Sendable, CaseIterable, Identifiable {
     case deployment
+    case command
     case hero
     case movement
+    case assault
     case shooting
     case charge
     case combat
+    case scoring
     case endOfTurn
     case enemyMovement
     case endOfAnyTurn
@@ -17,11 +20,14 @@ public enum BattleTurnPhase: String, Codable, Sendable, CaseIterable, Identifiab
     public var title: String {
         switch self {
         case .deployment: String(localized: "Deployment")
+        case .command: String(localized: "Command Phase")
         case .hero: String(localized: "Hero Phase")
         case .movement: String(localized: "Movement Phase")
+        case .assault: String(localized: "Assault Phase")
         case .shooting: String(localized: "Shooting Phase")
         case .charge: String(localized: "Charge Phase")
-        case .combat: String(localized: "Combat Phase")
+        case .combat: String(localized: "Fight Phase")
+        case .scoring: String(localized: "Scoring Phase")
         case .endOfTurn: String(localized: "End of Turn")
         case .enemyMovement: String(localized: "Enemy Movement")
         case .endOfAnyTurn: String(localized: "End of Any Turn")
@@ -35,7 +41,7 @@ public enum BattleTurnPhase: String, Codable, Sendable, CaseIterable, Identifiab
 
     public var isCombatRelated: Bool {
         switch self {
-        case .shooting, .charge, .combat, .anyCombat:
+        case .shooting, .assault, .charge, .combat, .anyCombat:
             true
         default:
             false
@@ -54,13 +60,21 @@ public enum BattleTurnPhase: String, Codable, Sendable, CaseIterable, Identifiab
             String(
                 localized: "Set up terrain and deploy units. The defender picks a board side first, then players alternate placing units."
             )
+        case .command:
+            String(
+                localized: "Gain Command Points, resolve battle-shock tests, use stratagems, and score mission objectives at the end of the phase."
+            )
         case .hero:
             String(
                 localized: "Use heroic abilities, spells, and prayers. Pick which player goes first if it is round 1."
             )
         case .movement:
             String(
-                localized: "Move units up to their Move characteristic. Stay within coherency and 3\" of terrain features you want to use."
+                localized: "Move units up to their Move characteristic. Deploy from reserves during Movement in StarCraft TMG."
+            )
+        case .assault:
+            String(
+                localized: "Shoot and charge with alternating activations. Surge and counter matchups matter."
             )
         case .shooting:
             String(
@@ -74,6 +88,10 @@ public enum BattleTurnPhase: String, Codable, Sendable, CaseIterable, Identifiab
             String(
                 localized: "Fight with units in combat. Pick attacker and defender, roll hit and wound dice, then saves and wards."
             )
+        case .scoring:
+            String(
+                localized: "Score mission victory points. Objectives use Supply within 3\", not model count."
+            )
         case .endOfTurn:
             String(
                 localized: "Score victory points from objectives and battle tactics, then pass play to your opponent."
@@ -85,6 +103,77 @@ public enum BattleTurnPhase: String, Codable, Sendable, CaseIterable, Identifiab
         case .endOfAnyTurn:
             String(
                 localized: "Abilities that fire at the end of either player's turn. Check both armies' end-of-turn effects."
+            )
+        }
+    }
+
+    public func playerFacingSummary(gameSystemId: String) -> String {
+        let context = GameSystemPlayContext.context(for: gameSystemId)
+        if context.isStarCraft {
+            return starCraftPlayerSummary
+        }
+        if context.isWh40k {
+            return wh40kPlayerSummary
+        }
+        return newPlayerSummary
+    }
+
+    private var wh40kPlayerSummary: String {
+        switch self {
+        case .command:
+            String(
+                localized: "Gain Command Points, test Battle-shock, use stratagems, then score objectives that trigger now."
+            )
+        case .movement:
+            String(
+                localized: "Move units up to their Move characteristic. Advancing adds distance but usually stops shooting."
+            )
+        case .shooting:
+            String(
+                localized: "Pick units to shoot, measure range, then resolve hit, wound, save, and damage on your datasheets."
+            )
+        case .charge:
+            String(
+                localized: "Declare charges into engagement range, then roll 2D6 — both dice must reach the target."
+            )
+        case .combat, .anyCombat:
+            String(
+                localized: "Fight with units in engagement range. Alternate attacks, then update wounds in Army Health."
+            )
+        case .endOfTurn:
+            String(
+                localized: "Score primary and secondary objectives for this turn, then pass the phone."
+            )
+        case .deployment:
+            String(
+                localized: "Set up the mission, terrain footprints, and deploy armies before the first battle round."
+            )
+        default:
+            String(localized: "Follow the current phase on your datasheet and the core rules.")
+        }
+    }
+
+    private var starCraftPlayerSummary: String {
+        switch self {
+        case .movement:
+            String(
+                localized: "Alternate activations — deploy from reserves, move one unit, then hand off. Pass to claim the First Player Marker for Assault."
+            )
+        case .assault:
+            String(
+                localized: "Alternate activations to shoot and charge. Surge and counter matchups matter. Pass to claim the marker for Combat."
+            )
+        case .combat:
+            String(
+                localized: "Alternate melee activations. Consolidate where allowed, then hand off with Done or Pass."
+            )
+        case .scoring:
+            String(
+                localized: "Award mission victory points. Objectives use total Supply within 3\", not model count."
+            )
+        default:
+            String(
+                localized: "StarCraft TMG alternates activations across Movement, Assault, Combat, and Scoring."
             )
         }
     }
@@ -242,6 +331,19 @@ public struct BattleTrackerState: Codable, Sendable, Equatable {
     public var unitWoundsRemaining: [String: Int]
     public var unitHealthPerModelOverrides: [String: Int]
     public var completedDeploymentSteps: Set<String>
+    /// Player one holds the First Player Marker when `true`; unset until someone passes.
+    public var scFirstPlayerMarkerIsPlayerOne: Bool?
+    /// Who passed this phase to claim the marker; cleared when the phase changes.
+    public var scPhasePassClaimedByPlayerOne: Bool?
+    /// Combat Patrol — Battle Ready bonus (+10 VP) agreed per player.
+    public var playerOneBattleReady: Bool?
+    public var playerTwoBattleReady: Bool?
+    /// Combat Patrol — objective markers secured by Battleline (A–D).
+    public var securedObjectiveIds: Set<String>
+    /// Combat Patrol — stratagem ids used this battle (`armyId:stratagemId`).
+    public var usedStratagemIds: Set<String>
+    /// Combat Patrol — Retrieve Intelligence: objectives data recovered from.
+    public var intelRecoveredObjectiveIds: Set<String>
 
     public init(
         battleRound: Int = 1,
@@ -254,7 +356,14 @@ public struct BattleTrackerState: Codable, Sendable, Equatable {
         completedRoundChecklistSteps: [String: Set<String>] = [:],
         unitWoundsRemaining: [String: Int] = [:],
         unitHealthPerModelOverrides: [String: Int] = [:],
-        completedDeploymentSteps: Set<String> = []
+        completedDeploymentSteps: Set<String> = [],
+        scFirstPlayerMarkerIsPlayerOne: Bool? = nil,
+        scPhasePassClaimedByPlayerOne: Bool? = nil,
+        playerOneBattleReady: Bool? = nil,
+        playerTwoBattleReady: Bool? = nil,
+        securedObjectiveIds: Set<String> = [],
+        usedStratagemIds: Set<String> = [],
+        intelRecoveredObjectiveIds: Set<String> = []
     ) {
         self.battleRound = battleRound
         self.activePlayerIsOne = activePlayerIsOne
@@ -267,6 +376,13 @@ public struct BattleTrackerState: Codable, Sendable, Equatable {
         self.unitWoundsRemaining = unitWoundsRemaining
         self.unitHealthPerModelOverrides = unitHealthPerModelOverrides
         self.completedDeploymentSteps = completedDeploymentSteps
+        self.scFirstPlayerMarkerIsPlayerOne = scFirstPlayerMarkerIsPlayerOne
+        self.scPhasePassClaimedByPlayerOne = scPhasePassClaimedByPlayerOne
+        self.playerOneBattleReady = playerOneBattleReady
+        self.playerTwoBattleReady = playerTwoBattleReady
+        self.securedObjectiveIds = securedObjectiveIds
+        self.usedStratagemIds = usedStratagemIds
+        self.intelRecoveredObjectiveIds = intelRecoveredObjectiveIds
     }
 
     public init(from decoder: Decoder) throws {
@@ -285,6 +401,13 @@ public struct BattleTrackerState: Codable, Sendable, Equatable {
             forKey: .unitHealthPerModelOverrides
         ) ?? [:]
         completedDeploymentSteps = try container.decodeIfPresent(Set<String>.self, forKey: .completedDeploymentSteps) ?? []
+        scFirstPlayerMarkerIsPlayerOne = try container.decodeIfPresent(Bool.self, forKey: .scFirstPlayerMarkerIsPlayerOne)
+        scPhasePassClaimedByPlayerOne = try container.decodeIfPresent(Bool.self, forKey: .scPhasePassClaimedByPlayerOne)
+        playerOneBattleReady = try container.decodeIfPresent(Bool.self, forKey: .playerOneBattleReady)
+        playerTwoBattleReady = try container.decodeIfPresent(Bool.self, forKey: .playerTwoBattleReady)
+        securedObjectiveIds = try container.decodeIfPresent(Set<String>.self, forKey: .securedObjectiveIds) ?? []
+        usedStratagemIds = try container.decodeIfPresent(Set<String>.self, forKey: .usedStratagemIds) ?? []
+        intelRecoveredObjectiveIds = try container.decodeIfPresent(Set<String>.self, forKey: .intelRecoveredObjectiveIds) ?? []
     }
 }
 

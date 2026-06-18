@@ -2,7 +2,7 @@ import SwiftUI
 import TabletomeDomain
 
 struct GuidedMatchDestinationView: View {
-    let gameSystemId: String
+    let gameSystemId: GameSystemId
 
     @EnvironmentObject private var dependencies: AppDependencies
     @State private var ruleSections: [RuleSection]?
@@ -12,7 +12,7 @@ struct GuidedMatchDestinationView: View {
         Group {
             if let ruleSections {
                 GuidedMatchView(
-                    viewModel: dependencies.makeGuidedMatchViewModel(),
+                    viewModel: dependencies.makeGuidedMatchViewModel(gameSystemId: gameSystemId),
                     ruleSections: ruleSections
                 )
             } else if let errorMessage {
@@ -28,7 +28,7 @@ struct GuidedMatchDestinationView: View {
 
     private func load() async {
         do {
-            let gameSystem = try await dependencies.rulesRepository.gameSystem(id: gameSystemId)
+            let gameSystem = try await dependencies.rulesRepository.gameSystem(id: gameSystemId.rawValue)
             ruleSections = gameSystem.ruleSections
         } catch {
             errorMessage = String(localized: "Guided Match could not be loaded.")

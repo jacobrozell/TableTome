@@ -113,6 +113,7 @@ public struct GuideStep: Codable, Sendable, Identifiable, Equatable {
 public enum RuleSectionCategory: String, Codable, Sendable, CaseIterable {
     case core
     case spearhead
+    case combatPatrol
     case glossary
 }
 

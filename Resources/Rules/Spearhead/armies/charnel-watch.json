@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "armyId": "charnel-watch",
+  "units": [
+    {
+      "id": "abhorrant-gorewarden",
+      "name": "Abhorrant Gorewarden",
+      "move": "12\"",
+      "save": 5,
+      "health": 7,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "royal-beastflayers",
+      "name": "Royal Beastflayers",
+      "move": "6\"",
+      "save": 6,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 10
+    },
+    {
+      "id": "crypt-horrors",
+      "name": "Crypt Horrors",
+      "move": "7\"",
+      "save": 5,
+      "health": 4,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "crypt-flayers",
+      "name": "Crypt Flayers",
+      "move": "12\"",
+      "save": 5,
+      "health": 4,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 3
+    }
+  ]
+}

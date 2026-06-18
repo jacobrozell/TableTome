@@ -2,9 +2,25 @@
 
 Non-authoritative backlog. Promote to `specs/` when behavior locks.
 
+## Unified app (Tabletome + MiniMuster)
+
+Merge hobby tracking (prep), roster building (muster), and guided play into one app. **Canonical repo: Tabletome.** MiniMuster iOS is frozen as port source.
+
+- Phased plan: [UnifiedAppPlan.md](UnifiedAppPlan.md)
+- Catalog ID crosswalk: [CatalogKeyAudit.md](CatalogKeyAudit.md)
+- Port freeze policy: [MiniMusterPortFreeze.md](MiniMusterPortFreeze.md)
+
+## Monetization (MAYBE)
+
+Subscription-first hobby OS brainstorm — gate depth not hype, free play for all shipped systems: [MonetizationPlan.md](MonetizationPlan.md).
+
 ## Beta feedback
 
 Playtest notes and feature options: [BetaFeedback.md](BetaFeedback.md).
+
+## Match history & log
+
+**Promoted:** [MatchHistorySpec.md](../specs/MatchHistorySpec.md) — v0 ships victory screen + global history. Event log: v1 in [MatchHistoryAndLog.md](MatchHistoryAndLog.md).
 
 ## Board state tracking
 
@@ -26,9 +42,21 @@ Natural-language Warhammer / Spearhead Q&A grounded on bundled rules, glossary, 
 
 Import Spearhead warscrolls per faction from GW free downloads. Pipeline: JSON schema extension + content review.
 
+## Play engine architecture refactor (blocking)
+
+Scalable play layer: registry, unified catalog repo, `PlayEngine` protocol, capability-driven UI, tracker split by engine. **Prerequisite for multi-franchise.** [PlayEngineArchitectureRefactor.md](PlayEngineArchitectureRefactor.md)
+
+## Multi-franchise expansion (Blood Bowl, Star Wars, Middle-earth, …)
+
+Play-engine taxonomy and phased roadmap for franchises beyond Warhammer — **after architecture refactor.** [MultiFranchiseExpansionPlan.md](MultiFranchiseExpansionPlan.md)
+
 ## StarCraft: Tabletop Miniatures Game
 
 Skirmish companion for Archon/Blizzard’s SC TMG — supply/reserves, alternating activations, guided match clone. Research draft: [StarCraftTMGLaunchPlan.md](StarCraftTMGLaunchPlan.md). Rules PDF free at [starcraft-tmg.com/downloads](https://starcraft-tmg.com/downloads).
+
+## 40k Combat Patrol (10th Edition)
+
+**Promoted to spec:** [40k10eCombatPatrolSpec.md](../specs/40k10eCombatPatrolSpec.md) — guided play for CP box sets; separate home row from 11e.
 
 ## 40k 11th Edition launch
 

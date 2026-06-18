@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "armyId": "zenestras-zealots",
+  "units": [
+    {
+      "id": "freeguild-marshal-and-relic-envoy",
+      "name": "Freeguild Marshal and Relic Envoy",
+      "move": "5\"",
+      "save": 3,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "pontifex-zenestra-matriarch-of-the-great-wheel",
+      "name": "Pontifex Zenestra Matriarch of the Great Wheel",
+      "move": "5\"",
+      "save": 5,
+      "health": 9,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "freeguild-command-corps",
+      "name": "Freeguild Command Corps",
+      "move": "5\"",
+      "save": 6,
+      "health": 3,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "freeguild-command-corps-2",
+      "name": "Freeguild Command Corps",
+      "move": "5\"",
+      "save": 6,
+      "health": 3,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "freeguild-steelhelms",
+      "name": "Freeguild Steelhelms",
+      "move": "5\"",
+      "save": 4,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "freeguild-steelhelms-2",
+      "name": "Freeguild Steelhelms",
+      "move": "5\"",
+      "save": 4,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    }
+  ]
+}

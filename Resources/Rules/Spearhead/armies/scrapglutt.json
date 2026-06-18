@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "armyId": "scrapglutt",
+  "units": [
+    {
+      "id": "mantrappers",
+      "name": "Mantrappers",
+      "move": "6\"",
+      "save": 5,
+      "health": 7,
+      "control": 5,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "ironguts",
+      "name": "Ironguts",
+      "move": "6\"",
+      "save": 5,
+      "health": 4,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 2
+    },
+    {
+      "id": "ironguts-2",
+      "name": "Ironguts",
+      "move": "6\"",
+      "save": 5,
+      "health": 4,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 2
+    },
+    {
+      "id": "ironguts-3",
+      "name": "Ironguts",
+      "move": "6\"",
+      "save": 5,
+      "health": 4,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 4
+    },
+    {
+      "id": "gnoblars",
+      "name": "Gnoblars",
+      "move": "5\"",
+      "save": 6,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 12
+    },
+    {
+      "id": "gnoblar-scraplauncher",
+      "name": "Gnoblar Scraplauncher",
+      "move": "9\"",
+      "save": 4,
+      "health": 9,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    }
+  ]
+}

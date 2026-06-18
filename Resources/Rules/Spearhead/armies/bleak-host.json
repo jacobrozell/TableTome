@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "armyId": "bleak-host",
+  "units": [
+    {
+      "id": "spoilpox-scrivener",
+      "name": "Spoilpox Scrivener",
+      "move": "4\"",
+      "save": 5,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "pusgoyle-blightlord",
+      "name": "Pusgoyle Blightlord",
+      "move": "8\"",
+      "save": 4,
+      "health": 8,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "pusgoyle-blightlord-2",
+      "name": "Pusgoyle Blightlord",
+      "move": "8\"",
+      "save": 4,
+      "health": 8,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "putrid-blightkings",
+      "name": "Putrid Blightkings",
+      "move": "4\"",
+      "save": 3,
+      "health": 3,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "plaguebearers",
+      "name": "Plaguebearers",
+      "move": "4\"",
+      "save": 6,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "plaguebearers-2",
+      "name": "Plaguebearers",
+      "move": "4\"",
+      "save": 6,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    }
+  ]
+}

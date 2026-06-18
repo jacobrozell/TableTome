@@ -27,13 +27,16 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
     private let catalogRepository: any SpearheadCatalogRepository
     private let attackerPrefill: MatchupUnitPrefill?
     private let defenderPrefill: MatchupUnitPrefill?
+    let gameSystemId: String
 
     init(
         catalogRepository: any SpearheadCatalogRepository,
+        gameSystemId: String = "aos-spearhead",
         attackerPrefill: MatchupUnitPrefill? = nil,
         defenderPrefill: MatchupUnitPrefill? = nil
     ) {
         self.catalogRepository = catalogRepository
+        self.gameSystemId = gameSystemId
         self.attackerPrefill = attackerPrefill
         self.defenderPrefill = defenderPrefill
     }
@@ -97,20 +100,24 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
     }
 
     var activeWardTarget: Int? {
-        CombatMatchupBuffCatalog.aggregateModifiers(from: matchupBuffs, enabledIds: enabledBuffIds).wardTarget
+        guard !CombatRollEngineRouter.usesWh40kRules(gameSystemId: gameSystemId) else { return nil }
+        return CombatMatchupBuffCatalog.aggregateModifiers(from: matchupBuffs, enabledIds: enabledBuffIds).wardTarget
     }
 
     func load() async {
         do {
             let catalog = try await catalogRepository.loadCatalog()
+            let featured = GuidedMatchFeaturedArmies.forGameSystem(gameSystemId)
             armies = catalog.factions
                 .flatMap(\.armies)
-                .filter { SpearheadFeaturedArmies.isFeatured($0.id) }
+                .filter { army in
+                    featured?.isFeatured(army.id) ?? SpearheadFeaturedArmies.isFeatured(army.id)
+                }
                 .sorted { $0.name < $1.name }
             applyInitialSelection()
             errorMessage = nil
         } catch {
-            errorMessage = String(localized: "Spearhead armies could not be loaded.")
+            errorMessage = String(localized: "Armies could not be loaded.")
         }
     }
 
@@ -273,13 +280,30 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
     }
 
     func applySuggestedDefenderWards() {
+        guard !CombatRollEngineRouter.usesWh40kRules(gameSystemId: gameSystemId) else { return }
         enabledBuffIds.formUnion(
             CombatMatchupBuffCatalog.suggestedWardBuffIds(for: selectedDefenderUnit)
         )
     }
 
+    var resolverAttackerBuffs: [CombatMatchupBuff] {
+        resolverMatchupBuffs.filter { $0.side == .attacker }
+    }
+
+    var resolverDefenderBuffs: [CombatMatchupBuff] {
+        resolverMatchupBuffs.filter { $0.side == .defender }
+    }
+
+    var resolverMatchupBuffs: [CombatMatchupBuff] {
+        guard CombatRollEngineRouter.usesWh40kRules(gameSystemId: gameSystemId) else {
+            return matchupBuffs
+        }
+        return matchupBuffs.filter { !$0.name.localizedCaseInsensitiveContains("ward") }
+    }
+
     var hasSuggestedWardBuffs: Bool {
-        !CombatMatchupBuffCatalog.suggestedWardBuffIds(for: selectedDefenderUnit).isEmpty
+        guard !CombatRollEngineRouter.usesWh40kRules(gameSystemId: gameSystemId) else { return false }
+        return !CombatMatchupBuffCatalog.suggestedWardBuffIds(for: selectedDefenderUnit).isEmpty
     }
 
     func toggleBuff(_ buff: CombatMatchupBuff, enabled: Bool) {
@@ -342,7 +366,7 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
             evaluation = nil
             return
         }
-        evaluation = CombatRollEngine.evaluate(input)
+        evaluation = CombatRollEngineRouter.evaluate(input, gameSystemId: gameSystemId)
     }
 
     func refreshEvaluation() {
@@ -356,7 +380,10 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
     func rollAttack() {
         guard let parameters = SimulatedAttackRollSupport.rollParameters(from: self) else { return }
         clearResults()
-        let result = CombatRollSimulator.rollAndEvaluate(parameters: parameters)
+        let result = CombatRollSimulator.rollAndEvaluate(
+            parameters: parameters,
+            gameSystemId: gameSystemId
+        )
         apply(result.rolls)
         result.rolls.rolls.forEach { SimulatedAttackRollSupport.announceRoll($0) }
         evaluation = result.evaluation

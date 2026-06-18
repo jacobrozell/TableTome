@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "armyId": "soulraid-hunt",
+  "units": [
+    {
+      "id": "isharann-soulscryer",
+      "name": "Isharann Soulscryer",
+      "move": "6\"",
+      "save": 5,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "akhelian-morrsarr-guard",
+      "name": "Akhelian Morrsarr Guard",
+      "move": "14\"",
+      "save": 4,
+      "health": 4,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "akhelian-allopex",
+      "name": "Akhelian Allopex",
+      "move": "12\"",
+      "save": 4,
+      "health": 8,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "namarti-thralls",
+      "name": "Namarti Thralls",
+      "move": "6\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "namarti-thralls-2",
+      "name": "Namarti Thralls",
+      "move": "6\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    }
+  ]
+}

@@ -68,7 +68,7 @@ struct NewPlayerStartHereCard: View {
             Text("\(number).")
                 .font(.subheadline.weight(.bold))
                 .foregroundStyle(Color.accentColor)
-                .frame(width: 20, alignment: .trailing)
+                .frame(minWidth: 20, alignment: .trailing)
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                     .font(.subheadline.weight(.semibold))
@@ -129,8 +129,8 @@ struct HomeWelcomeCard: View {
             Text(
                 String(
                     localized: """
-                    Your offline companion for Age of Sigmar: Spearhead and Warhammer 40,000: 11th Edition. \
-                    Pick a game below, follow Getting Started, and use the rules reference at the table.
+                    Your offline companion for Spearhead, Warhammer 40,000, Combat Patrol, and StarCraft TMG. \
+                    Pick a game below, follow Getting Started, and use Rules Search at the table.
                     """
                 )
             )

@@ -1,11 +1,12 @@
 import Foundation
+import TabletomeDomain
 
 enum OnboardingCompletion: Sendable, Equatable {
     case exploreApp
     case openGuidedMatch(gameSystemId: String)
     case openGameGuide(gameSystemId: String)
 
-    static let spearheadGameSystemId = "aos-spearhead"
-    static let wh40k11eGameSystemId = "wh40k-11e"
-    static let defaultGameSystemId = spearheadGameSystemId
+    static let spearheadGameSystemId = GameSystemId.aosSpearhead.rawValue
+    static let wh40k11eGameSystemId = GameSystemId.wh40k11e.rawValue
+    static let defaultGameSystemId = GameSystemId.default.rawValue
 }

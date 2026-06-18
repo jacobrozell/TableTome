@@ -13,8 +13,15 @@ public enum CombatRollSimulator: Sendable {
     }
 
     public static func rollAndEvaluate(parameters: AttackRollParameters) -> Result {
+        rollAndEvaluate(parameters: parameters, gameSystemId: "aos-spearhead")
+    }
+
+    public static func rollAndEvaluate(
+        parameters: AttackRollParameters,
+        gameSystemId: String
+    ) -> Result {
         let rolls = AttackRollSequenceRoller.roll(parameters: parameters)
-        return evaluate(rolls: rolls, parameters: parameters)
+        return evaluate(rolls: rolls, parameters: parameters, gameSystemId: gameSystemId)
     }
 
     public static func rollAndEvaluate<G: RandomNumberGenerator>(
@@ -39,6 +46,14 @@ public enum CombatRollSimulator: Sendable {
     }
 
     public static func evaluate(rolls: SimulatedAttackRolls, parameters: AttackRollParameters) -> Result {
+        evaluate(rolls: rolls, parameters: parameters, gameSystemId: "aos-spearhead")
+    }
+
+    public static func evaluate(
+        rolls: SimulatedAttackRolls,
+        parameters: AttackRollParameters,
+        gameSystemId: String
+    ) -> Result {
         let input = CombatRollResolution.input(
             from: parameters,
             hitRoll: rolls.hitRoll,
@@ -47,7 +62,7 @@ public enum CombatRollSimulator: Sendable {
             wardRoll: rolls.wardRoll,
             damage: rolls.damage
         )
-        let evaluation = CombatRollEngine.evaluate(input)
+        let evaluation = CombatRollEngineRouter.evaluate(input, gameSystemId: gameSystemId)
         return Result(rolls: rolls, evaluation: evaluation)
     }
 }

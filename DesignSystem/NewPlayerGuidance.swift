@@ -8,11 +8,36 @@ private struct CoachMarkStep {
 }
 
 struct BattleTrackerCoachCard: View {
+    var gameSystemId: GameSystemId = .default
     let onDismiss: () -> Void
 
-    @State private var step = 0
+    init(gameSystemId: GameSystemId = .default, onDismiss: @escaping () -> Void) {
+        self.gameSystemId = gameSystemId
+        self.onDismiss = onDismiss
+    }
 
-    private let steps: [CoachMarkStep] = [
+    init(gameSystemId: String, onDismiss: @escaping () -> Void) {
+        self.init(gameSystemId: GameSystemId(resolving: gameSystemId), onDismiss: onDismiss)
+    }
+
+    @State private var step = 0
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    private var playContext: GameSystemPlayContext {
+        GameSystemPlayContext.context(for: gameSystemId)
+    }
+
+    private var steps: [CoachMarkStep] {
+        if playContext.isStarCraft {
+            return starCraftSteps
+        }
+        if playContext.isWh40k {
+            return wh40kSteps
+        }
+        return spearheadSteps
+    }
+
+    private let spearheadSteps: [CoachMarkStep] = [
         CoachMarkStep(
             title: String(localized: "Track the turn"),
             detail: String(
@@ -43,23 +68,101 @@ struct BattleTrackerCoachCard: View {
         )
     ]
 
+    private let wh40kSteps: [CoachMarkStep] = [
+        CoachMarkStep(
+            title: String(localized: "Track the turn"),
+            detail: String(
+                localized: "Use the phase chips and active player picker. Command → Move → Shoot → Charge → Fight."
+            ),
+            systemImage: "arrow.triangle.2.circlepath"
+        ),
+        CoachMarkStep(
+            title: String(localized: "Resolve attack dice"),
+            detail: String(
+                localized: "During Shooting, Charge, or Fight, scroll to Resolve Attack Batch on the Turn tab and enter the dice you rolled."
+            ),
+            systemImage: "dice.fill"
+        ),
+        CoachMarkStep(
+            title: String(localized: "Apply damage"),
+            detail: String(
+                localized: "After resolving, tap Apply Damage to update wounds on the Army tab — no need to leave the battle tracker."
+            ),
+            systemImage: "heart.fill"
+        ),
+        CoachMarkStep(
+            title: String(localized: "Score at end of turn"),
+            detail: String(
+                localized: "In the End phase, add victory points for primaries and secondaries, then pass the phone."
+            ),
+            systemImage: "star.circle.fill"
+        )
+    ]
+
+    private let starCraftSteps: [CoachMarkStep] = [
+        CoachMarkStep(
+            title: String(localized: "Track the turn"),
+            detail: String(
+                localized: "Use the phase chips and active player picker to stay in sync. Movement → Assault → Combat → Scoring each round."
+            ),
+            systemImage: "arrow.triangle.2.circlepath"
+        ),
+        CoachMarkStep(
+            title: String(localized: "Activate one unit"),
+            detail: String(
+                localized: "On the Turn tab, tap Done after each activation. Pass to claim the First Player Marker for the next phase."
+            ),
+            systemImage: "person.fill"
+        ),
+        CoachMarkStep(
+            title: String(localized: "Score objectives"),
+            detail: String(
+                localized: "In Scoring, add victory points for Supply held within 3\" of objectives, then advance to the next battle round."
+            ),
+            systemImage: "star.circle.fill"
+        )
+    ]
+
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            HStack(spacing: DesignTokens.Spacing.sm) {
-                Image(systemName: "sparkles")
-                    .foregroundStyle(Color.accentColor)
-                Text(String(localized: "First battle?"))
-                    .font(.headline)
-                Spacer()
-                WalkthroughProgressDots(current: step, total: steps.count)
-                Button {
-                    onDismiss()
-                } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundStyle(.secondary)
+            Group {
+                if dynamicTypeSize.needsLayoutAdaptation {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                        HStack(spacing: DesignTokens.Spacing.sm) {
+                            Image(systemName: "sparkles")
+                                .foregroundStyle(Color.accentColor)
+                            Text(String(localized: "First battle?"))
+                                .font(.headline)
+                            Spacer(minLength: 0)
+                            Button {
+                                onDismiss()
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundStyle(.secondary)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel(String(localized: "Dismiss tips"))
+                        }
+                        WalkthroughProgressDots(current: step, total: steps.count)
+                    }
+                } else {
+                    HStack(spacing: DesignTokens.Spacing.sm) {
+                        Image(systemName: "sparkles")
+                            .foregroundStyle(Color.accentColor)
+                        Text(String(localized: "First battle?"))
+                            .font(.headline)
+                        Spacer()
+                        WalkthroughProgressDots(current: step, total: steps.count)
+                        Button {
+                            onDismiss()
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(.secondary)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(String(localized: "Dismiss tips"))
+                    }
                 }
-                .buttonStyle(.plain)
-                .accessibilityLabel(String(localized: "Dismiss tips"))
             }
 
             Label {
@@ -83,6 +186,7 @@ struct BattleTrackerCoachCard: View {
                         withAnimation(.easeInOut(duration: 0.2)) { step -= 1 }
                     }
                     .buttonStyle(.bordered)
+                    .minimumTouchTarget()
                 }
                 Spacer()
                 Button(step < steps.count - 1 ? String(localized: "Next") : String(localized: "Got it")) {
@@ -93,8 +197,8 @@ struct BattleTrackerCoachCard: View {
                     }
                 }
                 .buttonStyle(.borderedProminent)
+                .minimumTouchTarget()
             }
-            .frame(minHeight: DesignTokens.minTouchTarget)
         }
         .padding(DesignTokens.Spacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -109,9 +213,19 @@ struct BattleTrackerCoachCard: View {
 
 struct PhaseGuidanceBar: View {
     let phase: BattleTurnPhase
+    var gameSystemId: GameSystemId = .default
+
+    init(phase: BattleTurnPhase, gameSystemId: GameSystemId = .default) {
+        self.phase = phase
+        self.gameSystemId = gameSystemId
+    }
+
+    init(phase: BattleTurnPhase, gameSystemId: String) {
+        self.init(phase: phase, gameSystemId: GameSystemId(resolving: gameSystemId))
+    }
 
     private var quickTips: [String] {
-        PhaseContextCoach.quickTips(for: phase)
+        PhaseContextCoach.quickTips(for: phase, gameSystemId: gameSystemId.rawValue)
     }
 
     var body: some View {
@@ -124,7 +238,7 @@ struct PhaseGuidanceBar: View {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                     Text(phase.title)
                         .font(.caption.weight(.semibold))
-                    Text(phase.newPlayerSummary)
+                    Text(phase.playerFacingSummary(gameSystemId: gameSystemId.rawValue))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
@@ -157,62 +271,74 @@ struct PhaseGuidanceBar: View {
 
 struct CombatSequencePrimer: View {
     @Binding var isExpanded: Bool
+    var gameSystemId: String = "aos-spearhead"
     var showsDismissButton: Bool = true
     let onDismiss: () -> Void
+
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     private struct PrimerStep {
         let label: String
         let detail: String
     }
 
-    private let steps: [PrimerStep] = [
-        PrimerStep(
-            label: String(localized: "Hit"),
-            detail: String(localized: "Roll to hit — meet the weapon's Hit value on a D6.")
-        ),
-        PrimerStep(
-            label: String(localized: "Wound"),
-            detail: String(localized: "Roll to wound — meet the weapon's Wound value.")
-        ),
-        PrimerStep(
-            label: String(localized: "Save"),
-            detail: String(localized: "Defender rolls save, modified by Rend.")
-        ),
-        PrimerStep(
-            label: String(localized: "Ward"),
-            detail: String(localized: "If the unit has a ward, roll it after a failed save.")
-        ),
-        PrimerStep(
-            label: String(localized: "Damage"),
-            detail: String(localized: "Allocate damage to the defender — then apply it to the wound tracker.")
-        )
-    ]
+    private var steps: [PrimerStep] {
+        if CombatRollEngineRouter.usesWh40kRules(gameSystemId: gameSystemId) {
+            return [
+                PrimerStep(
+                    label: String(localized: "Hit"),
+                    detail: String(localized: "Roll to hit — meet the weapon's Hit value (unmodified 6 always hits).")
+                ),
+                PrimerStep(
+                    label: String(localized: "Wound"),
+                    detail: String(localized: "Roll to wound — meet the weapon's Wound value (unmodified 6 always wounds).")
+                ),
+                PrimerStep(
+                    label: String(localized: "Save"),
+                    detail: String(localized: "Defender rolls save — AP worsens the required roll.")
+                ),
+                PrimerStep(
+                    label: String(localized: "Damage"),
+                    detail: String(localized: "Allocate damage to the defender — then apply it to the wound tracker.")
+                )
+            ]
+        }
+        return [
+            PrimerStep(
+                label: String(localized: "Hit"),
+                detail: String(localized: "Roll to hit — meet the weapon's Hit value on a D6.")
+            ),
+            PrimerStep(
+                label: String(localized: "Wound"),
+                detail: String(localized: "Roll to wound — meet the weapon's Wound value.")
+            ),
+            PrimerStep(
+                label: String(localized: "Save"),
+                detail: String(localized: "Defender rolls save, modified by Rend.")
+            ),
+            PrimerStep(
+                label: String(localized: "Ward"),
+                detail: String(localized: "If the unit has a ward, roll it after a failed save.")
+            ),
+            PrimerStep(
+                label: String(localized: "Damage"),
+                detail: String(localized: "Allocate damage to the defender — then apply it to the wound tracker.")
+            )
+        ]
+    }
 
     var body: some View {
         DisclosureGroup(isExpanded: $isExpanded) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                HStack(spacing: DesignTokens.Spacing.xs) {
-                    ForEach(Array(steps.enumerated()), id: \.offset) { index, step in
-                        if index > 0 {
-                            Image(systemName: "arrow.right")
-                                .font(.caption2.weight(.bold))
-                                .foregroundStyle(.tertiary)
-                        }
-                        Text(step.label)
-                            .font(.caption.weight(.semibold))
-                            .padding(.horizontal, DesignTokens.Spacing.sm)
-                            .padding(.vertical, DesignTokens.Spacing.xs)
-                            .background(Color.accentColor.opacity(0.12), in: Capsule())
-                    }
-                }
-                .accessibilityHidden(true)
+                stepPills
+                    .accessibilityHidden(true)
 
                 ForEach(Array(steps.enumerated()), id: \.offset) { index, step in
                     HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
                         Text("\(index + 1).")
                             .font(.caption.weight(.bold))
                             .foregroundStyle(.secondary)
-                            .frame(width: 16, alignment: .trailing)
+                            .frame(minWidth: 16, alignment: .trailing)
                         VStack(alignment: .leading, spacing: 2) {
                             Text(step.label)
                                 .font(.caption.weight(.semibold))
@@ -247,5 +373,35 @@ struct CombatSequencePrimer: View {
         .padding(DesignTokens.Spacing.sm)
         .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
         .accessibilityIdentifier("battleTracker.combatPrimer")
+    }
+
+    @ViewBuilder
+    private var stepPills: some View {
+        if dynamicTypeSize.needsLayoutAdaptation {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                ForEach(Array(steps.enumerated()), id: \.offset) { _, step in
+                    Text(step.label)
+                        .font(.caption.weight(.semibold))
+                        .padding(.horizontal, DesignTokens.Spacing.sm)
+                        .padding(.vertical, DesignTokens.Spacing.xs)
+                        .background(Color.accentColor.opacity(0.12), in: Capsule())
+                }
+            }
+        } else {
+            AdaptiveHorizontalChipRow {
+                ForEach(Array(steps.enumerated()), id: \.offset) { index, step in
+                    if index > 0 {
+                        Image(systemName: "arrow.right")
+                            .font(.caption2.weight(.bold))
+                            .foregroundStyle(.tertiary)
+                    }
+                    Text(step.label)
+                        .font(.caption.weight(.semibold))
+                        .padding(.horizontal, DesignTokens.Spacing.sm)
+                        .padding(.vertical, DesignTokens.Spacing.xs)
+                        .background(Color.accentColor.opacity(0.12), in: Capsule())
+                }
+            }
+        }
     }
 }

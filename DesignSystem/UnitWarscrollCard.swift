@@ -5,6 +5,37 @@ struct UnitWarscrollCard: View {
     let army: SpearheadArmy
     let unit: SpearheadUnit
     let ruleSections: [RuleSection]
+    var gameSystemId: GameSystemId = .default
+
+    init(
+        army: SpearheadArmy,
+        unit: SpearheadUnit,
+        ruleSections: [RuleSection],
+        gameSystemId: GameSystemId = .default
+    ) {
+        self.army = army
+        self.unit = unit
+        self.ruleSections = ruleSections
+        self.gameSystemId = gameSystemId
+    }
+
+    init(
+        army: SpearheadArmy,
+        unit: SpearheadUnit,
+        ruleSections: [RuleSection],
+        gameSystemId: String
+    ) {
+        self.init(
+            army: army,
+            unit: unit,
+            ruleSections: ruleSections,
+            gameSystemId: GameSystemId(resolving: gameSystemId)
+        )
+    }
+
+    private var playContext: GameSystemPlayContext {
+        GameSystemPlayContext.context(for: gameSystemId)
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -117,6 +148,7 @@ struct UnitWarscrollCard: View {
                     NavigationLink {
                         UnitMatchupEvaluatorView(
                             ruleSections: ruleSections,
+                            gameSystemId: gameSystemId.rawValue,
                             attackerPrefill: MatchupUnitPrefill(
                                 armyId: army.id,
                                 unitId: unit.id,
@@ -134,7 +166,7 @@ struct UnitWarscrollCard: View {
             Text(weaponStatLine(weapon))
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Text(String(localized: "A = attacks · Hit/Wound = roll this or higher on D6 · Rend lowers save · Dmg = damage dealt"))
+            Text(weaponLegend)
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
                 .fixedSize(horizontal: false, vertical: true)
@@ -156,10 +188,23 @@ struct UnitWarscrollCard: View {
         unit.weapons.filter(\.isRollEvaluable)
     }
 
+    private var weaponLegend: String {
+        if playContext.isWh40k {
+            String(
+                localized: "A = attacks · Hit/Wound = roll this or higher on D6 · AP worsens save · Dmg = damage dealt"
+            )
+        } else {
+            String(
+                localized: "A = attacks · Hit/Wound = roll this or higher on D6 · Rend lowers save · Dmg = damage dealt"
+            )
+        }
+    }
+
     private var matchupLink: some View {
         NavigationLink {
             UnitMatchupEvaluatorView(
                 ruleSections: ruleSections,
+                gameSystemId: gameSystemId.rawValue,
                 attackerPrefill: MatchupUnitPrefill(
                     armyId: army.id,
                     unitId: unit.id,

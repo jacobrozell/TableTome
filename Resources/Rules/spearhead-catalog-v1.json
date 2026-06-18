@@ -9,13 +9,13 @@
         {
           "id": "vigilant-brotherhood",
           "name": "Vigilant Brotherhood",
-          "general": "Lord-Vigilant on Gryph-stalker",
+          "general": "Lord-Vigilant on Gryph\u2011stalker",
           "tagline": "Ruination-chamber elite from Skaventide / Ultimate Starter Set",
           "playstyle": "Prosecutors flank at speed while Liberators hold objectives. Holy Orders offers a run-and-charge trick and a once-per-battle Ward (5+).",
           "unitCount": 4,
           "roster": [
-            "Lord-Vigilant on Gryph-stalker",
-            "Lord-Veritant",
+            "Lord-Vigilant on Gryph\u2011stalker",
+            "1 Lord-Veritant",
             "3 Prosecutors",
             "5 Liberators"
           ],
@@ -46,7 +46,7 @@
             {
               "id": "blaze-of-glory",
               "name": "Blaze of Glory",
-              "summary": "Pick a unit in combat; when its models are slain, roll D6 per slain model — on 4+ inflict 1 mortal on an enemy in combat with that unit.",
+              "summary": "Pick a unit in combat; when its models are slain, roll D6 per slain model \u2014 on 4+ inflict 1 mortal on an enemy in combat with that unit.",
               "newPlayerHint": "Good when you expect your infantry to trade on an objective.",
               "timing": "Once per battle, Any Combat Phase"
             }
@@ -56,7 +56,7 @@
               "id": "hallowed-scrolls",
               "name": "Hallowed Scrolls",
               "summary": "Your general has Ward (5+).",
-              "newPlayerHint": "Safest pick — keeps your Lord-Vigilant alive longer.",
+              "newPlayerHint": "Safest pick \u2014 keeps your Lord-Vigilant alive longer.",
               "timing": "Passive"
             },
             {
@@ -77,7 +77,7 @@
               "id": "null-pendant",
               "name": "Null Pendant",
               "summary": "Roll for each enemy contesting the same objective as your general; on 2+ subtract the roll from their control score this turn.",
-              "newPlayerHint": "Objective play — use when contesting a key point late game.",
+              "newPlayerHint": "Objective play \u2014 use when contesting a key point late game.",
               "timing": "Once per battle, End of Any Turn"
             }
           ]
@@ -90,7 +90,8 @@
           "playstyle": "Yndrasta and Annihilators arrive from round 3. Vanquishers and a Stormstrike Chariot hit first; Yndrasta finishes the biggest threats.",
           "unitCount": 6,
           "roster": [
-            "Knight-Vexillor",
+            "Yndrasta, the Celestial Spear",
+            "1 Knight-Vexillor",
             "3 Annihilators",
             "5 Vanquishers",
             "5 Vanquishers",
@@ -110,7 +111,7 @@
             {
               "id": "drive-them-back",
               "name": "Drive Them Back",
-              "summary": "Pick units contesting an objective and in combat; each can pile-in, then roll D6 per adjacent enemy — on 4+ inflict 1 mortal.",
+              "summary": "Pick units contesting an objective and in combat; each can pile-in, then roll D6 per adjacent enemy \u2014 on 4+ inflict 1 mortal.",
               "timing": "Once per battle, Your Movement Phase"
             },
             {
@@ -162,8 +163,9 @@
           "playstyle": "Tunnel reserves and Gnawhole Ambush threaten the back line. Clanrats swarm objectives while Rat Ogors and heroes deliver the killing blow.",
           "unitCount": 6,
           "roster": [
-            "Grey Seer",
-            "Warlock Engineer",
+            "Clawlord on Gnaw-beast",
+            "1 Grey Seer",
+            "1 Warlock Engineer",
             "10 Clanrats",
             "10 Clanrats",
             "3 Rat Ogors"
@@ -196,7 +198,7 @@
               "id": "too-quick-to-hit",
               "name": "Too Quick to Hit-Hit",
               "summary": "No mortal damage is inflicted on friendly units when they use Retreat abilities.",
-              "newPlayerHint": "Reliable pick — Clanrats can retreat from trouble without losing models.",
+              "newPlayerHint": "Reliable pick \u2014 Clanrats can retreat from trouble without losing models.",
               "timing": "Passive"
             }
           ],
@@ -205,28 +207,28 @@
               "id": "lead-seething-horde",
               "name": "Lead the Seething Horde",
               "summary": "When using Call for Reinforcements, the replacement unit can be set up wholly within 13\" of your general and not in combat.",
-              "newPlayerHint": "Pairs well with Clanrats — bring reinforcements closer to the fight.",
+              "newPlayerHint": "Pairs well with Clanrats \u2014 bring reinforcements closer to the fight.",
               "timing": "Reaction: Call for Reinforcements"
             },
             {
               "id": "warpstone-charm",
               "name": "Warpstone Charm",
               "summary": "Subtract 1 from save rolls for enemy units in combat with your general.",
-              "newPlayerHint": "Aggressive — your Clawlord wants to be in melee.",
+              "newPlayerHint": "Aggressive \u2014 your Clawlord wants to be in melee.",
               "timing": "Passive"
             },
             {
               "id": "skryre-connections",
               "name": "Skryre Connections",
               "summary": "Your general's Ratling Pistol has Attacks 2D6 instead of D6.",
-              "newPlayerHint": "More shots from the Clawlord's pistol — risky but fun.",
+              "newPlayerHint": "More shots from the Clawlord's pistol \u2014 risky but fun.",
               "timing": "Passive"
             },
             {
               "id": "cloak-stitched-victories",
               "name": "Cloak of Stitched Victories",
               "summary": "Your general has Ward (5+).",
-              "newPlayerHint": "Safest pick — protects your Clawlord.",
+              "newPlayerHint": "Safest pick \u2014 protects your Clawlord.",
               "timing": "Passive"
             }
           ]
@@ -239,8 +241,9 @@
           "playstyle": "Clanrats screen for Stormfiends and a Warp Lightning Cannon. Always Three Clawsteps Ahead lets you reposition in the enemy movement phase.",
           "unitCount": 5,
           "roster": [
+            "Grey Seer",
             "3 Stormfiends",
-            "Warp Lightning Cannon",
+            "1 Warp Lightning Cannon",
             "10 Clanrats",
             "10 Clanrats"
           ],
@@ -298,10 +301,67 @@
         {
           "id": "crixxits-kill-pack",
           "name": "Crixxit's Kill-Pack",
-          "general": "Master Moulder",
+          "general": "Deathmaster Crixxit",
           "tagline": "Fast assassination and crit mortals",
           "playstyle": "Glass cannon with teleporting heroes and reinforced infantry. Fragile but explosive.",
-          "unitCount": 6
+          "unitCount": 5,
+          "roster": [
+            "Deathmaster Crixxit",
+            "1 Deathmaster",
+            "5 Gutter Runners",
+            "5 Gutter Runners",
+            "10 Night Runners"
+          ],
+          "battleTraitName": "Cloaked In Shadow",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/skaven-spearhead/eng_skaven_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "cloaked-in-shadow",
+              "name": "Cloaked In Shadow",
+              "summary": "By the time enemies have uncovered a band of Skaven assassins, the ratmen are already in place to strike",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "way-of-the-skittering-shade",
+              "name": "Way Of The Skittering Shade",
+              "summary": "It is said that a soul marked for death is never more than a few feet from lurking Eshin agents",
+              "timing": null
+            },
+            {
+              "id": "way-of-the-fiendish-claw",
+              "name": "Way Of The Fiendish Claw",
+              "summary": "Veteran Deathmasters are experts in many wicked martial arts that harness their natural twitchy agility",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "murderous-acrobatics",
+              "name": "Murderous Acrobatics",
+              "summary": "Glowing eyes locked on his target, Crixxit deftly weaves past and leaps across any who would impede him. Effect: When your general uses the \u2018 Charge \u2019 ability, they can pass through enemy models",
+              "timing": null
+            },
+            {
+              "id": "just-another-shadow",
+              "name": "Just Another Shadow",
+              "summary": "Crixxit is adept at stalking unseen until the moment to strike arrives. Effect: While your general is wholly within the combat range of a friendly unit that has 3 or more models, your general has WARD ( 4+ ) ",
+              "timing": null
+            },
+            {
+              "id": "master-of-shadows",
+              "name": "Master Of Shadows",
+              "summary": "Swathed in darkness, Crixxit can slip in and out of the gloom with ease, his victims\u2019 cooling corpses the only sign of his passing. Effect: When your general uses the \u2018 Cloaked in Shadow \u2019 ability, add 1 to the shadow-travel roll",
+              "timing": null
+            },
+            {
+              "id": "death-screech",
+              "name": "Death Screech",
+              "summary": "When needs must, Crixxit can unleash a deafening screech to stun foes",
+              "timing": null
+            }
+          ]
         }
       ]
     },
@@ -316,23 +376,266 @@
           "general": "Freeguild Cavalier-Marshal",
           "tagline": "Defensive combined-arms infantry",
           "playstyle": "Sturdy infantry lines with solid saves. Dependable but slower to close games.",
-          "unitCount": 4
+          "unitCount": 5,
+          "roster": [
+            "Freeguild Cavalier-Marshal",
+            "5 Freeguild Steelhelms",
+            "5 Freeguild Steelhelms",
+            "5 Freeguild Cavaliers",
+            "1 Ironweld Great Cannon"
+          ],
+          "battleTraitName": "The Officar'S Order",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/cities-of-sigmar-spearhead/eng_cities_of_sigmar_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "the-officars-order",
+              "name": "The Officar'S Order",
+              "summary": "Reading the flow of battle, a ranking Freeguilder dispatches an order that could well turn the tide in the Sigmarites\u2019 favour",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "charge",
+              "name": "Charge!",
+              "summary": "With their blade raised high, the Marshal signals the charge of the Cavaliers. Effect: Friendly CAVALRY units have STRIKE-FIRST if they charged in the same turn",
+              "timing": null
+            },
+            {
+              "id": "ironweld-discipline",
+              "name": "Ironweld Discipline",
+              "summary": "With nerves of steel, the crew of the Great Cannon prepare to fire even as enemies close in on all sides",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "flask-of-lethisian-darkwater",
+              "name": "Flask Of Lethisian Darkwater",
+              "summary": "Sourced from the lakewaters of the city of Lethis, when this potion is carefully sipped, its black liquid soothes the body and soul. Effect: Heal (D6) your general",
+              "timing": null
+            },
+            {
+              "id": "brazier-of-holy-flame",
+              "name": "Brazier Of Holy Flame",
+              "summary": "The torch borne by this champion symbolises the light of civilisation being carried forth into the darkness of the wilds, a sacred act that emboldens those who march alongside them",
+              "timing": null
+            },
+            {
+              "id": "heirloom-blade",
+              "name": "Heirloom Blade",
+              "summary": "Wielded in countless battles, the edge of this blade is as keen as the day it was forged. Effect: Add 1 to the Rend characteristic of your general\u2019s Master-forged Longsword ",
+              "timing": null
+            },
+            {
+              "id": "glimmering",
+              "name": "Glimmering",
+              "summary": "The glinting facets of this tiny fragment of Mallus offer fleeting glimpses of the future. Effect: Each phase, you can re-roll 1 hit roll , or 1 wound roll , or 1 save roll made for your general",
+              "timing": null
+            }
+          ]
         },
         {
           "id": "fusil-platoon",
           "name": "Fusil Platoon",
           "general": "Fusil-Major on Ogor Warhulk",
-          "tagline": "Sand & Bone — ranged firepower",
+          "tagline": "Sand & Bone \u2014 ranged firepower",
           "playstyle": "Strong shooting with limited frontline durability. Controls space from range.",
-          "unitCount": 5
+          "unitCount": 5,
+          "roster": [
+            "Fusil-Major on Ogor Warhulk",
+            "1 Alchemite Warforger",
+            "5 Freeguild Fusiliers with 1 Blackpowder Squire token",
+            "5 Freeguild Fusiliers",
+            "11 Wildercorps Hunters"
+          ],
+          "battleTraitName": "Fortify Position",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/cities-of-sigmar-spearhead/eng_cities_of_sigmar_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "fortify-position",
+              "name": "Fortify Position",
+              "summary": "Heavy pavises are slammed into the dirt, forming a wall of oak and iron as strong as a fortification. Effect: Subtract 1 from the Rend characteristic of weapons used for attacks that target friendly CASTELITE units if they did not use a MOVE ability in the same turn",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "well-provisioned",
+              "name": "Well Provisioned",
+              "summary": "This brigade has a quartermaster well versed in the art of keeping their troops, healthy, hale and supplied with plenty of arrows and blackpowder",
+              "timing": null
+            },
+            {
+              "id": "respected-leader",
+              "name": "Respected Leader",
+              "summary": "On occasion, a brigade will attract more Wildercorps Hunters than normal, as word reaches their ears of a commander worthy of their loyalty. Effect: Friendly Wildercorps Hunters units gain the REINFORCEMENTS keyword",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "adept-tactician",
+              "name": "Adept Tactician",
+              "summary": "Assembling reinforcements into ad-hoe regiments is the hallmark of a seasoned, if a somewhat desperate, general",
+              "timing": null
+            },
+            {
+              "id": "brace",
+              "name": "Brace!",
+              "summary": "With a keen eye for incoming attacks, this Ogor Warhulk is adept at rebuffing any and all threats made towards the Fusil-Major riding atop its gun platform. Effect: Your general has WARD ( 5+ ) ",
+              "timing": null
+            },
+            {
+              "id": "shield-bash",
+              "name": "Shield Bash",
+              "summary": "With a bellow, the Ogor Warhulk drives their shield forward, forcing the enemy back",
+              "timing": null
+            },
+            {
+              "id": "point-blank-volley",
+              "name": "Point-Blank Volley",
+              "summary": "A deadly round of shots are fired off at close range",
+              "timing": null
+            }
+          ]
         },
         {
           "id": "sentinels-embergard",
-          "name": "Sentinels of Embergard",
-          "general": "Freeguild Marshal on Griffon",
+          "name": "Sentinel's of Embergard",
+          "general": "Jorvan Kreel, Heir of the Kraken",
           "tagline": "Combo-focused support heroes",
           "playstyle": "Positioning-heavy synergies. Gallants hit hard with setup but the army is fragile.",
-          "unitCount": 5
+          "unitCount": 5,
+          "roster": [
+            "Jorvan Kreel, Heir of the Kraken",
+            "1 Mallus Forgepriest",
+            "5 Freeguild Gallants",
+            "5 Freeguild Grenadiers",
+            "5 Freeguild Grenadiers"
+          ],
+          "battleTraitName": "Ranger Doctrines",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/cities-of-sigmar-spearhead/eng_cities_of_sigmar_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "ranger-doctrines",
+              "name": "Ranger Doctrines",
+              "summary": "Kreel was once a captain in the Wildercorps. While he now commands an eclectic assortment of forces, the fluid tactics he honed in his prior life can still be used to great effect. Used By: The unit using that FIGHT ability Effect: Immediately after that FIGHT ability has been resolved, pick a point on the battlefield ",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "close-quarters-drill",
+              "name": "Close-Quarters Drill",
+              "summary": "Kreel has trained his Grenadiers to hold their fire until it can be unloaded right in their foes\u2019 faces. Effect: Friendly units\u2019 ranged weapons have Shoot in Combat but you must subtract 1 from hit rolls for their shooting attacks while they are in combat",
+              "timing": null
+            },
+            {
+              "id": "blaggards",
+              "name": "Blaggards!",
+              "summary": "Though their city lies in ruin, these warriors defy any enemy who tries to prise the wreckage from them. Effect: Add 5 to the control scores of friendly non- HERO units while they are in combat with any enemy units that have 6 or more models or a Health characteristic of 3 or more",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "throwing-knives",
+              "name": "Throwing Knives",
+              "summary": "Jorvan Kreel has, over the course of his adventures, acquired an assortment of deadly blades ready to be hurled into a chest, stomach or skull",
+              "timing": null
+            },
+            {
+              "id": "hot-blooded-endurance",
+              "name": "Hot-Blooded Endurance",
+              "summary": "A lifetime spent in the wilderness has left Kreel an indefatigable warrior. Effect: Your general can use CHARGE abilities even if they used a RUN or RETREAT ability in the same turn and no mortal damage is inflicted on them by RETREAT abilities",
+              "timing": null
+            },
+            {
+              "id": "trained-ranger",
+              "name": "Trained Ranger",
+              "summary": "The pathfinding skills he picked up in the jungles of the Charrwind Coast serve Kreel well in Embergard\u2019s urban sprawl",
+              "timing": null
+            },
+            {
+              "id": "blade-of-the-kraken",
+              "name": "Blade Of The Kraken",
+              "summary": "In a decisive moment, Kreel fights ferociously to avenge Embergard\u2019s fall \u2013 and also to maintain his warrior reputation\u2026 Effect: Double the Attacks characteristic of your general\u2019s melee weapons for the rest of the turn",
+              "timing": null
+            }
+          ]
+        },
+        {
+          "id": "zenestras-zealots",
+          "name": "Zenestra's Zealots",
+          "general": "Freeguild Marshal and Relic Envoy (The Relic Envoy is a token)",
+          "tagline": "AoS 4e Spearhead \u2014 Zenestra's Zealots",
+          "playstyle": "Fixed box-set roster. Pick regiment ability and general enhancement during guided match setup.",
+          "unitCount": 6,
+          "roster": [
+            "Freeguild Marshal and Relic Envoy (The Relic Envoy is a token)",
+            "Pontifex Zenestra, Matriarch of the Great Wheel",
+            "1 Freeguild Command Corps Whisperblade",
+            "1 Freeguild Command Corps Arch-Knight and Retinue",
+            "5 Freeguild Steelhelms",
+            "5 Freeguild Steelhelms"
+          ],
+          "battleTraitName": "Sudden Ambush",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/cities-of-sigmar-spearhead/eng_cities_of_sigmar_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "sudden-ambush",
+              "name": "Sudden Ambush",
+              "summary": "The Whisperblade hides until it is the perfect moment to strike. Effect: Set up this unit within 6\" of an enemy unit and not in combat ",
+              "timing": null
+            },
+            {
+              "id": "lady-of-the-wheel",
+              "name": "Lady Of The Wheel",
+              "summary": "Zenestra\u2019s followers will defend her with a strength that can cow even a follower of the Dark Gods. Effect: Each time a friendly model is slain by a combat attack, roll a number of dice equal to that model\u2019s Health characteristic. For each 5+, inflict 1 mortal damage on the attacking unit after the FIGHT ability has be",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "fervent-rush",
+              "name": "Fervent Rush",
+              "summary": "Singing righteous hymns and prepared to give their lives for the cause, these Sigmarites charge forward to battle",
+              "timing": null
+            },
+            {
+              "id": "fierce-zealots",
+              "name": "Fierce Zealots",
+              "summary": "Should Zenestra demand it, these followers will fight tooth and nail for even the meanest patch of dirt. Effect: Add 3 to the control scores of friendly Freeguild Steelhelms units",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "devout-commander",
+              "name": "Devout Commander",
+              "summary": "This faithful commander strikes with a ferocity born of utter conviction. Effect: Add 1 to the Attacks characteristic and the Rend characteristic of your general\u2019s Master-forged Weapon ",
+              "timing": null
+            },
+            {
+              "id": "comrades",
+              "name": "Comrades",
+              "summary": "The general calls upon their soldiers to hold the line, no matter the cost and no matter the foe",
+              "timing": null
+            },
+            {
+              "id": "step-to-it",
+              "name": "Step To It!",
+              "summary": "The Marshal tells their men to heft their weapons and get moving! Effect: Do not make a run roll as part of that RUN ability. Instead, add 6\" to that non- HERO unit\u2019s Move characteristic to determine the distance each model in that unit can move as part of that RUN ability",
+              "timing": null
+            },
+            {
+              "id": "ardent-demand",
+              "name": "Ardent Demand",
+              "summary": "With a bellowed order, the Marshal ignites the passion and fury of the Freeguilders, and they lay into the enemy furiously",
+              "timing": null
+            }
+          ]
         }
       ]
     },
@@ -347,15 +650,130 @@
           "general": "Melusai Ironscale",
           "tagline": "Fast melee strikers",
           "playstyle": "Strike first, hit hard, die fast. Aggressive and unforgiving.",
-          "unitCount": 5
+          "unitCount": 5,
+          "roster": [
+            "Melusai Ironscale",
+            "5 Witch Aelves",
+            "5 Witch Aelves",
+            "5 Doomfire Warlocks",
+            "5 Blood Stalkers"
+          ],
+          "battleTraitName": "Heartflayer Troupe",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/daughters-of-khaine-spearhead/eng_daughters_of_khaine_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "round-ability-1-quickening-bloodlust",
+              "name": "Round Ability 1 Quickening Bloodlust",
+              "summary": "The Khainites\u2019 hearts beat harder and their strides lengthen in anticipation of battle. Effect: Add 1 to run rolls for this unit. 2 HEADLONG FURY: Reciting the catechism of Crimson Hate, the Khainites rush ahead in their eagerness to slaughter. Effect: Add 1 to charge rolls for this unit. 3 ZEALOT\u2019S RAGE: The faithful ",
+              "timing": "ROUND"
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "murderous-epiphany",
+              "name": "Murderous Epiphany",
+              "summary": "The Khainites are struck by a terrible vision of the Bloody-Handed God that drives their zeal to ever greater heights. Effect: All friendly units gain the Blood Rites passive ability they would have gained at the start of the next battle round (they keep this ability for the rest of the battle, but they do not gain it ",
+              "timing": null
+            },
+            {
+              "id": "blessing-of-khaine",
+              "name": "Blessing Of Khaine",
+              "summary": "Sacred rites have been performed on this Melusai Ironscale by the priestesses of the temple, and it is said that she can bestow the blessing of Khaine upon her sisters in battle",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "bathed-in-blood",
+              "name": "Bathed In Blood",
+              "summary": "Your general draws vigour from the gore that splatters over her in battle. Effect: Each time a model is slain by your general, Heal (1) your general",
+              "timing": null
+            },
+            {
+              "id": "flask-of-shademist",
+              "name": "Flask Of Shademist",
+              "summary": "Filled with an obscuring mist harvested from the Ulguan coast, when this flask is shattered, the battlefield is plunged into darkness. Effect: Until the end of the phase, subtract 1 from hit rolls for attacks that target friendly units while they are wholly within 12\" of your general",
+              "timing": null
+            },
+            {
+              "id": "fuelled-by-revenge",
+              "name": "Fuelled By Revenge",
+              "summary": "This general inspires a wrathful lust for vengeance in her Sc\u00e1thborn kin. Effect: Add 1 to the Rend characteristic of melee weapons used by friendly Blood Stalkers units while they are wholly within 12\" of your general",
+              "timing": null
+            },
+            {
+              "id": "zealous-orator",
+              "name": "Zealous Orator",
+              "summary": "Your general is a wild demagogue who inspires her followers to fight on in the face of impossible odds",
+              "timing": null
+            }
+          ]
         },
         {
           "id": "khainite-shadow-coven",
           "name": "Khainite Shadow Coven",
-          "general": "Bloodwrack Shrine",
+          "general": "Slaughter Queen on Cauldron of Blood",
           "tagline": "Board-control prison army",
           "playstyle": "Many units, movement tricks, and defensive manipulation. High skill ceiling.",
-          "unitCount": 7
+          "unitCount": 6,
+          "roster": [
+            "Slaughter Queen on Cauldron of Blood",
+            "1 Hag Queen",
+            "1 Bloodwrack Medusa",
+            "9 Khainite Shadowstalkers",
+            "5 Sisters of Slaughter",
+            "5 Sisters of Slaughter"
+          ],
+          "battleTraitName": "Shadowmasked",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/daughters-of-khaine-spearhead/eng_daughters_of_khaine_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "shadowmasked",
+              "name": "Shadowmasked",
+              "summary": "The umbral arts of the Khainite Shadowstalkers and the gore-smoke of the Cauldron are utilised to mask the movements of the Shadow Coven",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "bleed-them-pale",
+              "name": "Bleed Them Pale",
+              "summary": "These aelves delight in bleeding their enemies slowly, darting away before they are attacked in turn",
+              "timing": null
+            },
+            {
+              "id": "murderous-strike",
+              "name": "Murderous Strike",
+              "summary": "A Shadow Coven attacks without warning, seeking to cripple the enemy with the cruelty of their opening strike. Effect: Add 1 to the Rend characteristic of melee weapons used by friendly INFANTRY units that charged in the same turn",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "shadow-avatar",
+              "name": "Shadow Avatar",
+              "summary": "The shadow of the Avatar of Khaine peels away and attacks the foe, every strike cleaving through both body and soul. Effect: Add 1 to the Rend characteristic of your general\u2019s melee weapons for the rest of the turn",
+              "timing": null
+            },
+            {
+              "id": "boiling-blood",
+              "name": "Boiling Blood",
+              "summary": "A torrent of scalding blood is vomited forth by the Avatar of Khaine, reducing even polished sigmarite to molten slag",
+              "timing": null
+            },
+            {
+              "id": "frenzied-exhortations",
+              "name": "Frenzied Exhortations",
+              "summary": "The Slaughter Queen atop the Cauldron of Blood howls a bloody liturgy that empowers nearby cultists",
+              "timing": null
+            },
+            {
+              "id": "bladed-impact",
+              "name": "Bladed Impact",
+              "summary": "The bladed carriage of a Cauldron of Blood can plough its way through enemy ranks with ease",
+              "timing": null
+            }
+          ]
         }
       ]
     },
@@ -370,7 +788,65 @@
           "general": "Battlesmith",
           "tagline": "Berzerker aggression",
           "playstyle": "Headlong charges and Awaken the Runes. Surprisingly durable despite low saves.",
-          "unitCount": 6
+          "unitCount": 6,
+          "roster": [
+            "Battlesmith",
+            "5 Hearthguard Berzerkers",
+            "5 Vulkite Berzerkers",
+            "5 Vulkite Berzerkers",
+            "5 Vulkite Berzerkers",
+            "5 Vulkite Berzerkers"
+          ],
+          "battleTraitName": "Awaken The Runes",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/fyreslayers-spearhead/eng_fyreslayers_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "awaken-the-runes",
+              "name": "Awaken The Runes",
+              "summary": "In battle, a Fyreslayer\u2019s ur-gold runes are awakened, filling them with the blazing power of Grimnir",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "magmic-tunnels",
+              "name": "Magmic Tunnels",
+              "summary": "Tunnels carved by runic magic enable a band of Fyreslayers to attack from an unseen quarter. Effect: Pick up to 2 friendly units. Remove them from the battlefield and set them up again anywhere on the battlefield more than 6\" from all enemy units",
+              "timing": null
+            },
+            {
+              "id": "fyresteel-throwing-axes",
+              "name": "Fyresteel Throwing Axes",
+              "summary": "These sidearms are deadly when hurled at close range",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "too-stubborn-to-die",
+              "name": "Too Stubborn To Die",
+              "summary": "Long in the beard, your general shrugs off wounds that would fell a lesser duardin. Effect: Heal (D3) your general",
+              "timing": null
+            },
+            {
+              "id": "horn-of-grimnir",
+              "name": "Horn Of Grimnir",
+              "summary": "Inlaid with powerful runes of ur-gold, a blast from this horn inspires those bloody and bruised to continue the fight",
+              "timing": null
+            },
+            {
+              "id": "spirit-of-grimnir",
+              "name": "Spirit Of Grimnir",
+              "summary": "The very presence of your general sets ur-gold ablaze. Effect: You can re-roll activation rolls you make for the \u2018Ur-gold Runes\u2019 ability (see Battle Traits )",
+              "timing": null
+            },
+            {
+              "id": "powerful-presence",
+              "name": "Powerful Presence",
+              "summary": "With a roaring voice and mighty displays of strength, your general is an imposing figure upon the battlefield. Effect: Add 3 to your general\u2019s control score ",
+              "timing": null
+            }
+          ]
         }
       ]
     },
@@ -385,7 +861,64 @@
           "general": "Arkanaut Admiral",
           "tagline": "Long-range mobile shooting",
           "playstyle": "Positioning and precision fire. Controls the board from range.",
-          "unitCount": 5
+          "unitCount": 5,
+          "roster": [
+            "Arkanaut Admiral",
+            "5 Arkanaut Company (incl. Skypike)",
+            "5 Arkanaut Company (incl. Light Skyhook and Aethermatic Volley Gun)",
+            "3 Skywardens",
+            "1 Arkanaut Frigate"
+          ],
+          "battleTraitName": "Ply The Skies",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/kharadron-overlords-spearhead/eng_kharadron_overlords_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "ply-the-skies",
+              "name": "Ply The Skies",
+              "summary": "The Kharadron rule the skies of the realms with fleets of fearsome airships crewed by hardened duardin. Used By: The Arkanaut Frigate that is using that MOVE ability. Effect: Pick a friendly INFANTRY unit that is wholly within the combat range of that Arkanaut Frigate and not in combat to be transported . Remove that I",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "assault-boat",
+              "name": "Assault Boat",
+              "summary": "The speed and manoeuvrability of the Arkanaut Frigate allows it to deliver Arkanaut Companies directly into the fray",
+              "timing": null
+            },
+            {
+              "id": "disengage",
+              "name": "Disengage",
+              "summary": "At an officer\u2019s command, the vessel disengages with all guns blazing",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "masterwrought-armour",
+              "name": "Masterwrought Armour",
+              "summary": "This Admiral\u2019s finely crafted suit of armour is the acme of the armourer\u2019s art. Effect: Your general has WARD ( 6+ ) ",
+              "timing": null
+            },
+            {
+              "id": "theres-no-reward-without-risk",
+              "name": "There'S No Reward Without Risk",
+              "summary": "Under the command of their Admiral, the crew close in on their prize without a moment\u2019s hesitation. Effect: You can re-roll the charge roll for that CHARGE ability",
+              "timing": null
+            },
+            {
+              "id": "flask-of-vintage-gorogna",
+              "name": "Flask Of Vintage Gorogna",
+              "summary": "This rare duardin drink is said to be good for whatever ails you. Effect: Heal (D6) your general",
+              "timing": null
+            },
+            {
+              "id": "leave-no-duardin-behind",
+              "name": "Leave No Duardin Behind",
+              "summary": "With a rousing speech, the Admiral rallies his crew and steels their resolve",
+              "timing": null
+            }
+          ]
         },
         {
           "id": "grundstok-trailblazers",
@@ -393,7 +926,63 @@
           "general": "Endrinmaster with Dirigible Suit",
           "tagline": "Tough flyers with strong shooting",
           "playstyle": "Flying 3+ saves, Endrinrigger reinforcements, and a dominant general.",
-          "unitCount": 4
+          "unitCount": 4,
+          "roster": [
+            "Endrinmaster with Dirigible Suit",
+            "5 Grundstok Thunderers",
+            "1 Grundstok Gunhauler",
+            "3 Endrinriggers"
+          ],
+          "battleTraitName": "Gunhauler Escort",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/kharadron-overlords-spearhead/eng_kharadron_overlords_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "gunhauler-escort",
+              "name": "Gunhauler Escort",
+              "summary": "The threatening presence of a Grundstok Gunhauler overhead makes it difficult for enemies to focus their attacks on the Trailblazers\u2019 ground forces. Effect: Subtract 1 from hit rolls for attacks that target friendly KHARADRON OVERLORDS INFANTRY units while they are wholly within 6\" of a friendly Grundstok Gunhauler ",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "rapid-relocation",
+              "name": "Rapid Relocation",
+              "summary": "The Gunhauler\u2019s pilot assumes a high trajectory before looping around and rejoining the battle from a different direction",
+              "timing": null
+            },
+            {
+              "id": "propeller-downdraught",
+              "name": "Propeller Downdraught",
+              "summary": "The buffeting air currents kicked up by the Gunhauler as it flies low mean that nearby foes seeking to engage the Kharadron find themselves charging into a headwind. Effect: Subtract 1 from charge rolls for enemy units while they are within 9\" of a friendly Grundstok Gunhauler ",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "emergency-fuel-injection-pods",
+              "name": "Emergency Fuel Injection Pods",
+              "summary": "By flicking a rune-embossed switch concealed in their suit, this Endrinmaster can give their equipment a boost just when they need it. Effect: Your general has STRIKE-FIRST for the rest of the turn",
+              "timing": null
+            },
+            {
+              "id": "celestium-burst-bomblets",
+              "name": "Celestium-Burst Bomblets",
+              "summary": "Long-standing trade agreements with Azyrheim have allowed the production of these munitions, which have a disruptive effect on supernatural defences",
+              "timing": null
+            },
+            {
+              "id": "prospector-and-pioneer",
+              "name": "Prospector And Pioneer",
+              "summary": "Whether they are a cranky taskmaster or a charismatic maverick, this general is a force of nature when it comes to staking new claims for their sky-port. Effect: Add 2 to your general\u2019s control score ",
+              "timing": null
+            },
+            {
+              "id": "extraction-fail-safes",
+              "name": "Extraction Fail-Safes",
+              "summary": "This Endrinmaster has fitted their Dirigible Suit with non-essential components that can be jettisoned to distract a pursuing foe. Effect: Subtract 1 from the number of damage points inflicted on this unit when it uses a RETREAT ability",
+              "timing": null
+            }
+          ]
         }
       ]
     },
@@ -408,7 +997,64 @@
           "general": "Isharann Soulscryer",
           "tagline": "Fast strike force",
           "playstyle": "Excellent mobility and burst damage. One of the most dangerous Spearheads.",
-          "unitCount": 5
+          "unitCount": 5,
+          "roster": [
+            "Isharann Soulscryer",
+            "3 Akhelian Morrsarr Guard",
+            "1 Akhelian Allopex",
+            "5 Namarti Thralls",
+            "5 Namarti Thralls"
+          ],
+          "battleTraitName": "Soulraid Hunt",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/idoneth-deepkin-spearhead/eng_idoneth_deepkin_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "round-ability-1-low-tide",
+              "name": "Round Ability 1 Low Tide",
+              "summary": "The Idoneth move towards the foe, their appearance eerily refracted and distorted. Effect: Subtract 1 from hit rolls for shooting attacks that target this unit. 2 FLOOD TIDE: The Idoneth attack suddenly, swirling around the foe and trapping the unwary. Effect: This unit can use a RUN ability and still use SHOOT and/or ",
+              "timing": "ROUND"
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "way-of-the-cresting-wave",
+              "name": "Way Of The Cresting Wave",
+              "summary": "The Thralls of this raiding party have been trained in techniques that see them strike like a tsunami. Effect: Add 1 to the Rend characteristic of melee weapons used by friendly Namarti Thralls units that charged in the same turn",
+              "timing": null
+            },
+            {
+              "id": "ethersea-predators",
+              "name": "Ethersea Predators",
+              "summary": "The deep-sea beasts these warriors ride are driven into a feeding frenzy during battle. Effect: Pick a friendly CAVALRY unit that used a FIGHT ability this turn. Heal (D3) that unit",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "arch-ritualist",
+              "name": "Arch-Ritualist",
+              "summary": "This general is a master at manipulating the ethersea to conceal the approach of their forces. Effect: Add 1 to rolls for your general\u2019s \u2018Ritual of the Creeping Mist\u2019 ability",
+              "timing": null
+            },
+            {
+              "id": "mind-flare",
+              "name": "Mind Flare",
+              "summary": "A brilliant pulse of bioluminescence suddenly illuminates the gloom of the ethersea, temporarily blinding those unprepared for it",
+              "timing": null
+            },
+            {
+              "id": "steelshell-armour",
+              "name": "Steelshell Armour",
+              "summary": "This pearlescent armour offers uncanny protection, regardless of the strength behind the blows that strike it. Effect: Ignore all modifiers to save rolls for your general (positive and negative)",
+              "timing": null
+            },
+            {
+              "id": "delicious-morsels",
+              "name": "Delicious Morsels",
+              "summary": "This general carries with them rare crustaceans favoured by Allopexes and Fangmora Eels. Effect: Heal (1) each friendly CAVALRY unit within your general\u2019s combat range ",
+              "timing": null
+            }
+          ]
         },
         {
           "id": "akhelian-tide-guard",
@@ -416,7 +1062,63 @@
           "general": "Akhelian King",
           "tagline": "Eel cavalry hammer",
           "playstyle": "Fast with double eel units. King buffs saves; Reavers provide ranged pressure.",
-          "unitCount": 4
+          "unitCount": 4,
+          "roster": [
+            "Akhelian King",
+            "3 Akhelian Morrsarr Guard",
+            "3 Akhelian Ishlaen Guard",
+            "10 Namarti Reavers"
+          ],
+          "battleTraitName": "Royal Imperative",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/idoneth-deepkin-spearhead/eng_idoneth_deepkin_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "royal-imperative",
+              "name": "Royal Imperative",
+              "summary": "Desperate to honour their liege, the Tide Guard strike a decisive blow. You can only use this ability in the third battle round. Effect: Pick 1 of the following effects to apply for the rest of the battle round: Into Them!: Friendly units have STRIKE-FIRST . Strike Sure: Friendly units\u2019 melee weapons have Crit (Mortal)",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "the-spear-of-asphoren",
+              "name": "The Spear Of Asphoren",
+              "summary": "Those Idoneth who wish to follow the example of legendary commander Asphoren must strike at the foe like the surging tide",
+              "timing": null
+            },
+            {
+              "id": "the-shield-of-ulchiss",
+              "name": "The Shield Of Ulchiss",
+              "summary": "Mastery of the ebb and flow of battle is core to the teachings of Ulchiss, which state that a timely withdrawal can open up enemy vulnerabilities",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "dutiful-souls",
+              "name": "Dutiful Souls",
+              "summary": "The Tide Guard will fight to protect their King even when gravely wounded",
+              "timing": null
+            },
+            {
+              "id": "voltaic-charge",
+              "name": "Voltaic Charge",
+              "summary": "This general\u2019s weapons crackle with electric power, ready to be discharged. Effect: Your general\u2019s Akhelian Royal Weapons have Charge (+1 Damage) ",
+              "timing": null
+            },
+            {
+              "id": "shimmering-amulet",
+              "name": "Shimmering Amulet",
+              "summary": "This void-pearl amulet conceals its wearer behind a shimmering cloak of refracted magic. Effect: Your general has WARD ( 5+ ) ",
+              "timing": null
+            },
+            {
+              "id": "soul-stealer",
+              "name": "Soul Stealer",
+              "summary": "This warrior is said to siphon the spirits of fallen foes to sustain them in battle. Effect: If your general is in combat , Heal (D3) your general",
+              "timing": null
+            }
+          ]
         }
       ]
     },
@@ -431,15 +1133,152 @@
           "general": "Scinari Cathallar",
           "tagline": "Precision strike infantry",
           "playstyle": "Hits hard but fragile. Rewards precise play; getting charged hurts.",
-          "unitCount": 5
+          "unitCount": 5,
+          "roster": [
+            "Scinari Cathallar",
+            "5 Vanari Auralan Sentinels",
+            "5 Vanari Auralan Sentinels",
+            "10 Vanari Auralan Wardens",
+            "5 Vanari Bladelords"
+          ],
+          "battleTraitName": "Facets Of War",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/lumineth-realm-lords-spearhead/eng_lumineth_realm_lords_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "facets-of-war",
+              "name": "Facets Of War",
+              "summary": "The arts of war practised by the Lumineth are subtle, precise and devastating. Effect: You must use this ability at the start of the battle round. Pick 1 FACET OF WAR ability. That FACET OF WAR ability can be used this battle round but the other two cannot",
+              "timing": null
+            },
+            {
+              "id": "shining-company",
+              "name": "Shining Company",
+              "summary": "Numinous light shines from this aelven formation, bedazzling the foe. Effect: Subtract 1 from hit rolls that target friendly units",
+              "timing": null
+            },
+            {
+              "id": "power-of-hysh",
+              "name": "Power Of Hysh",
+              "summary": "Vanari can use their innate arcane abilities to empower their sunmetal weapons",
+              "timing": null
+            },
+            {
+              "id": "lightning-reactions",
+              "name": "Lightning Reactions",
+              "summary": "Lumineth possess a natural alacrity beyond that of most rivals. Effect: When players are alternating picking units to use a FIGHT ability , when it is your turn to pick a unit, you can pick 2 units instead of 1. Resolve the second FIGHT ability immediately after the first",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "arcane-prowess",
+              "name": "Arcane Prowess",
+              "summary": "The Cathallar of this Glittering Phalanx keeps a hidden reserve of aetherquartz to bolster their sorcery in battle. Effect: Add 1 to casting rolls for your general",
+              "timing": null
+            },
+            {
+              "id": "heightened-reflexes",
+              "name": "Heightened Reflexes",
+              "summary": "The keen senses of these warriors are second to none. Effect: Add 1 to save rolls for friendly units that use a FIGHT ability immediately after another friendly unit because of the \u2018 Lightning Reactions \u2019 ability, until the end of the phase",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "waystone",
+              "name": "Waystone",
+              "summary": "This sliver of dark rock illuminates hidden paths around the bearer in stark relief. Effect: Remove your general from the battlefield and set them up again anywhere on the battlefield more than 6\" from all enemy units",
+              "timing": null
+            },
+            {
+              "id": "protection-of-hysh",
+              "name": "Protection Of Hysh",
+              "summary": "The caster opens their arms wide, creating a field of glowing energy that protects all of the caster\u2019s allies that are nearby",
+              "timing": null
+            },
+            {
+              "id": "speed-of-hysh",
+              "name": "Speed Of Hysh",
+              "summary": "The Cathallar magically empowers their allies to move with light\u2019s swiftness",
+              "timing": null
+            },
+            {
+              "id": "overwhelming-heat",
+              "name": "Overwhelming Heat",
+              "summary": "The Cathallar summons oppressive heat to sap their foes\u2019 strength",
+              "timing": null
+            }
+          ]
         },
         {
           "id": "hurakan-vanguard",
           "name": "Hurakan Vanguard",
-          "general": "Hurakan Tempest Lord",
+          "general": "Hurakan Windmage",
           "tagline": "Reactive movement control",
           "playstyle": "Windchargers and fox aura frustrate enemy hammer units. Strong board control.",
-          "unitCount": 5
+          "unitCount": 4,
+          "roster": [
+            "Hurakan Windmage",
+            "5 Hurakan Windchargers",
+            "10 Vanari Auralan Wardens",
+            "1 Hurakan Spirit of the Wind"
+          ],
+          "battleTraitName": "Pulled By Winds",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/lumineth-realm-lords-spearhead/eng_lumineth_realm_lords_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "pulled-by-winds",
+              "name": "Pulled By Winds",
+              "summary": "The Hurakan allow themselves to be pulled by the winds to more tactical locations",
+              "timing": null
+            },
+            {
+              "id": "gale-force",
+              "name": "Gale Force",
+              "summary": "Aligning their attacks with the direction of the wind allows the Hurakan to strike with deadlier force. Used By: The unit using that ATTACK ability. Effect: Add 1 to hit rolls for attacks made as part of that ATTACK ability if the target of that ability is closer to the leeward battlefield edge than the unit using this",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "roaring-headwind",
+              "name": "Roaring Headwind",
+              "summary": "The Hurakan call on the greater spirits of the wind to deliver one great gust to push back the enemy",
+              "timing": null
+            },
+            {
+              "id": "lifted-drbris",
+              "name": "Lifted Drbris",
+              "summary": "The lesser spirits of the wind aid the battle by lifting chunks of debris and hurling them towards the enemy",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "scattered-to-the-winds",
+              "name": "Scattered To The Winds",
+              "summary": "The strong winds that accompany the Windmage throw their enemies to the side to disorientate them. Effect: Subtract 1 from the control scores of enemy units within 6\" of your general for each friendly RIDE THE HURRICANE ability used this battle round",
+              "timing": null
+            },
+            {
+              "id": "temple-guardians",
+              "name": "Temple Guardians",
+              "summary": "This Windmage has been assigned a dedicated Vanari bodyguard. Effect: While any friendly INFANTRY units are within your general\u2019s combat range , both your general and those INFANTRY units have WARD ( 5+ ) ",
+              "timing": null
+            },
+            {
+              "id": "wind-whisperer",
+              "name": "Wind Whisperer",
+              "summary": "Hurakan Windmages have the greatest connection to the wind spirits, able to call on their aid to shift the weather to their advantage",
+              "timing": null
+            },
+            {
+              "id": "curved-shots",
+              "name": "Curved Shots",
+              "summary": "Hurakan Windmages are trained in using the winds to launch attacks along bewildering and unexpected trajectories. Effect: You can measure the range and visibility of your general\u2019s shooting attacks from any point on the leeward battlefield edge",
+              "timing": null
+            }
+          ]
         }
       ]
     },
@@ -454,15 +1293,136 @@
           "general": "Saurus Oldblood on Carnosaur",
           "tagline": "Durable all-rounder",
           "playstyle": "Tough Saurus Warriors and a devastating Carnosaur charge.",
-          "unitCount": 4
+          "unitCount": 4,
+          "roster": [
+            "Saurus Oldblood on Carnosaur",
+            "5 Saurus Warriors",
+            "5 Saurus Warriors",
+            "3 Kroxigor"
+          ],
+          "battleTraitName": "Beast Of The Dark Jungles",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/seraphon-spearhead/eng_seraphon_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "beast-of-the-dark-jungles",
+              "name": "Beast Of The Dark Jungles",
+              "summary": "The perilous jungles of the Seraphon are the hunting grounds of the mighty Carnosaur, a reptilian titan that strikes fear and awe into the hearts of its enemies",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "predatory-fighters",
+              "name": "Predatory Fighters",
+              "summary": "These warriors bite bloody chunks of flesh from their foes in battle",
+              "timing": null
+            },
+            {
+              "id": "temple-city-guardians",
+              "name": "Temple-City Guardians",
+              "summary": "Patrolling the lands on the outskirts of their domain, these defenders will stop at nothing to see intruders driven back. Effect: Friendly units have WARD ( 6+ ) while they are wholly within friendly territory",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "soteks-gaze",
+              "name": "Sotek'S Gaze",
+              "summary": "The eyes of this gilded war-mask resonate with the pitiless hunger of the Serpent God. With it, the Oldblood brutally cows lesser foes. Effect: Roll a dice. Add the roll to your general\u2019s control score this turn",
+              "timing": null
+            },
+            {
+              "id": "blade-of-realities",
+              "name": "Blade Of Realities",
+              "summary": "Entrusted only to the most formidable Oldbloods, this pan-dimensional weapon exists to bring about the end of tyrants. Effect: Add 1 to the Rend characteristic of your general\u2019s Relic Celestite Weapon ",
+              "timing": null
+            },
+            {
+              "id": "ancient-strategist",
+              "name": "Ancient Strategist",
+              "summary": "This Oldblood has centuries of experience in commanding their cohorts",
+              "timing": null
+            },
+            {
+              "id": "the-wrath-of-chotec",
+              "name": "The Wrath Of Chotec",
+              "summary": "An ancient relic removed from the deepest temple vaults, this gauntlet allows an Oldblood to channel the full might of the Seraphon\u2019s solar god. Effect: The Attacks characteristic of your general\u2019s Sunbolt Gauntlet is 6 instead of D6",
+              "timing": null
+            }
+          ]
         },
         {
           "id": "sunblooded-prowlers",
           "name": "Sunblooded Prowlers",
-          "general": "Sunblood Priest",
-          "tagline": "Sand & Bone — fast glass cannon",
+          "general": "Sunblood Pack with Venomites token",
+          "tagline": "Sand & Bone \u2014 fast glass cannon",
           "playstyle": "Hard-hitting and fast but extremely fragile. High skill cap.",
-          "unitCount": 5
+          "unitCount": 7,
+          "roster": [
+            "Sunblood Pack with Venomites token",
+            "5 Saurus Warriors",
+            "5 Saurus Warriors",
+            "5 Hunters of Huanchi",
+            "5 Hunters of Huanchi",
+            "3 Terrawings",
+            "1 Spawn of Chotec"
+          ],
+          "battleTraitName": "Chameleon Ambush",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/seraphon-spearhead/eng_seraphon_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "chameleon-ambush",
+              "name": "Chameleon Ambush",
+              "summary": "The Hunters of Huanchi and the Spawn of Chotec emerge from hiding to unleash a hail of potent poisoned projectiles. Effect: Set up this unit anywhere on the battlefield more than 6\" from all enemy units",
+              "timing": null
+            },
+            {
+              "id": "vengeance-of-azyr",
+              "name": "Vengeance Of Azyr",
+              "summary": "The celestite weapons carried by the warriors of a Sun blooded Prowlers host are supercharged with the power of Azyr",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "scaled-aegis",
+              "name": "Scaled Aegis",
+              "summary": "The tenacity of the saurus Sunbloods is legendary, and that of the cohorts under their command equally so",
+              "timing": null
+            },
+            {
+              "id": "followers-of-huanchi",
+              "name": "Followers Of Huanchi",
+              "summary": "Huanchi guides the shots of the skinks and their bestial companions",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "instinctive-commander",
+              "name": "Instinctive Commander",
+              "summary": "The saurus Sunblood has no need to utter orders, his warriors advancing with instinctive understanding",
+              "timing": null
+            },
+            {
+              "id": "venomite-swarm",
+              "name": "Venomite Swarm",
+              "summary": "Lethal venom drips from the fangs and claws of Sotek's Venomites",
+              "timing": null
+            },
+            {
+              "id": "savage-mauling",
+              "name": "Savage Mauling",
+              "summary": "Once the saurus Sunblood begins the dismemberment of the enemy, even mystical defences crumble under his terrible strength",
+              "timing": null
+            },
+            {
+              "id": "blessed-by-the-old-ones",
+              "name": "Blessed By The Old Ones",
+              "summary": "The Sunblood is whisked away by powers unseen moments before a fatal blow can fall, perhaps granting his indomitable spirit time enough to bring him to his feet once more",
+              "timing": null
+            }
+          ]
         }
       ]
     },
@@ -477,7 +1437,145 @@
           "general": "Branchwych",
           "tagline": "Woodland ambushers",
           "playstyle": "Tough units with staying power. Clever positioning is key.",
-          "unitCount": 4
+          "unitCount": 4,
+          "roster": [
+            "Branchwych",
+            "1 Treelord",
+            "3 Kurnoth Hunters",
+            "5 Tree-Revenants"
+          ],
+          "battleTraitName": "Ley Lines",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/sylvaneth-spearhead/eng_sylvaneth_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "ley-lines",
+              "name": "Ley Lines",
+              "summary": "The Sylvaneth draw strength from natural sites of mystical power. Effect: Heal (1) each friendly unit that is within 3\" of any terrain features ",
+              "timing": null
+            },
+            {
+              "id": "strike-and-fade",
+              "name": "Strike And Fade",
+              "summary": "These warriors use the spirit paths to ambush the enemy before retreating back into the shadows",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "vengeful-spirits-of-the-land",
+              "name": "Vengeful Spirits Of The Land",
+              "summary": "The realm-spirits lingering around the ancient sites are roused to wrath and unleashed upon the Sylvaneth\u2019s enemies",
+              "timing": null
+            },
+            {
+              "id": "walkers-of-the-hidden-paths",
+              "name": "Walkers Of The Hidden Paths",
+              "summary": "These mysterious warriors walk the realmroots",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "regrowth",
+              "name": "Regrowth",
+              "summary": "Your general channels an invigorating bloom of magic",
+              "timing": null
+            },
+            {
+              "id": "treesong",
+              "name": "Treesong",
+              "summary": "Your general implores the spirits of the wyldwoods to guide the blades of their allies",
+              "timing": null
+            },
+            {
+              "id": "gnarled-warrior",
+              "name": "Gnarled Warrior",
+              "summary": "This Sylvaneth\u2019s battlescarred hide has turned aside countless blades. Effect: Ignore negative modifiers to save rolls for your general",
+              "timing": null
+            },
+            {
+              "id": "seed-of-rebirth",
+              "name": "Seed Of Rebirth",
+              "summary": "Should its bearer ever fall, the seed will grant them new life. Effect: If your general would be destroyed, before removing them from play, roll a dice. On a 3+, your general is not destroyed and any remaining damage points inflicted on them have no effect. Then, Heal (1) your general. This unit cannot use this ability",
+              "timing": null
+            }
+          ]
+        },
+        {
+          "id": "spitewing-flight",
+          "name": "Spitewing Flight",
+          "general": "Arch-Revenant",
+          "tagline": "AoS 4e Spearhead \u2014 Spitewing Flight",
+          "playstyle": "Fixed box-set roster. Pick regiment ability and general enhancement during guided match setup.",
+          "unitCount": 4,
+          "roster": [
+            "Arch-Revenant",
+            "5 Gossamid Archers",
+            "3 Spiterider Lancers",
+            "3 Revenant Seekers"
+          ],
+          "battleTraitName": "Target Of Vengeance",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/sylvaneth-spearhead/eng_sylvaneth_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "target-of-vengeance",
+              "name": "Target Of Vengeance",
+              "summary": "The Spitewing Flight engages one foe at a time, swooping down to annihilate them before selecting a new target",
+              "timing": null
+            },
+            {
+              "id": "airborne-cohesion",
+              "name": "Airborne Cohesion",
+              "summary": "These warriors fly in tight formation, their dragonspites perfectly attuned to the movements of their kin. Effect: Friendly units have a coherency range of 2\"",
+              "timing": null
+            },
+            {
+              "id": "song-of-the-hunt",
+              "name": "Song Of The Hunt",
+              "summary": "The warriors of a Spitewing Flight are energised by the increasingly harmonious notes of the spirit-song as they fight, building momentum with every defeated foe. Effect: You gain 1 chord each time an enemy quarry is destroyed. The following cumulative effects apply depending on the number of chords you have: 1 chord S",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "leaves-on-the-wind",
+              "name": "Leaves On The Wind",
+              "summary": "These warriors attack swiftly and then retreat into the cover of the canopy",
+              "timing": null
+            },
+            {
+              "id": "lifebringers",
+              "name": "Lifebringers",
+              "summary": "Hailing from the vast boughs of the Oak of Ages Past, the life-giving magic of Ghyran permeates the sap-blood of these warriors and their steeds, causing their wounds to heal nigh instantaneously. Effect: Heal (D3) each friendly unit",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "head-of-the-hunt",
+              "name": "Head Of The Hunt",
+              "summary": "This warrior venerates the Hunter God Kurnoth as much as Alarielle. To them, the pursuit of the prey is a sacred act. Effect: Add 1 to the Rend characteristic of your general\u2019s melee weapons while the enemy quarry is within 9\" of and visible to them",
+              "timing": null
+            },
+            {
+              "id": "bold-spirit",
+              "name": "Bold Spirit",
+              "summary": "Thrusting their glaive towards the foe with a strident war cry, the Arch-Revenant inspires their warriors to fight with all they have. Effect: For the rest of the turn, add 1 to wound rolls for friendly units\u2019 combat attacks while they are within your general\u2019s combat range ",
+              "timing": null
+            },
+            {
+              "id": "zephyrkin",
+              "name": "Zephyrkin",
+              "summary": "The bond that this Arch-Revenant has with their companion zephyrspite is so strong that they can perform hit-and-run attacks with bewildering agility. Effect: If your general charged this turn, they can move up to 2D6\" after that FIGHT ability has been resolved. They cannot end that move in combat ",
+              "timing": null
+            },
+            {
+              "id": "cunning-pursuer",
+              "name": "Cunning Pursuer",
+              "summary": "The Arch-Revenant feigns weakness, baiting the enemy into being surrounded by the swarm. Effect: While your general is in combat , add 1 to charge rolls for friendly units wholly within 12\" of them. Add 2 instead while your general is in combat with the quarry",
+              "timing": null
+            }
+          ]
         }
       ]
     },
@@ -492,15 +1590,146 @@
           "general": "Slaughterpriest",
           "tagline": "Elite melee bruisers",
           "playstyle": "Excellent saves and brutal melee. Dominates most matchups.",
-          "unitCount": 5
+          "unitCount": 5,
+          "roster": [
+            "Slaughterpriest",
+            "5 Blood Warriors",
+            "5 Blood Warriors",
+            "10 Bloodreavers",
+            "3 Mighty Skullcrushers"
+          ],
+          "battleTraitName": "The Blood Tithe",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/blades-of-khorne-spearhead/eng_blades_of_khorne_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "the-blood-tithe",
+              "name": "The Blood Tithe",
+              "summary": "Khorne\u2019s warriors receive divine rewards when blood is shed; whether the sacrifice is theirs or that of their foes matters not. Effect: Each time a unit is destroyed during the battle, you receive 1 blood tithe point ",
+              "timing": null
+            },
+            {
+              "id": "heads-must-roll",
+              "name": "Heads Must Roll",
+              "summary": "A terrible hunger is awoken in the gore-slick weapons of the Bloodbound",
+              "timing": null
+            },
+            {
+              "id": "murderlust",
+              "name": "Murderlust",
+              "summary": "All servants of Khorne feel the urge to kill, but when prey is near, the impulse becomes all-consuming",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "favoured-of-khorne",
+              "name": "Favoured Of Khorne",
+              "summary": "These blood-marked warriors are the victors of many battles and court the favour of their patron. Effect: Roll a dice. On a 2+, you receive 1 blood tithe point ",
+              "timing": null
+            },
+            {
+              "id": "blood-woken-runes",
+              "name": "Blood-Woken Runes",
+              "summary": "Fell runes of resilience are carved into the armour of these warriors, needing only the touch of a foe\u2019s blood to be empowered. Effect: Friendly units have WARD ( 5+ ) if they have used a FIGHT ability in the same phase",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "resanguination",
+              "name": "Resanguination",
+              "summary": "The Slaughterpriest calls upon Khorne\u2019s favour to sear the wounds of an ally so that they can continue to shed the blood of the enemy",
+              "timing": null
+            },
+            {
+              "id": "headhunter",
+              "name": "Headhunter",
+              "summary": "Even Khorne\u2019s priests will seek out the worthiest of foes against which to test their martial prowess",
+              "timing": null
+            },
+            {
+              "id": "the-crimson-plate",
+              "name": "The Crimson Plate",
+              "summary": "This ancient armour bestows Khorne\u2019s protection upon its wearer, provided it is burnished daily with the blood of champions. Effect: Your general has WARD ( 5+ ) ",
+              "timing": null
+            },
+            {
+              "id": "unholy-flames",
+              "name": "Unholy Flames",
+              "summary": "The priest imbues the blades of their allies with daemonic fire, so that they may claim skulls with horrific ease",
+              "timing": null
+            }
+          ]
         },
         {
           "id": "fangs-of-the-blood-god",
           "name": "Fangs of the Blood God",
-          "general": "Bloodmaster",
+          "general": "Karanak",
           "tagline": "Fast glass cannon",
           "playstyle": "Reinforced keyword for hitting power. Must finish fights quickly.",
-          "unitCount": 5
+          "unitCount": 4,
+          "roster": [
+            "Karanak",
+            "5 Flesh Hounds",
+            "5 Flesh Hounds",
+            "8 Claws of Karanak"
+          ],
+          "battleTraitName": "The Quarry",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/blades-of-khorne-spearhead/eng_blades_of_khorne_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "the-quarry",
+              "name": "The Quarry",
+              "summary": "Karanak's hunt is eternal, for there is no end to those who offend Khorne's creed. Effect: If no enemy units are the quarry, pick an enemy unit to be the quarry (you can pick an enemy unit in reserve )",
+              "timing": null
+            },
+            {
+              "id": "blood-drenched",
+              "name": "Blood-Drenched",
+              "summary": "As blood gushes down blades, armour and teeth, the fervent warriors of the Blood God are driven into a divine frenzy",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "the-scent-of-blood",
+              "name": "The Scent Of Blood",
+              "summary": "The iron stink of gore sends Karanak's pack into a feral frenzy. Effect: Add 1 to hit rolls and add 1 to wound rolls for combat attacks that target an enemy unit that had any damage points allocated to it this turn",
+              "timing": null
+            },
+            {
+              "id": "savagery-upon-savagery",
+              "name": "Savagery Upon Savagery",
+              "summary": "The harder one resists Karanak, the more furious the daemon grows",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "sustained-by-gore",
+              "name": "Sustained By Gore",
+              "summary": "Karanak can pursue a target endlessly, provided the blood keeps flowing. Effect: Heal (D3) your general ",
+              "timing": null
+            },
+            {
+              "id": "killing-pounce",
+              "name": "Killing Pounce",
+              "summary": "When the moment to strike comes, Karanak leaps with unbridled force. Effect: For the rest of the turn, when making charge rolls for your general , you can roll an additional dice, to a maximum of 3, but if you do, they must finish that charge in combat with the quarry ",
+              "timing": null
+            },
+            {
+              "id": "evasive-hunter",
+              "name": "Evasive Hunter",
+              "summary": "Karanak's natural speed and the bloody aura that surrounds him, makes him difficult to target from afar. Effect: Subtract 1 from hit rolls and wound rolls for shooting attacks that target your general ",
+              "timing": null
+            },
+            {
+              "id": "furious-bites",
+              "name": "Furious Bites",
+              "summary": "All three of Karanak's monstrous heads hunger to tear apart flesh and soul. Effect: If your general is in combat with the quarry , inflict D3 mortal damage on the quarry ",
+              "timing": null
+            }
+          ]
         }
       ]
     },
@@ -515,7 +1744,141 @@
           "general": "Magister on Disc of Tzeentch",
           "tagline": "Magical damage and tricks",
           "playstyle": "Unpredictable spell use and positioning. Fragile but potent in skilled hands.",
-          "unitCount": 6
+          "unitCount": 6,
+          "roster": [
+            "Magister on Disc of Tzeentch",
+            "3 Flamers of Tzeentch",
+            "3 Screamers of Tzeentch",
+            "5 Tzaangors",
+            "5 Tzaangors",
+            "10 Kairic Acolytes"
+          ],
+          "battleTraitName": "Masters Of Destiny",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/disciples-of-tzeentch-spearhead/eng_disciples_of_tzeentch_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "masters-of-destiny",
+              "name": "Masters Of Destiny",
+              "summary": "To serve the Changer of the Ways is to instinctively understand the ebb and flow of future events and manipulate them at will. Effect: Roll 9 dice and put them to one side. These are your destiny dice . During the battle, instead of rolling the dice for 1 of the rolls from the list below, you can pick one of your desti",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "transient-forms",
+              "name": "Transient Forms",
+              "summary": "Some Kairic Acolytes actively seek transformation into Tzaangors, whom they revere as beings closer in nature to their mercurial deity. Effect: Roll a dice each time a friendly Kairic Acolytes model is slain in the combat phase. On a 4+, you can return 1 slain model to a friendly Tzaangors unit within 9\" of the slain m",
+              "timing": null
+            },
+            {
+              "id": "eternal-conflagration",
+              "name": "Eternal Conflagration",
+              "summary": "Some cults of Tzeentch seek to set the very cosmos aflame with the ever-burning fires of change. Effect: Add 1 to the Rend characteristic of ranged weapons used by friendly Flamers of Tzeentch units",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "shield-of-fate",
+              "name": "Shield Of Fate",
+              "summary": "There is little better protection than to be guided by destiny itself",
+              "timing": null
+            },
+            {
+              "id": "glimpse-the-future",
+              "name": "Glimpse The Future",
+              "summary": "By focusing on the skeins of potential fates, the sorcerer can glean hints of future events in time to manipulate them",
+              "timing": null
+            },
+            {
+              "id": "daemonheart",
+              "name": "Daemonheart",
+              "summary": "Through a dark ritual, the heart of a daemon dwells within your general\u2019s chest, where its dread power can be unleashed to greatly augment the strength of its host",
+              "timing": null
+            },
+            {
+              "id": "timeslip-pendant",
+              "name": "Timeslip Pendant",
+              "summary": "Time is a mutable concept to the bearer of this amulet",
+              "timing": null
+            }
+          ]
+        },
+        {
+          "id": "tzaangor-warflocks",
+          "name": "Tzaangor Warflocks",
+          "general": "Tzaangor Shaman",
+          "tagline": "AoS 4e Spearhead \u2014 Tzaangor Warflocks",
+          "playstyle": "Fixed box-set roster. Pick regiment ability and general enhancement during guided match setup.",
+          "unitCount": 4,
+          "roster": [
+            "Tzaangor Shaman",
+            "10 Tzaangors",
+            "3 Tzaangor Enlightened",
+            "3 Tzaangor Skyfires"
+          ],
+          "battleTraitName": "Fated Arrival",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/disciples-of-tzeentch-spearhead/eng_disciples_of_tzeentch_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "fated-arrival",
+              "name": "Fated Arrival",
+              "summary": "Followers of Tzeentch ride the waves of fate to ultimate victory. Effect: Set up this unit wholly within friendly territory, within 1\" of a battlefield edge and more than 6\" from all enemy units",
+              "timing": null
+            },
+            {
+              "id": "predict-the-future",
+              "name": "Predict The Future",
+              "summary": "Foresighted is forearmed, as the old saying goes. Effect: You can look at up to 3 cards from the top of your battle tactic deck without adding them to your hand. Then, in any order, return each card face down to either the top or the bottom of your battle tactic deck",
+              "timing": null
+            },
+            {
+              "id": "cheat-destiny",
+              "name": "Cheat Destiny",
+              "summary": "Can destiny truly be deceived, or are we pulled by strings we cannot see? Effect: Instead of discarding that card, return it face down to the bottom of your battle tactic deck",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "constant-flux",
+              "name": "Constant Flux",
+              "summary": "Tzeentch\u2019s plans often involve elements of self-sabotage to achieve the final goal. Effect: Subtract 1 from the Rend characteristic of weapons used for attacks that target friendly units while you are the underdog ",
+              "timing": null
+            },
+            {
+              "id": "arcane-ritualists",
+              "name": "Arcane Ritualists",
+              "summary": "This host specialises in esoterically gruesome sorcerous rituals. Effect: Add 1 to casting rolls for your general while they are wholly within 6\" of another friendly unit",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "predicted-strike",
+              "name": "Predicted Strike",
+              "summary": "Few seers are more accomplished when it comes to predicting an enemy\u2019s movements",
+              "timing": null
+            },
+            {
+              "id": "infernal-gateway",
+              "name": "Infernal Gateway",
+              "summary": "The sorcerer opens a portal to the Realm of Chaos, pulling enemies to their doom",
+              "timing": null
+            },
+            {
+              "id": "fold-reality",
+              "name": "Fold Reality",
+              "summary": "The sorcerer contorts the very fabric of the cosmos, allowing their minions to slip from hither to thither in an eye-blink",
+              "timing": null
+            },
+            {
+              "id": "mutagenic-sorcery",
+              "name": "Mutagenic Sorcery",
+              "summary": "As warriors fall around the Tzaangors, some mutate to become the creature that struck them down",
+              "timing": null
+            }
+          ]
         }
       ]
     },
@@ -530,7 +1893,56 @@
           "general": "Shardspeaker of Slaanesh",
           "tagline": "Fast and flashy",
           "playstyle": "Races across the board and hits hard but cannot take punishment.",
-          "unitCount": 5
+          "unitCount": 5,
+          "roster": [
+            "Shardspeaker of Slaanesh",
+            "5 Blissbarb Archers with 1 Blissbrew Homonculus",
+            "5 Blissbarb Archers",
+            "5 Slickblade Seekers",
+            "3 Slaangor Fiendbloods"
+          ],
+          "battleTraitName": "Blades of the Lurid Dream",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/hedonites-of-slaanesh-spearhead/eng_hedonites_of_slaanesh_spearhead.pdf",
+          "regimentAbilities": [
+            {
+              "id": "unparalleled-speed",
+              "name": "Unparalleled Speed",
+              "summary": "They say the first blow struck is the sweetest\u2026",
+              "timing": null
+            },
+            {
+              "id": "locus-of-diversion",
+              "name": "Locus Of Diversion",
+              "summary": "These warriors release perfumed mists that fill the foes\u2019 minds with everything but the matter at hand",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "sceptre-of-domination",
+              "name": "Sceptre Of Domination",
+              "summary": "The staff carried by this Shardspeaker contains magic that can seduce the minds of their foes",
+              "timing": null
+            },
+            {
+              "id": "cacophonic-choir",
+              "name": "Cacophonic Choir",
+              "summary": "The Shardspeaker summons a sanity\u2011shattering symphony of sound",
+              "timing": null
+            },
+            {
+              "id": "twisted-mirror",
+              "name": "Twisted Mirror",
+              "summary": "A Twisted Mirror tests the spirit of any who gaze into it, immobilising those who fall victim to its illusions",
+              "timing": null
+            },
+            {
+              "id": "pendant-of-slaanesh",
+              "name": "Pendant Of Slaanesh",
+              "summary": "This pendant burrows through the Shardspeaker\u2019s rich fabrics and scarred chest before nestling next to their heart, invigorating them with sublime energy whenever they feel pain. Effect: Heal (D3) your general ",
+              "timing": null
+            }
+          ]
         }
       ]
     },
@@ -545,7 +1957,160 @@
           "general": "Spoilpox Scrivener",
           "tagline": "Durable grindy force",
           "playstyle": "Shrugs off chip damage with surprising mobility for Nurgle.",
-          "unitCount": 6
+          "unitCount": 6,
+          "roster": [
+            "Spoilpox Scrivener",
+            "1 Pusgoyle Blightlord",
+            "1 Pusgoyle Blightlord",
+            "5 Putrid Blightkings",
+            "5 Plaguebearers",
+            "5 Plaguebearers"
+          ],
+          "battleTraitName": "Daemonic Summoning",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/maggotkin-of-nurgle-spearhead/eng_maggotkin_of_nurgle_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "daemonic-summoning",
+              "name": "Daemonic Summoning",
+              "summary": "The scions of Nurgle enter the battlefield through rifts torn in reality. Effect: Set up this unit anywhere on the battlefield more than 6\" from all enemy units",
+              "timing": null
+            },
+            {
+              "id": "diseased",
+              "name": "Diseased",
+              "summary": "Each of the Maggotkin is a walking vector of diseases that ravage both body and spirit. Effect: Each time an attack made by a friendly model scores a critical hit , you receive 1 disease point , to a maximum of 7",
+              "timing": null
+            },
+            {
+              "id": "nurgles-embrace",
+              "name": "Nurgle'S Embrace",
+              "summary": "The Grandfather\u2019s generosity proves overwhelming for many\u2026 Effect: Spend any number of your disease points . For each disease point you spend, pick an enemy unit that is in combat with any of your units and roll a dice. On a 5+, inflict 1 mortal damage on that unit (you can pick the same unit more than once)",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "locus-of-fecundity",
+              "name": "Locus Of Fecundity",
+              "summary": "Nurgle bestows a blessing of bountiful regrowth upon his children",
+              "timing": null
+            },
+            {
+              "id": "infested-with-wonders",
+              "name": "Infested With Wonders",
+              "summary": "These foul warriors invite the most horrific and repulsive diseases into their flesh, and they cannot wait to share them. Effect: Each time a friendly model is slain, before it is removed from play, you can pick an enemy unit within 1\" of it and roll a dice. On a 4+, inflict 1 mortal damage on that unit",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "summoner-of-plaguebearers",
+              "name": "Summoner Of Plaguebearers",
+              "summary": "Channelling a link to the Realm of Chaos, the Spoilpox Scrivener brings forth more minions",
+              "timing": null
+            },
+            {
+              "id": "pestilent-breath",
+              "name": "Pestilent Breath",
+              "summary": "This Spoilpox Scrivener has breath so foul that it can stun a full-grown rhinox",
+              "timing": null
+            },
+            {
+              "id": "gardener-of-nurgle",
+              "name": "Gardener Of Nurgle",
+              "summary": "This daemon seeks to expand the borders of Nurgle\u2019s Garden",
+              "timing": null
+            },
+            {
+              "id": "gift-of-febrile-frenzy",
+              "name": "Gift Of Febrile Frenzy",
+              "summary": "A reeking miasma rises around the daemon Herald that drives nearby followers into a wild delirium. Effect: Until the end of the phase, add 1 to the Attacks characteristic of melee weapons used by friendly units while they are wholly within 7\" of your general",
+              "timing": null
+            }
+          ]
+        },
+        {
+          "id": "bubonic-cell",
+          "name": "Bubonic Cell",
+          "general": "Rotbringer Sorcerer",
+          "tagline": "AoS 4e Spearhead \u2014 Bubonic Cell",
+          "playstyle": "Fixed box-set roster. Pick regiment ability and general enhancement during guided match setup.",
+          "unitCount": 5,
+          "roster": [
+            "Rotbringer Sorcerer",
+            "3 Nurglings",
+            "3 Nurglings",
+            "1 Beast of Nurgle",
+            "10 Rotmire Creed"
+          ],
+          "battleTraitName": "Numberless Pests",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/maggotkin-of-nurgle-spearhead/eng_maggotkin_of_nurgle_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "numberless-pests",
+              "name": "Numberless Pests",
+              "summary": "The Nurglites are obscured by flies. Effect: Subtract 1 from hit rolls for attacks that target friendly units",
+              "timing": null
+            },
+            {
+              "id": "nauseous-revulsion",
+              "name": "Nauseous Revulsion",
+              "summary": "These revolting warriors are too hideous to gaze upon for too long. Effect: Subtract 1 from charge rolls for enemy units",
+              "timing": null
+            },
+            {
+              "id": "plague-of-misery",
+              "name": "Plague Of Misery",
+              "summary": "A pall of despair covers the battlefield. Effect: While enemy units are within 6\" of any friendly units, they cannot use abilities that heal or return slain models to a unit",
+              "timing": null
+            },
+            {
+              "id": "burgeoning-filth",
+              "name": "Burgeoning Filth",
+              "summary": "Nurgle\u2019s followers grow bolder as their infestations multiply. Effect: Subtract 3 from the control scores of enemy units while they are in combat with any friendly units",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "corruption-of-the-land",
+              "name": "Corruption Of The Land",
+              "summary": "The mere presence of Nurgle\u2019s followers sees the land defiled",
+              "timing": null
+            },
+            {
+              "id": "putrefied-ground",
+              "name": "Putrefied Ground",
+              "summary": "The earth bubbles and liquefies beneath the enemy\u2019s feet. Effect: For the rest of the turn: Subtract 1 from the Move characteristic of enemy units. Subtract 1 from run rolls for enemy units",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "unnatural-vitality",
+              "name": "Unnatural Vitality",
+              "summary": "Disease may have ravaged this mage\u2019s form, but somehow they never seem to succumb to it. Effect: Your general has WARD ( 4+ ) ",
+              "timing": null
+            },
+            {
+              "id": "gaseous-emanation",
+              "name": "Gaseous Emanation",
+              "summary": "The sorcerer releases a vile cloud of gas that chokes their enemies",
+              "timing": null
+            },
+            {
+              "id": "subcutaneous-suppuration",
+              "name": "Subcutaneous Suppuration",
+              "summary": "The sheer abundance of pus beneath the sorcerer\u2019s skin acts as another layer of armour. Effect: Subtract 1 from wound rolls for attacks that target your general",
+              "timing": null
+            },
+            {
+              "id": "overripe-deaths-heads",
+              "name": "Overripe Death'S Heads",
+              "summary": "After carefully weighing a death\u2019s head in their palm, the bearer hurls it at a nearby foe",
+              "timing": null
+            }
+          ]
         }
       ]
     },
@@ -560,7 +2125,70 @@
           "general": "Chaos Lord",
           "tagline": "Balanced offence and defence",
           "playstyle": "Strong leadership buffs. Hits hard and holds objectives well.",
-          "unitCount": 5
+          "unitCount": 5,
+          "roster": [
+            "Chaos Lord",
+            "1 Chaos Chariot",
+            "5 Chaos Warriors",
+            "5 Chaos Warriors",
+            "5 Chaos Knights"
+          ],
+          "battleTraitName": "Dreaded Arrival",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/slaves-to-darkness-spearhead/eng_slaves_to_darkness_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "dreaded-arrival",
+              "name": "Dreaded Arrival",
+              "summary": "To the thunderous beating of flame-trailing hooves and clattering Chaos Armour, the knights arrive to shatter the enemy. Effect: Set up this unit wholly within your territory, within 1\" of a battlefield edge and more than 6\" from all enemy units",
+              "timing": null
+            },
+            {
+              "id": "eye-of-the-gods",
+              "name": "Eye Of The Gods",
+              "summary": "The Slaves to Darkness seek to attract the notice of the gods by performing great deeds in battle",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "fierce-conquerors",
+              "name": "Fierce Conquerors",
+              "summary": "These warriors are hell\u2011bent on desecrating the territory and holdings of any who dare oppose them. Effect: Add 3 to the control scores of friendly Chaos Warriors units",
+              "timing": null
+            },
+            {
+              "id": "the-dread-banner",
+              "name": "The Dread Banner",
+              "summary": "Marked with sigils of each of the Dark Gods, those who bear this banner seek ruinous blessings whatever their provenance",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "mark-of-khorne",
+              "name": "Mark Of Khorne",
+              "summary": "This general serves the Blood God and promises to deliver endless carnage upon the battlefield in return for his dark gifts. Effect: Add 1 to the Rend characteristic of your general \u2019s melee weapons if they charged in the same turn",
+              "timing": null
+            },
+            {
+              "id": "mark-of-nurgle",
+              "name": "Mark Of Nurgle",
+              "summary": "The Father of Plagues has blessed your general with unnatural resilience. Effect: Subtract 1 from wound rolls for combat attacks that target your general ",
+              "timing": null
+            },
+            {
+              "id": "mark-of-tzeentch",
+              "name": "Mark Of Tzeentch",
+              "summary": "The Changer of the Ways shapes the destiny of your general and grants them the ability to twist and warp the realms around them",
+              "timing": null
+            },
+            {
+              "id": "mark-of-slaanesh",
+              "name": "Mark Of Slaanesh",
+              "summary": "Your general is bound to the Dark Prince, who, for the price of their soul, gifts them inhuman grace and martial skill. Effect: Your general has STRIKE-FIRST ",
+              "timing": null
+            }
+          ]
         },
         {
           "id": "darkoath-raiders",
@@ -568,7 +2196,63 @@
           "general": "Darkoath Warqueen",
           "tagline": "Fast aggressive raiders",
           "playstyle": "Early objective grabs and melee pressure. Light armour limits prolonged fights.",
-          "unitCount": 4
+          "unitCount": 4,
+          "roster": [
+            "Darkoath Warqueen",
+            "10 Darkoath Savagers",
+            "5 Darkoath Fellriders",
+            "10 Darkoath Marauders"
+          ],
+          "battleTraitName": "Oaths Of Darkness",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/slaves-to-darkness-spearhead/eng_slaves_to_darkness_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "oaths-of-darkness",
+              "name": "Oaths Of Darkness",
+              "summary": "The Darkoath are roving barbarian raiders who seek to prove their might by swearing oaths of bloodshed and murder to the Dark Gods. Effect: You can reveal 1 battle tactic card in your hand to your opponent. If you do so, that battle tactic card becomes your oath for the rest of the turn. While this battle tactic card i",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "rage-of-arkhar",
+              "name": "Rage Of Arkhar",
+              "summary": "Unholy anger is stoked in the hearts of these warriors, filling them with hate-fuelled stamina",
+              "timing": null
+            },
+            {
+              "id": "fearless-invaders",
+              "name": "Fearless Invaders",
+              "summary": "These warriors are skilled raiders, riding into enemy settlements to plunder and pillage before retreating from more organised resistance",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "bloodthirsty-blade",
+              "name": "Bloodthirsty Blade",
+              "summary": "The runes engraved upon this weapon hungrily absorb the lifeblood of those it bites into. Effect: The Rend characteristic of your general \u2019s Rune-etched Axe is 2",
+              "timing": null
+            },
+            {
+              "id": "champion-of-raids",
+              "name": "Champion Of Raids",
+              "summary": "This Darkoath Warqueen is renowned for her lightning raids. With speed, momentum and swift violence, her forces surprise and overwhelm those who stand in her way",
+              "timing": null
+            },
+            {
+              "id": "godshadow-talisman",
+              "name": "Godshadow Talisman",
+              "summary": "This unassuming amulet subtly alters the bearer\u2019s form so that even the most determined strikes have a chance to harmlessly pass through them. Effect: Your general has WARD ( 4+ ) ",
+              "timing": null
+            },
+            {
+              "id": "fell-ritualist",
+              "name": "Fell Ritualist",
+              "summary": "On the eve of battle, the tribe\u2019s Godspeakers gather to enact a fell ritual to deliver prophecies of the battle to come. Effect: Each time you draw battle tactic cards , if your general is on the battlefield, you can choose to draw 1 additional battle tactic card, then put 1 of your battle tactic cards in your hand bac",
+              "timing": null
+            }
+          ]
         }
       ]
     },
@@ -580,10 +2264,67 @@
         {
           "id": "helforge-host",
           "name": "Helforge Host",
-          "general": "Infernal Castellan",
+          "general": "War Despot",
           "tagline": "Slow but devastating",
           "playstyle": "Daemonic Power buffs, 2+ saves, and a bull-centaur monster. Grinds opponents down.",
-          "unitCount": 4
+          "unitCount": 5,
+          "roster": [
+            "War Despot",
+            "1 Dominator Engine",
+            "1 Tormentor Bombard",
+            "5 Infernal Cohort with Hashutite Spears",
+            "5 Infernal Cohort with Hashutite Spears (with Gong Carrier)"
+          ],
+          "battleTraitName": "Harness Daemonic Power",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/helsmiths-of-hashut-spearhead/eng_helsmiths_of_hashut_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "harness-daemonic-power",
+              "name": "Harness Daemonic Power",
+              "summary": "The Helsmiths of Hashut believe themselves above the fell influence of Chaos and readily harness daemonic power to embolden their spellcraft and ensorcelled weapons. Effect: You must use this ability at the start of each of your hero phases. Remove all daemonic power points from each friendly unit. Then, gain a number ",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "grinding-advance",
+              "name": "Grinding Advance",
+              "summary": "The scions of Hashut do not come swiftly \u2013 but they are thorough, relentless and in time, all shall be ground to rubble before them",
+              "timing": null
+            },
+            {
+              "id": "suppressive-bombardment",
+              "name": "Suppressive Bombardment",
+              "summary": "Shows of extreme force are a favoured tactic of the Zharrdron",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "scroll-of-petrification",
+              "name": "Scroll Of Petrification",
+              "summary": "Though they cannot control the stone-flesh curse, the Zharrdron still believe it can be harnesses. This scroll is the result of such a belief. One who reads from it can transform themselves into stone for a fleeting moment. Effect: For the rest of the turn, your general has WARD ( 2+ ) but cannot use abilities or be pi",
+              "timing": null
+            },
+            {
+              "id": "talisman-of-obsidian",
+              "name": "Talisman Of Obsidian",
+              "summary": "Bartered in exchange for years of gruelling service, this talisman renders its wearer impervious to all but the most grievous of wounds. Effect: Ignore the first damage point allocated to your general in each phase",
+              "timing": null
+            },
+            {
+              "id": "chalice-of-darkness",
+              "name": "Chalice Of Darkness",
+              "summary": "Dread power spills from this vessel of ebon-black stone",
+              "timing": null
+            },
+            {
+              "id": "amulet-of-burning-hate",
+              "name": "Amulet Of Burning Hate",
+              "summary": "A sacred relic of the Drazghar order, this amulet is said to contain the merest flicker of Hashut\u2019s depthless spite. Effect: For the rest of the turn, your general \u2019s attacks score critical hits on unmodified hit rolls of 5+",
+              "timing": null
+            }
+          ]
         }
       ]
     },
@@ -598,15 +2339,137 @@
           "general": "Loonboss",
           "tagline": "Classic Gitz chaos",
           "playstyle": "Great board presence and objective play. Random and swingy.",
-          "unitCount": 6
+          "unitCount": 6,
+          "roster": [
+            "Loonboss",
+            "10 Moonclan Stabbas",
+            "10 Moonclan Stabbas",
+            "5 Squig Hoppers",
+            "5 Squig Hoppers",
+            "3 Rockgut Troggoths"
+          ],
+          "battleTraitName": "Squigalanche",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/gloomspite-gitz-spearhead/eng_gloomspite_gitz_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "squigalanche",
+              "name": "Squigalanche",
+              "summary": "A curious, arrhythmic pounding and cackles of wicked glee in the distance signal the approach of a mob of manic Squig Hoppers! Effect: Set up this unit wholly within your territory, wholly within 3\" of a battlefield edge and more than 6\" from all enemy units",
+              "timing": null
+            },
+            {
+              "id": "under-the-light-of-the-bad-moon",
+              "name": "Under The Light Of The Bad Moon",
+              "summary": "Grots are always vicious little monsters, but when their god\u2019s light falls upon them, they become an order of magnitude more dangerous",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "the-lunatic-hordes",
+              "name": "The Lunatic Hordes",
+              "summary": "From out of caves and darkened lairs, a stream of ravening grots pours forth into the lurid light of the Bad Moon",
+              "timing": null
+            },
+            {
+              "id": "the-hand-of-gork",
+              "name": "The Hand Of Gork",
+              "summary": "A bizarre ritual worked before the battle calls down a ghostly green hand that can carry a mob to where they are most needed",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "fight-another-day",
+              "name": "Fight Another Day",
+              "summary": "Your general has mastered the ignoble art of striking then running away before the enemy can hit back",
+              "timing": null
+            },
+            {
+              "id": "hallucinogenic-fungus-brew",
+              "name": "Hallucinogenic Fungus Brew",
+              "summary": "Stolen from the shamans of the Gobbapalooza, this potent brew makes the imbiber almost impervious to pain. However, as the battle progresses, the effects start to wear off. Effect: Your general has WARD ( 4+ ) in the first battle round, WARD ( 5+ ) in the second battle round, and WARD ( 6+ ) in the third and fourth bat",
+              "timing": null
+            },
+            {
+              "id": "the-clammy-cowl",
+              "name": "The Clammy Cowl",
+              "summary": "This enchanted hood wreathes its wearer in damp gloom, causing enemies to swing wildly at their blurred outline and weapons to slip in suddenly moistened palms. Effect: Subtract 1 from hit rolls for attacks that target your general",
+              "timing": null
+            },
+            {
+              "id": "nightshade-mushroom",
+              "name": "Nightshade Mushroom",
+              "summary": "This black-capped fungus bursts into a cloud of pitch darkness when tossed into the air",
+              "timing": null
+            }
+          ]
         },
         {
           "id": "snarlpack-huntaz",
           "name": "Snarlpack Huntaz",
-          "general": "Snarlfang Boss on Gnasttoof",
+          "general": "Snarlboss",
           "tagline": "Gitmob speed demons",
           "playstyle": "Movement 12\" and retreat-and-charge tricks. Can lock the board if going first.",
-          "unitCount": 6
+          "unitCount": 6,
+          "roster": [
+            "Snarlboss",
+            "2 Wolfgit Retinue",
+            "3 Snarlpack Cavalry",
+            "3 Snarlpack Cavalry",
+            "1 Sunsteala Wheela",
+            "1 Sunsteala Wheela"
+          ],
+          "battleTraitName": "Fast As Frazzlegit",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/gloomspite-gitz-spearhead/eng_gloomspite_gitz_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "fast-as-frazzlegit",
+              "name": "Fast As Frazzlegit",
+              "summary": "The Gitmob packs are always on the move, a speeding melange of howling Snarlfangs and cackling grots. Effect: Friendly units can use CHARGE abilities even if they used a RETREAT ability in the same turn. In addition, no mortal damage is inflicted on friendly units by RETREAT abilities",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "flankin-force",
+              "name": "Flankin' Force",
+              "summary": "The Snarlboss has sent some of his warriors to sneakily outflank the enemy. Effect: Pick up to 2 friendly units. Remove them from the battlefield and set them up again anywhere on the battlefield more than 6\" from all enemy units",
+              "timing": null
+            },
+            {
+              "id": "frazzleboom",
+              "name": "Frazzleboom",
+              "summary": "When a Sunsteala Wheela is destroyed, the metal shards hammered into it become unstable, burning nearby enemies as the Hyshian energies trapped within them are released. Effect: Each time a friendly WAR MACHINE is destroyed, before removing it from play, pick an enemy unit within 3\" of that WAR MACHINE and roll a D3. O",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "kunnin-as-a-snarlfang",
+              "name": "Kunnin' As A Snarlfang",
+              "summary": "This general knows the perfect time for the ladz to stab their enemies in the middle of a fight. Effect: For the rest of the turn, add 1 to the Rend characteristic of melee weapons used by friendly units while they are wholly within 12\" of the bearer",
+              "timing": null
+            },
+            {
+              "id": "sunsteala-shard",
+              "name": "Sunsteala Shard",
+              "summary": "This grot holds aloft a sliver of metal that absorbs ambient light, surrounding them in a patch of darkness that is perfect for the Gitmob to hide in. Effect: For the rest of the turn, friendly units cannot be targeted by shooting attacks while they are wholly within 6\" of this unit, unless the attacking unit is in com",
+              "timing": null
+            },
+            {
+              "id": "glare-of-frazzlegit",
+              "name": "Glare Of Frazzlegit",
+              "summary": "With a yell, the Snarlboss releases the Hyshian light captured within his jaggedy blade",
+              "timing": null
+            },
+            {
+              "id": "devious-backstabba",
+              "name": "Devious Backstabba",
+              "summary": "This grot has a scary number of shivs secreted about their body, and they are always ready to stab anyone who they think is too bossy",
+              "timing": null
+            }
+          ]
         }
       ]
     },
@@ -621,7 +2484,70 @@
           "general": "Megaboss",
           "tagline": "Slow heavy infantry",
           "playstyle": "Mass 3+ saves and -1 rend. Get stuck in and smash face.",
-          "unitCount": 5
+          "unitCount": 5,
+          "roster": [
+            "Megaboss",
+            "3 Brute Ragerz",
+            "5 Ardboyz",
+            "5 Ardboyz",
+            "5 Brutes"
+          ],
+          "battleTraitName": "We Go!",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/orruk-warclans-spearhead/eng_orruk_warclans_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "we-go",
+              "name": "We Go!",
+              "summary": "The din of battle draws in Ironjawz from leagues around. Effect: Set up this unit anywhere on the battlefield more than 6\" from all enemy units",
+              "timing": null
+            },
+            {
+              "id": "mighty-destroyers",
+              "name": "Mighty Destroyers",
+              "summary": "The Ironjawz won\u2019t let anything get between them and a good scrap",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "natural-disaster",
+              "name": "Natural Disaster",
+              "summary": "A mass of heavily armoured orruks hit an enemy line like a landslide if they gain enough momentum, leaving a trail of carnage and blazing ruin in their wake. Effect: If you make an unmodified charge roll of 8+ for a friendly unit, add 1 to the Attacks characteristic of that unit\u2019s melee weapons for the rest of the turn",
+              "timing": null
+            },
+            {
+              "id": "a-proper-ruckus",
+              "name": "A Proper Ruckus",
+              "summary": "Delighted by the scrap before them, the orruks barge and jostle their way into the fray. Effect: All friendly units on the battlefield that were not set up this turn are the targets of that ability instead",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "amberstone-whetstone",
+              "name": "Amberstone Whetstone",
+              "summary": "This prized sharpening stone, laced with veins of realmstone, is found deep in the crags of Ghur. It is loved by the Ironjawz for its ability to make a weapon \u2018ded sharp\u2019. Effect: The Rend characteristic of your general\u2019s melee weapons is 2",
+              "timing": null
+            },
+            {
+              "id": "armour-of-gork",
+              "name": "Armour Of Gork",
+              "summary": "This bashed-together armour is thick, heavy and possessed of its own fierce fighting spirit. Effect: Your general has WARD ( 6+ ) ",
+              "timing": null
+            },
+            {
+              "id": "trophy-skulls",
+              "name": "Trophy Skulls",
+              "summary": "Festooned with the skulls of those who crossed them, be they ferocious beast or mighty warrior, there\u2019s no doubt that this orruk means business. Effect: Your general\u2019s Control characteristic is 5",
+              "timing": null
+            },
+            {
+              "id": "mega-bossy",
+              "name": "Mega Bossy",
+              "summary": "This boss\u2019s booming voice rings out across the battlefield, \u2018encouraging\u2019 their ladz to get krumpin\u2019. Effect: If this unit charged this turn, for the rest of the turn, add 1 to charge rolls for friendly units while they are wholly within 12\" of this unit",
+              "timing": null
+            }
+          ]
         },
         {
           "id": "swampskulka-gang",
@@ -629,7 +2555,65 @@
           "general": "Killaboss on Great Gnashtoof",
           "tagline": "Kruleboyz from the original starter",
           "playstyle": "Poisoned weapons and sneaky tricks. Different feel from Ironjawz.",
-          "unitCount": 6
+          "unitCount": 6,
+          "roster": [
+            "Killaboss on Great Gnashtoof",
+            "1 Murknob with Belcha\u2011banna",
+            "3 Man-skewer Boltboyz",
+            "5 Gutrippaz",
+            "5 Gutrippaz",
+            "1 Beast-skewer Killbow"
+          ],
+          "battleTraitName": "Kruleboyz Waaagh!",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/orruk-warclans-spearhead/eng_orruk_warclans_spearhead.pdf",
+          "regimentAbilities": [
+            {
+              "id": "covered-in-mud",
+              "name": "Covered In Mud",
+              "summary": "After some \u2018hard finkin\u2019, a group of orruks decides to slather themselves in muck so they can sneak up on the unwitting enemy",
+              "timing": null
+            },
+            {
+              "id": "noisy-racket",
+              "name": "Noisy Racket",
+              "summary": "On the eve of battle, the Kruleboyz make sure the enemy receives no respite as their war drums and rattle-skulls ring out into the night. Effect: Subtract 1 from wound rolls for attacks made by enemy units in the first battle round",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "egomaniak",
+              "name": "Egomaniak",
+              "summary": "This self-important boss is willing to use anyone to protect his own hide. Effect: If any other friendly units are within your general\u2019s combat range , before you allocate a damage point to your general, roll a dice. On a 4+, you must allocate that damage point to one of those units instead",
+              "timing": null
+            },
+            {
+              "id": "kunnin-plan",
+              "name": "Kunnin' Plan",
+              "summary": "This devious Killaboss likes to feign retreat to draw their prey into a deadly trap",
+              "timing": null
+            },
+            {
+              "id": "morks-eye-pebble",
+              "name": "Mork'S Eye Pebble",
+              "summary": "When rubbed, this darkgrey rock produces a swirling bank of thick fog that protects the bearer and their allies from harm. Effect: In the next shooting phase, friendly units have WARD ( 5+ ) while they are wholly within 12\" of your general",
+              "timing": null
+            },
+            {
+              "id": "eye-biter-ash",
+              "name": "Eye-Biter Ash",
+              "summary": "Stored in a heat-proof pouch, this strange ash never stops smouldering. The bearer can cast it at a foe, creating a cloud of blistering ash that blinds the targets and causes them terrible pain",
+              "timing": null
+            }
+          ],
+          "battleTraits": [
+            {
+              "id": "kruleboyz-waaagh",
+              "name": "Kruleboyz Waaagh!",
+              "summary": "In typically Morky fashion, Kruleboyz wait until they have the enemy surrounded before calling a Waaagh! \u2013 and when they do, the enemy\u2019s fate is usually sealed",
+              "timing": null
+            }
+          ]
         }
       ]
     },
@@ -643,16 +2627,132 @@
           "name": "Tyrant's Bellow",
           "general": "Tyrant",
           "tagline": "Brutal mid-game power spike",
-          "playstyle": "Good saves, brutal damage, surprising mobility. Dominates by turn 3–4.",
-          "unitCount": 6
+          "playstyle": "Good saves, brutal damage, surprising mobility. Dominates by turn 3\u20134.",
+          "unitCount": 6,
+          "roster": [
+            "Tyrant",
+            "2 Mournfang Pack",
+            "3 Ogor Gluttons",
+            "3 Ogor Gluttons",
+            "4 Leadbelchers",
+            "1 Ironblaster"
+          ],
+          "battleTraitName": "Bellowing Arrival",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/ogor-mawtribes-spearhead/eng_ogor_mawtribes_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "bellowing-arrival",
+              "name": "Bellowing Arrival",
+              "summary": "A mighty roar echoes across the battlefield as more hungry ogors join the fray. Effect: Set up this unit anywhere on the battlefield, within 1\" of a battlefield edge and more than 6\" from all enemy units",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "pulverising-girth",
+              "name": "Pulverising Girth",
+              "summary": "There are few armies in the Mortal Realms that can withstand the charge of ravenous ogors",
+              "timing": null
+            },
+            {
+              "id": "bred-for-toughness",
+              "name": "Bred For Toughness",
+              "summary": "Ogors choose only the toughest and most thick-skinned beasts to carry them into battle. Effect: Add 1 to the Health characteristic of your Ironblaster and your Mournfang Pack unit",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "longstrider",
+              "name": "Longstrider",
+              "summary": "This warrior is said to be capable of running down a sprinting rhinox. Effect: Your general has a Move characteristic of 8\" instead of 6\"",
+              "timing": null
+            },
+            {
+              "id": "booming-roar",
+              "name": "Booming Roar",
+              "summary": "Relishing the fight, your general roars a challenge to the enemy that makes the very earth beneath their feet tremble. Effect: Roll a dice. On a 4+, subtract 1 from hit rolls for attacks made by enemy units this phase while they are within 9\" of your general",
+              "timing": null
+            },
+            {
+              "id": "flask-of-stonehorn-blood",
+              "name": "Flask Of Stonehorn Blood",
+              "summary": "This icy-blue liquid imbues the one who drinks it with the toughness of a Stonehorn. Effect: Your general has WARD ( 3+ ) this phase",
+              "timing": null
+            },
+            {
+              "id": "blubbergrub",
+              "name": "Blubbergrub",
+              "summary": "These filthy and disturbingly large maggots are a favourite of the big beasties of the mawtribes",
+              "timing": null
+            }
+          ]
         },
         {
           "id": "scrapglutt",
           "name": "Scrapglutt",
-          "general": "Tyrant",
-          "tagline": "Sand & Bone — steady bruisers",
+          "general": "Mantrappers with 3 Gnoblar tokens, 1 Frost Sabre token and 1 Trap token",
+          "tagline": "Sand & Bone \u2014 steady bruisers",
           "playstyle": "Consistent damage without Tyrant's Bellow's explosive peak.",
-          "unitCount": 5
+          "unitCount": 6,
+          "roster": [
+            "Mantrappers with 3 Gnoblar tokens, 1 Frost Sabre token and 1 Trap token",
+            "2 Ironguts",
+            "2 Ironguts",
+            "4 Ironguts",
+            "12 Gnoblars",
+            "1 Gnoblar Scraplauncher"
+          ],
+          "battleTraitName": "Let'S Get Stuck In",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/ogor-mawtribes-spearhead/eng_ogor_mawtribes_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "lets-get-stuck-in",
+              "name": "Let'S Get Stuck In",
+              "summary": "The Ironguts start to arrive, and woe betide whoever gets in their way. Effect: Set up this unit wholly within friendly territory, wholly within 6\" of the battlefield edge, and not in combat ",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "its-a-hard-life",
+              "name": "It'S A Hard Life",
+              "summary": "It doesn't take much to become lunch when the leader of this Scrapglutt is around. The best the gnoblars can hope for is that someone else is gobbled up first",
+              "timing": null
+            },
+            {
+              "id": "frenzied-artillery",
+              "name": "Frenzied Artillery",
+              "summary": "The gnoblars of this Scrapglutt's Scraplauncher are known for getting a bit carried away. Effect: If the unmodified charge roll for a friendly Gnoblar Scraplauncher is 6+, add 3 the Attacks characteristic of the target\u2019s Companion weapons for the rest of the turn",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "savage-instincts",
+              "name": "Savage Instincts",
+              "summary": "As this ogor lays into the enemy, nearby allies can't help but get enthusiastic about the feast to come. Effect: Pick a friendly unit that has not used a FIGHT ability this turn and is within your general\u2019s combat range to be the target. The target can be picked to use a FIGHT ability immediately after the FIGHT abilit",
+              "timing": null
+            },
+            {
+              "id": "massive-bulk",
+              "name": "Massive Bulk",
+              "summary": "Big, lumbering and nigh-on impossible to kill. Effect: Add 2 to the Health characteristic of your general",
+              "timing": null
+            },
+            {
+              "id": "nasty-trap",
+              "name": "Nasty Trap",
+              "summary": "Rusted and gnarled, the jaws of this iron trap mangle and snap the thickest bones with ease",
+              "timing": null
+            },
+            {
+              "id": "veteran-hunter",
+              "name": "Veteran Hunter",
+              "summary": "This ogor hunter has a keen eye and even keener hunger, which combine to make him as dangerous as a sudden avalanche",
+              "timing": null
+            }
+          ]
         }
       ]
     },
@@ -667,7 +2767,68 @@
           "general": "Mancrusher Gargant",
           "tagline": "Gargant stomp",
           "playstyle": "Few models but massive impact. Simple and devastating.",
-          "unitCount": 3
+          "unitCount": 3,
+          "roster": [
+            "Mancrusher Gargant",
+            "1 Mancrusher Gargant",
+            "1 Mancrusher Gargant"
+          ],
+          "battleTraitName": "Bellowing Roar",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/sons-of-behemat-spearhead/eng_sons_of_behemat_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "bellowing-roar",
+              "name": "Bellowing Roar",
+              "summary": "An ear-splitting bellow let loose by a Mancrusher can send the enemy battleline into disarray",
+              "timing": null
+            },
+            {
+              "id": "those-rocks-and-chuck-em",
+              "name": "Those Rocks And Chuck 'Em!'",
+              "summary": "Your general commands their fellow gargants to hurl as many rocks at the enemy as they can",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "foe-chompers",
+              "name": "Foe-Chompers",
+              "summary": "The Mancrushers hoist hapless enemies up into the air mid-battle, letting them tumble into their cavernous jaws before giving a mighty belch of satisfaction. Effect: Each time an enemy model is slain by a friendly unit\u2019s \u2018Stuff \u2019Em In Me Bag\u2019 ability, Heal (D3) that unit",
+              "timing": null
+            },
+            {
+              "id": "earth-shaking-charge",
+              "name": "Earth-Shaking Charge",
+              "summary": "The ground shakes as the colossal gargants charge head-first into the fray",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "monstrously-tough",
+              "name": "Monstrously Tough",
+              "summary": "This greedy gargant always takes the juiciest spoils of battle and has an impressive gut as a result. Effect: Your general has a Health characteristic of 15 instead of 12",
+              "timing": null
+            },
+            {
+              "id": "lanky-git",
+              "name": "Lanky Git",
+              "summary": "This long-legged gargant strides across the battlefield at a frightening pace. Effect: When you make a charge roll for your general, roll 3D6 instead of 2D6",
+              "timing": null
+            },
+            {
+              "id": "extra-big-bag",
+              "name": "Extra-Big Bag",
+              "summary": "Made from the tattered remains of enemy banners, even more screaming warriors can be stuffed into this large and garish bag. Effect: When your general uses their \u2018Stuff \u2019Em In Me Bag\u2019 ability, you can pick 2 enemy units instead of 1 (roll for each)",
+              "timing": null
+            },
+            {
+              "id": "furiously-territorial",
+              "name": "Furiously Territorial",
+              "summary": "Nothing infuriates this gargant more than pipsqueaks laying claim to the lands around them. Effect: Add 1 to hit rolls for attacks made by your general that target an enemy unit that is contesting an objective you do not control ",
+              "timing": null
+            }
+          ]
         }
       ]
     },
@@ -682,15 +2843,151 @@
           "general": "Abhorrant Archregent",
           "tagline": "Fast high-risk court",
           "playstyle": "Delusion mechanics and 6+ ward. Sneaky objective grabs.",
-          "unitCount": 4
+          "unitCount": 4,
+          "roster": [
+            "Abhorrant Archregent",
+            "10 Cryptguard",
+            "3 Morbheg Knights",
+            "Varghulf Courtier"
+          ],
+          "battleTraitName": "Noble Deeds",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/flesh-eater-courts-spearhead/eng_flesh_eater_courts_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "noble-deeds",
+              "name": "Noble Deeds",
+              "summary": "Each member of a ghoulish court is constantly seeking to prove their valour by performing worthy exploits on the battlefield. Effect: Each time a friendly HERO uses a FIGHT ability , after its attacks have been resolved, give that HERO a number of noble deeds points equal to the number of damage points allocated by tha",
+              "timing": null
+            },
+            {
+              "id": "feeding-frenzy",
+              "name": "Feeding Frenzy",
+              "summary": "To witness an abhorrant at war spurs a mad hunger in the ghouls Effect: Add 1 to the Attacks characteristic of melee weapons used by friendly units while they are wholly within 12\" of any friendly HEROES that have 6 noble deeds points ",
+              "timing": null
+            },
+            {
+              "id": "summon-loyal-subjects",
+              "name": "Summon Loyal Subjects",
+              "summary": "Ghouls flock to their vampiric masters",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "crusading-army",
+              "name": "Crusading Army",
+              "summary": "The warriors of this court see themselves a crusading paladins venturing out into the realms with a holy cause. Effect: Add 1 to run rolls and charge rolls for friendly units",
+              "timing": null
+            },
+            {
+              "id": "defenders-of-the-realm",
+              "name": "Defenders Of The Realm",
+              "summary": "These deluded ghouls see themselves as noble defenders, selling their lives dearly to drive back the invader from beyond. Effect: Add 1 to save rolls for friendly units that are contesting an objective you control ",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "ulguan-cloak",
+              "name": "Ulguan Cloak",
+              "summary": "This Archregent is shrouded by an aura of darkness \u2013 holiness, as they would see it \u2013 which makes them difficult to target. Effect: Your general is not visible to enemy models that are more than 12\" away from them",
+              "timing": null
+            },
+            {
+              "id": "rousing-oration",
+              "name": "Rousing Oration",
+              "summary": "The Archregent looses a soul-chilling howl, which is perceived as an inspiring call to gallantry by their deranged followers. Effect: Roll a dice for each friendly unit wholly within 12\" of your general. Do not roll a dice for your general. For each 5+, give 1 noble deeds point to your general",
+              "timing": null
+            },
+            {
+              "id": "blood-river-chalice",
+              "name": "Blood-River Chalice",
+              "summary": "The Archregent guzzles from a bloodstained chalice, roaring as their deathless form swells with restored vitality. Effect: Heal (2D3) your general ",
+              "timing": null
+            },
+            {
+              "id": "crimson-victuals",
+              "name": "Crimson Victuals",
+              "summary": "Hissing an incantation, the Archregent saps the life essence of nearby foes",
+              "timing": null
+            }
+          ]
         },
         {
           "id": "charnel-watch",
           "name": "Charnel Watch",
           "general": "Abhorrant Gorewarden",
-          "tagline": "Sand & Bone — glass cannon court",
+          "tagline": "Sand & Bone \u2014 glass cannon court",
           "playstyle": "Random delusions and hard-hitting charges. Fragile but fun.",
-          "unitCount": 4
+          "unitCount": 4,
+          "roster": [
+            "Abhorrant Gorewarden",
+            "10 Royal Beastflayers",
+            "3 Crypt Horrors",
+            "3 Crypt Flayers"
+          ],
+          "battleTraitName": "Delusions And Madness",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/flesh-eater-courts-spearhead/eng_flesh_eater_courts_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "delusions-and-madness",
+              "name": "Delusions And Madness",
+              "summary": "The Flesh\u2011eaters\u2019 delusions can change on a whim",
+              "timing": null
+            },
+            {
+              "id": "delusion-of-the-great-feast",
+              "name": "Delusion Of The Great Feast",
+              "summary": "In victory\u2019s wake, the ghouls gorge upon their \u2018bounty\u2019\u2026",
+              "timing": null
+            },
+            {
+              "id": "delusion-of-the-knightly-host",
+              "name": "Delusion Of The Knightly Host",
+              "summary": "The earth shakes and the sky screams as the ghouls charge. Effect: While you believe this DELUSION , if the unmodified charge roll for a friendly HERO or KNIGHTS unit is 8+, add 1 to hit rolls for that unit\u2019s combat attacks for the rest of the turn",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "delusion-of-the-sentinel",
+              "name": "Delusion Of The Sentinel",
+              "summary": "Convinced that they are the last line of defence, the ghouls fight on with a shrieking grit. Effect: While you believe this DELUSION , add 1 to ward rolls for friendly units while each model in the unit is contesting an objective ",
+              "timing": null
+            },
+            {
+              "id": "delusion-of-the-hunter",
+              "name": "Delusion Of The Hunter",
+              "summary": "The ghouls opt to pounce on trespassers rather than hold ground. Effect: While you believe this DELUSION , add 1 to wound rolls for combat attacks made by friendly units while no models in the unit are contesting an objective ",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "almost-lucid",
+              "name": "Almost Lucid",
+              "summary": "This vampire has just enough sanity to faintly manipulate their madness. Effect: You can re-roll the delusion roll",
+              "timing": null
+            },
+            {
+              "id": "a-worthy-challenge",
+              "name": "A Worthy Challenge",
+              "summary": "The pinnacle of chivalry is a noble duel between virtuous warriors",
+              "timing": null
+            },
+            {
+              "id": "companion-of-the-hunt",
+              "name": "Companion Of The Hunt",
+              "summary": "This vampire has oft excelled in their monarch\u2019s hunting parties. Effect: If your general is not in combat , they can move 3\". They cannot move into combat during any part of that move",
+              "timing": null
+            },
+            {
+              "id": "choirmaster",
+              "name": "Choirmaster",
+              "summary": "The shrieks of this Gorewarden further bolster the howls of their Crypt Flayers",
+              "timing": null
+            }
+          ]
         }
       ]
     },
@@ -702,10 +2999,74 @@
         {
           "id": "slasher-host",
           "name": "Slasher Host",
-          "general": "Knight of Shroud",
+          "general": "Knight of Shrouds",
           "tagline": "Fast harassers",
           "playstyle": "Charge potential and objective harassment. Lacks staying power.",
-          "unitCount": 6
+          "unitCount": 6,
+          "roster": [
+            "Knight of Shrouds",
+            "3 Spirit Hosts",
+            "5 Grimghast Reapers",
+            "5 Grimghast Reapers",
+            "10 Chainrasps",
+            "10 Chainrasps"
+          ],
+          "battleTraitName": "Wave Of Terror",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/nighthaunt-spearhead/eng_nighthaunt_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "wave-of-terror",
+              "name": "Wave Of Terror",
+              "summary": "Many foes freeze in fear when faced by a swarming Nighthaunt charge",
+              "timing": null
+            },
+            {
+              "id": "ethereal",
+              "name": "Ethereal",
+              "summary": "Nighthaunt spirits can only be harmed by blows delivered with great conviction. Effect: Ignore all modifiers to save rolls for friendly units (positive and negative)",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "death-stalkers",
+              "name": "Death Stalkers",
+              "summary": "These spectral killers relentlessly hunt down quarry whose names have been whispered to them in darksome rites",
+              "timing": null
+            },
+            {
+              "id": "chorus-of-terror",
+              "name": "Chorus Of Terror",
+              "summary": "Warriors are frozen in place by the shrieks of the Nighthaunt as they wash over the enemy lines in a wave of terror. Effect: Subtract 1 from hit rolls for combat attacks that target a friendly unit that charged in the same turn",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "soulfire-ring",
+              "name": "Soulfire Ring",
+              "summary": "Gouts of lashing green flames leap forth from this ring as it consumes the souls of those slain by the wearer. Effect: If any models were slain by your general this turn, Heal (D6) your general",
+              "timing": null
+            },
+            {
+              "id": "beacon-of-nagashizzar",
+              "name": "Beacon Of Nagashizzar",
+              "summary": "This malignant light summons departed souls. Effect: Return 1 slain model to each friendly unit on the battlefield",
+              "timing": null
+            },
+            {
+              "id": "cloaked-in-shadow",
+              "name": "Cloaked In Shadow",
+              "summary": "Eerily intangible, this spirit\u2019s ethereal form fades in and out of existence like some wispy cloud of supernatural mist. Effect: No more than 1 enemy unit can target your general with attacks (shooting or combat) per phase",
+              "timing": null
+            },
+            {
+              "id": "shadows-edge",
+              "name": "Shadow'S Edge",
+              "summary": "It is impossible to tell if this ebon blade is corporeal or mere shadow, yet its touch tears through flesh and bone with ease. Effect: Your general \u2019s Sword of Stolen Hours has Crit (Mortal) ",
+              "timing": null
+            }
+          ]
         },
         {
           "id": "cursed-shacklehorde",
@@ -713,7 +3074,72 @@
           "general": "Spirit Torment",
           "tagline": "Flying horde ghosts",
           "playstyle": "Many units, Fly everywhere, 5+ ward. Hit-and-fade with resilience.",
-          "unitCount": 7
+          "unitCount": 7,
+          "roster": [
+            "Spirit Torment",
+            "2 Chainghasts",
+            "5 Bladegheist Revenants",
+            "5 Bladegheist Revenants",
+            "5 Dreadscythe Harridans",
+            "5 Dreadscythe Harridans",
+            "2 Dreadblade Harrows"
+          ],
+          "battleTraitName": "Cackling Arrival",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/nighthaunt-spearhead/eng_nighthaunt_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "cackling-arrival",
+              "name": "Cackling Arrival",
+              "summary": "Whether diving from the skies or rising suddenly from the very ground, a host of gheists catches the foe unaware",
+              "timing": null
+            },
+            {
+              "id": "ethereal",
+              "name": "Ethereal",
+              "summary": "Nighthaunt spirits can rarely be harmed by blows delivered by those caught in the grip of a spiritual terror. Effect: Ignore negative modifiers to save rolls for friendly units",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "discorporate",
+              "name": "Discorporate",
+              "summary": "If given the order, the Nighthaunt can flicker between the realms of the living and dead",
+              "timing": null
+            },
+            {
+              "id": "mounting-dread",
+              "name": "Mounting Dread",
+              "summary": "The wails and shrieks of the Nighthaunt are a continuous assault on the courage of those who face them in battle",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "unholy-visage",
+              "name": "Unholy Visage",
+              "summary": "Even the mightiest feel a glimmer of fear in the face of this creature's unutterably foul appearance",
+              "timing": null
+            },
+            {
+              "id": "deathly-possessor",
+              "name": "Deathly Possessor",
+              "summary": "In a flash of balefire, the Nighthaunt vanishes. An instant later, a nearby foe's eyes glow with spectral power and they lash out at their allies, cackling in a voice not their own",
+              "timing": null
+            },
+            {
+              "id": "tales-of-horror",
+              "name": "Tales Of Horror",
+              "summary": "Desertions are all too common when battling this spectral terror",
+              "timing": null
+            },
+            {
+              "id": "spectral-howl",
+              "name": "Spectral Howl",
+              "summary": "A soul-shattering howl pierces the din of battle, rooting the enemy in place",
+              "timing": null
+            }
+          ]
         }
       ]
     },
@@ -728,23 +3154,204 @@
           "general": "Mortisan Soulreaper",
           "tagline": "Resilient grind force",
           "playstyle": "Synergy between units. Grinds through sheer resilience.",
-          "unitCount": 5
+          "unitCount": 5,
+          "roster": [
+            "Mortisan Soulreaper",
+            "10 Mortek Guard",
+            "10 Mortek Guard",
+            "5 Kavalos Deathriders",
+            "1 Gothizzar Harvester"
+          ],
+          "battleTraitName": "Contingent Arrival",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/ossiarch-bonereapers-spearhead/eng_ossiarch_bonereapers_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "contingent-arrival",
+              "name": "Contingent Arrival",
+              "summary": "Marching in perfect unison, a reinforcing unit of Mortek Guard arrives. Effect: Set up this unit anywhere on the battlefield wholly within 3\" of a battlefield edge and more than 6\" from all enemy units",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "inpenetrable-ranks",
+              "name": "Inpenetrable Ranks",
+              "summary": "If given the order, Ossiarch warriors will snap into an unyielding defensive line",
+              "timing": null
+            },
+            {
+              "id": "re-form-ranks",
+              "name": "Re-Form Ranks",
+              "summary": "A group of Bonereapers swiftly disengages from combat with flawless precision",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "empower-nadirite-weapons",
+              "name": "Empower Nadirite Weapons",
+              "summary": "Soulreaper can call upon stolen life essence to bolster nadirite weapons",
+              "timing": null
+            },
+            {
+              "id": "murderous-drive",
+              "name": "Murderous Drive",
+              "summary": "This Soulreaper is animated by especially vicious and warlike spirits. Effect: Your general \u2019s Soulreaper Scythe has Crit (2 Hits) ",
+              "timing": null
+            },
+            {
+              "id": "unstoppable-commander",
+              "name": "Unstoppable Commander",
+              "summary": "This Soulreaper\u2019s animus contains the essence of a brilliant commander that can still urge their troops to victory",
+              "timing": null
+            },
+            {
+              "id": "marrowpact",
+              "name": "Marrowpact",
+              "summary": "The glyphs borne to war by your general bind those who view them in arcane pacts. Effect: Each time your general uses a FIGHT ability , after all of their attacks have been resolved, Heal (X) your general where X is the number of damage points allocated by those attacks",
+              "timing": null
+            }
+          ]
         },
         {
           "id": "mortisan-elite",
           "name": "Mortisan Elite",
-          "general": "Mortisan Boneshaper",
-          "tagline": "Sand & Bone — support and magic",
+          "general": "1 Mortisan Ossifector",
+          "tagline": "Sand & Bone \u2014 support and magic",
           "playstyle": "Powerful support pieces. Fragile if key heroes are removed.",
-          "unitCount": 4
+          "unitCount": 4,
+          "roster": [
+            "1 Mortisan Ossifector",
+            "3 Immortis Guard",
+            "3 Necropolis Stalkers",
+            "2 Morghast Archai"
+          ],
+          "battleTraitName": "Dread Descent",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/ossiarch-bonereapers-spearhead/eng_ossiarch_bonereapers_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "dread-descent",
+              "name": "Dread Descent",
+              "summary": "There are fewer more unwelcome sights to an enemy than the arrival of one of the Great Necromancer's heralds. Effect: Set up this unit anywhere on the battlefield more than 6\" from all enemy units",
+              "timing": null
+            },
+            {
+              "id": "relentless-discipline",
+              "name": "Relentless Discipline",
+              "summary": "The Ossiarchs are infamous for their cohesive discipline",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "peerless-cohesion",
+              "name": "Peerless Cohesion",
+              "summary": "With coordination that would be the envy of any mortal commander, the Ossiarch Bonereapers act in effortless tandem. Effect: You can use the \u2019 Relentless Discipline \u2019 ability for a second time this phase but you must pick a different target to the one you picked the first time",
+              "timing": null
+            },
+            {
+              "id": "immaculate-generalship",
+              "name": "Immaculate Generalship",
+              "summary": "The Ossiarch Bonereapers instantly understand the intent of their commander and seamlessly move to act upon it. Effect: Add 1 to discipline rolls you make",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "shard-storm",
+              "name": "Shard Storm",
+              "summary": "The caster conjures forth a great cloud of bone-shards and hurls them at the foe",
+              "timing": null
+            },
+            {
+              "id": "lode-of-saturation",
+              "name": "Lode Of Saturation",
+              "summary": "This ingot of nadirite-iron alloy, when pressed against a bone construct, renders its structure nigh invulnerable. Effect: Subtract 1 from the Rend characteristic of melee weapons used for combat attacks that target this general ",
+              "timing": null
+            },
+            {
+              "id": "mend-constructs",
+              "name": "Mend Constructs",
+              "summary": "The caster seeks to undo the damage that mars the surface of their creations",
+              "timing": null
+            },
+            {
+              "id": "helm-of-tyranny",
+              "name": "Helm Of Tyranny",
+              "summary": "This helm radiates the oppressive will of the wearer, filling nearby foes with supernatural dread",
+              "timing": null
+            }
+          ]
         },
         {
           "id": "kavalos-vanguard",
-          "name": "Kavalos Vanguard",
-          "general": "Lieutenant on Morrgoth",
+          "name": "Kavalo's Vanguard",
+          "general": "Liege-Kavalos",
           "tagline": "Mobile tempo army",
           "playstyle": "Free retreats, Fly, and charge-blocking. Wins through movement control.",
-          "unitCount": 5
+          "unitCount": 4,
+          "roster": [
+            "Liege-Kavalos",
+            "5 Kavalos Deathriders",
+            "5 Kavalos Deathriders",
+            "8 Teratic Cohort"
+          ],
+          "battleTraitName": "Calculated Feint",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/ossiarch-bonereapers-spearhead/eng_ossiarch_bonereapers_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "calculated-feint",
+              "name": "Calculated Feint",
+              "summary": "To the Ossiarch legions, battle is but a plan to be enacted, each part meticulously choreographed down to the last detail. Effect: No mortal damage is inflicted on friendly CAVALRY units by RETREAT abilities",
+              "timing": null
+            },
+            {
+              "id": "kavalos-lance",
+              "name": "Kavalos Lance",
+              "summary": "These warriors form the tip of the spear, crashing through enemy formations with terrifying ease",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "feigned-retreat",
+              "name": "Feigned Retreat",
+              "summary": "At an unseen and unheard signal, the Kavalos Vanguard pivots effortlessly from one engagement to another. Effect: For the rest of the turn, friendly units can use CHARGE abilities even if they used a RETREAT ability in the same turn",
+              "timing": null
+            },
+            {
+              "id": "reinforced-constructs",
+              "name": "Reinforced Constructs",
+              "summary": "These mastercrafted Bonereapers were created by some of the finest bone-sculptors of the Ossiarch Empire",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "mighty-archaeossian",
+              "name": "Mighty Archaeossian",
+              "summary": "The fossilised bone from which this commander is formed is supernaturally hard. Effect: Your general has WARD ( 5+ ) ",
+              "timing": null
+            },
+            {
+              "id": "imperious-commander",
+              "name": "Imperious Commander",
+              "summary": "This general is unforgiving of failure, and their demands are met with incredible swiftness",
+              "timing": null
+            },
+            {
+              "id": "murderous-blade",
+              "name": "Murderous Blade",
+              "summary": "Said to have been wielded by Patru Zandtos before he took up the Dark Lance, this blade is utterly lethal. Effect: Your general \u2019s Commander\u2019s Blade has Crit (2 Hits) ",
+              "timing": null
+            },
+            {
+              "id": "cold-savagery",
+              "name": "Cold Savagery",
+              "summary": "Perhaps tainted by beast-bone, this commander infects their troops with more than a hint of ferocity",
+              "timing": null
+            }
+          ]
         }
       ]
     },
@@ -759,15 +3366,141 @@
           "general": "Vampire Lord",
           "tagline": "Fast relentless predators",
           "playstyle": "Excellent mobility, recursion, and objective control.",
-          "unitCount": 5
+          "unitCount": 5,
+          "roster": [
+            "Vampire Lord",
+            "10 Deathrattle Skeletons",
+            "10 Deathrattle Skeletons",
+            "5 Blood Knights",
+            "3 Vargheists"
+          ],
+          "battleTraitName": "Swoop Down",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/soulblight-gravelords-spearhead/eng_soulblight_gravelords_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "swoop-down",
+              "name": "Swoop Down",
+              "summary": "The sky darkens as the Vargheists descend. Effect: Set up this unit anywhere on the battlefield more than 6\" from all enemy units",
+              "timing": null
+            },
+            {
+              "id": "the-hunger",
+              "name": "The Hunger",
+              "summary": "Those who bear the Soulblight Curse constantly crave blood and are empowered by feasting upon their foes. Effect: Each time a friendly VAMPIRE unit uses a FIGHT ability , after all of its attacks have been resolved, Heal (X) that VAMPIRE unit where X is the number of damage points allocated by those attacks",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "endless-legions",
+              "name": "Endless Legions",
+              "summary": "To the Soulblight aristocracy, the dead are mere chattel to be expended at will",
+              "timing": null
+            },
+            {
+              "id": "ruinous-chargers",
+              "name": "Ruinous Chargers",
+              "summary": "The Blood Knights of this army leave a trail of destruction as they trample anything that lies between them and their prey",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "grave-sand-shard",
+              "name": "Grave-Sand Shard",
+              "summary": "By crushing this gem of vitrified grave-sand, the Vampire Lord can draw upon a surge of death magic to reinvigorate their resurrected warriors. Effect: Add 1 to each legion roll made for that unit",
+              "timing": null
+            },
+            {
+              "id": "aura-of-night",
+              "name": "Aura Of Night",
+              "summary": "This black leather brigandine was crafted from the hide of an abyssal stalker and grants the wearer that creature\u2019s shadowy aura. Effect: Ignore negative modifiers to save rolls for shooting attacks that target your general ",
+              "timing": null
+            },
+            {
+              "id": "cloud-of-bats",
+              "name": "Cloud Of Bats",
+              "summary": "Your Vampire Lord dissolves into a swarm of bats before reappearing elsewhere. Effect: Remove your general from the battlefield and set them up again anywhere on the battlefield more than 6\" from all enemy units",
+              "timing": null
+            },
+            {
+              "id": "spirit-gale",
+              "name": "Spirit Gale",
+              "summary": "Your general calls forth spectral winds that tear the souls of the foe from their bodies",
+              "timing": null
+            }
+          ]
         },
         {
           "id": "deathrattle-tomb-host",
           "name": "Deathrattle Tomb Host",
-          "general": "Wight King on Skeletal Steed",
+          "general": "Wight King",
           "tagline": "Methodical board control",
           "playstyle": "Defensive with reinforcements. Wight King must stay near troops for 5+ ward.",
-          "unitCount": 6
+          "unitCount": 5,
+          "roster": [
+            "Wight King",
+            "10 Barrow Guard",
+            "5 Barrow Knights",
+            "10 Deathrattle Skeletons",
+            "10 Deathrattle Skeletons"
+          ],
+          "battleTraitName": "The Rising Dead",
+          "officialRulesURL": "https://assets.warhammer-community.com/rules-downloads/age-of-sigmar/soulblight-gravelords-spearhead/eng_soulblight_gravelords_spearhead.pdf",
+          "battleTraits": [
+            {
+              "id": "the-rising-dead",
+              "name": "The Rising Dead",
+              "summary": "Clawing their way through the soil and rock, more undead warriors join the fight. Effect: Set up this unit anywhere on the battlefield wholly within 3\" of a battlefield edge and more than 6\" from all enemy units",
+              "timing": null
+            },
+            {
+              "id": "aura-of-antiquity",
+              "name": "Aura Of Antiquity",
+              "summary": "Prolonged exposure to the necrotic energies that animate these Deathrattle warriors can cause the equipment of their foes to corrode and crumble with unnatural speed",
+              "timing": null
+            }
+          ],
+          "regimentAbilities": [
+            {
+              "id": "overwhelming-hordes",
+              "name": "Overwhelming Hordes",
+              "summary": "The relentless advance of these skeletal undead can overwhelm even the most tenacious resistance. Effect: Add 1 to wound rolls for combat attacks made by friendly non- HERO units that target a unit that has fewer models than the attacking unit",
+              "timing": null
+            },
+            {
+              "id": "deathmarch",
+              "name": "Deathmarch",
+              "summary": "With rusted armour clattering, the skeletons advance in eerie lockstep, unburdened by pain or doubt",
+              "timing": null
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "shyishan-blade",
+              "name": "Shyishan Blade",
+              "summary": "Sorcerous shadows dance across the deadly sharp edge of this obsidian sword. Effect: The Rend characteristic of your general \u2019s Baleful Tomb Blade is 2",
+              "timing": null
+            },
+            {
+              "id": "propelled-by-hate",
+              "name": "Propelled By Hate",
+              "summary": "This warrior\u2019s insatiable urge to slaughter the enemies of Nagash drives their deathless soldiers forward with sudden haste",
+              "timing": null
+            },
+            {
+              "id": "stolen-animus",
+              "name": "Stolen Animus",
+              "summary": "This Wight King draws their unholy vitality from spilling blood in great measure. Effect: Each time your general scores a critical hit , Heal (2) your general after the ATTACK ability has been resolved",
+              "timing": null
+            },
+            {
+              "id": "soul-drain-pendant",
+              "name": "Soul-Drain Pendant",
+              "summary": "When the cursed words of awakening are uttered, this amethyst pendant saps the vigour of the living",
+              "timing": null
+            }
+          ]
         }
       ]
     }
@@ -778,7 +3511,7 @@
       "order": 1,
       "title": "Choose Spearhead Armies",
       "summary": "Each player picks their faction and specific Spearhead army.",
-      "body": "Spearhead armies are fixed box-set rosters — you cannot change unit composition. Many factions have multiple Spearhead options with different playstyles. Pick the army each player is fielding today.",
+      "body": "Spearhead armies are fixed box-set rosters \u2014 you cannot change unit composition. Many factions have multiple Spearhead options with different playstyles. Pick the army each player is fielding today.",
       "tips": [
         "Check which Spearhead box your models came from if you're unsure.",
         "Download free faction Spearhead packs from Warhammer Community for warscrolls."
@@ -803,7 +3536,7 @@
       "summary": "Attacker picks first, then defender.",
       "body": "Each Spearhead army offers two regiment abilities. The attacker picks one, then the defender picks one. These range from passive bonuses to once-per-battle actions that can shift the game.",
       "tips": [
-        "Some abilities counter specific opponents — study the enemy army before choosing.",
+        "Some abilities counter specific opponents \u2014 study the enemy army before choosing.",
         "Passive abilities are reliable; once-per-battle abilities can be game-swinging."
       ]
     },
@@ -812,10 +3545,10 @@
       "order": 4,
       "title": "Pick General Enhancements",
       "summary": "Attacker picks first, then defender.",
-      "body": "Each army has four enhancements for its general. The attacker picks one, then the defender. Enhancements upgrade your general only — protect them accordingly.",
+      "body": "Each army has four enhancements for its general. The attacker picks one, then the defender. Enhancements upgrade your general only \u2014 protect them accordingly.",
       "tips": [
         "Ward enhancements help fragile generals survive longer.",
-        "Offensive enhancements can turn your general into a linchpin — but losing them hurts."
+        "Offensive enhancements can turn your general into a linchpin \u2014 but losing them hurts."
       ]
     },
     {
@@ -823,11 +3556,11 @@
       "order": 5,
       "title": "Set Up the Battlefield",
       "summary": "Defender chooses board and side; terrain, objectives, deploy armies.",
-      "body": "Deployment is the last step before round 1. The defender chooses which Spearhead battlefield you are using — Fire and Jade (Aqshy or Ghyran), Sand and Bone (Ossia or Dolorum), or City of Ash (Ashen Bastion or Shattered Crossroads) — and which side of that board to fight on. Each side has its own deployment map and twist deck, so match the deck to the side you pick.\n\nNext, set up terrain: two large and two small features, spread across the board without blocking deployment zones or objectives. Objectives are already printed on the board — the whole circle counts when contesting, not just the centre symbol.\n\nDeploy armies within the shaded zones on the deployment map, defender first then alternating. Before the first turn, resolve any once-per-battle deployment abilities on your army sheets (for example, Skaven hiding a unit in the tunnels below).",
+      "body": "Deployment is the last step before round 1. The defender chooses which Spearhead battlefield you are using \u2014 Fire and Jade (Aqshy or Ghyran), Sand and Bone (Ossia or Dolorum), or City of Ash (Ashen Bastion or Shattered Crossroads) \u2014 and which side of that board to fight on. Each side has its own deployment map and twist deck, so match the deck to the side you pick.\n\nNext, set up terrain: two large and two small features, spread across the board without blocking deployment zones or objectives. Objectives are already printed on the board \u2014 the whole circle counts when contesting, not just the centre symbol.\n\nDeploy armies within the shaded zones on the deployment map, defender first then alternating. Before the first turn, resolve any once-per-battle deployment abilities on your army sheets (for example, Skaven hiding a unit in the tunnels below).",
       "tips": [
         "Use the coin flip in the checklist below if neither player cares which side you play on.",
         "Fire and Jade is the classic Spearhead board; Sand and Bone and City of Ash add new maps and twists.",
-        "Check both army sheets for Deployment Phase abilities — they are easy to forget in a first game.",
+        "Check both army sheets for Deployment Phase abilities \u2014 they are easy to forget in a first game.",
         "The whole objective circle counts, not just the centre symbol."
       ],
       "relatedRuleSectionId": "spearhead-overview"
@@ -836,11 +3569,11 @@
       "id": "fight-battle",
       "order": 6,
       "title": "Fight the Battle",
-      "summary": "Play 4 battle rounds — score victory points to win.",
-      "body": "Deploy armies, then play exactly four battle rounds (~60–90 minutes). Each round: priority roll, identify underdog, draw twist card, draw battle tactic cards, then alternate turns. Score VP for objectives and completed battle tactics.",
+      "summary": "Play 4 battle rounds \u2014 score victory points to win.",
+      "body": "Deploy armies, then play exactly four battle rounds (~60\u201390 minutes). Each round: priority roll, identify underdog, draw twist card, draw battle tactic cards, then alternate turns. Score VP for objectives and completed battle tactics.",
       "tips": [
-        "Twist cards favour the underdog — comebacks are built in.",
-        "Each battle tactic card offers a tactic OR a command — not both."
+        "Twist cards favour the underdog \u2014 comebacks are built in.",
+        "Each battle tactic card offers a tactic OR a command \u2014 not both."
       ],
       "relatedRuleSectionId": "spearhead-scoring"
     }

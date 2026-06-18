@@ -53,7 +53,7 @@ final class BundledSpearheadCatalogRepositoryTests: XCTestCase {
 
     func testArmyDetailOverlaysMergeAtLoadTime() async throws {
         let catalog = try await repository.loadCatalog()
-        XCTAssertGreaterThanOrEqual(catalog.battleTrackerArmyCount, 2)
+        XCTAssertGreaterThanOrEqual(catalog.battleTrackerArmyCount, 48)
 
         let vigilant = try XCTUnwrap(
             catalog.factions.flatMap(\.armies).first { $0.id == "vigilant-brotherhood" }
@@ -81,15 +81,15 @@ final class BundledSpearheadCatalogRepositoryTests: XCTestCase {
         XCTAssertTrue(ratOgors.canShoot)
     }
 
-    func testStubArmiesDecodeWithEmptyLoadouts() async throws {
+    func testImportedArmiesDecodeWithMatchSetupLoadouts() async throws {
         let catalog = try await repository.loadCatalog()
         let crixxit = try XCTUnwrap(
             catalog.factions.first { $0.id == "skaven" }?
                 .armies.first { $0.id == "crixxits-kill-pack" }
         )
-        XCTAssertTrue(crixxit.regimentAbilities.isEmpty)
-        XCTAssertTrue(crixxit.enhancements.isEmpty)
-        XCTAssertTrue(crixxit.battleTraits.isEmpty)
+        XCTAssertEqual(crixxit.regimentAbilities.count, 2)
+        XCTAssertEqual(crixxit.enhancements.count, 4)
+        XCTAssertFalse(crixxit.battleTraits.isEmpty)
     }
 
     func testDecodesMinimalFixture() async throws {

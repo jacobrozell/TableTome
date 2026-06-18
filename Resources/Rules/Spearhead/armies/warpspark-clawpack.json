@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "armyId": "warpspark-clawpack",
+  "units": [
+    {
+      "id": "grey-seer",
+      "name": "Grey Seer",
+      "move": "6\"",
+      "save": 6,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "stormfiends",
+      "name": "Stormfiends",
+      "move": "6\"",
+      "save": 4,
+      "health": 6,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "warp-lightning-cannon",
+      "name": "Warp Lightning Cannon",
+      "move": "3\"",
+      "save": 4,
+      "health": 8,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "clanrats",
+      "name": "Clanrats",
+      "move": "6\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 10
+    },
+    {
+      "id": "clanrats-2",
+      "name": "Clanrats",
+      "move": "6\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 10
+    }
+  ]
+}

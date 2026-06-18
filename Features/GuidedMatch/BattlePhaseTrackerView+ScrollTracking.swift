@@ -2,6 +2,10 @@ import SwiftUI
 import TabletomeDomain
 
 extension BattlePhaseTrackerView {
+    private var usesAccessibilityLayout: Bool {
+        dynamicTypeSize.needsLayoutAdaptation
+    }
+
     func trackedScrollView(proxy: ScrollViewProxy) -> some View {
         applyScrollTargets(to: applyPhaseChanges(to: trackerScrollContent, proxy: proxy), proxy: proxy)
             .modifier(TrackerNoticeDismissalsModifier(view: self))
@@ -12,9 +16,17 @@ extension BattlePhaseTrackerView {
             Group {
                 switch layoutContext {
                 case .padLandscape:
-                    landscapeLayout
+                    if usesAccessibilityLayout {
+                        compactLayout
+                    } else {
+                        landscapeLayout
+                    }
                 case .padPortrait:
-                    regularPortraitLayout
+                    if usesAccessibilityLayout {
+                        compactLayout
+                    } else {
+                        regularPortraitLayout
+                    }
                 case .phonePortrait, .phoneLandscape:
                     compactLayout
                 }
@@ -36,9 +48,10 @@ extension BattlePhaseTrackerView {
                 selectedSectionTab = BattleTrackerSectionTab.suggested(
                     phase: phase,
                     deploymentComplete: deploymentIsComplete,
-                    roundOpenerIncomplete: viewModel.roundOpenerIsIncomplete
+                    roundOpenerIncomplete: viewModel.roundOpenerIsIncomplete,
+                    gameSystemId: viewModel.gameSystemId
                 )
-                if phase.isCombatRelated {
+                if phase.isCombatRelated, ReleaseSurface.showsCombatResolver(for: viewModel.gameSystemId) {
                     requestCombatResolverFocus(using: proxy)
                 }
                 if phase == .endOfTurn, handoffBaselineEstablished {

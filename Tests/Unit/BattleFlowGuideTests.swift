@@ -64,6 +64,47 @@ final class BattleFlowGuideTests: XCTestCase {
         XCTAssertEqual(step?.kind, .deployment(.chooseRealmSide))
     }
 
+    func testWh40kStartsWithDeploymentChecklist() {
+        let step = BattleFlowGuide.currentStep(
+            matchState: GuidedMatchState(),
+            trackerState: BattleTrackerState(),
+            gameSystemId: "wh40k-11e"
+        )
+
+        XCTAssertEqual(step?.kind, .wh40kSetup(.chooseMission))
+    }
+
+    func testCombatPatrolStartsWithDeploymentChecklist() {
+        let step = BattleFlowGuide.currentStep(
+            matchState: GuidedMatchState(),
+            trackerState: BattleTrackerState(),
+            gameSystemId: "wh40k-10e-cp"
+        )
+
+        XCTAssertEqual(step?.kind, .cpSetup(.setupTerrain))
+    }
+
+    func testCombatPatrolMovesToCommandAfterDeployment() {
+        var tracker = BattleTrackerState()
+        tracker.completedDeploymentSteps = Set(CombatPatrolDeploymentChecklistStep.allCases.map(\.rawValue))
+        tracker.currentPhase = .command
+
+        let step = BattleFlowGuide.currentStep(
+            matchState: GuidedMatchState(),
+            trackerState: tracker,
+            gameSystemId: "wh40k-10e-cp"
+        )
+
+        XCTAssertEqual(step?.kind, .turnPhase(.command))
+    }
+
+    func testCombatPatrolMainPhasesExcludeDeployment() {
+        let phases = BattleRules.mainPhases(gameSystemId: "wh40k-10e-cp")
+        XCTAssertEqual(phases.first, .command)
+        XCTAssertFalse(phases.contains(.deployment))
+        XCTAssertEqual(BattleRules.battleRoundCount(gameSystemId: "wh40k-10e-cp"), 5)
+    }
+
     func testMovesToRoundOpenerAfterDeployment() {
         var tracker = BattleTrackerState()
         tracker.completedDeploymentSteps = Set(DeploymentChecklistStep.allCases.map(\.rawValue))

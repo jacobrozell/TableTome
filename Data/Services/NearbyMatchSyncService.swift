@@ -12,6 +12,7 @@ public final class NearbyMatchSyncService: NSObject, ObservableObject, @unchecke
 
     @MainActor @Published public private(set) var role: Role = .idle
     @MainActor @Published public private(set) var statusMessage: String?
+    @MainActor public var syncGameSystemId: String = "aos-spearhead"
 
     private static let serviceType = "tabletome-match"
     private let peerID: MCPeerID
@@ -101,7 +102,7 @@ public final class NearbyMatchSyncService: NSObject, ObservableObject, @unchecke
 
     @MainActor
     public var exportPasteCode: String? {
-        MatchSyncCodec.encode(MatchSyncCodec.current())
+        MatchSyncCodec.encode(MatchSyncCodec.current(gameSystemId: syncGameSystemId))
     }
 
     @MainActor
@@ -114,7 +115,7 @@ public final class NearbyMatchSyncService: NSObject, ObservableObject, @unchecke
     @MainActor
     private func broadcastCurrentStateIfConnected() {
         guard let session, !session.connectedPeers.isEmpty,
-              let data = try? JSONEncoder().encode(MatchSyncCodec.current()) else { return }
+              let data = try? JSONEncoder().encode(MatchSyncCodec.current(gameSystemId: syncGameSystemId)) else { return }
         try? session.send(data, toPeers: session.connectedPeers, with: .reliable)
     }
 

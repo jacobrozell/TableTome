@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "armyId": "mortisan-elite",
+  "units": [
+    {
+      "id": "mortisan-ossifector",
+      "name": "Mortisan Ossifector",
+      "move": "5\"",
+      "save": 4,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "immortis-guard",
+      "name": "Immortis Guard",
+      "move": "5\"",
+      "save": 3,
+      "health": 4,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "necropolis-stalkers",
+      "name": "Necropolis Stalkers",
+      "move": "6\"",
+      "save": 4,
+      "health": 4,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "morghast-archai",
+      "name": "Morghast Archai",
+      "move": "10\"",
+      "save": 3,
+      "health": 6,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 2
+    }
+  ]
+}

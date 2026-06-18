@@ -34,7 +34,7 @@ struct FortyKStartHereCard: View {
                     steps: [
                         (String(localized: "Getting Started"), String(localized: "What you need, army size, and how a turn works.")),
                         (GameSystemRulesLabels.rulesReferenceLinkTitle(gameSystemId: "wh40k-11e"), String(localized: "Search turn phases, combat, and glossary terms.")),
-                        (String(localized: "Guided Match"), String(localized: "Interactive setup and battle tracker — coming soon for 40k."))
+                        (String(localized: "Guided Match"), String(localized: "Armageddon starter matchup with datasheets and battle tracker."))
                     ]
                 )
 
@@ -43,7 +43,7 @@ struct FortyKStartHereCard: View {
                     steps: [
                         (String(localized: "What's New in 11e"), String(localized: "Detachments, terrain objectives, combat, and battle-shock.")),
                         (GameSystemRulesLabels.rulesReferenceLinkTitle(gameSystemId: "wh40k-11e"), String(localized: "Jump to changed topics from the guide.")),
-                        (String(localized: "Guided Match"), String(localized: "Armageddon starter matchup — coming soon."))
+                        (String(localized: "Guided Match"), String(localized: "Operation Imperator vs Waaagh! Armageddon — tap Use Starter Matchup."))
                     ]
                 )
             }
@@ -88,7 +88,7 @@ struct FortyKStartHereCard: View {
                     Text("\(index + 1)")
                         .font(.caption.weight(.bold))
                         .foregroundStyle(Color.accentColor)
-                        .frame(width: 20, alignment: .trailing)
+                        .frame(minWidth: 20, alignment: .trailing)
                     VStack(alignment: .leading, spacing: 2) {
                         Text(step.0)
                             .font(.subheadline.weight(.medium))

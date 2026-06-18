@@ -4,6 +4,7 @@ import TabletomeData
 extension GuidedMatchView {
     @ToolbarContentBuilder
     var matchSyncToolbar: some ToolbarContent {
+        matchHistoryToolbarItems
         ToolbarItem(placement: .topBarTrailing) {
             Button {
                 showsMatchSync = true
@@ -15,7 +16,7 @@ extension GuidedMatchView {
     }
 
     var matchSyncSheet: some View {
-        MatchSyncSheet(syncService: matchSyncService) {
+        MatchSyncSheet(syncService: matchSyncService, gameSystemId: gameSystemId.rawValue) {
             viewModel.reloadFromStore()
         }
     }

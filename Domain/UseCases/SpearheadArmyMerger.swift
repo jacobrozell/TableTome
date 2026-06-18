@@ -17,6 +17,8 @@ public enum SpearheadArmyMerger {
             battleTraits: detail.battleTraits ?? base.battleTraits,
             regimentAbilities: base.regimentAbilities,
             enhancements: base.enhancements,
+            secondaryObjectives: base.secondaryObjectives,
+            stratagems: base.stratagems,
             units: detail.units ?? base.units
         )
     }

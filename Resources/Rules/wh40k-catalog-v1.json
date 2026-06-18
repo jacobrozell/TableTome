@@ -1,0 +1,344 @@
+{
+  "schemaVersion": 1,
+  "factions": [
+    {
+      "id": "space-marines",
+      "name": "Space Marines",
+      "alliance": "order",
+      "armies": [
+        {
+          "id": "operation-imperator",
+          "name": "Operation Imperator",
+          "general": "Captain with Relic Shield",
+          "tagline": "Strike force from Warhammer 40,000: Armageddon",
+          "playstyle": "Intercessors hold terrain footprints while Vanguard Veterans and the Land Speeder strike. Eradicators punish Ork hordes at range.",
+          "unitCount": 23,
+          "roster": [
+            "Captain with Relic Shield",
+            "Librarian",
+            "Chaplain with Jump Pack",
+            "Ancient",
+            "10 Intercessors",
+            "5 Vanguard Veterans",
+            "3 Eradicators with Heavy Bolters",
+            "Land Speeder"
+          ],
+          "battleTraitName": "Armageddon Strike Force",
+          "officialRulesURL": "https://www.warhammer-community.com/en-gb/articles/x2allqya/warhammer-40000-armageddon-whats-in-the-box/",
+          "regimentAbilities": [
+            {
+              "id": "disposition-take-and-hold",
+              "name": "Take and Hold",
+              "summary": "Primary missions reward holding terrain objectives — a natural fit for Intercessors and the Ancient.",
+              "newPlayerHint": "Good default for your first Incursion game from the box.",
+              "timing": "Pre-battle — Force Disposition"
+            },
+            {
+              "id": "disposition-purge-the-foe",
+              "name": "Purge the Foe",
+              "summary": "Primary missions reward destroying enemy units while still scoring for board presence.",
+              "newPlayerHint": "Pick this if you plan to hunt the Warboss with Vanguard Veterans.",
+              "timing": "Pre-battle — Force Disposition"
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "enhancement-ancient-banner",
+              "name": "Ancient's Campaign Banner",
+              "summary": "Lean on the Ancient to boost Objective Control around your Intercessors.",
+              "newPlayerHint": "Pairs with Take and Hold missions.",
+              "timing": "List building — 1 of 2 Enhancements at 1,000 pts"
+            },
+            {
+              "id": "enhancement-chaplain-lead",
+              "name": "Chaplain Leads the Assault",
+              "summary": "Attach the Jump Pack Chaplain to Vanguard Veterans for a decisive melee punch.",
+              "newPlayerHint": "Strong when you expect to charge early.",
+              "timing": "List building — 1 of 2 Enhancements at 1,000 pts"
+            },
+            {
+              "id": "enhancement-librarian-support",
+              "name": "Librarian's Psychic Support",
+              "summary": "Keep the Librarian with Intercessors for ranged control and utility.",
+              "timing": "List building — 1 of 2 Enhancements at 1,000 pts"
+            },
+            {
+              "id": "enhancement-captain-frontline",
+              "name": "Captain at the Front",
+              "summary": "Your Relic Shield Captain anchors the line and protects key units.",
+              "timing": "List building — 1 of 2 Enhancements at 1,000 pts"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adepta-sororitas",
+      "name": "Adepta Sororitas",
+      "alliance": "order",
+      "armies": []
+    },
+    {
+      "id": "adeptus-custodes",
+      "name": "Adeptus Custodes",
+      "alliance": "order",
+      "armies": []
+    },
+    {
+      "id": "adeptus-mechanicus",
+      "name": "Adeptus Mechanicus",
+      "alliance": "order",
+      "armies": []
+    },
+    {
+      "id": "astra-militarum",
+      "name": "Astra Militarum",
+      "alliance": "order",
+      "armies": []
+    },
+    {
+      "id": "grey-knights",
+      "name": "Grey Knights",
+      "alliance": "order",
+      "armies": []
+    },
+    {
+      "id": "imperial-agents",
+      "name": "Imperial Agents",
+      "alliance": "order",
+      "armies": []
+    },
+    {
+      "id": "imperial-knights",
+      "name": "Imperial Knights",
+      "alliance": "order",
+      "armies": []
+    },
+    {
+      "id": "chaos-space-marines",
+      "name": "Chaos Space Marines",
+      "alliance": "chaos",
+      "armies": []
+    },
+    {
+      "id": "chaos-daemons",
+      "name": "Chaos Daemons",
+      "alliance": "chaos",
+      "armies": []
+    },
+    {
+      "id": "chaos-knights",
+      "name": "Chaos Knights",
+      "alliance": "chaos",
+      "armies": []
+    },
+    {
+      "id": "death-guard",
+      "name": "Death Guard",
+      "alliance": "chaos",
+      "armies": []
+    },
+    {
+      "id": "emperors-children",
+      "name": "Emperor's Children",
+      "alliance": "chaos",
+      "armies": []
+    },
+    {
+      "id": "thousand-sons",
+      "name": "Thousand Sons",
+      "alliance": "chaos",
+      "armies": []
+    },
+    {
+      "id": "world-eaters",
+      "name": "World Eaters",
+      "alliance": "chaos",
+      "armies": []
+    },
+    {
+      "id": "orks",
+      "name": "Orks",
+      "alliance": "destruction",
+      "armies": [
+        {
+          "id": "waaagh-armageddon",
+          "name": "Waaagh! Armageddon",
+          "general": "Warboss",
+          "tagline": "Green tide from Warhammer 40,000: Armageddon",
+          "playstyle": "Boyz flood objectives while characters and the Dakkarig deliver the killing blow. Gretchin screen and the Wartrakk add ranged pressure.",
+          "unitCount": 38,
+          "roster": [
+            "Warboss",
+            "Bigboss",
+            "Bannernob",
+            "Painboy and Grot",
+            "Weirdboy",
+            "20 Boyz",
+            "10 Gretchin",
+            "Wartrakk",
+            "Big Mek Dakkarig"
+          ],
+          "battleTraitName": "Armageddon Horde",
+          "officialRulesURL": "https://www.warhammer-community.com/en-gb/articles/x2allqya/warhammer-40000-armageddon-whats-in-the-box/",
+          "regimentAbilities": [
+            {
+              "id": "disposition-purge-the-foe",
+              "name": "Purge the Foe",
+              "summary": "Primary missions reward krumping enemy units — matches an aggressive Ork play style.",
+              "newPlayerHint": "Natural pick for a first game: chase the Space Marine characters.",
+              "timing": "Pre-battle — Force Disposition"
+            },
+            {
+              "id": "disposition-take-and-hold",
+              "name": "Take and Hold",
+              "summary": "Primary missions reward holding terrain objectives with your Boyz mobs.",
+              "timing": "Pre-battle — Force Disposition"
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "enhancement-warboss-might",
+              "name": "Warboss's Mighty Waaagh!",
+              "summary": "Keep the Warboss with Boyz to lead the central push.",
+              "newPlayerHint": "Safest first pick for melee pressure.",
+              "timing": "List building — 1 of 2 Enhancements at 1,000 pts"
+            },
+            {
+              "id": "enhancement-weirdboy-mob",
+              "name": "Weirdboy with the Mob",
+              "summary": "Attach the Weirdboy to a Boyz unit for psychic support.",
+              "timing": "List building — 1 of 2 Enhancements at 1,000 pts"
+            },
+            {
+              "id": "enhancement-painboy-resilience",
+              "name": "Painboy's Patch-Up",
+              "summary": "Painboy keeps key units fighting after heavy damage.",
+              "timing": "List building — 1 of 2 Enhancements at 1,000 pts"
+            },
+            {
+              "id": "enhancement-dakkarig-focus",
+              "name": "Dakkarig Spearhead",
+              "summary": "Build around the Big Mek Dakkarig as your firepower centerpiece.",
+              "timing": "List building — 1 of 2 Enhancements at 1,000 pts"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "aeldari",
+      "name": "Aeldari",
+      "alliance": "destruction",
+      "armies": []
+    },
+    {
+      "id": "drukhari",
+      "name": "Drukhari",
+      "alliance": "destruction",
+      "armies": []
+    },
+    {
+      "id": "genestealer-cults",
+      "name": "Genestealer Cults",
+      "alliance": "destruction",
+      "armies": []
+    },
+    {
+      "id": "leagues-of-votann",
+      "name": "Leagues of Votann",
+      "alliance": "destruction",
+      "armies": []
+    },
+    {
+      "id": "necrons",
+      "name": "Necrons",
+      "alliance": "destruction",
+      "armies": []
+    },
+    {
+      "id": "tau-empire",
+      "name": "T'au Empire",
+      "alliance": "destruction",
+      "armies": []
+    },
+    {
+      "id": "tyranids",
+      "name": "Tyranids",
+      "alliance": "destruction",
+      "armies": []
+    }
+  ],
+  "matchSteps": [
+    {
+      "id": "choose-armies",
+      "order": 1,
+      "title": "Choose Armies",
+      "summary": "Each player picks a faction and army list.",
+      "body": "For the Armageddon box, use the fixed Operation Imperator and Waaagh! Armageddon rosters — about 1,000 points per side. Other factions can be added in future app updates with your own lists.",
+      "tips": [
+        "Tap Use Starter Matchup for the Armageddon box armies.",
+        "Characters attach to units during list building in matched play."
+      ]
+    },
+    {
+      "id": "roll-attacker",
+      "order": 2,
+      "title": "Roll for First Turn",
+      "summary": "Winner chooses who takes the first turn.",
+      "body": "Roll off. The winner chooses which player takes the first turn. Unlike Spearhead, there is no separate attacker/defender for list building — but going first still matters for tempo.",
+      "tips": [
+        "Going second can score primaries at the end of your turn on battle round 5 in many missions."
+      ],
+      "relatedRuleSectionId": "11e-turn-overview"
+    },
+    {
+      "id": "force-disposition",
+      "order": 3,
+      "title": "Pick Force Dispositions",
+      "summary": "Each player chooses a mission posture for the game.",
+      "body": "Your Force Disposition and your opponent's determine the Chapter Approved mission matchup. Pick one disposition each — Take and Hold, Purge the Foe, and others are tied to your detachments in full matched play.",
+      "tips": [
+        "Armageddon players often pick Take and Hold for Marines and Purge the Foe for Orks — but either works.",
+        "Your primary objectives may differ from your opponent's."
+      ],
+      "relatedRuleSectionId": "11e-scoring-overview"
+    },
+    {
+      "id": "enhancements",
+      "order": 4,
+      "title": "Pick Enhancements",
+      "summary": "Two Enhancements per player at 1,000 points.",
+      "body": "At Incursion scale you typically take two Enhancements across your army. Choose options that match how you plan to use your characters and centerpiece units.",
+      "tips": [
+        "One Enhancement per unit maximum.",
+        "Use your box datasheet cards for exact Enhancement rules."
+      ],
+      "relatedRuleSectionId": "11e-detachments"
+    },
+    {
+      "id": "deploy-battlefield",
+      "order": 5,
+      "title": "Set Up the Battlefield",
+      "summary": "Mission cards, terrain footprints, deployment, reserves.",
+      "body": "Draw your Chapter Approved mission matchup, place terrain objectives from the map, deploy armies, then confirm reserves and Deep Strike setup. Roll for first turn when deployment is complete.",
+      "tips": [
+        "Objectives are terrain footprints in 11th Edition — not separate round markers.",
+        "Use the Chapter Approved deck from the Armageddon box."
+      ],
+      "relatedRuleSectionId": "11e-terrain-objectives"
+    },
+    {
+      "id": "fight-battle",
+      "order": 6,
+      "title": "Fight the Battle",
+      "summary": "Play five battle rounds — score victory points to win.",
+      "body": "Play five battle rounds. Each turn: Command, Movement, Shooting, Charge, and Fight. Score primaries and secondaries from your mission cards, plus the Battle Ready bonus if your army is fully painted.",
+      "tips": [
+        "Battle-shock tests happen in the Command phase.",
+        "Overwatch fires at the end of the enemy Movement phase."
+      ],
+      "relatedRuleSectionId": "11e-scoring-overview"
+    }
+  ]
+}

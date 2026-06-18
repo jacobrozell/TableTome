@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "armyId": "crixxits-kill-pack",
+  "units": [
+    {
+      "id": "deathmaster-crixxit",
+      "name": "Deathmaster Crixxit",
+      "move": "7\"",
+      "save": 5,
+      "health": 6,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "deathmaster",
+      "name": "Deathmaster",
+      "move": "7\"",
+      "save": 5,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "gutter-runners",
+      "name": "Gutter Runners",
+      "move": "7\"",
+      "save": 6,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "gutter-runners-2",
+      "name": "Gutter Runners",
+      "move": "7\"",
+      "save": 6,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "night-runners",
+      "name": "Night Runners",
+      "move": "7\"",
+      "save": 6,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 10
+    }
+  ]
+}

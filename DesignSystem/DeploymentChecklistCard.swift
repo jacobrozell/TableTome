@@ -52,42 +52,15 @@ struct DeploymentChecklistCard: View {
     private func checklistRow(step: DeploymentChecklistStep) -> some View {
         let isComplete = DeploymentChecklist.isComplete(step: step, completedSteps: completedSteps)
         let isFocused = focusedStep == step
-        return HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
-            Image(systemName: isComplete ? "checkmark.circle.fill" : (isFocused ? "circle.inset.filled" : "circle"))
-                .font(.body)
-                .foregroundStyle(isComplete ? Color.green : (isFocused ? Color.accentColor : Color.secondary.opacity(0.5)))
-                .accessibilityHidden(true)
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(step.title)
-                    .font(.subheadline.weight(isFocused ? .bold : .semibold))
-                if isFocused || !isComplete {
-                    Text(step.detail)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-            }
-            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-
-            if !isComplete {
-                Button(String(localized: "Done")) {
-                    onToggle(step, true)
-                }
-                .font(.caption.weight(.semibold))
-                .buttonStyle(.bordered)
-                .controlSize(.small)
-                .accessibilityIdentifier("deployment.done.\(step.id)")
-            }
-        }
-        .padding(.vertical, DesignTokens.Spacing.xs)
-        .padding(.horizontal, isFocused ? DesignTokens.Spacing.xs : 0)
-        .background(
-            isFocused ? Color.accentColor.opacity(0.08) : Color.clear,
-            in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
+        return ChecklistStepRow(
+            isComplete: isComplete,
+            isFocused: isFocused,
+            title: step.title,
+            detail: step.detail,
+            showsDetail: isFocused || !isComplete,
+            accessibilityIdentifier: "deployment.check.\(step.id)",
+            doneAccessibilityIdentifier: "deployment.done.\(step.id)",
+            onDone: isComplete ? nil : { onToggle(step, true) }
         )
-        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-        .accessibilityElement(children: .combine)
-        .accessibilityIdentifier("deployment.check.\(step.id)")
     }
 }

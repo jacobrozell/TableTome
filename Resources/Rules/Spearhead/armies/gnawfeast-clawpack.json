@@ -177,8 +177,8 @@
       ],
       "move": "6\"",
       "save": 5,
-      "health": 4,
-      "control": 1,
+      "health": 5,
+      "control": 2,
       "keywords": [
         "Hero",
         "Infantry"
@@ -243,7 +243,45 @@
           "damage": "1"
         }
       ],
-      "modelCount": 20
+      "modelCount": 10
+    },
+    {
+      "id": "clanrats-2",
+      "name": "Clanrats",
+      "abilities": [
+        {
+          "id": "seething-swarm",
+          "name": "Seething Swarm",
+          "source": "Clanrats",
+          "flavor": "Clanrats overwhelm enemies with seemingly limitless numbers.",
+          "phases": [
+            "endOfAnyTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "effect": "You can return D3 slain models to this unit.",
+          "kind": "ability"
+        }
+      ],
+      "move": "6\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [
+        "Infantry",
+        "Reinforcements"
+      ],
+      "weapons": [
+        {
+          "id": "rusty-blade",
+          "name": "Rusty Blade",
+          "attacks": "2",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "modelCount": 10
     },
     {
       "id": "rat-ogors",

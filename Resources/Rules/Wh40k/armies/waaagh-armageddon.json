@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "armyId": "waaagh-armageddon",
+  "units": [
+    {
+      "id": "warboss",
+      "name": "Warboss",
+      "keywords": ["Character", "Infantry"],
+      "modelCount": 1,
+      "notes": "See your Armageddon datasheet card for exact stats.",
+      "abilities": [
+        {
+          "id": "warboss-waaagh",
+          "name": "Da Boss",
+          "source": "Warboss",
+          "effect": "The biggest Ork in the mob — buffs nearby Boyz and hits brutally hard in melee.",
+          "phases": ["command", "combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "bigboss",
+      "name": "Bigboss",
+      "keywords": ["Character", "Infantry"],
+      "modelCount": 1,
+      "abilities": [
+        {
+          "id": "bigboss-discipline",
+          "name": "Keep Da Boyz In Line",
+          "source": "Bigboss",
+          "effect": "Secondary leader who keeps mobs fighting and punishes stragglers.",
+          "phases": ["command", "combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "bannernob",
+      "name": "Bannernob",
+      "keywords": ["Character", "Infantry"],
+      "modelCount": 1,
+      "abilities": [
+        {
+          "id": "bannernob-waaagh-banner",
+          "name": "Waaagh! Banner",
+          "source": "Bannernob",
+          "effect": "Carries a prized banner — Orks nearby fight harder when the icon is on the table.",
+          "phases": ["command"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "painboy",
+      "name": "Painboy and Grot",
+      "keywords": ["Character", "Infantry"],
+      "modelCount": 2,
+      "abilities": [
+        {
+          "id": "painboy-surgery",
+          "name": "Dok's Surgery",
+          "source": "Painboy",
+          "effect": "Patches Boyz back together — risky but can keep key units on objectives.",
+          "phases": ["command"],
+          "usageLimit": "eachTurn",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "weirdboy",
+      "name": "Weirdboy",
+      "keywords": ["Character", "Infantry", "Psyker"],
+      "modelCount": 1,
+      "abilities": [
+        {
+          "id": "weirdboy-powers",
+          "name": "Weirdboy Powers",
+          "source": "Weirdboy",
+          "effect": "Unpredictable psychic violence — can swing a fight but risks blowing up.",
+          "phases": ["command", "shooting"],
+          "usageLimit": "eachTurn",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "boyz",
+      "name": "Boyz",
+      "keywords": ["Battleline", "Infantry"],
+      "modelCount": 20,
+      "abilities": [
+        {
+          "id": "boyz-mob",
+          "name": "Choppa and Shoota",
+          "source": "Boyz",
+          "effect": "Core mob unit — volume of attacks and bodies for holding terrain footprints.",
+          "phases": ["shooting", "combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "gretchin",
+      "name": "Gretchin",
+      "keywords": ["Infantry"],
+      "modelCount": 10,
+      "abilities": [
+        {
+          "id": "gretchin-screen",
+          "name": "Cower and Shoot",
+          "source": "Gretchin",
+          "effect": "Cheap screens that chip away with ranged attacks when safe.",
+          "phases": ["shooting"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "wartrakk",
+      "name": "Wartrakk",
+      "keywords": ["Vehicle"],
+      "modelCount": 1,
+      "abilities": [
+        {
+          "id": "wartrakk-rokkits",
+          "name": "Rokkit Support",
+          "source": "Wartrakk",
+          "effect": "Fast rokkit platform — reposition for side shots on Space Marine vehicles.",
+          "phases": ["movement", "shooting"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "big-mek-dakkarig",
+      "name": "Big Mek Dakkarig",
+      "keywords": ["Character", "Vehicle", "Walker"],
+      "modelCount": 1,
+      "abilities": [
+        {
+          "id": "dakkarig-blitz",
+          "name": "Blitzcannon Platform",
+          "source": "Big Mek Dakkarig",
+          "effect": "Walking gun platform and army centerpiece — flexible shooting at multiple targets.",
+          "phases": ["shooting", "combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    }
+  ]
+}

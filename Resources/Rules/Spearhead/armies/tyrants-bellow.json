@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "armyId": "tyrants-bellow",
+  "units": [
+    {
+      "id": "tyrant",
+      "name": "Tyrant",
+      "move": "6\"",
+      "save": 4,
+      "health": 8,
+      "control": 5,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "mournfang-pack",
+      "name": "Mournfang Pack",
+      "move": "9\"",
+      "save": 4,
+      "health": 6,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 2
+    },
+    {
+      "id": "ogor-gluttons",
+      "name": "Ogor Gluttons",
+      "move": "6\"",
+      "save": 5,
+      "health": 4,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "ogor-gluttons-2",
+      "name": "Ogor Gluttons",
+      "move": "6\"",
+      "save": 5,
+      "health": 4,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "leadbelchers",
+      "name": "Leadbelchers",
+      "move": "6\"",
+      "save": 5,
+      "health": 4,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 4
+    },
+    {
+      "id": "ironblaster",
+      "name": "Ironblaster",
+      "move": "9\"",
+      "save": 4,
+      "health": 9,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    }
+  ]
+}

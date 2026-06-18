@@ -2,6 +2,7 @@ import SwiftUI
 import TabletomeDomain
 
 struct BattleTrackerPhaseDock: View {
+    let mainPhases: [BattleTurnPhase]
     let currentPhase: BattleTurnPhase
     let nextPhase: BattleTurnPhase?
     let myUnitLabel: String?
@@ -12,33 +13,73 @@ struct BattleTrackerPhaseDock: View {
     let onResolve: () -> Void
     let onScoreVictoryPoints: () -> Void
 
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     var body: some View {
-        HStack(spacing: DesignTokens.Spacing.xs) {
-            phaseButton
-            dockButton(
-                title: String(localized: "My Unit"),
-                subtitle: myUnitLabel,
-                systemImage: "person.crop.circle",
-                isEnabled: myUnitEnabled,
-                accessibilityId: "battleTracker.phaseDock.myUnit",
-                action: onMyUnit
-            )
-            dockButton(
-                title: String(localized: "Resolve"),
-                subtitle: String(localized: "Combat"),
-                systemImage: "dice.fill",
-                isEnabled: true,
-                accessibilityId: "battleTracker.phaseDock.resolve",
-                action: onResolve
-            )
-            dockButton(
-                title: String(localized: "Score"),
-                subtitle: String(localized: "VP"),
-                systemImage: "star.fill",
-                isEnabled: true,
-                accessibilityId: "battleTracker.phaseDock.score",
-                action: onScoreVictoryPoints
-            )
+        Group {
+            if dynamicTypeSize.needsLayoutAdaptation {
+                LazyVGrid(
+                    columns: [
+                        GridItem(.flexible(), spacing: DesignTokens.Spacing.xs),
+                        GridItem(.flexible(), spacing: DesignTokens.Spacing.xs)
+                    ],
+                    spacing: DesignTokens.Spacing.xs
+                ) {
+                    phaseButton
+                    dockButton(
+                        title: String(localized: "My Unit"),
+                        subtitle: myUnitLabel,
+                        systemImage: "person.crop.circle",
+                        isEnabled: myUnitEnabled,
+                        accessibilityId: "battleTracker.phaseDock.myUnit",
+                        action: onMyUnit
+                    )
+                    dockButton(
+                        title: String(localized: "Resolve"),
+                        subtitle: String(localized: "Combat"),
+                        systemImage: "dice.fill",
+                        isEnabled: true,
+                        accessibilityId: "battleTracker.phaseDock.resolve",
+                        action: onResolve
+                    )
+                    dockButton(
+                        title: String(localized: "Score"),
+                        subtitle: String(localized: "VP"),
+                        systemImage: "star.fill",
+                        isEnabled: true,
+                        accessibilityId: "battleTracker.phaseDock.score",
+                        action: onScoreVictoryPoints
+                    )
+                }
+            } else {
+                HStack(spacing: DesignTokens.Spacing.xs) {
+                    phaseButton
+                    dockButton(
+                        title: String(localized: "My Unit"),
+                        subtitle: myUnitLabel,
+                        systemImage: "person.crop.circle",
+                        isEnabled: myUnitEnabled,
+                        accessibilityId: "battleTracker.phaseDock.myUnit",
+                        action: onMyUnit
+                    )
+                    dockButton(
+                        title: String(localized: "Resolve"),
+                        subtitle: String(localized: "Combat"),
+                        systemImage: "dice.fill",
+                        isEnabled: true,
+                        accessibilityId: "battleTracker.phaseDock.resolve",
+                        action: onResolve
+                    )
+                    dockButton(
+                        title: String(localized: "Score"),
+                        subtitle: String(localized: "VP"),
+                        systemImage: "star.fill",
+                        isEnabled: true,
+                        accessibilityId: "battleTracker.phaseDock.score",
+                        action: onScoreVictoryPoints
+                    )
+                }
+            }
         }
         .padding(.horizontal, DesignTokens.Spacing.sm)
         .padding(.vertical, DesignTokens.Spacing.sm)
@@ -49,7 +90,7 @@ struct BattleTrackerPhaseDock: View {
     private var phaseButton: some View {
         Menu {
             Section(String(localized: "Jump to phase")) {
-                ForEach(BattleTurnPhase.mainTurnPhases) { phase in
+                ForEach(mainPhases) { phase in
                     Button {
                         onSelectPhase(phase)
                     } label: {
@@ -119,17 +160,16 @@ struct BattleTrackerPhaseDock: View {
                 .font(.body.weight(.semibold))
             Text(title)
                 .font(.caption2.weight(.semibold))
-                .lineLimit(1)
+                .adaptiveLineLimit(1)
             if let subtitle, !subtitle.isEmpty {
                 Text(subtitle)
-                    .font(.system(size: 9))
+                    .font(.caption2)
                     .foregroundStyle(.secondary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
+                    .adaptiveLineLimit(2)
             }
         }
         .frame(maxWidth: .infinity)
-        .frame(minHeight: DesignTokens.minTouchTarget)
+        .minimumTouchTarget()
         .foregroundStyle(isEnabled ? Color.primary : Color.secondary.opacity(0.5))
         .padding(.vertical, DesignTokens.Spacing.xs)
         .background(Color(.tertiarySystemFill).opacity(isEnabled ? 0.6 : 0.25), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))

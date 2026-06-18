@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "armyId": "helforge-host",
+  "units": [
+    {
+      "id": "war-despot",
+      "name": "War Despot",
+      "move": "4\"",
+      "save": 3,
+      "health": 6,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "dominator-engine-with-immolation-cannons",
+      "name": "Dominator Engine with Immolation Cannons",
+      "move": "6\"",
+      "save": 2,
+      "health": 10,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "tormentor-bombard",
+      "name": "Tormentor Bombard",
+      "move": "4\"",
+      "save": 3,
+      "health": 8,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "infernal-cohort-with-hashutite-spears",
+      "name": "Infernal Cohort with Hashutite Spears",
+      "move": "4\"",
+      "save": 3,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "infernal-cohort-with-hashutite-spears-2",
+      "name": "Infernal Cohort with Hashutite Spears",
+      "move": "4\"",
+      "save": 3,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    }
+  ]
+}

@@ -11,11 +11,26 @@ public struct SpearheadCatalog: Codable, Sendable, Equatable {
     public let schemaVersion: Int
     public let factions: [SpearheadFaction]
     public let matchSteps: [MatchSetupStep]
+    public let missions: [CombatPatrolMission]
 
-    public init(schemaVersion: Int, factions: [SpearheadFaction], matchSteps: [MatchSetupStep]) {
+    public init(
+        schemaVersion: Int,
+        factions: [SpearheadFaction],
+        matchSteps: [MatchSetupStep],
+        missions: [CombatPatrolMission] = []
+    ) {
         self.schemaVersion = schemaVersion
         self.factions = factions
         self.matchSteps = matchSteps
+        self.missions = missions
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        schemaVersion = try container.decode(Int.self, forKey: .schemaVersion)
+        factions = try container.decode([SpearheadFaction].self, forKey: .factions)
+        matchSteps = try container.decode([MatchSetupStep].self, forKey: .matchSteps)
+        missions = try container.decodeIfPresent([CombatPatrolMission].self, forKey: .missions) ?? []
     }
 }
 
@@ -46,6 +61,8 @@ public struct SpearheadArmy: Codable, Sendable, Identifiable, Equatable {
     public let battleTraits: [ArmyRuleOption]
     public let regimentAbilities: [ArmyRuleOption]
     public let enhancements: [ArmyRuleOption]
+    public let secondaryObjectives: [ArmyRuleOption]
+    public let stratagems: [CombatPatrolStratagem]
     public let units: [SpearheadUnit]
 
     public init(
@@ -61,6 +78,8 @@ public struct SpearheadArmy: Codable, Sendable, Identifiable, Equatable {
         battleTraits: [ArmyRuleOption] = [],
         regimentAbilities: [ArmyRuleOption] = [],
         enhancements: [ArmyRuleOption] = [],
+        secondaryObjectives: [ArmyRuleOption] = [],
+        stratagems: [CombatPatrolStratagem] = [],
         units: [SpearheadUnit] = []
     ) {
         self.id = id
@@ -75,6 +94,8 @@ public struct SpearheadArmy: Codable, Sendable, Identifiable, Equatable {
         self.battleTraits = battleTraits
         self.regimentAbilities = regimentAbilities
         self.enhancements = enhancements
+        self.secondaryObjectives = secondaryObjectives
+        self.stratagems = stratagems
         self.units = units
     }
 
@@ -92,6 +113,8 @@ public struct SpearheadArmy: Codable, Sendable, Identifiable, Equatable {
         battleTraits = try container.decodeIfPresent([ArmyRuleOption].self, forKey: .battleTraits) ?? []
         regimentAbilities = try container.decodeIfPresent([ArmyRuleOption].self, forKey: .regimentAbilities) ?? []
         enhancements = try container.decodeIfPresent([ArmyRuleOption].self, forKey: .enhancements) ?? []
+        secondaryObjectives = try container.decodeIfPresent([ArmyRuleOption].self, forKey: .secondaryObjectives) ?? []
+        stratagems = try container.decodeIfPresent([CombatPatrolStratagem].self, forKey: .stratagems) ?? []
         units = try container.decodeIfPresent([SpearheadUnit].self, forKey: .units) ?? []
     }
 }
@@ -196,19 +219,32 @@ public struct PlayerArmySelection: Codable, Sendable, Equatable {
     public var armyId: String
     public var regimentAbilityId: String?
     public var enhancementId: String?
+    public var secondaryObjectiveId: String?
 
     public init(
         playerName: String,
         factionId: String = "",
         armyId: String = "",
         regimentAbilityId: String? = nil,
-        enhancementId: String? = nil
+        enhancementId: String? = nil,
+        secondaryObjectiveId: String? = nil
     ) {
         self.playerName = playerName
         self.factionId = factionId
         self.armyId = armyId
         self.regimentAbilityId = regimentAbilityId
         self.enhancementId = enhancementId
+        self.secondaryObjectiveId = secondaryObjectiveId
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        playerName = try container.decode(String.self, forKey: .playerName)
+        factionId = try container.decode(String.self, forKey: .factionId)
+        armyId = try container.decode(String.self, forKey: .armyId)
+        regimentAbilityId = try container.decodeIfPresent(String.self, forKey: .regimentAbilityId)
+        enhancementId = try container.decodeIfPresent(String.self, forKey: .enhancementId)
+        secondaryObjectiveId = try container.decodeIfPresent(String.self, forKey: .secondaryObjectiveId)
     }
 }
 
@@ -216,18 +252,34 @@ public struct GuidedMatchState: Codable, Sendable, Equatable {
     public var playerOne: PlayerArmySelection
     public var playerTwo: PlayerArmySelection
     public var attackerIsPlayerOne: Bool?
+    public var firstTurnIsPlayerOne: Bool?
+    public var selectedMissionId: String?
     public var completedStepIds: Set<String>
 
     public init(
         playerOne: PlayerArmySelection = PlayerArmySelection(playerName: "Player 1"),
         playerTwo: PlayerArmySelection = PlayerArmySelection(playerName: "Player 2"),
         attackerIsPlayerOne: Bool? = nil,
+        firstTurnIsPlayerOne: Bool? = nil,
+        selectedMissionId: String? = nil,
         completedStepIds: Set<String> = []
     ) {
         self.playerOne = playerOne
         self.playerTwo = playerTwo
         self.attackerIsPlayerOne = attackerIsPlayerOne
+        self.firstTurnIsPlayerOne = firstTurnIsPlayerOne
+        self.selectedMissionId = selectedMissionId
         self.completedStepIds = completedStepIds
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        playerOne = try container.decode(PlayerArmySelection.self, forKey: .playerOne)
+        playerTwo = try container.decode(PlayerArmySelection.self, forKey: .playerTwo)
+        attackerIsPlayerOne = try container.decodeIfPresent(Bool.self, forKey: .attackerIsPlayerOne)
+        firstTurnIsPlayerOne = try container.decodeIfPresent(Bool.self, forKey: .firstTurnIsPlayerOne)
+        selectedMissionId = try container.decodeIfPresent(String.self, forKey: .selectedMissionId)
+        completedStepIds = try container.decodeIfPresent(Set<String>.self, forKey: .completedStepIds) ?? []
     }
 
     public var hasBothArmies: Bool {

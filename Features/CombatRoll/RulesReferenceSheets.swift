@@ -4,10 +4,16 @@ import TabletomeDomain
 struct RulesGlossaryView: View {
     let highlightedEntryId: String?
     let gameSystemId: String
+    var ruleSections: [RuleSection] = []
 
-    init(highlightedEntryId: String? = nil, gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId) {
+    init(
+        highlightedEntryId: String? = nil,
+        gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId,
+        ruleSections: [RuleSection] = []
+    ) {
         self.highlightedEntryId = highlightedEntryId
         self.gameSystemId = gameSystemId
+        self.ruleSections = ruleSections
     }
 
     var body: some View {
@@ -26,7 +32,16 @@ struct RulesGlossaryView: View {
                 .listRowBackground(Color.clear)
             }
 
-            ForEach(SpearheadRulesGlossary.entries) { entry in
+            if glossaryEntries.isEmpty {
+                Section {
+                    Text(emptyStateMessage)
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+
+            ForEach(glossaryEntries) { entry in
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                     Text(entry.term)
                         .font(.headline)
@@ -45,6 +60,21 @@ struct RulesGlossaryView: View {
         .navigationTitle(GameSystemRulesLabels.glossaryTitle(gameSystemId: gameSystemId))
         .navigationBarTitleDisplayMode(.inline)
         .accessibilityIdentifier("glossary.screen")
+    }
+
+    private var glossaryEntries: [RulesGlossaryEntry] {
+        RulesGlossaryCatalog.entries(gameSystemId: gameSystemId, ruleSections: ruleSections)
+    }
+
+    private var emptyStateMessage: String {
+        if GameSystemPlayContext.context(for: gameSystemId).isStarCraft {
+            return String(
+                localized: """
+                StarCraft glossary terms are in the StarCraft Rules reference. Open it from Browse or the game guide.
+                """
+            )
+        }
+        return String(localized: "No glossary entries are available for this game mode yet.")
     }
 }
 

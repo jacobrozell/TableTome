@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "armyId": "bitterbark-copse",
+  "units": [
+    {
+      "id": "branchwych",
+      "name": "Branchwych",
+      "move": "6\"",
+      "save": 5,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "treelord",
+      "name": "Treelord",
+      "move": "5\"",
+      "save": 3,
+      "health": 14,
+      "control": 5,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "kurnoth-hunters",
+      "name": "Kurnoth Hunters",
+      "move": "5\"",
+      "save": 4,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "tree-revenants",
+      "name": "Tree-Revenants",
+      "move": "6\"",
+      "save": 5,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    }
+  ]
+}

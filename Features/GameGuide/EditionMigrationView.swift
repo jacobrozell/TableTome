@@ -9,17 +9,35 @@ struct EditionMigrationView: View {
         gameSystem.editionMigrationSteps.sorted { $0.order < $1.order }
     }
 
+    private var introText: String {
+        switch gameSystem.id {
+        case "sc-tmg":
+            String(
+                localized: """
+                Coming from StarCraft II? These five cards map RTS habits — supply, fog of war, APM — to the tabletop rules.
+                """
+            )
+        default:
+            String(
+                localized: """
+                Your codexes still work — this guide covers what changed at the table in 11th Edition. \
+                Summaries only; confirm details in the official core rules PDF.
+                """
+            )
+        }
+    }
+
+    private var navigationTitleText: String {
+        switch gameSystem.id {
+        case "sc-tmg": String(localized: "RTS → Tabletop")
+        default: String(localized: "What's New in 11e")
+        }
+    }
+
     var body: some View {
         List {
             Section {
-                Text(
-                    String(
-                        localized: """
-                        Your codexes still work — this guide covers what changed at the table in 11th Edition. \
-                        Summaries only; confirm details in the official core rules PDF.
-                        """
-                    )
-                )
+                Text(introText)
                 .font(.callout)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
@@ -49,7 +67,7 @@ struct EditionMigrationView: View {
         }
         .listStyle(.plain)
         .readableContentWidth()
-        .navigationTitle(String(localized: "What's New in 11e"))
+        .navigationTitle(navigationTitleText)
         .accessibilityIdentifier("guide.migrationList")
     }
 }

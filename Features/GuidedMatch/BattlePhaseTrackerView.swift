@@ -19,6 +19,9 @@ struct BattlePhaseTrackerView: View {
     @State var showsBattleTrackerCoach = false
     @State var showsBattleGuideExpanded = true
     @State var dismissedBattleCompleteGuide = false
+    @State var showsVictoryScreen = false
+    @State var victoryPlayerOneVP = 0
+    @State var victoryPlayerTwoVP = 0
     @State var turnHandoffNotice: TurnHandoffNotice?
     @State var damageUndoNotice: DamageUndoNotice?
     @State var roundOpenerNotice: RoundOpenerNotice?
@@ -31,20 +34,26 @@ struct BattlePhaseTrackerView: View {
     @State var scrollToPhaseControls = false
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
+    @Environment(\.dynamicTypeSize) var dynamicTypeSize
     @Environment(\.accessibilityReduceMotion) var reduceMotion
     let ruleSections: [RuleSection]
 
     let onMatchStateChange: (() -> Void)?
+    let onVictoryComplete: ((Bool, Int, Int) async -> Void)?
 
     init(
+        gameSystemId: GameSystemId = .default,
         matchState: GuidedMatchState,
         catalog: SpearheadCatalog,
         ruleSections: [RuleSection] = [],
-        onMatchStateChange: (() -> Void)? = nil
+        onMatchStateChange: (() -> Void)? = nil,
+        onVictoryComplete: ((Bool, Int, Int) async -> Void)? = nil
     ) {
         self.onMatchStateChange = onMatchStateChange
+        self.onVictoryComplete = onVictoryComplete
         _viewModel = StateObject(
             wrappedValue: BattlePhaseTrackerViewModel(
+                gameSystemId: gameSystemId,
                 matchState: matchState,
                 catalog: catalog,
                 onMatchStateChange: onMatchStateChange
@@ -52,7 +61,8 @@ struct BattlePhaseTrackerView: View {
         )
         _combatViewModel = StateObject(
             wrappedValue: UnitMatchupEvaluatorViewModel(
-                catalogRepository: BundledSpearheadCatalogRepository(),
+                catalogRepository: Self.catalogRepository(for: gameSystemId),
+                gameSystemId: gameSystemId.rawValue,
                 attackerPrefill: Self.matchupPrefill(for: matchState.playerOne),
                 defenderPrefill: Self.matchupPrefill(for: matchState.playerTwo)
             )
@@ -66,15 +76,19 @@ struct BattlePhaseTrackerView: View {
                 trackedScrollView(proxy: proxy)
             }
             .safeAreaInset(edge: .top, spacing: 0) {
-                if layoutContext.usesPadSplitNavigation == false, supportsBattleTracker {
+                if usesCompactBattleTrackerChrome, supportsBattleTracker {
                     VStack(spacing: DesignTokens.Spacing.sm) {
-                        BattleTrackerSectionTabBar(selection: $selectedSectionTab)
+                        BattleTrackerSectionTabBar(
+                            gameSystemId: viewModel.gameSystemId,
+                            selection: $selectedSectionTab
+                        )
                         StickyPhaseHeader(
                             round: viewModel.trackerState.battleRound,
                             phaseTitle: viewModel.trackerState.currentPhase.title,
                             playerName: viewModel.trackerState.activePlayerIsOne
                                 ? viewModel.playerOneName
-                                : viewModel.playerTwoName
+                                : viewModel.playerTwoName,
+                            gameSystemId: viewModel.gameSystemId
                         )
                     }
                     .padding(.horizontal, DesignTokens.Spacing.md)
@@ -82,7 +96,7 @@ struct BattlePhaseTrackerView: View {
                 }
             }
             .safeAreaInset(edge: .bottom, spacing: 0) {
-                if supportsBattleTracker, layoutContext.usesPadSplitNavigation == false {
+                if supportsBattleTracker, usesCompactBattleTrackerChrome {
                     phaseDock
                 }
             }
@@ -100,7 +114,12 @@ struct BattlePhaseTrackerView: View {
             .sheet(item: $unitFocusSelection) { _ in
                 unitFocusSheet
             }
+            .fullScreenCover(isPresented: $showsVictoryScreen) {
+                victoryScreen
+            }
             .onAppear {
+                MatchSessionStore.markStartedIfNeeded(gameSystemId: viewModel.gameSystemId)
+                MatchLogRecorder.ensureSession(gameSystemId: viewModel.gameSystemId)
                 showsBattleTrackerCoach = supportsBattleTracker && !NewPlayerTipsStore.hasSeenBattleTrackerCoach
                 Task {
                     try? await Task.sleep(for: .milliseconds(400))
@@ -126,6 +145,10 @@ struct BattlePhaseTrackerView: View {
         layoutContext == .padLandscape
     }
 
+    var usesCompactBattleTrackerChrome: Bool {
+        !layoutContext.usesPadSplitNavigation || dynamicTypeSize.needsLayoutAdaptation
+    }
+
     var trackerContentPadding: CGFloat {
         switch layoutContext {
         case .padLandscape: DesignTokens.Spacing.sm
@@ -137,7 +160,7 @@ struct BattlePhaseTrackerView: View {
     @ViewBuilder
     var coachSection: some View {
         if supportsBattleTracker, showsBattleTrackerCoach {
-            BattleTrackerCoachCard {
+            BattleTrackerCoachCard(gameSystemId: viewModel.gameSystemId) {
                 withAnimation(.easeInOut(duration: 0.25)) {
                     NewPlayerTipsStore.markBattleTrackerCoachSeen()
                     showsBattleTrackerCoach = false
@@ -153,6 +176,9 @@ struct BattlePhaseTrackerView: View {
             DisclosureGroup(isExpanded: $showsBattleGuideExpanded) {
                 BattleGuideCard(step: step) {
                     if step.kind == .battleComplete {
+                        if ReleaseSurface.showsMatchHistory {
+                            presentVictoryScreen()
+                        }
                         dismissedBattleCompleteGuide = true
                     } else {
                         viewModel.completeCurrentGuideStep()
@@ -175,17 +201,20 @@ struct BattlePhaseTrackerView: View {
 
     @ViewBuilder
     var startOfRoundHelper: some View {
-        if supportsBattleTracker, viewModel.needsStartOfRoundAbilitiesPrompt {
+        if supportsBattleTracker, showsSpearheadBattleChrome, viewModel.needsStartOfRoundAbilitiesPrompt {
             StartOfRoundAbilitiesBanner(abilities: viewModel.startOfRoundAbilities)
         }
     }
 
     @ViewBuilder
     var shootingPhaseHelper: some View {
-        if supportsBattleTracker, viewModel.trackerState.currentPhase == .shooting {
+        if supportsBattleTracker,
+           ReleaseSurface.showsCombatResolver(for: viewModel.gameSystemId),
+           viewModel.trackerState.currentPhase == .shooting {
             ShootingEligibleUnitsCard(
                 units: viewModel.shootingEligibleUnits,
                 armyName: viewModel.armyName,
+                gameSystemId: viewModel.gameSystemId,
                 onSelectUnit: { unitId in
                     guard let armyId = viewModel.activeArmy?.id else { return }
                     let shootingWeaponId = viewModel.activeArmy?
@@ -207,6 +236,7 @@ struct BattlePhaseTrackerView: View {
     @ViewBuilder
     var shootInCombatPhaseHelper: some View {
         if supportsBattleTracker,
+           ReleaseSurface.showsCombatResolver(for: viewModel.gameSystemId),
            viewModel.trackerState.currentPhase == .combat
                || viewModel.trackerState.currentPhase == .anyCombat,
            !viewModel.shootInCombatEligibleUnits.isEmpty {
@@ -226,7 +256,7 @@ struct BattlePhaseTrackerView: View {
 
     @ViewBuilder
     func combatResolverSection(usesLandscapeSplit: Bool = false) -> some View {
-        if supportsBattleTracker {
+        if supportsBattleTracker, ReleaseSurface.showsCombatResolver(for: viewModel.gameSystemId) {
             BattleTrackerCombatResolverSection(
                 combatViewModel: combatViewModel,
                 multiAttackViewModel: multiAttackViewModel,
@@ -254,15 +284,7 @@ struct BattlePhaseTrackerView: View {
     var deploymentSection: some View {
         if viewModel.trackerState.battleRound == 1 {
             DisclosureGroup(isExpanded: $showsDeploymentSetup) {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    RealmSideCoinFlipCard()
-                    DeploymentChecklistCard(
-                        completedSteps: viewModel.trackerState.completedDeploymentSteps,
-                        focusedStep: viewModel.focusedDeploymentStep,
-                        onToggle: viewModel.setDeploymentStep
-                    )
-                }
-                .padding(.top, DesignTokens.Spacing.sm)
+                engineDeploymentSection
             } label: {
                 Label(String(localized: "Battlefield setup"), systemImage: "map")
                     .font(.headline)
@@ -280,7 +302,7 @@ struct BattlePhaseTrackerView: View {
 
     @ViewBuilder
     func armyTrackerSection(wideLayout: Bool, compactSidebar: Bool = false) -> some View {
-        if supportsBattleTracker {
+        if supportsBattleTracker, !viewModel.isStarCraft {
             ArmyTrackerCard(
                 playerOneName: viewModel.playerOneName,
                 playerTwoName: viewModel.playerTwoName,
@@ -291,6 +313,7 @@ struct BattlePhaseTrackerView: View {
                 activePlayerIsOne: viewModel.trackerState.activePlayerIsOne,
                 usesWideLayout: wideLayout,
                 usesCompactSidebar: compactSidebar,
+                gameSystemId: viewModel.gameSystemId,
                 onChange: viewModel.setUnitWounds(key:remaining:),
                 onSelectUnit: { armyId, unitId in
                     handleArmyUnitSelection(armyId: armyId, unitId: unitId)
@@ -301,24 +324,11 @@ struct BattlePhaseTrackerView: View {
 
     @ViewBuilder
     var secondarySections: some View {
-        BattleTrackerBothLoadoutsSection(
-            playerOneName: viewModel.playerOneName,
-            playerTwoName: viewModel.playerTwoName,
-            playerOneArmy: viewModel.playerOneArmy,
-            playerTwoArmy: viewModel.playerTwoArmy,
-            playerOneRegimentAbility: viewModel.playerOneRegimentAbility,
-            playerTwoRegimentAbility: viewModel.playerTwoRegimentAbility,
-            playerOneEnhancement: viewModel.playerOneEnhancement,
-            playerTwoEnhancement: viewModel.playerTwoEnhancement,
-            playerIsAttacker: viewModel.playerIsAttacker(isOne:),
-            ruleSections: ruleSections
-        )
-        gotchaSection
-        BattleTrackerReferenceLinksSection(ruleSections: ruleSections)
+        engineSecondarySections
     }
 
     @ViewBuilder
-    private var gotchaSection: some View {
+    var gotchaSection: some View {
         if !viewModel.activeGotchas.isEmpty {
             DisclosureGroup {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
@@ -340,17 +350,45 @@ struct BattlePhaseTrackerView: View {
     var trackerContent: some View {
         if !supportsBattleTracker {
             emptyState
+        } else if viewModel.isStarCraft {
+            scTrackerPlaceholder
         } else {
             BattleTrackerAbilitySections(
                 viewModel: viewModel,
                 ruleSections: ruleSections,
+                showsEmbeddedCombatTools: ReleaseSurface.showsCombatResolver(for: viewModel.gameSystemId),
                 onResolveAttack: handleResolveAttack
             )
         }
     }
 
+    @ViewBuilder
+    var scTrackerPlaceholder: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            Text(String(localized: "Resolve attacks on the table"))
+                .font(.headline)
+            Text(
+                String(
+                    localized: """
+                    Use your physical unit cards and Command Center for combat. On the Turn tab, tap Done after each \
+                    activation and Pass when you want the First Player Marker for the next phase.
+                    """
+                )
+            )
+            .font(.callout)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+        }
+        .surfaceCard()
+        .accessibilityIdentifier("battleTracker.scPlaceholder")
+    }
+
     var supportsBattleTracker: Bool {
-        viewModel.contentCoverage >= .battleTracker
+        viewModel.isStarCraft || viewModel.contentCoverage >= .battleTracker
+    }
+
+    var showsSpearheadBattleChrome: Bool {
+        viewModel.playContext.capabilities.showsBattleTacticDecks
     }
 }
 

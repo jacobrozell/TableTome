@@ -1,0 +1,173 @@
+{
+  "schemaVersion": 1,
+  "factions": [
+    {
+      "id": "terran",
+      "name": "Terran",
+      "alliance": "order",
+      "armies": [
+        {
+          "id": "raynors-raiders",
+          "name": "Raynor's Raiders",
+          "general": "Jim Raynor",
+          "tagline": "2-Player Founders Edition — Terran side",
+          "playstyle": "Flexible infantry and fire support. Marines hold lines; Marauders crack armored targets; Medics keep squads in the fight.",
+          "unitCount": 4,
+          "roster": [
+            "Jim Raynor & Point Defense Drone",
+            "Marines",
+            "Marines with Shields",
+            "Marauders",
+            "Medics"
+          ],
+          "battleTraitName": "",
+          "battleTraits": [],
+          "regimentAbilities": [],
+          "enhancements": [],
+          "units": []
+        }
+      ]
+    },
+    {
+      "id": "zerg",
+      "name": "Zerg",
+      "alliance": "destruction",
+      "armies": [
+        {
+          "id": "kerrigans-swarm",
+          "name": "Kerrigan's Swarm",
+          "general": "Sarah Kerrigan",
+          "tagline": "2-Player Founders Edition — Zerg side",
+          "playstyle": "Overwhelming numbers and reactive reinforcements. Zerglings flood objectives; Roaches hold; Kerrigan and the Queen anchor the swarm.",
+          "unitCount": 5,
+          "roster": [
+            "Sarah Kerrigan",
+            "Queen",
+            "Zerglings",
+            "Raptors",
+            "Roaches",
+            "Nydus Worm"
+          ],
+          "battleTraitName": "",
+          "battleTraits": [],
+          "regimentAbilities": [],
+          "enhancements": [],
+          "units": []
+        }
+      ]
+    },
+    {
+      "id": "protoss",
+      "name": "Protoss",
+      "alliance": "death",
+      "armies": [
+        {
+          "id": "artanis-host",
+          "name": "Artanis Host",
+          "general": "Artanis",
+          "tagline": "Protoss Founders Edition — solo player box",
+          "playstyle": "Fewer models, higher impact. Zealots and Adepts trade efficiently; Stalkers and Sentries control the mid-board.",
+          "unitCount": 4,
+          "roster": [
+            "Artanis",
+            "Zealots",
+            "Adepts",
+            "Stalkers",
+            "Sentries",
+            "Pylon"
+          ],
+          "battleTraitName": "",
+          "battleTraits": [],
+          "regimentAbilities": [],
+          "enhancements": [],
+          "units": []
+        }
+      ]
+    }
+  ],
+  "matchSteps": [
+    {
+      "id": "choose-armies",
+      "order": 1,
+      "title": "Choose Factions & Armies",
+      "summary": "Each player picks a faction and army list.",
+      "body": "Select Terran, Zerg, or Protoss and the sub-faction army each commander is fielding. The 2-Player Founders Edition matchup is Raynor's Raiders vs Kerrigan's Swarm.",
+      "tips": [
+        "Use Starter Matchup for the box set armies.",
+        "Protoss Founders Edition is a one-player expansion — pair it with a second army for full games."
+      ]
+    },
+    {
+      "id": "battle-format",
+      "order": 2,
+      "title": "Pick Battle Format",
+      "summary": "Skirmish or standard minerals; table size.",
+      "body": "Agree on game size. Skirmish uses 1,000 minerals on a 36\"×36\" table (~1 hour). Standard uses 2,000 minerals on a 54\"×36\" table (~2 hours). Vespene for tactical cards is about 10% of your mineral budget.",
+      "tips": [
+        "First game? Skirmish on the Founders play mat is ideal.",
+        "Tactical cards are paid with vespene — not minerals."
+      ],
+      "relatedRuleSectionId": "sc-supply-economy"
+    },
+    {
+      "id": "mission-setup",
+      "order": 3,
+      "title": "Mission & Deployment Draft",
+      "summary": "Draft mission and deployment cards before play.",
+      "body": "Use the physical card draft or Archon's Command Center to veto and select Mission and Deployment cards. Note the mission name and victory conditions — you will score during the Scoring phase each round.",
+      "tips": [
+        "Command Center can generate custom maps — link in Official Resources.",
+        "No models start on the table — your army begins in reserves."
+      ],
+      "relatedRuleSectionId": "sc-turn-overview"
+    },
+    {
+      "id": "confirm-lists",
+      "order": 4,
+      "title": "Confirm Army Lists",
+      "summary": "Minerals on units; vespene on tactical cards.",
+      "body": "Build lists within your mineral budget. Spend vespene only on faction and tactical cards. Starter box players can use the included rosters as written.",
+      "tips": [
+        "Supply on the table is limited — losses free pool space for reserves.",
+        "Unit cards in the box are the source of truth for stats."
+      ],
+      "relatedRuleSectionId": "sc-supply-economy"
+    },
+    {
+      "id": "battlefield-setup",
+      "order": 5,
+      "title": "Set Up the Battlefield",
+      "summary": "Terrain, objectives, empty table, supply pools.",
+      "body": "Place terrain and assign height tiers. Mark mission objectives. Confirm both armies are in reserves — the table starts empty except terrain and entry points. Note each player's starting supply pool from the mission.",
+      "tips": [
+        "Objective control uses total Supply within 3\" — not model count.",
+        "Lost Temple terrain ships with the Founders Edition."
+      ],
+      "relatedRuleSectionId": "sc-reserves"
+    },
+    {
+      "id": "roll-attacker",
+      "order": 6,
+      "title": "Roll for First Activation",
+      "summary": "Winner chooses who activates first in Movement.",
+      "body": "Roll off. The winner chooses who takes the first unit activation in Round 1 Movement. Passing during a phase claims the First Player Marker for the next phase.",
+      "tips": [
+        "Sometimes passing in Movement lets you strike first in Assault.",
+        "First Player Marker holder picks who goes first in the next phase."
+      ],
+      "relatedRuleSectionId": "sc-activations"
+    },
+    {
+      "id": "fight-battle",
+      "order": 7,
+      "title": "Fight the Battle",
+      "summary": "Five rounds — Movement, Assault, Combat, Scoring.",
+      "body": "Play five battle rounds. Each round: Movement (deploy from reserves), Assault (shoot and charge), Combat (melee), then Scoring. Players alternate activating one unit at a time within each phase until both pass or finish.",
+      "tips": [
+        "Track supply pool — it increases each round.",
+        "Reinforce from reserves when losses free supply space."
+      ],
+      "relatedRuleSectionId": "sc-turn-overview"
+    }
+  ]
+}

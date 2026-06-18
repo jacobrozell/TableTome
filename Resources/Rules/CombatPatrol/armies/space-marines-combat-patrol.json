@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 1,
+  "armyId": "space-marines-combat-patrol",
+  "units": [
+    {
+      "id": "captain-octavius",
+      "name": "Captain Octavius",
+      "keywords": ["Character", "Infantry", "Terminator", "Imperium", "Adeptus Astartes"],
+      "modelCount": 1,
+      "move": "5\"",
+      "save": 2,
+      "health": 5,
+      "control": 2,
+      "notes": "Warlord — Oath of Moment each Command phase. Deep Strike.",
+      "weapons": [
+        {
+          "id": "master-crafted-boltgun",
+          "name": "Master-crafted Boltgun",
+          "rangeInches": 24,
+          "attacks": "2",
+          "hit": 2,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "power-fist",
+          "name": "Power Fist",
+          "attacks": "5",
+          "hit": 2,
+          "wound": 2,
+          "rend": 2,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "unstoppable-valour",
+          "name": "Unstoppable Valour",
+          "source": "Captain Octavius",
+          "effect": "Re-roll Charge rolls for this model's unit.",
+          "phases": ["movement"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        },
+        {
+          "id": "oath-of-moment",
+          "name": "Oath of Moment",
+          "source": "Strike Force Octavius",
+          "effect": "In your Command phase, pick one enemy unit. Until your next Command phase, re-roll Hit rolls against that target.",
+          "phases": ["command"],
+          "usageLimit": "eachTurn",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "librarian-tantus",
+      "name": "Librarian Tantus",
+      "keywords": ["Character", "Infantry", "Psyker", "Terminator", "Imperium", "Adeptus Astartes"],
+      "modelCount": 1,
+      "move": "5\"",
+      "save": 2,
+      "health": 5,
+      "control": 1,
+      "notes": "Deep Strike. Can attach to Terminators during Declare Formations.",
+      "weapons": [
+        {
+          "id": "force-weapon",
+          "name": "Force Weapon",
+          "attacks": "4",
+          "hit": 2,
+          "wound": 3,
+          "rend": 2,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "veil-of-time",
+          "name": "Veil of Time",
+          "source": "Librarian Tantus",
+          "effect": "While leading a unit, weapons in that unit have Sustained Hits 1.",
+          "phases": ["shooting", "combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "terminator-squad",
+      "name": "Terminator Squad",
+      "keywords": ["Battleline", "Infantry", "Terminator", "Imperium", "Adeptus Astartes"],
+      "modelCount": 5,
+      "move": "5\"",
+      "save": 2,
+      "health": 3,
+      "control": 1,
+      "notes": "Deep Strike. Battleline — use them to secure objectives in Command phase.",
+      "weapons": [
+        {
+          "id": "storm-bolter",
+          "name": "Storm Bolter",
+          "rangeInches": 24,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "power-fist",
+          "name": "Power Fist",
+          "attacks": "3",
+          "hit": 3,
+          "wound": 2,
+          "rend": 2,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "terminator-veterans",
+          "name": "Terminator Veterans",
+          "source": "Terminator Squad",
+          "effect": "Hold objectives and use Veteran Instincts or Duty and Honour when Terminators fight or secure.",
+          "phases": ["command", "combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "infernus-squad",
+      "name": "Infernus Squad",
+      "keywords": ["Battleline", "Infantry", "Imperium", "Adeptus Astartes"],
+      "modelCount": 5,
+      "move": "6\"",
+      "save": 3,
+      "health": 2,
+      "control": 2,
+      "notes": "Battleline — clear infantry holding objectives.",
+      "weapons": [
+        {
+          "id": "pyreblaster",
+          "name": "Pyreblaster",
+          "rangeInches": 12,
+          "attacks": "D6",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "ability": "Ignores Cover"
+        },
+        {
+          "id": "close-combat-weapon",
+          "name": "Close Combat Weapon",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "pyreblasters",
+          "name": "Pyreblasters",
+          "source": "Infernus Squad",
+          "effect": "Close-range flame specialists — advance onto objectives then torch nearby infantry.",
+          "phases": ["shooting", "combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    }
+  ]
+}

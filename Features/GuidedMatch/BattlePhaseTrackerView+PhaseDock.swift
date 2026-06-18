@@ -4,8 +4,12 @@ import TabletomeDomain
 extension BattlePhaseTrackerView {
     var phaseDock: some View {
         BattleTrackerPhaseDock(
+            mainPhases: BattleRules.mainPhases(gameSystemId: viewModel.gameSystemId),
             currentPhase: viewModel.trackerState.currentPhase,
-            nextPhase: viewModel.trackerState.currentPhase.nextMainPhase,
+            nextPhase: BattleRules.nextMainPhase(
+                after: viewModel.trackerState.currentPhase,
+                gameSystemId: viewModel.gameSystemId
+            ),
             myUnitLabel: focusedUnitDisplayName,
             myUnitEnabled: focusedUnitSelection != nil,
             onSelectPhase: { phase in
@@ -19,10 +23,7 @@ extension BattlePhaseTrackerView {
                 scrollToPhaseControls = true
             },
             onMyUnit: openFocusedUnit,
-            onResolve: {
-                selectedSectionTab = .combat
-                scrollToCombatResolver = true
-            },
+            onResolve: { focusCombatResolverSection() },
             onScoreVictoryPoints: {
                 selectedSectionTab = .turn
                 scrollToVictoryPoints = true

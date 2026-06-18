@@ -4,6 +4,7 @@ import TabletomeData
 
 struct MatchSyncSheet: View {
     @ObservedObject var syncService: NearbyMatchSyncService
+    let gameSystemId: String
     @Environment(\.dismiss) private var dismiss
 
     @State private var joinCode = ""
@@ -112,5 +113,6 @@ struct MatchSyncSheet: View {
             }
         }
         .accessibilityIdentifier("matchSync.sheet")
+        .onAppear { syncService.syncGameSystemId = gameSystemId }
     }
 }

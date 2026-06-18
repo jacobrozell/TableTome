@@ -59,7 +59,12 @@ struct BattleTrackerQuickActionsList: View {
 
 struct BattleTrackerTabHintBanner: View {
     let suggestedTab: BattleTrackerSectionTab
+    var gameSystemId: GameSystemId = .default
     let onSwitch: () -> Void
+
+    private var playContext: GameSystemPlayContext {
+        GameSystemPlayContext.context(for: gameSystemId)
+    }
 
     var body: some View {
         Button(action: onSwitch) {
@@ -93,13 +98,21 @@ struct BattleTrackerTabHintBanner: View {
     private var hintDetail: String {
         switch suggestedTab {
         case .setup:
-            String(localized: "Deployment or round-opener steps still need attention.")
+            playContext.isWh40k
+                ? String(localized: "Mission setup steps still need attention.")
+                : String(localized: "Deployment or round-opener steps still need attention.")
         case .turn:
             String(localized: "Phase controls and shooting reminders live here.")
         case .combat:
             String(localized: "Resolve dice and apply damage here.")
         case .army:
-            String(localized: "Track wounds and browse warscrolls here.")
+            if playContext.isStarCraft {
+                String(localized: "Track unit health and browse unit cards here.")
+            } else if playContext.isWh40k {
+                String(localized: "Track wounds and browse unit details here.")
+            } else {
+                String(localized: "Track wounds and browse warscrolls here.")
+            }
         }
     }
 }

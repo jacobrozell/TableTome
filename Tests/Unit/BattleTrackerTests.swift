@@ -109,4 +109,25 @@ final class BattleTrackerTests: XCTestCase {
         XCTAssertEqual(loaded.unitWoundsRemaining["vigilant-brotherhood:liberators"], 7)
         XCTAssertEqual(loaded.unitHealthPerModelOverrides["gnawfeast-clawpack:rat-ogors"], 4)
     }
+
+    func testCombatPatrolTrackerStoreRoundTrip() {
+        var state = BattleTrackerState()
+        state.battleRound = 3
+        state.currentPhase = .command
+        state.playerOneBattleReady = true
+        state.playerTwoBattleReady = false
+        state.securedObjectiveIds = ["A", "C"]
+        state.usedStratagemIds = ["space-marines-combat-patrol:duty-and-honour"]
+        state.intelRecoveredObjectiveIds = ["B"]
+
+        BattleTrackerStore.save(state, gameSystemId: "wh40k-10e-cp")
+        defer { BattleTrackerStore.reset(gameSystemId: "wh40k-10e-cp") }
+        let loaded = BattleTrackerStore.load(gameSystemId: "wh40k-10e-cp")
+
+        XCTAssertEqual(loaded.playerOneBattleReady, true)
+        XCTAssertEqual(loaded.playerTwoBattleReady, false)
+        XCTAssertEqual(loaded.securedObjectiveIds, ["A", "C"])
+        XCTAssertTrue(loaded.usedStratagemIds.contains("space-marines-combat-patrol:duty-and-honour"))
+        XCTAssertEqual(loaded.intelRecoveredObjectiveIds, ["B"])
+    }
 }

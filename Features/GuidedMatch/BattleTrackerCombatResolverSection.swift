@@ -19,7 +19,7 @@ struct BattleTrackerCombatResolverSection: View {
     let unitWoundsRemaining: [String: Int]
     let ruleSections: [RuleSection]
     let onSyncMultiAttack: () -> Void
-    var onApplyDamage: ((Int) -> Void)?
+    var onApplyDamage: ((Int, CombatBatchLogContext?) -> Void)?
     var usesLandscapeSplitPresentation: Bool = false
 
     var body: some View {

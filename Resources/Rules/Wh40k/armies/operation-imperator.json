@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "armyId": "operation-imperator",
+  "units": [
+    {
+      "id": "captain-relic-shield",
+      "name": "Captain with Relic Shield",
+      "keywords": ["Character", "Infantry"],
+      "modelCount": 1,
+      "notes": "See your Armageddon datasheet card for exact stats and wargear.",
+      "abilities": [
+        {
+          "id": "captain-lead-from-front",
+          "name": "Lead From the Front",
+          "source": "Captain with Relic Shield",
+          "effect": "A front-line leader built to trade blows and protect nearby battleline units.",
+          "phases": ["command", "charge", "combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "librarian",
+      "name": "Librarian",
+      "keywords": ["Character", "Infantry", "Psyker"],
+      "modelCount": 1,
+      "notes": "Psychic support — check datasheet for powers and weapon profiles.",
+      "abilities": [
+        {
+          "id": "librarian-psychic",
+          "name": "Psychic Assault",
+          "source": "Librarian",
+          "effect": "Channels psychic power through a force staff — strong at range and in melee.",
+          "phases": ["command", "shooting", "combat"],
+          "usageLimit": "eachTurn",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "chaplain-jump-pack",
+      "name": "Chaplain with Jump Pack",
+      "keywords": ["Character", "Infantry", "Jump Pack"],
+      "modelCount": 1,
+      "abilities": [
+        {
+          "id": "chaplain-oratory",
+          "name": "Fiery Oratory",
+          "source": "Chaplain with Jump Pack",
+          "effect": "Leads Vanguard Veterans in a fast assault — attach during list building.",
+          "phases": ["command", "charge"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "ancient",
+      "name": "Ancient",
+      "keywords": ["Character", "Infantry", "Ancient"],
+      "modelCount": 1,
+      "abilities": [
+        {
+          "id": "ancient-banner",
+          "name": "Armageddon Campaign Banner",
+          "source": "Ancient",
+          "effect": "Inspires nearby Intercessors and boosts your hold on terrain objectives.",
+          "phases": ["command"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "intercessors",
+      "name": "Intercessor Squad",
+      "keywords": ["Battleline", "Infantry"],
+      "modelCount": 10,
+      "abilities": [
+        {
+          "id": "intercessors-objectives",
+          "name": "Objective Anchors",
+          "source": "Intercessor Squad",
+          "effect": "Flexible battleline troops — solid shooting and decent melee for holding footprints.",
+          "phases": ["shooting", "combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "vanguard-veterans",
+      "name": "Vanguard Veterans",
+      "keywords": ["Infantry", "Jump Pack"],
+      "modelCount": 5,
+      "abilities": [
+        {
+          "id": "vanguard-assault",
+          "name": "Spearhead Assault",
+          "source": "Vanguard Veterans",
+          "effect": "Fast melee specialists — ideal for hunting characters or seizing a footprint.",
+          "phases": ["movement", "charge", "combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "eradicators",
+      "name": "Eradicator Squad",
+      "keywords": ["Infantry", "Gravis"],
+      "modelCount": 3,
+      "abilities": [
+        {
+          "id": "eradicators-heavy-bolters",
+          "name": "Heavy Bolter Barrage",
+          "source": "Eradicator Squad",
+          "effect": "Heavy Gravis infantry — devastating against Ork hordes at medium range.",
+          "phases": ["shooting"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "land-speeder",
+      "name": "Land Speeder",
+      "keywords": ["Vehicle", "Fly"],
+      "modelCount": 1,
+      "abilities": [
+        {
+          "id": "land-speeder-strike",
+          "name": "Hunter-Killer",
+          "source": "Land Speeder",
+          "effect": "Fast anti-grav striker — reposition after shooting to stay on objectives or flank.",
+          "phases": ["movement", "shooting"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    }
+  ]
+}

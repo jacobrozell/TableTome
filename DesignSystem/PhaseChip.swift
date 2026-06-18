@@ -9,12 +9,14 @@ struct PhaseChip: View {
     var style: Style = .primary
     let action: () -> Void
 
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     var body: some View {
         Button(action: action) {
             Text(shortTitle)
                 .font(.caption.weight(.semibold))
-                .lineLimit(1)
-                .minimumScaleFactor(0.8)
+                .adaptiveLineLimit(1)
+                .minimumScaleFactor(dynamicTypeSize.needsLayoutAdaptation ? 1 : 0.8)
                 .padding(.horizontal, DesignTokens.Spacing.sm)
                 .padding(.vertical, DesignTokens.Spacing.xs)
                 .background(isSelected ? Color.accentColor : Color(.tertiarySystemFill), in: Capsule())
@@ -32,11 +34,14 @@ struct PhaseChip: View {
         switch phase {
         case .hero: String(localized: "Hero")
         case .movement: String(localized: "Move")
+        case .assault: String(localized: "Assault")
         case .shooting: String(localized: "Shoot")
         case .charge: String(localized: "Charge")
         case .combat: String(localized: "Fight")
+        case .scoring: String(localized: "Score")
         case .endOfTurn: String(localized: "End")
         case .deployment: String(localized: "Deploy")
+        case .command: String(localized: "Command")
         case .enemyMovement: String(localized: "Enemy")
         case .endOfAnyTurn: String(localized: "End Any")
         case .anyCombat: String(localized: "Combat")
@@ -50,13 +55,54 @@ struct PhaseChipRow: View {
     let showAllAbilities: Bool
     var style: PhaseChip.Style = .primary
     var showsPhaseGuidance: Bool = false
+    var gameSystemId: GameSystemId = .default
     let onSelect: (BattleTurnPhase) -> Void
+
+    init(
+        phases: [BattleTurnPhase],
+        selectedPhase: BattleTurnPhase,
+        showAllAbilities: Bool,
+        style: PhaseChip.Style = .primary,
+        showsPhaseGuidance: Bool = false,
+        gameSystemId: GameSystemId = .default,
+        onSelect: @escaping (BattleTurnPhase) -> Void
+    ) {
+        self.phases = phases
+        self.selectedPhase = selectedPhase
+        self.showAllAbilities = showAllAbilities
+        self.style = style
+        self.showsPhaseGuidance = showsPhaseGuidance
+        self.gameSystemId = gameSystemId
+        self.onSelect = onSelect
+    }
+
+    init(
+        phases: [BattleTurnPhase],
+        selectedPhase: BattleTurnPhase,
+        showAllAbilities: Bool,
+        style: PhaseChip.Style = .primary,
+        showsPhaseGuidance: Bool = false,
+        gameSystemId: String,
+        onSelect: @escaping (BattleTurnPhase) -> Void
+    ) {
+        self.init(
+            phases: phases,
+            selectedPhase: selectedPhase,
+            showAllAbilities: showAllAbilities,
+            style: style,
+            showsPhaseGuidance: showsPhaseGuidance,
+            gameSystemId: GameSystemId(resolving: gameSystemId),
+            onSelect: onSelect
+        )
+    }
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     private var usesPhaseGrid: Bool {
-        TabletomeLayout.context(
+        guard !dynamicTypeSize.needsLayoutAdaptation else { return false }
+        return TabletomeLayout.context(
             horizontalSizeClass: horizontalSizeClass,
             verticalSizeClass: verticalSizeClass
         ) == .padPortrait
@@ -85,7 +131,7 @@ struct PhaseChipRow: View {
             }
 
             if showsPhaseGuidance, !showAllAbilities {
-                PhaseGuidanceBar(phase: selectedPhase)
+                PhaseGuidanceBar(phase: selectedPhase, gameSystemId: gameSystemId)
                     .transition(.opacity.combined(with: .move(edge: .top)))
             }
         }

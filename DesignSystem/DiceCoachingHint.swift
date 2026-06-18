@@ -17,6 +17,8 @@ struct UnitQuickStatsRow: View {
     let unit: SpearheadUnit
     var woundsRemaining: Int?
 
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     private var capacity: Int {
         UnitWoundCapacity.capacity(for: unit)
     }
@@ -27,40 +29,53 @@ struct UnitQuickStatsRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-            HStack(spacing: DesignTokens.Spacing.sm) {
-                if let move = unit.move {
-                    statChip(String(localized: "Move \(move)\""), systemImage: "figure.walk")
-                }
-                if let save = unit.save {
-                    statChip(String(localized: "Save \(save)+"), systemImage: "shield.fill")
-                }
-                if let health = unit.health {
-                    let woundLabel: String = {
-                        if let woundsRemaining {
-                            return String(localized: "\(woundsRemaining)/\(capacity) wounds")
-                        }
-                        return String(localized: "\(health) wounds/model")
-                    }()
-                    statChip(woundLabel, systemImage: "heart.fill")
-                }
-                if isDestroyed {
-                    Text(String(localized: "Destroyed"))
-                        .font(.caption2.weight(.bold))
-                        .padding(.horizontal, DesignTokens.Spacing.sm)
-                        .padding(.vertical, DesignTokens.Spacing.xs)
-                        .background(Color.red.opacity(0.15), in: Capsule())
-                        .foregroundStyle(.red)
+            Group {
+                if dynamicTypeSize.needsLayoutAdaptation {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                        statChips
+                    }
+                } else {
+                    HStack(spacing: DesignTokens.Spacing.sm) {
+                        statChips
+                    }
                 }
             }
         }
         .opacity(isDestroyed ? 0.65 : 1)
     }
 
+    @ViewBuilder
+    private var statChips: some View {
+        if let move = unit.move {
+            statChip(String(localized: "Move \(move)\""), systemImage: "figure.walk")
+        }
+        if let save = unit.save {
+            statChip(String(localized: "Save \(save)+"), systemImage: "shield.fill")
+        }
+        if let health = unit.health {
+            let woundLabel: String = {
+                if let woundsRemaining {
+                    return String(localized: "\(woundsRemaining)/\(capacity) wounds")
+                }
+                return String(localized: "\(health) wounds/model")
+            }()
+            statChip(woundLabel, systemImage: "heart.fill")
+        }
+        if isDestroyed {
+            Text(String(localized: "Destroyed"))
+                .font(.caption2.weight(.bold))
+                .padding(.horizontal, DesignTokens.Spacing.sm)
+                .padding(.vertical, DesignTokens.Spacing.xs)
+                .background(Color.red.opacity(0.15), in: Capsule())
+                .foregroundStyle(.red)
+        }
+    }
+
     private func statChip(_ text: String, systemImage: String) -> some View {
         Label(text, systemImage: systemImage)
             .font(.caption2)
             .foregroundStyle(.secondary)
-            .lineLimit(1)
+            .adaptiveLineLimit(1)
     }
 }
 
@@ -118,7 +133,9 @@ struct BattleTrackerRoundOpenerBanner: View {
 
             Button(String(localized: "Jump to checklist"), action: onJumpToChecklist)
                 .buttonStyle(.borderedProminent)
-                .controlSize(.small)
+                .adaptiveControlSize()
+                .frame(maxWidth: .infinity)
+                .minimumTouchTarget()
                 .accessibilityIdentifier("battleTracker.roundOpener.jump")
         }
         .padding(DesignTokens.Spacing.md)
@@ -134,8 +151,13 @@ struct BattleTrackerRoundOpenerBanner: View {
 
 struct BattleTrackerScoringReminderBanner: View {
     let playerName: String
+    var gameSystemId: GameSystemId = .default
     let onJumpToScoring: () -> Void
     let onDismiss: () -> Void
+
+    private var playContext: GameSystemPlayContext {
+        GameSystemPlayContext.context(for: gameSystemId)
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
@@ -146,11 +168,7 @@ struct BattleTrackerScoringReminderBanner: View {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                     Text(String(localized: "Score \(playerName)'s turn"))
                         .font(.subheadline.weight(.semibold))
-                    Text(
-                        String(
-                            localized: "Add victory points for objectives held and battle tactics completed, then pass the phone."
-                        )
-                    )
+                    Text(scoringDetail)
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -166,7 +184,9 @@ struct BattleTrackerScoringReminderBanner: View {
 
             Button(String(localized: "Jump to scoring"), action: onJumpToScoring)
                 .buttonStyle(.borderedProminent)
-                .controlSize(.small)
+                .adaptiveControlSize()
+                .frame(maxWidth: .infinity)
+                .minimumTouchTarget()
                 .accessibilityIdentifier("battleTracker.scoringReminder.jump")
         }
         .padding(DesignTokens.Spacing.md)
@@ -177,6 +197,22 @@ struct BattleTrackerScoringReminderBanner: View {
                 .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
         }
         .accessibilityIdentifier("battleTracker.scoringReminder")
+    }
+
+    private var scoringDetail: String {
+        if playContext.isStarCraft {
+            String(
+                localized: "Add victory points for Supply held within 3\" of objectives, then advance the battle round."
+            )
+        } else if playContext.isWh40k {
+            String(
+                localized: "Add victory points for primary and secondary objectives before passing the phone."
+            )
+        } else {
+            String(
+                localized: "Add victory points for objectives and battle tactics before passing the phone."
+            )
+        }
     }
 }
 

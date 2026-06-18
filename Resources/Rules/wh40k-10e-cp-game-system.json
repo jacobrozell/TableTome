@@ -1,0 +1,345 @@
+{
+  "id": "wh40k-10e-cp",
+  "name": "Warhammer 40,000: Combat Patrol",
+  "tagline": "Quick box-set battles — guided rules and missions",
+  "edition": "10th Edition — Combat Patrol",
+  "availability": "available",
+  "externalLinks": [
+    {
+      "id": "cp-rules-pdf",
+      "title": "Combat Patrol Rules (PDF)",
+      "url": "https://assets.warhammer-community.com/warhammer40000_combatpatrol_rules_eng.24.09-rbtns7zwbh.pdf"
+    },
+    {
+      "id": "cp-downloads",
+      "title": "Combat Patrol Faction Downloads",
+      "url": "https://www.warhammer-community.com/en-gb/downloads/warhammer-40000/"
+    },
+    {
+      "id": "10e-core-downloads",
+      "title": "10th Edition Core Rules & Downloads",
+      "url": "https://www.warhammer-community.com/en-gb/downloads/warhammer-40000/"
+    }
+  ],
+  "gettingStartedSteps": [
+    {
+      "id": "pick-patrol",
+      "order": 1,
+      "title": "Pick a Combat Patrol",
+      "summary": "Each player uses a fixed roster from a Combat Patrol box.",
+      "body": "Combat Patrol games use the units listed on your patrol's datasheet — no points or list building. Each box includes custom datasheets balanced against other patrols. Declare which patrol you are using and which Enhancement (default or optional) before setup.",
+      "tips": [
+        "New players should stick with the default Enhancement until you know the army.",
+        "Leviathan box Space Marines and Tyranids patrols are a great first matchup."
+      ],
+      "relatedRuleSectionId": "cp-overview"
+    },
+    {
+      "id": "pick-mission",
+      "order": 2,
+      "title": "Pick a Mission",
+      "summary": "Choose or roll one of six Combat Patrol missions.",
+      "body": "Missions set deployment maps, objective positions, a mission rule, and a primary scoring objective. Roll a D6 or agree on a mission — Clash of Patrols is recommended for your first game.",
+      "tips": [
+        "Read the mission rule and primary objective before placing terrain.",
+        "Round 5 scoring often differs for the second-turn player — check cp-scoring."
+      ],
+      "relatedRuleSectionId": "cp-missions"
+    },
+    {
+      "id": "setup-board",
+      "order": 3,
+      "title": "Set Up the Battlefield",
+      "summary": "44\"×30\" board, terrain, objectives, attacker and defender.",
+      "body": "Combat Patrol uses a 44\" by 30\" battlefield. Place terrain evenly so both sides can use cover. Place objective markers per the mission map. Agree battlefield edges, roll off for attacker and defender, then declare formations: Patrol Squads splits, Leader attachments, Transports, and Reserves.",
+      "tips": [
+        "Defender deploys first, alternating one unit at a time.",
+        "Reserves cannot arrive in battle round 1."
+      ],
+      "relatedRuleSectionId": "cp-pre-battle"
+    },
+    {
+      "id": "declare-formations",
+      "order": 4,
+      "title": "Declare Formations",
+      "summary": "Patrol Squads, Leaders, Transports, and Reserves.",
+      "body": "Secretly note Patrol Squads splits, which Leaders attach to which units, embarked units, and units in Reserves. Reveal to your opponent, then deploy. Roll for first turn and resolve pre-battle abilities (such as Scouts) before the first battle round.",
+      "tips": [
+        "Units in Reserves must arrive by end of battle round 3 or they are destroyed.",
+        "Attached Leaders move and fight with their bodyguard until rules detach them."
+      ],
+      "relatedRuleSectionId": "cp-pre-battle"
+    },
+    {
+      "id": "how-a-turn-works",
+      "order": 5,
+      "title": "How a Turn Works",
+      "summary": "Command, Move, Shoot, Charge, Fight — five battle rounds.",
+      "body": "Each turn: Command Phase (battle-shock, stratagems, secure objectives, mission actions), Movement, Shooting, Charge, and Fight. Combat Patrol games last five battle rounds unless one army is wiped — compare victory points at the end.",
+      "tips": [
+        "Battleline units can secure objectives in your Command phase — see cp-securing.",
+        "Each patrol has three bespoke stratagems on its datasheet."
+      ],
+      "relatedRuleSectionId": "10e-turn-overview"
+    },
+    {
+      "id": "how-you-win",
+      "order": 6,
+      "title": "How You Win",
+      "summary": "Score VP from the mission, your secondary, and Battle Ready.",
+      "body": "Each player picks one of two secondary objectives on their patrol sheet. Score primary VP from the mission (usually from battle round 2 onward), secondary VP from your chosen card, and +10 VP if your army is Battle Ready (fully painted). Most VP wins; a tie is a draw.",
+      "tips": [
+        "Track secured objectives — they keep scoring even when you move away.",
+        "Round 5: the second-turn player often scores at end of turn, not Command phase."
+      ],
+      "relatedRuleSectionId": "cp-scoring"
+    },
+    {
+      "id": "first-game",
+      "order": 7,
+      "title": "Play Your First Game",
+      "summary": "Clash of Patrols with the Leviathan patrols.",
+      "body": "For a first Combat Patrol, use Clash of Patrols with two patrols from the same or different boxes. Open Missions Reference for the deployment map and scoring reminders, and use the rules reference at the table for phases and combat.",
+      "tips": [
+        "Expect about an hour for five rounds.",
+        "Guided Match with battle tracker arrives in a future app update."
+      ],
+      "relatedRuleSectionId": "cp-mission-clash-of-patrols"
+    }
+  ],
+  "ruleSections": [
+    {
+      "id": "10e-overview",
+      "title": "10th Edition Overview",
+      "category": "core",
+      "order": 1,
+      "content": "Warhammer 40,000 10th Edition uses alternating turns over five battle rounds. Combat Patrol is a compact format: fixed patrol rosters, six missions, and bespoke stratagems per patrol. Standard 10th Edition core rules apply for movement, shooting, charges, and fighting unless a mission or patrol rule overrides them.",
+      "relatedSectionIds": ["10e-turn-overview", "cp-overview"]
+    },
+    {
+      "id": "10e-turn-overview",
+      "title": "Turn Structure",
+      "category": "core",
+      "order": 2,
+      "content": "Each player turn has five phases in order:\n\n1. Command Phase — Battle-shock tests, stratagems, abilities; in Combat Patrol missions, secure objectives and mission actions also happen here.\n2. Movement Phase — Normal moves, Advances, Falls Back.\n3. Shooting Phase — Ranged attacks.\n4. Charge Phase — Declare charges within 12\", roll 2D6, move to engage.\n5. Fight Phase — Pile-in, fight, consolidation.\n\nPlayers alternate turns each battle round. Combat Patrol games use five battle rounds.",
+      "relatedSectionIds": ["10e-command-phase", "10e-charge-fight"]
+    },
+    {
+      "id": "10e-command-phase",
+      "title": "Command Phase",
+      "category": "core",
+      "order": 3,
+      "content": "Start of Command Phase: resolve start-of-phase abilities. Battle-shocked units and units below Half-strength take Leadership tests; failures apply Battle-shock. Use stratagems and other Command abilities. End of Command Phase: in Combat Patrol missions, secure objectives and score primary VP when the mission says so.",
+      "relatedSectionIds": ["10e-battle-shock", "cp-securing"]
+    },
+    {
+      "id": "10e-attack-sequence",
+      "title": "Attack Sequence",
+      "category": "core",
+      "order": 4,
+      "content": "When a unit attacks:\n\n1. Select eligible targets.\n2. Roll to hit (BS for shooting, WS for melee).\n3. Roll to wound comparing Strength to Toughness.\n4. Defender rolls saves (Armour then Invulnerable if applicable).\n5. Apply damage; remove destroyed models.\n\nGroup identical weapons together. Critical hits auto-wound on the wound roll.",
+      "relatedSectionIds": ["10e-shooting", "10e-cover-concealment"]
+    },
+    {
+      "id": "10e-shooting",
+      "title": "Shooting Phase",
+      "category": "core",
+      "order": 5,
+      "content": "Units that Remained Stationary or Advanced with Assault weapons may shoot. Select targets in range and visible unless Indirect Fire rules apply. Cover gives the target Benefit of Cover (+1 to armour save, or -1 to hit in some cases per datasheet). Heavy weapons cannot shoot after Advancing unless rules allow.",
+      "relatedSectionIds": ["10e-cover-concealment"]
+    },
+    {
+      "id": "10e-charge-fight",
+      "title": "Charge & Fight Phases",
+      "category": "core",
+      "order": 6,
+      "content": "Charge: pick enemy units within 12\", roll 2D6 total for distance, move to within Engagement Range (2\"). Fight: eligible units pile in 3\", then make melee attacks, then consolidate 3\" toward the closest enemy. Alternating fight order follows the core rules sequence.",
+      "relatedSectionIds": ["10e-attack-sequence"]
+    },
+    {
+      "id": "10e-movement",
+      "title": "Movement Phase",
+      "category": "core",
+      "order": 7,
+      "content": "Units move up to their Move characteristic, or Advance (roll D6\" added to Move, cannot shoot except with Assault). Fall Back moves away from Engagement Range but the unit cannot charge that turn. Models must stay in Unit Coherency.",
+      "relatedSectionIds": ["10e-turn-overview"]
+    },
+    {
+      "id": "10e-battle-shock",
+      "title": "Battle-shock",
+      "category": "core",
+      "order": 8,
+      "content": "In the Command phase, Battle-shocked units and units at Below Half-strength test Leadership. On a fail, the unit is Battle-shocked until the start of your next Command phase. Battle-shocked units cannot secure objectives in Combat Patrol missions and have other restrictions per core rules.",
+      "relatedSectionIds": ["10e-command-phase", "cp-securing"]
+    },
+    {
+      "id": "10e-oc",
+      "title": "Objective Control",
+      "category": "core",
+      "order": 9,
+      "content": "A model is within range of an objective marker if any part of its base is within the distance shown on the mission (usually 3\"). Control compares the sum of Objective Control (OC) values of models within range. Higher total controls the marker; equal totals mean neither side controls it.",
+      "relatedSectionIds": ["glossary-oc-10e", "cp-securing"]
+    },
+    {
+      "id": "10e-cover-concealment",
+      "title": "Cover",
+      "category": "core",
+      "order": 10,
+      "content": "Terrain with the Cover keyword grants Benefit of Cover to infantry models wholly within it when targeted by ranged attacks — typically +1 to armour saves. Dense ruins and similar features are placed during setup. Combat Patrol missions expect evenly distributed terrain so both patrols can benefit.",
+      "relatedSectionIds": ["10e-shooting"]
+    },
+    {
+      "id": "cp-overview",
+      "title": "Combat Patrol Overview",
+      "category": "combatPatrol",
+      "order": 11,
+      "content": "Combat Patrol is the fastest way to play Warhammer 40,000: fixed box-set armies, six missions, about one hour, 44\"×30\" boards. Each patrol has custom datasheets, two Enhancements, two Secondary Objectives (pick one), and three Stratagems balanced against every other patrol.",
+      "relatedSectionIds": ["cp-pre-battle", "cp-missions"]
+    },
+    {
+      "id": "cp-pre-battle",
+      "title": "Pre-battle Sequence",
+      "category": "combatPatrol",
+      "order": 12,
+      "content": "1. Select patrol and Enhancement.\n2. Determine mission (D6 or agree).\n3. Create battlefield — terrain and objectives per map.\n4. Determine attacker and defender.\n5. Declare formations — Patrol Squads, Leaders, Transports, Reserves.\n6. Deploy armies — defender first, alternate units.\n7. Roll for first turn.\n8. Resolve pre-battle rules.\n9. Play five battle rounds.\n10. Compare VP (+ Battle Ready bonus).",
+      "relatedSectionIds": ["cp-missions", "cp-reserves"]
+    },
+    {
+      "id": "cp-securing",
+      "title": "Securing Objectives",
+      "category": "combatPatrol",
+      "order": 13,
+      "content": "At the end of your Command phase, if you control an objective marker and one or more Battleline units from your army (excluding Battle-shocked units) are within range, that objective is secured by you. While secured, you keep control even without models in range. Securing ends if your opponent controls the marker at the end of a later Command phase.",
+      "relatedSectionIds": ["glossary-cp-secure", "10e-oc"]
+    },
+    {
+      "id": "cp-reserves",
+      "title": "Reserves in Combat Patrol",
+      "category": "combatPatrol",
+      "order": 14,
+      "content": "Units in Reserves (including Deep Strike) cannot arrive in battle round 1. Any Reserves unit not on the battlefield by the end of battle round 3 is destroyed, as are units embarked within it. Declare Reserves during battle formations before deployment.",
+      "relatedSectionIds": ["glossary-cp-reserves", "cp-pre-battle"]
+    },
+    {
+      "id": "cp-battle-ready",
+      "title": "Battle Ready",
+      "category": "combatPatrol",
+      "order": 15,
+      "content": "If every model in your Combat Patrol is painted to Battle Ready standard (fully painted with a detailed or textured base), you score an additional 10 VP at the end of the battle. Agree with your opponent before the game whether both armies qualify.",
+      "relatedSectionIds": ["glossary-cp-battle-ready", "cp-scoring"]
+    },
+    {
+      "id": "cp-missions",
+      "title": "Six Missions",
+      "category": "combatPatrol",
+      "order": 16,
+      "content": "Roll a D6 or pick a mission:\n\n1 — Clash of Patrols (Retrieve Intelligence + Take and Hold)\n2 — Archeotech Recovery (Irradiated Power Cells)\n3 — Forward Outpost (Sabotage Enemy Comms + Vital Ground)\n4 — Scorched Earth (Raze and Ruin)\n5 — Sweeping Raid (Supply Lines + Priority Targets)\n6 — Display of Might (Claim Sites + Symbolic Sites)\n\nEach mission includes a deployment map and objective placement. See individual mission sections for scoring detail.",
+      "relatedSectionIds": ["cp-mission-clash-of-patrols", "cp-scoring"]
+    },
+    {
+      "id": "cp-mission-clash-of-patrols",
+      "title": "Clash of Patrols",
+      "category": "combatPatrol",
+      "order": 17,
+      "content": "Mission rule — Retrieve Intelligence: From battle round 2, in your Command phase you may select one objective you control and recover data once (each objective once per game). If your Warlord is on the battlefield, gain 1CP.\n\nPrimary — Take and Hold: Rounds 2–4, score 5 VP per objective you control at end of your Command phase (max 15 VP per turn). Round 5: second-turn player scores at end of turn instead of Command phase.",
+      "relatedSectionIds": ["cp-missions", "cp-scoring"]
+    },
+    {
+      "id": "cp-mission-archeotech-recovery",
+      "title": "Archeotech Recovery",
+      "category": "combatPatrol",
+      "order": 18,
+      "content": "Mission rule — Irradiated Power Cells: Round 3 Defender picks a No Man's Land objective as Gamma; round 4 remove Gamma and Attacker picks Beta; round 5 remove Beta.\n\nPrimary — Recover Archeotech: Score 5 VP per objective controlled at end of Command phase rounds 2–5. +10 VP at battle end if you control the last No Man's Land objective.",
+      "relatedSectionIds": ["cp-missions"]
+    },
+    {
+      "id": "cp-mission-forward-outpost",
+      "title": "Forward Outpost",
+      "category": "combatPatrol",
+      "order": 19,
+      "content": "Mission rule — Sabotage Enemy Comms: If you control the objective in the opponent's deployment zone at end of your turn, they cannot use Command Re-roll until battle end.\n\nPrimary — Vital Ground: 5 VP per No Man's Land objective + 10 VP for opponent's deployment zone objective each Command phase (rounds 2–4, max 15). Round 5 second-turn player scores at end of turn.",
+      "relatedSectionIds": ["cp-missions"]
+    },
+    {
+      "id": "cp-mission-scorched-earth",
+      "title": "Scorched Earth",
+      "category": "combatPatrol",
+      "order": 20,
+      "content": "Mission rule — Raze and Ruin: From round 2, raze a controlled objective (no enemies within 3\"; Attacker never marker A; Defender never marker B) to remove it.\n\nPrimary: 5 VP if you control any objective; +5 if you control more than opponent; +10 if you razed an objective this turn. Round 5 second-turn player scores at end of turn.",
+      "relatedSectionIds": ["cp-missions"]
+    },
+    {
+      "id": "cp-mission-sweeping-raid",
+      "title": "Sweeping Raid",
+      "category": "combatPatrol",
+      "order": 21,
+      "content": "Mission rule — Supply Lines: Start of your Command phase, if you control your deployment zone objective, roll D6 — on 4+ gain 1CP.\n\nPrimary — Priority Targets: 5 VP per objective at end of Command phase rounds 2–4 (max 15). End of battle: Attacker scores for markers C/D; Defender for A/B (5 or 10 VP each).",
+      "relatedSectionIds": ["cp-missions"]
+    },
+    {
+      "id": "cp-mission-display-of-might",
+      "title": "Display of Might",
+      "category": "combatPatrol",
+      "order": 22,
+      "content": "Mission rule — Break Their Spirit: Insane Bravery only within 6\" of your Warlord. Claim Sites: Characters claim No Man's Land symbolic sites in Command phase.\n\nPrimary — Symbolic Sites: Up to four scoring conditions × 5 VP per turn (control, multi-control, claim, consecutive claim). Round 5 second-turn player scores at end of turn.",
+      "relatedSectionIds": ["cp-missions"]
+    },
+    {
+      "id": "cp-scoring",
+      "title": "Scoring Summary",
+      "category": "combatPatrol",
+      "order": 23,
+      "content": "Primary VP comes from the mission (usually from battle round 2). Each player selects one Secondary Objective from their patrol sheet. Battle Ready armies gain +10 VP. Most VP wins.\n\nRound 5 note: in many missions the second-turn player scores primary VP at the end of their turn, not at end of Command phase — so last-turn decisions still matter.",
+      "relatedSectionIds": ["cp-battle-ready", "cp-missions"]
+    },
+    {
+      "id": "glossary-cp-secure",
+      "title": "Secure",
+      "category": "glossary",
+      "order": 24,
+      "content": "Combat Patrol missions only. At end of your Command phase, Battleline units (not Battle-shocked) within range of an objective you control secure it. Secured objectives stay yours without models in range until lost.",
+      "relatedSectionIds": ["cp-securing"]
+    },
+    {
+      "id": "glossary-cp-patrol-squads",
+      "title": "Patrol Squads",
+      "category": "glossary",
+      "order": 25,
+      "content": "Some patrol datasheets let you split a unit into smaller units for one battle. Declare splits during battle formations; follow the exact split on the datasheet.",
+      "relatedSectionIds": ["cp-pre-battle"]
+    },
+    {
+      "id": "glossary-cp-battle-ready",
+      "title": "Battle Ready",
+      "category": "glossary",
+      "order": 26,
+      "content": "Fully painted models with detailed or textured bases. Worth +10 VP at end of a Combat Patrol game.",
+      "relatedSectionIds": ["cp-battle-ready"]
+    },
+    {
+      "id": "glossary-cp-leaders",
+      "title": "Attached Leaders",
+      "category": "glossary",
+      "order": 27,
+      "content": "Declare which Leader is attached to which Bodyguard before deployment. They act as one unit until detached by rules.",
+      "relatedSectionIds": ["cp-pre-battle"]
+    },
+    {
+      "id": "glossary-cp-reserves",
+      "title": "Reserves (Combat Patrol)",
+      "category": "glossary",
+      "order": 28,
+      "content": "Cannot arrive round 1. Destroyed if not on board by end of round 3.",
+      "relatedSectionIds": ["cp-reserves"]
+    },
+    {
+      "id": "glossary-oc-10e",
+      "title": "Objective Control (OC)",
+      "category": "glossary",
+      "order": 29,
+      "content": "Sum OC of models within range of an objective; higher total controls it.",
+      "relatedSectionIds": ["10e-oc"]
+    }
+  ],
+  "editionMigrationSteps": []
+}

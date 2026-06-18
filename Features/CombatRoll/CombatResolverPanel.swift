@@ -22,7 +22,7 @@ struct CombatResolverPanel: View {
     var defenderWoundsRemaining: Int?
     var unitWoundsRemaining: [String: Int] = [:]
     let onSyncMultiAttack: () -> Void
-    var onApplyDamage: ((Int) -> Void)?
+    var onApplyDamage: ((Int, CombatBatchLogContext?) -> Void)?
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
@@ -43,7 +43,7 @@ struct CombatResolverPanel: View {
         TabletomeLayout.usesSideBySideLayout(
             horizontalSizeClass: horizontalSizeClass,
             verticalSizeClass: verticalSizeClass,
-            isAccessibilitySize: dynamicTypeSize.isAccessibilitySize
+            isAccessibilitySize: dynamicTypeSize.needsLayoutAdaptation
         )
     }
 
@@ -153,17 +153,19 @@ struct CombatResolverPanel: View {
     @ViewBuilder
     private var embeddedContextBar: some View {
         if let attackerPlayerName, let defenderPlayerName {
-            HStack(spacing: DesignTokens.Spacing.sm) {
+            AdaptiveHStack(alignment: .center, spacing: DesignTokens.Spacing.sm) {
                 Label(attackerPlayerName, systemImage: "scope")
                     .font(.caption.weight(.semibold))
-                    .lineLimit(1)
+                    .adaptiveLineLimit(1)
                 Image(systemName: "arrow.right")
                     .font(.caption2.weight(.bold))
                     .foregroundStyle(.secondary)
                 Label(defenderPlayerName, systemImage: "shield.fill")
                     .font(.caption.weight(.semibold))
-                    .lineLimit(1)
-                Spacer(minLength: 0)
+                    .adaptiveLineLimit(1)
+                if !dynamicTypeSize.needsLayoutAdaptation {
+                    Spacer(minLength: 0)
+                }
             }
             .foregroundStyle(.secondary)
             .padding(DesignTokens.Spacing.sm)
@@ -180,6 +182,7 @@ struct CombatResolverPanel: View {
     private var combatSequencePrimerSection: some View {
         CombatSequencePrimer(
             isExpanded: $showsCombatSequencePrimer,
+            gameSystemId: viewModel.gameSystemId,
             showsDismissButton: !NewPlayerTipsStore.hasDismissedCombatSequencePrimer,
             onDismiss: {
                 NewPlayerTipsStore.dismissCombatSequencePrimer()
@@ -190,7 +193,9 @@ struct CombatResolverPanel: View {
     private var introSection: some View {
         IntroCallout(
             text: isSimulated
-                ? "Pick attacker and defender, enter your dice or tap Roll Attack, and see hit, save, ward, and damage instantly."
+                ? (CombatRollEngineRouter.usesWh40kRules(gameSystemId: viewModel.gameSystemId)
+                    ? "Pick attacker and defender, enter your dice or tap Roll Attack, and see hit, save, and damage instantly."
+                    : "Pick attacker and defender, enter your dice or tap Roll Attack, and see hit, save, ward, and damage instantly.")
                 : "Pick attacker and defender, enter the dice you rolled at the table, and the result updates automatically.",
             systemImage: "arrow.left.arrow.right"
         )
@@ -287,7 +292,7 @@ struct CombatResolverPanel: View {
                 Image(systemName: "target")
                     .foregroundStyle(.secondary)
                 Text(
-                    "\(weapon.name): Hit \(weapon.hit)+ · Wound \(weapon.wound)+ · Rend \(weapon.rend) · Dmg \(viewModel.damage)"
+                    "\(weapon.name): \(WarscrollStatSummary.weaponCombatProfile(weapon, gameSystemId: viewModel.gameSystemId)) · Dmg \(viewModel.damage)"
                 )
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -316,7 +321,8 @@ struct CombatResolverPanel: View {
 
     @ViewBuilder
     private var hitDiceBannerSection: some View {
-        if viewModel.selectedAttackerWeapon?.hasCritAutoWound == true {
+        if viewModel.selectedAttackerWeapon?.hasCritAutoWound == true,
+           !CombatRollEngineRouter.usesWh40kRules(gameSystemId: viewModel.gameSystemId) {
             CritAutoWoundCoachingHint()
         }
         if viewModel.attackerUsesVariableAttacks {
@@ -407,7 +413,10 @@ struct CombatResolverPanel: View {
     @ViewBuilder
     private var referenceLinksSection: some View {
         ReferenceLinksGroup {
-            if let combatSection = ruleSections.first(where: { $0.id == "combat-sequence" }) {
+            let combatSectionId = CombatRollEngineRouter.usesWh40kRules(gameSystemId: viewModel.gameSystemId)
+                ? "10e-attack-sequence"
+                : "combat-sequence"
+            if let combatSection = ruleSections.first(where: { $0.id == combatSectionId }) {
                 NavigationLink {
                     RuleSectionDetailView(section: combatSection, allSections: ruleSections)
                 } label: {
@@ -417,10 +426,10 @@ struct CombatResolverPanel: View {
                 Divider().padding(.leading, DesignTokens.Spacing.md)
             }
             NavigationLink {
-                RulesGlossaryView()
+                RulesGlossaryView(gameSystemId: viewModel.gameSystemId, ruleSections: ruleSections)
             } label: {
                 ReferenceLinkRow(
-                    title: GameSystemRulesLabels.glossaryTitle(gameSystemId: GameSystemRulesLabels.defaultGameSystemId),
+                    title: GameSystemRulesLabels.glossaryTitle(gameSystemId: viewModel.gameSystemId),
                     systemImage: "book.fill"
                 )
             }

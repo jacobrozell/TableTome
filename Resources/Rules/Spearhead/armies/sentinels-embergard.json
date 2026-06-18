@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "armyId": "sentinels-embergard",
+  "units": [
+    {
+      "id": "jorvan-kreel-heir-of-the-kraken",
+      "name": "Jorvan Kreel Heir of the Kraken",
+      "move": "6\"",
+      "save": 4,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "mallus-forgepriest",
+      "name": "Mallus Forgepriest",
+      "move": "5\"",
+      "save": 4,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "freeguild-gallants",
+      "name": "Freeguild Gallants",
+      "move": "5\"",
+      "save": 3,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "freeguild-grenadiers",
+      "name": "Freeguild Grenadiers",
+      "move": "5\"",
+      "save": 4,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "freeguild-grenadiers-2",
+      "name": "Freeguild Grenadiers",
+      "move": "5\"",
+      "save": 4,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    }
+  ]
+}

@@ -4,6 +4,7 @@ import TabletomeDomain
 /// Short, self-contained walkthrough of one turn's phases — no match state required.
 struct SampleTurnWalkthroughView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var step = 0
     @State private var showsCombatPrimer = true
 
@@ -114,9 +115,9 @@ struct SampleTurnWalkthroughView: View {
     }
 
     private var phaseStrip: some View {
-        HStack(spacing: DesignTokens.Spacing.xs) {
+        AdaptiveHorizontalChipRow {
             ForEach(Array(steps.enumerated()), id: \.offset) { index, item in
-                if index > 0 {
+                if index > 0, !dynamicTypeSize.needsLayoutAdaptation {
                     Image(systemName: "chevron.right")
                         .font(.caption2.weight(.bold))
                         .foregroundStyle(.tertiary)
@@ -133,9 +134,10 @@ struct SampleTurnWalkthroughView: View {
                     .foregroundStyle(index == step ? Color.accentColor : Color.secondary)
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityHidden(true)
     }
+
+    @ScaledMetric(relativeTo: .title2) private var stepIconSize: CGFloat = 44
 
     private var stepCard: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -158,7 +160,7 @@ struct SampleTurnWalkthroughView: View {
                     .font(.title2)
                     .foregroundStyle(Color.accentColor)
                     .symbolRenderingMode(.hierarchical)
-                    .frame(width: 44, height: 44)
+                    .frame(width: stepIconSize, height: stepIconSize)
             }
         }
         .padding(DesignTokens.Spacing.md)
@@ -206,7 +208,7 @@ struct SampleTurnWalkthroughView: View {
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
 
-                    NavigationLink(value: GuidedMatchLink(gameSystemId: OnboardingCompletion.defaultGameSystemId)) {
+                    NavigationLink(value: GuidedMatchLink(gameSystemId: .default)) {
                         Label(String(localized: "Open Guided Match"), systemImage: "flag.checkered")
                             .font(.headline)
                             .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)

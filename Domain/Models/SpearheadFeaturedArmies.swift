@@ -1,29 +1,22 @@
 import Foundation
 
 public enum SpearheadFeaturedArmies {
-    public static let armyIds: Set<String> = [
-        "vigilant-brotherhood",
-        "gnawfeast-clawpack"
-    ]
+    private static var config: FeaturedArmiesConfig {
+        GameSystemRegistry.bundled.featuredArmies(for: .aosSpearhead)!
+    }
 
-    public static let starterMatchupTitle = "Vigilant Brotherhood vs Gnawfeast Clawpack"
+    public static var armyIds: Set<String> { config.armyIds }
+    public static var starterMatchupTitle: String { config.starterMatchupTitle }
+
+    public static var configuration: GuidedMatchFeaturedArmies {
+        GuidedMatchFeaturedArmies(config: config)
+    }
 
     public static func isFeatured(_ armyId: String) -> Bool {
-        armyIds.contains(armyId)
+        config.isFeatured(armyId)
     }
 
     public static func applyStarterMatchup(to state: inout GuidedMatchState) {
-        state.playerOne = PlayerArmySelection(
-            playerName: "Player 1",
-            factionId: "stormcast-eternals",
-            armyId: "vigilant-brotherhood"
-        )
-        state.playerTwo = PlayerArmySelection(
-            playerName: "Player 2",
-            factionId: "skaven",
-            armyId: "gnawfeast-clawpack"
-        )
-        state.attackerIsPlayerOne = nil
-        state.completedStepIds = []
+        config.applyStarterMatchup(to: &state)
     }
 }

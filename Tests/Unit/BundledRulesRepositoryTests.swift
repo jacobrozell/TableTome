@@ -58,6 +58,15 @@ final class BundledRulesRepositoryTests: XCTestCase {
         XCTAssertEqual(migrationOrders, migrationOrders.sorted())
     }
 
+    func testScTmgHasGuideContent() async throws {
+        let system = try await testRepository.gameSystem(id: "sc-tmg")
+        XCTAssertEqual(system.availability, .available)
+        XCTAssertEqual(system.gettingStartedSteps.count, 7)
+        XCTAssertEqual(system.editionMigrationSteps.count, 5)
+        XCTAssertEqual(system.ruleSections.count, 10)
+        XCTAssertFalse(system.externalLinks?.isEmpty ?? true)
+    }
+
     func testWh40k11eBattleShockUsesCorrectPassCondition() async throws {
         let system = try await testRepository.gameSystem(id: "wh40k-11e")
         let section = try XCTUnwrap(system.ruleSections.first { $0.id == "11e-battle-shock" })
@@ -80,6 +89,53 @@ final class BundledRulesRepositoryTests: XCTestCase {
         let section = try XCTUnwrap(system.ruleSections.first { $0.id == "11e-scoring-overview" })
         XCTAssertTrue(section.content.contains("battle round"))
         XCTAssertFalse(section.content.localizedCaseInsensitiveContains("per turn"))
+    }
+
+    func testWh40k10eCpHasGuideContent() async throws {
+        let system = try await testRepository.gameSystem(id: "wh40k-10e-cp")
+        XCTAssertEqual(system.availability, .available)
+        XCTAssertEqual(system.gettingStartedSteps.count, 7)
+        XCTAssertEqual(system.ruleSections.count, 29)
+        XCTAssertFalse(system.externalLinks?.isEmpty ?? true)
+
+        let ids = Set(system.ruleSections.map(\.id))
+        let requiredCore = ["10e-overview", "10e-turn-overview", "10e-attack-sequence"]
+        let requiredFormat = ["cp-overview", "cp-missions", "cp-scoring", "cp-securing"]
+        let requiredGlossary = ["glossary-cp-secure", "glossary-oc-10e"]
+        XCTAssertTrue(requiredCore.allSatisfy { ids.contains($0) })
+        XCTAssertTrue(requiredFormat.allSatisfy { ids.contains($0) })
+        XCTAssertTrue(requiredGlossary.allSatisfy { ids.contains($0) })
+    }
+
+    func testWh40k10eCpSectionIdsUseModePrefixes() async throws {
+        let system = try await testRepository.gameSystem(id: "wh40k-10e-cp")
+        for section in system.ruleSections {
+            switch section.category {
+            case .core:
+                XCTAssertTrue(
+                    section.id.hasPrefix("10e-"),
+                    "Core section \(section.id) must use 10e- prefix"
+                )
+            case .combatPatrol:
+                XCTAssertTrue(
+                    section.id.hasPrefix("cp-"),
+                    "Combat Patrol section \(section.id) must use cp- prefix"
+                )
+            case .glossary:
+                XCTAssertTrue(
+                    section.id.hasPrefix("glossary-"),
+                    "Glossary section \(section.id) must use glossary- prefix"
+                )
+            case .spearhead:
+                XCTFail("Spearhead category must not appear in wh40k-10e-cp")
+            }
+        }
+    }
+
+    func testWh40k10eCpHasCombatPatrolCategorySections() async throws {
+        let system = try await testRepository.gameSystem(id: "wh40k-10e-cp")
+        let cpSections = system.ruleSections.filter { $0.category == .combatPatrol }
+        XCTAssertEqual(cpSections.count, 13)
     }
 
     func testGameSystemNotFound() async {

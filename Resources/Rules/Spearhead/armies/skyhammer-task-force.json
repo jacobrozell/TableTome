@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "armyId": "skyhammer-task-force",
+  "units": [
+    {
+      "id": "arkanaut-admiral",
+      "name": "Arkanaut Admiral",
+      "move": "4\"",
+      "save": 3,
+      "health": 6,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "arkanaut-company",
+      "name": "Arkanaut Company",
+      "move": "4\"",
+      "save": 4,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "arkanaut-company-2",
+      "name": "Arkanaut Company",
+      "move": "4\"",
+      "save": 4,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "skywardens",
+      "name": "Skywardens",
+      "move": "12\"",
+      "save": 4,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "arkanaut-frigate",
+      "name": "Arkanaut Frigate",
+      "move": "12\"",
+      "save": 3,
+      "health": 15,
+      "control": 5,
+      "keywords": [],
+      "modelCount": 1
+    }
+  ]
+}

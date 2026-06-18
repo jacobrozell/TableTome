@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "armyId": "akhelian-tide-guard",
+  "units": [
+    {
+      "id": "akhelian-king",
+      "name": "Akhelian King",
+      "move": "12\"",
+      "save": 3,
+      "health": 7,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "akhelian-morrsarr-guard",
+      "name": "Akhelian Morrsarr Guard",
+      "move": "14\"",
+      "save": 4,
+      "health": 4,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "akhelian-ishlaen-guard",
+      "name": "Akhelian Ishlaen Guard",
+      "move": "14\"",
+      "save": 4,
+      "health": 4,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "namarti-reavers",
+      "name": "Namarti Reavers",
+      "move": "7\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 10
+    }
+  ]
+}

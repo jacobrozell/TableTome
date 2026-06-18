@@ -1,4 +1,5 @@
 import SwiftUI
+import TabletomeDomain
 
 enum AppTab: Hashable {
     case bench
@@ -52,17 +53,10 @@ struct RootTabView: View {
                 }
             }
             .tabItem {
-                Label(
-                    GameSystemRulesLabels.tabTitle(gameSystemId: GameSystemRulesLabels.defaultGameSystemId),
-                    systemImage: ReleaseSurface.showsRulesAssistant ? "magnifyingglass" : "doc.text.fill"
-                )
+                Label(String(localized: "Rules"), systemImage: ReleaseSurface.showsRulesAssistant ? "magnifyingglass" : "doc.text.fill")
             }
             .tag(AppTab.search)
-            .accessibilityLabel(
-                GameSystemRulesLabels.tabAccessibilityTitle(
-                    gameSystemId: GameSystemRulesLabels.defaultGameSystemId
-                )
-            )
+            .accessibilityLabel(String(localized: "Rules Search"))
             .accessibilityIdentifier(
                 ReleaseSurface.showsRulesAssistant ? "tab.aosRules" : "tab.rules"
             )
@@ -115,7 +109,7 @@ struct RootTabView: View {
 
     private func openGuidedMatch(gameSystemId: String) {
         selectedTab = .learn
-        learnPath = NavigationPath([GuidedMatchLink(gameSystemId: gameSystemId)])
+        learnPath = NavigationPath([GuidedMatchLink(gameSystemId: GameSystemId(resolving: gameSystemId))])
     }
 
     private func openGameGuide(gameSystemId: String) {

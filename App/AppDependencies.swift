@@ -5,32 +5,66 @@ import TabletomeData
 @MainActor
 final class AppDependencies: ObservableObject {
     let rulesRepository: any RulesRepository
-    let spearheadCatalogRepository: any SpearheadCatalogRepository
+    let gameSystemRegistry: GameSystemRegistry
+    let playCatalogRepository: any PlayCatalogRepository
+    let matchHistoryRepository: any MatchHistoryRepository
 
     init(
         rulesRepository: any RulesRepository = BundledRulesRepository(),
-        spearheadCatalogRepository: any SpearheadCatalogRepository = BundledSpearheadCatalogRepository()
+        gameSystemRegistry: GameSystemRegistry = .bundled,
+        playCatalogRepository: (any PlayCatalogRepository)? = nil,
+        matchHistoryRepository: any MatchHistoryRepository = JSONMatchHistoryRepository()
     ) {
         self.rulesRepository = rulesRepository
-        self.spearheadCatalogRepository = spearheadCatalogRepository
+        self.gameSystemRegistry = gameSystemRegistry
+        self.playCatalogRepository = playCatalogRepository
+            ?? BundledPlayCatalogRepository(registry: gameSystemRegistry)
+        self.matchHistoryRepository = matchHistoryRepository
     }
 
     func makeHomeViewModel() -> HomeViewModel {
         HomeViewModel(rulesRepository: rulesRepository)
     }
 
-    func makeRulesReferenceViewModel() -> RulesReferenceViewModel {
-        RulesReferenceViewModel(rulesRepository: rulesRepository)
+    func makeRulesReferenceViewModel(gameSystemId: GameSystemId = .default) -> RulesReferenceViewModel {
+        RulesReferenceViewModel(rulesRepository: rulesRepository, gameSystemId: gameSystemId.rawValue)
     }
 
-    func makeAppSearchViewModel() -> AppSearchViewModel {
-        AppSearchViewModel(
-            rulesRepository: rulesRepository,
-            catalogRepository: spearheadCatalogRepository
+    func catalogRepository(for gameSystemId: GameSystemId) -> any SpearheadCatalogRepository {
+        GameSystemCatalogRepository(
+            gameSystemId: gameSystemId.rawValue,
+            repository: playCatalogRepository
         )
     }
 
-    func makeGuidedMatchViewModel() -> GuidedMatchViewModel {
-        GuidedMatchViewModel(catalogRepository: spearheadCatalogRepository)
+    func makeAppSearchViewModel(gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId) -> AppSearchViewModel {
+        AppSearchViewModel(
+            rulesRepository: rulesRepository,
+            catalogRepository: { [weak self] gameSystemId in
+                guard let self else {
+                    return GameSystemCatalogRepository(
+                        gameSystemId: gameSystemId,
+                        repository: BundledPlayCatalogRepository()
+                    )
+                }
+                return self.catalogRepository(for: GameSystemId(resolving: gameSystemId))
+            },
+            gameSystemId: gameSystemId,
+            visibleGameSystemFilter: { ReleaseSurface.isGameSystemVisible($0, registry: self.gameSystemRegistry) }
+        )
+    }
+
+    func makeGuidedMatchViewModel(gameSystemId: GameSystemId = .default) -> GuidedMatchViewModel {
+        GuidedMatchViewModel(
+            gameSystemId: gameSystemId,
+            catalogRepository: catalogRepository(for: gameSystemId)
+        )
+    }
+
+    func makeMatchHistoryViewModel() -> MatchHistoryViewModel {
+        MatchHistoryViewModel(
+            historyRepository: matchHistoryRepository,
+            rulesRepository: rulesRepository
+        )
     }
 }

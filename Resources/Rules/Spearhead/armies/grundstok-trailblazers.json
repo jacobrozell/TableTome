@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "armyId": "grundstok-trailblazers",
+  "units": [
+    {
+      "id": "endrinmaster-with-dirigible-suit",
+      "name": "Endrinmaster with Dirigible Suit",
+      "move": "12\"",
+      "save": 3,
+      "health": 8,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "grundstok-thunderers",
+      "name": "Grundstok Thunderers",
+      "move": "4\"",
+      "save": 3,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "grundstok-gunhauler",
+      "name": "Grundstok Gunhauler",
+      "move": "14\"",
+      "save": 2,
+      "health": 10,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "endrinriggers",
+      "name": "Endrinriggers",
+      "move": "12\"",
+      "save": 3,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 3
+    }
+  ]
+}

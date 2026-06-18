@@ -14,18 +14,28 @@ struct UnitMatchupEvaluatorView: View {
 
     init(
         ruleSections: [RuleSection] = [],
-        catalogRepository: any SpearheadCatalogRepository = BundledSpearheadCatalogRepository(),
+        gameSystemId: String = "aos-spearhead",
+        catalogRepository: (any SpearheadCatalogRepository)? = nil,
         attackerPrefill: MatchupUnitPrefill? = nil,
         defenderPrefill: MatchupUnitPrefill? = nil
     ) {
+        let repository = catalogRepository ?? Self.catalogRepository(for: gameSystemId)
         _viewModel = StateObject(
             wrappedValue: UnitMatchupEvaluatorViewModel(
-                catalogRepository: catalogRepository,
+                catalogRepository: repository,
+                gameSystemId: gameSystemId,
                 attackerPrefill: attackerPrefill,
                 defenderPrefill: defenderPrefill
             )
         )
         self.ruleSections = ruleSections
+    }
+
+    private static func catalogRepository(for gameSystemId: String) -> any SpearheadCatalogRepository {
+        GameSystemCatalogRepository(
+            gameSystemId: gameSystemId,
+            repository: BundledPlayCatalogRepository()
+        )
     }
 
     var body: some View {
@@ -97,7 +107,9 @@ struct UnitMatchupEvaluatorView: View {
             saveTarget: save,
             unitId: unit.id,
             deployedModelCount: viewModel.attackerDeployedModelCount,
-            wardTarget: viewModel.activeWardTarget,
+            wardTarget: CombatRollEngineRouter.usesWh40kRules(gameSystemId: viewModel.gameSystemId)
+                ? nil
+                : viewModel.activeWardTarget,
             resolvedAttackCount: viewModel.resolvedVariableAttackCount
         )
         multiAttackViewModel.bind(

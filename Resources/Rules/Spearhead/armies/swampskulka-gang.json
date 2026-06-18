@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "armyId": "swampskulka-gang",
+  "units": [
+    {
+      "id": "killaboss-on-great-gnashtoof",
+      "name": "Killaboss on Great Gnashtoof",
+      "move": "10\"",
+      "save": 3,
+      "health": 10,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "murknob-with-belcha-banna",
+      "name": "Murknob with Belcha-banna",
+      "move": "5\"",
+      "save": 4,
+      "health": 6,
+      "control": 5,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "man-skewer-boltboyz",
+      "name": "Man-skewer Boltboyz",
+      "move": "5\"",
+      "save": 5,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "gutrippaz",
+      "name": "Gutrippaz",
+      "move": "5\"",
+      "save": 5,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "gutrippaz-2",
+      "name": "Gutrippaz",
+      "move": "5\"",
+      "save": 5,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "beast-skewer-killbow",
+      "name": "Beast-skewer Killbow",
+      "move": "5\"",
+      "save": 5,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    }
+  ]
+}

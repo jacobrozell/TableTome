@@ -3,7 +3,9 @@ import TabletomeDomain
 
 extension BattlePhaseTrackerView {
     var usesPhoneLandscapeCombatSplit: Bool {
-        layoutContext == .phoneLandscape
+        !viewModel.isStarCraft
+            && layoutContext == .phoneLandscape
+            && !dynamicTypeSize.needsLayoutAdaptation
     }
 
     @ViewBuilder
@@ -14,6 +16,7 @@ extension BattlePhaseTrackerView {
                     army: pinned.army,
                     unit: pinned.unit,
                     playerName: pinned.playerName,
+                    gameSystemId: viewModel.gameSystemId.rawValue,
                     woundsRemaining: pinned.woundsRemaining,
                     woundCapacity: pinned.woundCapacity,
                     effectiveHealthPerModel: pinned.effectiveHealthPerModel,

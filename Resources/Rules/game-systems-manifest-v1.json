@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "systems": [
+    {
+      "id": "aos-spearhead",
+      "playEngine": "phasedRound",
+      "publisher": "gw",
+      "catalogBundleName": "spearhead-catalog-v1",
+      "armyDetailsSubdirectories": ["Spearhead/armies", "Rules/Spearhead/armies"]
+    },
+    {
+      "id": "wh40k-11e",
+      "playEngine": "phasedRound",
+      "publisher": "gw",
+      "catalogBundleName": "wh40k-catalog-v1",
+      "armyDetailsSubdirectories": ["Wh40k/armies", "Rules/Wh40k/armies"]
+    },
+    {
+      "id": "wh40k-10e-cp",
+      "playEngine": "phasedRound",
+      "publisher": "gw",
+      "catalogBundleName": "combat-patrol-catalog-v1",
+      "armyDetailsSubdirectories": ["CombatPatrol/armies", "Rules/CombatPatrol/armies"]
+    },
+    {
+      "id": "sc-tmg",
+      "playEngine": "alternatingActivation",
+      "publisher": "amg",
+      "catalogBundleName": "sc-tmg-catalog-v1",
+      "armyDetailsSubdirectories": ["ScTmg/armies", "Rules/ScTmg/armies"]
+    }
+  ]
+}

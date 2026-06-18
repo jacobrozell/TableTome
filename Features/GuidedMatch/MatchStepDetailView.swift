@@ -15,7 +15,7 @@ struct MatchStepDetailView: View {
         TabletomeLayout.usesSideBySideLayout(
             horizontalSizeClass: horizontalSizeClass,
             verticalSizeClass: verticalSizeClass,
-            isAccessibilitySize: dynamicTypeSize.isAccessibilitySize
+            isAccessibilitySize: dynamicTypeSize.needsLayoutAdaptation
         )
     }
 
@@ -30,7 +30,7 @@ struct MatchStepDetailView: View {
                     .font(.body)
                     .fixedSize(horizontal: false, vertical: true)
 
-                GlossaryChipsRow(text: step.body)
+                GlossaryChipsRow(text: step.body, gameSystemId: viewModel.gameSystemId.rawValue, ruleSections: ruleSections)
 
                 stepSpecificContent
 
@@ -65,21 +65,43 @@ struct MatchStepDetailView: View {
 
     @ViewBuilder
     private var stepCompletionStatus: some View {
-        HStack(spacing: DesignTokens.Spacing.sm) {
-            Image(systemName: isComplete ? "checkmark.circle.fill" : "circle")
-                .foregroundStyle(isComplete ? .green : .secondary)
-            Text(
-                isComplete
-                    ? String(localized: "Step complete")
-                    : String(localized: "Complete the actions above — this step checks off automatically.")
-            )
-            .font(.subheadline)
-            .foregroundStyle(isComplete ? .primary : .secondary)
-            .fixedSize(horizontal: false, vertical: true)
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            HStack(spacing: DesignTokens.Spacing.sm) {
+                Image(systemName: isComplete ? "checkmark.circle.fill" : "circle")
+                    .foregroundStyle(isComplete ? .green : .secondary)
+                Text(completionHint)
+                    .font(.subheadline)
+                    .foregroundStyle(isComplete ? .primary : .secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            if usesManualConfirmation, !isComplete {
+                Button(String(localized: "Mark step complete")) {
+                    viewModel.setStepComplete(step.id, complete: true)
+                }
+                .buttonStyle(.borderedProminent)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .accessibilityIdentifier("guidedMatch.markComplete.\(step.id)")
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .surfaceCard()
         .accessibilityIdentifier("guidedMatch.stepComplete.\(step.id)")
+    }
+
+    private var completionHint: String {
+        if isComplete {
+            return String(localized: "Step complete")
+        }
+        if usesManualConfirmation {
+            return String(localized: "Tap below when you've finished this step.")
+        }
+        return String(localized: "Complete the actions above — this step checks off automatically.")
+    }
+
+    private var usesManualConfirmation: Bool {
+        viewModel.gameSystemId == .scTmg
+            && ["battle-format", "mission-setup", "confirm-lists"].contains(step.id)
     }
 
     @ViewBuilder
@@ -89,10 +111,12 @@ struct MatchStepDetailView: View {
             matchupCard
         case "roll-attacker":
             attackerPicker
-        case "regiment-abilities":
+        case "regiment-abilities", "force-disposition":
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                 armyOptionsSection(
-                    title: String(localized: "Regiment Abilities"),
+                    title: viewModel.gameSystemId == .wh40k11e
+                        ? String(localized: "Force Dispositions")
+                        : String(localized: "Regiment Abilities"),
                     playerOneKeyPath: \.regimentAbilityId,
                     playerTwoKeyPath: \.regimentAbilityId,
                     options: { army in army.regimentAbilities },
@@ -111,13 +135,165 @@ struct MatchStepDetailView: View {
                 )
                 loadoutSummarySection(showRegiment: true, showEnhancement: true)
             }
+        case "pick-enhancement":
+            combatPatrolLoadoutSection
+        case "determine-mission":
+            combatPatrolMissionSection
+        case "setup-battlefield":
+            combatPatrolSetupBattlefieldSection
+        case "declare-formations":
+            combatPatrolFormationsSection
+        case "deploy-armies":
+            combatPatrolDeploySection
+        case "roll-first-turn":
+            combatPatrolFirstTurnSection
         case "realm-battlefield":
             deploymentSetupSection
+        case "deploy-battlefield":
+            wh40kDeploymentSetupSection
+        case "battlefield-setup":
+            if viewModel.gameSystemId == .scTmg {
+                scTmgBattlefieldSetupSection
+            }
+        case "battle-format", "mission-setup", "confirm-lists":
+            if viewModel.gameSystemId == .scTmg {
+                scTmgManualConfirmSection
+            }
         case "fight-battle":
             battleStartLinks
         default:
             EmptyView()
         }
+    }
+
+    private var wh40kDeploymentSetupSection: some View {
+        Wh40kDeploymentChecklistCard(
+            completedSteps: viewModel.deploymentCompletedSteps,
+            focusedStep: Wh40kDeploymentChecklistStep.allCases.first {
+                !Wh40kDeploymentChecklist.isComplete(step: $0, completedSteps: viewModel.deploymentCompletedSteps)
+            },
+            onToggle: viewModel.setWh40kDeploymentStep
+        )
+    }
+
+    private var combatPatrolLoadoutSection: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            armyOptionsSection(
+                title: String(localized: "Enhancements"),
+                playerOneKeyPath: \.enhancementId,
+                playerTwoKeyPath: \.enhancementId,
+                options: { army in army.enhancements },
+                onSelect: viewModel.setEnhancement
+            )
+            armyOptionsSection(
+                title: String(localized: "Secondary Objectives"),
+                playerOneKeyPath: \.secondaryObjectiveId,
+                playerTwoKeyPath: \.secondaryObjectiveId,
+                options: { army in army.secondaryObjectives },
+                onSelect: viewModel.setSecondaryObjective
+            )
+            loadoutSummarySection(showRegiment: false, showEnhancement: true, showSecondary: true)
+        }
+    }
+
+    private var combatPatrolMissionSection: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            if let catalog = viewModel.catalog {
+                CombatPatrolMissionPickerCard(
+                    missions: catalog.missions,
+                    selectedMissionId: viewModel.matchState.selectedMissionId,
+                    onSelect: viewModel.setSelectedMission
+                )
+            }
+            if let mission = viewModel.catalog.flatMap({ viewModel.selectedMission(in: $0) }) {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                    Text(mission.primaryObjectiveSummary)
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                    if let notes = mission.scoringNotes {
+                        Text(notes)
+                            .font(.caption)
+                            .foregroundStyle(.tertiary)
+                    }
+                }
+                .surfaceCard()
+            }
+        }
+    }
+
+    private var combatPatrolSetupBattlefieldSection: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            CombatPatrolDeploymentChecklistCard(
+                completedSteps: viewModel.deploymentCompletedSteps,
+                focusedSteps: [.setupTerrain, .placeObjectives, .attackerDefender],
+                onToggle: viewModel.setCombatPatrolDeploymentStep
+            )
+            AttackerDefenderPickerCard(
+                playerOneName: viewModel.matchState.playerOne.playerName,
+                playerTwoName: viewModel.matchState.playerTwo.playerName,
+                attackerIsPlayerOne: viewModel.matchState.attackerIsPlayerOne,
+                onSelect: viewModel.setAttacker,
+                title: String(localized: "Who is the attacker?"),
+                decidedCaption: { isPlayerOne in
+                    let attacker = isPlayerOne
+                        ? viewModel.matchState.playerOne.playerName
+                        : viewModel.matchState.playerTwo.playerName
+                    let defender = isPlayerOne
+                        ? viewModel.matchState.playerTwo.playerName
+                        : viewModel.matchState.playerOne.playerName
+                    return String(
+                        localized: "\(attacker) uses the Attacker deployment zone. \(defender) uses the Defender zone."
+                    )
+                }
+            )
+        }
+    }
+
+    private var combatPatrolFormationsSection: some View {
+        CombatPatrolDeploymentChecklistCard(
+            completedSteps: viewModel.deploymentCompletedSteps,
+            focusedSteps: [.declareFormations],
+            onToggle: viewModel.setCombatPatrolDeploymentStep
+        )
+    }
+
+    private var combatPatrolDeploySection: some View {
+        CombatPatrolDeploymentChecklistCard(
+            completedSteps: viewModel.deploymentCompletedSteps,
+            focusedSteps: [.deployArmies],
+            onToggle: viewModel.setCombatPatrolDeploymentStep
+        )
+    }
+
+    private var combatPatrolFirstTurnSection: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            FirstTurnPickerCard(
+                playerOneName: viewModel.matchState.playerOne.playerName,
+                playerTwoName: viewModel.matchState.playerTwo.playerName,
+                firstTurnIsPlayerOne: viewModel.matchState.firstTurnIsPlayerOne,
+                onSelect: viewModel.setFirstTurn
+            )
+            CombatPatrolDeploymentChecklistCard(
+                completedSteps: viewModel.deploymentCompletedSteps,
+                focusedSteps: [.rollFirstTurn],
+                onToggle: viewModel.setCombatPatrolDeploymentStep
+            )
+        }
+    }
+
+    private var scTmgBattlefieldSetupSection: some View {
+        ScTmgDeploymentChecklistCard(
+            completedSteps: viewModel.deploymentCompletedSteps,
+            focusedStep: BattleFlowGuide.nextIncompleteScTmgSetupStep(
+                in: viewModel.deploymentCompletedSteps
+            ),
+            onToggle: viewModel.setScTmgDeploymentStep
+        )
+    }
+
+    @ViewBuilder
+    private var scTmgManualConfirmSection: some View {
+        EmptyView()
     }
 
     private var deploymentSetupSection: some View {
@@ -143,15 +319,20 @@ struct MatchStepDetailView: View {
         }
     }
 
+    @ViewBuilder
     private var battleStartLinks: some View {
-        ReferenceLinksGroup {
-            NavigationLink {
-                BattleTacticsReferenceView(ruleSections: ruleSections)
-            } label: {
-                ReferenceLinkRow(
-                    title: String(localized: "Card Decks Guide"),
-                    systemImage: "rectangle.stack"
-                )
+        if viewModel.gameSystemId == .wh40k11e || viewModel.gameSystemId == .scTmg || viewModel.gameSystemId == .wh40k10eCp {
+            EmptyView()
+        } else {
+            ReferenceLinksGroup {
+                NavigationLink {
+                    BattleTacticsReferenceView(ruleSections: ruleSections)
+                } label: {
+                    ReferenceLinkRow(
+                        title: String(localized: "Card Decks Guide"),
+                        systemImage: "rectangle.stack"
+                    )
+                }
             }
         }
     }
@@ -179,7 +360,11 @@ struct MatchStepDetailView: View {
         )
     }
 
-    private func loadoutSummarySection(showRegiment: Bool, showEnhancement: Bool) -> some View {
+    private func loadoutSummarySection(
+        showRegiment: Bool,
+        showEnhancement: Bool,
+        showSecondary: Bool = false
+    ) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             SectionHeader(title: String(localized: "Loadout Summary"), systemImage: "tray.full")
 
@@ -189,13 +374,15 @@ struct MatchStepDetailView: View {
                         player: viewModel.matchState.playerOne,
                         isAttacker: viewModel.matchState.attackerIsPlayerOne == true,
                         showRegiment: showRegiment,
-                        showEnhancement: showEnhancement
+                        showEnhancement: showEnhancement,
+                        showSecondary: showSecondary
                     )
                     playerLoadoutCard(
                         player: viewModel.matchState.playerTwo,
                         isAttacker: viewModel.matchState.attackerIsPlayerOne == false,
                         showRegiment: showRegiment,
-                        showEnhancement: showEnhancement
+                        showEnhancement: showEnhancement,
+                        showSecondary: showSecondary
                     )
                 }
             } else {
@@ -203,13 +390,15 @@ struct MatchStepDetailView: View {
                     player: viewModel.matchState.playerOne,
                     isAttacker: viewModel.matchState.attackerIsPlayerOne == true,
                     showRegiment: showRegiment,
-                    showEnhancement: showEnhancement
+                    showEnhancement: showEnhancement,
+                    showSecondary: showSecondary
                 )
                 playerLoadoutCard(
                     player: viewModel.matchState.playerTwo,
                     isAttacker: viewModel.matchState.attackerIsPlayerOne == false,
                     showRegiment: showRegiment,
-                    showEnhancement: showEnhancement
+                    showEnhancement: showEnhancement,
+                    showSecondary: showSecondary
                 )
             }
         }
@@ -219,13 +408,15 @@ struct MatchStepDetailView: View {
         player: PlayerArmySelection,
         isAttacker: Bool,
         showRegiment: Bool,
-        showEnhancement: Bool
+        showEnhancement: Bool,
+        showSecondary: Bool = false
     ) -> some View {
         LoadoutSummaryCard(
             playerName: player.playerName,
             armyName: viewModel.armyName(for: player) ?? String(localized: "No army selected"),
             regimentAbility: showRegiment ? viewModel.regimentAbility(for: player) : nil,
             enhancement: showEnhancement ? viewModel.enhancement(for: player) : nil,
+            secondaryObjective: showSecondary ? viewModel.secondaryObjective(for: player) : nil,
             isAttacker: isAttacker
         )
     }
@@ -306,7 +497,7 @@ struct MatchStepDetailView: View {
             if let army = viewModel.army(factionId: player.factionId, armyId: player.armyId) {
                 let armyOptions = options(army)
                 if armyOptions.isEmpty {
-                    Text(String(localized: "See your faction's free Spearhead download for regiment and enhancement options."))
+                    Text(emptyArmyOptionsMessage)
                         .font(.callout)
                         .foregroundStyle(.secondary)
                 } else {
@@ -332,5 +523,18 @@ struct MatchStepDetailView: View {
     private var relatedSection: RuleSection? {
         guard let sectionId = step.relatedRuleSectionId else { return nil }
         return ruleSections.first { $0.id == sectionId }
+    }
+
+    private var emptyArmyOptionsMessage: String {
+        switch viewModel.gameSystemId {
+        case .wh40k11e:
+            String(localized: "See your Munitorum Field Manual and box datasheets for detachment options.")
+        case .wh40k10eCp:
+            String(localized: "See your Combat Patrol datasheet for enhancement and secondary options.")
+        case .scTmg:
+            String(localized: "Founders Edition armies ship as fixed lists — no extra options to pick.")
+        default:
+            String(localized: "See your faction's free Spearhead download for regiment and enhancement options.")
+        }
     }
 }

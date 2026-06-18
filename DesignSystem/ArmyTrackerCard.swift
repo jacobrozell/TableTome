@@ -11,10 +11,16 @@ struct ArmyTrackerCard: View {
     let activePlayerIsOne: Bool
     var usesWideLayout: Bool = false
     var usesCompactSidebar: Bool = false
+    var gameSystemId: GameSystemId = .default
     let onChange: (String, Int) -> Void
     var onSelectUnit: ((String, String) -> Void)?
 
     @State private var hidesDestroyedUnits = false
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    private var effectiveWideLayout: Bool {
+        usesWideLayout && !dynamicTypeSize.needsLayoutAdaptation
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: usesCompactSidebar ? DesignTokens.Spacing.sm : DesignTokens.Spacing.md) {
@@ -36,7 +42,7 @@ struct ArmyTrackerCard: View {
                 }
             }
 
-            if usesWideLayout {
+            if effectiveWideLayout {
                 HStack(alignment: .top, spacing: DesignTokens.Spacing.lg) {
                     armyColumn(
                         army: playerOneArmy,
@@ -90,8 +96,9 @@ struct ArmyTrackerCard: View {
                 summary: summary,
                 isActivePlayer: isActivePlayer,
                 hidesDestroyedUnits: hidesDestroyedUnits,
-                usesWideLayout: usesWideLayout,
+                usesWideLayout: effectiveWideLayout,
                 usesCompactSidebar: usesCompactSidebar,
+                gameSystemId: gameSystemId,
                 onChange: onChange,
                 onSelectUnit: onSelectUnit
             )
@@ -106,6 +113,7 @@ struct ArmyHealthPanel: View {
     let hidesDestroyedUnits: Bool
     let usesWideLayout: Bool
     let usesCompactSidebar: Bool
+    var gameSystemId: GameSystemId = .default
     let onChange: (String, Int) -> Void
     var onSelectUnit: ((String, String) -> Void)?
 
@@ -153,6 +161,7 @@ struct ArmyHealthPanel: View {
                         armyId: summary.armyId,
                         usesWideLayout: usesWideLayout,
                         usesCompactSidebar: usesCompactSidebar,
+                        gameSystemId: gameSystemId,
                         onChange: onChange,
                         onSelect: onSelectUnit
                     )
@@ -223,8 +232,19 @@ struct ArmyUnitHealthRow: View {
     let armyId: String
     var usesWideLayout: Bool = false
     var usesCompactSidebar: Bool = false
+    var gameSystemId: GameSystemId = .default
     let onChange: (String, Int) -> Void
     var onSelect: ((String, String) -> Void)?
+
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    private var effectiveWideLayout: Bool {
+        usesWideLayout && !dynamicTypeSize.needsLayoutAdaptation
+    }
+
+    private var unitNameLineLimit: Int {
+        dynamicTypeSize.needsLayoutAdaptation ? 3 : (effectiveWideLayout ? 2 : 1)
+    }
 
     private var woundKey: String {
         UnitWoundTracker.unitKey(armyId: armyId, unitId: unit.unitId)
@@ -239,8 +259,8 @@ struct ArmyUnitHealthRow: View {
                     VStack(alignment: .leading, spacing: 2) {
                         HStack(spacing: DesignTokens.Spacing.xs) {
                             Text(unit.unitName)
-                                .font(usesWideLayout ? .subheadline.weight(.semibold) : .caption.weight(.semibold))
-                                .lineLimit(usesWideLayout ? 2 : 1)
+                                .font(effectiveWideLayout ? .subheadline.weight(.semibold) : .caption.weight(.semibold))
+                                .lineLimit(unitNameLineLimit)
                                 .multilineTextAlignment(.leading)
                             if unit.isDestroyed {
                                 Text(String(localized: "Destroyed"))
@@ -279,7 +299,25 @@ struct ArmyUnitHealthRow: View {
             )
         }
         .opacity(unit.isDestroyed ? 0.6 : 1)
-        .frame(minHeight: usesCompactSidebar ? 40 : DesignTokens.minTouchTarget)
-        .accessibilityHint(onSelect == nil ? "" : String(localized: "Opens unit focus with warscroll and combat options."))
+        .frame(minHeight: DesignTokens.minTouchTarget)
+        .accessibilityHint(
+            onSelect == nil
+                ? ""
+                : unitFocusAccessibilityHint
+        )
+    }
+
+    private var playContext: GameSystemPlayContext {
+        GameSystemPlayContext.context(for: gameSystemId)
+    }
+
+    private var unitFocusAccessibilityHint: String {
+        if playContext.capabilities.showsWh40kDeploymentChecklist {
+            return String(localized: "Opens unit focus with datasheet details.")
+        }
+        if playContext.capabilities.showsActivationBar {
+            return String(localized: "Opens unit focus with unit card details.")
+        }
+        return String(localized: "Opens unit focus with warscroll and combat options.")
     }
 }

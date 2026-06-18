@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "armyId": "bloodbound-gore-pilgrims",
+  "units": [
+    {
+      "id": "slaughterpriest",
+      "name": "Slaughterpriest",
+      "move": "5\"",
+      "save": 5,
+      "health": 6,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "blood-warriors",
+      "name": "Blood Warriors",
+      "move": "5\"",
+      "save": 3,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "blood-warriors-2",
+      "name": "Blood Warriors",
+      "move": "5\"",
+      "save": 3,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "bloodreavers",
+      "name": "Bloodreavers",
+      "move": "5\"",
+      "save": 6,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 10
+    },
+    {
+      "id": "mighty-skullcrushers",
+      "name": "Mighty Skullcrushers",
+      "move": "8\"",
+      "save": 2,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 3
+    }
+  ]
+}

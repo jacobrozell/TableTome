@@ -6,9 +6,21 @@ public struct RuleSectionRow: View {
     let category: RuleSectionCategory
     let accessibilityId: String
 
-    public init(title: String, category: RuleSectionCategory, accessibilityId: String) {
+    private var categoryLabel: String {
+        GameSystemRulesLabels.categoryRowLabel(category, gameSystemId: gameSystemId)
+    }
+
+    private let gameSystemId: String
+
+    public init(
+        title: String,
+        category: RuleSectionCategory,
+        gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId,
+        accessibilityId: String
+    ) {
         self.title = title
         self.category = category
+        self.gameSystemId = gameSystemId
         self.accessibilityId = accessibilityId
     }
 
@@ -31,13 +43,5 @@ public struct RuleSectionRow: View {
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(title), \(categoryLabel)")
         .accessibilityIdentifier(accessibilityId)
-    }
-
-    private var categoryLabel: String {
-        switch category {
-        case .core: String(localized: "Core Rules")
-        case .spearhead: String(localized: "Spearhead")
-        case .glossary: String(localized: "Glossary")
-        }
     }
 }

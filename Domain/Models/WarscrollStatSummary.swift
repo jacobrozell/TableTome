@@ -16,7 +16,10 @@ public enum WarscrollStatSummary: Sendable {
         return base
     }
 
-    public static func weaponCombatProfile(_ weapon: SpearheadWeapon) -> String {
+    public static func weaponCombatProfile(
+        _ weapon: SpearheadWeapon,
+        gameSystemId: String = "aos-spearhead"
+    ) -> String {
         var parts: [String] = []
         if let range = weapon.rangeInches {
             parts.append("Range \(range)\"")
@@ -24,7 +27,10 @@ public enum WarscrollStatSummary: Sendable {
         parts.append("A \(weapon.attacks)")
         parts.append("Hit \(weapon.hit)+")
         parts.append("Wound \(weapon.wound)+")
-        parts.append("Rend \(weapon.rend)")
+        let penetration = CombatRollEngineRouter.usesWh40kRules(gameSystemId: gameSystemId)
+            ? String(localized: "AP \(weapon.rend)")
+            : "Rend \(weapon.rend)"
+        parts.append(penetration)
         parts.append("Dmg \(weapon.damage)")
         return parts.joined(separator: " · ")
     }

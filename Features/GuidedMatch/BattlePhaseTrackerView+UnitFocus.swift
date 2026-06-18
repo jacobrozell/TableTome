@@ -15,6 +15,7 @@ extension BattlePhaseTrackerView {
             let hasOverride = viewModel.healthPerModelOverride(for: woundKey) != nil
 
             UnitFocusSheet(
+                gameSystemId: viewModel.gameSystemId,
                 army: army,
                 unit: unit,
                 playerName: viewModel.playerName(forArmyId: army.id),
@@ -76,12 +77,13 @@ extension BattlePhaseTrackerView {
         unitId: String,
         preferredWeaponId: String?
     ) {
+        guard ReleaseSurface.showsCombatResolver(for: viewModel.gameSystemId) else { return }
         applyArmyUnitCombatPrefill(
             armyId: armyId,
             unitId: unitId,
             preferredWeaponId: preferredWeaponId
         )
         unitFocusSelection = nil
-        selectedSectionTab = .combat
+        focusCombatResolverSection()
     }
 }

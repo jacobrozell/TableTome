@@ -2,18 +2,29 @@ import Foundation
 
 /// Combined match + tracker payload for sharing between two devices.
 public struct MatchSyncSnapshot: Codable, Sendable, Equatable {
+    public var gameSystemId: String
     public var matchState: GuidedMatchState
     public var trackerState: BattleTrackerState
     public var updatedAt: Date
 
     public init(
+        gameSystemId: String = "aos-spearhead",
         matchState: GuidedMatchState,
         trackerState: BattleTrackerState,
         updatedAt: Date = Date()
     ) {
+        self.gameSystemId = gameSystemId
         self.matchState = matchState
         self.trackerState = trackerState
         self.updatedAt = updatedAt
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        gameSystemId = try container.decodeIfPresent(String.self, forKey: .gameSystemId) ?? "aos-spearhead"
+        matchState = try container.decode(GuidedMatchState.self, forKey: .matchState)
+        trackerState = try container.decode(BattleTrackerState.self, forKey: .trackerState)
+        updatedAt = try container.decodeIfPresent(Date.self, forKey: .updatedAt) ?? Date()
     }
 }
 
@@ -36,16 +47,17 @@ public enum MatchSyncCodec {
         return snapshot
     }
 
-    public static func current() -> MatchSyncSnapshot {
+    public static func current(gameSystemId: String = "aos-spearhead") -> MatchSyncSnapshot {
         MatchSyncSnapshot(
-            matchState: MatchSetupStore.load(),
-            trackerState: BattleTrackerStore.load()
+            gameSystemId: gameSystemId,
+            matchState: MatchSetupStore.load(gameSystemId: gameSystemId),
+            trackerState: BattleTrackerStore.load(gameSystemId: gameSystemId)
         )
     }
 
     public static func apply(_ snapshot: MatchSyncSnapshot, notifyUI: Bool = true) {
-        MatchSetupStore.save(snapshot.matchState, notifySync: false)
-        BattleTrackerStore.save(snapshot.trackerState, notifySync: false)
+        MatchSetupStore.save(snapshot.matchState, gameSystemId: snapshot.gameSystemId, notifySync: false)
+        BattleTrackerStore.save(snapshot.trackerState, gameSystemId: snapshot.gameSystemId, notifySync: false)
         if notifyUI {
             MatchSyncNotifications.postStateDidChange()
         }

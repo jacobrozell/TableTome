@@ -1,4 +1,5 @@
 import SwiftUI
+import TabletomeDomain
 
 struct VictoryPointsCard: View {
     let playerOneName: String
@@ -6,8 +7,57 @@ struct VictoryPointsCard: View {
     let playerOneVP: Int
     let playerTwoVP: Int
     var highlightsScoring: Bool = false
-    let onAdjust: (Bool, Int) -> Void
-    let onQuickAdd: (Bool, Int) -> Void
+    var gameSystemId: GameSystemId = .default
+    let onAdjust: (Bool, Int, MatchVictoryPointsReason) -> Void
+    let onQuickAdd: (Bool, Int, MatchVictoryPointsReason) -> Void
+
+    init(
+        playerOneName: String,
+        playerTwoName: String,
+        playerOneVP: Int,
+        playerTwoVP: Int,
+        highlightsScoring: Bool = false,
+        gameSystemId: GameSystemId = .default,
+        onAdjust: @escaping (Bool, Int, MatchVictoryPointsReason) -> Void,
+        onQuickAdd: @escaping (Bool, Int, MatchVictoryPointsReason) -> Void
+    ) {
+        self.playerOneName = playerOneName
+        self.playerTwoName = playerTwoName
+        self.playerOneVP = playerOneVP
+        self.playerTwoVP = playerTwoVP
+        self.highlightsScoring = highlightsScoring
+        self.gameSystemId = gameSystemId
+        self.onAdjust = onAdjust
+        self.onQuickAdd = onQuickAdd
+    }
+
+    init(
+        playerOneName: String,
+        playerTwoName: String,
+        playerOneVP: Int,
+        playerTwoVP: Int,
+        highlightsScoring: Bool = false,
+        gameSystemId: String,
+        onAdjust: @escaping (Bool, Int, MatchVictoryPointsReason) -> Void,
+        onQuickAdd: @escaping (Bool, Int, MatchVictoryPointsReason) -> Void
+    ) {
+        self.init(
+            playerOneName: playerOneName,
+            playerTwoName: playerTwoName,
+            playerOneVP: playerOneVP,
+            playerTwoVP: playerTwoVP,
+            highlightsScoring: highlightsScoring,
+            gameSystemId: GameSystemId(resolving: gameSystemId),
+            onAdjust: onAdjust,
+            onQuickAdd: onQuickAdd
+        )
+    }
+
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    private var scoring: VictoryPointsScoring {
+        GameSystemPlayContext.context(for: gameSystemId).victoryPointsScoring
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -16,7 +66,7 @@ struct VictoryPointsCard: View {
 
             if highlightsScoring {
                 Label(
-                    String(localized: "Score objectives and battle tactics for the active player before ending the turn."),
+                    scoring.highlightText,
                     systemImage: "star.circle.fill"
                 )
                 .font(.caption)
@@ -24,10 +74,20 @@ struct VictoryPointsCard: View {
                 .fixedSize(horizontal: false, vertical: true)
             }
 
-            HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
-                vpColumn(name: playerOneName, vp: playerOneVP, isPlayerOne: true)
-                Divider()
-                vpColumn(name: playerTwoName, vp: playerTwoVP, isPlayerOne: false)
+            Group {
+                if dynamicTypeSize.needsLayoutAdaptation {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                        vpColumn(name: playerOneName, vp: playerOneVP, isPlayerOne: true)
+                        Divider()
+                        vpColumn(name: playerTwoName, vp: playerTwoVP, isPlayerOne: false)
+                    }
+                } else {
+                    HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
+                        vpColumn(name: playerOneName, vp: playerOneVP, isPlayerOne: true)
+                        Divider()
+                        vpColumn(name: playerTwoName, vp: playerTwoVP, isPlayerOne: false)
+                    }
+                }
             }
 
             Text(String(localized: "Quick add (end of turn scoring)"))
@@ -50,8 +110,8 @@ struct VictoryPointsCard: View {
             Text(name)
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(.secondary)
-                .lineLimit(2)
-                .minimumScaleFactor(0.85)
+                .adaptiveLineLimit(2)
+                .minimumScaleFactor(dynamicTypeSize.needsLayoutAdaptation ? 1 : 0.85)
 
             Text("\(vp)")
                 .font(.title2.bold())
@@ -61,28 +121,43 @@ struct VictoryPointsCard: View {
 
             Stepper(
                 String(localized: "Adjust"),
-                onIncrement: { onAdjust(isPlayerOne, 1) },
-                onDecrement: { onAdjust(isPlayerOne, -1) }
+                onIncrement: { onAdjust(isPlayerOne, 1, .manual) },
+                onDecrement: { onAdjust(isPlayerOne, -1, .manual) }
             )
             .labelsHidden()
             .accessibilityLabel(String(localized: "\(name), \(vp) victory points"))
             .accessibilityIdentifier(isPlayerOne ? "battleTracker.vp.playerOne" : "battleTracker.vp.playerTwo")
 
             HStack(spacing: DesignTokens.Spacing.xs) {
-                quickButton(label: String(localized: "+1 objective"), isPlayerOne: isPlayerOne, amount: 1)
-                quickButton(label: String(localized: "+1 tactic"), isPlayerOne: isPlayerOne, amount: 1)
+                quickButton(
+                    label: scoring.primaryQuickAddLabel,
+                    isPlayerOne: isPlayerOne,
+                    amount: scoring.primaryQuickAddAmount,
+                    reason: .objective
+                )
+                quickButton(
+                    label: scoring.secondaryQuickAddLabel,
+                    isPlayerOne: isPlayerOne,
+                    amount: scoring.secondaryQuickAddAmount,
+                    reason: .tactic
+                )
             }
         }
         .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
     }
 
-    private func quickButton(label: String, isPlayerOne: Bool, amount: Int) -> some View {
+    private func quickButton(
+        label: String,
+        isPlayerOne: Bool,
+        amount: Int,
+        reason: MatchVictoryPointsReason
+    ) -> some View {
         Button(label) {
-            onQuickAdd(isPlayerOne, amount)
+            onQuickAdd(isPlayerOne, amount, reason)
         }
         .buttonStyle(.bordered)
-        .controlSize(.small)
+        .controlSize(dynamicTypeSize.needsLayoutAdaptation ? .regular : .small)
         .font(.caption)
-        .frame(minHeight: 32)
+        .minimumTouchTarget(alignment: .leading)
     }
 }

@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "armyId": "fluxblade-coven",
+  "units": [
+    {
+      "id": "magister-on-disc-of-tzeentch",
+      "name": "Magister on Disc of Tzeentch",
+      "move": "14\"",
+      "save": 4,
+      "health": 6,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "flamers-of-tzeentch",
+      "name": "Flamers of Tzeentch",
+      "move": "9\"",
+      "save": 5,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "screamers-of-tzeentch",
+      "name": "Screamers of Tzeentch",
+      "move": "14\"",
+      "save": 5,
+      "health": 3,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "tzaangors",
+      "name": "Tzaangors",
+      "move": "6\"",
+      "save": 5,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "tzaangors-2",
+      "name": "Tzaangors",
+      "move": "6\"",
+      "save": 5,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "kairic-acolytes",
+      "name": "Kairic Acolytes",
+      "move": "5\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 10
+    }
+  ]
+}

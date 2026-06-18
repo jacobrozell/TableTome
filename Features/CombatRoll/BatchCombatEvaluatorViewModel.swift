@@ -18,8 +18,10 @@ final class BatchCombatEvaluatorViewModel: ObservableObject {
     @Published private(set) var mortalDamage = false
     @Published private(set) var usesVariableDamage = false
     @Published private(set) var evaluation: BatchCombatRollEvaluation?
+    var gameSystemId = "aos-spearhead"
 
     func sync(from viewModel: UnitMatchupEvaluatorViewModel) {
+        gameSystemId = viewModel.gameSystemId
         guard viewModel.canEvaluate,
               let weapon = viewModel.selectedAttackerWeapon,
               let defender = viewModel.selectedDefenderUnit,
@@ -36,12 +38,13 @@ final class BatchCombatEvaluatorViewModel: ObservableObject {
             from: viewModel.matchupBuffs,
             enabledIds: viewModel.enabledBuffIds
         )
-        saveNeededOnDice = BatchCombatRollEngine.saveNeededOnDice(
+        saveNeededOnDice = CombatRollEngineRouter.saveNeededOnDice(
             saveTarget: save,
             rend: weapon.rend,
-            saveModifier: mods.save
+            saveModifier: mods.save,
+            gameSystemId: gameSystemId
         )
-        wardTarget = mods.wardTarget
+        wardTarget = CombatRollEngineRouter.usesWh40kRules(gameSystemId: gameSystemId) ? nil : mods.wardTarget
         mortalDamage = viewModel.resolvedRollOptions().mortalDamage
 
         if case .fixed(let value) = weapon.damageKind {

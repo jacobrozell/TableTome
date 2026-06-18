@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "armyId": "darkoath-raiders",
+  "units": [
+    {
+      "id": "darkoath-warqueen",
+      "name": "Darkoath Warqueen",
+      "move": "5\"",
+      "save": 5,
+      "health": 5,
+      "control": 2,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "darkoath-savagers",
+      "name": "Darkoath Savagers",
+      "move": "5\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 10
+    },
+    {
+      "id": "darkoath-fellriders",
+      "name": "Darkoath Fellriders",
+      "move": "12\"",
+      "save": 5,
+      "health": 3,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "darkoath-marauders",
+      "name": "Darkoath Marauders",
+      "move": "5\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 10
+    }
+  ]
+}

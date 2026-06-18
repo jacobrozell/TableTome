@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "armyId": "sunblooded-prowlers",
+  "units": [
+    {
+      "id": "sunblood-pack",
+      "name": "Sunblood Pack",
+      "move": "5\"",
+      "save": 4,
+      "health": 3,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 1
+    },
+    {
+      "id": "saurus-warriors",
+      "name": "Saurus Warriors",
+      "move": "5\"",
+      "save": 4,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "saurus-warriors-2",
+      "name": "Saurus Warriors",
+      "move": "5\"",
+      "save": 4,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "hunters-of-huanchi",
+      "name": "Hunters of Huanchi",
+      "move": "8\"",
+      "save": 6,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "hunters-of-huanchi-2",
+      "name": "Hunters of Huanchi",
+      "move": "8\"",
+      "save": 6,
+      "health": 1,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 5
+    },
+    {
+      "id": "terrawings",
+      "name": "Terrawings",
+      "move": "12\"",
+      "save": 5,
+      "health": 2,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 3
+    },
+    {
+      "id": "spawn-of-chotec",
+      "name": "Spawn of Chotec",
+      "move": "5\"",
+      "save": 5,
+      "health": 8,
+      "control": 1,
+      "keywords": [],
+      "modelCount": 1
+    }
+  ]
+}

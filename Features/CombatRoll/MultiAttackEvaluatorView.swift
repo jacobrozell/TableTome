@@ -6,19 +6,26 @@ struct MultiAttackEvaluatorView: View {
     let weaponName: String
     let ruleSections: [RuleSection]
     let isSimulated: Bool
+    var gameSystemId: String = "aos-spearhead"
 
     @State private var batchHitCount = 1
+
+    private var usesWh40kRules: Bool {
+        CombatRollEngineRouter.usesWh40kRules(gameSystemId: gameSystemId)
+    }
 
     init(
         viewModel: MultiAttackEvaluatorViewModel,
         weaponName: String,
         ruleSections: [RuleSection],
-        isSimulated: Bool = false
+        isSimulated: Bool = false,
+        gameSystemId: String = "aos-spearhead"
     ) {
         self.viewModel = viewModel
         self.weaponName = weaponName
         self.ruleSections = ruleSections
         self.isSimulated = isSimulated
+        self.gameSystemId = gameSystemId
     }
 
     var body: some View {
@@ -121,8 +128,9 @@ struct MultiAttackEvaluatorView: View {
             )
 
             Text(
-                "Hit \(viewModel.hitTarget)+ · Wound \(viewModel.woundTarget)+ · "
-                    + "Rend \(viewModel.rend) · Damage \(viewModel.damage) vs Save \(viewModel.saveTarget)+"
+                usesWh40kRules
+                    ? "Hit \(viewModel.hitTarget)+ · Wound \(viewModel.woundTarget)+ · AP \(viewModel.rend) · Damage \(viewModel.damage) vs Save \(viewModel.saveTarget)+"
+                    : "Hit \(viewModel.hitTarget)+ · Wound \(viewModel.woundTarget)+ · Rend \(viewModel.rend) · Damage \(viewModel.damage) vs Save \(viewModel.saveTarget)+"
             )
             .font(.caption)
             .foregroundStyle(.secondary)
@@ -163,7 +171,7 @@ struct MultiAttackEvaluatorView: View {
                 isSimulated: isSimulated,
                 onRoll: { viewModel.rollSave() }
             )
-            if viewModel.wardTarget != nil {
+            if viewModel.wardTarget != nil, !usesWh40kRules {
                 SimulatedDiceFieldRow(
                     label: String(localized: "Ward"),
                     value: $viewModel.wardRoll,
@@ -186,13 +194,25 @@ struct MultiAttackEvaluatorView: View {
 
     @ViewBuilder
     private var weaponOptionsSection: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            SectionHeader(title: String(localized: "Weapon Rules"), systemImage: "bolt.fill")
-            rollOptionToggle(String(localized: "Crit (Auto-wound)"), keyPath: \.critAutoWound, id: "multiAttack.critAutoWound")
-            rollOptionToggle(String(localized: "Crit (Mortal)"), keyPath: \.critMortal, id: "multiAttack.critMortal")
-            rollOptionToggle(String(localized: "Mortal damage (skip save)"), keyPath: \.mortalDamage, id: "multiAttack.mortalDamage")
+        if usesWh40kRules {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                SectionHeader(title: String(localized: "Weapon Rules"), systemImage: "bolt.fill")
+                rollOptionToggle(
+                    String(localized: "Mortal damage (skip save)"),
+                    keyPath: \.mortalDamage,
+                    id: "multiAttack.mortalDamage"
+                )
+            }
+            .surfaceCard()
+        } else {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                SectionHeader(title: String(localized: "Weapon Rules"), systemImage: "bolt.fill")
+                rollOptionToggle(String(localized: "Crit (Auto-wound)"), keyPath: \.critAutoWound, id: "multiAttack.critAutoWound")
+                rollOptionToggle(String(localized: "Crit (Mortal)"), keyPath: \.critMortal, id: "multiAttack.critMortal")
+                rollOptionToggle(String(localized: "Mortal damage (skip save)"), keyPath: \.mortalDamage, id: "multiAttack.mortalDamage")
+            }
+            .surfaceCard()
         }
-        .surfaceCard()
     }
 
     private func rollOptionToggle(

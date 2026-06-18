@@ -68,7 +68,26 @@ extension BattlePhaseTrackerView {
             Text(String(localized: "Battle tracker isn't available for this army yet."))
                 .font(.headline)
             Text(
-                "Ability reminders for this army aren't in Tabletome yet. Use the GW Spearhead PDF link on the army picker for full rules."
+                viewModel.isStarCraft
+                    ? String(
+                        localized: """
+                        Unit cards and Command Center have full combat detail. Use the Turn tab for activations and \
+                        scoring below for victory points.
+                        """
+                    )
+                    : viewModel.playContext.usesGuidedBattleTracker
+                    ? String(
+                        localized: """
+                        Ability reminders for this army aren't in Tabletome yet. Use your box datasheets and the \
+                        official core rules for full detail.
+                        """
+                    )
+                    : String(
+                        localized: """
+                        Ability reminders for this army aren't in Tabletome yet. Use the GW Spearhead PDF link on \
+                        the army picker for full rules.
+                        """
+                    )
             )
             .font(.callout)
             .foregroundStyle(.secondary)

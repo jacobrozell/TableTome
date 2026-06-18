@@ -54,8 +54,8 @@ struct GameSystemRulesReferenceView: View {
             }
         }
         .listStyle(.insetGrouped)
-        .searchable(text: $searchText, prompt: String(localized: "Search rules"))
-        .navigationTitle(String(localized: "Rules Reference"))
+        .searchable(text: $searchText, prompt: GameSystemRulesLabels.rulesSearchPrompt(gameSystemId: gameSystem.id))
+        .navigationTitle(GameSystemRulesLabels.rulesReferenceTitle(gameSystemId: gameSystem.id))
         .accessibilityIdentifier("guide.rulesList.\(gameSystem.id)")
     }
 

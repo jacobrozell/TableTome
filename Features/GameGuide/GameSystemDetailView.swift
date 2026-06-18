@@ -83,7 +83,7 @@ struct GameSystemDetailView: View {
                                 GameSystemRulesReferenceView(gameSystem: gameSystem)
                             } label: {
                                 guideRow(
-                                    title: String(localized: "Rules Reference"),
+                                    title: GameSystemRulesLabels.rulesReferenceLinkTitle(gameSystemId: gameSystemId),
                                     symbol: "doc.text.fill",
                                     detail: String(localized: "Search phases, combat, terrain, and glossary")
                                 )
@@ -123,9 +123,9 @@ struct GameSystemDetailView: View {
                         Text(String(localized: "Play"))
                     } footer: {
                         if gameSystemId == "aos-spearhead" {
-                            Text(String(localized: "New to a term? Open Rules Glossary under Table Reference."))
+                            Text(String(localized: "New to a term? Open AoS Glossary under Table Reference."))
                         } else if gameSystemId == "wh40k-11e" {
-                            Text(String(localized: "Guided Match for Armageddon arrives in a future update. Use Getting Started and Rules Reference for now."))
+                            Text(String(localized: "Guided Match for Armageddon arrives in a future update. Use Getting Started and 40k Rules for now."))
                         }
                     }
 
@@ -139,9 +139,12 @@ struct GameSystemDetailView: View {
                             }
                             .accessibilityHint(String(localized: "Twist cards vs battle tactic cards — which deck is which"))
                             NavigationLink {
-                                RulesGlossaryView()
+                                RulesGlossaryView(gameSystemId: gameSystemId)
                             } label: {
-                                Label(String(localized: "Rules Glossary"), systemImage: "book.fill")
+                                Label(
+                                    GameSystemRulesLabels.glossaryTitle(gameSystemId: gameSystemId),
+                                    systemImage: "book.fill"
+                                )
                                     .frame(minHeight: DesignTokens.minTouchTarget)
                             }
                         }

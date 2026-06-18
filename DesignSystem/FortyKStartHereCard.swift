@@ -33,7 +33,7 @@ struct FortyKStartHereCard: View {
                     title: String(localized: "New to Warhammer 40,000"),
                     steps: [
                         (String(localized: "Getting Started"), String(localized: "What you need, army size, and how a turn works.")),
-                        (String(localized: "Rules Reference"), String(localized: "Search turn phases, combat, and glossary terms.")),
+                        (GameSystemRulesLabels.rulesReferenceLinkTitle(gameSystemId: "wh40k-11e"), String(localized: "Search turn phases, combat, and glossary terms.")),
                         (String(localized: "Guided Match"), String(localized: "Interactive setup and battle tracker — coming soon for 40k."))
                     ]
                 )
@@ -42,7 +42,7 @@ struct FortyKStartHereCard: View {
                     title: String(localized: "Played 10th Edition?"),
                     steps: [
                         (String(localized: "What's New in 11e"), String(localized: "Detachments, terrain objectives, combat, and battle-shock.")),
-                        (String(localized: "Rules Reference"), String(localized: "Jump to changed topics from the guide.")),
+                        (GameSystemRulesLabels.rulesReferenceLinkTitle(gameSystemId: "wh40k-11e"), String(localized: "Jump to changed topics from the guide.")),
                         (String(localized: "Guided Match"), String(localized: "Armageddon starter matchup — coming soon."))
                     ]
                 )

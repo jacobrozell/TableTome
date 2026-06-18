@@ -18,7 +18,10 @@ struct BattleTrackerReferenceLinksSection: View {
             NavigationLink {
                 RulesGlossaryView()
             } label: {
-                referenceLinkLabel(String(localized: "Rules Glossary"), systemImage: "book.fill")
+                referenceLinkLabel(
+                    GameSystemRulesLabels.glossaryTitle(gameSystemId: GameSystemRulesLabels.defaultGameSystemId),
+                    systemImage: "book.fill"
+                )
             }
             .accessibilityIdentifier("battleTracker.glossary")
 

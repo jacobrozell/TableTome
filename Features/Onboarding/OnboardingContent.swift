@@ -106,12 +106,12 @@ enum OnboardingContent {
         OnboardingPage(
             id: 4,
             symbol: "doc.text.fill",
-            title: String(localized: "Rules at your fingertips"),
-            subtitle: String(localized: "Searchable reference"),
+            title: String(localized: "AoS rules at your fingertips"),
+            subtitle: String(localized: "Searchable Spearhead reference"),
             body: String(
                 localized: """
-                Browse Spearhead, 40k 11th Edition, and core rules offline. Filter, search, and jump \
-                between related sections or back to the guide.
+                Browse Age of Sigmar Spearhead and core rules offline. Filter, search, and jump \
+                between related sections or back to the guide. More game modes get their own rules tab as they ship.
                 """
             )
         ),
@@ -138,9 +138,9 @@ enum OnboardingContent {
         ),
         OnboardingTabTourItem(
             id: "rules",
-            symbol: "doc.text.fill",
-            title: String(localized: "Rules"),
-            body: String(localized: "Offline Spearhead, 40k 11th Edition, and core rules with search")
+            symbol: "magnifyingglass",
+            title: String(localized: "AoS Rules"),
+            body: String(localized: "Search Spearhead rules, warscrolls, and glossary offline")
         ),
         OnboardingTabTourItem(
             id: "settings",

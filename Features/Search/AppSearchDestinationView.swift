@@ -17,7 +17,7 @@ struct AppSearchDestinationView: View {
                 AppSearchResultDetailView(result: result)
             }
         case .glossary:
-            RulesGlossaryView(highlightedEntryId: result.referenceId)
+            RulesGlossaryView(highlightedEntryId: result.referenceId, gameSystemId: GameSystemRulesLabels.defaultGameSystemId)
         case .gettingStarted:
             if let step = gettingStartedSteps.first(where: { $0.id == result.referenceId }) {
                 GuideStepDetailView(

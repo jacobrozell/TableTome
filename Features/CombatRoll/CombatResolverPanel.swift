@@ -419,7 +419,10 @@ struct CombatResolverPanel: View {
             NavigationLink {
                 RulesGlossaryView()
             } label: {
-                ReferenceLinkRow(title: String(localized: "Rules Glossary"), systemImage: "book.fill")
+                ReferenceLinkRow(
+                    title: GameSystemRulesLabels.glossaryTitle(gameSystemId: GameSystemRulesLabels.defaultGameSystemId),
+                    systemImage: "book.fill"
+                )
             }
             .accessibilityIdentifier("\(accessibilityPrefix).glossary")
         }

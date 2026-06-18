@@ -17,6 +17,7 @@ public struct SpearheadWeapon: Codable, Sendable, Identifiable, Equatable {
     public let rend: Int
     public let damage: String
     public let ability: String?
+    public let modelsWithWeapon: Int?
 
     public init(
         id: String,
@@ -27,7 +28,8 @@ public struct SpearheadWeapon: Codable, Sendable, Identifiable, Equatable {
         wound: Int,
         rend: Int,
         damage: String,
-        ability: String? = nil
+        ability: String? = nil,
+        modelsWithWeapon: Int? = nil
     ) {
         self.id = id
         self.name = name
@@ -38,6 +40,25 @@ public struct SpearheadWeapon: Codable, Sendable, Identifiable, Equatable {
         self.rend = rend
         self.damage = damage
         self.ability = ability
+        self.modelsWithWeapon = modelsWithWeapon
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case id, name, rangeInches, attacks, hit, wound, rend, damage, ability, modelsWithWeapon
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        rangeInches = try container.decodeIfPresent(Int.self, forKey: .rangeInches)
+        attacks = try container.decode(String.self, forKey: .attacks)
+        hit = try container.decode(Int.self, forKey: .hit)
+        wound = try container.decode(Int.self, forKey: .wound)
+        rend = try container.decode(Int.self, forKey: .rend)
+        damage = try container.decode(String.self, forKey: .damage)
+        ability = try container.decodeIfPresent(String.self, forKey: .ability)
+        modelsWithWeapon = try container.decodeIfPresent(Int.self, forKey: .modelsWithWeapon)
     }
 
     public var isRanged: Bool { rangeInches != nil }

@@ -72,13 +72,17 @@ public enum ArmyHealthCatalog {
     public static func summary(
         army: SpearheadArmy,
         playerName: String,
-        woundsRemaining: [String: Int]
+        woundsRemaining: [String: Int],
+        healthPerModelOverrides: [String: Int] = [:]
     ) -> ArmyHealthSummary? {
         let units = army.units
             .filter { $0.health != nil }
             .map { unit -> ArmyUnitHealth in
                 let key = UnitWoundTracker.unitKey(armyId: army.id, unitId: unit.id)
-                let capacity = UnitWoundCapacity.capacity(for: unit)
+                let capacity = UnitWoundCapacity.capacity(
+                    for: unit,
+                    healthPerModelOverride: healthPerModelOverrides[key]
+                )
                 let remaining = woundsRemaining[key] ?? capacity
                 return ArmyUnitHealth(
                     unitId: unit.id,

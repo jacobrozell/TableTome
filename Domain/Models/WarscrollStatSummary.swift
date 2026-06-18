@@ -1,6 +1,21 @@
 import Foundation
 
 public enum WarscrollStatSummary: Sendable {
+    public static func weaponLoadoutLabel(
+        _ weapon: SpearheadWeapon,
+        unitModelCount: Int? = nil
+    ) -> String? {
+        guard let count = weapon.modelsWithWeapon else { return nil }
+        let modelWord = count == 1
+            ? String(localized: "model")
+            : String(localized: "models")
+        let base = "\(count) \(modelWord)"
+        if let total = unitModelCount, total > count {
+            return String(localized: "\(base) of \(total)")
+        }
+        return base
+    }
+
     public static func weaponCombatProfile(_ weapon: SpearheadWeapon) -> String {
         var parts: [String] = []
         if let range = weapon.rangeInches {

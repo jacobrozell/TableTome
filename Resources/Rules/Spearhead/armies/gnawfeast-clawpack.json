@@ -251,7 +251,7 @@
       "abilities": [],
       "move": "6\"",
       "save": 5,
-      "health": 5,
+      "health": 4,
       "control": 1,
       "keywords": [
         "Infantry"
@@ -259,13 +259,26 @@
       "notes": "2 Rat Ogors with Claws, Blades and Fangs; 1 with Warpfire Gun and Claws, Blades and Fangs.",
       "weapons": [
         {
+          "id": "warpfire-gun",
+          "name": "Warpfire Gun",
+          "rangeInches": 10,
+          "attacks": "2D6",
+          "hit": 2,
+          "wound": 4,
+          "rend": 2,
+          "damage": "1",
+          "ability": "Shoot in Combat",
+          "modelsWithWeapon": 1
+        },
+        {
           "id": "claws-blades-fangs",
           "name": "Claws, Blades and Fangs",
           "attacks": "5",
           "hit": 4,
           "wound": 3,
           "rend": 1,
-          "damage": "2"
+          "damage": "2",
+          "modelsWithWeapon": 2
         }
       ],
       "modelCount": 3

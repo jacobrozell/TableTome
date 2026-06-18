@@ -836,8 +836,8 @@
       "id": "fight-battle",
       "order": 6,
       "title": "Fight the Battle",
-      "summary": "Four battle rounds — score victory points to win.",
-      "body": "Deploy armies, then play four battle rounds (~60–90 minutes). Each round: priority roll, identify underdog, draw twist card, draw battle tactic cards, then alternate turns. Score VP for objectives and completed battle tactics.",
+      "summary": "Play 4 battle rounds — score victory points to win.",
+      "body": "Deploy armies, then play exactly four battle rounds (~60–90 minutes). Each round: priority roll, identify underdog, draw twist card, draw battle tactic cards, then alternate turns. Score VP for objectives and completed battle tactics.",
       "tips": [
         "Twist cards favour the underdog — comebacks are built in.",
         "Each battle tactic card offers a tactic OR a command — not both."

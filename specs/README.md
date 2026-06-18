@@ -18,6 +18,7 @@ Authoritative behavior contracts. Brainstorm (`docs/brainstorm.md`) is **not** a
 | [GuidedMatchUXPolishPlan.md](GuidedMatchUXPolishPlan.md) | iPad, landscape, accessibility polish for Guided Match |
 | [SpearheadContentSpec.md](SpearheadContentSpec.md) | Scalable Spearhead army content pipeline |
 | [CombatRollEvaluatorSpec.md](CombatRollEvaluatorSpec.md) | Hit/wound/save attack roll wizard |
+| [BattleTableFlowSpec.md](BattleTableFlowSpec.md) | Unit Focus sheet, batch combat, phase dock (tableside flow) |
 | [DiceRollerSpec.md](DiceRollerSpec.md) | Roll simulator (v1) + dice tray future work |
 | [CoinFlipSpec.md](CoinFlipSpec.md) | Board side coin flip (Fire/Jade and Sand/Bone) |
 | [RulesReferenceSpec.md](RulesReferenceSpec.md) | Offline rules browser |

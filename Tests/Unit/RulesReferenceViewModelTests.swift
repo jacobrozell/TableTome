@@ -16,7 +16,7 @@ final class RulesReferenceViewModelTests: XCTestCase {
         await viewModel.load()
 
         XCTAssertNil(viewModel.errorMessage)
-        XCTAssertEqual(viewModel.sections.count, 7)
+        XCTAssertEqual(viewModel.sections.count, 20)
     }
 
     func testFiltersByCategory() async {
@@ -24,7 +24,7 @@ final class RulesReferenceViewModelTests: XCTestCase {
         await viewModel.load()
         viewModel.selectedCategory = .core
 
-        XCTAssertEqual(viewModel.filteredSections.count, 3)
+        XCTAssertEqual(viewModel.filteredSections.count, 13)
         XCTAssertTrue(viewModel.filteredSections.allSatisfy { $0.category == .core })
     }
 
@@ -33,7 +33,7 @@ final class RulesReferenceViewModelTests: XCTestCase {
         await viewModel.load()
         viewModel.searchText = "contest"
 
-        XCTAssertEqual(viewModel.filteredSections.map(\.id), ["glossary-contest"])
+        XCTAssertTrue(viewModel.filteredSections.contains { $0.id == "glossary-contest" })
     }
 
     func testFilteredSectionsStayOrdered() async {

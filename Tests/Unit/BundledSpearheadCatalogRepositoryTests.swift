@@ -63,6 +63,24 @@ final class BundledSpearheadCatalogRepositoryTests: XCTestCase {
         XCTAssertEqual(vigilant.battleTraits.first?.phases, [.charge])
     }
 
+    func testRatOgorsIncludeWarpfireGun() async throws {
+        let catalog = try await repository.loadCatalog()
+        let gnawfeast = try XCTUnwrap(
+            catalog.factions.flatMap(\.armies).first { $0.id == "gnawfeast-clawpack" }
+        )
+        let ratOgors = try XCTUnwrap(gnawfeast.units.first { $0.id == "rat-ogors" })
+
+        XCTAssertEqual(ratOgors.weapons.map(\.id), ["warpfire-gun", "claws-blades-fangs"])
+
+        let warpfire = try XCTUnwrap(ratOgors.weapons.first { $0.id == "warpfire-gun" })
+        XCTAssertEqual(warpfire.name, "Warpfire Gun")
+        XCTAssertEqual(warpfire.rangeInches, 10)
+        XCTAssertEqual(warpfire.attacks, "2D6")
+        XCTAssertEqual(warpfire.modelsWithWeapon, 1)
+        XCTAssertTrue(warpfire.isRollEvaluable)
+        XCTAssertTrue(ratOgors.canShoot)
+    }
+
     func testStubArmiesDecodeWithEmptyLoadouts() async throws {
         let catalog = try await repository.loadCatalog()
         let crixxit = try XCTUnwrap(

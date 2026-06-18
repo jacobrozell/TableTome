@@ -22,18 +22,64 @@ final class BundledRulesRepositoryTests: XCTestCase {
         XCTAssertEqual(system.gettingStartedSteps.count, 5)
     }
 
-    func testSpearheadHasV01RuleSections() async throws {
+    func testSpearheadHasCoreAndSpearheadRuleSections() async throws {
         let system = try await testRepository.gameSystem(id: "aos-spearhead")
-        XCTAssertEqual(system.ruleSections.count, 7)
-        XCTAssertEqual(Set(system.ruleSections.map(\.id)), [
+        let ids = Set(system.ruleSections.map(\.id))
+        let required = [
             "combat-sequence",
-            "attack-modifiers",
-            "damage-sequence",
+            "turn-structure",
+            "movement-phase",
+            "shooting-phase",
+            "charge-phase",
+            "combat-phase-fight",
+            "weapon-abilities",
             "spearhead-overview",
+            "spearhead-format",
+            "spearhead-deployment",
             "spearhead-scoring",
-            "spearhead-battle-round",
             "glossary-contest"
-        ])
+        ]
+        XCTAssertEqual(system.ruleSections.count, 20)
+        XCTAssertTrue(required.allSatisfy { ids.contains($0) })
+    }
+
+    func testWh40k11eHasGuideContent() async throws {
+        let system = try await testRepository.gameSystem(id: "wh40k-11e")
+        XCTAssertEqual(system.availability, .available)
+        XCTAssertEqual(system.gettingStartedSteps.count, 7)
+        XCTAssertEqual(system.editionMigrationSteps.count, 11)
+        XCTAssertEqual(system.ruleSections.count, 17)
+        XCTAssertFalse(system.externalLinks?.isEmpty ?? true)
+
+        let gettingStartedOrders = system.gettingStartedSteps.map(\.order)
+        XCTAssertEqual(gettingStartedOrders, gettingStartedOrders.sorted())
+
+        let migrationOrders = system.editionMigrationSteps.map(\.order)
+        XCTAssertEqual(migrationOrders, migrationOrders.sorted())
+    }
+
+    func testWh40k11eBattleShockUsesCorrectPassCondition() async throws {
+        let system = try await testRepository.gameSystem(id: "wh40k-11e")
+        let section = try XCTUnwrap(system.ruleSections.first { $0.id == "11e-battle-shock" })
+        XCTAssertTrue(section.content.contains("equal to or greater than"))
+        XCTAssertTrue(section.content.contains("cannot be targeted by Stratagems"))
+        XCTAssertFalse(section.content.contains("≤"))
+        XCTAssertFalse(section.content.contains("cannot use Stratagems"))
+    }
+
+    func testWh40k11eHiddenRequiresLightOrDenseAndNoRangedAttacks() async throws {
+        let system = try await testRepository.gameSystem(id: "wh40k-11e")
+        let section = try XCTUnwrap(system.ruleSections.first { $0.id == "11e-cover-hidden" })
+        XCTAssertTrue(section.content.contains("Light or Dense"))
+        XCTAssertTrue(section.content.contains("ranged attacks"))
+        XCTAssertFalse(section.content.localizedCaseInsensitiveContains("did not shoot"))
+    }
+
+    func testWh40k11eScoringUsesBattleRoundCaps() async throws {
+        let system = try await testRepository.gameSystem(id: "wh40k-11e")
+        let section = try XCTUnwrap(system.ruleSections.first { $0.id == "11e-scoring-overview" })
+        XCTAssertTrue(section.content.contains("battle round"))
+        XCTAssertFalse(section.content.localizedCaseInsensitiveContains("per turn"))
     }
 
     func testGameSystemNotFound() async {

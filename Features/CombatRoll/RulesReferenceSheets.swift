@@ -52,26 +52,12 @@ struct BattleTacticsReferenceView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                introBanner
+
+                deckComparisonSection
+
                 ForEach(SpearheadBattleTacticsReference.sections) { section in
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                        Text(section.title)
-                            .font(.headline)
-                        Text(section.body)
-                            .font(.body)
-                            .foregroundStyle(.secondary)
-                            .fixedSize(horizontal: false, vertical: true)
-                        if !section.bullets.isEmpty {
-                            ForEach(section.bullets, id: \.self) { bullet in
-                                Label(bullet, systemImage: "circle.fill")
-                                    .font(.callout)
-                                    .labelStyle(GlossaryBulletLabelStyle())
-                                    .foregroundStyle(.secondary)
-                                    .fixedSize(horizontal: false, vertical: true)
-                            }
-                        }
-                    }
-                    .surfaceCard()
-                    .accessibilityIdentifier("battleTactics.section.\(section.id)")
+                    referenceSectionCard(section)
                 }
 
                 if let scoring = ruleSections.first(where: { $0.id == "spearhead-scoring" }) {
@@ -90,9 +76,116 @@ struct BattleTacticsReferenceView: View {
             .padding(DesignTokens.Spacing.md)
         }
         .tabBarScrollInset()
-        .navigationTitle(String(localized: "Battle Tactics & Twists"))
+        .navigationTitle(String(localized: "Card Decks Guide"))
         .navigationBarTitleDisplayMode(.inline)
         .accessibilityIdentifier("battleTactics.screen")
+    }
+
+    private var introBanner: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            Label(String(localized: "Twists vs Battle Tactics"), systemImage: "rectangle.stack.fill")
+                .font(.headline)
+                .foregroundStyle(Color.accentColor)
+            Text(
+                String(
+                    localized: """
+                    Spearhead uses two completely different card decks. Mixing them up is the most common \
+                    rules mistake — use this guide at the table when you are unsure which deck to grab.
+                    """
+                )
+            )
+            .font(.callout)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(DesignTokens.Spacing.md)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .overlay {
+            RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
+                .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
+        }
+        .accessibilityIdentifier("battleTactics.intro")
+    }
+
+    private var deckComparisonSection: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            Text(String(localized: "Which Deck Is Which?"))
+                .font(.headline)
+
+            ForEach(SpearheadBattleTacticsReference.deckGuides) { deck in
+                SpearheadCardDeckGuideCard(deck: deck)
+                    .accessibilityIdentifier("battleTactics.deck.\(deck.id)")
+            }
+        }
+    }
+
+    private func referenceSectionCard(_ section: BattleTacticsReferenceSection) -> some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            Text(section.title)
+                .font(.headline)
+            Text(section.body)
+                .font(.body)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            if !section.bullets.isEmpty {
+                ForEach(section.bullets, id: \.self) { bullet in
+                    Label(bullet, systemImage: "circle.fill")
+                        .font(.callout)
+                        .labelStyle(GlossaryBulletLabelStyle())
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            if !section.examples.isEmpty {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                    Text(String(localized: "Examples"))
+                        .font(.subheadline.weight(.semibold))
+                    ForEach(section.examples, id: \.self) { example in
+                        Label(example, systemImage: "arrow.turn.down.right")
+                            .font(.callout)
+                            .labelStyle(GlossaryBulletLabelStyle())
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+                .padding(DesignTokens.Spacing.sm)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
+            }
+        }
+        .surfaceCard()
+        .accessibilityIdentifier("battleTactics.section.\(section.id)")
+    }
+}
+
+private struct SpearheadCardDeckGuideCard: View {
+    let deck: SpearheadCardDeckGuide
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            Label(deck.name, systemImage: deck.id == "twist" ? "sparkles" : "person.fill")
+                .font(.subheadline.weight(.semibold))
+
+            deckDetailRow(label: String(localized: "Comes from"), value: deck.comesFrom)
+            deckDetailRow(label: String(localized: "Who uses it"), value: deck.whoUsesIt)
+            deckDetailRow(label: String(localized: "When"), value: deck.whenUsed)
+            deckDetailRow(label: String(localized: "Look for"), value: deck.lookFor)
+        }
+        .padding(DesignTokens.Spacing.md)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+    }
+
+    private func deckDetailRow(label: String, value: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(label)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+            Text(value)
+                .font(.callout)
+                .fixedSize(horizontal: false, vertical: true)
+        }
     }
 }
 

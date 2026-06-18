@@ -22,6 +22,20 @@ struct RulesReferenceView: View {
                 )
             } else {
                 List {
+                    if viewModel.showsGameSystemPicker {
+                        Section {
+                            Picker(String(localized: "Game"), selection: $viewModel.selectedGameSystemId) {
+                                ForEach(viewModel.gameSystems) { system in
+                                    Text(gameSystemPickerLabel(system)).tag(system.id)
+                                }
+                            }
+                            .onChange(of: viewModel.selectedGameSystemId) { _, newValue in
+                                viewModel.selectGameSystem(newValue)
+                            }
+                            .accessibilityIdentifier("rules.gameSystemPicker")
+                        }
+                    }
+
                     Section {
                         Picker(String(localized: "Category"), selection: $viewModel.selectedCategory) {
                             Text(String(localized: "All")).tag(RuleSectionCategory?.none)
@@ -69,6 +83,13 @@ struct RulesReferenceView: View {
         case .glossary: String(localized: "Glossary")
         }
     }
+
+    private func gameSystemPickerLabel(_ system: GameSystem) -> String {
+        if system.id == "wh40k-11e" {
+            return String(localized: "Warhammer 40,000 — 11th Edition")
+        }
+        return system.name
+    }
 }
 
 struct RuleSectionDetailView: View {
@@ -104,6 +125,7 @@ struct RuleSectionDetailView: View {
                 }
             }
             .padding(DesignTokens.Spacing.md)
+            .readableContentWidth()
         }
         .navigationTitle(section.title)
         .navigationBarTitleDisplayMode(.inline)

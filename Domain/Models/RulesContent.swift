@@ -22,6 +22,7 @@ public struct GameSystem: Codable, Sendable, Identifiable, Equatable {
     public let edition: String
     public let availability: GameSystemAvailability
     public let gettingStartedSteps: [GuideStep]
+    public let editionMigrationSteps: [GuideStep]
     public let ruleSections: [RuleSection]
     public let externalLinks: [ExternalLink]?
 
@@ -32,6 +33,7 @@ public struct GameSystem: Codable, Sendable, Identifiable, Equatable {
         edition: String,
         availability: GameSystemAvailability,
         gettingStartedSteps: [GuideStep],
+        editionMigrationSteps: [GuideStep] = [],
         ruleSections: [RuleSection],
         externalLinks: [ExternalLink]? = nil
     ) {
@@ -41,8 +43,42 @@ public struct GameSystem: Codable, Sendable, Identifiable, Equatable {
         self.edition = edition
         self.availability = availability
         self.gettingStartedSteps = gettingStartedSteps
+        self.editionMigrationSteps = editionMigrationSteps
         self.ruleSections = ruleSections
         self.externalLinks = externalLinks
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id, name, tagline, edition, availability
+        case gettingStartedSteps, editionMigrationSteps, ruleSections, externalLinks
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        tagline = try container.decode(String.self, forKey: .tagline)
+        edition = try container.decode(String.self, forKey: .edition)
+        availability = try container.decode(GameSystemAvailability.self, forKey: .availability)
+        gettingStartedSteps = try container.decode([GuideStep].self, forKey: .gettingStartedSteps)
+        editionMigrationSteps = try container.decodeIfPresent([GuideStep].self, forKey: .editionMigrationSteps) ?? []
+        ruleSections = try container.decode([RuleSection].self, forKey: .ruleSections)
+        externalLinks = try container.decodeIfPresent([ExternalLink].self, forKey: .externalLinks)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encode(tagline, forKey: .tagline)
+        try container.encode(edition, forKey: .edition)
+        try container.encode(availability, forKey: .availability)
+        try container.encode(gettingStartedSteps, forKey: .gettingStartedSteps)
+        if !editionMigrationSteps.isEmpty {
+            try container.encode(editionMigrationSteps, forKey: .editionMigrationSteps)
+        }
+        try container.encode(ruleSections, forKey: .ruleSections)
+        try container.encodeIfPresent(externalLinks, forKey: .externalLinks)
     }
 }
 

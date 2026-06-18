@@ -4,6 +4,7 @@ import TabletomeDomain
 @MainActor
 final class MultiAttackEvaluatorViewModel: ObservableObject {
     @Published var attackCount = 1
+    @Published var deployedModelCount = 1
     @Published var currentAttackIndex = 0
     @Published var hitTarget = 4
     @Published var woundTarget = 4
@@ -35,7 +36,39 @@ final class MultiAttackEvaluatorViewModel: ObservableObject {
     var attacksRemaining: Int { max(0, attackCount - results.count) }
     var isSequenceComplete: Bool { results.count >= attackCount }
 
-    func apply(weapon: SpearheadWeapon, saveTarget: Int, unitId: String, wardTarget: Int? = nil) {
+    var hitDicePlan: HitDicePlan {
+        guard let weapon = currentWeapon else {
+            return HitDicePlan(
+                quantity: .fixed(totalHitDice: attackCount),
+                summary: String(localized: "\(attackCount) attacks"),
+                detail: nil
+            )
+        }
+        return WeaponAttackRollCount.hitDicePlan(
+            weapon: weapon,
+            deployedModelCount: deployedModelCount
+        )
+    }
+
+    var hitDiceSummary: String { hitDicePlan.summary }
+
+    var usesVariableAttacks: Bool {
+        currentWeapon?.hasVariableAttacks == true
+    }
+
+    func syncAttackCountFromDeployment() {
+        guard let total = hitDicePlan.fixedTotalHitDice else { return }
+        attackCount = total
+    }
+
+    func apply(
+        weapon: SpearheadWeapon,
+        saveTarget: Int,
+        unitId: String,
+        deployedModelCount: Int,
+        wardTarget: Int? = nil,
+        resolvedAttackCount: Int? = nil
+    ) {
         hitTarget = weapon.hit
         woundTarget = weapon.wound
         rend = weapon.rend
@@ -46,7 +79,12 @@ final class MultiAttackEvaluatorViewModel: ObservableObject {
         } else if case .variable(let kind) = weapon.damageKind {
             damage = kind == .d3 ? 2 : 3
         }
-        attackCount = weapon.fixedAttackCount ?? 1
+        self.deployedModelCount = max(1, deployedModelCount)
+        attackCount = resolvedAttackCount ?? WeaponAttackRollCount.hitDicePlan(
+            weapon: weapon,
+            deployedModelCount: self.deployedModelCount,
+            resolvedAttackCount: resolvedAttackCount
+        ).fixedTotalHitDice ?? 1
         rollOptions = CombatRollOptions.from(weapon: weapon)
         enabledBuffIds = Set(weapon.weaponBuffs(unitId: unitId).map(\.id))
         resetSequence()
@@ -77,6 +115,20 @@ final class MultiAttackEvaluatorViewModel: ObservableObject {
         lastEvaluation = evaluation
         results.append(MultiAttackResult(id: results.count + 1, evaluation: evaluation))
         currentAttackIndex = results.count
+    }
+
+    func rollAllRemainingAttacks() {
+        while !isSequenceComplete {
+            rollCurrentAttack()
+        }
+    }
+
+    func resolveBatchHits(_ successfulHits: Int) {
+        let count = min(max(0, successfulHits), attacksRemaining)
+        guard count > 0 else { return }
+        for _ in 0..<count {
+            evaluateCurrentAttack()
+        }
     }
 
     func rollCurrentAttack() {
@@ -135,10 +187,12 @@ final class MultiAttackEvaluatorViewModel: ObservableObject {
 
     var currentWeapon: SpearheadWeapon?
     var currentUnitId: String?
+    var currentUnitModelCount: Int?
 
-    func bind(weapon: SpearheadWeapon?, unitId: String?) {
+    func bind(weapon: SpearheadWeapon?, unitId: String?, unitModelCount: Int? = nil) {
         currentWeapon = weapon
         currentUnitId = unitId
+        currentUnitModelCount = unitModelCount
     }
 
     private func apply(_ simulated: SimulatedAttackRolls) {

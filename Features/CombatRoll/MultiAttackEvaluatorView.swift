@@ -7,6 +7,8 @@ struct MultiAttackEvaluatorView: View {
     let ruleSections: [RuleSection]
     let isSimulated: Bool
 
+    @State private var batchHitCount = 1
+
     init(
         viewModel: MultiAttackEvaluatorViewModel,
         weaponName: String,
@@ -34,6 +36,14 @@ struct MultiAttackEvaluatorView: View {
                     ) {
                         viewModel.rollCurrentAttack()
                     }
+                    if viewModel.attackCount > 1, !viewModel.isSequenceComplete {
+                        Button(String(localized: "Roll all remaining attacks")) {
+                            viewModel.rollAllRemainingAttacks()
+                        }
+                        .buttonStyle(.bordered)
+                        .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+                        .accessibilityIdentifier("multiAttack.rollAll")
+                    }
                     Button(
                         String(localized: "Evaluate Attack \(viewModel.results.count + 1) of \(viewModel.attackCount)")
                     ) {
@@ -44,6 +54,7 @@ struct MultiAttackEvaluatorView: View {
                     .accessibilityIdentifier("multiAttack.evaluate")
                     .accessibilityHint(String(localized: "Uses current dice values without rolling again"))
                 } else {
+                    batchPhysicalSection
                     PrimaryButton(
                         title: String(localized: "Evaluate Attack \(viewModel.results.count + 1) of \(viewModel.attackCount)"),
                         accessibilityId: "multiAttack.evaluate"
@@ -62,15 +73,53 @@ struct MultiAttackEvaluatorView: View {
         .accessibilityIdentifier("multiAttack.section")
     }
 
+    private var batchPhysicalSection: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            Text(
+                String(
+                    localized: "After rolling all hit dice at the table, enter how many hits succeeded, then resolve with your wound/save dice below."
+                )
+            )
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+
+            Stepper(
+                String(localized: "Successful hits: \(min(viewModel.attackCount, max(1, batchHitCount)))"),
+                value: $batchHitCount,
+                in: 1...max(1, viewModel.attacksRemaining)
+            )
+            .accessibilityIdentifier("multiAttack.batchHitCount")
+
+            Button(String(localized: "Resolve \(min(batchHitCount, viewModel.attacksRemaining)) hits")) {
+                viewModel.resolveBatchHits(batchHitCount)
+            }
+            .buttonStyle(.bordered)
+            .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+            .accessibilityIdentifier("multiAttack.resolveBatch")
+        }
+        .surfaceCard()
+    }
+
     private var headerSection: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
             SectionHeader(title: String(localized: "Multi-Attack: \(weaponName)"), systemImage: "repeat")
-            Stepper(
-                String(localized: "\(viewModel.attackCount) attacks"),
-                value: $viewModel.attackCount,
-                in: 1...20
+
+            CombatRollCountBanner(
+                plan: viewModel.hitDicePlan,
+                accessibilityPrefix: "multiAttack"
             )
-            .accessibilityIdentifier("multiAttack.attackCount")
+
+            DeployedModelCountStepper(
+                modelCount: $viewModel.deployedModelCount,
+                warscrollModelCount: viewModel.currentUnitModelCount,
+                usesVariableAttacks: viewModel.usesVariableAttacks,
+                onChange: {
+                    viewModel.syncAttackCountFromDeployment()
+                },
+                accessibilityPrefix: "multiAttack"
+            )
+
             Text(
                 "Hit \(viewModel.hitTarget)+ · Wound \(viewModel.woundTarget)+ · "
                     + "Rend \(viewModel.rend) · Damage \(viewModel.damage) vs Save \(viewModel.saveTarget)+"

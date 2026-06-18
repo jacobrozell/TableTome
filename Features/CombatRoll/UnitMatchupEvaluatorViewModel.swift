@@ -10,6 +10,10 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
     @Published var attackerWeaponId = ""
     @Published var defenderArmyId = ""
     @Published var defenderUnitId = ""
+    @Published var attackerDeployedModelCount = 1
+    @Published var resolvedVariableAttackCount: Int?
+    @Published var variableAttackRollBreakdown: String?
+    @Published var variableAttackPerModelTotals: [Int] = []
     @Published var enabledBuffIds: Set<String> = []
     @Published var damage = 1
     @Published var hitRoll = 4
@@ -137,6 +141,7 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
     func setAttackerUnit(_ unitId: String) {
         attackerUnitId = unitId
         selectDefaultAttackerWeapon()
+        applyDeployedCountForSelectedWeapon()
         MatchupSelectionMemory.saveAttacker(
             armyId: attackerArmyId,
             unitId: unitId,
@@ -156,8 +161,98 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
         refreshEvaluation()
     }
 
+    var attackerHitDicePlan: HitDicePlan? {
+        guard let weapon = selectedAttackerWeapon else { return nil }
+        return WeaponAttackRollCount.hitDicePlan(
+            weapon: weapon,
+            deployedModelCount: attackerDeployedModelCount,
+            resolvedAttackCount: resolvedVariableAttackCount
+        )
+    }
+
+    var attackerHitDiceSummary: String? {
+        attackerHitDicePlan?.summary
+    }
+
+    var attackerTotalAttacks: Int {
+        attackerHitDicePlan?.fixedTotalHitDice ?? 1
+    }
+
+    var attackerUsesVariableAttacks: Bool {
+        selectedAttackerWeapon?.hasVariableAttacks == true
+    }
+
+    var usesPerModelVariableAttackRolling: Bool {
+        attackerUsesVariableAttacks && attackerDeployedModelCount > 1
+    }
+
+    var variableAttackModelsRemaining: Int {
+        max(0, attackerDeployedModelCount - variableAttackPerModelTotals.count)
+    }
+
+    func applyDeployedCountForSelectedWeapon() {
+        guard let weapon = selectedAttackerWeapon, let unit = selectedAttackerUnit else { return }
+        attackerDeployedModelCount = unit.defaultDeployedModelCount(for: weapon)
+        clearVariableAttackResolution()
+    }
+
+    func clearVariableAttackResolution() {
+        resolvedVariableAttackCount = nil
+        variableAttackRollBreakdown = nil
+        variableAttackPerModelTotals = []
+    }
+
+    func rollVariableAttacks() {
+        guard let weapon = selectedAttackerWeapon else { return }
+        let outcome = VariableAttackRollEngine.roll(
+            expression: weapon.attacks,
+            modelCount: attackerDeployedModelCount
+        )
+        variableAttackPerModelTotals = outcome.perModelTotals
+        applyVariableAttackOutcome(outcome)
+    }
+
+    func rollVariableAttacksForNextModel() {
+        guard let weapon = selectedAttackerWeapon else { return }
+        guard variableAttackPerModelTotals.count < attackerDeployedModelCount else { return }
+        let outcome = VariableAttackRollEngine.roll(expression: weapon.attacks, modelCount: 1)
+        guard let modelTotal = outcome.perModelTotals.first else { return }
+        variableAttackPerModelTotals.append(modelTotal)
+        let total = variableAttackPerModelTotals.reduce(0, +)
+        let breakdown = perModelBreakdown(
+            expression: weapon.attacks,
+            perModel: variableAttackPerModelTotals,
+            total: total
+        )
+        applyVariableAttackOutcome(
+            VariableAttackRollOutcome(
+                perModelTotals: variableAttackPerModelTotals,
+                totalAttacks: total,
+                breakdown: breakdown
+            )
+        )
+    }
+
+    private func applyVariableAttackOutcome(_ outcome: VariableAttackRollOutcome) {
+        resolvedVariableAttackCount = outcome.totalAttacks
+        variableAttackRollBreakdown = outcome.breakdown
+    }
+
+    private func perModelBreakdown(expression: String, perModel: [Int], total: Int) -> String {
+        if perModel.count == 1 {
+            return String(localized: "\(expression): \(perModel[0]) attacks")
+        }
+        let rolls = perModel.map(String.init).joined(separator: " + ")
+        let remaining = attackerDeployedModelCount - perModel.count
+        if remaining > 0 {
+            return String(localized: "\(expression) so far: \(rolls) = \(total) (\(remaining) model(s) left)")
+        }
+        return String(localized: "\(expression) per model: \(rolls) = \(total) attacks")
+    }
+
     func setAttackerWeapon(_ weaponId: String) {
         attackerWeaponId = weaponId
+        applyDeployedCountForSelectedWeapon()
         MatchupSelectionMemory.saveAttacker(
             armyId: attackerArmyId,
             unitId: attackerUnitId,
@@ -357,6 +452,7 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
     private func selectDefaultAttackerUnit() {
         attackerUnitId = selectedAttackerArmy?.units.first?.id ?? ""
         selectDefaultAttackerWeapon()
+        applyDeployedCountForSelectedWeapon()
     }
 
     private func restoreAttackerSelection(for armyId: String) {
@@ -374,6 +470,7 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
             } else {
                 selectDefaultAttackerWeapon()
             }
+            applyDeployedCountForSelectedWeapon()
         } else {
             selectDefaultAttackerUnit()
         }

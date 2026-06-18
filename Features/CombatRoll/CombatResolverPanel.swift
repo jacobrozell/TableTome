@@ -9,9 +9,11 @@ struct CombatResolverPanel: View {
 
     @ObservedObject var viewModel: UnitMatchupEvaluatorViewModel
     @ObservedObject var multiAttackViewModel: MultiAttackEvaluatorViewModel
+    @ObservedObject var batchViewModel: BatchCombatEvaluatorViewModel
     @Binding var diceInputModeRaw: String
     @Binding var showsAdvancedOptions: Bool
     @Binding var showsMultiAttack: Bool
+    @Binding var showsAdvancedSingleAttack: Bool
 
     let ruleSections: [RuleSection]
     let presentation: Presentation
@@ -23,7 +25,9 @@ struct CombatResolverPanel: View {
     var onApplyDamage: ((Int) -> Void)?
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @State private var showsCombatSequencePrimer = true
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @State private var showsCombatSequencePrimer = false
 
     private var diceInputMode: DiceInputMode {
         get { DiceInputMode(rawValue: diceInputModeRaw) ?? .physical }
@@ -34,6 +38,14 @@ struct CombatResolverPanel: View {
     private var locksArmies: Bool { presentation == .embeddedInBattleTracker }
     private var isEmbedded: Bool { presentation == .embeddedInBattleTracker }
     private var panelSpacing: CGFloat { isEmbedded ? DesignTokens.Spacing.md : DesignTokens.Spacing.lg }
+
+    private var usesSideBySideMatchup: Bool {
+        TabletomeLayout.usesSideBySideLayout(
+            horizontalSizeClass: horizontalSizeClass,
+            verticalSizeClass: verticalSizeClass,
+            isAccessibilitySize: dynamicTypeSize.isAccessibilitySize
+        )
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: panelSpacing) {
@@ -46,19 +58,36 @@ struct CombatResolverPanel: View {
             }
             matchupPanels
             attackProfileBar
+            deployedModelSection
+            hitDiceBannerSection
+            if !isSimulated {
+                batchCombatSection
+            }
             if isEmbedded {
-                diceSection
-                resultsSection
+                advancedSingleAttackSection
             } else {
                 resultsSection
                 diceSection
+                optionsSection
+                simulatedActionsSection
+                multiAttackSection
             }
-            optionsSection
-            simulatedActionsSection
-            multiAttackSection
             if presentation == .standalone {
                 referenceLinksSection
             }
+        }
+        .onChange(of: viewModel.attackerUnitId) { _, _ in
+            onSyncMultiAttack()
+            syncBatchCombat()
+        }
+        .onChange(of: viewModel.attackerDeployedModelCount) { _, _ in
+            viewModel.clearVariableAttackResolution()
+            onSyncMultiAttack()
+            syncBatchCombat()
+        }
+        .onChange(of: viewModel.resolvedVariableAttackCount) { _, _ in
+            onSyncMultiAttack()
+            syncBatchCombat()
         }
         .onChange(of: viewModel.defenderUnitId) { _, _ in
             guard isEmbedded else { return }
@@ -66,11 +95,59 @@ struct CombatResolverPanel: View {
             if viewModel.hasSuggestedWardBuffs {
                 showsAdvancedOptions = true
             }
+            onSyncMultiAttack()
+            syncBatchCombat()
+        }
+        .onChange(of: viewModel.attackerWeaponId) { _, _ in
+            syncBatchCombat()
+        }
+        .onChange(of: viewModel.enabledBuffIds) { _, _ in
+            syncBatchCombat()
+        }
+        .onChange(of: viewModel.damage) { _, _ in
+            syncBatchCombat()
+        }
+        .onChange(of: viewModel.rollOptions) { _, _ in
+            syncBatchCombat()
         }
         .onAppear {
-            guard isEmbedded, NewPlayerTipsStore.hasDismissedCombatSequencePrimer else { return }
+            guard isEmbedded else { return }
             showsCombatSequencePrimer = false
+            syncBatchCombat()
         }
+    }
+
+    private func syncBatchCombat() {
+        batchViewModel.sync(from: viewModel)
+    }
+
+    @ViewBuilder
+    private var batchCombatSection: some View {
+        BatchCombatResolverSection(
+            batchViewModel: batchViewModel,
+            combatViewModel: viewModel,
+            accessibilityPrefix: accessibilityPrefix,
+            defenderName: viewModel.selectedDefenderUnit?.name,
+            defenderWoundsRemaining: defenderWoundsRemaining,
+            onApplyDamage: onApplyDamage
+        )
+    }
+
+    @ViewBuilder
+    private var advancedSingleAttackSection: some View {
+        DisclosureGroup(isExpanded: $showsAdvancedSingleAttack) {
+            VStack(alignment: .leading, spacing: panelSpacing) {
+                diceSection
+                resultsSection
+                simulatedActionsSection
+                multiAttackSection
+            }
+            .padding(.top, DesignTokens.Spacing.sm)
+        } label: {
+            Text(String(localized: "Single attack & coaching"))
+                .font(.subheadline.weight(.semibold))
+        }
+        optionsSection
     }
 
     @ViewBuilder
@@ -123,7 +200,7 @@ struct CombatResolverPanel: View {
     private var matchupPanels: some View {
         if isEmbedded {
             embeddedMatchupCard
-        } else if horizontalSizeClass == .regular {
+        } else if usesSideBySideMatchup {
             HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
                 attackerPanel
                 MatchupVersusBadge()
@@ -138,7 +215,7 @@ struct CombatResolverPanel: View {
 
     private var embeddedMatchupCard: some View {
         Group {
-            if horizontalSizeClass == .regular {
+            if usesSideBySideMatchup {
                 HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
                     attackerPanel
                     MatchupVersusBadge()
@@ -221,6 +298,50 @@ struct CombatResolverPanel: View {
             .padding(DesignTokens.Spacing.sm)
             .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
             .onAppear { onSyncMultiAttack() }
+        }
+    }
+
+    @ViewBuilder
+    private var deployedModelSection: some View {
+        if viewModel.selectedAttackerUnit != nil, viewModel.selectedAttackerWeapon != nil {
+            DeployedModelCountStepper(
+                modelCount: $viewModel.attackerDeployedModelCount,
+                warscrollModelCount: viewModel.selectedAttackerUnit?.modelCount,
+                usesVariableAttacks: viewModel.attackerUsesVariableAttacks,
+                onChange: onSyncMultiAttack,
+                accessibilityPrefix: accessibilityPrefix
+            )
+        }
+    }
+
+    @ViewBuilder
+    private var hitDiceBannerSection: some View {
+        if viewModel.selectedAttackerWeapon?.hasCritAutoWound == true {
+            CritAutoWoundCoachingHint()
+        }
+        if viewModel.attackerUsesVariableAttacks {
+            VariableAttacksRollCard(
+                expression: viewModel.selectedAttackerWeapon?.attacks ?? "D6",
+                modelCount: viewModel.attackerDeployedModelCount,
+                perModelTotals: viewModel.variableAttackPerModelTotals,
+                resolvedAttackCount: $viewModel.resolvedVariableAttackCount,
+                breakdown: viewModel.variableAttackRollBreakdown,
+                onRollAll: {
+                    viewModel.rollVariableAttacks()
+                    onSyncMultiAttack()
+                },
+                onRollNextModel: {
+                    viewModel.rollVariableAttacksForNextModel()
+                    onSyncMultiAttack()
+                },
+                accessibilityPrefix: accessibilityPrefix
+            )
+        }
+        if let plan = viewModel.attackerHitDicePlan {
+            CombatRollCountBanner(
+                plan: plan,
+                accessibilityPrefix: accessibilityPrefix
+            )
         }
     }
 

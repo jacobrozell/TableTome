@@ -5,9 +5,11 @@ import TabletomeData
 struct UnitMatchupEvaluatorView: View {
     @StateObject private var viewModel: UnitMatchupEvaluatorViewModel
     @StateObject private var multiAttackViewModel = MultiAttackEvaluatorViewModel()
+    @StateObject private var batchCombatViewModel = BatchCombatEvaluatorViewModel()
     @AppStorage("diceInputMode") private var diceInputModeRaw = DiceInputMode.physical.rawValue
     @State private var showsAdvancedOptions = false
     @State private var showsMultiAttack = false
+    @State private var showsAdvancedSingleAttack = false
     let ruleSections: [RuleSection]
 
     init(
@@ -37,9 +39,11 @@ struct UnitMatchupEvaluatorView: View {
                     CombatResolverPanel(
                         viewModel: viewModel,
                         multiAttackViewModel: multiAttackViewModel,
+                        batchViewModel: batchCombatViewModel,
                         diceInputModeRaw: $diceInputModeRaw,
                         showsAdvancedOptions: $showsAdvancedOptions,
                         showsMultiAttack: $showsMultiAttack,
+                        showsAdvancedSingleAttack: $showsAdvancedSingleAttack,
                         ruleSections: ruleSections,
                         presentation: .standalone,
                         onSyncMultiAttack: syncMultiAttack
@@ -92,9 +96,15 @@ struct UnitMatchupEvaluatorView: View {
             weapon: weapon,
             saveTarget: save,
             unitId: unit.id,
-            wardTarget: viewModel.activeWardTarget
+            deployedModelCount: viewModel.attackerDeployedModelCount,
+            wardTarget: viewModel.activeWardTarget,
+            resolvedAttackCount: viewModel.resolvedVariableAttackCount
         )
-        multiAttackViewModel.bind(weapon: weapon, unitId: unit.id)
+        multiAttackViewModel.bind(
+            weapon: weapon,
+            unitId: unit.id,
+            unitModelCount: unit.modelCount
+        )
         multiAttackViewModel.hitModifier = mods.hit
         multiAttackViewModel.woundModifier = mods.wound
         multiAttackViewModel.saveModifier = mods.save

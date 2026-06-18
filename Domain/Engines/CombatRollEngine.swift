@@ -247,8 +247,21 @@ public enum CombatRollEngine: Sendable {
         if input.saveRoll == 1 {
             return "Unmodified roll of 1 always fails."
         }
-        let rendNote = input.rend == 0 ? "" : " (Rend \(input.rend >= 0 ? "+" : "")\(input.rend))"
-        return "Rolled \(input.saveRoll) + modifiers\(rendNote) = \(effective) vs Save \(input.saveTarget)+ — \(effective >= input.saveTarget ? "saved" : "failed save")."
+        let autoWoundPrefix = CombatRollResolution.criticalHit(input)
+            ? String(localized: "Auto-wound skipped the wound roll — defender still saves. ")
+            : ""
+        let saved = effective >= input.saveTarget
+        if input.rend != 0 {
+            let modifierTerm = input.saveModifier == 0 ? "" : " + modifier \(input.saveModifier)"
+            let needed = max(1, input.saveTarget - input.rend - input.saveModifier)
+            let rendLabel = input.rend >= 0 ? "+\(input.rend)" : "\(input.rend)"
+            return autoWoundPrefix + """
+            Rolled \(input.saveRoll)\(modifierTerm) + Rend \(rendLabel) = \(effective) vs Save \(input.saveTarget)+ — \
+            need \(needed)+ on the dice — \(saved ? "saved" : "failed save").
+            """
+        }
+        let modNote = input.saveModifier == 0 ? "" : " (modifier \(input.saveModifier >= 0 ? "+" : "")\(input.saveModifier))"
+        return autoWoundPrefix + "Rolled \(input.saveRoll)\(modNote) vs Save \(input.saveTarget)+ — \(saved ? "saved" : "failed save")."
     }
 
     private static func wardExplanation(wardRoll: Int, wardTarget: Int, success: Bool) -> String {

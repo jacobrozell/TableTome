@@ -2,7 +2,7 @@ import SwiftUI
 
 enum AppTab: Hashable {
     case learn
-    case rules
+    case search
     case settings
 }
 
@@ -25,13 +25,22 @@ struct RootTabView: View {
             .accessibilityIdentifier("tab.play")
 
             NavigationStack {
-                RulesReferenceView(viewModel: dependencies.makeRulesReferenceViewModel())
+                if ReleaseSurface.showsRulesAssistant {
+                    AppSearchView(viewModel: dependencies.makeAppSearchViewModel())
+                } else {
+                    RulesReferenceView(viewModel: dependencies.makeRulesReferenceViewModel())
+                }
             }
             .tabItem {
-                Label(String(localized: "Rules"), systemImage: "doc.text.fill")
+                Label(
+                    ReleaseSurface.showsRulesAssistant
+                        ? String(localized: "Search")
+                        : String(localized: "Rules"),
+                    systemImage: ReleaseSurface.showsRulesAssistant ? "magnifyingglass" : "doc.text.fill"
+                )
             }
-            .tag(AppTab.rules)
-            .accessibilityIdentifier("tab.rules")
+            .tag(AppTab.search)
+            .accessibilityIdentifier(ReleaseSurface.showsRulesAssistant ? "tab.search" : "tab.rules")
 
             NavigationStack {
                 SettingsView()
@@ -64,6 +73,8 @@ struct RootTabView: View {
             break
         case .openGuidedMatch(let gameSystemId):
             openGuidedMatch(gameSystemId: gameSystemId)
+        case .openGameGuide(let gameSystemId):
+            openGameGuide(gameSystemId: gameSystemId)
         }
     }
 
@@ -72,11 +83,18 @@ struct RootTabView: View {
         switch action {
         case .openGuidedMatch(let gameSystemId):
             openGuidedMatch(gameSystemId: gameSystemId)
+        case .openGameGuide(let gameSystemId):
+            openGameGuide(gameSystemId: gameSystemId)
         }
     }
 
     private func openGuidedMatch(gameSystemId: String) {
         selectedTab = .learn
         learnPath = NavigationPath([GuidedMatchLink(gameSystemId: gameSystemId)])
+    }
+
+    private func openGameGuide(gameSystemId: String) {
+        selectedTab = .learn
+        learnPath = NavigationPath([gameSystemId])
     }
 }

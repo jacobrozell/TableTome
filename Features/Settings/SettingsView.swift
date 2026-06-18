@@ -136,8 +136,13 @@ struct SettingsView: View {
         .fullScreenCover(isPresented: $showsOnboarding) {
             OnboardingView(mode: .replay) { completion in
                 showsOnboarding = false
-                if case .openGuidedMatch(let gameSystemId) = completion {
+                switch completion {
+                case .openGuidedMatch(let gameSystemId):
                     learnNavigationCoordinator.openGuidedMatch(gameSystemId: gameSystemId)
+                case .openGameGuide(let gameSystemId):
+                    learnNavigationCoordinator.openGameGuide(gameSystemId: gameSystemId)
+                case .exploreApp:
+                    break
                 }
             }
         }

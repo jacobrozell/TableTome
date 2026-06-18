@@ -22,9 +22,7 @@ struct HomeView: View {
                 )
             } else {
                 List {
-                    if viewModel.gameSystems.count == 1,
-                       let system = viewModel.gameSystems.first,
-                       system.id == "aos-spearhead" {
+                    if !viewModel.gameSystems.isEmpty {
                         Section {
                             HomeWelcomeCard()
                         }
@@ -63,8 +61,13 @@ struct HomeView: View {
 
     private func gameSystemRow(_ system: GameSystem) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-            Text(system.name)
-                .font(.headline)
+            HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
+                Text(system.name)
+                    .font(.headline)
+                if ReleaseSurface.showsNewEditionBadge(for: system.id) {
+                    NewEditionBadge()
+                }
+            }
             Text(newcomerTagline(for: system))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
@@ -74,12 +77,24 @@ struct HomeView: View {
         }
         .padding(.vertical, DesignTokens.Spacing.xs)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(system.name). \(newcomerTagline(for: system)). \(system.edition)")
+        .accessibilityLabel(homeRowAccessibilityLabel(for: system))
+    }
+
+    private func homeRowAccessibilityLabel(for system: GameSystem) -> String {
+        var parts = [system.name]
+        if ReleaseSurface.showsNewEditionBadge(for: system.id) {
+            parts.append(String(localized: "New edition"))
+        }
+        parts.append(contentsOf: [newcomerTagline(for: system), system.edition])
+        return parts.joined(separator: ". ")
     }
 
     private func newcomerTagline(for system: GameSystem) -> String {
         if system.id == "aos-spearhead" {
             return String(localized: "Learn and play with your starter-set armies")
+        }
+        if system.id == "wh40k-11e" {
+            return String(localized: "New to 40k or upgrading from 10th? Guided setup and rules")
         }
         return system.tagline
     }

@@ -3,7 +3,7 @@ import TabletomeDomain
 
 struct GameSystemDetailView: View {
     let gameSystemId: String
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     @EnvironmentObject private var dependencies: AppDependencies
     @State private var gameSystem: GameSystem?
     @State private var featuredArmies: [SpearheadArmy] = []
@@ -16,6 +16,14 @@ struct GameSystemDetailView: View {
                     if gameSystemId == "aos-spearhead" {
                         Section {
                             NewPlayerStartHereCard()
+                        }
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Color.clear)
+                    }
+
+                    if gameSystemId == "wh40k-11e" {
+                        Section {
+                            FortyKStartHereCard(gameSystem: gameSystem)
                         }
                         .listRowInsets(EdgeInsets())
                         .listRowBackground(Color.clear)
@@ -49,43 +57,65 @@ struct GameSystemDetailView: View {
                         NavigationLink {
                             GettingStartedView(gameSystem: gameSystem)
                         } label: {
-                            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                                Label(String(localized: "Getting Started"), systemImage: "map")
-                                Text(String(localized: "Five-minute read — what you need and how a battle works"))
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                            }
-                            .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                            guideRow(
+                                title: String(localized: "Getting Started"),
+                                symbol: "map",
+                                detail: gettingStartedDetail
+                            )
                         }
                         .accessibilityIdentifier("guide.gettingStarted.\(gameSystemId)")
 
-                        NavigationLink {
-                            GuidedMatchView(
-                                viewModel: dependencies.makeGuidedMatchViewModel(),
-                                ruleSections: gameSystem.ruleSections
-                            )
-                        } label: {
-                            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                                Label(String(localized: "Guided Match"), systemImage: "flag.checkered")
-                                Text(String(localized: "Interactive setup and battle tracker — start with Use Starter Matchup"))
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
+                        if !gameSystem.editionMigrationSteps.isEmpty {
+                            NavigationLink {
+                                EditionMigrationView(gameSystem: gameSystem)
+                            } label: {
+                                guideRow(
+                                    title: String(localized: "What's New in 11th Edition"),
+                                    symbol: "arrow.triangle.2.circlepath",
+                                    detail: String(localized: "Upgrading from 10th — key rule changes at the table")
+                                )
                             }
-                            .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                            .accessibilityIdentifier("guide.whatsNew.\(gameSystemId)")
                         }
-                        .accessibilityIdentifier("guide.guidedMatch.\(gameSystemId)")
 
-                        if ReleaseSurface.showsRollEvaluator {
+                        if !gameSystem.ruleSections.isEmpty {
+                            NavigationLink {
+                                GameSystemRulesReferenceView(gameSystem: gameSystem)
+                            } label: {
+                                guideRow(
+                                    title: String(localized: "Rules Reference"),
+                                    symbol: "doc.text.fill",
+                                    detail: String(localized: "Search phases, combat, terrain, and glossary")
+                                )
+                            }
+                            .accessibilityIdentifier("guide.rulesReference.\(gameSystemId)")
+                        }
+
+                        if ReleaseSurface.showsGuidedMatch(for: gameSystemId) {
+                            NavigationLink {
+                                GuidedMatchView(
+                                    viewModel: dependencies.makeGuidedMatchViewModel(),
+                                    ruleSections: gameSystem.ruleSections
+                                )
+                            } label: {
+                                guideRow(
+                                    title: String(localized: "Guided Match"),
+                                    symbol: "flag.checkered",
+                                    detail: String(localized: "Interactive setup and battle tracker — start with Use Starter Matchup")
+                                )
+                            }
+                            .accessibilityIdentifier("guide.guidedMatch.\(gameSystemId)")
+                        }
+
+                        if ReleaseSurface.showsCombatResolver(for: gameSystemId) {
                             NavigationLink {
                                 UnitMatchupEvaluatorView(ruleSections: gameSystem.ruleSections)
                             } label: {
-                                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                                    Label(String(localized: "Combat Resolver"), systemImage: "dice.fill")
-                                    Text(String(localized: "Practice attack dice math between games"))
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-                                }
-                                .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                                guideRow(
+                                    title: String(localized: "Combat Resolver"),
+                                    symbol: "dice.fill",
+                                    detail: String(localized: "Practice attack dice math between games")
+                                )
                             }
                             .accessibilityIdentifier("guide.combatResolver.\(gameSystemId)")
                         }
@@ -94,6 +124,8 @@ struct GameSystemDetailView: View {
                     } footer: {
                         if gameSystemId == "aos-spearhead" {
                             Text(String(localized: "New to a term? Open Rules Glossary under Table Reference."))
+                        } else if gameSystemId == "wh40k-11e" {
+                            Text(String(localized: "Guided Match for Armageddon arrives in a future update. Use Getting Started and Rules Reference for now."))
                         }
                     }
 
@@ -102,9 +134,10 @@ struct GameSystemDetailView: View {
                             NavigationLink {
                                 BattleTacticsReferenceView(ruleSections: gameSystem.ruleSections)
                             } label: {
-                                Label(String(localized: "Battle Tactics & Twists"), systemImage: "rectangle.stack")
+                                Label(String(localized: "Card Decks Guide"), systemImage: "rectangle.stack")
                                     .frame(minHeight: DesignTokens.minTouchTarget)
                             }
+                            .accessibilityHint(String(localized: "Twist cards vs battle tactic cards — which deck is which"))
                             NavigationLink {
                                 RulesGlossaryView()
                             } label: {
@@ -133,9 +166,36 @@ struct GameSystemDetailView: View {
                 ProgressView()
             }
         }
-        .navigationTitle(gameSystem?.name ?? String(localized: "Game Guide"))
-        .navigationBarTitleDisplayMode(horizontalSizeClass == .regular ? .large : .inline)
+        .navigationTitle(navigationTitle)
+        .navigationBarTitleDisplayMode(verticalSizeClass == .compact ? .inline : .large)
         .task { await load() }
+    }
+
+    private var navigationTitle: String {
+        guard let gameSystem else { return String(localized: "Game Guide") }
+        if gameSystemId == "wh40k-11e" {
+            return String(localized: "Warhammer 40,000")
+        }
+        return gameSystem.name
+    }
+
+    private var gettingStartedDetail: String {
+        switch gameSystemId {
+        case "wh40k-11e":
+            String(localized: "What you need, army building, and how a battle works")
+        default:
+            String(localized: "Five-minute read — what you need and how a battle works")
+        }
+    }
+
+    private func guideRow(title: String, symbol: String, detail: String) -> some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+            Label(title, systemImage: symbol)
+            Text(detail)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
     }
 
     private func load() async {

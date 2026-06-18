@@ -23,6 +23,13 @@ final class AppDependencies: ObservableObject {
         RulesReferenceViewModel(rulesRepository: rulesRepository)
     }
 
+    func makeAppSearchViewModel() -> AppSearchViewModel {
+        AppSearchViewModel(
+            rulesRepository: rulesRepository,
+            catalogRepository: spearheadCatalogRepository
+        )
+    }
+
     func makeGuidedMatchViewModel() -> GuidedMatchViewModel {
         GuidedMatchViewModel(catalogRepository: spearheadCatalogRepository)
     }

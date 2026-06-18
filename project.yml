@@ -74,9 +74,8 @@ targets:
     platform: iOS
     sources:
       - path: Data
-      - path: Data/Hobby
         excludes:
-          - "**/*"
+          - "Hobby/**"
     dependencies:
       - target: TabletomeDomain
     settings:

@@ -2,7 +2,7 @@ name: Tabletome
 options:
   bundleIdPrefix: com.jacobrozell
   deploymentTarget:
-    iOS: "17.0"
+    iOS: "18.0"
   xcodeVersion: "16.0"
   createIntermediateGroups: true
   groupSortPosition: top
@@ -36,6 +36,7 @@ targets:
     dependencies:
       - target: TabletomeDomain
       - target: TabletomeData
+      - target: TabletomeHobbyData
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.tabletome
@@ -73,6 +74,9 @@ targets:
     platform: iOS
     sources:
       - path: Data
+      - path: Data/Hobby
+        excludes:
+          - "**/*"
     dependencies:
       - target: TabletomeDomain
     settings:
@@ -80,6 +84,19 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.tabletome.data
         GENERATE_INFOPLIST_FILE: YES
         SWIFT_STRICT_CONCURRENCY: minimal
+
+  TabletomeHobbyData:
+    type: framework
+    platform: iOS
+    sources:
+      - path: Data/Hobby
+    dependencies:
+      - target: TabletomeDomain
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.tabletome.hobbydata
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_STRICT_CONCURRENCY: complete
 
   TabletomeTests:
     type: bundle.unit-test
@@ -98,6 +115,7 @@ targets:
       - target: Tabletome
       - target: TabletomeDomain
       - target: TabletomeData
+      - target: TabletomeHobbyData
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.tabletome.tests

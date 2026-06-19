@@ -33,10 +33,9 @@ Tabletome is not selling rules PDFs (GW gives those away). It sells **at-table w
 | Fallback SKU | **Lifetime** (~$79–99) for sub-averse whales |
 | App structure | **Same app** — one SKU, tiers via entitlements |
 | Two-app pivot | **Back pocket only** — split Play vs full OS if store positioning forces it |
-| Tip jar | Keep **Buy Me a Coffee** in Settings (supporter intent, not product SKU) |
 | `ReleaseSurface` | Use for **readiness** and tier gating — never hide *ready* hype systems behind pay |
 
-See [Alternative: OG strategy](#alternative-og-strategy--portfolio-of-free-apps--buy-me-a-coffee) below — still valid for ship-fast / side-project mode.
+See [Alternative: OG strategy](#alternative-og-strategy--portfolio-of-free-apps) below — still valid for ship-fast / side-project mode.
 
 ---
 
@@ -139,9 +138,9 @@ Shared Domain/Data targets; two app targets in XcodeGen. **Default: one app** un
 
 ---
 
-## Alternative: OG strategy — portfolio of free apps + Buy Me a Coffee
+## Alternative: OG strategy — portfolio of free apps
 
-**Original plan:** Ship several **focused, fully free** apps (one per game mode or edition), each with a **Buy Me a Coffee** tip link in Settings. No StoreKit, no paywalls.
+**Original plan:** Ship several **focused, fully free** apps (one per game mode or edition). No StoreKit, no paywalls.
 
 **Status:** Still valid. This doc’s Plus tiers are the **“if Tabletome grows up”** path — not a rejection of OG.
 
@@ -214,7 +213,6 @@ Architecture already supports either shape: shared Domain/Data targets; `Release
 - Map entitlements to existing `ReleaseSurface` gates (`showsGuidedMatch`, `showsCombatResolver`, `isGameSystemVisible`, future Bench/Muster flags).
 - StoreKit: annual product as default; monthly + lifetime as secondary.
 - Family Sharing on annual + lifetime.
-- Do not conflate Buy Me a Coffee with Plus.
 
 ---
 

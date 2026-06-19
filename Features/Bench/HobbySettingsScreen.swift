@@ -49,9 +49,6 @@ struct HobbySettingsScreen: View {
                         Text(Bundle.main.appVersion)
                             .foregroundStyle(.secondary)
                     }
-                    Link(destination: AppInfo.buyMeACoffeeURL) {
-                        Label(String(localized: "Buy me a coffee"), systemImage: "cup.and.saucer.fill")
-                    }
                     Text(String(localized: "For the Emperor · For the Great Horned Rat · Sigmar Watches"))
                         .font(.caption).foregroundStyle(.secondary)
                 }

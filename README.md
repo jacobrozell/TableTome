@@ -42,3 +42,7 @@ XcodeBuildMCP and iOS Simulator MCP are configured in [`.cursor/mcp.json`](.curs
 **Dedicated simulator:** Run `Scripts/setup-tabletome-simulator.sh` to create or reuse a simulator named `Tabletome` (iPhone 17, iOS 26.4). Agents pin `IDB_UDID` in MCP config and use the `tabletome` XcodeBuildMCP profile so builds do not touch other projects' simulators.
 
 **GitHub Pages:** Legal pages live in `docs/`. Enable **Settings → Pages → Deploy from branch `main` / `/docs`**. Published at `https://jacobrozell.github.io/Tabletome/`.
+
+## Support
+
+If Tabletome helps at your table, optional tips are appreciated: [Buy Me a Coffee](https://buymeacoffee.com/jacobrozelq).

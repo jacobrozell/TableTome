@@ -157,13 +157,6 @@ struct SettingsView: View {
                     hint: String(localized: "Opens accessibility statement in Safari")
                 )
                 settingsLink(
-                    title: String(localized: "Buy Me a Coffee"),
-                    systemImage: "cup.and.saucer",
-                    destination: AppLinks.tipJar,
-                    identifier: "settings.tipJar",
-                    hint: String(localized: "Opens tip page in Safari")
-                )
-                settingsLink(
                     title: String(localized: "Source Code"),
                     systemImage: "chevron.left.forwardslash.chevron.right",
                     destination: AppLinks.sourceRepository,

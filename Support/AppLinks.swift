@@ -8,6 +8,5 @@ public enum AppLinks {
     public static let privacy = pagesBase.appending(path: "privacy.html")
     public static let support = pagesBase.appending(path: "support.html")
     public static let accessibility = pagesBase.appending(path: "accessibility.html")
-    public static let tipJar = URL(string: "https://buymeacoffee.com/jacobrozelq")!
     public static let sourceRepository = URL(string: "https://github.com/jacobrozell/Tabletome")!
 }

@@ -9,10 +9,6 @@ final class AppLinksTests: XCTestCase {
         XCTAssertTrue(AppLinks.privacy.path.hasSuffix("privacy.html"))
     }
 
-    func testTipJarURL() {
-        XCTAssertEqual(AppLinks.tipJar.absoluteString, "https://buymeacoffee.com/jacobrozelq")
-    }
-
     func testSourceRepositoryURL() {
         XCTAssertEqual(AppLinks.sourceRepository.host, "github.com")
         XCTAssertTrue(AppLinks.sourceRepository.path.contains("Tabletome"))

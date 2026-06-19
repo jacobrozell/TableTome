@@ -77,7 +77,6 @@ Pattern-matching on bundled rule graph first; optional on-device LLM later behin
 | Min iOS | 17.0 |
 | Locales | English only (v1) |
 | Telemetry | Off in Release; stub logger only |
-| Tip/donate | Shipped — [Buy Me a Coffee](https://buymeacoffee.com/jacobrozelq) in Settings |
 | Orientations | Portrait phone; iPad all |
 
 ## Open Questions

@@ -1,6 +1,10 @@
 # Tabletome
 
-Offline-first iOS reference and rules companion for Warhammer tabletop games, starting with **Age of Sigmar: Spearhead**.
+Offline-first iOS reference and rules companion for Warhammer tabletop games.
+
+**Release:** **1.0.0** · **Phase:** **TestFlight** ([release status](docs/release/status.md))
+
+Supported in this build: **Age of Sigmar Spearhead** and **Warhammer 40,000 11th Edition**. See [feature inventory](docs/feature-inventory.md) and [release surface spec](specs/ReleaseSurfaceSpec.md) for what is gated vs shipped.
 
 ## Build & Run
 
@@ -28,6 +32,8 @@ xcodebuild test \
 - **Brainstorm (non-authoritative):** [docs/brainstorm.md](docs/brainstorm.md)
 - **System specs:** [specs/README.md](specs/README.md)
 - **Feature inventory:** [docs/feature-inventory.md](docs/feature-inventory.md)
+- **Release status (1.0.0 TestFlight):** [docs/release/status.md](docs/release/status.md)
+- **Gated features testing backlog:** [docs/release/gated-features-testing.md](docs/release/gated-features-testing.md)
 - **Agent build checklist:** [docs/agent-build-checklist.md](docs/agent-build-checklist.md)
 - **Contributing:** [CONTRIBUTING.md](CONTRIBUTING.md)
 

@@ -19,7 +19,7 @@ Layered modules — **Features → Domain / Data → bundled JSON**. Domain neve
 1. **Spec-first:** No user-visible behavior without an authoritative spec in `specs/`.
 2. **Test-first for domain:** Pure logic and ViewModels get unit tests before UI polish.
 3. **Regenerate Xcode project:** Run `xcodegen generate` after `project.yml` changes. Do not commit `.xcodeproj`.
-4. **Release surface:** Gate unfinished UI via `Support/ReleaseSurface.swift` — hide, don't delete.
+4. **Release surface:** Gate unfinished UI via `Support/ReleaseSurface.swift` — hide, don't delete. Current target: **1.0.0 TestFlight** ([docs/release/status.md](docs/release/status.md)).
 5. **Accessibility:** VoiceOver labels, 44pt targets, Dynamic Type on all new controls.
 6. **Localization:** User-facing strings via `String(localized:)` / `Localizable.xcstrings`.
 

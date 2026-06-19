@@ -148,13 +148,13 @@ struct OnboardingView: View {
                     alignment: .leading,
                     spacing: 12
                 ) {
-                    ForEach(OnboardingContent.gameHighlights) { game in
+                    ForEach(OnboardingContent.visibleGameHighlights) { game in
                         gameHighlightCard(game)
                     }
                 }
             } else {
                 VStack(alignment: .leading, spacing: 12) {
-                    ForEach(OnboardingContent.gameHighlights) { game in
+                    ForEach(OnboardingContent.visibleGameHighlights) { game in
                         gameHighlightCard(game)
                     }
                 }
@@ -421,7 +421,7 @@ struct OnboardingView: View {
 
     private func gameStartButtons(controlSize: ControlSize) -> some View {
         VStack(spacing: 10) {
-            ForEach(OnboardingContent.gameHighlights) { game in
+            ForEach(OnboardingContent.visibleGameHighlights) { game in
                 gameStartButton(for: game, controlSize: controlSize)
             }
         }

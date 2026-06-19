@@ -16,7 +16,7 @@ final class ReleaseSurfaceTests: XCTestCase {
         XCTAssertTrue(ReleaseSurface.isGameSystemVisible(system))
     }
 
-    func testWh40k10eCpVisibleInRelease() {
+    func testWh40k10eCpHiddenInRelease() {
         let system = GameSystem(
             id: "wh40k-10e-cp",
             name: "Combat Patrol",
@@ -26,7 +26,7 @@ final class ReleaseSurfaceTests: XCTestCase {
             gettingStartedSteps: [],
             ruleSections: []
         )
-        XCTAssertTrue(ReleaseSurface.isGameSystemVisible(system))
+        XCTAssertFalse(ReleaseSurface.isGameSystemVisible(system))
     }
 
     func test40k10eHiddenWithoutLaunchArg() {
@@ -60,15 +60,15 @@ final class ReleaseSurfaceTests: XCTestCase {
         XCTAssertFalse(ReleaseSurface.showsNewEditionBadge(for: "aos-spearhead"))
     }
 
-    func testGuidedMatchForSpearheadAnd40k11e() {
+    func testGuidedMatchForSpearheadAnd40k11eOnlyInRelease() {
         XCTAssertTrue(ReleaseSurface.showsGuidedMatch(for: "aos-spearhead"))
         XCTAssertTrue(ReleaseSurface.showsGuidedMatch(for: "wh40k-11e"))
-        XCTAssertTrue(ReleaseSurface.showsGuidedMatch(for: "wh40k-10e-cp"))
-        XCTAssertTrue(ReleaseSurface.showsGuidedMatch(for: "sc-tmg"))
+        XCTAssertFalse(ReleaseSurface.showsGuidedMatch(for: "wh40k-10e-cp"))
+        XCTAssertFalse(ReleaseSurface.showsGuidedMatch(for: "sc-tmg"))
         XCTAssertFalse(ReleaseSurface.showsGuidedMatch(for: "wh40k-10e"))
     }
 
-    func testScTmgVisibleInRelease() {
+    func testScTmgHiddenInRelease() {
         let system = GameSystem(
             id: "sc-tmg",
             name: "StarCraft",
@@ -78,18 +78,21 @@ final class ReleaseSurfaceTests: XCTestCase {
             gettingStartedSteps: [],
             ruleSections: []
         )
-        XCTAssertTrue(ReleaseSurface.isGameSystemVisible(system))
+        XCTAssertFalse(ReleaseSurface.isGameSystemVisible(system))
     }
 
-    func testRollEvaluatorEnabledInRelease() {
+    func testReleasePlayFeatures() {
         XCTAssertTrue(ReleaseSurface.showsRollEvaluator)
-        XCTAssertTrue(ReleaseSurface.showsRulesAssistant)
+        XCTAssertFalse(ReleaseSurface.showsRulesAssistant)
         XCTAssertTrue(ReleaseSurface.showsMatchHistory)
     }
 
-    func testCombatResolverEnabledForCombatPatrol() {
-        XCTAssertTrue(ReleaseSurface.showsCombatResolver(for: "wh40k-10e-cp"))
+    func testCombatResolverEnabledForSpearhead() {
         XCTAssertTrue(ReleaseSurface.showsCombatResolver(for: "aos-spearhead"))
+    }
+
+    func testCombatResolverHiddenForCombatPatrolInRelease() {
+        XCTAssertFalse(ReleaseSurface.showsCombatResolver(for: "wh40k-10e-cp"))
     }
 
     func testCombatResolverHiddenForWh40k11eByDefault() {
@@ -98,5 +101,13 @@ final class ReleaseSurfaceTests: XCTestCase {
 
     func testWh40kCombatResolverGateRequiresLaunchArg() {
         XCTAssertFalse(ReleaseSurface.showsWh40kCombatResolver)
+    }
+
+    func testReleaseTabs() {
+        XCTAssertTrue(ReleaseSurface.showsBenchTab)
+        XCTAssertFalse(ReleaseSurface.showsMusterTab)
+        XCTAssertFalse(ReleaseSurface.showsPaintsInBench)
+        XCTAssertTrue(ReleaseSurface.showsPlayTab)
+        XCTAssertTrue(ReleaseSurface.showsRulesTab)
     }
 }

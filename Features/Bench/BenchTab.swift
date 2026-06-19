@@ -27,18 +27,27 @@ struct BenchTab: View {
     }
   }
 
+  private var visibleSections: [BenchSection] {
+    if ReleaseSurface.showsPaintsInBench {
+      return BenchSection.allCases
+    }
+    return [.collection]
+  }
+
   var body: some View {
     VStack(spacing: 0) {
-      Picker(String(localized: "Models section"), selection: $section) {
-        ForEach(BenchSection.allCases) { item in
-          Label(item.label, systemImage: item.icon).tag(item)
+      if visibleSections.count > 1 {
+        Picker(String(localized: "Models section"), selection: $section) {
+          ForEach(visibleSections) { item in
+            Label(item.label, systemImage: item.icon).tag(item)
+          }
         }
+        .pickerStyle(.segmented)
+        .padding(.horizontal, DesignTokens.Spacing.md)
+        .padding(.vertical, DesignTokens.Spacing.sm)
+        .accessibilityIdentifier("bench.sectionPicker")
+        .accessibilityHint(String(localized: "Switch between your armies and paint inventory"))
       }
-      .pickerStyle(.segmented)
-      .padding(.horizontal, DesignTokens.Spacing.md)
-      .padding(.vertical, DesignTokens.Spacing.sm)
-      .accessibilityIdentifier("bench.sectionPicker")
-      .accessibilityHint(String(localized: "Switch between your armies and paint inventory"))
 
       Group {
         switch section {
@@ -64,7 +73,8 @@ struct BenchTab: View {
   private func syncSectionFromRouter() {
     switch router.tab {
     case .armies: section = .collection
-    case .paints: section = .paints
+    case .paints:
+      section = ReleaseSurface.showsPaintsInBench ? .paints : .collection
     case .muster: break
     }
   }

@@ -2,35 +2,61 @@ import Foundation
 import TabletomeDomain
 
 public enum ReleaseSurface {
+    /// Unlock gated features for CI, dogfood, and internal builds.
     private static var fullSurfaceEnabled: Bool {
         ProcessInfo.processInfo.arguments.contains("-enable_full_product_surface")
     }
 
-    /// Bench (collection + paints) and Muster (roster builder) hobby pillars.
-    private static var hobbyPillarsEnabled: Bool { true }
+    /// Game systems shipped in App Store 1.0.0.
+    private static let releaseGameSystemIds: Set<String> = [
+        GameSystemId.aosSpearhead.rawValue,
+        GameSystemId.wh40k11e.rawValue,
+    ]
 
-    public static var shows40kEditions: Bool { true }
+    // MARK: Tabs (1.0.0: Models, Play, Rules, Settings)
 
-    public static var showsRollEvaluator: Bool { true }
-    public static var showsRulesAssistant: Bool { true }
-    public static var showsMatchHistory: Bool { true }
-
-    // MARK: Pillars
-    //
-    // Unified-app pillars from FutureIdeas/UnifiedAppPlan.md. All non-Play pillars
-    // default to the full-surface flag so they stay hidden in TestFlight/Release
-    // until each pillar's Phase ships. Toggle from a single point so feature gates
-    // never scatter across views.
-
-    public static var showsBenchTab: Bool { hobbyPillarsEnabled }
-    public static var showsMusterTab: Bool { hobbyPillarsEnabled }
+    public static var showsBenchTab: Bool { true }
+    public static var showsMusterTab: Bool { fullSurfaceEnabled }
+    public static var showsPaintsInBench: Bool { fullSurfaceEnabled }
     public static var showsPlayTab: Bool { true }
     public static var showsRulesTab: Bool { true }
 
     // MARK: Cross-pillar links
 
-    public static var showsPlayFromRoster: Bool { hobbyPillarsEnabled }
-    public static var showsPaintStatusInMatch: Bool { hobbyPillarsEnabled }
+    public static var showsPlayFromRoster: Bool { fullSurfaceEnabled }
+    public static var showsPaintStatusInMatch: Bool { showsPaintsInBench }
+
+    // MARK: Play features
+
+    public static var shows40kEditions: Bool { true }
+    public static var showsRollEvaluator: Bool { true }
+    public static var showsRulesAssistant: Bool { fullSurfaceEnabled }
+    public static var showsMatchHistory: Bool { true }
+
+    // MARK: Game systems
+
+    public static func isGameSystemIdVisible(
+        _ gameSystemId: String,
+        registry: GameSystemRegistry = .bundled
+    ) -> Bool {
+        if fullSurfaceEnabled {
+            if let capabilities = registry.capabilities(for: gameSystemId) {
+                if capabilities.requiresFullSurfaceFlag {
+                    return true
+                }
+                if capabilities.homeRowVisible {
+                    return true
+                }
+            }
+            switch gameSystemId {
+            case "wh40k-10e":
+                return true
+            default:
+                return true
+            }
+        }
+        return releaseGameSystemIds.contains(gameSystemId)
+    }
 
     public static func showsNewEditionBadge(
         for gameSystemId: GameSystemId,
@@ -57,7 +83,8 @@ public enum ReleaseSurface {
         for gameSystemId: String,
         registry: GameSystemRegistry = .bundled
     ) -> Bool {
-        registry.capabilities(for: gameSystemId)?.showsGuidedMatch == true
+        guard isGameSystemIdVisible(gameSystemId, registry: registry) else { return false }
+        return registry.capabilities(for: gameSystemId)?.showsGuidedMatch == true
     }
 
     public static func showsCombatResolver(
@@ -72,6 +99,7 @@ public enum ReleaseSurface {
         registry: GameSystemRegistry = .bundled
     ) -> Bool {
         guard showsRollEvaluator else { return false }
+        guard isGameSystemIdVisible(gameSystemId, registry: registry) else { return false }
         guard let capabilities = registry.capabilities(for: gameSystemId) else { return false }
         if capabilities.showsCombatResolver {
             return true
@@ -88,19 +116,15 @@ public enum ReleaseSurface {
         _ system: GameSystem,
         registry: GameSystemRegistry = .bundled
     ) -> Bool {
-        if let capabilities = registry.capabilities(for: system.id) {
-            if capabilities.requiresFullSurfaceFlag {
-                return fullSurfaceEnabled
-            }
-            if capabilities.homeRowVisible {
+        guard isGameSystemIdVisible(system.id, registry: registry) else { return false }
+        if fullSurfaceEnabled {
+            switch system.id {
+            case "wh40k-10e":
                 return true
+            default:
+                return system.availability == .available
             }
         }
-        switch system.id {
-        case "wh40k-10e":
-            return fullSurfaceEnabled
-        default:
-            return system.availability == .available
-        }
+        return system.availability == .available
     }
 }

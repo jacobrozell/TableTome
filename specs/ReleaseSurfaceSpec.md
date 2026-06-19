@@ -8,22 +8,39 @@
 
 | Argument | Effect |
 |----------|--------|
-| `-enable_full_product_surface` | Show gated features (CI/dogfood only) |
+| `-enable_full_product_surface` | Show gated features (Lists tab, Paints, Combat Patrol, StarCraft, Rules Q&A, etc.) |
+| `-enable_wh40k_combat_resolver` | Enable 11e combat resolver (QA) |
 
-## Gates (v0.1 Release defaults)
+## Gates (1.0.0 Release defaults)
 
 | Feature | Release | Full Surface |
 |---------|---------|--------------|
-| AoS Spearhead guide | ✅ | ✅ |
-| 40k 10th / 11th | ❌ | ✅ (coming soon cards) |
+| Models tab (Collection) | ✅ | ✅ |
+| Paints (in Models) | ❌ | ✅ |
+| Lists tab (Muster) | ❌ | ✅ |
+| Play tab | ✅ | ✅ |
+| Rules reference | ✅ | ✅ |
+| Rules Q&A assistant | ❌ | ✅ |
+| Match history | ✅ | ✅ |
 | Roll evaluator | ✅ | ✅ |
-| Rules Q&A | ❌ | ❌ (stub) |
+| AoS Spearhead | ✅ | ✅ |
+| 40k 11th Edition | ✅ | ✅ |
+| Combat Patrol (10e CP) | ❌ | ✅ |
+| StarCraft TMG | ❌ | ✅ |
+| 40k 10th Edition | ❌ | ✅ |
+
+## Gated feature testing (future work)
+
+Before ungating any row above, complete the matching checklist in [docs/release/gated-features-testing.md](../docs/release/gated-features-testing.md) (unit gaps, manual QA, UI automation, promotion criteria).
 
 ## Verification
 
 | Field | Value |
 |-------|-------|
-| Target release | v0.1 |
-| Last verified | 2026-06-17 |
-| Commit | (initial scaffold) |
+| Target release | 1.0.0 |
+| Distribution phase | TestFlight (not App Store production) |
+| Last verified | 2026-06-19 |
+| Branch | release/1.0.0 |
 | Code paths | `Support/ReleaseSurface.swift` |
+| Release status doc | `docs/release/status.md` |
+| Gated features testing | `docs/release/gated-features-testing.md` |

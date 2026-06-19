@@ -2,7 +2,7 @@
 
 Living checklist for iOS app delivery. See the full prompt library in the original spec document.
 
-**App:** Tabletome · **Bundle ID:** `com.jacobrozell.tabletome` · **MVP:** AoS Spearhead offline guide
+**App:** Tabletome · **Bundle ID:** `com.jacobrozell.tabletome` · **Version:** 1.0.0 · **Phase:** TestFlight ([status](release/status.md))
 
 ## Progress log
 

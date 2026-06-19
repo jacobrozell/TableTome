@@ -18,6 +18,10 @@ Subscription-first hobby OS brainstorm — gate depth not hype, free play for al
 
 Playtest notes and feature options: [BetaFeedback.md](BetaFeedback.md).
 
+## Gated features (post–1.0.0 TestFlight)
+
+Testing backlog before ungating Lists, Paints, Combat Patrol, StarCraft, Rules Q&A, etc.: [../docs/release/gated-features-testing.md](../docs/release/gated-features-testing.md).
+
 ## New player first launch
 
 June 2026 audit (shipped checklist): [NewPlayerUXAudit.md](NewPlayerUXAudit.md).  

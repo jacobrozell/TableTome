@@ -161,6 +161,10 @@ enum OnboardingContent {
         )
     ]
 
+    static var visibleGameHighlights: [OnboardingGameHighlight] {
+        gameHighlights.filter { ReleaseSurface.isGameSystemIdVisible($0.id) }
+    }
+
     static var visibleTabTourItems: [OnboardingTabTourItem] {
         tabTourItems.filter { item in
             switch item.id {

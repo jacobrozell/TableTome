@@ -131,6 +131,37 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
         focusedRoundOpenerStep != nil
     }
 
+    /// Regiment ability and enhancement when they explicitly trigger in the current phase.
+    var phaseArmyRuleOptions: [ArmyRuleOption] {
+        guard let army = activeArmy else { return [] }
+        let player = activePlayer
+        var options: [ArmyRuleOption] = []
+        if let regiment = army.regimentAbilities.first(where: { $0.id == player.regimentAbilityId }),
+           regiment.isAvailableIn(phase: trackerState.currentPhase) {
+            options.append(regiment)
+        }
+        if let enhancement = army.enhancements.first(where: { $0.id == player.enhancementId }),
+           enhancement.isAvailableIn(phase: trackerState.currentPhase) {
+            options.append(enhancement)
+        }
+        return options
+    }
+
+    var phaseStratagems: [CombatPatrolStratagem] {
+        guard playContext.isCombatPatrol, let army = activeArmy else { return [] }
+        if trackerState.showAllAbilities {
+            return army.stratagems
+        }
+        return army.stratagems.filter { $0.matches(battlePhase: trackerState.currentPhase) }
+    }
+
+    var nextPhaseTitle: String? {
+        let phases = BattleRules.mainPhases(gameSystemId: gameSystemId)
+        guard let index = phases.firstIndex(of: trackerState.currentPhase),
+              index < phases.count - 1 else { return nil }
+        return phases[index + 1].title
+    }
+
     private func startOfRoundAbilities(for army: SpearheadArmy?) -> [TriggeredAbility] {
         guard let army else { return [] }
         return BattleAbilityCatalog.abilities(for: army).filter(\.isStartOfBattleRound)
@@ -297,6 +328,22 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
 
     func isUsed(_ ability: TriggeredAbility) -> Bool {
         trackerState.usedOncePerBattleAbilityIds.contains(ability.id)
+    }
+
+    func toggleStratagem(_ stratagem: CombatPatrolStratagem) {
+        guard let armyId = activeArmy?.id else { return }
+        let key = "\(armyId):\(stratagem.id)"
+        if trackerState.usedStratagemIds.contains(key) {
+            trackerState.usedStratagemIds.remove(key)
+        } else {
+            trackerState.usedStratagemIds.insert(key)
+        }
+        persist()
+    }
+
+    func isStratagemUsed(_ stratagem: CombatPatrolStratagem) -> Bool {
+        guard let armyId = activeArmy?.id else { return false }
+        return trackerState.usedStratagemIds.contains("\(armyId):\(stratagem.id)")
     }
 
     func setRoundChecklistStep(_ step: BattleRoundChecklistStep, complete: Bool) {

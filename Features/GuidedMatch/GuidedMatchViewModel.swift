@@ -321,6 +321,29 @@ final class GuidedMatchViewModel: ObservableObject {
         syncAutoCompletions()
     }
 
+    /// Skips manual setup for simulator automation (`-open_battle_tracker`).
+    func completeSetupForAutomation() {
+        if matchState.attackerIsPlayerOne == nil {
+            setAttacker(isPlayerOne: true)
+        }
+        applyRecommendedLoadouts()
+
+        let context = GameSystemPlayContext.context(for: gameSystemId)
+        if context.isWh40k11e {
+            Wh40kDeploymentChecklistStep.allCases.forEach { setWh40kDeploymentStep($0, complete: true) }
+        } else if context.isStarCraft {
+            ScTmgDeploymentChecklistStep.allCases.forEach { setScTmgDeploymentStep($0, complete: true) }
+        } else if context.isCombatPatrol {
+            CombatPatrolDeploymentChecklistStep.allCases.forEach { setCombatPatrolDeploymentStep($0, complete: true) }
+            if matchState.firstTurnIsPlayerOne == nil {
+                setFirstTurn(isPlayerOne: true)
+            }
+        } else {
+            DeploymentChecklistStep.allCases.forEach { setDeploymentStep($0, complete: true) }
+        }
+        syncAutoCompletions()
+    }
+
     private func applyRecommendedLoadout(for player: inout PlayerArmySelection, catalog: SpearheadCatalog) {
         guard let army = army(factionId: player.factionId, armyId: player.armyId) else { return }
         if let enhancement = ArmyRuleOption.recommendedDefault(in: army.enhancements) {

@@ -27,9 +27,13 @@ struct PaintRow: View {
     }
 
     private var accessibilityText: String {
-        var parts = ["\(paint.name)", paint.type, "quantity \(paint.qty)"]
-        if paint.low { parts.append("running low") }
-        if linkedCount > 0 { parts.append("\(linkedCount) linked units") }
+        var parts = [
+            paint.name,
+            paint.type,
+            String(localized: "quantity \(paint.qty)")
+        ]
+        if paint.low { parts.append(String(localized: "running low")) }
+        if linkedCount > 0 { parts.append(String(localized: "\(linkedCount) linked units")) }
         return parts.joined(separator: ", ")
     }
 
@@ -79,7 +83,7 @@ struct PaintRow: View {
                     .truncationMode(.tail)
                     .fixedSize(horizontal: false, vertical: true)
                 if paint.low {
-                    Text("LOW")
+                    Text(String(localized: "LOW"))
                         .font(.caption2.bold())
                         .padding(.horizontal, 5).padding(.vertical, 2)
                         .background(.orange.opacity(0.2), in: Capsule())
@@ -95,7 +99,11 @@ struct PaintRow: View {
                     .truncationMode(.tail)
             }
             if !paint.source.isEmpty {
-                Text("\(paint.source)\(linkedCount > 0 ? " (\(linkedCount) units)" : "")")
+                Text(
+                    linkedCount > 0
+                        ? String(localized: "\(paint.source) (\(linkedCount) units)")
+                        : paint.source
+                )
                     .font(.caption2)
                     .foregroundStyle(.tint)
                     .lineLimit(2)

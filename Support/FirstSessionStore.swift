@@ -50,7 +50,7 @@ enum FirstSessionStore: Sendable {
     }
 
     static func shouldShowContinueCard() -> Bool {
-        onboardingChoice != nil && !hasOpenedGameGuide
+        PlayContinuationResolver.current() != nil
     }
 
     static func shouldPromoteSampleData() -> Bool {

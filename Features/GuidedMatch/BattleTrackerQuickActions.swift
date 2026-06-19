@@ -120,16 +120,17 @@ enum BattleTrackerQuickActions {
             )
         case .shooting:
             if showsCombatResolver {
+                let usesCombatTab = playContext.capabilities.showsDedicatedCombatTab
                 if shootingEligibleCount > 0 {
                     items.append(
                         BattleTrackerQuickAction(
                             id: "shooting-units",
                             title: String(localized: "\(shootingEligibleCount) unit(s) can shoot"),
-                            detail: playContext.isWh40k
-                                ? String(localized: "Pick a unit below, then resolve dice on the Turn tab")
-                                : String(localized: "See the list below, then resolve dice in Combat"),
+                            detail: usesCombatTab
+                                ? String(localized: "Eligible units and dice tools are on the Combat tab")
+                                : String(localized: "Pick a unit below, then resolve dice on the Turn tab"),
                             systemImage: "scope",
-                            target: .sectionTab(.turn)
+                            target: usesCombatTab ? .sectionTab(.combat) : .sectionTab(.turn)
                         )
                     )
                 }
@@ -172,7 +173,9 @@ enum BattleTrackerQuickActions {
                         target: .sectionTab(.combat)
                     )
                 )
-            } else if showsCombatResolver, playContext.isWh40k {
+            } else if showsCombatResolver, playContext.capabilities.showsDedicatedCombatTab {
+                items.append(combatResolverAction(playContext: playContext))
+            } else if showsCombatResolver, playContext.isWh40k, !playContext.capabilities.showsDedicatedCombatTab {
                 items.append(
                     BattleTrackerQuickAction(
                         id: "fight-attacks",
@@ -182,7 +185,7 @@ enum BattleTrackerQuickActions {
                         target: .combatResolver
                     )
                 )
-            } else if playContext.isWh40k {
+            } else if playContext.isWh40k, !playContext.capabilities.showsDedicatedCombatTab {
                 items.append(wh40kPhaseReminder(phase: phase, gameSystemId: gameSystemId))
             }
         case .endOfTurn:
@@ -268,14 +271,17 @@ enum BattleTrackerQuickActions {
     }
 
     private static func combatResolverAction(playContext: GameSystemPlayContext) -> BattleTrackerQuickAction {
-        BattleTrackerQuickAction(
+        let usesCombatTab = playContext.capabilities.showsDedicatedCombatTab
+        return BattleTrackerQuickAction(
             id: "resolve-combat",
             title: playContext.isWh40k
                 ? String(localized: "Resolve attack dice")
                 : String(localized: "Resolve attacks in Combat"),
-            detail: String(localized: "Enter hit, wound, and save dice from the table"),
+            detail: usesCombatTab
+                ? String(localized: "Open the Combat tab for dice entry and damage")
+                : String(localized: "Enter hit, wound, and save dice from the table"),
             systemImage: "dice.fill",
-            target: .combatResolver
+            target: usesCombatTab ? .sectionTab(.combat) : .combatResolver
         )
     }
 

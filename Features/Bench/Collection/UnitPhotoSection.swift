@@ -21,7 +21,9 @@ struct UnitPhotoSection: View {
     @State private var photoToDelete: ModelPhoto?
 
     private var addPhotoLabel: String {
-        unit.photos.isEmpty ? "Add photo" : "Add another photo"
+        unit.photos.isEmpty
+            ? String(localized: "Add photo")
+            : String(localized: "Add another photo")
     }
 
     var body: some View {
@@ -41,21 +43,31 @@ struct UnitPhotoSection: View {
                 }
             }
         } header: {
-            Text("Photos")
+            Text(String(localized: "Photos"))
         } footer: {
             if !unit.photos.isEmpty {
-                Text("Photos are stored on this device. Tag stages automatically from your current painting state.")
+                Text(
+                    String(
+                        localized: """
+                        Photos are stored on this device. Tag stages automatically from your current painting state.
+                        """
+                    )
+                )
             }
         }
         .onChange(of: pickerItem) { _, item in
             guard let item else { return }
             Task { await importPhoto(from: item) }
         }
-        .confirmationDialog("Remove this photo?", isPresented: .init(
-            get: { photoToDelete != nil },
-            set: { if !$0 { photoToDelete = nil } }
-        ), titleVisibility: .visible) {
-            Button("Remove", role: .destructive) {
+        .confirmationDialog(
+            String(localized: "Remove this photo?"),
+            isPresented: .init(
+                get: { photoToDelete != nil },
+                set: { if !$0 { photoToDelete = nil } }
+            ),
+            titleVisibility: .visible
+        ) {
+            Button(String(localized: "Remove"), role: .destructive) {
                 if let photo = photoToDelete {
                     PhotoStore.delete(photo, in: context)
                     photoToDelete = nil
@@ -77,7 +89,7 @@ struct UnitPhotoSection: View {
                     StateChip(state: photo.stageKey, pipeline: pipeline)
                         .padding(8)
                 }
-                .accessibilityLabel("Cover photo, \(photo.stageKey)")
+                .accessibilityLabel(String(localized: "Cover photo, \(photo.stageKey)"))
                 .accessibilityIdentifier("unitCoverPhoto")
         }
     }
@@ -139,11 +151,11 @@ struct UnitPhotoSection: View {
     private func photoActions(_ photo: ModelPhoto) -> some View {
         HStack(spacing: 12) {
             if photo.isCover {
-                Text("Cover")
+                Text(String(localized: "Cover"))
                     .font(.caption.weight(.medium))
                     .foregroundStyle(.secondary)
             } else {
-                Button("Set cover") {
+                Button(String(localized: "Set cover")) {
                     PhotoStore.setCover(photo, in: context)
                 }
                 .font(.caption)
@@ -154,7 +166,7 @@ struct UnitPhotoSection: View {
                 Image(systemName: "trash")
             }
             .buttonStyle(.borderless)
-            .accessibilityLabel("Delete photo")
+            .accessibilityLabel(String(localized: "Delete photo"))
         }
     }
 #endif
@@ -163,7 +175,7 @@ struct UnitPhotoSection: View {
         defer { pickerItem = nil }
         do {
             guard let data = try await item.loadTransferable(type: Data.self) else {
-                banner.show("Could not read the selected image")
+                banner.show(String(localized: "Could not read the selected image"))
                 return
             }
             _ = try PhotoStore.addPhoto(from: data, to: unit, stageKey: unit.state, in: context)

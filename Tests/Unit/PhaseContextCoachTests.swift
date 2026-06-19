@@ -31,8 +31,8 @@ final class PhaseContextCoachTests: XCTestCase {
 
     func testCombatPatrolCommandPhaseIncludesSecureObjectives() {
         let tips = PhaseContextCoach.quickTips(for: .command, gameSystemId: "wh40k-10e-cp")
-        XCTAssertTrue(tips.joined().localizedCaseInsensitiveContains("Battleline"))
-        XCTAssertTrue(tips.joined().localizedCaseInsensitiveContains("stratagem"))
+        XCTAssertTrue(tips.joined().localizedCaseInsensitiveContains("objectives"))
+        XCTAssertTrue(tips.joined().localizedCaseInsensitiveContains("Table State"))
     }
 
     func testStarCraftMovementSummaryIsNotSpearhead() {

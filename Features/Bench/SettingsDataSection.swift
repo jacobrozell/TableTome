@@ -43,25 +43,25 @@ struct SettingsDataSection: View {
             .fileExporter(isPresented: $showExporter, document: exportDoc,
                           contentType: exportType, defaultFilename: exportName) { _ in }
             .sheet(item: $importOutcome, content: importResultsSheet)
-            .alert(alertError?.title ?? "Error", isPresented: alertPresented) {
-                Button("OK", role: .cancel) {}
+            .alert(alertError?.title ?? String(localized: "Error"), isPresented: alertPresented) {
+                Button(String(localized: "OK"), role: .cancel) {}
             } message: {
                 if let alertError { Text(alertError.message) }
             }
-            .confirmationDialog("Replace all data on this device?",
+            .confirmationDialog(String(localized: "Replace all data on this device?"),
                                 isPresented: $confirmRestore, titleVisibility: .visible) {
-                Button("Choose backup file") { showJSONImporter = true }
+                Button(String(localized: "Choose backup file")) { showJSONImporter = true }
             } message: {
-                Text("Restoring a backup replaces armies, paints, and settings.")
+                Text(String(localized: "Restoring a backup replaces armies, paints, and hobby settings."))
             }
-            .confirmationDialog("Delete all armies, paints, and settings?",
+            .confirmationDialog(String(localized: "Delete all armies, paints, and settings?"),
                                 isPresented: $confirmClear, titleVisibility: .visible) {
-                Button("Clear all", role: .destructive) { clearAllData() }
+                Button(String(localized: "Clear all"), role: .destructive) { clearAllData() }
             }
-            .confirmationDialog("Replace existing data?",
+            .confirmationDialog(String(localized: "Replace existing data?"),
                                 isPresented: $confirmReplaceImport, titleVisibility: .visible) {
-                Button("Replace") { runPendingImport() }
-                Button("Cancel", role: .cancel) { pendingImportURL = nil }
+                Button(String(localized: "Replace")) { runPendingImport() }
+                Button(String(localized: "Cancel"), role: .cancel) { pendingImportURL = nil }
             } message: {
                 Text(replaceImportMessage)
             }
@@ -72,41 +72,69 @@ struct SettingsDataSection: View {
     @ViewBuilder
     private var formSections: some View {
         Section {
+            Text(
+                String(
+                    localized: """
+                    Back up or move your collection between devices. Replace clears existing data in that \
+                    category first; append adds new rows and skips duplicates.
+                    """
+                )
+            )
+            .font(.callout)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+
             if let cfg = try? context.fetch(FetchDescriptor<AppConfiguration>()).first,
                let last = cfg.lastBackupAt {
-                LabeledContent("Last backup") {
+                LabeledContent(String(localized: "Last backup")) {
                     Text(last, style: .date).foregroundStyle(.secondary)
                 }
             }
+        } header: {
+            Text(String(localized: "Collection & Data"))
         }
 
         templateSection
 
-        Section("Import") {
-            Button("Import armies (replace)…") { beginImport(.armies, .replace) }
-            Button("Import armies (append)…") { beginImport(.armies, .append) }
-            Button("Import paints (replace)…") { beginImport(.paints, .replace) }
-            Button("Import paints (append)…") { beginImport(.paints, .append) }
+        Section {
+            Button(String(localized: "Import armies (replace)…")) { beginImport(.armies, .replace) }
+            Button(String(localized: "Import armies (append)…")) { beginImport(.armies, .append) }
+            Button(String(localized: "Import paints (replace)…")) { beginImport(.paints, .replace) }
+            Button(String(localized: "Import paints (append)…")) { beginImport(.paints, .append) }
+        } header: {
+            Text(String(localized: "Import"))
+        } footer: {
+            Text(String(localized: "CSV files from Excel, Numbers, or Google Sheets. Use a template below if you're starting fresh."))
         }
 
-        Section("Export") {
-            Button("Export armies CSV") { exportArmiesCSV() }
-            Button("Export paints CSV") { exportPaintsCSV() }
-            Button("Full backup (JSON)") { exportBackup() }
+        Section {
+            Button(String(localized: "Export armies CSV")) { exportArmiesCSV() }
+            Button(String(localized: "Export paints CSV")) { exportPaintsCSV() }
+            Button(String(localized: "Full backup (JSON)")) { exportBackup() }
+        } header: {
+            Text(String(localized: "Export"))
+        } footer: {
+            Text(String(localized: "JSON backup includes armies, paints, pipeline settings, and list defaults."))
         }
 
-        Section("Backup & sample") {
-            Button("Restore backup…") { confirmRestore = true }
-            Button("Load sample collection") {
+        Section {
+            Button(String(localized: "Restore backup…")) { confirmRestore = true }
+            Button(String(localized: "Load sample collection")) {
                 presentOutcome(DataActions.loadSampleOutcome(ctx: context))
             }
-            Button("Clear all data", role: .destructive) { confirmClear = true }
+            Button(String(localized: "Clear all data"), role: .destructive) { confirmClear = true }
+        } header: {
+            Text(String(localized: "Backup & sample"))
+        } footer: {
+            Text(String(localized: "Sample data is for exploring the Models tab — safe to delete anytime."))
         }
     }
 
     private var replaceImportMessage: String {
-        let noun = importDomain == .armies ? "armies" : "paints"
-        return "Import (replace) will delete current \(noun) before importing."
+        if importDomain == .armies {
+            return String(localized: "Import (replace) will delete your current armies before importing.")
+        }
+        return String(localized: "Import (replace) will delete your current paints before importing.")
     }
 
     @ViewBuilder
@@ -125,17 +153,17 @@ struct SettingsDataSection: View {
     private func clearAllData() {
         CollectionStore.clearAll(in: context)
         WidgetUpdater.refresh(context: context)
-        banner.show("All data cleared")
+        banner.show(String(localized: "All data cleared"))
     }
 
     private var templateSection: some View {
         Section {
-            Button("Armies template") { exportArmiesTemplate() }
-            Button("Paints template") { exportPaintsTemplate() }
+            Button(String(localized: "Armies template")) { exportArmiesTemplate() }
+            Button(String(localized: "Paints template")) { exportPaintsTemplate() }
         } header: {
-            Text("CSV templates")
+            Text(String(localized: "CSV templates"))
         } footer: {
-            Text("Download a starter CSV with the correct columns and an example row.")
+            Text(String(localized: "Download a starter CSV with the correct columns and an example row."))
         }
     }
 
@@ -149,7 +177,7 @@ struct SettingsDataSection: View {
                 presentOutcome(importFrom(url))
             }
         case .failure(let err):
-            showFailure(title: "Import failed", message: err.localizedDescription)
+            showFailure(title: String(localized: "Import failed"), message: err.localizedDescription)
         }
     }
 
@@ -171,7 +199,7 @@ struct SettingsDataSection: View {
         case .success(let url):
             presentOutcome(DataActions.restoreBackupOutcome(from: url, ctx: context))
         case .failure(let err):
-            showFailure(title: "Restore failed", message: err.localizedDescription)
+            showFailure(title: String(localized: "Restore failed"), message: err.localizedDescription)
         }
     }
 
@@ -221,6 +249,6 @@ struct SettingsDataSection: View {
         let out = DataActions.backupJSON(ctx: context)
         exportDoc = TextFileDocument(text: out.text, contentType: .json)
         exportName = out.filename; exportType = .json; showExporter = true
-        banner.show("Backup exported")
+        banner.show(String(localized: "Backup exported"))
     }
 }

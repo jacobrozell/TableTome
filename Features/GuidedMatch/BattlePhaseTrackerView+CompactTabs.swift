@@ -47,21 +47,25 @@ extension BattlePhaseTrackerView {
 
     var turnTabContent: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            phasePlaybookSection
             coachSection
+            guideSection
+            startOfRoundHelper
+            if !showsDedicatedCombatTab {
+                shootingPhaseHelper
+            }
             turnHandoffSection
             scoringReminderSection
             roundOpenerSection
-            quickActionsSection
-            guideSection
-            shootingPhaseHelper
-            roundAndScoreSection
-            BattleTrackerControlPanel(viewModel: viewModel)
-            movementPhaseHelper
-            if viewModel.playContext.usesGuidedBattleTracker,
-               ReleaseSurface.showsCombatResolver(for: viewModel.gameSystemId) {
-                damageUndoSection
-                combatResolverSection()
+            if !showsSlimTurnTab {
+                quickActionsSection
+                BattleTrackerControlPanel(
+                    viewModel: viewModel,
+                    showsPhaseGuidanceInPicker: !showsPhasePlaybook,
+                    showsAdvancePhaseButton: !showsPhasePlaybook
+                )
             }
+            movementPhaseHelper
         }
     }
 
@@ -73,6 +77,9 @@ extension BattlePhaseTrackerView {
                 phoneLandscapeCombatSplitLayout
             } else {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                    if showsDedicatedCombatTab {
+                        shootingPhaseHelper
+                    }
                     damageUndoSection
                     combatPhaseHelper
                     shootInCombatPhaseHelper
@@ -91,7 +98,11 @@ extension BattlePhaseTrackerView {
     var armyTabContent: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             armyTrackerSection(wideLayout: false)
-            trackerContent
+            if viewModel.trackerState.showAllAbilities {
+                trackerContent
+            } else {
+                passiveAbilitiesSection
+            }
             secondarySections
         }
     }

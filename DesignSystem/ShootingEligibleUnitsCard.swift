@@ -49,7 +49,7 @@ struct ShootingEligibleUnitsCard: View {
         return String(
             localized: """
             These \(armyName) units have ranged weapons for the shooting phase. Weapons with Shoot in Combat can \
-            also fire during the fight phase — check the warscroll.
+            also fire during the fight phase — check the unit rules card.
             """
         )
     }

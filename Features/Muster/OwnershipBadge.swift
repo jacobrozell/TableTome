@@ -39,10 +39,10 @@ struct OwnershipBadge: View {
 
     private var label: String {
         switch status {
-        case .owned: "Owned in collection"
-        case .partial: "Partially owned"
-        case .missing: "Missing from collection"
-        case .unknown: "Collection match unknown"
+        case .owned: String(localized: "Owned in collection")
+        case .partial: String(localized: "Partially owned")
+        case .missing: String(localized: "Missing from collection")
+        case .unknown: String(localized: "Collection match unknown")
         }
     }
 }

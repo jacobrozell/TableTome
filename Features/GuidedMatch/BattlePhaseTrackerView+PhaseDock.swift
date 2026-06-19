@@ -25,9 +25,12 @@ extension BattlePhaseTrackerView {
             onMyUnit: openFocusedUnit,
             onResolve: { focusCombatResolverSection() },
             onScoreVictoryPoints: {
-                selectedSectionTab = .turn
+                selectedSectionTab = .setup
                 scrollToVictoryPoints = true
-            }
+            },
+            resolveAccessibilityHint: showsDedicatedCombatTab
+                ? String(localized: "Opens the Combat tab with dice tools")
+                : String(localized: "Opens combat dice tools on the Turn tab")
         )
     }
 

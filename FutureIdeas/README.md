@@ -18,6 +18,11 @@ Subscription-first hobby OS brainstorm — gate depth not hype, free play for al
 
 Playtest notes and feature options: [BetaFeedback.md](BetaFeedback.md).
 
+## New player first launch
+
+June 2026 audit (shipped checklist): [NewPlayerUXAudit.md](NewPlayerUXAudit.md).  
+Next-phase plan — shorter onboarding, continuation state, progressive tabs: [NewPlayerFirstLaunchPlan.md](NewPlayerFirstLaunchPlan.md).
+
 ## Match history & log
 
 **Promoted:** [MatchHistorySpec.md](../specs/MatchHistorySpec.md) — v0 ships victory screen + global history. Event log: v1 in [MatchHistoryAndLog.md](MatchHistoryAndLog.md).

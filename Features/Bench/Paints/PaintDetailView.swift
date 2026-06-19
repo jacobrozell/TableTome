@@ -24,12 +24,16 @@ struct PaintDetailView: View {
     var body: some View {
         Group {
             if let paint { form(paint) }
-            else { ContentUnavailableView("HobbyPaint not found", systemImage: "paintpalette") }
+            else { ContentUnavailableView(String(localized: "Paint not found"), systemImage: "paintpalette") }
         }
-        .navigationTitle(paint?.name ?? "HobbyPaint")
+        .navigationTitle(paint?.name ?? String(localized: "Paint"))
         .navigationBarTitleDisplayMode(.inline)
-        .confirmationDialog("Delete \"\(paint?.name ?? "")\"?", isPresented: $confirmDelete, titleVisibility: .visible) {
-            Button("Delete", role: .destructive) {
+        .confirmationDialog(
+            String(localized: "Delete \"\(paint?.name ?? "")\"?"),
+            isPresented: $confirmDelete,
+            titleVisibility: .visible
+        ) {
+            Button(String(localized: "Delete"), role: .destructive) {
                 if let paint {
                     PaintStore.delete(paint, in: context)
                     dismiss()
@@ -53,53 +57,53 @@ struct PaintDetailView: View {
                 }
             }
             Section {
-                TextField("Name", text: $paint.name)
+                TextField(String(localized: "Name"), text: $paint.name)
                     .textInputAutocapitalization(.words)
-                Picker("Type", selection: $paint.type) {
+                Picker(String(localized: "Type"), selection: $paint.type) {
                     ForEach(typeOptions, id: \.self) { Text($0.isEmpty ? "—" : $0).tag($0) }
                 }
                 .formNavigationPickerStyle()
-                TextField("Brand", text: $paint.brand)
+                TextField(String(localized: "Brand"), text: $paint.brand)
                     .textInputAutocapitalization(.words)
             } header: {
-                Text("HobbyPaint")
+                Text(String(localized: "Paint"))
             }
 
             Section {
-                QuantityStepper(label: "Quantity", value: $paint.qty)
-                Toggle("Running low", isOn: $paint.low)
+                QuantityStepper(label: String(localized: "Quantity"), value: $paint.qty)
+                Toggle(String(localized: "Running low"), isOn: $paint.low)
             } header: {
-                Text("Inventory")
+                Text(String(localized: "Inventory"))
             } footer: {
                 Text(FormHints.paintLow)
             }
 
             Section {
-                TextField("Source", text: $paint.source)
+                TextField(String(localized: "Source"), text: $paint.source)
                     .textInputAutocapitalization(.words)
             } header: {
-                Text("Collection link")
+                Text(String(localized: "Collection link"))
             } footer: {
                 Text(FormHints.paintSource)
             }
 
             Section {
-                FormNotesField(title: "Notes", text: $paint.notes, lineLimit: 2...6)
+                FormNotesField(title: String(localized: "Notes"), text: $paint.notes, lineLimit: 2...6)
             } header: {
-                Text("Notes")
+                Text(String(localized: "Notes"))
             }
             if !paint.source.isEmpty {
-                Section("Collection link") {
-                    LabeledContent("Linked units", value: "\(linked)")
-                    Button("Show in Collection", systemImage: "link") {
+                Section(String(localized: "Collection link")) {
+                    LabeledContent(String(localized: "Linked units"), value: "\(linked)")
+                    Button(String(localized: "Show in Collection"), systemImage: "link") {
                         router.showArmies(filteredBySource: paint.source)
-                        banner.show("Filtered by source: \(paint.source)")
+                        banner.show(String(localized: "Filtered by source: \(paint.source)"))
                         filterTrigger.toggle()
                     }
                 }
             }
             Section {
-                Button("Delete paint", role: .destructive) { confirmDelete = true }
+                Button(String(localized: "Delete paint"), role: .destructive) { confirmDelete = true }
             }
         }
         .onDisappear { try? context.save() }

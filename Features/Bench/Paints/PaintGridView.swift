@@ -33,7 +33,7 @@ struct PaintGridView: View {
                             .lineLimit(2)
                             .multilineTextAlignment(.leading)
                         if paint.low {
-                            Text("LOW").font(.caption2.bold()).foregroundStyle(.orange)
+                            Text(String(localized: "LOW")).font(.caption2.bold()).foregroundStyle(.orange)
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -43,17 +43,21 @@ struct PaintGridView: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(gridAccessibilityLabel(for: paint))
-                .accessibilityHint("Opens paint details")
+                .accessibilityHint(String(localized: "Opens paint details"))
             }
         }
         .padding(.horizontal)
     }
 
     private func gridAccessibilityLabel(for paint: HobbyPaint) -> String {
-        var parts = [paint.name, paint.type, "quantity \(paint.qty)"]
-        if paint.low { parts.append("running low") }
+        var parts = [
+            paint.name,
+            paint.type,
+            String(localized: "quantity \(paint.qty)")
+        ]
+        if paint.low { parts.append(String(localized: "running low")) }
         let linked = linkedCount(paint)
-        if linked > 0 { parts.append("\(linked) linked units") }
+        if linked > 0 { parts.append(String(localized: "\(linked) linked units")) }
         return parts.joined(separator: ", ")
     }
 }

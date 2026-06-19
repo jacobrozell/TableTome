@@ -57,8 +57,6 @@ struct ChecklistStepRow<Extra: View>: View {
             in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
         )
         .minimumTouchTarget(alignment: .leading)
-        .accessibilityElement(children: .combine)
-        .accessibilityIdentifier(accessibilityIdentifier)
     }
 
     private var labelContent: some View {
@@ -81,6 +79,8 @@ struct ChecklistStepRow<Extra: View>: View {
             }
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier(accessibilityIdentifier)
     }
 
     @ViewBuilder

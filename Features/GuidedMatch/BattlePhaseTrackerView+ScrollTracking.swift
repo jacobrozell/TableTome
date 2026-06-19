@@ -171,8 +171,9 @@ extension BattlePhaseTrackerView {
             }
             .onChange(of: scrollToPhaseControls) { _, shouldScroll in
                 guard shouldScroll else { return }
+                let target = showsSlimTurnTab ? "battleTracker.phasePlaybook" : "phaseControls"
                 withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.35)) {
-                    proxy.scrollTo("phaseControls", anchor: .top)
+                    proxy.scrollTo(target, anchor: .top)
                 }
                 scrollToPhaseControls = false
             }

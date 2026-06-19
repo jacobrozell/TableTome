@@ -26,23 +26,35 @@ struct CollectionOverviewView: View {
         Int((Pipeline.progress(of: scopedUnits, resolvedGlobal) * 100).rounded())
     }
 
+    private var progressTitle: String {
+        scoped
+            ? String(localized: "Filtered progress")
+            : String(localized: "Collection progress")
+    }
+
+    private var accessibilityProgressLabel: String {
+        scoped
+            ? String(localized: "Filtered progress, \(overall) percent")
+            : String(localized: "Collection progress, \(overall) percent")
+    }
+
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
                 VStack(spacing: 8) {
                     ProgressRing(percent: overall, diameter: 88)
-                    Text(scoped ? "Filtered progress" : "Collection progress")
+                    Text(progressTitle)
                         .font(.headline)
                         .multilineTextAlignment(.center)
                         .lineLimit(2)
                         .fixedSize(horizontal: false, vertical: true)
-                    Text("\(overall)% complete")
+                    Text(String(localized: "\(overall)% complete"))
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
                 .padding(.top, 8)
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel("\(scoped ? "Filtered" : "Collection") progress, \(overall) percent")
+                .accessibilityLabel(accessibilityProgressLabel)
 
                 VStack(alignment: .leading, spacing: 6) {
                     ProgressMeter(segments: Pipeline.segments(of: scopedUnits, resolvedGlobal), height: 10)
@@ -55,13 +67,17 @@ struct CollectionOverviewView: View {
                                 pipeline: resolvedGlobal, scoped: scoped)
 
                 if scoped {
-                    Button("Advance visible units", systemImage: "arrow.right.to.line") {
+                    Button(String(localized: "Advance visible units"), systemImage: "arrow.right.to.line") {
                         let n = ArmyStore.advanceUnits(visible.flatMap(\.units), global: globalPipeline, in: context)
-                        banner.show(n > 0 ? "Advanced \(n) unit\(n == 1 ? "" : "s")" : "Nothing to advance")
+                        if n > 0 {
+                            banner.show(String(localized: "Advanced \(n) unit\(n == 1 ? "" : "s")"))
+                        } else {
+                            banner.show(String(localized: "Nothing to advance"))
+                        }
                     }
                     .buttonStyle(.borderedProminent)
 
-                    Button("Clear filters", systemImage: "line.3.horizontal.decrease.circle") {
+                    Button(String(localized: "Clear filters"), systemImage: "line.3.horizontal.decrease.circle") {
                         ArmyFilter.clearFilters(cfg)
                         try? context.save()
                     }
@@ -70,7 +86,7 @@ struct CollectionOverviewView: View {
             }
             .padding()
         }
-        .navigationTitle("Overview")
+        .navigationTitle(String(localized: "Overview"))
         .navigationBarTitleDisplayMode(.inline)
     }
 }

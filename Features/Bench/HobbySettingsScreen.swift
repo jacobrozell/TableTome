@@ -19,44 +19,44 @@ struct HobbySettingsScreen: View {
             Form {
                 Section {
                     NavigationLink(value: HobbySettingsRoute.pipeline) {
-                        Text("Pipeline stages")
+                        Text(String(localized: "Pipeline stages"))
                     }
                     NavigationLink(value: HobbySettingsRoute.factions) {
-                        Text("Faction crests & colours")
+                        Text(String(localized: "Faction crests & colours"))
                     }
                 } header: {
-                    Text("Painting")
+                    Text(String(localized: "Painting"))
                 } footer: {
-                    Text("Customize painting stages and how armies appear in your collection.")
+                    Text(String(localized: "Customize painting stages and how armies appear in your collection."))
                 }
 
                 MusterSettingsSection(cfg: cfg)
 
                 SettingsDataSection()
 
-                Section("Help & Feedback") {
+                Section(String(localized: "Help & Feedback")) {
                     NavigationLink(value: HobbySettingsRoute.accessibility) {
-                        Label("Accessibility", systemImage: "accessibility")
+                        Label(String(localized: "Accessibility"), systemImage: "accessibility")
                     }
                     NavigationLink(value: HobbySettingsRoute.privacy) {
-                        Label("Privacy Policy", systemImage: "hand.raised")
+                        Label(String(localized: "Privacy Policy"), systemImage: "hand.raised")
                     }
                 }
 
-                Section("About") {
-                    LabeledContent("App", value: AppInfo.displayName)
-                    LabeledContent("Version") {
+                Section(String(localized: "About")) {
+                    LabeledContent(String(localized: "App"), value: AppInfo.displayName)
+                    LabeledContent(String(localized: "Version")) {
                         Text(Bundle.main.appVersion)
                             .foregroundStyle(.secondary)
                     }
                     Link(destination: AppInfo.buyMeACoffeeURL) {
-                        Label("Buy me a coffee", systemImage: "cup.and.saucer.fill")
+                        Label(String(localized: "Buy me a coffee"), systemImage: "cup.and.saucer.fill")
                     }
-                    Text("For the Emperor · For the Great Horned Rat · Sigmar Watches")
+                    Text(String(localized: "For the Emperor · For the Great Horned Rat · Sigmar Watches"))
                         .font(.caption).foregroundStyle(.secondary)
                 }
             }
-            .navigationTitle("Settings")
+            .navigationTitle(String(localized: "Collection & Data"))
             .navigationDestination(for: HobbySettingsRoute.self) { route in
                 switch route {
                 case .pipeline:
@@ -69,7 +69,7 @@ struct HobbySettingsScreen: View {
                     PrivacyPolicyView()
                 }
             }
-            .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
+            .toolbar { ToolbarItem(placement: .confirmationAction) { Button(String(localized: "Done")) { dismiss() } } }
         }
     }
 }
@@ -85,28 +85,28 @@ private struct PipelineEditor: View {
             Section {
                 ForEach(Array(stages.enumerated()), id: \.offset) { index, _ in
                     HStack {
-                        TextField("Stage name", text: $stages[index].key)
+                        TextField(String(localized: "Stage name"), text: $stages[index].key)
                         ColorPicker("", selection: Binding(
                             get: { Color(hex: stages[index].hex) },
                             set: { stages[index].hex = $0.hexString }))
                         .labelsHidden()
-                        .accessibilityLabel("Stage color")
+                        .accessibilityLabel(String(localized: "Stage color"))
                     }
                 }
                 .onDelete { stages.remove(atOffsets: $0) }
                 .onMove { stages.move(fromOffsets: $0, toOffset: $1) }
 
-                Button("Add stage", systemImage: "plus") {
+                Button(String(localized: "Add stage"), systemImage: "plus") {
                     stages.append(PipelineStage(key: "New", hex: "#888888"))
                 }
-                Button("Reset to default") { stages = DefaultPipeline.stages }
+                Button(String(localized: "Reset to default")) { stages = DefaultPipeline.stages }
             } header: {
-                Text("Stages")
+                Text(String(localized: "Stages"))
             } footer: {
                 Text(FormHints.pipelineStages)
             }
         }
-        .navigationTitle("Pipeline")
+        .navigationTitle(String(localized: "Pipeline"))
         .toolbar { EditButton() }
         .onAppear { stages = Pipeline.resolve(cfg.globalPipeline) }
         .onDisappear {
@@ -143,8 +143,11 @@ private struct FactionOverridesEditor: View {
         Form {
             if rows.isEmpty {
                 Section {
-                    ContentUnavailableView("No armies yet", systemImage: "shield",
-                                           description: Text("Add an army in Collection to customize its crest."))
+                    ContentUnavailableView(
+                        String(localized: "No armies yet"),
+                        systemImage: "shield",
+                        description: Text(String(localized: "Add an army in Collection to customize its crest."))
+                    )
                 }
             } else {
                 Section {
@@ -152,7 +155,7 @@ private struct FactionOverridesEditor: View {
                         VStack(alignment: .leading, spacing: 6) {
                             Text(row.id).font(.caption).foregroundStyle(.secondary)
                             HStack {
-                                TextField("Crest", text: Binding(
+                                TextField(String(localized: "Crest"), text: Binding(
                                     get: { crest[row.id] ?? "" },
                                     set: { crest[row.id] = String($0.prefix(8)) }))
                                 .textInputAutocapitalization(.characters)
@@ -161,18 +164,18 @@ private struct FactionOverridesEditor: View {
                                     get: { color[row.id] ?? .gray },
                                     set: { color[row.id] = $0 }))
                                 .labelsHidden()
-                                .accessibilityLabel("Faction color")
+                                .accessibilityLabel(String(localized: "Faction color"))
                             }
                         }
                     }
                 } header: {
-                    Text("Factions")
+                    Text(String(localized: "Factions"))
                 } footer: {
                     Text(FormHints.factionCrest)
                 }
             }
         }
-        .navigationTitle("Factions")
+        .navigationTitle(String(localized: "Factions"))
         .onAppear(perform: seed)
         .onDisappear(perform: save)
     }

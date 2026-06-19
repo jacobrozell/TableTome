@@ -42,6 +42,7 @@ struct GuidedMatchView: View {
     @State var showsMatchSync = false
     @State private var showsResetConfirmation = false
     @State var hubTab: GuidedMatchHubTab = .armies
+    @State private var hubTrackerTick = 0
     @State private var showsOwnListsSection = false
     @State var showsMatchHistoryToolbar = false
 
@@ -92,9 +93,16 @@ struct GuidedMatchView: View {
         }
         .task {
             await viewModel.load()
-            guard AppLaunchArguments.shouldApplyStarterMatchup else { return }
-            viewModel.applyStarterMatchup()
-            if usesPadSplitNavigation {
+            let wantsStarterArmies = AppLaunchArguments.shouldApplyStarterMatchup
+                || AppLaunchArguments.shouldOpenBattleTracker
+            if wantsStarterArmies, !viewModel.matchState.hasBothArmies {
+                viewModel.applyStarterMatchup()
+            }
+            if AppLaunchArguments.shouldOpenBattleTracker {
+                viewModel.completeSetupForAutomation()
+                selectedDestination = .battleTracker
+                hubTab = .battle
+            } else if AppLaunchArguments.shouldApplyStarterMatchup, usesPadSplitNavigation {
                 selectedDestination = .battleTracker
             }
         }
@@ -807,6 +815,7 @@ extension GuidedMatchView {
                 setupComplete: setupIsComplete,
                 battleTrackerSummary: battleTrackerSummaryLine()
             )
+            .id(hubTrackerTick)
             GuidedMatchHubTabBar(
                 selection: $hubTab,
                 hasBothArmies: viewModel.matchState.hasBothArmies,
@@ -837,9 +846,13 @@ extension GuidedMatchView {
                     matchSetupSection(catalog: catalog, useSplitSelection: false)
                 }
             case .battle:
-                battleTrackerSection(catalog: catalog, useSplitSelection: false)
-                if usesCompactSetupLayout {
-                    sampleTurnSection
+                if setupIsComplete {
+                    battleTrackerSection(catalog: catalog, useSplitSelection: false)
+                    if usesCompactSetupLayout {
+                        sampleTurnSection
+                    }
+                } else {
+                    setupIncompleteBattleSection(catalog: catalog)
                 }
             }
             resetSection
@@ -856,11 +869,69 @@ extension GuidedMatchView {
             matchState: viewModel.matchState,
             catalog: catalog,
             ruleSections: ruleSections,
-            onMatchStateChange: { viewModel.reloadFromStore() },
+            onMatchStateChange: {
+                viewModel.reloadFromStore()
+                hubTrackerTick += 1
+            },
             onVictoryComplete: handleVictoryComplete
         )
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .accessibilityIdentifier("guidedMatch.embeddedBattleTracker")
+    }
+
+    @ViewBuilder
+    private func setupIncompleteBattleSection(catalog _: SpearheadCatalog) -> some View {
+        Section {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                Label(String(localized: "Finish setup first"), systemImage: "checklist")
+                    .font(.headline)
+                Text(
+                    String(
+                        localized: """
+                        Complete the remaining setup steps before the battle tracker unlocks. \
+                        The Battle tab opens automatically when you're ready.
+                        """
+                    )
+                )
+                .font(.callout)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+
+                if let next = viewModel.nextIncompleteStep,
+                   let index = viewModel.sortedMatchSteps.firstIndex(where: { $0.id == next.id }) {
+                    NavigationLink(value: GuidedMatchDestination.step(next.id)) {
+                        GuideStepCard(
+                            stepNumber: index + 1,
+                            title: next.title,
+                            summary: next.summary,
+                            isComplete: false,
+                            showsDisclosureIndicator: false,
+                            accessibilityId: "guidedMatch.battleGate.\(next.id)"
+                        )
+                    }
+                    .listRowInsets(GuideStepCard.listRowInsets)
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                }
+
+                Button {
+                    hubTab = .setup
+                } label: {
+                    Label(String(localized: "Go to Setup"), systemImage: "arrow.left.circle")
+                        .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                }
+                .accessibilityIdentifier("guidedMatch.battleGate.setup")
+            }
+            .padding(.vertical, DesignTokens.Spacing.xs)
+        } footer: {
+            if viewModel.setupProgress.total > 0 {
+                Text(
+                    String(
+                        localized: "Setup \(viewModel.setupProgress.completed) of \(viewModel.setupProgress.total) complete."
+                    )
+                )
+            }
+        }
     }
 }
 

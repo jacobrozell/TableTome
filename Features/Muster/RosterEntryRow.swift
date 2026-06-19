@@ -31,7 +31,7 @@ struct RosterEntryRow: View {
         .contentShape(Rectangle())
         .onTapGesture { onTap?() }
         .accessibilityElement(children: .contain)
-        .accessibilityHint("Opens unit options")
+        .accessibilityHint(String(localized: "Opens unit options"))
     }
 
     private var compactRow: some View {
@@ -42,7 +42,7 @@ struct RosterEntryRow: View {
             Text("\(entry.pointsTotal)")
                 .font(.subheadline.weight(.semibold).monospacedDigit())
                 .foregroundStyle(.secondary)
-                .accessibilityLabel("\(entry.pointsTotal) points")
+                .accessibilityLabel(String(localized: "\(entry.pointsTotal) points"))
             qtyStepper
         }
     }
@@ -52,10 +52,10 @@ struct RosterEntryRow: View {
             nameBlock
             HStack(alignment: .center, spacing: 10) {
                 ownershipControl
-                Text("\(entry.pointsTotal) pts")
+                Text(String(localized: "\(entry.pointsTotal) pts"))
                     .font(.subheadline.weight(.semibold).monospacedDigit())
                     .foregroundStyle(.secondary)
-                    .accessibilityLabel("\(entry.pointsTotal) points")
+                    .accessibilityLabel(String(localized: "\(entry.pointsTotal) points"))
                 Spacer(minLength: 0)
                 qtyStepper
             }
@@ -96,11 +96,11 @@ struct RosterEntryRow: View {
     @ViewBuilder
     private var qtyStepper: some View {
         if usesStackedLayout {
-            Stepper("Qty \(entry.qty)", value: Binding(
+            Stepper(String(localized: "Qty \(entry.qty)"), value: Binding(
                 get: { entry.qty },
                 set: { RosterStore.setQty(entry, $0, in: context) }
             ), in: 1...HobbyLimits.maxRosterQty)
-            .accessibilityLabel("Quantity")
+            .accessibilityLabel(String(localized: "Quantity"))
             .accessibilityValue("\(entry.qty)")
         } else {
             Stepper(value: Binding(
@@ -110,13 +110,13 @@ struct RosterEntryRow: View {
                 EmptyView()
             }
             .labelsHidden()
-            .accessibilityLabel("Quantity")
+            .accessibilityLabel(String(localized: "Quantity"))
             .accessibilityValue("\(entry.qty)")
         }
     }
 
     private var nameAccessibilityLabel: String {
-        var parts = [entry.displayName, "\(entry.pointsTotal) points"]
+        var parts = [entry.displayName, String(localized: "\(entry.pointsTotal) points")]
         if let catalog {
             parts.append(modelCountLabel(catalog.modelCount, category: catalog.category))
         }
@@ -127,15 +127,20 @@ struct RosterEntryRow: View {
     }
 
     private func modelCountLabel(_ count: Int, category: String) -> String {
-        let noun = count == 1 ? "model" : "models"
-        return "\(count) \(noun) · \(category)"
+        let noun = count == 1
+            ? String(localized: "model")
+            : String(localized: "models")
+        return String(localized: "\(count) \(noun) · \(category)")
     }
 
     private func ownershipHint(for status: CollectionMatchResult.Status) -> String {
         switch status {
-        case .owned, .partial: "Owned in collection, opens in Collection tab"
-        case .missing: "Missing from collection"
-        case .unknown: "Collection match unknown"
+        case .owned, .partial:
+            String(localized: "Owned in collection, opens in Collection tab")
+        case .missing:
+            String(localized: "Missing from collection")
+        case .unknown:
+            String(localized: "Collection match unknown")
         }
     }
 

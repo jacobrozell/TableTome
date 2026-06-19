@@ -43,4 +43,29 @@ final class RulesReferenceViewModelTests: XCTestCase {
         let orders = viewModel.filteredSections.map(\.order)
         XCTAssertEqual(orders, orders.sorted())
     }
+
+    func testLoadPreservesCategoryAndSearch() async {
+        let viewModel = viewModel
+        await viewModel.load()
+        viewModel.selectedCategory = .core
+        viewModel.searchText = "battle"
+
+        await viewModel.load()
+
+        XCTAssertEqual(viewModel.selectedCategory, .core)
+        XCTAssertEqual(viewModel.searchText, "battle")
+        XCTAssertFalse(viewModel.filteredSections.isEmpty)
+    }
+
+    func testSelectSameGameSystemDoesNotResetFilters() async {
+        let viewModel = viewModel
+        await viewModel.load()
+        viewModel.selectedCategory = .glossary
+        viewModel.searchText = "rend"
+
+        viewModel.selectGameSystem(viewModel.selectedGameSystemId)
+
+        XCTAssertEqual(viewModel.selectedCategory, .glossary)
+        XCTAssertEqual(viewModel.searchText, "rend")
+    }
 }

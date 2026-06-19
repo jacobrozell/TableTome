@@ -23,43 +23,45 @@ struct AddArmySheet: View {
         NavigationStack {
             Form {
                 Section {
-                    Picker("Game", selection: $game) {
+                    Picker(String(localized: "Game"), selection: $game) {
                         ForEach(SupportedGames.all, id: \.self) { Text($0).tag($0) }
                     }
                     .formNavigationPickerStyle()
                     .onChange(of: game) { _, _ in faction = "" }
 
-                    Picker("Faction", selection: $faction) {
-                        Text("Choose…").tag("")
+                    Picker(String(localized: "Faction"), selection: $faction) {
+                        Text(String(localized: "Choose…")).tag("")
                         ForEach(factions, id: \.self) { Text($0).tag($0) }
-                        Text("Custom…").tag(customSentinel)
+                        Text(String(localized: "Custom…")).tag(customSentinel)
                     }
                     .formNavigationPickerStyle()
                     if faction == customSentinel {
-                        TextField("Custom faction", text: $customFaction)
+                        TextField(String(localized: "Custom faction"), text: $customFaction)
                             .textInputAutocapitalization(.words)
                     }
                 } header: {
-                    Text("Game & faction")
+                    Text(String(localized: "Game & faction"))
                 }
 
                 Section {
-                    FormNameField(title: "Army name", text: $name, focus: $nameFocused)
+                    FormNameField(title: String(localized: "Army name"), text: $name, focus: $nameFocused)
                 } header: {
-                    Text("Name")
+                    Text(String(localized: "Name"))
                 } footer: {
                     if error {
-                        FormValidationFooter(message: "That army name is already taken.")
+                        FormValidationFooter(message: String(localized: "That army name is already taken."))
                     } else {
                         Text(FormHints.uniqueName)
                     }
                 }
             }
-            .navigationTitle("New army")
+            .navigationTitle(String(localized: "New army"))
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(String(localized: "Cancel")) { dismiss() }
+                }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Add") {
+                    Button(String(localized: "Add")) {
                         let f = resolvedFaction.isEmpty ? "Custom" : resolvedFaction
                         if onCreate(game, f, name) { dismiss() } else { error = true }
                     }
@@ -94,30 +96,32 @@ struct AddUnitSheet: View {
         NavigationStack {
             Form {
                 Section {
-                    FormNameField(title: "ArmyUnit name", text: $name, focus: $nameFocused)
-                    QuantityStepper(label: "Quantity", value: $qty)
+                    FormNameField(title: String(localized: "Unit name"), text: $name, focus: $nameFocused)
+                    QuantityStepper(label: String(localized: "Quantity"), value: $qty)
                 } header: {
-                    Text("ArmyUnit")
+                    Text(String(localized: "Unit"))
                 }
 
                 Section {
-                    TextField("Source", text: $source)
+                    TextField(String(localized: "Source"), text: $source)
                         .textInputAutocapitalization(.words)
-                    Picker("Starting state", selection: $state) {
+                    Picker(String(localized: "Starting state"), selection: $state) {
                         ForEach(pipeline) { Text($0.key).tag($0.key) }
                     }
                     .formNavigationPickerStyle()
                 } header: {
-                    Text("Details")
+                    Text(String(localized: "Details"))
                 } footer: {
                     Text(FormHints.source)
                 }
             }
-            .navigationTitle("Add unit")
+            .navigationTitle(String(localized: "Add unit"))
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(String(localized: "Cancel")) { dismiss() }
+                }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Add") { onAdd(name, qty, source, state); dismiss() }
+                    Button(String(localized: "Add")) { onAdd(name, qty, source, state); dismiss() }
                         .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
             }
@@ -146,20 +150,22 @@ struct RenameArmySheet: View {
         NavigationStack {
             Form {
                 Section {
-                    FormNameField(title: "Army name", text: $name, focus: $nameFocused)
+                    FormNameField(title: String(localized: "Army name"), text: $name, focus: $nameFocused)
                 } footer: {
                     if error {
-                        FormValidationFooter(message: "That name is taken.")
+                        FormValidationFooter(message: String(localized: "That name is taken."))
                     } else {
                         Text(FormHints.uniqueName)
                     }
                 }
             }
-            .navigationTitle("Rename army")
+            .navigationTitle(String(localized: "Rename army"))
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(String(localized: "Cancel")) { dismiss() }
+                }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") { if onRename(name) { dismiss() } else { error = true } }
+                    Button(String(localized: "Save")) { if onRename(name) { dismiss() } else { error = true } }
                         .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
             }
@@ -186,14 +192,14 @@ struct ArmyPipelineEditorSheet: View {
         NavigationStack {
             Form {
                 Section {
-                    Picker("Pipeline", selection: $mode) {
-                        Text("Use global pipeline").tag(Mode.global)
-                        Text("Custom for this army").tag(Mode.custom)
+                    Picker(String(localized: "Pipeline"), selection: $mode) {
+                        Text(String(localized: "Use global pipeline")).tag(Mode.global)
+                        Text(String(localized: "Custom for this army")).tag(Mode.custom)
                     }
                     .pickerStyle(.segmented)
                 } footer: {
                     if mode == .global {
-                        Text("Uses the stages from Settings → Pipeline.")
+                        Text(String(localized: "Uses the stages from Settings → Pipeline."))
                     }
                 }
 
@@ -201,7 +207,7 @@ struct ArmyPipelineEditorSheet: View {
                     Section {
                         ForEach(Array(stages.enumerated()), id: \.offset) { index, _ in
                             HStack {
-                                TextField("Stage name", text: $stages[index].key)
+                                TextField(String(localized: "Stage name"), text: $stages[index].key)
                                 ColorPicker("", selection: Binding(
                                     get: { Color(hex: stages[index].hex) },
                                     set: { stages[index].hex = $0.hexString }))
@@ -211,21 +217,25 @@ struct ArmyPipelineEditorSheet: View {
                         .onDelete { stages.remove(atOffsets: $0) }
                         .onMove { stages.move(fromOffsets: $0, toOffset: $1) }
 
-                        Button("Add stage", systemImage: "plus") {
+                        Button(String(localized: "Add stage"), systemImage: "plus") {
                             stages.append(PipelineStage(key: "New", hex: "#888888"))
                         }
-                        Button("Reset to default") { stages = DefaultPipeline.stages }
+                        Button(String(localized: "Reset to default")) { stages = DefaultPipeline.stages }
                     } header: {
-                        Text("Stages")
+                        Text(String(localized: "Stages"))
                     } footer: {
-                        Text("Drag to reorder. Swipe left to delete.")
+                        Text(String(localized: "Drag to reorder. Swipe left to delete."))
                     }
                 }
             }
-            .navigationTitle("Army pipeline")
+            .navigationTitle(String(localized: "Army pipeline"))
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
-                ToolbarItem(placement: .confirmationAction) { Button("Save") { save(); dismiss() } }
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(String(localized: "Cancel")) { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(String(localized: "Save")) { save(); dismiss() }
+                }
                 if mode == .custom { ToolbarItem(placement: .topBarLeading) { EditButton() } }
             }
             .onAppear {
@@ -269,22 +279,24 @@ struct MoveUnitSheet: View {
         NavigationStack {
             Form {
                 Section {
-                    Picker("Destination army", selection: $selection) {
+                    Picker(String(localized: "Destination army"), selection: $selection) {
                         ForEach(destinations, id: \.self) { Text($0).tag($0) }
                     }
                     .formNavigationPickerStyle()
                 } header: {
-                    Text("Move to")
+                    Text(String(localized: "Move to"))
                 } footer: {
-                    Text("\"\(unitName)\" will leave its current army.")
+                    Text(String(localized: "\"\(unitName)\" will leave its current army."))
                 }
             }
-            .navigationTitle("Move unit")
+            .navigationTitle(String(localized: "Move unit"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(String(localized: "Cancel")) { dismiss() }
+                }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Move") { onMove(selection); dismiss() }
+                    Button(String(localized: "Move")) { onMove(selection); dismiss() }
                         .disabled(selection.isEmpty)
                 }
             }

@@ -9,7 +9,7 @@ struct AccessibilityView: View {
            let text = try? String(contentsOf: url, encoding: .utf8) {
             markdown = text
         } else {
-            markdown = "# Accessibility\n\nUnable to load the accessibility file."
+            markdown = String(localized: "# Accessibility\n\nUnable to load the accessibility file.")
         }
     }
 
@@ -20,7 +20,7 @@ struct AccessibilityView: View {
                 .padding()
                 .textSelection(.enabled)
         }
-        .navigationTitle("Accessibility")
+        .navigationTitle(String(localized: "Accessibility"))
         .navigationBarTitleDisplayMode(.inline)
     }
 

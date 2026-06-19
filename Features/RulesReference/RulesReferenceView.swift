@@ -24,7 +24,7 @@ struct RulesReferenceView: View {
                 List {
                     if viewModel.showsGameSystemPicker {
                         Section {
-                            Picker(String(localized: "Game"), selection: $viewModel.selectedGameSystemId) {
+                            Picker(String(localized: "Which game are you playing?"), selection: $viewModel.selectedGameSystemId) {
                                 ForEach(viewModel.gameSystems) { system in
                                     Text(gameSystemPickerLabel(system)).tag(system.id)
                                 }
@@ -33,7 +33,26 @@ struct RulesReferenceView: View {
                                 viewModel.selectGameSystem(newValue)
                             }
                             .accessibilityIdentifier("rules.gameSystemPicker")
+                        } footer: {
+                            Text(
+                                String(
+                                    localized: """
+                                    Matches the game you picked on the Play tab. Change it here to browse a different rules set.
+                                    """
+                                )
+                            )
                         }
+                    }
+
+                    Section {
+                        Text(
+                            GameSystemRulesLabels.browseIntro(
+                                gameSystemId: viewModel.selectedGameSystemId
+                            )
+                        )
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
                     }
 
                     Section {
@@ -118,6 +137,16 @@ struct RuleSectionDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                Text(
+                    GameSystemRulesLabels.categoryRowLabel(
+                        section.category,
+                        gameSystemId: gameSystemId
+                    )
+                )
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+                .accessibilityAddTraits(.isHeader)
+
                 Text(section.content)
                     .font(.body)
                     .fixedSize(horizontal: false, vertical: true)

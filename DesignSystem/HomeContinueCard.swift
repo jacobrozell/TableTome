@@ -1,32 +1,22 @@
 import SwiftUI
 import TabletomeDomain
 
-/// Shown on Play when the user picked a game during onboarding but has not opened its guide yet.
+/// Shown on Play when the user should continue onboarding or resume an in-progress Guided Match.
 struct HomeContinueCard: View {
-    let gameSystemId: String
+    let continuation: PlayContinuation
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Label(String(localized: "Continue your path"), systemImage: "arrow.right.circle.fill")
+            Label(continuation.title, systemImage: continuationIcon)
                 .font(.headline)
                 .foregroundStyle(Color.accentColor)
 
-            Text(continuationMessage)
+            Text(continuation.message)
                 .font(.callout)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            NavigationLink(value: gameSystemId) {
-                Label(openGuideLabel, systemImage: "play.circle.fill")
-                    .font(.subheadline.weight(.semibold))
-                    .multilineTextAlignment(.center)
-                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-            }
-            .buttonStyle(.borderedProminent)
-            .simultaneousGesture(TapGesture().onEnded {
-                ActiveGameContextStore.setActiveGameSystem(gameSystemId)
-            })
-            .accessibilityIdentifier("home.continueGuide")
+            continuationLink
         }
         .padding(DesignTokens.Spacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -38,53 +28,45 @@ struct HomeContinueCard: View {
         .accessibilityIdentifier("home.continueCard")
     }
 
-    private var continuationMessage: String {
-        switch gameSystemId {
-        case GameSystemId.aosSpearhead.rawValue:
-            return String(
-                localized: """
-                You picked Age of Sigmar Spearhead. Open the guide for setup steps, then run Guided Match at the table.
-                """
-            )
-        case GameSystemId.wh40k10eCp.rawValue:
-            return String(
-                localized: """
-                You picked Combat Patrol. Open the guide for missions and setup, then start Guided Match when you're ready.
-                """
-            )
-        case GameSystemId.wh40k11e.rawValue:
-            return String(
-                localized: """
-                You picked full Warhammer 40,000. Open the guide for deployment and phase tips, then run Guided Match.
-                """
-            )
-        case GameSystemId.scTmg.rawValue:
-            return String(
-                localized: """
-                You picked StarCraft: The Miniatures Game. Open the guide for economy and phases, then run Guided Match.
-                """
-            )
-        default:
-            return String(
-                localized: """
-                Open your game guide for setup steps, then run Guided Match at the table.
-                """
-            )
+    @ViewBuilder
+    private var continuationLink: some View {
+        switch continuation.destination {
+        case .gameGuide:
+            NavigationLink(value: continuation.gameSystemId) {
+                continuationButtonLabel
+            }
+            .buttonStyle(.borderedProminent)
+            .simultaneousGesture(TapGesture().onEnded {
+                ActiveGameContextStore.setActiveGameSystem(continuation.gameSystemId)
+            })
+            .accessibilityIdentifier("home.continueGuide")
+        case .guidedMatch:
+            NavigationLink(
+                value: GuidedMatchLink(gameSystemId: GameSystemId(resolving: continuation.gameSystemId))
+            ) {
+                continuationButtonLabel
+            }
+            .buttonStyle(.borderedProminent)
+            .simultaneousGesture(TapGesture().onEnded {
+                ActiveGameContextStore.setActiveGameSystem(continuation.gameSystemId)
+            })
+            .accessibilityIdentifier("home.continueGuidedMatch")
         }
     }
 
-    private var openGuideLabel: String {
-        switch gameSystemId {
-        case GameSystemId.aosSpearhead.rawValue:
-            return String(localized: "Open Spearhead guide")
-        case GameSystemId.wh40k10eCp.rawValue:
-            return String(localized: "Open Combat Patrol guide")
-        case GameSystemId.wh40k11e.rawValue:
-            return String(localized: "Open Warhammer 40,000 guide")
-        case GameSystemId.scTmg.rawValue:
-            return String(localized: "Open StarCraft guide")
-        default:
-            return String(localized: "Open game guide")
+    private var continuationButtonLabel: some View {
+        Label(continuation.buttonTitle, systemImage: "play.circle.fill")
+            .font(.subheadline.weight(.semibold))
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+    }
+
+    private var continuationIcon: String {
+        switch continuation.destination {
+        case .gameGuide:
+            "arrow.right.circle.fill"
+        case .guidedMatch:
+            "flag.checkered"
         }
     }
 }

@@ -23,25 +23,31 @@ struct ArmyStatsHeader: View {
         }
     }
 
-    private func label(_ base: String) -> String { scoped ? "\(base) (filtered)" : base }
+    private func label(_ base: String) -> String {
+        scoped ? String(localized: "\(base) (filtered)") : base
+    }
 
     var body: some View {
         let stats = CollectionStats.snapshot(units: units, pipeline: pipeline)
 
         VStack(spacing: 12) {
             LazyVGrid(columns: statColumns, spacing: 8) {
-                StatTile(value: stats.unitEntries, label: label("ArmyUnit Entries"))
-                StatTile(value: stats.models, label: label("Models (est.)"), accent: true)
-                StatTile(value: stats.based, label: label(CollectionStats.basedStage(in: pipeline)?.key ?? "Based"))
-                StatTile(value: stats.done, label: label(CollectionStats.doneStage(in: pipeline)?.key ?? "Done"))
-                StatTile(value: stats.wip, label: "In Progress")
-                StatTile(value: stats.todo, label: "On the Sprue")
-                StatTile(value: armyCount, label: label("Armies"))
+                StatTile(value: stats.unitEntries, label: label(String(localized: "Unit entries")))
+                StatTile(value: stats.models, label: label(String(localized: "Models (est.)")), accent: true)
+                StatTile(value: stats.based, label: label(CollectionStats.basedStage(in: pipeline)?.key ?? String(localized: "Based")))
+                StatTile(value: stats.done, label: label(CollectionStats.doneStage(in: pipeline)?.key ?? String(localized: "Done")))
+                StatTile(value: stats.wip, label: String(localized: "In Progress"))
+                StatTile(value: stats.todo, label: String(localized: "On the Sprue"))
+                StatTile(value: armyCount, label: label(String(localized: "Armies")))
             }
 
             VStack(alignment: .leading, spacing: 4) {
                 HStack(alignment: .firstTextBaseline) {
-                    Text(scoped ? "Filtered progress (by model count)" : "Collection progress (by model count)")
+                    Text(
+                        scoped
+                            ? String(localized: "Filtered progress (by model count)")
+                            : String(localized: "Collection progress (by model count)")
+                    )
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .lineLimit(2)
@@ -56,7 +62,7 @@ struct ArmyStatsHeader: View {
                 ProgressLegend(segments: stats.segments)
             }
             .accessibilityElement(children: .combine)
-            .accessibilityLabel("Collection progress \(stats.overallPercent) percent")
+            .accessibilityLabel(String(localized: "Collection progress \(stats.overallPercent) percent"))
         }
     }
 }

@@ -25,6 +25,15 @@ struct GameSystemRulesReferenceView: View {
     var body: some View {
         List {
             Section {
+                Text(
+                    GameSystemRulesLabels.browseIntro(gameSystemId: gameSystem.id)
+                )
+                .font(.callout)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section {
                 Picker(String(localized: "Category"), selection: $selectedCategory) {
                     Text(String(localized: "All")).tag(RuleSectionCategory?.none)
                     ForEach(
@@ -45,8 +54,15 @@ struct GameSystemRulesReferenceView: View {
 
             Section(String(localized: "Sections")) {
                 if filteredSections.isEmpty {
-                    Text(String(localized: "No matching sections"))
-                        .foregroundStyle(.secondary)
+                    if searchText.isEmpty {
+                        Text(String(localized: "No matching sections"))
+                            .foregroundStyle(.secondary)
+                    } else {
+                        Text(String(localized: "No results for this search. Try a shorter phrase or check another category."))
+                            .font(.callout)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
                 } else {
                     ForEach(filteredSections) { section in
                         NavigationLink(value: RuleSectionLink(gameSystemId: gameSystem.id, sectionId: section.id)) {

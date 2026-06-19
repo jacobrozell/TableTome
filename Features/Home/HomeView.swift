@@ -25,10 +25,9 @@ struct HomeView: View {
             } else {
                 List {
                     if !viewModel.gameSystems.isEmpty {
-                        if FirstSessionStore.shouldShowContinueCard(),
-                           let choice = FirstSessionStore.onboardingChoice {
+                        if let continuation = PlayContinuationResolver.current() {
                             Section {
-                                HomeContinueCard(gameSystemId: choice)
+                                HomeContinueCard(continuation: continuation)
                             }
                             .listRowInsets(EdgeInsets())
                             .listRowBackground(Color.clear)

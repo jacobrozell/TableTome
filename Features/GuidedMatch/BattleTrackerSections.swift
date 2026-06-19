@@ -256,15 +256,14 @@ struct BattleTrackerBothLoadoutsSection: View {
     }
 
     private var unitRosterLinkTitle: String {
-        if playContext.capabilities.showsBattleTacticDecks {
-            return String(localized: "View Warscrolls")
-        }
-        return String(localized: "View Unit Roster")
+        playContext.armyUnitRosterLinkTitle
     }
 }
 
 struct BattleTrackerControlPanel: View {
     @ObservedObject var viewModel: BattlePhaseTrackerViewModel
+    var showsPhaseGuidanceInPicker: Bool = true
+    var showsAdvancePhaseButton: Bool = true
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -314,7 +313,11 @@ struct BattleTrackerControlPanel: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
 
-            BattleTrackerPhaseControls(viewModel: viewModel)
+            BattleTrackerPhaseControls(
+                viewModel: viewModel,
+                showsPhaseGuidance: showsPhaseGuidanceInPicker,
+                showsAdvancePhaseButton: showsAdvancePhaseButton
+            )
                 .id("phaseControls")
         }
     }
@@ -322,6 +325,8 @@ struct BattleTrackerControlPanel: View {
 
 private struct BattleTrackerPhaseControls: View {
     @ObservedObject var viewModel: BattlePhaseTrackerViewModel
+    var showsPhaseGuidance: Bool = true
+    var showsAdvancePhaseButton: Bool = true
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
@@ -332,7 +337,7 @@ private struct BattleTrackerPhaseControls: View {
                 phases: BattleRules.mainPhases(gameSystemId: viewModel.gameSystemId),
                 selectedPhase: viewModel.trackerState.currentPhase,
                 showAllAbilities: viewModel.trackerState.showAllAbilities,
-                showsPhaseGuidance: true,
+                showsPhaseGuidance: showsPhaseGuidance,
                 gameSystemId: viewModel.gameSystemId
             ) { phase in
                 viewModel.trackerState.showAllAbilities = false
@@ -361,15 +366,17 @@ private struct BattleTrackerPhaseControls: View {
                 .accessibilityIdentifier("battleTracker.showAll")
             }
 
-            Button {
-                viewModel.advancePhase()
-            } label: {
-                Label(String(localized: "Next Phase"), systemImage: "arrow.right.circle.fill")
-                    .frame(maxWidth: .infinity, alignment: .leading)
+            if showsAdvancePhaseButton {
+                Button {
+                    viewModel.advancePhase()
+                } label: {
+                    Label(String(localized: "Next Phase"), systemImage: "arrow.right.circle.fill")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .buttonStyle(.borderedProminent)
+                .frame(minHeight: DesignTokens.minTouchTarget)
+                .accessibilityIdentifier("battleTracker.nextPhase")
             }
-            .buttonStyle(.borderedProminent)
-            .frame(minHeight: DesignTokens.minTouchTarget)
-            .accessibilityIdentifier("battleTracker.nextPhase")
         }
         .surfaceCard()
     }

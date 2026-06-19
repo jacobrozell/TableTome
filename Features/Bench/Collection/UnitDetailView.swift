@@ -56,14 +56,18 @@ struct UnitDetailView: View {
             if let unit {
                 unitForm(unit)
             } else {
-                ContentUnavailableView("ArmyUnit not found", systemImage: "figure.stand")
+                ContentUnavailableView(String(localized: "Unit not found"), systemImage: "figure.stand")
             }
         }
-        .navigationTitle(unit?.name.isEmpty == false ? unit!.name : "ArmyUnit")
+        .navigationTitle(unit?.name.isEmpty == false ? unit!.name : String(localized: "Unit"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { unitToolbar }
-        .confirmationDialog("Remove \"\(unit?.name ?? "")\"?", isPresented: $confirmDelete, titleVisibility: .visible) {
-            Button("Remove", role: .destructive) {
+        .confirmationDialog(
+            String(localized: "Remove \"\(unit?.name ?? "")\"?"),
+            isPresented: $confirmDelete,
+            titleVisibility: .visible
+        ) {
+            Button(String(localized: "Remove"), role: .destructive) {
                 if let unit {
                     ArmyStore.delete(unit, in: context)
                     deleteWarningTrigger.toggle()
@@ -92,33 +96,33 @@ struct UnitDetailView: View {
         @Bindable var unit = unit
         Form {
             Section {
-                TextField("Name", text: $unit.name)
+                TextField(String(localized: "Name"), text: $unit.name)
                     .textInputAutocapitalization(.words)
-                QuantityStepper(label: "Quantity", value: Binding(
+                QuantityStepper(label: String(localized: "Quantity"), value: Binding(
                     get: { unit.qty },
                     set: { ArmyStore.setQty(unit, $0, in: context) }
                 ))
                 if unit.hasSquadMembers {
-                    Text("Squad tracks \(unit.modelCount) models.")
+                    Text(String(localized: "Squad tracks \(unit.modelCount) models."))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
-                TextField("Source", text: $unit.source)
+                TextField(String(localized: "Source"), text: $unit.source)
                     .textInputAutocapitalization(.words)
                 if usesSpearhead {
-                    Toggle("Spearhead", isOn: Binding(
+                    Toggle(String(localized: "Spearhead"), isOn: Binding(
                         get: { unit.spearhead == true },
                         set: { ArmyStore.setSpearhead(unit, $0, in: context) }
                     ))
                 }
             } header: {
-                Text("ArmyUnit")
+                Text(String(localized: "Unit"))
             } footer: {
                 Text(FormHints.source)
             }
 
             Section {
-                Picker("State", selection: Binding(
+                Picker(String(localized: "State"), selection: Binding(
                     get: { unit.state },
                     set: { ArmyStore.setState(unit, $0, in: context) }
                 )) {
@@ -127,18 +131,18 @@ struct UnitDetailView: View {
                     }
                 }
                 .formNavigationPickerStyle()
-                .accessibilityLabel("Painting state")
+                .accessibilityLabel(String(localized: "Painting state"))
                 .accessibilityValue(unit.state)
                 if canAdvance {
-                    Button("Advance one stage", systemImage: "arrow.right.circle.fill") {
+                    Button(String(localized: "Advance one stage"), systemImage: "arrow.right.circle.fill") {
                         ArmyStore.advance(unit, pipeline: pipeline, in: context)
                         advanceTrigger.toggle()
                     }
                     .buttonStyle(.borderedProminent)
                 }
-                FormNotesField(title: "Notes", text: $unit.notes)
+                FormNotesField(title: String(localized: "Notes"), text: $unit.notes)
             } header: {
-                Text("Painting")
+                Text(String(localized: "Painting"))
             } footer: {
                 Text(FormHints.notesTags)
             }
@@ -148,8 +152,8 @@ struct UnitDetailView: View {
             UnitTimelineSection(unit: unit, pipeline: pipeline)
 
             if trackable {
-                Section("Squad") {
-                    Toggle("Track per model", isOn: Binding(
+                Section(String(localized: "Squad")) {
+                    Toggle(String(localized: "Track per model"), isOn: Binding(
                         get: { unit.hasSquadMembers },
                         set: { enabled in
                             if enabled { SquadStore.enable(unit, in: context) }
@@ -168,7 +172,7 @@ struct UnitDetailView: View {
             }
 
             Section {
-                Button("Delete unit", role: .destructive) { confirmDelete = true }
+                Button(String(localized: "Delete unit"), role: .destructive) { confirmDelete = true }
             }
         }
     }
@@ -176,21 +180,21 @@ struct UnitDetailView: View {
     @ToolbarContentBuilder private var unitToolbar: some ToolbarContent {
         ToolbarItem(placement: .topBarTrailing) {
             Menu {
-                Button("Duplicate", systemImage: "plus.square.on.square") {
+                Button(String(localized: "Duplicate"), systemImage: "plus.square.on.square") {
                     if let unit {
                         if ArmyStore.duplicate(unit, in: context) != nil {
-                            banner.show("Duplicated \(unit.name)")
+                            banner.show(String(localized: "Duplicated \(unit.name)"))
                             duplicateTrigger.toggle()
                         }
                     }
                 }
-                Button("Move to…", systemImage: "arrow.right.arrow.left") { showMove = true }
+                Button(String(localized: "Move to…"), systemImage: "arrow.right.arrow.left") { showMove = true }
                     .disabled(otherArmyNames.isEmpty)
-                Button("Delete", systemImage: "trash", role: .destructive) { confirmDelete = true }
+                Button(String(localized: "Delete"), systemImage: "trash", role: .destructive) { confirmDelete = true }
             } label: {
                 Image(systemName: "ellipsis.circle")
             }
-            .accessibilityLabel("ArmyUnit actions")
+            .accessibilityLabel(String(localized: "Unit actions"))
         }
     }
 }

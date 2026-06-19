@@ -14,7 +14,7 @@ struct MusterIntroSheet: View {
                         .font(.system(size: 56))
                         .foregroundStyle(Color.accentColor)
                         .accessibilityHidden(true)
-                    Text("Muster for the table")
+                    Text(String(localized: "Army Lists"))
                         .font(.title.bold())
                         .multilineTextAlignment(.center)
                     Text(
@@ -35,7 +35,7 @@ struct MusterIntroSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Got it") { onDismiss() }
+                    Button(String(localized: "Got it")) { onDismiss() }
                         .accessibilityIdentifier("musterIntroDismiss")
                 }
             }
@@ -50,10 +50,10 @@ struct MusterSettingsSection: View {
     @State private var showDisclaimer = false
 
     var body: some View {
-        Section("Muster") {
-            LabeledContent("Catalog version", value: UnitCatalogLoader.version)
-            Button("Disclaimer", systemImage: "info.circle") { showDisclaimer = true }
-            Picker("Default battle size (40k)", selection: Binding(
+        Section(String(localized: "Army Lists")) {
+            LabeledContent(String(localized: "Catalog version"), value: UnitCatalogLoader.version)
+            Button(String(localized: "Disclaimer"), systemImage: "info.circle") { showDisclaimer = true }
+            Picker(String(localized: "Default battle size (40k)"), selection: Binding(
                 get: { cfg.defaultBattleSizeKey40k },
                 set: { cfg.defaultBattleSizeKey40k = $0; try? context.save() }
             )) {
@@ -62,15 +62,22 @@ struct MusterSettingsSection: View {
                 }
             }
             .formNavigationPickerStyle()
-            Button("Reset Muster intro", systemImage: "arrow.counterclockwise") {
+            Button(String(localized: "Reset intro"), systemImage: "arrow.counterclockwise") {
                 cfg.hasSeenMusterIntro = false
                 try? context.save()
             }
         }
-        .alert("Unofficial data", isPresented: $showDisclaimer) {
-            Button("OK", role: .cancel) {}
+        .alert(String(localized: "Unofficial data"), isPresented: $showDisclaimer) {
+            Button(String(localized: "OK"), role: .cancel) {}
         } message: {
-            Text("ArmyUnit names and points values are unofficial community data for personal list building. Not endorsed by Games Workshop. Verify before events.")
+            Text(
+                String(
+                    localized: """
+                    Unit names and points values are unofficial community data for personal list building. \
+                    Not endorsed by Games Workshop. Verify before events.
+                    """
+                )
+            )
         }
     }
 }

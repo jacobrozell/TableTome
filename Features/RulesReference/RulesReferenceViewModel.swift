@@ -57,17 +57,21 @@ final class RulesReferenceViewModel: ObservableObject {
                let first = gameSystems.first {
                 selectedGameSystemId = first.id
             }
-            reloadSections(from: gameSystems.first { $0.id == selectedGameSystemId })
+            applySections(
+                from: gameSystems.first { $0.id == selectedGameSystemId },
+                resetFilters: false
+            )
         } catch {
             errorMessage = String(localized: "Rules reference could not be loaded.")
         }
     }
 
     func selectGameSystem(_ id: String) {
+        guard id != selectedGameSystemId else { return }
         selectedGameSystemId = id
         ActiveGameContextStore.setActiveGameSystem(id)
         if let system = gameSystems.first(where: { $0.id == id }) {
-            reloadSections(from: system)
+            applySections(from: system, resetFilters: true)
         }
         if let selectedCategory,
            !GameSystemRulesLabels.availableCategories(gameSystemId: id).contains(selectedCategory) {
@@ -75,8 +79,9 @@ final class RulesReferenceViewModel: ObservableObject {
         }
     }
 
-    private func reloadSections(from system: GameSystem?) {
+    private func applySections(from system: GameSystem?, resetFilters: Bool) {
         sections = system?.ruleSections ?? []
+        guard resetFilters else { return }
         selectedCategory = nil
         searchText = ""
     }

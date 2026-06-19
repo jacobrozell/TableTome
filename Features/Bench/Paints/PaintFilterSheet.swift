@@ -13,23 +13,23 @@ struct PaintFilterSheet: View {
         NavigationStack {
             Form {
                 Section {
-                    Picker("Type", selection: $cfg.paintTypeFilter) {
+                    Picker(String(localized: "Type"), selection: $cfg.paintTypeFilter) {
                         ForEach(["All"] + types, id: \.self) { Text($0).tag($0) }
                     }
                     .formNavigationPickerStyle()
-                    Picker("Brand", selection: $cfg.paintBrandFilter) {
+                    Picker(String(localized: "Brand"), selection: $cfg.paintBrandFilter) {
                         ForEach(["All"] + brands, id: \.self) { Text($0).tag($0) }
                     }
                     .formNavigationPickerStyle()
-                    Toggle("Running low only", isOn: $cfg.paintLowOnly)
+                    Toggle(String(localized: "Running low only"), isOn: $cfg.paintLowOnly)
                 } header: {
-                    Text("Filter by")
+                    Text(String(localized: "Filter by"))
                 } footer: {
                     Text(FormHints.paintFilter)
                 }
 
                 Section {
-                    Button("Clear filters", role: .destructive) {
+                    Button(String(localized: "Clear filters"), role: .destructive) {
                         cfg.paintTypeFilter = "All"
                         cfg.paintBrandFilter = "All"
                         cfg.paintLowOnly = false
@@ -38,10 +38,10 @@ struct PaintFilterSheet: View {
                     }
                 }
             }
-            .navigationTitle("HobbyPaint filters")
+            .navigationTitle(String(localized: "Paint filters"))
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") { try? context.save(); dismiss() }
+                    Button(String(localized: "Done")) { try? context.save(); dismiss() }
                 }
             }
         }

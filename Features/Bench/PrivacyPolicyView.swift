@@ -9,7 +9,7 @@ struct PrivacyPolicyView: View {
            let text = try? String(contentsOf: url, encoding: .utf8) {
             markdown = text
         } else {
-            markdown = "# Privacy Policy\n\nUnable to load the privacy policy file."
+            markdown = String(localized: "# Privacy Policy\n\nUnable to load the privacy policy file.")
         }
     }
 
@@ -20,7 +20,7 @@ struct PrivacyPolicyView: View {
                 .padding()
                 .textSelection(.enabled)
         }
-        .navigationTitle("Privacy Policy")
+        .navigationTitle(String(localized: "Privacy Policy"))
         .navigationBarTitleDisplayMode(.inline)
     }
 

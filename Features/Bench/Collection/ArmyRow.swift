@@ -32,8 +32,12 @@ struct ArmyRow: View {
         }
         .padding(.vertical, 4)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(army.name), \(army.faction), \(percentComplete) percent complete, \(visibleUnitCount) units")
-        .accessibilityHint("Opens army details")
+        .accessibilityLabel(
+            String(
+                localized: "\(army.name), \(army.faction), \(percentComplete) percent complete, \(visibleUnitCount) units"
+            )
+        )
+        .accessibilityHint(String(localized: "Opens army details"))
     }
 
     private var horizontalRow: some View {
@@ -78,7 +82,7 @@ struct ArmyRow: View {
                 Text("\(army.game) · \(army.faction)")
                 Text(countLabel)
                 if army.customPipeline?.isEmpty == false {
-                    Text("custom pipeline")
+                    Text(String(localized: "custom pipeline"))
                 }
             }
             .font(.subheadline)
@@ -95,12 +99,16 @@ struct ArmyRow: View {
     }
 
     private var countLabel: String {
-        scoped ? "\(visibleUnitCount) visible" : "\(visibleUnitCount) units"
+        scoped
+            ? String(localized: "\(visibleUnitCount) visible")
+            : String(localized: "\(visibleUnitCount) units")
     }
 
     private var subtitle: String {
         var parts = [army.game, army.faction, countLabel]
-        if army.customPipeline?.isEmpty == false { parts.append("custom pipeline") }
+        if army.customPipeline?.isEmpty == false {
+            parts.append(String(localized: "custom pipeline"))
+        }
         return parts.joined(separator: " · ")
     }
 }

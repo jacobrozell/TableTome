@@ -74,6 +74,11 @@ final class GameSystemRegistryTests: XCTestCase {
         XCTAssertEqual(scoring.secondaryQuickAddAmount, 10)
     }
 
+    func testCombatPatrolShowsDedicatedCombatTab() throws {
+        let descriptor = try registry.requireDescriptor(for: GameSystemId.wh40k10eCp.rawValue)
+        XCTAssertTrue(descriptor.capabilities.showsDedicatedCombatTab)
+    }
+
     func testWh40kHidesDedicatedCombatTab() throws {
         let descriptor = try registry.requireDescriptor(for: GameSystemId.wh40k11e.rawValue)
         XCTAssertFalse(descriptor.capabilities.showsDedicatedCombatTab)

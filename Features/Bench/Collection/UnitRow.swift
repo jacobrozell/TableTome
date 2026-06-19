@@ -25,7 +25,7 @@ struct UnitRow: View {
         .padding(.vertical, 2)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(accessibilityText)
-        .accessibilityHint("Opens unit details")
+        .accessibilityHint(String(localized: "Opens unit details"))
     }
 
     @ViewBuilder
@@ -63,7 +63,7 @@ struct UnitRow: View {
                     Image(systemName: "star.fill")
                         .font(.caption2)
                         .foregroundStyle(Color.accentColor)
-                        .accessibilityLabel("Spearhead")
+                        .accessibilityLabel(String(localized: "Spearhead"))
                 }
             }
             .font(.caption)
@@ -79,13 +79,15 @@ struct UnitRow: View {
 
     private var modelLabel: String {
         let n = unit.modelCount
-        return n == 1 ? "1 model" : "\(n) models"
+        return n == 1
+            ? String(localized: "1 model")
+            : String(localized: "\(n) models")
     }
 
     private var accessibilityText: String {
         var parts = [unit.name, unit.state, modelLabel]
         if !unit.source.isEmpty { parts.append(unit.source) }
-        if unit.spearhead == true { parts.append("spearhead") }
+        if unit.spearhead == true { parts.append(String(localized: "spearhead")) }
         return parts.joined(separator: ", ")
     }
 }

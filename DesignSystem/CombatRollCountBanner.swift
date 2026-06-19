@@ -121,7 +121,7 @@ struct DeployedModelCountStepper: View {
             } else if let warscrollModelCount, warscrollModelCount != modelCount, warscrollModelCount < 20 {
                 Text(
                     String(
-                        localized: "Warscroll lists \(warscrollModelCount) models — lower this if you split the unit on the table."
+                        localized: "Unit rules list \(warscrollModelCount) models — lower this if you split the unit on the table."
                     )
                 )
                 .font(.caption)

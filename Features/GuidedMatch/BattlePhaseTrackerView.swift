@@ -160,7 +160,7 @@ struct BattlePhaseTrackerView: View {
 
     @ViewBuilder
     var coachSection: some View {
-        if supportsBattleTracker, showsBattleTrackerCoach {
+        if supportsBattleTracker, showsBattleTrackerCoach, !showsPhasePlaybook {
             BattleTrackerCoachCard(gameSystemId: viewModel.gameSystemId) {
                 withAnimation(.easeInOut(duration: 0.25)) {
                     NewPlayerTipsStore.markBattleTrackerCoachSeen()

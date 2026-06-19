@@ -29,7 +29,7 @@ struct BenchTab: View {
 
   var body: some View {
     VStack(spacing: 0) {
-      Picker("Bench section", selection: $section) {
+      Picker(String(localized: "Models section"), selection: $section) {
         ForEach(BenchSection.allCases) { item in
           Label(item.label, systemImage: item.icon).tag(item)
         }
@@ -38,6 +38,7 @@ struct BenchTab: View {
       .padding(.horizontal, DesignTokens.Spacing.md)
       .padding(.vertical, DesignTokens.Spacing.sm)
       .accessibilityIdentifier("bench.sectionPicker")
+      .accessibilityHint(String(localized: "Switch between your armies and paint inventory"))
 
       Group {
         switch section {

@@ -17,13 +17,13 @@ struct ImportResultsSheet: View {
                         .foregroundStyle(failed ? .red : .primary)
                 }
                 if !warnings.isEmpty {
-                    Section("Warnings (\(warnings.count))") {
+                    Section(String(localized: "Warnings (\(warnings.count))")) {
                         ForEach(warnings, id: \.self) { Text($0).font(.caption) }
                     }
                 }
             }
             .navigationTitle(title)
-            .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
+            .toolbar { ToolbarItem(placement: .confirmationAction) { Button(String(localized: "Done")) { dismiss() } } }
         }
     }
 }

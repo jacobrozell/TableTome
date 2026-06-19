@@ -19,7 +19,11 @@ extension BattlePhaseTrackerView {
                     shootingPhaseHelper
                     startOfRoundHelper
                     roundAndScoreSection
-                    BattleTrackerControlPanel(viewModel: viewModel)
+                    BattleTrackerControlPanel(
+                        viewModel: viewModel,
+                        showsPhaseGuidanceInPicker: !showsPhasePlaybook,
+                        showsAdvancePhaseButton: !showsPhasePlaybook
+                    )
                     secondarySections
                 }
                 .frame(minWidth: 0, maxWidth: DesignTokens.battleTrackerControlColumnMaxWidth, alignment: .leading)
@@ -51,7 +55,11 @@ extension BattlePhaseTrackerView {
                 coachSection
                 shootingPhaseHelper
                 startOfRoundHelper
-                BattleTrackerControlPanel(viewModel: viewModel)
+                BattleTrackerControlPanel(
+                    viewModel: viewModel,
+                    showsPhaseGuidanceInPicker: !showsPhasePlaybook,
+                    showsAdvancePhaseButton: !showsPhasePlaybook
+                )
             },
             combat: VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                 damageUndoSection

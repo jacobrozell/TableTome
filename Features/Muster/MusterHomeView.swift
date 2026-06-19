@@ -40,10 +40,10 @@ struct MusterHomeView: View {
             else { listContent }
         }
         .navigationTitle(String(localized: "Army Lists"))
-        .searchable(text: $search, prompt: "Lists, factions…")
+        .searchable(text: $search, prompt: String(localized: "Lists, factions…"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button("New list", systemImage: "plus") { showNewRoster = true }
+                Button(String(localized: "New list"), systemImage: "plus") { showNewRoster = true }
                     .accessibilityIdentifier("musterNewList")
             }
         }
@@ -62,18 +62,20 @@ struct MusterHomeView: View {
                 .presentationDetents([.medium])
             }
         }
-        .confirmationDialog("Delete \"\(rosterToDelete?.name ?? "")\"?",
-                            isPresented: Binding(get: { rosterToDelete != nil },
-                                                 set: { if !$0 { rosterToDelete = nil } }),
-                            titleVisibility: .visible) {
-            Button("Delete", role: .destructive) {
+        .confirmationDialog(
+            String(localized: "Delete \"\(rosterToDelete?.name ?? "")\"?"),
+            isPresented: Binding(get: { rosterToDelete != nil },
+                                 set: { if !$0 { rosterToDelete = nil } }),
+            titleVisibility: .visible
+        ) {
+            Button(String(localized: "Delete"), role: .destructive) {
                 if let roster = rosterToDelete {
                     if roster.id == selectedRosterId { selectedRosterId = nil }
                     RosterStore.delete(roster, in: context)
                 }
                 rosterToDelete = nil
             }
-            Button("Cancel", role: .cancel) { rosterToDelete = nil }
+            Button(String(localized: "Cancel"), role: .cancel) { rosterToDelete = nil }
         }
     }
 
@@ -81,7 +83,14 @@ struct MusterHomeView: View {
         ContentUnavailableView {
             Label(String(localized: "No lists yet"), systemImage: "flag")
         } description: {
-            Text(String(localized: "Army lists count points and show what you can field. Optional until you build a larger collection."))
+            Text(
+                String(
+                    localized: """
+                    Army lists count points and show what you can field. Optional until you build a larger collection — \
+                    link a list to Models to see which units you own.
+                    """
+                )
+            )
         } actions: {
             Button(String(localized: "New list"), systemImage: "plus") { showNewRoster = true }
                 .accessibilityIdentifier("musterNewList")
@@ -116,11 +125,11 @@ struct MusterHomeView: View {
                 onSelectRoster(roster.id)
             }
             .contextMenu {
-                Button("Duplicate", systemImage: "doc.on.doc") {
+                Button(String(localized: "Duplicate"), systemImage: "doc.on.doc") {
                     duplicate(roster)
                 }
-                Button("Rename", systemImage: "pencil") { rosterToRename = roster }
-                Button("Delete", systemImage: "trash", role: .destructive) { rosterToDelete = roster }
+                Button(String(localized: "Rename"), systemImage: "pencil") { rosterToRename = roster }
+                Button(String(localized: "Delete"), systemImage: "trash", role: .destructive) { rosterToDelete = roster }
             }
     }
 
@@ -151,7 +160,7 @@ struct MusterHomeView: View {
         .accessibilityLabel(rosterAccessibilityLabel(
             roster: roster, total: total, limit: limit, fieldable: fieldable, showsFieldable: showsFieldable
         ))
-        .accessibilityHint("Opens list editor")
+        .accessibilityHint(String(localized: "Opens list editor"))
     }
 
     private func compactRosterRow(
@@ -169,14 +178,14 @@ struct MusterHomeView: View {
                     .font(.headline)
                     .lineLimit(2)
                     .fixedSize(horizontal: false, vertical: true)
-                Text("\(roster.faction) · \(total) / \(limit) pts")
+                Text(String(localized: "\(roster.faction) · \(total) / \(limit) pts"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
             Spacer(minLength: 8)
             if !roster.entries.isEmpty, showsFieldable {
                 ProgressRing(percent: fieldable, diameter: 32)
-                    .accessibilityLabel("\(fieldable) percent fieldable")
+                    .accessibilityLabel(String(localized: "\(fieldable) percent fieldable"))
             }
         }
     }
@@ -195,14 +204,14 @@ struct MusterHomeView: View {
                 Spacer(minLength: 0)
                 if !roster.entries.isEmpty, showsFieldable {
                     ProgressRing(percent: fieldable, diameter: 32)
-                        .accessibilityLabel("\(fieldable) percent fieldable")
+                        .accessibilityLabel(String(localized: "\(fieldable) percent fieldable"))
                 }
             }
             Text(roster.name)
                 .font(.headline)
                 .lineLimit(3)
                 .fixedSize(horizontal: false, vertical: true)
-            Text("\(roster.faction) · \(total) / \(limit) pts")
+            Text(String(localized: "\(roster.faction) · \(total) / \(limit) pts"))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
@@ -212,17 +221,17 @@ struct MusterHomeView: View {
     private func rosterAccessibilityLabel(
         roster: Roster, total: Int, limit: Int, fieldable: Int, showsFieldable: Bool
     ) -> String {
-        var label = "\(roster.name), \(roster.faction), \(total) of \(limit) points"
-        if showsFieldable { label += ", \(fieldable) percent fieldable" }
+        var label = String(localized: "\(roster.name), \(roster.faction), \(total) of \(limit) points")
+        if showsFieldable { label += String(localized: ", \(fieldable) percent fieldable") }
         return label
     }
 
     private func duplicate(_ roster: Roster) {
         do {
             let copy = try RosterStore.duplicate(roster, in: context)
-            banner.show("Duplicated \"\(copy.name)\"")
+            banner.show(String(localized: "Duplicated \"\(copy.name)\""))
         } catch {
-            banner.show("Could not duplicate list")
+            banner.show(String(localized: "Could not duplicate list"))
         }
     }
 }
@@ -246,20 +255,22 @@ struct RenameRosterSheet: View {
         NavigationStack {
             Form {
                 Section {
-                    FormNameField(title: "List name", text: $name, focus: $nameFocused)
+                    FormNameField(title: String(localized: "List name"), text: $name, focus: $nameFocused)
                 } footer: {
                     if error {
-                        FormValidationFooter(message: "That name is taken.")
+                        FormValidationFooter(message: String(localized: "That name is taken."))
                     } else {
                         Text(FormHints.uniqueName)
                     }
                 }
             }
-            .navigationTitle("Rename list")
+            .navigationTitle(String(localized: "Rename list"))
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(String(localized: "Cancel")) { dismiss() }
+                }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") { if onRename(name) { dismiss() } else { error = true } }
+                    Button(String(localized: "Save")) { if onRename(name) { dismiss() } else { error = true } }
                         .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
             }

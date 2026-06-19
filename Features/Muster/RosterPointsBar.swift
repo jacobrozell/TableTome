@@ -38,7 +38,7 @@ struct RosterPointsBar: View {
             Text("\(total)")
                 .font(.title3.weight(.semibold))
                 .monospacedDigit()
-            Text("pts used")
+            Text(String(localized: "pts used"))
                 .font(.body)
                 .foregroundStyle(.secondary)
         }
@@ -48,12 +48,12 @@ struct RosterPointsBar: View {
     @ViewBuilder
     private var pointsSecondaryLine: some View {
         if over {
-            Text("of \(limit), \(-remaining) over limit")
+            Text(String(localized: "of \(limit), \(-remaining) over limit"))
                 .font(.subheadline.monospacedDigit())
                 .foregroundStyle(.red)
                 .fixedSize(horizontal: false, vertical: true)
         } else {
-            Text("of \(limit), \(remaining) remaining")
+            Text(String(localized: "of \(limit), \(remaining) remaining"))
                 .font(.subheadline.monospacedDigit())
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
@@ -65,21 +65,21 @@ struct RosterPointsBar: View {
             Text("\(total)")
                 .font(.title3.weight(.semibold))
                 .monospacedDigit()
-            Text("pts used")
+            Text(String(localized: "pts used"))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
             Spacer()
             if limit > 0 {
                 VStack(alignment: .trailing, spacing: 2) {
-                    Text("of \(limit)")
+                    Text(String(localized: "of \(limit)"))
                         .font(.subheadline.monospacedDigit())
                         .foregroundStyle(over ? .red : .secondary)
                     if !over {
-                        Text("\(remaining) left")
+                        Text(String(localized: "\(remaining) left"))
                             .font(.caption.monospacedDigit())
                             .foregroundStyle(.secondary)
                     } else {
-                        Text("\(-remaining) over")
+                        Text(String(localized: "\(-remaining) over"))
                             .font(.caption.monospacedDigit())
                             .foregroundStyle(.red)
                     }
@@ -89,8 +89,10 @@ struct RosterPointsBar: View {
     }
 
     private var accessibilitySummary: String {
-        guard limit > 0 else { return "Points \(total), no limit" }
-        if over { return "Points \(total) of \(limit), over limit by \(-remaining)" }
-        return "Points \(total) of \(limit), \(remaining) remaining"
+        guard limit > 0 else { return String(localized: "Points \(total), no limit") }
+        if over {
+            return String(localized: "Points \(total) of \(limit), over limit by \(-remaining)")
+        }
+        return String(localized: "Points \(total) of \(limit), \(remaining) remaining")
     }
 }

@@ -19,7 +19,7 @@ struct MatchHistoryListView: View {
     var body: some View {
         Group {
             if viewModel.isLoading, viewModel.records.isEmpty {
-                ProgressView()
+                ProgressView(String(localized: "Loading match history…"))
             } else if let error = viewModel.errorMessage, viewModel.records.isEmpty {
                 EmptyStateView(
                     title: String(localized: "Unable to Load"),
@@ -51,9 +51,9 @@ struct MatchHistoryListView: View {
                             )
                         )
                     } actions: {
-                        Button(String(localized: "Open Spearhead Guided Match")) {
+                        Button(activeGameGuidedMatchLabel) {
                             learnNavigationCoordinator.openGuidedMatch(
-                                gameSystemId: OnboardingCompletion.spearheadGameSystemId
+                                gameSystemId: activeGameGuidedMatchGameSystemId
                             )
                         }
                         .accessibilityIdentifier("matchHistory.openGuidedMatch")
@@ -112,6 +112,19 @@ struct MatchHistoryListView: View {
             await viewModel.load()
         }
         .refreshable { await viewModel.load() }
+    }
+
+    private var activeGameGuidedMatchGameSystemId: String {
+        let activeId = ActiveGameContextStore.gameSystemId
+        if ReleaseSurface.showsGuidedMatch(for: activeId) {
+            return activeId
+        }
+        return OnboardingCompletion.spearheadGameSystemId
+    }
+
+    private var activeGameGuidedMatchLabel: String {
+        let gameLabel = GameSystemRulesLabels.displayName(gameSystemId: activeGameGuidedMatchGameSystemId)
+        return String(localized: "Open \(gameLabel) Guided Match")
     }
 }
 

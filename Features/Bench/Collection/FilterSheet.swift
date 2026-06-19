@@ -19,25 +19,25 @@ struct FilterSheet: View {
         NavigationStack {
             Form {
                 Section {
-                    Picker("View", selection: $cfg.quickViewRaw) {
-                        Text("All").tag("all")
-                        Text("Backlog").tag("backlog")
-                        Text("WIP").tag("wip")
-                        Text("Table-ready").tag("ready")
+                    Picker(String(localized: "View"), selection: $cfg.quickViewRaw) {
+                        Text(String(localized: "All")).tag("all")
+                        Text(String(localized: "Backlog")).tag("backlog")
+                        Text(String(localized: "WIP")).tag("wip")
+                        Text(String(localized: "Table-ready")).tag("ready")
                     }
                     .pickerStyle(.segmented)
                 } header: {
-                    Text("Quick view")
+                    Text(String(localized: "Quick view"))
                 } footer: {
                     Text(FormHints.filterQuickView)
                 }
 
                 Section {
-                    Picker("Game", selection: $cfg.gameFilter) {
+                    Picker(String(localized: "Game"), selection: $cfg.gameFilter) {
                         ForEach(["All"] + games, id: \.self) { Text($0).tag($0) }
                     }
                     .formNavigationPickerStyle()
-                    Picker("Faction", selection: $cfg.factionFilter) {
+                    Picker(String(localized: "Faction"), selection: $cfg.factionFilter) {
                         ForEach(["All"] + factions, id: \.self) { f in
                             HStack {
                                 if f != "All" {
@@ -48,59 +48,59 @@ struct FilterSheet: View {
                         }
                     }
                     .formNavigationPickerStyle()
-                    Picker("State", selection: $cfg.stateFilter) {
+                    Picker(String(localized: "State"), selection: $cfg.stateFilter) {
                         ForEach(states, id: \.self) { Text($0).tag($0) }
                     }
                     .formNavigationPickerStyle()
-                    Picker("Source", selection: $cfg.sourceFilter) {
+                    Picker(String(localized: "Source"), selection: $cfg.sourceFilter) {
                         ForEach(["All"] + sources, id: \.self) { Text($0).tag($0) }
                     }
                     .formNavigationPickerStyle()
                     if !tags.isEmpty {
-                        Picker("Tag", selection: $cfg.tagFilter) {
+                        Picker(String(localized: "Tag"), selection: $cfg.tagFilter) {
                             ForEach(["All"] + tags, id: \.self) { t in
-                                Text(t == "All" ? "All" : "#\(t)").tag(t)
+                                Text(t == "All" ? String(localized: "All") : "#\(t)").tag(t)
                             }
                         }
                         .formNavigationPickerStyle()
                     }
-                    Toggle("Spearhead only", isOn: $cfg.spearheadOnly)
+                    Toggle(String(localized: "Spearhead only"), isOn: $cfg.spearheadOnly)
                 } header: {
-                    Text("Narrow by")
+                    Text(String(localized: "Narrow by"))
                 } footer: {
                     Text(FormHints.filterNarrow)
                 }
 
                 Section {
-                    Picker("Armies", selection: $cfg.armySortRaw) {
-                        Text("Import order").tag("import")
-                        Text("Name").tag("name")
-                        Text("Least complete").tag("progress")
+                    Picker(String(localized: "Armies"), selection: $cfg.armySortRaw) {
+                        Text(String(localized: "Import order")).tag("import")
+                        Text(String(localized: "Name")).tag("name")
+                        Text(String(localized: "Least complete")).tag("progress")
                     }
                     .formNavigationPickerStyle()
-                    Picker("Units", selection: $cfg.unitSortRaw) {
-                        Text("Name").tag("name")
-                        Text("State").tag("state")
+                    Picker(String(localized: "Units"), selection: $cfg.unitSortRaw) {
+                        Text(String(localized: "Name")).tag("name")
+                        Text(String(localized: "State")).tag("state")
                     }
                     .formNavigationPickerStyle()
                 } header: {
-                    Text("Sort")
+                    Text(String(localized: "Sort"))
                 } footer: {
                     Text(FormHints.filterSort)
                 }
 
                 Section {
-                    Button("Clear all filters", role: .destructive) {
+                    Button(String(localized: "Clear all filters"), role: .destructive) {
                         ArmyFilter.clearFilters(cfg)
                         try? context.save()
                         dismiss()
                     }
                 }
             }
-            .navigationTitle("Filters")
+            .navigationTitle(String(localized: "Filters"))
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") { try? context.save(); dismiss() }
+                    Button(String(localized: "Done")) { try? context.save(); dismiss() }
                 }
             }
         }

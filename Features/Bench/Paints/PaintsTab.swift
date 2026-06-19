@@ -40,7 +40,7 @@ struct PaintsTab: View {
             AddEditPaintSheet(existing: nil, extraTypes: types) { name, type, brand, source, qty, notes, low in
                 let ok = PaintStore.add(name: name, type: type, brand: brand, source: source,
                                         qty: qty, notes: notes, low: low, in: context)
-                if ok { banner.show("HobbyPaint added") } else { banner.show("That name already exists") }
+                if ok { banner.show(String(localized: "Paint added")) } else { banner.show(String(localized: "That name already exists")) }
                 return ok
             }
         }
@@ -69,9 +69,25 @@ struct PaintsTab: View {
         } detail: {
             if let id = selectedPaintId {
                 PaintDetailView(paintId: id)
+            } else if paints.isEmpty {
+                ContentUnavailableView {
+                    Label(String(localized: "Your paints live here"), systemImage: "paintpalette")
+                } description: {
+                    Text(
+                        String(
+                            localized: """
+                            Optional — track paint inventory after your first game. Add a paint in the sidebar \
+                            or import from Settings → Collection & Data.
+                            """
+                        )
+                    )
+                }
             } else {
-                ContentUnavailableView("Select a HobbyPaint", systemImage: "paintpalette",
-                                       description: Text("Choose a paint from the list."))
+                ContentUnavailableView {
+                    Label(String(localized: "Pick a paint"), systemImage: "paintpalette")
+                } description: {
+                    Text(String(localized: "Choose a paint from the sidebar to see details and inventory."))
+                }
             }
         }
     }

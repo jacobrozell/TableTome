@@ -16,7 +16,7 @@ struct UnitTimelineSection: View {
 
     var body: some View {
         if !events.isEmpty {
-            Section("Timeline") {
+            Section(String(localized: "Timeline")) {
                 ForEach(events) { event in
                     timelineRow(event)
                 }
@@ -61,7 +61,7 @@ struct UnitTimelineSection: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
             if let previous = event.previousStageKey, previous != event.stageKey {
-                Text("from \(previous)")
+                Text(String(localized: "from \(previous)"))
                     .font(.caption2)
                     .foregroundStyle(.tertiary)
             }

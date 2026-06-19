@@ -12,6 +12,7 @@ struct BattleTrackerPhaseDock: View {
     let onMyUnit: () -> Void
     let onResolve: () -> Void
     let onScoreVictoryPoints: () -> Void
+    var resolveAccessibilityHint: String?
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
@@ -42,6 +43,7 @@ struct BattleTrackerPhaseDock: View {
                         accessibilityId: "battleTracker.phaseDock.resolve",
                         action: onResolve
                     )
+                    .optionalAccessibilityHint(resolveAccessibilityHint)
                     dockButton(
                         title: String(localized: "Score"),
                         subtitle: String(localized: "VP"),
@@ -70,6 +72,7 @@ struct BattleTrackerPhaseDock: View {
                         accessibilityId: "battleTracker.phaseDock.resolve",
                         action: onResolve
                     )
+                    .optionalAccessibilityHint(resolveAccessibilityHint)
                     dockButton(
                         title: String(localized: "Score"),
                         subtitle: String(localized: "VP"),
@@ -146,6 +149,7 @@ struct BattleTrackerPhaseDock: View {
         }
         .buttonStyle(.plain)
         .disabled(!isEnabled)
+        .accessibilityLabel(title)
         .accessibilityIdentifier(accessibilityId)
     }
 

@@ -48,10 +48,7 @@ extension BattlePhaseTrackerView {
                 withAnimation(.easeInOut(duration: 0.25)) {
                     selectedSectionTab = suggestedSectionTab
                 }
-                if suggestedSectionTab == .combat || (
-                    viewModel.playContext.usesGuidedBattleTracker && suggestedSectionTab == .turn
-                    && viewModel.trackerState.currentPhase.isCombatRelated
-                ) {
+                if suggestedSectionTab == .combat {
                     scrollToCombatResolver = true
                 }
             }
@@ -71,16 +68,11 @@ extension BattlePhaseTrackerView {
             selectedSectionTab = tab
             if tab == .combat {
                 scrollToCombatResolver = true
-            } else if tab == .turn,
-                      viewModel.playContext.usesGuidedBattleTracker,
-                      ReleaseSurface.showsCombatResolver(for: viewModel.gameSystemId),
-                      viewModel.trackerState.currentPhase.isCombatRelated {
-                scrollToCombatResolver = true
             }
         case .combatResolver:
             focusCombatResolverSection()
         case .victoryPoints:
-            selectedSectionTab = .turn
+            selectedSectionTab = .setup
             scrollToVictoryPoints = true
         case .roundChecklist:
             selectedSectionTab = .setup

@@ -5,9 +5,14 @@ import UIKit
 struct WarscrollInfoButton: View {
     let armyId: String
     let unit: SpearheadUnit
+    var gameSystemId: GameSystemId = .default
     var accessibilityId: String
 
     @State private var showsSheet = false
+
+    private var playContext: GameSystemPlayContext {
+        GameSystemPlayContext.context(for: gameSystemId)
+    }
 
     var body: some View {
         Button {
@@ -19,8 +24,8 @@ struct WarscrollInfoButton: View {
                 .frame(width: DesignTokens.minTouchTarget, height: DesignTokens.minTouchTarget)
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(String(localized: "View \(unit.name) warscroll"))
-        .accessibilityHint(String(localized: "Opens the unit datasheet."))
+        .accessibilityLabel(playContext.unitRulesInfoAccessibilityLabel(unitName: unit.name))
+        .accessibilityHint(String(localized: "Opens the unit rules reference."))
         .accessibilityIdentifier(accessibilityId)
         .sheet(isPresented: $showsSheet) {
             WarscrollSheetView(armyId: armyId, unit: unit)
@@ -117,7 +122,7 @@ private struct WarscrollTextReference: View {
     }
 
     private var sheetImageMissingHint: String {
-        String(localized: "Official warscroll image isn't bundled for this unit. Showing stats from the app.")
+        String(localized: "Official rules card image isn't bundled for this unit. Showing stats from the app.")
     }
 
     private func labeledSection(_ title: String, text: String) -> some View {

@@ -23,9 +23,13 @@ final class RosterPointsTests: XCTestCase {
     }
 
     func testLimitResolvesFromBattleSize() {
+        let combatPatrol = makeRoster(battleSizeKey: "combat-patrol", entries: [])
+        XCTAssertEqual(RosterPoints.limit(for: combatPatrol), 500)
         let incursion = makeRoster(battleSizeKey: "incursion", entries: [])
         XCTAssertEqual(RosterPoints.limit(for: incursion), 1000)
         XCTAssertEqual(RosterPoints.limit(for: makeRoster(battleSizeKey: "strike-force", entries: [])), 2000)
+        let custom = makeRoster(battleSizeKey: "custom:750", entries: [])
+        XCTAssertEqual(RosterPoints.limit(for: custom), 750)
     }
 
     func testRemainingAndOverLimit() {

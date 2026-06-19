@@ -150,7 +150,6 @@ extension GameSystemId {
                     showsCombatResolver: true,
                     showsVictoryPoints: true,
                     showsCombatPatrolMode: true,
-                    showsDedicatedCombatTab: false,
                     usesWh40kCombatRollEngine: true,
                     scoringRuleSectionId: "cp-scoring",
                     ruleCategories: [.core, .combatPatrol, .glossary]
@@ -179,9 +178,9 @@ extension GameSystemId {
                     armyIds: ["space-marines-combat-patrol", "tyranids-combat-patrol"],
                     starterMatchupTitle: "Space Marines vs Tyranids",
                     starterSetDescription: String(
-                        localized: "Quick-start the Leviathan Combat Patrol matchup with missions, setup, and battle tools."
+                        localized: "Quick-start the Space Marines vs Tyranids starter matchup — works with any Combat Patrol box."
                     ),
-                    starterSetBadge: String(localized: "Leviathan Combat Patrol"),
+                    starterSetBadge: String(localized: "Combat Patrol starter box"),
                     playerOne: StarterArmySelection(
                         playerName: "Player 1",
                         factionId: "space-marines",

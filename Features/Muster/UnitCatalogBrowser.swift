@@ -36,11 +36,11 @@ struct UnitCatalogBrowser: View {
                     }
                 }
             }
-            .searchable(text: $search, prompt: "Units, keywords…")
-            .navigationTitle("Add unit")
+            .searchable(text: $search, prompt: String(localized: "Units, keywords…"))
+            .navigationTitle(String(localized: "Add unit"))
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Done") { dismiss() }
+                    Button(String(localized: "Done")) { dismiss() }
                 }
             }
         }
@@ -53,7 +53,7 @@ struct UnitCatalogBrowser: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(unit.name)
                     .fixedSize(horizontal: false, vertical: true)
-                Text("\(unit.basePoints) pts")
+                Text(String(localized: "\(unit.basePoints) pts"))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .monospacedDigit()
@@ -63,7 +63,7 @@ struct UnitCatalogBrowser: View {
             HStack {
                 Text(unit.name)
                 Spacer()
-                Text("\(unit.basePoints) pts")
+                Text(String(localized: "\(unit.basePoints) pts"))
                     .foregroundStyle(.secondary)
                     .monospacedDigit()
             }

@@ -12,10 +12,24 @@ struct GettingStartedView: View {
         List {
             if gameSystem.id == "wh40k-10e-cp" {
                 Section {
-                    combatPatrolPathCard
+                    combatPatrolFirstGameSection
                 }
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color.clear)
+
+                Section {
+                    NavigationLink(value: CombatPatrolSampleTurnLink()) {
+                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                            Label(String(localized: "Preview a Turn"), systemImage: "play.circle")
+                                .font(.headline)
+                            Text(String(localized: "~2 minutes — each battle phase, dice, and scoring"))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                    }
+                    .accessibilityIdentifier("guide.gettingStarted.combatPatrolSampleTurn")
+                }
             }
 
             if gameSystem.id == "aos-spearhead" {
@@ -90,20 +104,38 @@ struct GettingStartedView: View {
         .accessibilityIdentifier("guide.stepList")
     }
 
-    private var combatPatrolPathCard: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+    private var combatPatrolFirstGameSection: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Label(String(localized: "Your first game"), systemImage: "map")
                 .font(.headline)
-            Text(
-                String(
-                    localized: """
-                    1. Read the topics below  2. Open Missions Reference  3. Run Guided Match and tap Use Starter Matchup
-                    """
-                )
-            )
-            .font(.callout)
-            .foregroundStyle(.secondary)
-            .fixedSize(horizontal: false, vertical: true)
+
+            CombatPatrolWhatYouNeedCard()
+
+            if let firstStep = sortedSteps.first {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                    TappableGuidePathStep(
+                        number: 1,
+                        title: String(localized: "Read the topics below"),
+                        detail: firstStep.summary,
+                        destination: GuideStepLink(gameSystemId: gameSystem.id, stepId: firstStep.id),
+                        accessibilityId: "guide.combatPatrol.path.firstTopic"
+                    )
+                    TappableGuidePathStep(
+                        number: 2,
+                        title: String(localized: "Missions Reference"),
+                        detail: String(localized: "Deployment maps and mission rules from your box."),
+                        destination: CombatPatrolMissionsLink(gameSystemId: gameSystem.id),
+                        accessibilityId: "guide.combatPatrol.path.missions"
+                    )
+                    TappableGuidePathStep(
+                        number: 3,
+                        title: String(localized: "Guided Match"),
+                        detail: String(localized: "Tap Use Starter Matchup for built-in armies, or pick your patrol boxes."),
+                        destination: GuidedMatchLink(gameSystemId: .wh40k10eCp),
+                        accessibilityId: "guide.combatPatrol.path.guidedMatch"
+                    )
+                }
+            }
         }
         .padding(DesignTokens.Spacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)

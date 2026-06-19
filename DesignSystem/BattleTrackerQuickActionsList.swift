@@ -92,6 +92,8 @@ struct BattleTrackerTabHintBanner: View {
         .buttonStyle(.plain)
         .padding(DesignTokens.Spacing.md)
         .background(Color.orange.opacity(0.1), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .accessibilityLabel(String(localized: "Suggested \(suggestedTab.title) tab"))
+        .accessibilityHint(hintDetail)
         .accessibilityIdentifier("battleTracker.tabHint")
     }
 
@@ -102,17 +104,11 @@ struct BattleTrackerTabHintBanner: View {
                 ? String(localized: "Mission setup steps still need attention.")
                 : String(localized: "Deployment or round-opener steps still need attention.")
         case .turn:
-            String(localized: "Phase controls and shooting reminders live here.")
+            String(localized: "Phase playbook, abilities, and what to do in this phase.")
         case .combat:
             String(localized: "Resolve dice and apply damage here.")
         case .army:
-            if playContext.isStarCraft {
-                String(localized: "Track unit health and browse unit cards here.")
-            } else if playContext.isWh40k {
-                String(localized: "Track wounds and browse unit details here.")
-            } else {
-                String(localized: "Track wounds and browse warscrolls here.")
-            }
+            playContext.armyTabBrowseRulesHint
         }
     }
 }

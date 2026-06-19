@@ -77,3 +77,14 @@ struct AdaptiveHorizontalChipRow<Content: View>: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
+
+extension View {
+    @ViewBuilder
+    func optionalAccessibilityHint(_ hint: String?) -> some View {
+        if let hint {
+            accessibilityHint(hint)
+        } else {
+            self
+        }
+    }
+}

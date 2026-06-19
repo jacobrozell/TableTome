@@ -13,24 +13,24 @@ struct RosterEntrySheet: View {
         NavigationStack {
             Form {
                 Section {
-                    LabeledContent("ArmyUnit", value: entry.displayName)
-                    QuantityStepper(label: "Quantity", value: Binding(
+                    LabeledContent(String(localized: "Unit"), value: entry.displayName)
+                    QuantityStepper(label: String(localized: "Quantity"), value: Binding(
                         get: { entry.qty },
                         set: { RosterStore.setQty(entry, $0, in: context) }
                     ), range: 1...HobbyLimits.maxRosterQty)
                 } header: {
-                    Text("Entry")
+                    Text(String(localized: "Entry"))
                 }
 
                 Section {
-                    LabeledContent("Points each", value: "\(entry.pointsEach)")
-                    LabeledContent("Total", value: "\(entry.pointsTotal) pts")
+                    LabeledContent(String(localized: "Points each"), value: "\(entry.pointsEach)")
+                    LabeledContent(String(localized: "Total"), value: String(localized: "\(entry.pointsTotal) pts"))
                 } header: {
-                    Text("Points")
+                    Text(String(localized: "Points"))
                 }
 
                 Section {
-                    Button("Remove from list", role: .destructive) {
+                    Button(String(localized: "Remove from list"), role: .destructive) {
                         RosterStore.deleteEntry(entry, in: context)
                         dismiss()
                     }
@@ -40,7 +40,7 @@ struct RosterEntrySheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") { dismiss() }
+                    Button(String(localized: "Done")) { dismiss() }
                 }
             }
         }

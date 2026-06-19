@@ -32,15 +32,19 @@ struct SquadMemberRow: View {
                         SquadStore.advanceMember(unit, index: member.index, pipeline: pipeline, in: ctx)
                     } label: { Image(systemName: "arrow.right.circle") }
                     .buttonStyle(.borderless)
-                    .accessibilityLabel("Advance model \(member.index + 1)")
+                    .accessibilityLabel(String(localized: "Advance model \(member.index + 1)"))
                 }
             }
             .accessibilityElement(children: .combine)
-            .accessibilityLabel("Model \(member.index + 1) of \(unit.modelCount), state \(effectiveState)")
+            .accessibilityLabel(
+                String(
+                    localized: "Model \(member.index + 1) of \(unit.modelCount), state \(effectiveState)"
+                )
+            )
 
-            TextField("model note…", text: $notes)
+            TextField(String(localized: "model note…"), text: $notes)
                 .font(.caption2)
-                .accessibilityLabel("Notes for model \(member.index + 1)")
+                .accessibilityLabel(String(localized: "Notes for model \(member.index + 1)"))
                 .onChange(of: notes) { SquadStore.setMemberNotes(unit, index: member.index, notes: notes, in: ctx) }
         }
         .onAppear { notes = member.notes ?? "" }

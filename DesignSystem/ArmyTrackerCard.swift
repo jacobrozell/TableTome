@@ -312,12 +312,6 @@ struct ArmyUnitHealthRow: View {
     }
 
     private var unitFocusAccessibilityHint: String {
-        if playContext.capabilities.showsWh40kDeploymentChecklist {
-            return String(localized: "Opens unit focus with datasheet details.")
-        }
-        if playContext.capabilities.showsActivationBar {
-            return String(localized: "Opens unit focus with unit card details.")
-        }
-        return String(localized: "Opens unit focus with warscroll and combat options.")
+        playContext.unitFocusAccessibilityHint
     }
 }

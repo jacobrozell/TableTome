@@ -78,9 +78,9 @@ struct ArmyDetailView: View {
     var body: some View {
         Group {
             if let army { unitList(army: army) }
-            else { ContentUnavailableView("Army not found", systemImage: "shield") }
+            else { ContentUnavailableView(String(localized: "Army not found"), systemImage: "shield") }
         }
-        .navigationTitle(army?.name ?? "Army")
+        .navigationTitle(army?.name ?? String(localized: "Army"))
         .navigationBarTitleDisplayMode(armyTitleDisplayMode)
         .toolbar { armyToolbar }
         .safeAreaInset(edge: .bottom) { batchActionBar }
@@ -121,9 +121,12 @@ struct ArmyDetailView: View {
                                prefillLinkedArmyId: army.id)
             }
         }
-        .confirmationDialog("Delete entire army \"\(army?.name ?? "")\" and all its units?",
-                            isPresented: $confirmDeleteArmy, titleVisibility: .visible) {
-            Button("Delete", role: .destructive) {
+        .confirmationDialog(
+            String(localized: "Delete entire army \"\(army?.name ?? "")\" and all its units?"),
+            isPresented: $confirmDeleteArmy,
+            titleVisibility: .visible
+        ) {
+            Button(String(localized: "Delete"), role: .destructive) {
                 if let army {
                     if army.id == selectedArmyId { selectedArmyId = nil }
                     ArmyStore.delete(army, in: context)
@@ -131,10 +134,12 @@ struct ArmyDetailView: View {
                 }
             }
         }
-        .confirmationDialog("Remove \"\(unitToDelete?.name ?? "")\"?",
-                            isPresented: Binding(get: { unitToDelete != nil }, set: { if !$0 { unitToDelete = nil } }),
-                            titleVisibility: .visible) {
-            Button("Remove", role: .destructive) {
+        .confirmationDialog(
+            String(localized: "Remove \"\(unitToDelete?.name ?? "")\"?"),
+            isPresented: Binding(get: { unitToDelete != nil }, set: { if !$0 { unitToDelete = nil } }),
+            titleVisibility: .visible
+        ) {
+            Button(String(localized: "Remove"), role: .destructive) {
                 if let unit = unitToDelete {
                     if unit.id == selectedUnitId { selectedUnitId = nil }
                     ArmyStore.delete(unit, in: context)
@@ -142,12 +147,15 @@ struct ArmyDetailView: View {
                 }
                 unitToDelete = nil
             }
-            Button("Cancel", role: .cancel) { unitToDelete = nil }
+            Button(String(localized: "Cancel"), role: .cancel) { unitToDelete = nil }
         }
-        .confirmationDialog("Remove \(batchSelection.count) selected unit\(batchSelection.count == 1 ? "" : "s")?",
-                            isPresented: $confirmBatchDelete, titleVisibility: .visible) {
-            Button("Remove", role: .destructive) { deleteBatchSelection() }
-            Button("Cancel", role: .cancel) {}
+        .confirmationDialog(
+            String(localized: "Remove \(batchSelection.count) selected unit\(batchSelection.count == 1 ? "" : "s")?"),
+            isPresented: $confirmBatchDelete,
+            titleVisibility: .visible
+        ) {
+            Button(String(localized: "Remove"), role: .destructive) { deleteBatchSelection() }
+            Button(String(localized: "Cancel"), role: .cancel) {}
         }
         .sensoryFeedback(.success, trigger: advanceTrigger)
         .sensoryFeedback(.warning, trigger: deleteWarningTrigger)
@@ -185,12 +193,12 @@ struct ArmyDetailView: View {
     private func editModeList(army: Army, pres: (crest: String, colorHex: String)) -> some View {
         List(selection: $batchSelection) {
             armyHeaderSection(army: army, pres: pres)
-            Section("Units") {
+            Section(String(localized: "Units")) {
                 if visibleUnits.isEmpty {
                     ContentUnavailableView {
-                        Label("No units", systemImage: "figure.stand")
+                        Label(String(localized: "No units"), systemImage: "figure.stand")
                     } description: {
-                        Text("Add a unit or adjust filters.")
+                        Text(String(localized: "Add a unit or adjust filters."))
                     }
                     .listRowBackground(Color.clear)
                 } else {
@@ -208,12 +216,12 @@ struct ArmyDetailView: View {
     private func armyHeaderSection(army: Army, pres: (crest: String, colorHex: String)) -> some View {
         Section {
             VStack(alignment: .leading, spacing: 10) {
-                Text("\(army.game) · \(army.faction)\(army.customPipeline?.isEmpty == false ? " · custom pipeline" : "")")
+                Text("\(army.game) · \(army.faction)\(army.customPipeline?.isEmpty == false ? String(localized: " · custom pipeline") : "")")
                     .font(.subheadline).foregroundStyle(.secondary)
                 HStack {
                     CrestBadge(text: pres.crest, colorHex: pres.colorHex)
                     Spacer()
-                    Text("\(percent)% complete").font(.subheadline.monospacedDigit()).foregroundStyle(.secondary)
+                    Text(String(localized: "\(percent)% complete")).font(.subheadline.monospacedDigit()).foregroundStyle(.secondary)
                 }
                 ProgressMeter(segments: Pipeline.segments(of: visibleUnits, pipeline), height: 8)
             }
@@ -227,9 +235,9 @@ struct ArmyDetailView: View {
         Section {
             if visibleUnits.isEmpty {
                 ContentUnavailableView {
-                    Label("No units", systemImage: "figure.stand")
+                    Label(String(localized: "No units"), systemImage: "figure.stand")
                 } description: {
-                    Text("Add a unit or adjust filters.")
+                    Text(String(localized: "Add a unit or adjust filters."))
                 }
                 .listRowBackground(Color.clear)
             } else {
@@ -253,7 +261,7 @@ struct ArmyDetailView: View {
                 }
             }
         } header: {
-            Text("Units")
+            Text(String(localized: "Units"))
                 .popoverTip(showAdvanceTip ? SwipeAdvanceTip() : nil, arrowEdge: .top)
         }
     }
@@ -263,40 +271,40 @@ struct ArmyDetailView: View {
         UnitRow(unit: unit, pipeline: pipeline, showSpearhead: usesSpearhead)
             .swipeActions(edge: .leading, allowsFullSwipe: true) {
                 if !isEditing, canAdvance(unit) {
-                    Button("Advance") {
+                    Button(String(localized: "Advance")) {
                         ArmyStore.advance(unit, pipeline: pipeline, in: context)
                         advanceTrigger.toggle()
                         SwipeAdvanceTip().invalidate(reason: .actionPerformed)
                     }
                     .tint(.accentColor)
-                    .accessibilityLabel("Advance painting state")
+                    .accessibilityLabel(String(localized: "Advance painting state"))
                 }
             }
             .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                 if !isEditing {
-                    Button("Duplicate") { duplicateUnit(unit) }
-                    .accessibilityLabel("Duplicate unit")
-                    Button("Delete", role: .destructive) { unitToDelete = unit }
-                        .accessibilityLabel("Delete unit")
+                    Button(String(localized: "Duplicate")) { duplicateUnit(unit) }
+                    .accessibilityLabel(String(localized: "Duplicate unit"))
+                    Button(String(localized: "Delete"), role: .destructive) { unitToDelete = unit }
+                        .accessibilityLabel(String(localized: "Delete unit"))
                 }
             }
             .contextMenu {
                 if !isEditing {
                     if canAdvance(unit) {
-                        Button("Advance", systemImage: "arrow.right.circle") {
+                        Button(String(localized: "Advance"), systemImage: "arrow.right.circle") {
                             ArmyStore.advance(unit, pipeline: pipeline, in: context)
                             advanceTrigger.toggle()
                             SwipeAdvanceTip().invalidate(reason: .actionPerformed)
                         }
                     }
-                    Button("Duplicate", systemImage: "plus.square.on.square") { duplicateUnit(unit) }
+                    Button(String(localized: "Duplicate"), systemImage: "plus.square.on.square") { duplicateUnit(unit) }
                     if !otherArmyNames.isEmpty {
-                        Button("Move to…", systemImage: "arrow.right.arrow.left") {
+                        Button(String(localized: "Move to…"), systemImage: "arrow.right.arrow.left") {
                             unitToMove = unit
                             showMoveUnit = true
                         }
                     }
-                    Button("Delete", systemImage: "trash", role: .destructive) {
+                    Button(String(localized: "Delete"), systemImage: "trash", role: .destructive) {
                         unitToDelete = unit
                     }
                 }
@@ -307,18 +315,22 @@ struct ArmyDetailView: View {
     private var batchActionBar: some View {
         if isEditing, !batchSelection.isEmpty {
             HStack(spacing: 12) {
-                Text("\(batchSelection.count) selected")
+                Text(String(localized: "\(batchSelection.count) selected"))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                 Spacer()
-                Button("Advance") {
+                Button(String(localized: "Advance")) {
                     let n = ArmyStore.advance(selectedUnits, pipeline: pipeline, in: context)
-                    banner.show(n > 0 ? "Advanced \(n) unit\(n == 1 ? "" : "s")" : "Nothing to advance")
+                    if n > 0 {
+                        banner.show(String(localized: "Advanced \(n) unit\(n == 1 ? "" : "s")"))
+                    } else {
+                        banner.show(String(localized: "Nothing to advance"))
+                    }
                     if n > 0 { advanceTrigger.toggle() }
                     batchSelection.removeAll()
                 }
                 .buttonStyle(.borderedProminent)
-                Button("Delete", role: .destructive) { confirmBatchDelete = true }
+                Button(String(localized: "Delete"), role: .destructive) { confirmBatchDelete = true }
                     .buttonStyle(.bordered)
             }
             .padding(.horizontal)
@@ -330,48 +342,54 @@ struct ArmyDetailView: View {
     @ToolbarContentBuilder private var armyToolbar: some ToolbarContent {
         ToolbarItem(placement: .topBarTrailing) {
             if isEditing {
-                Button("Done") { isEditing = false }
+                Button(String(localized: "Done")) { isEditing = false }
             } else {
-                Button("Select") { isEditing = true }
+                Button(String(localized: "Select")) { isEditing = true }
             }
         }
         ToolbarItem(placement: .topBarTrailing) {
-            Button("Add unit", systemImage: "plus") { showAddUnit = true }
+            Button(String(localized: "Add unit"), systemImage: "plus") { showAddUnit = true }
                 .disabled(isEditing)
         }
         ToolbarItem(placement: .topBarTrailing) {
             Menu {
-                Button("Advance all", systemImage: "arrow.right.to.line") {
+                Button(String(localized: "Advance all"), systemImage: "arrow.right.to.line") {
                     if let army {
                         let n = ArmyStore.advanceAll(in: army, global: globalPipeline, in: context)
-                        banner.show(n > 0 ? "Advanced \(n) unit\(n == 1 ? "" : "s")" : "Nothing to advance")
+                        if n > 0 {
+                            banner.show(String(localized: "Advanced \(n) unit\(n == 1 ? "" : "s")"))
+                        } else {
+                            banner.show(String(localized: "Nothing to advance"))
+                        }
                         if n > 0 { advanceTrigger.toggle() }
                     }
                 }
-                Button("Merge duplicates", systemImage: "square.on.square") {
+                Button(String(localized: "Merge duplicates"), systemImage: "square.on.square") {
                     if let army {
                         let n = ArmyStore.mergeDuplicates(in: army, ctx: context)
-                        if n > 0 { banner.show("Merged \(n) duplicate\(n == 1 ? "" : "s")") }
+                        if n > 0 {
+                            banner.show(String(localized: "Merged \(n) duplicate\(n == 1 ? "" : "s")"))
+                        }
                     }
                 }
                 Divider()
-                Button("Muster roster…", systemImage: "flag") {
+                Button(String(localized: "Link army list…"), systemImage: "flag") {
                     if let army, let linked = linkedRoster(for: army) {
                         router.openMuster(rosterId: linked.id)
                     } else {
                         showMusterRoster = true
                     }
                 }
-                Button("Pipeline stages", systemImage: "list.bullet") { showPipeline = true }
-                Button("Reset crest & colour", systemImage: "circle.lefthalf.filled") {
+                Button(String(localized: "Pipeline stages"), systemImage: "list.bullet") { showPipeline = true }
+                Button(String(localized: "Reset crest & colour"), systemImage: "circle.lefthalf.filled") {
                     if let army { ArmyStore.resetTheme(army, in: context) }
                 }
-                Button("Rename", systemImage: "pencil") { showRename = true }
-                Button("Delete army", systemImage: "trash", role: .destructive) { confirmDeleteArmy = true }
+                Button(String(localized: "Rename"), systemImage: "pencil") { showRename = true }
+                Button(String(localized: "Delete army"), systemImage: "trash", role: .destructive) { confirmDeleteArmy = true }
             } label: {
                 Image(systemName: "ellipsis.circle")
             }
-            .accessibilityLabel("Army actions")
+            .accessibilityLabel(String(localized: "Army actions"))
             .disabled(isEditing)
         }
     }
@@ -391,7 +409,7 @@ struct ArmyDetailView: View {
 
     private func duplicateUnit(_ unit: ArmyUnit) {
         guard let copy = ArmyStore.duplicate(unit, in: context) else { return }
-        banner.show("Duplicated \(unit.name)")
+        banner.show(String(localized: "Duplicated \(unit.name)"))
         duplicateTrigger.toggle()
         selectedUnitId = copy.id
         onSelectUnit(copy.id)

@@ -65,15 +65,15 @@ struct PaintListView: View {
             else if useGrid { gridBody }
             else { listBody }
         }
-        .navigationTitle("Paints")
-        .searchable(text: $search, prompt: "Paints, brands, sources…")
+        .navigationTitle(String(localized: "Paints"))
+        .searchable(text: $search, prompt: String(localized: "Paints, brands, sources…"))
         .toolbar { toolbar }
         .confirmationDialog(
-            "Delete \"\(paintToDelete?.name ?? "")\"?",
+            String(localized: "Delete \"\(paintToDelete?.name ?? "")\"?"),
             isPresented: Binding(get: { paintToDelete != nil }, set: { if !$0 { paintToDelete = nil } }),
             titleVisibility: .visible
         ) {
-            Button("Delete", role: .destructive) {
+            Button(String(localized: "Delete"), role: .destructive) {
                 if let paint = paintToDelete {
                     if paint.id == selectedPaintId { selectedPaintId = nil }
                     PaintStore.delete(paint, in: context)
@@ -81,7 +81,7 @@ struct PaintListView: View {
                 }
                 paintToDelete = nil
             }
-            Button("Cancel", role: .cancel) { paintToDelete = nil }
+            Button(String(localized: "Cancel"), role: .cancel) { paintToDelete = nil }
         }
         .sensoryFeedback(.selection, trigger: filterTrigger)
         .sensoryFeedback(.warning, trigger: deleteWarningTrigger)
@@ -110,7 +110,7 @@ struct PaintListView: View {
                     }
                     .listSidebarSelection(isSelected: paint.id == selectedPaintId, enabled: usesPadSidebarList)
                     .swipeActions(edge: .trailing) {
-                        Button("Delete", role: .destructive) { paintToDelete = paint }
+                        Button(String(localized: "Delete"), role: .destructive) { paintToDelete = paint }
                     }
                     .contextMenu { paintContextMenu(paint) }
                 }
@@ -134,13 +134,13 @@ struct PaintListView: View {
     @ViewBuilder
     private func paintContextMenu(_ paint: HobbyPaint) -> some View {
         if !paint.source.isEmpty {
-            Button("Filter collection by source", systemImage: "link") {
+            Button(String(localized: "Filter collection by source"), systemImage: "link") {
                 router.showArmies(filteredBySource: paint.source)
-                banner.show("Filtered by source")
+                banner.show(String(localized: "Filtered by source"))
                 filterTrigger.toggle()
             }
         }
-        Button("Delete", systemImage: "trash", role: .destructive) {
+        Button(String(localized: "Delete"), systemImage: "trash", role: .destructive) {
             paintToDelete = paint
         }
     }
@@ -165,53 +165,66 @@ struct PaintListView: View {
     private var summaryLine: some View {
         let rows = filtered
         let total = rows.reduce(0) { $0 + $1.qty }
-        let prefix = (filtersActive || !search.isEmpty) ? "Showing " : ""
-        return Text("\(prefix)\(rows.count) paints · \(total) pots")
+        let prefix = (filtersActive || !search.isEmpty) ? String(localized: "Showing ") : ""
+        return Text(String(localized: "\(prefix)\(rows.count) paints · \(total) pots"))
             .font(.caption)
             .foregroundStyle(.secondary)
     }
 
     @ToolbarContentBuilder private var toolbar: some ToolbarContent {
         ToolbarItem(placement: .topBarLeading) {
-            Button("Add paint", systemImage: "plus") { showAdd = true }
+            Button(String(localized: "Add paint"), systemImage: "plus") { showAdd = true }
         }
         ToolbarItem(placement: .topBarTrailing) {
-            Button(useGrid ? "List layout" : "Grid layout",
-                   systemImage: useGrid ? "list.bullet" : "square.grid.2x2") {
+            Button(
+                useGrid ? String(localized: "List layout") : String(localized: "Grid layout"),
+                systemImage: useGrid ? "list.bullet" : "square.grid.2x2"
+            ) {
                 useGrid.toggle()
             }
         }
         ToolbarItem(placement: .topBarTrailing) {
-            Button("Filters", systemImage: filtersActive
+            Button(String(localized: "Filters"), systemImage: filtersActive
                    ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle") {
                 showFilters = true
             }
-            .accessibilityLabel(filterCount > 0 ? "Filters, \(filterCount) active" : "Filters")
+            .accessibilityLabel(
+                filterCount > 0
+                    ? String(localized: "Filters, \(filterCount) active")
+                    : String(localized: "Filters")
+            )
         }
         ToolbarItem(placement: .topBarTrailing) {
-            Button("Settings", systemImage: "gearshape") { showSettings = true }
+            Button(String(localized: "Settings"), systemImage: "gearshape") { showSettings = true }
                 .accessibilityIdentifier("settings")
         }
     }
 
     private var emptyState: some View {
         ContentUnavailableView {
-            Label("No paints yet", systemImage: "paintpalette")
+            Label(String(localized: "No paints yet"), systemImage: "paintpalette")
         } description: {
-            Text("Add a paint or import from Settings → Data.")
+            Text(
+                String(
+                    localized: """
+                    Optional — track paint pots and link them to models in your collection. Add one here, \
+                    or import from Settings → Collection & Data.
+                    """
+                )
+            )
         } actions: {
-            Button("Add paint") { showAdd = true }.buttonStyle(.borderedProminent)
+            Button(String(localized: "Add paint")) { showAdd = true }.buttonStyle(.borderedProminent)
         }
         .adaptiveEmptyStateLayout()
     }
 
     private var noMatches: some View {
         ContentUnavailableView {
-            Label("No matching paints", systemImage: "paintpalette")
+            Label(String(localized: "No matching paints"), systemImage: "paintpalette")
         } description: {
-            Text("Nothing matches your search or filters.")
+            Text(String(localized: "Nothing matches your search or filters."))
         } actions: {
-            Button("Clear filters") {
+            Button(String(localized: "Clear filters")) {
                 cfg.paintTypeFilter = "All"
                 cfg.paintBrandFilter = "All"
                 cfg.paintLowOnly = false

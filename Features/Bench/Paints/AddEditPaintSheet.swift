@@ -44,48 +44,58 @@ struct AddEditPaintSheet: View {
         NavigationStack {
             Form {
                 Section {
-                    FormNameField(title: "Name", text: $name, focus: $nameFocused)
-                    Picker("Type", selection: $type) {
+                    FormNameField(title: String(localized: "Name"), text: $name, focus: $nameFocused)
+                    Picker(String(localized: "Type"), selection: $type) {
                         ForEach(typeOptions, id: \.self) { Text($0.isEmpty ? "—" : $0).tag($0) }
                     }
                     .formNavigationPickerStyle()
-                    TextField("Brand", text: $brand)
+                    TextField(String(localized: "Brand"), text: $brand)
                         .textInputAutocapitalization(.words)
                 } header: {
-                    Text("HobbyPaint")
+                    Text(String(localized: "Paint"))
                 } footer: {
-                    if error { FormValidationFooter(message: "A paint with that name already exists.") }
+                    if error {
+                        FormValidationFooter(
+                            message: String(localized: "A paint with that name already exists.")
+                        )
+                    }
                 }
 
                 Section {
-                    QuantityStepper(label: "Quantity", value: $qty)
-                    Toggle("Running low", isOn: $low)
+                    QuantityStepper(label: String(localized: "Quantity"), value: $qty)
+                    Toggle(String(localized: "Running low"), isOn: $low)
                 } header: {
-                    Text("Inventory")
+                    Text(String(localized: "Inventory"))
                 } footer: {
                     Text(FormHints.paintLow)
                 }
 
                 Section {
-                    TextField("Source", text: $source)
+                    TextField(String(localized: "Source"), text: $source)
                         .textInputAutocapitalization(.words)
                 } header: {
-                    Text("Collection link")
+                    Text(String(localized: "Collection link"))
                 } footer: {
                     Text(FormHints.paintSource)
                 }
 
                 Section {
-                    FormNotesField(title: "Notes", text: $notes, lineLimit: 2...6)
+                    FormNotesField(title: String(localized: "Notes"), text: $notes, lineLimit: 2...6)
                 } header: {
-                    Text("Notes")
+                    Text(String(localized: "Notes"))
                 }
             }
-            .navigationTitle(existing == nil ? "Add paint" : "Edit paint")
+            .navigationTitle(
+                existing == nil
+                    ? String(localized: "Add paint")
+                    : String(localized: "Edit paint")
+            )
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(String(localized: "Cancel")) { dismiss() }
+                }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
+                    Button(String(localized: "Save")) {
                         if onSave(name, type, brand, source, qty, notes, low) { dismiss() }
                         else { error = true }
                     }

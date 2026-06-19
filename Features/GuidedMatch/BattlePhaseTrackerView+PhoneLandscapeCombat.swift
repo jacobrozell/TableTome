@@ -32,6 +32,9 @@ extension BattlePhaseTrackerView {
 
             ScrollView {
                 VStack(alignment: .leading, spacing: compactLayoutSpacing) {
+                    if showsDedicatedCombatTab {
+                        shootingPhaseHelper
+                    }
                     damageUndoSection
                     combatPhaseHelper
                     shootInCombatPhaseHelper
@@ -42,6 +45,7 @@ extension BattlePhaseTrackerView {
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
         }
         .accessibilityIdentifier("battleTracker.phoneLandscapeSplit")
+        .accessibilityLabel(String(localized: "Combat tools with pinned unit profile"))
     }
 
     struct PinnedWarscrollContext {

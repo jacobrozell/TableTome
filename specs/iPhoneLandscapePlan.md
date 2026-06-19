@@ -42,9 +42,9 @@ Related specs: [AccessibilitySpec.md](AccessibilitySpec.md), [DesignSystemSpec.m
 
 ### What exists today
 
-- **Orientation policy:** iPhone portrait only; iPad portrait + landscape (`project.yml`).
-- **`TabletomeLayout.isPadLandscape`:** `regular` horizontal + `compact` vertical — matches iPad landscape **and** iPhone landscape.
-- **Already adapted:** Battle Tracker 2- and 3-column layouts, Guided Match `NavigationSplitView` on regular width, Combat Resolver side-by-side on regular width, Onboarding `widePageLayout` on compact height.
+- **Orientation policy:** iPhone portrait + landscape; iPad portrait + landscape (`project.yml`).
+- **`TabletomeLayoutContext`:** Idiom-aware layout contexts (`phonePortrait`, `phoneLandscape`, `padPortrait`, `padLandscape`) in `DesignSystem/TabletomeLayout.swift`.
+- **Already adapted:** Battle Tracker phone/iPad landscape layouts, Guided Match `NavigationSplitView` on iPad, Combat Resolver side-by-side on iPad, Onboarding `widePageLayout` on compact height, `AdaptiveLayout.usesSplitNavigation` gated by pad idiom, embedded battle tab bar hide via `TabBarChrome`, compact one-line `GuidedMatchStatusBar` in phone landscape battle.
 
 ### Critical architectural gap
 

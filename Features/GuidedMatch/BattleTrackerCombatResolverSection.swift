@@ -80,13 +80,14 @@ struct BattleTrackerCombatResolverSection: View {
             HStack(spacing: DesignTokens.Spacing.sm) {
                 Label(String(localized: "Resolve Combat"), systemImage: "dice.fill")
                     .font(.headline)
+                    .foregroundStyle(.primary)
                 if trackerState.currentPhase.isCombatRelated {
                     Text(trackerState.currentPhase.title)
                         .font(.caption2.weight(.semibold))
                         .padding(.horizontal, DesignTokens.Spacing.sm)
                         .padding(.vertical, DesignTokens.Spacing.xs)
                         .background(Color.accentColor.opacity(0.15), in: Capsule())
-                        .foregroundStyle(Color.accentColor)
+                        .foregroundStyle(Color.accentOnSurface)
                 }
             }
             Text(

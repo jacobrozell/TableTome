@@ -110,7 +110,9 @@ Fixed bottom bar on iPhone battle tracker (replaces combat-only sticky bar):
 | **Phase** | Menu: jump to any main phase, or advance to next |
 | **My Unit** | Opens Unit Focus for last-selected active unit (or first alive unit) |
 | **Resolve** | Combat tab → batch resolver |
-| **Score** | Turn tab → victory points |
+| **Score** | Turn tab → victory points (live totals in dock subtitle when scored) |
+
+Embedded Guided Match battle (phone): no hub back-links to Armies/Match Setup; status bar compacts to one line in landscape; tab bar hidden via `TabBarChrome`.
 
 Accessibility: `battleTracker.phaseDock`, `.phaseDock.phase`, `.phaseDock.myUnit`, `.phaseDock.resolve`, `.phaseDock.score`, `.phaseDock.nextPhase`
 
@@ -145,5 +147,5 @@ Accessibility: `battleTracker.phoneLandscapeSplit`, `battleTracker.pinnedWarscro
 | Field | Value |
 |-------|-------|
 | Target release | v0.3 (Phases A–E) |
-| Last verified | 2026-06-17 |
-| Code paths | `Features/GuidedMatch/BattleTrackerPhaseDock.swift`, `Features/GuidedMatch/BattlePhaseTrackerView+PhaseDock.swift`, `Features/GuidedMatch/UnitFocusSheet.swift`, `Features/CombatRoll/BatchCombatResolverSection.swift` |
+| Last verified | 2026-06-19 |
+| Code paths | `Features/GuidedMatch/BattleTrackerPhaseDock.swift`, `Features/GuidedMatch/BattlePhaseTrackerView+PhaseDock.swift`, `Features/GuidedMatch/UnitFocusSheet.swift`, `Features/CombatRoll/BatchCombatResolverSection.swift`, `Support/PlayContinuationResolver.swift`, `DesignSystem/GuidedMatchHubChrome.swift`, `Support/TabBarChrome.swift` |

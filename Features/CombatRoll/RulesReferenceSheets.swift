@@ -267,7 +267,7 @@ private struct GlossaryBulletLabelStyle: LabelStyle {
     func makeBody(configuration: Configuration) -> some View {
         HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
             configuration.icon
-                .font(.system(size: 6))
+                .font(.caption2)
                 .padding(.top, 6)
             configuration.title
         }

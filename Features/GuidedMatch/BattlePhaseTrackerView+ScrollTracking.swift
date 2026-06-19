@@ -15,17 +15,11 @@ extension BattlePhaseTrackerView {
         ScrollView(.vertical) {
             Group {
                 switch layoutContext {
-                case .padLandscape:
+                case .padLandscape, .padPortrait:
                     if usesAccessibilityLayout {
                         compactLayout
                     } else {
-                        landscapeLayout
-                    }
-                case .padPortrait:
-                    if usesAccessibilityLayout {
-                        compactLayout
-                    } else {
-                        regularPortraitLayout
+                        padTabbedTwoColumnLayout
                     }
                 case .phonePortrait, .phoneLandscape:
                     compactLayout
@@ -36,7 +30,20 @@ extension BattlePhaseTrackerView {
             .padding(trackerContentPadding)
         }
         .scrollBounceBehavior(.basedOnSize, axes: .vertical)
-        .tabBarScrollInset()
+        .tabBarScrollInset(enabled: !(isEmbeddedInGuidedMatch && layoutContext.prefersCollapsedBattleChrome))
+        .modifier(BattleTrackerPhaseDockScrollInset(isEnabled: usesCompactBattleTrackerChrome && isEmbeddedInGuidedMatch))
+    }
+
+    private struct BattleTrackerPhaseDockScrollInset: ViewModifier {
+        let isEnabled: Bool
+
+        func body(content: Content) -> some View {
+            if isEnabled {
+                content.battleTrackerPhaseDockScrollInset()
+            } else {
+                content
+            }
+        }
     }
 
     private func applyPhaseChanges<Content: View>(

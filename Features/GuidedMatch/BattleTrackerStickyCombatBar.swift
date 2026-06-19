@@ -37,7 +37,7 @@ struct BattleTrackerStickyCombatBar: View {
                             .padding(.horizontal, DesignTokens.Spacing.sm)
                             .padding(.vertical, DesignTokens.Spacing.xs)
                             .background(Color.accentColor.opacity(0.15), in: Capsule())
-                            .foregroundStyle(Color.accentColor)
+                            .foregroundStyle(Color.accentOnSurface)
                     }
                 } else {
                     HStack(spacing: DesignTokens.Spacing.sm) {
@@ -63,7 +63,7 @@ struct BattleTrackerStickyCombatBar: View {
                             .padding(.horizontal, DesignTokens.Spacing.sm)
                             .padding(.vertical, DesignTokens.Spacing.xs)
                             .background(Color.accentColor.opacity(0.15), in: Capsule())
-                            .foregroundStyle(Color.accentColor)
+                            .foregroundStyle(Color.accentOnSurface)
                         Image(systemName: "chevron.up")
                             .font(.caption.weight(.bold))
                             .foregroundStyle(.secondary)
@@ -95,7 +95,7 @@ struct BattleTrackerDamageUndoBanner: View {
     var body: some View {
         HStack(spacing: DesignTokens.Spacing.sm) {
             Image(systemName: "heart.slash.fill")
-                .foregroundStyle(Color.accentColor)
+                .foregroundStyle(Color.accentOnSurface)
             Text(message)
                 .font(.caption)
                 .foregroundStyle(.primary)

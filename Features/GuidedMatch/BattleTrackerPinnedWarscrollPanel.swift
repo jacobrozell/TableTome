@@ -112,7 +112,7 @@ struct BattleTrackerPinnedWarscrollPanel: View {
                         ) {
                             Text(loadout)
                                 .font(.caption2.weight(.bold))
-                                .foregroundStyle(Color.accentColor)
+                                .foregroundStyle(Color.accentOnSurface)
                         }
                     }
                     Text(WarscrollStatSummary.weaponCombatProfile(weapon, gameSystemId: gameSystemId))

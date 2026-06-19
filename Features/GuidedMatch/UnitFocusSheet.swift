@@ -170,7 +170,10 @@ struct UnitFocusSheet: View {
                 if showsCombatTools, !isActivePlayerUnit, !evaluableWeapons.isEmpty {
                     PrimaryButton(
                         title: String(localized: "Set as defender"),
-                        accessibilityId: "unitFocus.setDefender.\(unit.id)"
+                        accessibilityId: "unitFocus.setDefender.\(unit.id)",
+                        accessibilityHint: String(
+                            localized: "Uses this unit as the defender in the combat resolver."
+                        )
                     ) {
                         onSetAsDefender()
                     }
@@ -178,8 +181,10 @@ struct UnitFocusSheet: View {
                     .background(.bar)
                 }
             }
-            .sheet(isPresented: $showsFullWarscroll) {
-                WarscrollSheetView(armyId: army.id, unit: unit)
+            .navigationDestination(isPresented: $showsFullWarscroll) {
+                WarscrollReferenceView(armyId: army.id, unit: unit)
+                    .navigationTitle(unit.name)
+                    .navigationBarTitleDisplayMode(.inline)
             }
             .accessibilityIdentifier("unitFocus.sheet")
         }
@@ -196,7 +201,7 @@ struct UnitFocusSheet: View {
                         .padding(.horizontal, DesignTokens.Spacing.sm)
                         .padding(.vertical, 2)
                         .background(Color.accentColor.opacity(0.15), in: Capsule())
-                        .foregroundStyle(Color.accentColor)
+                        .foregroundStyle(Color.accentOnSurface)
                 }
             }
             Text(army.name)
@@ -318,7 +323,7 @@ struct UnitFocusSheet: View {
                                 .padding(.horizontal, DesignTokens.Spacing.sm)
                                 .padding(.vertical, 2)
                                 .background(Color.accentColor.opacity(0.15), in: Capsule())
-                                .foregroundStyle(Color.accentColor)
+                                .foregroundStyle(Color.accentOnSurface)
                         }
                     }
                     if let loadout = WarscrollStatSummary.weaponLoadoutLabel(
@@ -327,7 +332,7 @@ struct UnitFocusSheet: View {
                     ) {
                         Text(loadout)
                             .font(.caption.weight(.semibold))
-                            .foregroundStyle(Color.accentColor)
+                            .foregroundStyle(Color.accentOnSurface)
                     }
                     Text(WarscrollStatSummary.weaponCombatProfile(weapon, gameSystemId: gameSystemId.rawValue))
                         .font(.caption)

@@ -12,6 +12,8 @@ extension BattlePhaseTrackerView {
             ),
             myUnitLabel: focusedUnitDisplayName,
             myUnitEnabled: focusedUnitSelection != nil,
+            victoryPointsSubtitle: victoryPointsDockSubtitle,
+            compactLandscape: layoutContext.prefersCollapsedBattleChrome,
             onSelectPhase: { phase in
                 viewModel.setPhase(phase)
                 selectedSectionTab = .turn
@@ -25,13 +27,22 @@ extension BattlePhaseTrackerView {
             onMyUnit: openFocusedUnit,
             onResolve: { focusCombatResolverSection() },
             onScoreVictoryPoints: {
-                selectedSectionTab = .setup
+                selectedSectionTab = .turn
                 scrollToVictoryPoints = true
             },
             resolveAccessibilityHint: showsDedicatedCombatTab
                 ? String(localized: "Opens the Combat tab with dice tools")
                 : String(localized: "Opens combat dice tools on the Turn tab")
         )
+    }
+
+    var victoryPointsDockSubtitle: String {
+        let playerOne = viewModel.trackerState.playerOneVictoryPoints
+        let playerTwo = viewModel.trackerState.playerTwoVictoryPoints
+        if playerOne == 0, playerTwo == 0 {
+            return String(localized: "VP")
+        }
+        return "\(playerOne) · \(playerTwo)"
     }
 
     var focusedUnitDisplayName: String? {

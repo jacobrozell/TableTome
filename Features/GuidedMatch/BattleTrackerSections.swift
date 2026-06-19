@@ -98,6 +98,7 @@ struct BattleTrackerBothRostersSection: View {
                     if isAttacker {
                         Text(String(localized: "Attacker"))
                             .font(.caption2.weight(.semibold))
+                            .foregroundStyle(Color.accentOnSurface)
                             .padding(.horizontal, DesignTokens.Spacing.xs)
                             .padding(.vertical, 2)
                             .background(Color.accentColor.opacity(0.15), in: Capsule())
@@ -436,7 +437,8 @@ struct BattleTrackerAbilitySections: View {
     }
 }
 
-struct BattleTrackerRoundAndScoreSection: View {
+/// Pre-battle and start-of-round checklist — belongs on the Setup tab.
+struct BattleTrackerRoundOpenerSection: View {
     @ObservedObject var viewModel: BattlePhaseTrackerViewModel
 
     var body: some View {
@@ -469,27 +471,6 @@ struct BattleTrackerRoundAndScoreSection: View {
                     onApplyBattleReadyBonus: viewModel.applyBattleReadyBonus
                 )
             }
-            VictoryPointsCard(
-                playerOneName: viewModel.playerOneName,
-                playerTwoName: viewModel.playerTwoName,
-                playerOneVP: viewModel.trackerState.playerOneVictoryPoints,
-                playerTwoVP: viewModel.trackerState.playerTwoVictoryPoints,
-                highlightsScoring: viewModel.trackerState.currentPhase == (viewModel.isStarCraft ? .scoring : .endOfTurn),
-                gameSystemId: viewModel.gameSystemId,
-                onAdjust: { viewModel.adjustVictoryPoints(playerIsOne: $0, delta: $1, reason: $2) },
-                onQuickAdd: { viewModel.adjustVictoryPoints(playerIsOne: $0, delta: $1, reason: $2) }
-            )
-            if let underdogIsPlayerOne = viewModel.underdogIsPlayerOne,
-               viewModel.playContext.capabilities.showsBattleTacticDecks {
-                let name = underdogIsPlayerOne ? viewModel.playerOneName : viewModel.playerTwoName
-                Label(String(localized: "Underdog: \(name)"), systemImage: "arrow.down.circle.fill")
-                    .font(.caption.weight(.medium))
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, DesignTokens.Spacing.sm)
-                    .padding(.vertical, DesignTokens.Spacing.xs)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
-            }
         }
     }
 
@@ -519,5 +500,36 @@ struct BattleTrackerRoundAndScoreSection: View {
             get: { viewModel.trackerState.intelRecoveredObjectiveIds },
             set: { viewModel.setIntelRecoveredObjectiveIds($0) }
         )
+    }
+}
+
+/// Ongoing match score — belongs on the Turn tab (and phase dock Score shortcut).
+struct BattleTrackerVictoryPointsSection: View {
+    @ObservedObject var viewModel: BattlePhaseTrackerViewModel
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            VictoryPointsCard(
+                playerOneName: viewModel.playerOneName,
+                playerTwoName: viewModel.playerTwoName,
+                playerOneVP: viewModel.trackerState.playerOneVictoryPoints,
+                playerTwoVP: viewModel.trackerState.playerTwoVictoryPoints,
+                highlightsScoring: viewModel.trackerState.currentPhase == (viewModel.isStarCraft ? .scoring : .endOfTurn),
+                gameSystemId: viewModel.gameSystemId,
+                onAdjust: { viewModel.adjustVictoryPoints(playerIsOne: $0, delta: $1, reason: $2) },
+                onQuickAdd: { viewModel.adjustVictoryPoints(playerIsOne: $0, delta: $1, reason: $2) }
+            )
+            if let underdogIsPlayerOne = viewModel.underdogIsPlayerOne,
+               viewModel.playContext.capabilities.showsBattleTacticDecks {
+                let name = underdogIsPlayerOne ? viewModel.playerOneName : viewModel.playerTwoName
+                Label(String(localized: "Underdog: \(name)"), systemImage: "arrow.down.circle.fill")
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, DesignTokens.Spacing.sm)
+                    .padding(.vertical, DesignTokens.Spacing.xs)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
+            }
+        }
     }
 }

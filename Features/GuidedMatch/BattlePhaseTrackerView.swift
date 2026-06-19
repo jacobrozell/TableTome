@@ -8,6 +8,8 @@ struct BattlePhaseTrackerView: View {
     @StateObject var multiAttackViewModel = MultiAttackEvaluatorViewModel()
     @StateObject var batchCombatViewModel = BatchCombatEvaluatorViewModel()
     @AppStorage("diceInputMode") var diceInputModeRaw = DiceInputMode.physical.rawValue
+    @AppStorage(BattleTrackerChromeStorage.topCollapsedKey) private var isTopChromeCollapsed = false
+    @AppStorage(BattleTrackerChromeStorage.topChromeExpandedInLandscapeKey) private var topChromeExpandedInLandscape = false
     @State var showsCombatResolver = false
     @State var showsAdvancedOptions = false
     @State var showsMultiAttack = false
@@ -32,10 +34,12 @@ struct BattlePhaseTrackerView: View {
     @State var unitFocusSelection: UnitFocusSelection?
     @State var lastFocusedUnitSelection: UnitFocusSelection?
     @State var scrollToPhaseControls = false
+    @State private var hasAppliedInitialSectionTab = false
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
     @Environment(\.accessibilityReduceMotion) var reduceMotion
+    @Environment(\.battleTrackerIsEmbeddedInGuidedMatch) var isEmbeddedInGuidedMatch
     let ruleSections: [RuleSection]
 
     let onMatchStateChange: (() -> Void)?
@@ -71,17 +75,115 @@ struct BattlePhaseTrackerView: View {
     }
 
     var body: some View {
-        applyCombatEvaluationSync(to:
-            ScrollViewReader { proxy in
-                trackedScrollView(proxy: proxy)
+        applyCombatEvaluationSync(to: trackerScreen)
+    }
+
+    @ViewBuilder
+    private var trackerScreen: some View {
+        let scroll = ScrollViewReader { proxy in
+            trackedScrollView(proxy: proxy)
+        }
+
+        Group {
+            if isEmbeddedInGuidedMatch {
+                VStack(spacing: 0) {
+                    compactTopChrome
+                    scroll
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                        .layoutPriority(1)
+                        .safeAreaInset(edge: .bottom, spacing: 0) {
+                            compactBottomChrome
+                        }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            } else {
+                scroll
+                    .safeAreaInset(edge: .top, spacing: 0) {
+                        compactTopChrome
+                    }
+                    .safeAreaInset(edge: .bottom, spacing: 0) {
+                        compactBottomChrome
+                    }
             }
-            .safeAreaInset(edge: .top, spacing: 0) {
-                if usesCompactBattleTrackerChrome, supportsBattleTracker {
-                    VStack(spacing: DesignTokens.Spacing.sm) {
-                        BattleTrackerSectionTabBar(
-                            gameSystemId: viewModel.gameSystemId,
-                            selection: $selectedSectionTab
-                        )
+        }
+        .modifier(
+            BattleTrackerScreenChrome(
+                isEmbeddedInGuidedMatch: isEmbeddedInGuidedMatch,
+                showsTopChromeCollapseToggle: supportsBattleTracker && usesCompactBattleTrackerChrome,
+                isTopChromeCollapsed: $isTopChromeCollapsed,
+                onReset: { viewModel.resetTracker() }
+            )
+        )
+        .accessibilityIdentifier("battleTracker.screen")
+        .sheet(item: $unitFocusSelection) { _ in
+            unitFocusSheet
+        }
+        .fullScreenCover(isPresented: $showsVictoryScreen) {
+            victoryScreen
+        }
+        .onAppear {
+            MatchSessionStore.markStartedIfNeeded(gameSystemId: viewModel.gameSystemId)
+            MatchLogRecorder.ensureSession(gameSystemId: viewModel.gameSystemId)
+            showsBattleTrackerCoach = supportsBattleTracker && !NewPlayerTipsStore.hasSeenBattleTrackerCoach
+            FirstSessionStore.recordSetupComplete()
+            if !hasAppliedInitialSectionTab {
+                hasAppliedInitialSectionTab = true
+                selectedSectionTab = suggestedSectionTab
+            }
+            applyPhoneLandscapeTopChromeDefault()
+            Task {
+                try? await Task.sleep(for: .milliseconds(400))
+                handoffBaselineEstablished = true
+                presentRoundOpenerNudgeIfNeeded()
+            }
+        }
+        .onChange(of: layoutContext) { _, _ in
+            applyPhoneLandscapeTopChromeDefault()
+        }
+        .onChange(of: isTopChromeCollapsed) { _, collapsed in
+            if layoutContext.prefersCollapsedBattleChrome {
+                topChromeExpandedInLandscape = !collapsed
+            }
+        }
+        .task {
+            await combatViewModel.load()
+            syncCombatContext()
+        }
+    }
+
+    @ViewBuilder
+    private var compactTopChrome: some View {
+        if supportsBattleTracker {
+            if usesCompactBattleTrackerChrome {
+                phoneCompactTopChrome
+            } else if usesPadTabbedTwoColumnLayout {
+                padTopChrome
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var phoneCompactTopChrome: some View {
+        if isTopChromeCollapsed {
+            BattleTrackerCollapsedTopChrome(
+                gameSystemId: viewModel.gameSystemId,
+                tabs: BattleTrackerSectionTab.visibleTabs(gameSystemId: viewModel.gameSystemId),
+                selection: $selectedSectionTab,
+                round: viewModel.trackerState.battleRound,
+                phaseTitle: viewModel.trackerState.currentPhase.title,
+                playerName: viewModel.trackerState.activePlayerIsOne
+                    ? viewModel.playerOneName
+                    : viewModel.playerTwoName,
+                onExpand: { expandTopChrome() }
+            )
+        } else {
+            HStack(alignment: .top, spacing: 0) {
+                VStack(spacing: layoutContext.prefersCollapsedBattleChrome ? DesignTokens.Spacing.xs : DesignTokens.Spacing.sm) {
+                    BattleTrackerSectionTabBar(
+                        gameSystemId: viewModel.gameSystemId,
+                        selection: $selectedSectionTab
+                    )
+                    if !isEmbeddedInGuidedMatch {
                         StickyPhaseHeader(
                             round: viewModel.trackerState.battleRound,
                             phaseTitle: viewModel.trackerState.currentPhase.title,
@@ -91,48 +193,69 @@ struct BattlePhaseTrackerView: View {
                             gameSystemId: viewModel.gameSystemId
                         )
                     }
-                    .padding(.horizontal, DesignTokens.Spacing.md)
-                    .padding(.bottom, DesignTokens.Spacing.xs)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                ChromeCollapseInlineButton(
+                    accessibilityLabel: String(localized: "Hide battle header"),
+                    accessibilityIdentifier: "battleTracker.chromeCollapseInline",
+                    onCollapse: collapseTopChrome
+                )
             }
-            .safeAreaInset(edge: .bottom, spacing: 0) {
-                if supportsBattleTracker, usesCompactBattleTrackerChrome {
-                    phaseDock
-                }
-            }
-            .navigationTitle(String(localized: "Battle Tracker"))
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(String(localized: "Reset")) {
-                        viewModel.resetTracker()
-                    }
-                    .accessibilityIdentifier("battleTracker.reset")
-                }
-            }
-            .accessibilityIdentifier("battleTracker.screen")
-            .sheet(item: $unitFocusSelection) { _ in
-                unitFocusSheet
-            }
-            .fullScreenCover(isPresented: $showsVictoryScreen) {
-                victoryScreen
-            }
-            .onAppear {
-                MatchSessionStore.markStartedIfNeeded(gameSystemId: viewModel.gameSystemId)
-                MatchLogRecorder.ensureSession(gameSystemId: viewModel.gameSystemId)
-                showsBattleTrackerCoach = supportsBattleTracker && !NewPlayerTipsStore.hasSeenBattleTrackerCoach
-                FirstSessionStore.recordSetupComplete()
-                Task {
-                    try? await Task.sleep(for: .milliseconds(400))
-                    handoffBaselineEstablished = true
-                    presentRoundOpenerNudgeIfNeeded()
-                }
-            }
-            .task {
-                await combatViewModel.load()
-                syncCombatContext()
-            }
-        )
+            .padding(.horizontal, DesignTokens.Spacing.md)
+            .padding(.vertical, layoutContext.prefersCollapsedBattleChrome ? 2 : DesignTokens.Spacing.xs)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(.bar)
+        }
+    }
+
+    private var padTopChrome: some View {
+        VStack(spacing: DesignTokens.Spacing.sm) {
+            BattleTrackerSectionTabBar(
+                gameSystemId: viewModel.gameSystemId,
+                selection: $selectedSectionTab
+            )
+            StickyPhaseHeader(
+                round: viewModel.trackerState.battleRound,
+                phaseTitle: viewModel.trackerState.currentPhase.title,
+                playerName: viewModel.trackerState.activePlayerIsOne
+                    ? viewModel.playerOneName
+                    : viewModel.playerTwoName,
+                gameSystemId: viewModel.gameSystemId
+            )
+        }
+        .padding(.horizontal, DesignTokens.Spacing.md)
+        .padding(.vertical, DesignTokens.Spacing.xs)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(.bar)
+        .accessibilityIdentifier("battleTracker.padTopChrome")
+    }
+
+    private func applyPhoneLandscapeTopChromeDefault() {
+        guard layoutContext.prefersCollapsedBattleChrome, !topChromeExpandedInLandscape else { return }
+        guard !isTopChromeCollapsed else { return }
+        withAnimation(.easeInOut(duration: 0.2)) {
+            isTopChromeCollapsed = true
+        }
+    }
+
+    private func expandTopChrome() {
+        withAnimation(.easeInOut(duration: 0.2)) {
+            isTopChromeCollapsed = false
+        }
+    }
+
+    private func collapseTopChrome() {
+        withAnimation(.easeInOut(duration: 0.2)) {
+            isTopChromeCollapsed = true
+        }
+    }
+
+    @ViewBuilder
+    private var compactBottomChrome: some View {
+        if supportsBattleTracker, usesCompactBattleTrackerChrome {
+            phaseDock
+        }
     }
 
     var layoutContext: TabletomeLayoutContext {
@@ -297,8 +420,12 @@ struct BattlePhaseTrackerView: View {
         }
     }
 
-    var roundAndScoreSection: some View {
-        BattleTrackerRoundAndScoreSection(viewModel: viewModel)
+    var roundOpenerChecklistSection: some View {
+        BattleTrackerRoundOpenerSection(viewModel: viewModel)
+    }
+
+    var victoryPointsSection: some View {
+        BattleTrackerVictoryPointsSection(viewModel: viewModel)
     }
 
     @ViewBuilder
@@ -372,7 +499,8 @@ struct BattlePhaseTrackerView: View {
                 String(
                     localized: """
                     Use your physical unit cards and Command Center for combat. On the Turn tab, tap Done after each \
-                    activation and Pass when you want the First Player Marker for the next phase.
+                    activation and Pass when you want the First Player Marker for the next phase. Victory points and \
+                    turn activations are tracked in the tabs below.
                     """
                 )
             )
@@ -393,6 +521,43 @@ struct BattlePhaseTrackerView: View {
     }
 }
 
+private struct BattleTrackerScreenChrome: ViewModifier {
+    let isEmbeddedInGuidedMatch: Bool
+    let showsTopChromeCollapseToggle: Bool
+    @Binding var isTopChromeCollapsed: Bool
+    let onReset: () -> Void
+
+    func body(content: Content) -> some View {
+        Group {
+            if isEmbeddedInGuidedMatch {
+                content
+            } else {
+                content
+                    .navigationTitle(String(localized: "Battle Tracker"))
+                    .navigationBarTitleDisplayMode(.inline)
+            }
+        }
+        .toolbar {
+            if showsTopChromeCollapseToggle {
+                ToolbarItem(placement: .topBarLeading) {
+                    ChromeCollapseToolbarButton(
+                        isCollapsed: $isTopChromeCollapsed,
+                        expandedAccessibilityLabel: String(localized: "Hide battle header"),
+                        collapsedAccessibilityLabel: String(localized: "Show battle header"),
+                        accessibilityIdentifier: "battleTracker.chromeCollapse"
+                    )
+                }
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(String(localized: "Reset")) {
+                    onReset()
+                }
+                .accessibilityIdentifier("battleTracker.reset")
+            }
+        }
+    }
+}
+
 struct BattleTrackerContentWidth: ViewModifier {
     let layoutContext: TabletomeLayoutContext
 
@@ -400,10 +565,8 @@ struct BattleTrackerContentWidth: ViewModifier {
         switch layoutContext {
         case .padPortrait, .padLandscape:
             content
-        case .phoneLandscape:
-            content.readableContentWidth()
-        case .phonePortrait:
-            content.readableContentWidth()
+        case .phoneLandscape, .phonePortrait:
+            content
         }
     }
 }

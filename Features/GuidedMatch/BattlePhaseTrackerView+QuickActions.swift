@@ -33,7 +33,7 @@ extension BattlePhaseTrackerView {
 
     @ViewBuilder
     var modelsMilestoneSection: some View {
-        if FirstSessionStore.shouldShowModelsNudge() {
+        if !isEmbeddedInGuidedMatch, FirstSessionStore.shouldShowModelsNudge() {
             NewPlayerMilestoneBanner {
                 FirstSessionStore.markModelsNudgeSeen()
             }
@@ -72,7 +72,7 @@ extension BattlePhaseTrackerView {
         case .combatResolver:
             focusCombatResolverSection()
         case .victoryPoints:
-            selectedSectionTab = .setup
+            selectedSectionTab = .turn
             scrollToVictoryPoints = true
         case .roundChecklist:
             selectedSectionTab = .setup

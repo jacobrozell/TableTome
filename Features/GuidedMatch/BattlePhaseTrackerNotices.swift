@@ -82,7 +82,10 @@ extension BattlePhaseTrackerView {
             BattleTrackerScoringReminderBanner(
                 playerName: notice.playerName,
                 gameSystemId: viewModel.gameSystemId,
-                onJumpToScoring: { scrollToVictoryPoints = true },
+                onJumpToScoring: {
+                    selectedSectionTab = .turn
+                    scrollToVictoryPoints = true
+                },
                 onDismiss: {
                     withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) {
                         scoringReminderNotice = nil

@@ -19,6 +19,13 @@ This plan covers layout adaptation, clarity improvements, and accessibility hard
 
 Work proceeds in dependency order: shared layout primitives first, then high-value game-time screens, then clarity copy, then accessibility depth, then structural iPad navigation.
 
+### 2026-06-19 supplement (implemented)
+
+- Phone Guided Match uses **inline** navigation title (not large) to avoid scroll overlap with hub chrome.
+- Embedded battle on phone: **no** `GuidedMatchEmbeddedHubSwitcher` (Armies/Match Setup back-links removed — they broke table flow).
+- `AccentOnSurface` color for readable gold text on light cards; `Return to battle` routes via `opensBattleTab`.
+- Battle tracker opens on **suggested section tab** (Setup during deployment).
+
 ---
 
 ## Phase 1 — Readable content width

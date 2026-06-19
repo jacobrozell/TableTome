@@ -7,6 +7,8 @@ struct BattleTrackerPhaseDock: View {
     let nextPhase: BattleTurnPhase?
     let myUnitLabel: String?
     let myUnitEnabled: Bool
+    var victoryPointsSubtitle: String = String(localized: "VP")
+    var compactLandscape: Bool = false
     let onSelectPhase: (BattleTurnPhase) -> Void
     let onAdvancePhase: () -> Void
     let onMyUnit: () -> Void
@@ -46,7 +48,7 @@ struct BattleTrackerPhaseDock: View {
                     .optionalAccessibilityHint(resolveAccessibilityHint)
                     dockButton(
                         title: String(localized: "Score"),
-                        subtitle: String(localized: "VP"),
+                        subtitle: victoryPointsSubtitle,
                         systemImage: "star.fill",
                         isEnabled: true,
                         accessibilityId: "battleTracker.phaseDock.score",
@@ -75,7 +77,7 @@ struct BattleTrackerPhaseDock: View {
                     .optionalAccessibilityHint(resolveAccessibilityHint)
                     dockButton(
                         title: String(localized: "Score"),
-                        subtitle: String(localized: "VP"),
+                        subtitle: victoryPointsSubtitle,
                         systemImage: "star.fill",
                         isEnabled: true,
                         accessibilityId: "battleTracker.phaseDock.score",
@@ -85,7 +87,7 @@ struct BattleTrackerPhaseDock: View {
             }
         }
         .padding(.horizontal, DesignTokens.Spacing.sm)
-        .padding(.vertical, DesignTokens.Spacing.sm)
+        .padding(.vertical, compactLandscape ? DesignTokens.Spacing.xs : DesignTokens.Spacing.sm)
         .background(.bar)
         .accessibilityIdentifier("battleTracker.phaseDock")
     }
@@ -120,8 +122,8 @@ struct BattleTrackerPhaseDock: View {
             }
         } label: {
             dockLabel(
-                title: String(localized: "Phase"),
-                subtitle: phaseSubtitle,
+                title: compactLandscape ? currentPhase.title : String(localized: "Phase"),
+                subtitle: compactLandscape ? nil : phaseSubtitle,
                 systemImage: "arrow.triangle.2.circlepath",
                 isEnabled: true
             )
@@ -159,13 +161,13 @@ struct BattleTrackerPhaseDock: View {
         systemImage: String,
         isEnabled: Bool
     ) -> some View {
-        VStack(spacing: 2) {
+        VStack(spacing: compactLandscape ? 0 : 2) {
             Image(systemName: systemImage)
-                .font(.body.weight(.semibold))
+                .font(compactLandscape ? .callout.weight(.semibold) : .body.weight(.semibold))
             Text(title)
                 .font(.caption2.weight(.semibold))
                 .adaptiveLineLimit(1)
-            if let subtitle, !subtitle.isEmpty {
+            if !compactLandscape, let subtitle, !subtitle.isEmpty {
                 Text(subtitle)
                     .font(.caption2)
                     .foregroundStyle(.secondary)
@@ -175,7 +177,7 @@ struct BattleTrackerPhaseDock: View {
         .frame(maxWidth: .infinity)
         .minimumTouchTarget()
         .foregroundStyle(isEnabled ? Color.primary : Color.secondary.opacity(0.5))
-        .padding(.vertical, DesignTokens.Spacing.xs)
+        .padding(.vertical, compactLandscape ? 2 : DesignTokens.Spacing.xs)
         .background(Color(.tertiarySystemFill).opacity(isEnabled ? 0.6 : 0.25), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
     }
 }

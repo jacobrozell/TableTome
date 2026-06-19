@@ -48,9 +48,19 @@ private struct BattleTrackerPlayEngineIdKey: EnvironmentKey {
     static let defaultValue: PlayEngineId = .phasedRound
 }
 
+private struct BattleTrackerEmbeddedInGuidedMatchKey: EnvironmentKey {
+    static let defaultValue = false
+}
+
 extension EnvironmentValues {
     var battleTrackerPlayEngineId: PlayEngineId {
         get { self[BattleTrackerPlayEngineIdKey.self] }
         set { self[BattleTrackerPlayEngineIdKey.self] = newValue }
+    }
+
+    /// True when the tracker is embedded under Guided Match hub chrome (phone compact layout).
+    var battleTrackerIsEmbeddedInGuidedMatch: Bool {
+        get { self[BattleTrackerEmbeddedInGuidedMatchKey.self] }
+        set { self[BattleTrackerEmbeddedInGuidedMatchKey.self] = newValue }
     }
 }

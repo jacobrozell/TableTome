@@ -38,6 +38,7 @@ extension BattlePhaseTrackerView {
                     damageUndoSection
                     combatPhaseHelper
                     shootInCombatPhaseHelper
+                    wh40k11eResolverComingSoonSection
                     combatResolverSection(usesLandscapeSplit: true)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)

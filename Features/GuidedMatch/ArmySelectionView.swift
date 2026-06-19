@@ -273,8 +273,8 @@ private struct ArmyOptionRow: View {
                             .font(.caption2.weight(.semibold))
                             .padding(.horizontal, DesignTokens.Spacing.sm)
                             .padding(.vertical, 2)
-                            .background(Color.orange.opacity(0.15), in: Capsule())
-                            .foregroundStyle(.orange)
+                            .background(Color.accentColor.opacity(0.15), in: Capsule())
+                            .foregroundStyle(Color.accentOnSurface)
                     }
                 }
                 Text(army.general)

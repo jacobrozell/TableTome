@@ -63,32 +63,57 @@ struct MatchupSidePanel: View {
 
     private var unitSelection: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-            HStack(alignment: .center, spacing: 0) {
-                Picker(String(localized: "Unit"), selection: $unitId) {
-                    ForEach(units) { unit in
-                        Text(unitPickerLabel(for: unit)).tag(unit.id)
+            if let unit = selectedUnit {
+                HStack(alignment: .top, spacing: DesignTokens.Spacing.xs) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(unitPickerLabel(for: unit))
+                            .font(usesCompactStyle ? .subheadline.weight(.semibold) : .body.weight(.semibold))
+                            .fixedSize(horizontal: false, vertical: true)
+                            .adaptiveLineLimit(2)
+                        if let subtext = WarscrollStatSummary.unitChoiceSubtext(
+                            unit,
+                            woundsRemaining: woundsRemaining
+                        ) {
+                            Text(subtext)
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .accessibilityIdentifier("matchup.unit.subtext.\(unit.id)")
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                    if !armyId.isEmpty {
+                        WarscrollInfoButton(
+                            armyId: armyId,
+                            unit: unit,
+                            accessibilityId: "matchup.unit.warscroll.\(unit.id)"
+                        )
                     }
                 }
-                .pickerStyle(.menu)
-                .onChange(of: unitId) { _, newValue in onUnitChange(newValue) }
-
-                if let unit = selectedUnit, !armyId.isEmpty {
-                    WarscrollInfoButton(
-                        armyId: armyId,
-                        unit: unit,
-                        accessibilityId: "matchup.unit.warscroll.\(unit.id)"
-                    )
-                }
             }
 
-            if let unit = selectedUnit,
-               let subtext = WarscrollStatSummary.unitChoiceSubtext(unit, woundsRemaining: woundsRemaining) {
-                Text(subtext)
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-                    .accessibilityIdentifier("matchup.unit.subtext.\(unit.id)")
+            if units.count > 1 {
+                unitChangePicker
             }
         }
+    }
+
+    private var unitChangePicker: some View {
+        Picker(selection: $unitId) {
+            ForEach(units) { unit in
+                Text(unitPickerLabel(for: unit)).tag(unit.id)
+            }
+        } label: {
+            Text(
+                selectedUnit == nil
+                    ? String(localized: "Unit")
+                    : String(localized: "Change unit")
+            )
+            .font(usesCompactStyle ? .caption.weight(.semibold) : .subheadline)
+        }
+        .pickerStyle(.menu)
+        .onChange(of: unitId) { _, newValue in onUnitChange(newValue) }
     }
 
     private var weaponSelection: some View {

@@ -58,9 +58,13 @@ public struct GameSystemPlayContext: Sendable, Equatable {
     }
 
     public var armyTabBrowseRulesHint: String {
-        if isStarCraft { return String(localized: "Track unit health and browse unit cards here.") }
-        if isWh40k { return String(localized: "Track wounds and browse unit details here.") }
-        return String(localized: "Track wounds and browse unit rules cards here.")
+        if isStarCraft {
+            return String(localized: "During the battle: track unit health and browse unit cards here.")
+        }
+        if isWh40k {
+            return String(localized: "During the battle: track wounds and browse unit details here.")
+        }
+        return String(localized: "During the battle: track wounds and browse unit rules cards here.")
     }
 
     public var bundledUnitSourceAttribution: String {

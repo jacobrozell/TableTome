@@ -38,26 +38,66 @@ struct GuidedMatchHubTabBar: View {
     @Binding var selection: GuidedMatchHubTab
     let hasBothArmies: Bool
     let setupComplete: Bool
+    var locksArmiesTab: Bool = false
+
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
-        Picker(String(localized: "Guided match section"), selection: $selection) {
-            ForEach(GuidedMatchHubTab.allCases) { tab in
-                Label(tab.title, systemImage: tab.systemImage)
-                    .tag(tab)
-                    .disabled(isDisabled(tab))
-                    .accessibilityHint(accessibilityHint(for: tab))
+        Group {
+            if dynamicTypeSize.needsLayoutAdaptation {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: DesignTokens.Spacing.sm) {
+                        ForEach(GuidedMatchHubTab.allCases) { tab in
+                            hubTabButton(tab)
+                        }
+                    }
+                    .padding(.horizontal, DesignTokens.Spacing.xs)
+                }
+            } else {
+                Picker(String(localized: "Guided match section"), selection: $selection) {
+                    ForEach(GuidedMatchHubTab.allCases) { tab in
+                        Label(tab.title, systemImage: tab.systemImage)
+                            .tag(tab)
+                            .disabled(isDisabled(tab))
+                            .accessibilityHint(accessibilityHint(for: tab))
+                    }
+                }
+                .pickerStyle(.segmented)
             }
         }
-        .pickerStyle(.segmented)
         .accessibilityIdentifier("guidedMatch.hubTabs")
+    }
+
+    private func hubTabButton(_ tab: GuidedMatchHubTab) -> some View {
+        let isSelected = selection == tab
+        return Button {
+            selection = tab
+        } label: {
+            Label(tab.title, systemImage: tab.systemImage)
+                .font(.caption.weight(.semibold))
+                .padding(.horizontal, DesignTokens.Spacing.md)
+                .padding(.vertical, DesignTokens.Spacing.sm)
+                .background(isSelected ? Color.accentColor.opacity(0.15) : Color(.tertiarySystemFill))
+                .foregroundStyle(isSelected ? Color.accentOnSurface : .primary)
+                .clipShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .disabled(isDisabled(tab))
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
+        .accessibilityHint(accessibilityHint(for: tab))
+        .accessibilityIdentifier("guidedMatch.hubTab.\(tab.rawValue)")
     }
 
     private func accessibilityHint(for tab: GuidedMatchHubTab) -> String {
         switch tab {
         case .armies:
-            String(
-                localized: "Pick both armies or use starter matchup. Required before setup unlocks."
-            )
+            if locksArmiesTab {
+                String(localized: "Army selection is locked once a battle is in progress. Reset the match to change armies.")
+            } else {
+                String(
+                    localized: "Before the battle: pick both player armies or use starter matchup."
+                )
+            }
         case .setup:
             String(
                 localized: "Mission, deployment, and pre-battle steps. Unlocks after both armies are chosen."
@@ -74,7 +114,7 @@ struct GuidedMatchHubTabBar: View {
     private func isDisabled(_ tab: GuidedMatchHubTab) -> Bool {
         switch tab {
         case .armies:
-            false
+            locksArmiesTab
         case .setup:
             !hasBothArmies
         case .battle:
@@ -92,24 +132,55 @@ struct GuidedMatchStatusBar: View {
     let nextStepTitle: String?
     let setupComplete: Bool
     var battleTrackerSummary: String?
+    var compactMode: Bool = false
+
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
+        Group {
+            if compactMode {
+                compactBody
+            } else {
+                fullBody
+            }
+        }
+        .padding(.horizontal, DesignTokens.Spacing.md)
+        .padding(.vertical, DesignTokens.Spacing.sm)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(.bar)
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("guidedMatch.statusBar")
+    }
+
+    @ViewBuilder
+    private var compactBody: some View {
+        if let battleTrackerSummary {
+            Label(battleTrackerSummary, systemImage: "flag.checkered")
+                .font(.caption.weight(.medium))
+                .foregroundStyle(.secondary)
+                .adaptiveLineLimit(1)
+        } else if hasBothArmies {
+            Text(matchupLine)
+                .font(.caption.weight(.semibold))
+                .adaptiveLineLimit(1)
+                .accessibilityLabel(matchupAccessibilityLabel)
+        } else {
+            Text(String(localized: "Choose both armies to unlock setup"))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .adaptiveLineLimit(1)
+        }
+    }
+
+    @ViewBuilder
+    private var fullBody: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
             if hasBothArmies {
-                HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
-                    Text(playerOneSummary)
-                        .font(.caption.weight(.semibold))
-                        .lineLimit(2)
-                        .minimumScaleFactor(0.85)
-                    Text(String(localized: "vs"))
-                        .font(.caption)
-                        .foregroundStyle(.tertiary)
-                    Text(playerTwoSummary)
-                        .font(.caption.weight(.semibold))
-                        .lineLimit(2)
-                        .minimumScaleFactor(0.85)
-                }
-                .fixedSize(horizontal: false, vertical: true)
+                Text(matchupLine)
+                    .font(.caption.weight(.semibold))
+                    .adaptiveLineLimit(3)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityLabel(matchupAccessibilityLabel)
 
                 if setupTotal > 0, !setupComplete {
                     HStack(spacing: DesignTokens.Spacing.sm) {
@@ -128,12 +199,12 @@ struct GuidedMatchStatusBar: View {
                     if let battleTrackerSummary {
                         Label(battleTrackerSummary, systemImage: "flag.checkered")
                             .font(.caption.weight(.medium))
-                            .foregroundStyle(Color.accentColor)
+                            .foregroundStyle(.secondary)
                             .lineLimit(2)
                     } else {
                         Label(String(localized: "Setup complete — open Battle"), systemImage: "checkmark.circle.fill")
                             .font(.caption.weight(.medium))
-                            .foregroundStyle(Color.accentColor)
+                            .foregroundStyle(.secondary)
                     }
                 }
             } else {
@@ -142,12 +213,6 @@ struct GuidedMatchStatusBar: View {
                     .foregroundStyle(.secondary)
             }
         }
-        .padding(.horizontal, DesignTokens.Spacing.md)
-        .padding(.vertical, DesignTokens.Spacing.sm)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.bar)
-        .accessibilityElement(children: .combine)
-        .accessibilityIdentifier("guidedMatch.statusBar")
     }
 
     private var setupProgressLabel: String {
@@ -156,5 +221,13 @@ struct GuidedMatchStatusBar: View {
             label += " · \(nextStepTitle)"
         }
         return label
+    }
+
+    private var matchupLine: String {
+        "\(playerOneSummary) \(String(localized: "vs")) \(playerTwoSummary)"
+    }
+
+    private var matchupAccessibilityLabel: String {
+        "\(playerOneSummary), \(String(localized: "vs")), \(playerTwoSummary)"
     }
 }

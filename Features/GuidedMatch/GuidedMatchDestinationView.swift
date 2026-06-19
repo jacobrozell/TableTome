@@ -3,6 +3,7 @@ import TabletomeDomain
 
 struct GuidedMatchDestinationView: View {
     let gameSystemId: GameSystemId
+    var opensBattleTab: Bool = false
 
     @EnvironmentObject private var dependencies: AppDependencies
     @State private var ruleSections: [RuleSection]?
@@ -13,10 +14,14 @@ struct GuidedMatchDestinationView: View {
             if let ruleSections {
                 GuidedMatchView(
                     viewModel: dependencies.makeGuidedMatchViewModel(gameSystemId: gameSystemId),
-                    ruleSections: ruleSections
+                    ruleSections: ruleSections,
+                    initialHubTab: opensBattleTab ? .battle : nil
                 )
             } else if let errorMessage {
-                EmptyStateView(title: String(localized: "Not Found"), message: errorMessage)
+                EmptyStateView(
+                    title: String(localized: "Guided Match unavailable"),
+                    message: errorMessage
+                )
             } else {
                 ProgressView(String(localized: "Loading match setup…"))
                     .accessibilityIdentifier("guidedMatch.loading")

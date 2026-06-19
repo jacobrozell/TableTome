@@ -37,6 +37,7 @@ struct GuidedMatchView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(TabBarChrome.self) private var tabBarChrome
     @State var selectedDestination: GuidedMatchDestination?
     @State private var showsAllSetupSteps = NewPlayerTipsStore.hasExpandedGuidedMatchSetup
     @State var showsMatchSync = false
@@ -45,13 +46,25 @@ struct GuidedMatchView: View {
     @State private var hubTrackerTick = 0
     @State private var showsOwnListsSection = false
     @State var showsMatchHistoryToolbar = false
+    @State private var hasAppliedInitialHubTab = false
+    @AppStorage(BattleTrackerChromeStorage.guidedMatchHubCollapsedKey) var isHubChromeCollapsed = false
+
+    private let initialHubTab: GuidedMatchHubTab?
 
     private var usesCompactSetupLayout: Bool {
         !NewPlayerTipsStore.hasExpandedGuidedMatchSetup
     }
-    init(viewModel: GuidedMatchViewModel, ruleSections: [RuleSection] = []) {
+    init(
+        viewModel: GuidedMatchViewModel,
+        ruleSections: [RuleSection] = [],
+        initialHubTab: GuidedMatchHubTab? = nil
+    ) {
         _viewModel = StateObject(wrappedValue: viewModel)
         self.ruleSections = ruleSections
+        self.initialHubTab = initialHubTab
+        if let initialHubTab {
+            _hubTab = State(initialValue: initialHubTab)
+        }
     }
 
     var body: some View {
@@ -68,8 +81,12 @@ struct GuidedMatchView: View {
                 ProgressView(String(localized: "Loading guided match…"))
             }
         }
-        .navigationTitle(String(localized: "Guided Match"))
-        .navigationBarTitleDisplayMode(layoutContext.isCompactHeight ? .inline : .large)
+        .navigationTitle(
+            usesPhoneLandscapeBattleImmersion
+                ? ""
+                : String(localized: "Guided Match")
+        )
+        .navigationBarTitleDisplayMode(guidedMatchNavigationTitleDisplayMode)
         .toolbar { matchSyncToolbar }
         .sheet(isPresented: $showsMatchSync) { matchSyncSheet }
         .navigationDestination(for: MatchHistoryLink.self) { _ in
@@ -114,7 +131,7 @@ struct GuidedMatchView: View {
         .accessibilityIdentifier("guidedMatch.screen")
     }
 
-    private var layoutContext: TabletomeLayoutContext {
+    var layoutContext: TabletomeLayoutContext {
         TabletomeLayout.context(
             horizontalSizeClass: horizontalSizeClass,
             verticalSizeClass: verticalSizeClass
@@ -123,6 +140,14 @@ struct GuidedMatchView: View {
 
     private var usesPadSplitNavigation: Bool {
         layoutContext.usesPadSplitNavigation && !dynamicTypeSize.needsLayoutAdaptation
+    }
+
+    /// Large titles collapse when the embedded battle tracker scrolls and draw over hub chrome on phone.
+    private var guidedMatchNavigationTitleDisplayMode: NavigationBarItem.TitleDisplayMode {
+        if layoutContext.isCompactHeight || layoutContext == .phonePortrait {
+            return .inline
+        }
+        return .large
     }
 
     private var isPadLandscape: Bool {
@@ -439,7 +464,7 @@ struct GuidedMatchView: View {
                             .multilineTextAlignment(.leading)
                     } icon: {
                         Image(systemName: "flag.2.crossed.fill")
-                            .foregroundStyle(Color.accentColor)
+                            .foregroundStyle(Color.accentOnSurface)
                     }
                     Text(featuredArmies.starterSetDescription)
                         .font(.callout)
@@ -540,7 +565,7 @@ struct GuidedMatchView: View {
                         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                             Text(String(localized: "Continue Setup"))
                                 .font(.caption.weight(.semibold))
-                                .foregroundStyle(Color.accentColor)
+                                .foregroundStyle(Color.accentOnSurface)
                             GuideStepCard(
                                 stepNumber: index + 1,
                                 title: next.title,
@@ -774,6 +799,17 @@ extension GuidedMatchView {
                 guidedMatchHubList(catalog: catalog)
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .toolbar(hidesTabBarInLandscapeBattle ? .hidden : .visible, for: .tabBar)
+        .onChange(of: hidesTabBarInLandscapeBattle) { _, hidden in
+            tabBarChrome.isHidden = hidden
+        }
+        .onChange(of: layoutContext) { _, _ in
+            tabBarChrome.isHidden = hidesTabBarInLandscapeBattle
+        }
+        .onDisappear {
+            tabBarChrome.isHidden = false
+        }
         .navigationDestination(for: GuidedMatchDestination.self) { destination in
             guidedMatchScreen(
                 destination: destination,
@@ -782,49 +818,92 @@ extension GuidedMatchView {
             )
         }
         .onAppear {
-            hubTab = suggestedHubTab
+            applyInitialHubTabIfNeeded()
+            tabBarChrome.isHidden = hidesTabBarInLandscapeBattle
+            if hasResumableBattleSession, hubTab == .armies {
+                hubTab = .battle
+            }
         }
         .onChange(of: viewModel.matchState.hasBothArmies) { _, _ in
+            guard initialHubTab == nil else { return }
             hubTab = suggestedHubTab
         }
         .onChange(of: viewModel.matchState.completedStepIds) { _, _ in
-            if setupIsComplete, hubTab == .setup {
+            if initialHubTab == nil, setupIsComplete, hubTab == .setup {
                 hubTab = .battle
             }
         }
     }
 
+    private func applyInitialHubTabIfNeeded() {
+        guard !hasAppliedInitialHubTab else { return }
+        hasAppliedInitialHubTab = true
+        hubTab = initialHubTab ?? suggestedHubTab
+    }
+
     @ViewBuilder
     private func guidedMatchHubChrome(catalog: SpearheadCatalog) -> some View {
-        VStack(spacing: DesignTokens.Spacing.sm) {
-            GuidedMatchStatusBar(
-                playerOneSummary: playerSummary(
-                    selection: viewModel.matchState.playerOne,
-                    catalog: catalog,
-                    fallback: String(localized: "Player 1")
-                ),
-                playerTwoSummary: playerSummary(
-                    selection: viewModel.matchState.playerTwo,
-                    catalog: catalog,
-                    fallback: String(localized: "Player 2")
-                ),
-                hasBothArmies: viewModel.matchState.hasBothArmies,
-                setupCompleted: viewModel.setupProgress.completed,
-                setupTotal: viewModel.setupProgress.total,
-                nextStepTitle: viewModel.nextIncompleteStep?.title,
-                setupComplete: setupIsComplete,
-                battleTrackerSummary: battleTrackerSummaryLine()
-            )
-            .id(hubTrackerTick)
-            GuidedMatchHubTabBar(
-                selection: $hubTab,
-                hasBothArmies: viewModel.matchState.hasBothArmies,
-                setupComplete: setupIsComplete
-            )
-            .padding(.horizontal, DesignTokens.Spacing.md)
+        if !usesPhoneLandscapeBattleImmersion {
+            if isHubChromeCollapsed {
+                GuidedMatchCollapsedHubChrome(summary: hubChromeSummaryLine(catalog: catalog)) {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        isHubChromeCollapsed = false
+                    }
+                }
+            } else {
+                HStack(alignment: .top, spacing: 0) {
+                    VStack(spacing: DesignTokens.Spacing.sm) {
+                        GuidedMatchStatusBar(
+                            playerOneSummary: playerSummary(
+                                selection: viewModel.matchState.playerOne,
+                                catalog: catalog,
+                                fallback: String(localized: "Player 1")
+                            ),
+                            playerTwoSummary: playerSummary(
+                                selection: viewModel.matchState.playerTwo,
+                                catalog: catalog,
+                                fallback: String(localized: "Player 2")
+                            ),
+                            hasBothArmies: viewModel.matchState.hasBothArmies,
+                            setupCompleted: viewModel.setupProgress.completed,
+                            setupTotal: viewModel.setupProgress.total,
+                            nextStepTitle: viewModel.nextIncompleteStep?.title,
+                            setupComplete: setupIsComplete,
+                            battleTrackerSummary: battleTrackerSummaryLine(),
+                            compactMode: usesCompactLandscapeStatusBar
+                        )
+                        .id(hubTrackerTick)
+                        if !showsEmbeddedBattleTracker {
+                            GuidedMatchHubTabBar(
+                                selection: $hubTab,
+                                hasBothArmies: viewModel.matchState.hasBothArmies,
+                                setupComplete: setupIsComplete,
+                                locksArmiesTab: hasResumableBattleSession
+                            )
+                            .padding(.horizontal, DesignTokens.Spacing.md)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                    ChromeCollapseInlineButton(
+                        accessibilityLabel: String(localized: "Hide match summary"),
+                        accessibilityIdentifier: "guidedMatch.hubChromeCollapseInline",
+                        onCollapse: {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                isHubChromeCollapsed = true
+                            }
+                        }
+                    )
+                }
+                .padding(.bottom, DesignTokens.Spacing.xs)
+                .background(.bar)
+                .overlay(alignment: .bottom) {
+                    if showsEmbeddedBattleTracker {
+                        Divider()
+                    }
+                }
+            }
         }
-        .padding(.bottom, DesignTokens.Spacing.xs)
-        .background(.bar)
     }
 
     @ViewBuilder
@@ -875,6 +954,7 @@ extension GuidedMatchView {
             },
             onVictoryComplete: handleVictoryComplete
         )
+        .environment(\.battleTrackerIsEmbeddedInGuidedMatch, true)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .accessibilityIdentifier("guidedMatch.embeddedBattleTracker")
     }

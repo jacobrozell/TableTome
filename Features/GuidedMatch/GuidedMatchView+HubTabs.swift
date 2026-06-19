@@ -29,8 +29,15 @@ extension GuidedMatchView {
         return "\(name) · \(army.name)"
     }
 
+    var hasResumableBattleSession: Bool {
+        if MatchSessionStore.startedAt(gameSystemId: gameSystemId.rawValue) != nil {
+            return true
+        }
+        return BattleTrackerStore.load(gameSystemId: gameSystemId).hasBattleProgress
+    }
+
     func battleTrackerSummaryLine() -> String? {
-        guard setupIsComplete else { return nil }
+        guard setupIsComplete || hasResumableBattleSession else { return nil }
         let state = BattleTrackerStore.load(gameSystemId: gameSystemId)
         let playerName = state.activePlayerIsOne
             ? (viewModel.matchState.playerOne.playerName.isEmpty
@@ -43,6 +50,44 @@ extension GuidedMatchView {
     }
 
     var showsEmbeddedBattleTracker: Bool {
-        hubTab == .battle && setupIsComplete && viewModel.matchState.hasBothArmies
+        hubTab == .battle
+            && viewModel.matchState.hasBothArmies
+            && (setupIsComplete || hasResumableBattleSession)
+    }
+
+    var usesPhoneLandscapeBattleImmersion: Bool {
+        layoutContext.prefersCollapsedBattleChrome && showsEmbeddedBattleTracker
+    }
+
+    var hidesTabBarInLandscapeBattle: Bool {
+        usesPhoneLandscapeBattleImmersion
+    }
+
+    var usesCompactLandscapeStatusBar: Bool {
+        usesPhoneLandscapeBattleImmersion
+    }
+
+    var showsHubChromeCollapseToggle: Bool {
+        !usesPhoneLandscapeBattleImmersion && !showsEmbeddedBattleTracker
+    }
+
+    func hubChromeSummaryLine(catalog: SpearheadCatalog) -> String {
+        if showsEmbeddedBattleTracker, let battleSummary = battleTrackerSummaryLine() {
+            return battleSummary
+        }
+        if viewModel.matchState.hasBothArmies {
+            let playerOne = playerSummary(
+                selection: viewModel.matchState.playerOne,
+                catalog: catalog,
+                fallback: String(localized: "Player 1")
+            )
+            let playerTwo = playerSummary(
+                selection: viewModel.matchState.playerTwo,
+                catalog: catalog,
+                fallback: String(localized: "Player 2")
+            )
+            return "\(playerOne) \(String(localized: "vs")) \(playerTwo)"
+        }
+        return String(localized: "Choose both armies to unlock setup")
     }
 }

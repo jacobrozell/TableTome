@@ -369,6 +369,7 @@ struct CombatSequencePrimer: View {
         } label: {
             Label(String(localized: "How combat rolls work"), systemImage: "questionmark.circle")
                 .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.primary)
         }
         .padding(DesignTokens.Spacing.sm)
         .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))

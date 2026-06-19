@@ -67,6 +67,9 @@ extension BattlePhaseTrackerView {
                 }
             }
             .onChange(of: viewModel.trackerState.battleRound) { oldRound, round in
+                if oldRound == 1, round == 2 {
+                    FirstSessionStore.recordFirstBattleRound()
+                }
                 if viewModel.roundOpenerIsIncomplete {
                     selectedSectionTab = .setup
                 }

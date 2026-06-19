@@ -121,6 +121,7 @@ struct BattlePhaseTrackerView: View {
                 MatchSessionStore.markStartedIfNeeded(gameSystemId: viewModel.gameSystemId)
                 MatchLogRecorder.ensureSession(gameSystemId: viewModel.gameSystemId)
                 showsBattleTrackerCoach = supportsBattleTracker && !NewPlayerTipsStore.hasSeenBattleTrackerCoach
+                FirstSessionStore.recordSetupComplete()
                 Task {
                     try? await Task.sleep(for: .milliseconds(400))
                     handoffBaselineEstablished = true

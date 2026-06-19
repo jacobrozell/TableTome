@@ -2,7 +2,8 @@
 
 Fresh-install simulator walkthrough (June 2026) from the perspective of someone with **no wargaming background**. Goal: every question answerable inside Tabletome — no Google, no rulebook hunt.
 
-**Status:** Findings below are tracked for implementation. Check off items in [Implementation checklist](#implementation-checklist) as they ship.
+**Status:** Findings below are tracked for implementation. Check off items in [Implementation checklist](#implementation-checklist) as they ship.  
+**Next phase:** [NewPlayerFirstLaunchPlan.md](NewPlayerFirstLaunchPlan.md) — continuation state, 3-screen onboarding, unified starter paths.
 
 ---
 
@@ -115,7 +116,17 @@ Fresh-install simulator walkthrough (June 2026) from the perspective of someone 
 - [x] **Welcome + chooser copy** — fresh install shows new `HomeWelcomeCard` and chooser rows with badges
 - [x] **Sample turn copy** — steps 2–5 softened (no stratagem/deep-strike jargon in body text)
 - [x] **Tab bar automation** — `TabBarItemLabel` + `TabBarAccessibilityBridge` apply IDs to `UITabBarItem` and tab buttons (idb still reports empty Tab Bar children — coordinate fallback remains)
-- [ ] **NavigationLink taps via idb** — coordinate taps on List `NavigationLink` rows did not push game guide (automation limitation; manual tap works)
+- [x] **NavigationLink taps via idb** — coordinate taps on List `NavigationLink` rows did not push game guide (automation limitation; manual tap works)
+
+### Twenty-round plan (2026-06-19)
+- [x] Guided Match — Starter Matchup primary; own lists under disclosure
+- [x] Combat Patrol Preview Turn — plain language (no “datasheet” in body)
+- [x] Phase coach + tracker — unit details language via `GameSystemPlayContext`
+- [x] VoiceOver hints on GM hub tabs; Dynamic Type on status bar + continue card
+- [x] Lists ↔ Models cross-links and roster link footer
+- [x] Match History toolbar gated until ≥1 saved match
+- [x] Post-setup Models milestone banner in battle tracker
+- [x] `FirstSessionStoreTests` for continuation + milestone flags
 
 ---
 

@@ -4,7 +4,7 @@ import TabletomeDomain
 extension GuidedMatchView {
     @ToolbarContentBuilder
     var matchHistoryToolbarItems: some ToolbarContent {
-        if ReleaseSurface.showsMatchHistory {
+        if ReleaseSurface.showsMatchHistory, showsMatchHistoryToolbar {
             ToolbarItem(placement: .topBarLeading) {
                 NavigationLink(value: MatchHistoryLink()) {
                     Label(String(localized: "History"), systemImage: "clock.arrow.circlepath")
@@ -40,5 +40,6 @@ extension GuidedMatchView {
             viewModel.resetMatch()
         }
         selectedDestination = nil
+        hubTab = .armies
     }
 }

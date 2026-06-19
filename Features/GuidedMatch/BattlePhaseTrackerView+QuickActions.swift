@@ -32,7 +32,17 @@ extension BattlePhaseTrackerView {
     }
 
     @ViewBuilder
+    var modelsMilestoneSection: some View {
+        if FirstSessionStore.shouldShowModelsNudge() {
+            NewPlayerMilestoneBanner {
+                FirstSessionStore.markModelsNudgeSeen()
+            }
+        }
+    }
+
+    @ViewBuilder
     var tabHintSection: some View {
+        modelsMilestoneSection
         if showsTabHint {
             BattleTrackerTabHintBanner(suggestedTab: suggestedSectionTab, gameSystemId: viewModel.gameSystemId) {
                 withAnimation(.easeInOut(duration: 0.25)) {

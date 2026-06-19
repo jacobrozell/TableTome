@@ -4,6 +4,7 @@ import TabletomeDomain
 struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel
     @EnvironmentObject private var dependencies: AppDependencies
+    @State private var showsMatchHistoryToolbar = false
 
     init(viewModel: HomeViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -73,7 +74,7 @@ struct HomeView: View {
         }
         .playNavigationDestinations()
         .toolbar {
-            if ReleaseSurface.showsMatchHistory {
+            if ReleaseSurface.showsMatchHistory, showsMatchHistoryToolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink(value: MatchHistoryLink()) {
                         Label(String(localized: "History"), systemImage: "clock.arrow.circlepath")
@@ -83,7 +84,12 @@ struct HomeView: View {
                 }
             }
         }
-        .task { await viewModel.load() }
+        .task {
+            await viewModel.load()
+            showsMatchHistoryToolbar = await MatchHistoryVisibility.showsToolbar(
+                repository: dependencies.matchHistoryRepository
+            )
+        }
         .refreshable { await viewModel.load() }
     }
 

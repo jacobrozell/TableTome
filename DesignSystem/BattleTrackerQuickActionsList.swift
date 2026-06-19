@@ -9,6 +9,7 @@ struct BattleTrackerQuickActionsList: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
             Label(String(localized: "What's next"), systemImage: "list.bullet")
                 .font(.headline)
+                .foregroundStyle(.primary)
 
             VStack(spacing: DesignTokens.Spacing.xs) {
                 ForEach(actions) { action in
@@ -31,7 +32,7 @@ struct BattleTrackerQuickActionsList: View {
         HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
             Image(systemName: action.systemImage)
                 .font(.body.weight(.semibold))
-                .foregroundStyle(Color.accentColor)
+                .foregroundStyle(Color.accentOnSurface)
                 .frame(width: 24)
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
@@ -70,9 +71,9 @@ struct BattleTrackerTabHintBanner: View {
         Button(action: onSwitch) {
             HStack(spacing: DesignTokens.Spacing.sm) {
                 Image(systemName: suggestedTab.systemImage)
-                    .foregroundStyle(Color.orange)
+                    .foregroundStyle(Color.accentOnSurface)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(String(localized: "Suggested: \(suggestedTab.title) tab"))
+                    Text(suggestedTabTitle)
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(.primary)
                     Text(hintDetail)
@@ -85,16 +86,25 @@ struct BattleTrackerTabHintBanner: View {
                     .font(.caption.weight(.bold))
                     .padding(.horizontal, DesignTokens.Spacing.sm)
                     .padding(.vertical, DesignTokens.Spacing.xs)
-                    .background(Color.orange.opacity(0.15), in: Capsule())
+                    .background(Color.accentColor.opacity(0.15), in: Capsule())
+                    .foregroundStyle(Color.accentOnSurface)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .buttonStyle(.plain)
         .padding(DesignTokens.Spacing.md)
-        .background(Color.orange.opacity(0.1), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
-        .accessibilityLabel(String(localized: "Suggested \(suggestedTab.title) tab"))
+        .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .accessibilityLabel(suggestedTabAccessibilityLabel)
         .accessibilityHint(hintDetail)
         .accessibilityIdentifier("battleTracker.tabHint")
+    }
+
+    private var suggestedTabTitle: String {
+        String(localized: "Suggested: \(suggestedTab.title) tab")
+    }
+
+    private var suggestedTabAccessibilityLabel: String {
+        String(localized: "Suggested \(suggestedTab.title) tab")
     }
 
     private var hintDetail: String {

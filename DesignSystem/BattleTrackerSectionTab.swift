@@ -82,7 +82,7 @@ extension BattleTrackerSectionTab {
                 ? String(localized: "Mission map, deployment, and pre-battle checklist.")
                 : String(localized: "Terrain, deployment, and round-opener steps.")
         case .turn:
-            return String(localized: "Current phase abilities, phase controls, and what to do now.")
+            return String(localized: "Current phase, victory points, and what to do now.")
         case .combat:
             return String(localized: "Shooting lists, dice resolver, and damage at the table.")
         case .army:
@@ -121,7 +121,10 @@ struct BattleTrackerSectionTabBar: View {
 
     private var usesScrollableTabBar: Bool {
         dynamicTypeSize.needsLayoutAdaptation
-            || (layoutContext == .phoneLandscape && tabs.count >= 4)
+    }
+
+    private var usesCompactTabBar: Bool {
+        layoutContext.prefersCollapsedBattleChrome && !dynamicTypeSize.needsLayoutAdaptation
     }
 
     var body: some View {
@@ -136,14 +139,39 @@ struct BattleTrackerSectionTabBar: View {
     }
 
     private var segmentedTabBar: some View {
-        Picker(String(localized: "Battle tracker section"), selection: $selection) {
+        HStack(spacing: 2) {
             ForEach(tabs) { tab in
-                Label(tab.title, systemImage: tab.systemImage)
-                    .tag(tab)
-                    .accessibilityHint(tab.accessibilityHint(gameSystemId: gameSystemId))
+                segmentedTabButton(tab)
             }
         }
-        .pickerStyle(.segmented)
+        .padding(2)
+        .background(Color(.secondarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
+        .accessibilityElement(children: .contain)
+    }
+
+    private func segmentedTabButton(_ tab: BattleTrackerSectionTab) -> some View {
+        let isSelected = selection == tab
+        return Button {
+            selection = tab
+        } label: {
+            Text(tab.title)
+                .font(usesCompactTabBar ? .caption.weight(.semibold) : .footnote.weight(.semibold))
+                .adaptiveLineLimit(1)
+                .minimumScaleFactor(0.85)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, usesCompactTabBar ? DesignTokens.Spacing.xs : DesignTokens.Spacing.sm)
+                .foregroundStyle(isSelected ? Color.primary : Color.secondary)
+                .background(
+                    isSelected ? Color(.systemBackground) : Color.clear,
+                    in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm - 2)
+                )
+        }
+        .buttonStyle(.plain)
+        .frame(minHeight: DesignTokens.minTouchTarget)
+        .accessibilityLabel(tab.title)
+        .accessibilityHint(tab.accessibilityHint(gameSystemId: gameSystemId))
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
+        .accessibilityIdentifier("battleTracker.sectionTab.\(tab.id)")
     }
 
     private var scrollableTabBar: some View {
@@ -194,30 +222,35 @@ struct StickyPhaseHeader: View {
     let phaseTitle: String
     let playerName: String
     var gameSystemId: GameSystemId = .default
+    var compact: Bool = false
 
     init(
         round: Int,
         phaseTitle: String,
         playerName: String,
-        gameSystemId: GameSystemId = .default
+        gameSystemId: GameSystemId = .default,
+        compact: Bool = false
     ) {
         self.round = round
         self.phaseTitle = phaseTitle
         self.playerName = playerName
         self.gameSystemId = gameSystemId
+        self.compact = compact
     }
 
     init(
         round: Int,
         phaseTitle: String,
         playerName: String,
-        gameSystemId: String
+        gameSystemId: String,
+        compact: Bool = false
     ) {
         self.init(
             round: round,
             phaseTitle: phaseTitle,
             playerName: playerName,
-            gameSystemId: GameSystemId(resolving: gameSystemId)
+            gameSystemId: GameSystemId(resolving: gameSystemId),
+            compact: compact
         )
     }
 
@@ -240,7 +273,7 @@ struct StickyPhaseHeader: View {
                         .padding(.horizontal, DesignTokens.Spacing.sm)
                         .padding(.vertical, DesignTokens.Spacing.xs)
                         .background(Color.accentColor.opacity(0.15), in: Capsule())
-                        .foregroundStyle(Color.accentColor)
+                        .foregroundStyle(Color.accentOnSurface)
                 }
             } else {
                 HStack(spacing: DesignTokens.Spacing.sm) {
@@ -257,13 +290,17 @@ struct StickyPhaseHeader: View {
                         .padding(.horizontal, DesignTokens.Spacing.sm)
                         .padding(.vertical, DesignTokens.Spacing.xs)
                         .background(Color.accentColor.opacity(0.15), in: Capsule())
-                        .foregroundStyle(Color.accentColor)
+                        .foregroundStyle(Color.accentOnSurface)
                 }
             }
         }
-        .padding(.horizontal, DesignTokens.Spacing.md)
-        .padding(.vertical, DesignTokens.Spacing.sm)
-        .background(.bar)
+        .padding(.horizontal, compact ? 0 : DesignTokens.Spacing.md)
+        .padding(.vertical, compact ? 0 : DesignTokens.Spacing.sm)
+        .background {
+            if !compact {
+                Rectangle().fill(.bar)
+            }
+        }
         .accessibilityElement(children: .combine)
         .accessibilityLabel(stickyPhaseAccessibilityLabel)
         .accessibilityIdentifier("battleTracker.stickyPhaseHeader")

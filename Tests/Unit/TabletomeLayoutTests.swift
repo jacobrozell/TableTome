@@ -1,5 +1,8 @@
 import SwiftUI
 import XCTest
+#if canImport(UIKit)
+import UIKit
+#endif
 @testable import Tabletome
 
 final class TabletomeLayoutTests: XCTestCase {
@@ -58,6 +61,13 @@ final class TabletomeLayoutTests: XCTestCase {
     }
 
     @MainActor
+    func testPhoneLandscapePrefersCollapsedBattleChrome() {
+        XCTAssertTrue(TabletomeLayoutContext.phoneLandscape.prefersCollapsedBattleChrome)
+        XCTAssertFalse(TabletomeLayoutContext.phonePortrait.prefersCollapsedBattleChrome)
+        XCTAssertFalse(TabletomeLayoutContext.padLandscape.prefersCollapsedBattleChrome)
+    }
+
+    @MainActor
     func testUsesSideBySideLayoutRequiresPadIdiom() {
         XCTAssertFalse(
             TabletomeLayout.usesSideBySideLayout(
@@ -97,5 +107,15 @@ final class TabletomeLayoutTests: XCTestCase {
         XCTAssertTrue(DynamicTypeSize.xxxLarge.needsLayoutAdaptation)
         XCTAssertTrue(DynamicTypeSize.accessibility1.needsLayoutAdaptation)
         XCTAssertTrue(DynamicTypeSize.accessibility5.needsLayoutAdaptation)
+    }
+
+    @MainActor
+    func testAdaptiveLayoutSplitRequiresPadIdiomOnPhoneSimulator() {
+        #if os(iOS)
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            XCTAssertFalse(AdaptiveLayout.usesSplitNavigation(.regular))
+            XCTAssertFalse(AdaptiveLayout.usesSidebarListStyle(.regular))
+        }
+        #endif
     }
 }

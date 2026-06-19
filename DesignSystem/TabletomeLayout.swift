@@ -22,6 +22,11 @@ public enum TabletomeLayoutContext: Equatable, Sendable {
         default: false
         }
     }
+
+    /// iPhone landscape has very little vertical space — collapse decorative chrome during battle.
+    public var prefersCollapsedBattleChrome: Bool {
+        self == .phoneLandscape
+    }
 }
 
 public enum TabletomeLayout {

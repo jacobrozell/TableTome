@@ -36,7 +36,17 @@ public extension View {
     }
 
     /// Extra bottom margin on scrollable content so it is not hidden behind the tab bar.
-    func tabBarScrollInset() -> some View {
-        contentMargins(.bottom, DesignTokens.tabBarScrollBottomInset, for: .scrollContent)
+    @ViewBuilder
+    func tabBarScrollInset(enabled: Bool = true) -> some View {
+        if enabled {
+            contentMargins(.bottom, DesignTokens.tabBarScrollBottomInset, for: .scrollContent)
+        } else {
+            self
+        }
+    }
+
+    /// Breathing room above the phase dock when it is pinned below scroll content.
+    func battleTrackerPhaseDockScrollInset() -> some View {
+        contentMargins(.bottom, DesignTokens.battleTrackerPhaseDockScrollBottomInset, for: .scrollContent)
     }
 }

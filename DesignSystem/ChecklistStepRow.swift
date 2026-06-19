@@ -90,6 +90,7 @@ struct ChecklistStepRow<Extra: View>: View {
                 .font(.caption.weight(.semibold))
                 .buttonStyle(.bordered)
                 .adaptiveControlSize()
+                .accessibilityLabel(String(localized: "Mark step done"))
                 .frame(
                     maxWidth: dynamicTypeSize.needsLayoutAdaptation ? .infinity : nil,
                     alignment: dynamicTypeSize.needsLayoutAdaptation ? .leading : .trailing

@@ -5,8 +5,8 @@ enum AppLaunchArguments: Sendable {
     static let skipOnboarding = "-skip_onboarding"
     static let openGuidedMatch = "-open_guided_match"
     static let applyStarterMatchup = "-apply_starter_matchup"
-    static let openBattleTracker = "-open_battle_tracker"
     /// Applies starter armies, completes setup, and opens the Battle tab tracker (simulator / UI tests).
+    static let openBattleTracker = "-open_battle_tracker"
     static let enableFullProductSurface = "-enable_full_product_surface"
 
     static var shouldOpenGuidedMatch: Bool {

@@ -77,6 +77,35 @@ final class GuidedMatchViewModelTests: XCTestCase {
         XCTAssertNotNil(viewModel.matchState.playerTwo.enhancementId)
         XCTAssertNotNil(viewModel.matchState.playerTwo.secondaryObjectiveId)
     }
+
+    func testCompleteSetupForAutomationFinishesSpearheadSetup() async throws {
+        let catalog = try await BundledSpearheadCatalogRepository(
+            bundle: Bundle(for: GuidedMatchViewModelTests.self)
+        ).loadCatalog()
+        defer {
+            MatchSetupStore.reset()
+            BattleTrackerStore.reset()
+        }
+
+        let viewModel = GuidedMatchViewModel(
+            catalogRepository: StubSpearheadCatalogRepository(catalog: catalog),
+            initialState: GuidedMatchState()
+        )
+        await viewModel.load()
+        viewModel.applyStarterMatchup()
+        viewModel.completeSetupForAutomation()
+
+        XCTAssertNotNil(viewModel.matchState.attackerIsPlayerOne)
+        XCTAssertEqual(viewModel.setupProgress.completed, viewModel.setupProgress.total)
+        let deployment = BattleTrackerStore.load().completedDeploymentSteps
+        XCTAssertEqual(
+            deployment.count,
+            DeploymentChecklistStep.allCases.count
+        )
+        for step in DeploymentChecklistStep.allCases {
+            XCTAssertTrue(deployment.contains(step.rawValue), "Missing deployment step \(step.rawValue)")
+        }
+    }
 }
 
 private struct StubSpearheadCatalogRepository: SpearheadCatalogRepository {

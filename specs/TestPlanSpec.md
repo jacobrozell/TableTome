@@ -21,6 +21,10 @@ xcodebuild test -scheme TabletomeCI -destination 'platform=iOS Simulator,name=Ta
 
 Split targets per checklist. Launch args:
 
+- `-skip_onboarding`
+- `-open_guided_match`
+- `-open_battle_tracker` — starter matchup + full setup + Battle tab tracker (MCP / UI automation)
+- `-apply_starter_matchup`
 - `-enable_full_product_surface`
 - `-reset_user_defaults`
 

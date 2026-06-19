@@ -53,7 +53,10 @@ Unit ability content is loaded from optional per-army detail files. See `Spearhe
 ## Accessibility
 
 - Screen: `guidedMatch.screen`
-- Battle tracker: `battleTracker.screen`, `battleTracker.phase.{phaseId}`, `battleTracker.ability.{abilityId}`
+- Battle tracker: `battleTracker.screen` (iPhone hub embed: `guidedMatch.embeddedBattleTracker`), `battleTracker.phase.{phaseId}`, `battleTracker.ability.{abilityId}`
+- Deployment checklist: `deployment.check.{stepId}`, `deployment.done.{stepId}`
+- New-player milestone: `newPlayer.milestone.models`, `milestone.openModels`, `milestone.dismiss`
+- Launch automation: `-open_battle_tracker` (with `-open_guided_match`, `-skip_onboarding`, `-enable_full_product_surface`)
 - Player rows: `guidedMatch.playerOne`, `guidedMatch.playerTwo`
 - Army options: `guidedMatch.army.{armyId}`
 - Steps: `guidedMatch.step.{stepId}`

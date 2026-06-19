@@ -11,6 +11,7 @@ struct RosterEditorView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(AppRouter.self) private var router
     @Environment(BannerCenter.self) private var banner
+    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
     @Query private var rosters: [Roster]
     @Query(sort: \Army.sortIndex) private var armies: [Army]
     @Query private var configs: [AppConfiguration]
@@ -161,6 +162,19 @@ struct RosterEditorView: View {
             RosterPointsBar(roster: roster)
         }
         .toolbar {
+            if ReleaseSurface.showsPlayFromRoster, roster.game == "40k" {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        playWithList(roster)
+                    } label: {
+                        Label(String(localized: "Play with this list"), systemImage: "play.circle")
+                    }
+                    .accessibilityIdentifier("rosterEditor.playWithList")
+                    .accessibilityHint(
+                        String(localized: "Opens Guided Match on the Play tab for this army list.")
+                    )
+                }
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Button(String(localized: "Add unit"), systemImage: "plus") { showCatalog = true }
             }
@@ -231,6 +245,19 @@ struct RosterEditorView: View {
         armies.filter {
             $0.game == roster.game && FactionResolver.normalize($0.faction) == FactionResolver.normalize(roster.faction)
         }
+    }
+
+    private func playWithList(_ roster: Roster) {
+        let gameSystemId = guidedMatchGameSystemId(for: roster)
+        learnNavigationCoordinator.openGuidedMatch(gameSystemId: gameSystemId)
+    }
+
+    private func guidedMatchGameSystemId(for roster: Roster) -> String {
+        if let size = BattleSizes.resolve(game: roster.game, key: roster.battleSizeKey),
+           size.id == "combat-patrol" {
+            return GameSystemId.wh40k10eCp.rawValue
+        }
+        return GameSystemId.wh40k11e.rawValue
     }
 
     private func duplicate(_ roster: Roster) {

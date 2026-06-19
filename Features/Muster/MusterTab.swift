@@ -118,6 +118,7 @@ struct MusterTab: View {
         selectedRosterId = id
         router.selectedRosterId = id
         if !usesSplitLayout {
+            compactPath = NavigationPath()
             compactPath.append(MusterRoute.roster(id))
         }
     }

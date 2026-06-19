@@ -13,7 +13,10 @@ struct EditionMigrationDestinationView: View {
             if let gameSystem {
                 EditionMigrationView(gameSystem: gameSystem)
             } else if let errorMessage {
-                EmptyStateView(title: String(localized: "Not Found"), message: errorMessage)
+                EmptyStateView(
+                    title: String(localized: "Edition guide unavailable"),
+                    message: errorMessage
+                )
             } else {
                 ProgressView(String(localized: "Loading guide…"))
                     .accessibilityIdentifier("guide.migration.loading")

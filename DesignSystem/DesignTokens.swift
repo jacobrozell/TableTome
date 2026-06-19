@@ -26,14 +26,14 @@ public enum DesignTokens {
     /// Control column width in iPad landscape (controls left).
     public static let battleTrackerLandscapeControlColumnMaxWidth: CGFloat = 300
 
-    /// Army health sidebar width in iPad landscape.
-    public static let battleTrackerLandscapeArmyColumnMaxWidth: CGFloat = 340
-
     /// Tighter section spacing in landscape to preserve vertical space.
     public static let battleTrackerLandscapeSectionSpacing: CGFloat = 16
 
     /// Scroll content inset so the last rows clear the floating tab bar on iPhone.
     public static let tabBarScrollBottomInset: CGFloat = 64
+
+    /// Extra scroll inset when the phase dock sits below the battle tracker scroll view.
+    public static let battleTrackerPhaseDockScrollBottomInset: CGFloat = 8
 
     /// Horizontal padding on iPhone landscape to preserve vertical space.
     public static let phoneLandscapeHorizontalPadding: CGFloat = 16
@@ -45,6 +45,9 @@ public enum DesignTokens {
     public static let phoneLandscapeWarscrollColumnMinWidth: CGFloat = 140
     public static let phoneLandscapeWarscrollColumnIdealWidth: CGFloat = 180
     public static let phoneLandscapeWarscrollColumnMaxWidth: CGFloat = 220
+
+    /// Pinned combat bar height on iPhone landscape battle tracker.
+    public static let phoneLandscapeStickyBarHeight: CGFloat = 56
 
     /// Optional readable width cap for prose on iPhone landscape.
     public static let readableContentMaxWidthPhoneLandscape: CGFloat = 560

@@ -53,7 +53,10 @@ struct MatchHistoryListView: View {
                     } actions: {
                         Button(activeGameGuidedMatchLabel) {
                             learnNavigationCoordinator.openGuidedMatch(
-                                gameSystemId: activeGameGuidedMatchGameSystemId
+                                gameSystemId: activeGameGuidedMatchGameSystemId,
+                                opensBattleTab: PlayContinuationResolver.shouldOpenBattleTab(
+                                    gameSystemId: activeGameGuidedMatchGameSystemId
+                                )
                             )
                         }
                         .accessibilityIdentifier("matchHistory.openGuidedMatch")

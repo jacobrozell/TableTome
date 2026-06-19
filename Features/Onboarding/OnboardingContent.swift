@@ -138,7 +138,7 @@ enum OnboardingContent {
         OnboardingTabTourItem(
             id: "muster",
             symbol: "flag.checkered",
-            title: String(localized: "Army lists"),
+            title: String(localized: "Lists"),
             body: String(localized: "Optional — build point lists and compare them to models you own")
         ),
         OnboardingTabTourItem(
@@ -150,7 +150,7 @@ enum OnboardingContent {
         OnboardingTabTourItem(
             id: "rules",
             symbol: "magnifyingglass",
-            title: String(localized: "Rules Search"),
+            title: String(localized: "Rules"),
             body: String(localized: "Look up rules, units, and glossary terms for your selected game")
         ),
         OnboardingTabTourItem(

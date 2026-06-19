@@ -134,7 +134,7 @@ struct ArmyHealthPanel: View {
                                 .padding(.horizontal, DesignTokens.Spacing.sm)
                                 .padding(.vertical, 2)
                                 .background(Color.accentColor.opacity(0.15), in: Capsule())
-                                .foregroundStyle(Color.accentColor)
+                                .foregroundStyle(Color.accentOnSurface)
                         }
                     }
                     Text(summary.armyName)

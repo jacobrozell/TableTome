@@ -169,7 +169,26 @@ struct GameSystemDetailView: View {
                         } else if playContext.isSpearhead {
                             Text(String(localized: "New to a term? Open AoS Glossary under Table Reference."))
                         } else if playContext.isWh40k11e {
-                            Text(String(localized: "Use Guided Match for the Armageddon starter matchup, or browse all factions in army selection."))
+                            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                                if !ReleaseSurface.showsCombatResolver(for: gameSystemId) {
+                                    Text(
+                                        String(
+                                            localized: """
+                                            Dice combat resolution for full 40k battles is coming soon. Turn tracking, \
+                                            phases, and victory points work in Guided Match today.
+                                            """
+                                        )
+                                    )
+                                }
+                                Text(
+                                    String(
+                                        localized: """
+                                        Use Guided Match for the Armageddon starter matchup, or browse all factions \
+                                        in army selection.
+                                        """
+                                    )
+                                )
+                            }
                         } else if playContext.isCombatPatrol {
                             Text(
                                 String(
@@ -253,7 +272,10 @@ struct GameSystemDetailView: View {
                 .listStyle(.insetGrouped)
                 .tabBarScrollInset()
             } else if let errorMessage {
-                EmptyStateView(title: String(localized: "Not Found"), message: errorMessage)
+                EmptyStateView(
+                    title: String(localized: "Game guide unavailable"),
+                    message: errorMessage
+                )
             } else {
                 ProgressView(String(localized: "Loading game guide…"))
             }

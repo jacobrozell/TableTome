@@ -3,20 +3,22 @@ import TabletomeDomain
 
 /// Shown on Play when the user should continue onboarding or resume an in-progress Guided Match.
 struct HomeContinueCard: View {
+    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
+
     let continuation: PlayContinuation
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Label(continuation.title, systemImage: continuationIcon)
                 .font(.headline)
-                .foregroundStyle(Color.accentColor)
+                .foregroundStyle(Color.accentOnSurface)
 
             Text(continuation.message)
                 .font(.callout)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            continuationLink
+            continuationButton
         }
         .padding(DesignTokens.Spacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -28,29 +30,39 @@ struct HomeContinueCard: View {
         .accessibilityIdentifier("home.continueCard")
     }
 
-    @ViewBuilder
-    private var continuationLink: some View {
+    private var continuationButton: some View {
+        Button(action: openContinuation) {
+            continuationButtonLabel
+        }
+        .buttonStyle(.borderedProminent)
+        .accessibilityLabel(continuation.buttonTitle)
+        .accessibilityHint(continuationAccessibilityHint)
+        .accessibilityIdentifier(continuationAccessibilityIdentifier)
+    }
+
+    private var continuationAccessibilityHint: String {
         switch continuation.destination {
         case .gameGuide:
-            NavigationLink(value: continuation.gameSystemId) {
-                continuationButtonLabel
-            }
-            .buttonStyle(.borderedProminent)
-            .simultaneousGesture(TapGesture().onEnded {
-                ActiveGameContextStore.setActiveGameSystem(continuation.gameSystemId)
-            })
-            .accessibilityIdentifier("home.continueGuide")
+            String(localized: "Opens the game guide on the Play tab.")
         case .guidedMatch:
-            NavigationLink(
-                value: GuidedMatchLink(gameSystemId: GameSystemId(resolving: continuation.gameSystemId))
-            ) {
-                continuationButtonLabel
+            if continuation.opensBattleTab {
+                String(localized: "Opens Guided Match on the battle tracker where you left off.")
+            } else {
+                String(localized: "Opens Guided Match to continue setup or choose armies.")
             }
-            .buttonStyle(.borderedProminent)
-            .simultaneousGesture(TapGesture().onEnded {
-                ActiveGameContextStore.setActiveGameSystem(continuation.gameSystemId)
-            })
-            .accessibilityIdentifier("home.continueGuidedMatch")
+        }
+    }
+
+    private func openContinuation() {
+        ActiveGameContextStore.setActiveGameSystem(continuation.gameSystemId)
+        switch continuation.destination {
+        case .gameGuide:
+            learnNavigationCoordinator.openGameGuide(gameSystemId: continuation.gameSystemId)
+        case .guidedMatch:
+            learnNavigationCoordinator.openGuidedMatch(
+                gameSystemId: continuation.gameSystemId,
+                opensBattleTab: continuation.opensBattleTab
+            )
         }
     }
 
@@ -59,6 +71,15 @@ struct HomeContinueCard: View {
             .font(.subheadline.weight(.semibold))
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+    }
+
+    private var continuationAccessibilityIdentifier: String {
+        switch continuation.destination {
+        case .gameGuide:
+            "home.continueGuide"
+        case .guidedMatch:
+            "home.continueGuidedMatch"
+        }
     }
 
     private var continuationIcon: String {

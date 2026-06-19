@@ -15,7 +15,7 @@ WCAG 2.1 AA engineering baseline. Manual VoiceOver pass required before App Stor
 
 ## Orientations
 
-- **iPhone:** Portrait only (Info.plist)
+- **iPhone:** Portrait + landscape (`project.yml`)
 - **iPad:** Portrait + landscape
 
 ## Reduce Motion
@@ -31,6 +31,6 @@ Per-screen audits: `accessibility/audits/` (empty until Phase 11).
 | Field | Value |
 |-------|-------|
 | Target release | v0.1 |
-| Last verified | 2026-06-17 |
+| Last verified | 2026-06-19 |
 | Commit | (initial scaffold) |
 | Code paths | Feature views, `DesignSystem/` |

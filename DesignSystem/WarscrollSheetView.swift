@@ -33,33 +33,42 @@ struct WarscrollInfoButton: View {
     }
 }
 
-struct WarscrollSheetView: View {
+struct WarscrollReferenceView: View {
     let armyId: String
     let unit: SpearheadUnit
-
-    @Environment(\.dismiss) private var dismiss
 
     private var sheetImageURL: URL? {
         WarscrollSheetCatalog.sheetImageURL(armyId: armyId, unitId: unit.id)
     }
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    if let sheetImageURL,
-                       let uiImage = UIImage(contentsOfFile: sheetImageURL.path) {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(maxWidth: .infinity)
-                            .accessibilityLabel(unit.name)
-                    } else {
-                        WarscrollTextReference(unit: unit)
-                    }
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                if let sheetImageURL,
+                   let uiImage = UIImage(contentsOfFile: sheetImageURL.path) {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: .infinity)
+                        .accessibilityLabel(unit.name)
+                } else {
+                    WarscrollTextReference(unit: unit)
                 }
-                .padding(DesignTokens.Spacing.md)
             }
+            .padding(DesignTokens.Spacing.md)
+        }
+    }
+}
+
+struct WarscrollSheetView: View {
+    let armyId: String
+    let unit: SpearheadUnit
+
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            WarscrollReferenceView(armyId: armyId, unit: unit)
             .navigationTitle(unit.name)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

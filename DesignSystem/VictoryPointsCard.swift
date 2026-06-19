@@ -70,7 +70,7 @@ struct VictoryPointsCard: View {
                     systemImage: "star.circle.fill"
                 )
                 .font(.caption)
-                .foregroundStyle(Color.accentColor)
+                .foregroundStyle(Color.accentOnSurface)
                 .fixedSize(horizontal: false, vertical: true)
             }
 

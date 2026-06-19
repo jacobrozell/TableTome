@@ -17,6 +17,8 @@ struct GlossaryChip: View {
         }
         .buttonStyle(.plain)
         .minimumTouchTarget()
+        .accessibilityLabel(entry.term)
+        .accessibilityHint(String(localized: "Opens the glossary definition for this term."))
         .accessibilityIdentifier("glossary.chip.\(entry.id)")
     }
 }
@@ -26,6 +28,8 @@ struct GlossaryChipsRow: View {
     var label: String? = String(localized: "Key terms")
     var gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId
     var ruleSections: [RuleSection] = []
+
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     private var entries: [RulesGlossaryEntry] {
         RulesGlossaryCatalog.entriesReferenced(
@@ -43,8 +47,12 @@ struct GlossaryChipsRow: View {
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(.secondary)
                 }
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: DesignTokens.Spacing.sm) {
+                if dynamicTypeSize.needsLayoutAdaptation {
+                    LazyVGrid(
+                        columns: [GridItem(.adaptive(minimum: 120), spacing: DesignTokens.Spacing.sm)],
+                        alignment: .leading,
+                        spacing: DesignTokens.Spacing.sm
+                    ) {
                         ForEach(entries) { entry in
                             GlossaryChip(
                                 entry: entry,
@@ -53,8 +61,21 @@ struct GlossaryChipsRow: View {
                             )
                         }
                     }
+                    .accessibilityLabel(label ?? String(localized: "Key terms"))
+                } else {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: DesignTokens.Spacing.sm) {
+                            ForEach(entries) { entry in
+                                GlossaryChip(
+                                    entry: entry,
+                                    gameSystemId: gameSystemId,
+                                    ruleSections: ruleSections
+                                )
+                            }
+                        }
+                    }
+                    .accessibilityLabel(label ?? String(localized: "Key terms"))
                 }
-                .accessibilityLabel(label ?? String(localized: "Key terms"))
             }
         }
     }

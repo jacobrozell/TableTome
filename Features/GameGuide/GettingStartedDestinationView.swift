@@ -13,7 +13,10 @@ struct GettingStartedDestinationView: View {
             if let gameSystem {
                 GettingStartedView(gameSystem: gameSystem)
             } else if let errorMessage {
-                EmptyStateView(title: String(localized: "Not Found"), message: errorMessage)
+                EmptyStateView(
+                    title: String(localized: "Getting Started unavailable"),
+                    message: errorMessage
+                )
             } else {
                 ProgressView(String(localized: "Loading guide…"))
                     .accessibilityIdentifier("guide.gettingStarted.loading")

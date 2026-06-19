@@ -37,7 +37,7 @@ struct ArmyStatsHeader: View {
                 StatTile(value: stats.based, label: label(CollectionStats.basedStage(in: pipeline)?.key ?? String(localized: "Based")))
                 StatTile(value: stats.done, label: label(CollectionStats.doneStage(in: pipeline)?.key ?? String(localized: "Done")))
                 StatTile(value: stats.wip, label: String(localized: "In Progress"))
-                StatTile(value: stats.todo, label: String(localized: "On the Sprue"))
+                StatTile(value: stats.todo, label: String(localized: "Unassembled"))
                 StatTile(value: armyCount, label: label(String(localized: "Armies")))
             }
 

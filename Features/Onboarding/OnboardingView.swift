@@ -66,6 +66,8 @@ struct OnboardingView: View {
                             complete(.exploreApp)
                         }
                         .accessibilityIdentifier("onboarding.skip")
+                        .accessibilityLabel(String(localized: "Skip onboarding"))
+                        .accessibilityHint(String(localized: "Finish setup and explore the app on your own."))
                     }
                 }
             }

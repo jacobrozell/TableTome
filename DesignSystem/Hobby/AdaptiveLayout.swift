@@ -1,15 +1,22 @@
 import SwiftUI
+#if canImport(UIKit)
+import UIKit
+#endif
 
 /// Shared size-class and Dynamic Type helpers for adaptive navigation and list chrome.
 enum AdaptiveLayout {
-    /// Two-column split (sidebar + detail) when horizontal space is regular — iPad full screen, not iPhone or iPad slide-over.
+    /// Two-column split (sidebar + detail) on iPad when horizontal space is regular.
     static func usesSplitNavigation(_ horizontal: UserInterfaceSizeClass?) -> Bool {
+        #if canImport(UIKit)
+        UIDevice.current.userInterfaceIdiom == .pad && horizontal == .regular
+        #else
         horizontal == .regular
+        #endif
     }
 
-    /// Sidebar-style list chrome inside a split column.
+    /// Sidebar-style list chrome inside a split column on iPad.
     static func usesSidebarListStyle(_ horizontal: UserInterfaceSizeClass?) -> Bool {
-        horizontal == .regular
+        usesSplitNavigation(horizontal)
     }
 
     /// Wider split column when Dynamic Type is in an accessibility bucket.

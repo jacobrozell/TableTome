@@ -45,8 +45,13 @@ public struct EmptyStateView: View {
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
             if let actionTitle, let action {
-                PrimaryButton(title: actionTitle, accessibilityId: "emptyState.retry", action: action)
-                    .padding(.top, DesignTokens.Spacing.sm)
+                PrimaryButton(
+                    title: actionTitle,
+                    accessibilityId: "emptyState.retry",
+                    accessibilityHint: String(localized: "Tries loading this content again."),
+                    action: action
+                )
+                .padding(.top, DesignTokens.Spacing.sm)
             }
         }
         .padding(DesignTokens.Spacing.lg)

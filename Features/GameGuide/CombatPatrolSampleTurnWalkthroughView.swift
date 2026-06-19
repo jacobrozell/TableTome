@@ -44,8 +44,8 @@ struct CombatPatrolSampleTurnWalkthroughView: View {
             shortLabel: String(localized: "Shoot"),
             detail: String(
                 localized: """
-                Pick a unit, choose a target in range, and roll dice to see if shots hit and wound. Each unit's \
-                datasheet in Guided Match shows what to roll and how much damage to deal.
+                Pick units to shoot, choose a target in range, and roll dice to see if shots hit and wound. Each unit's \
+                details in Guided Match show what to roll and how much damage to deal.
                 """
             ),
             systemImage: "scope"
@@ -55,7 +55,7 @@ struct CombatPatrolSampleTurnWalkthroughView: View {
             shortLabel: String(localized: "Fight"),
             detail: String(
                 localized: """
-                Roll to charge into melee, then fight with the close-combat weapons on your datasheet. The battle \
+                Roll to charge into melee, then fight with the close-combat weapons listed in unit details. The battle \
                 tracker helps you remember wounds taken and which units have already fought this phase.
                 """
             ),

@@ -42,6 +42,8 @@ struct GuidedMatchView: View {
     @State var showsMatchSync = false
     @State private var showsResetConfirmation = false
     @State var hubTab: GuidedMatchHubTab = .armies
+    @State private var showsOwnListsSection = false
+    @State var showsMatchHistoryToolbar = false
 
     private var usesCompactSetupLayout: Bool {
         !NewPlayerTipsStore.hasExpandedGuidedMatchSetup
@@ -95,6 +97,11 @@ struct GuidedMatchView: View {
             if usesPadSplitNavigation {
                 selectedDestination = .battleTracker
             }
+        }
+        .task {
+            showsMatchHistoryToolbar = await MatchHistoryVisibility.showsToolbar(
+                repository: dependencies.matchHistoryRepository
+            )
         }
         .accessibilityIdentifier("guidedMatch.screen")
     }
@@ -177,29 +184,35 @@ struct GuidedMatchView: View {
                             )
                         )
 
-                        Button {
-                            selectedDestination = .playerOne
-                        } label: {
-                            PlayerArmyRow(
-                                label: String(localized: "Player 1"),
-                                selection: viewModel.matchState.playerOne,
-                                catalog: catalog
-                            )
-                        }
-                        .buttonStyle(.bordered)
-                        .accessibilityIdentifier("guidedMatch.playerOne.detail")
+                        DisclosureGroup(String(localized: "We brought our own lists")) {
+                            VStack(spacing: DesignTokens.Spacing.sm) {
+                                Button {
+                                    selectedDestination = .playerOne
+                                } label: {
+                                    PlayerArmyRow(
+                                        label: String(localized: "Player 1"),
+                                        selection: viewModel.matchState.playerOne,
+                                        catalog: catalog
+                                    )
+                                }
+                                .buttonStyle(.bordered)
+                                .accessibilityIdentifier("guidedMatch.playerOne.detail")
 
-                        Button {
-                            selectedDestination = .playerTwo
-                        } label: {
-                            PlayerArmyRow(
-                                label: String(localized: "Player 2"),
-                                selection: viewModel.matchState.playerTwo,
-                                catalog: catalog
-                            )
+                                Button {
+                                    selectedDestination = .playerTwo
+                                } label: {
+                                    PlayerArmyRow(
+                                        label: String(localized: "Player 2"),
+                                        selection: viewModel.matchState.playerTwo,
+                                        catalog: catalog
+                                    )
+                                }
+                                .buttonStyle(.bordered)
+                                .accessibilityIdentifier("guidedMatch.playerTwo.detail")
+                            }
+                            .padding(.top, DesignTokens.Spacing.sm)
                         }
-                        .buttonStyle(.bordered)
-                        .accessibilityIdentifier("guidedMatch.playerTwo.detail")
+                        .font(.subheadline.weight(.semibold))
                     }
                 }
             }
@@ -407,6 +420,8 @@ struct GuidedMatchView: View {
                 viewModel.applyStarterMatchup()
                 if usesPadSplitNavigation {
                     selectedDestination = .battleTracker
+                } else {
+                    hubTab = .setup
                 }
             } label: {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
@@ -541,42 +556,56 @@ struct GuidedMatchView: View {
     @ViewBuilder
     private func playersSection(catalog: SpearheadCatalog, useSplitSelection: Bool) -> some View {
         Section {
-            if useSplitSelection {
-                playerSidebarRow(
-                    label: String(localized: "Player 1"),
-                    selection: viewModel.matchState.playerOne,
-                    catalog: catalog,
-                    destination: .playerOne
+            DisclosureGroup(
+                isExpanded: Binding(
+                    get: { showsOwnListsSection || viewModel.matchState.hasBothArmies },
+                    set: { showsOwnListsSection = $0 }
                 )
-                playerSidebarRow(
-                    label: String(localized: "Player 2"),
-                    selection: viewModel.matchState.playerTwo,
-                    catalog: catalog,
-                    destination: .playerTwo
-                )
-            } else {
-                NavigationLink(value: GuidedMatchDestination.playerOne) {
-                    PlayerArmyRow(
+            ) {
+                if useSplitSelection {
+                    playerSidebarRow(
                         label: String(localized: "Player 1"),
                         selection: viewModel.matchState.playerOne,
-                        catalog: catalog
+                        catalog: catalog,
+                        destination: .playerOne
                     )
-                }
-                .accessibilityIdentifier("guidedMatch.playerOne")
-
-                NavigationLink(value: GuidedMatchDestination.playerTwo) {
-                    PlayerArmyRow(
+                    playerSidebarRow(
                         label: String(localized: "Player 2"),
                         selection: viewModel.matchState.playerTwo,
-                        catalog: catalog
+                        catalog: catalog,
+                        destination: .playerTwo
                     )
+                } else {
+                    NavigationLink(value: GuidedMatchDestination.playerOne) {
+                        PlayerArmyRow(
+                            label: String(localized: "Player 1"),
+                            selection: viewModel.matchState.playerOne,
+                            catalog: catalog
+                        )
+                    }
+                    .accessibilityIdentifier("guidedMatch.playerOne")
+
+                    NavigationLink(value: GuidedMatchDestination.playerTwo) {
+                        PlayerArmyRow(
+                            label: String(localized: "Player 2"),
+                            selection: viewModel.matchState.playerTwo,
+                            catalog: catalog
+                        )
+                    }
+                    .accessibilityIdentifier("guidedMatch.playerTwo")
                 }
-                .accessibilityIdentifier("guidedMatch.playerTwo")
+            } label: {
+                Text(String(localized: "We brought our own lists"))
+                    .font(.subheadline.weight(.semibold))
             }
-        } header: {
-            Text(String(localized: "Players"))
         } footer: {
             if !viewModel.matchState.hasBothArmies {
+                Text(
+                    String(
+                        localized: "Optional — most beginners tap Use Starter Matchup above to load both armies."
+                    )
+                )
+            } else {
                 Text(String(localized: "Choose both armies before the setup steps unlock."))
             }
         }
@@ -728,6 +757,69 @@ struct GuidedMatchView: View {
 extension GuidedMatchView {
     @ViewBuilder
     func compactLayout(catalog: SpearheadCatalog) -> some View {
+        VStack(spacing: 0) {
+            guidedMatchHubChrome(catalog: catalog)
+
+            if showsEmbeddedBattleTracker {
+                embeddedBattleTracker(catalog: catalog)
+            } else {
+                guidedMatchHubList(catalog: catalog)
+            }
+        }
+        .navigationDestination(for: GuidedMatchDestination.self) { destination in
+            guidedMatchScreen(
+                destination: destination,
+                catalog: catalog,
+                dismissesArmySelectionOnSave: true
+            )
+        }
+        .onAppear {
+            hubTab = suggestedHubTab
+        }
+        .onChange(of: viewModel.matchState.hasBothArmies) { _, _ in
+            hubTab = suggestedHubTab
+        }
+        .onChange(of: viewModel.matchState.completedStepIds) { _, _ in
+            if setupIsComplete, hubTab == .setup {
+                hubTab = .battle
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func guidedMatchHubChrome(catalog: SpearheadCatalog) -> some View {
+        VStack(spacing: DesignTokens.Spacing.sm) {
+            GuidedMatchStatusBar(
+                playerOneSummary: playerSummary(
+                    selection: viewModel.matchState.playerOne,
+                    catalog: catalog,
+                    fallback: String(localized: "Player 1")
+                ),
+                playerTwoSummary: playerSummary(
+                    selection: viewModel.matchState.playerTwo,
+                    catalog: catalog,
+                    fallback: String(localized: "Player 2")
+                ),
+                hasBothArmies: viewModel.matchState.hasBothArmies,
+                setupCompleted: viewModel.setupProgress.completed,
+                setupTotal: viewModel.setupProgress.total,
+                nextStepTitle: viewModel.nextIncompleteStep?.title,
+                setupComplete: setupIsComplete,
+                battleTrackerSummary: battleTrackerSummaryLine()
+            )
+            GuidedMatchHubTabBar(
+                selection: $hubTab,
+                hasBothArmies: viewModel.matchState.hasBothArmies,
+                setupComplete: setupIsComplete
+            )
+            .padding(.horizontal, DesignTokens.Spacing.md)
+        }
+        .padding(.bottom, DesignTokens.Spacing.xs)
+        .background(.bar)
+    }
+
+    @ViewBuilder
+    private func guidedMatchHubList(catalog: SpearheadCatalog) -> some View {
         List {
             switch hubTab {
             case .armies:
@@ -755,52 +847,20 @@ extension GuidedMatchView {
         .listStyle(.insetGrouped)
         .tabBarScrollInset()
         .readableContentWidth()
-        .safeAreaInset(edge: .top, spacing: 0) {
-            VStack(spacing: DesignTokens.Spacing.sm) {
-                GuidedMatchStatusBar(
-                    playerOneSummary: playerSummary(
-                        selection: viewModel.matchState.playerOne,
-                        catalog: catalog,
-                        fallback: String(localized: "Player 1")
-                    ),
-                    playerTwoSummary: playerSummary(
-                        selection: viewModel.matchState.playerTwo,
-                        catalog: catalog,
-                        fallback: String(localized: "Player 2")
-                    ),
-                    hasBothArmies: viewModel.matchState.hasBothArmies,
-                    setupCompleted: viewModel.setupProgress.completed,
-                    setupTotal: viewModel.setupProgress.total,
-                    nextStepTitle: viewModel.nextIncompleteStep?.title,
-                    setupComplete: setupIsComplete
-                )
-                GuidedMatchHubTabBar(
-                    selection: $hubTab,
-                    hasBothArmies: viewModel.matchState.hasBothArmies
-                )
-                .padding(.horizontal, DesignTokens.Spacing.md)
-            }
-            .padding(.bottom, DesignTokens.Spacing.xs)
-            .background(.bar)
-        }
-        .navigationDestination(for: GuidedMatchDestination.self) { destination in
-            guidedMatchScreen(
-                destination: destination,
-                catalog: catalog,
-                dismissesArmySelectionOnSave: true
-            )
-        }
-        .onAppear {
-            hubTab = suggestedHubTab
-        }
-        .onChange(of: viewModel.matchState.hasBothArmies) { _, _ in
-            hubTab = suggestedHubTab
-        }
-        .onChange(of: viewModel.matchState.completedStepIds) { _, _ in
-            if setupIsComplete, hubTab == .setup {
-                hubTab = .battle
-            }
-        }
+    }
+
+    @ViewBuilder
+    private func embeddedBattleTracker(catalog: SpearheadCatalog) -> some View {
+        BattlePhaseTrackerShell(
+            gameSystemId: gameSystemId,
+            matchState: viewModel.matchState,
+            catalog: catalog,
+            ruleSections: ruleSections,
+            onMatchStateChange: { viewModel.reloadFromStore() },
+            onVictoryComplete: handleVictoryComplete
+        )
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .accessibilityIdentifier("guidedMatch.embeddedBattleTracker")
     }
 }
 

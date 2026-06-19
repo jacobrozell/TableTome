@@ -23,18 +23,30 @@ public enum PhaseContextCoach {
         switch phase {
         case .command:
             [
-                String(localized: "Secure objectives with Battleline units at the end of Command phase."),
-                String(localized: "Mark secured markers and stratagems on the Table State card.")
+                String(
+                    localized: """
+                    Hold objectives with troops on the board — open unit details in Guided Match to see which models can score.
+                    """
+                ),
+                String(
+                    localized: """
+                    Mark secured objectives and any Command abilities you used on the Table State card.
+                    """
+                )
             ]
         case .movement:
             [
-                String(localized: "Deep Strike and Reserves arrive from battle round 2."),
+                String(localized: "Units that started off the board can arrive from battle round 2."),
                 String(localized: "Reserves must arrive by end of battle round 3 or are destroyed.")
             ]
         case .endOfTurn:
             [
-                String(localized: "Score secondaries and any end-of-turn mission VP."),
-                String(localized: "Round 5: the second-turn player scores primary VP here, not in Command.")
+                String(localized: "Score bonus objectives and any end-of-turn mission points."),
+                String(
+                    localized: """
+                    In round 5, the player who went second scores primary points here — not in Command.
+                    """
+                )
             ]
         case .shooting, .charge, .combat, .anyCombat:
             wh40kQuickTips(for: phase)
@@ -58,7 +70,7 @@ public enum PhaseContextCoach {
         case .shooting:
             [
                 String(localized: "Measure range to the closest part of each target."),
-                String(localized: "Resolve hit, wound, save, and damage on your datasheets.")
+                String(localized: "Resolve hit, wound, save, and damage using each unit's details in the app.")
             ]
         case .charge:
             [

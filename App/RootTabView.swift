@@ -93,9 +93,13 @@ struct RootTabView: View {
             }
             .tag(AppTab.settings)
         }
+        .modifier(PhoneTabBarOnlyStyle())
         .toolbar(tabBarChrome.isHidden ? .hidden : .visible, for: .tabBar)
         .background {
-            TabBarAccessibilityBridge(itemIdentifiers: tabBarItemIdentifiers)
+            TabBarAccessibilityBridge(
+                itemIdentifiers: tabBarItemIdentifiers,
+                isHidden: tabBarChrome.isHidden
+            )
         }
         .fullScreenCover(isPresented: $showsOnboarding) {
             OnboardingView(mode: .firstLaunch, onFinished: handleOnboardingCompletion)
@@ -119,9 +123,18 @@ struct RootTabView: View {
                 if selectedTab != .muster { selectedTab = .muster }
             }
         }
+        .onChange(of: selectedTab) { oldTab, newTab in
+            guard oldTab != newTab else { return }
+            tabBarChrome.isHidden = false
+        }
         .onChange(of: selectedTab) { _, tab in
             if tab == .muster, router.tab != .muster {
                 router.tab = .muster
+            }
+        }
+        .onChange(of: learnPath.count) { _, count in
+            if count == 0 {
+                tabBarChrome.isHidden = false
             }
         }
         .bannerInset()

@@ -112,7 +112,7 @@ Fixed bottom bar on iPhone battle tracker (replaces combat-only sticky bar):
 | **Resolve** | Combat tab → batch resolver |
 | **Score** | Turn tab → victory points (live totals in dock subtitle when scored) |
 
-Embedded Guided Match battle (phone): no hub back-links to Armies/Match Setup; status bar compacts to one line in landscape; tab bar hidden via `TabBarChrome`.
+Embedded Guided Match battle (phone): no hub back-links to Armies/Match Setup; status bar compacts to one line in landscape; tab bar hidden via `TabBarChrome` (SwiftUI toolbar + UIKit `tabBar.isHidden`, with `.tabBarOnly` style on iPhone to avoid landscape sidebar).
 
 Accessibility: `battleTracker.phaseDock`, `.phaseDock.phase`, `.phaseDock.myUnit`, `.phaseDock.resolve`, `.phaseDock.score`, `.phaseDock.nextPhase`
 
@@ -148,4 +148,5 @@ Accessibility: `battleTracker.phoneLandscapeSplit`, `battleTracker.pinnedWarscro
 |-------|-------|
 | Target release | v0.3 (Phases A–E) |
 | Last verified | 2026-06-19 |
-| Code paths | `Features/GuidedMatch/BattleTrackerPhaseDock.swift`, `Features/GuidedMatch/BattlePhaseTrackerView+PhaseDock.swift`, `Features/GuidedMatch/UnitFocusSheet.swift`, `Features/CombatRoll/BatchCombatResolverSection.swift`, `Support/PlayContinuationResolver.swift`, `DesignSystem/GuidedMatchHubChrome.swift`, `Support/TabBarChrome.swift` |
+| Code paths | `Features/GuidedMatch/BattleTrackerPhaseDock.swift`, `Features/GuidedMatch/BattlePhaseTrackerView+PhaseDock.swift`, `Features/GuidedMatch/UnitFocusSheet.swift`, `Features/CombatRoll/BatchCombatResolverSection.swift`, `Support/PlayContinuationResolver.swift`, `DesignSystem/GuidedMatchHubChrome.swift`, `Support/TabBarChrome.swift`, `Support/TabBarAccessibilityBridge.swift`, `App/RootTabView.swift`, `Domain/UseCases/BattleTrackerStore.swift` |
+| Resume contract | A battle is resumable only when `BattleTrackerState.hasBattleProgress` is true (not on tracker open alone). `MatchSessionStore` timestamps are recorded when progress is saved. Play continuation prefers the game system with battle progress, then onboarding choice, then active context. |

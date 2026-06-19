@@ -1,23 +1,27 @@
 import SwiftUI
 
-/// Applies stable accessibility identifiers to `UITabBar` items for UI automation.
+/// Applies stable accessibility identifiers and visibility to the root `UITabBarController`.
 struct TabBarAccessibilityBridge: UIViewControllerRepresentable {
     let itemIdentifiers: [String]
+    var isHidden = false
 
     func makeUIViewController(context: Context) -> Controller {
-        Controller(itemIdentifiers: itemIdentifiers)
+        Controller(itemIdentifiers: itemIdentifiers, isHidden: isHidden)
     }
 
     func updateUIViewController(_ controller: Controller, context: Context) {
         controller.itemIdentifiers = itemIdentifiers
+        controller.isHidden = isHidden
         controller.apply()
     }
 
     final class Controller: UIViewController {
         var itemIdentifiers: [String]
+        var isHidden: Bool
 
-        init(itemIdentifiers: [String]) {
+        init(itemIdentifiers: [String], isHidden: Bool) {
             self.itemIdentifiers = itemIdentifiers
+            self.isHidden = isHidden
             super.init(nibName: nil, bundle: nil)
             view.isHidden = true
             view.isUserInteractionEnabled = false
@@ -38,6 +42,18 @@ struct TabBarAccessibilityBridge: UIViewControllerRepresentable {
 
         func apply() {
             guard let tabBarController = tabBarController() else { return }
+            applyVisibility(to: tabBarController)
+            applyAccessibilityIdentifiers(to: tabBarController)
+        }
+
+        private func applyVisibility(to tabBarController: UITabBarController) {
+            guard tabBarController.tabBar.isHidden != isHidden else { return }
+            tabBarController.tabBar.isHidden = isHidden
+            tabBarController.view.setNeedsLayout()
+            tabBarController.view.layoutIfNeeded()
+        }
+
+        private func applyAccessibilityIdentifiers(to tabBarController: UITabBarController) {
             let items = tabBarController.tabBar.items ?? []
             for (index, identifier) in itemIdentifiers.enumerated() where index < items.count {
                 items[index].accessibilityIdentifier = identifier
@@ -57,6 +73,17 @@ struct TabBarAccessibilityBridge: UIViewControllerRepresentable {
                 return nil
             }
             return root.findTabBarController()
+        }
+    }
+}
+
+/// Keeps iPhone tab bars at the bottom in landscape instead of the iOS 18+ sidebar strip.
+struct PhoneTabBarOnlyStyle: ViewModifier {
+    func body(content: Content) -> some View {
+        if TabletomeLayout.currentIdiom() == .phone {
+            content.tabViewStyle(.tabBarOnly)
+        } else {
+            content
         }
     }
 }

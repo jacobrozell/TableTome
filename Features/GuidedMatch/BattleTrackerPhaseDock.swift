@@ -58,9 +58,10 @@ struct BattleTrackerPhaseDock: View {
             } else {
                 HStack(spacing: DesignTokens.Spacing.xs) {
                     phaseButton
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                     dockButton(
                         title: String(localized: "My Unit"),
-                        subtitle: myUnitLabel,
+                        subtitle: compactLandscape ? nil : myUnitLabel,
                         systemImage: "person.crop.circle",
                         isEnabled: myUnitEnabled,
                         accessibilityId: "battleTracker.phaseDock.myUnit",
@@ -68,7 +69,7 @@ struct BattleTrackerPhaseDock: View {
                     )
                     dockButton(
                         title: String(localized: "Resolve"),
-                        subtitle: String(localized: "Combat"),
+                        subtitle: compactLandscape ? nil : String(localized: "Combat"),
                         systemImage: "dice.fill",
                         isEnabled: true,
                         accessibilityId: "battleTracker.phaseDock.resolve",
@@ -77,7 +78,7 @@ struct BattleTrackerPhaseDock: View {
                     .optionalAccessibilityHint(resolveAccessibilityHint)
                     dockButton(
                         title: String(localized: "Score"),
-                        subtitle: victoryPointsSubtitle,
+                        subtitle: compactLandscape ? nil : victoryPointsSubtitle,
                         systemImage: "star.fill",
                         isEnabled: true,
                         accessibilityId: "battleTracker.phaseDock.score",
@@ -86,6 +87,7 @@ struct BattleTrackerPhaseDock: View {
                 }
             }
         }
+        .frame(maxWidth: .infinity)
         .padding(.horizontal, DesignTokens.Spacing.sm)
         .padding(.vertical, compactLandscape ? DesignTokens.Spacing.xs : DesignTokens.Spacing.sm)
         .background(.bar)
@@ -151,6 +153,7 @@ struct BattleTrackerPhaseDock: View {
         }
         .buttonStyle(.plain)
         .disabled(!isEnabled)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .accessibilityLabel(title)
         .accessibilityIdentifier(accessibilityId)
     }
@@ -167,14 +170,21 @@ struct BattleTrackerPhaseDock: View {
             Text(title)
                 .font(.caption2.weight(.semibold))
                 .adaptiveLineLimit(1)
-            if !compactLandscape, let subtitle, !subtitle.isEmpty {
-                Text(subtitle)
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-                    .adaptiveLineLimit(2)
+            if !compactLandscape {
+                ZStack(alignment: .top) {
+                    Text(" \n ")
+                        .font(.caption2)
+                        .hidden()
+                    if let subtitle, !subtitle.isEmpty {
+                        Text(subtitle)
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                            .adaptiveLineLimit(2)
+                    }
+                }
             }
         }
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .minimumTouchTarget()
         .foregroundStyle(isEnabled ? Color.primary : Color.secondary.opacity(0.5))
         .padding(.vertical, compactLandscape ? 2 : DesignTokens.Spacing.xs)

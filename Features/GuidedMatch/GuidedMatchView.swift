@@ -803,7 +803,6 @@ extension GuidedMatchView {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .toolbar(hidesTabBarInLandscapeBattle ? .hidden : .visible, for: .tabBar)
         .onChange(of: hidesTabBarInLandscapeBattle) { _, hidden in
             tabBarChrome.isHidden = hidden
         }

@@ -1,5 +1,4 @@
 import Foundation
-import TabletomeDomain
 
 public enum WarscrollTrustFeedback: Sendable {
     public static func reportText(

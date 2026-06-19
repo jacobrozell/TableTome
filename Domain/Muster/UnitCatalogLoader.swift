@@ -1,5 +1,4 @@
 import Foundation
-import TabletomeDomain
 
 public enum UnitCatalogLoader {
     private(set) nonisolated(unsafe) static var manifest: UnitCatalogManifest?

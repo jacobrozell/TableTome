@@ -1,5 +1,4 @@
 import Foundation
-import TabletomeDomain
 
 public struct BattleSize: Identifiable, Hashable, Sendable {
     public let id: String

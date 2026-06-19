@@ -241,8 +241,6 @@ enum PlayContinuationResolver {
             return String(localized: "Resume Warhammer 40,000 match")
         case .scTmg:
             return String(localized: "Resume StarCraft match")
-        default:
-            return String(localized: "Resume Guided Match")
         }
     }
 }

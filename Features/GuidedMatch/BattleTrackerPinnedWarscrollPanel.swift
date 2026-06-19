@@ -60,7 +60,7 @@ struct BattleTrackerPinnedWarscrollPanel: View {
                 Text(String(localized: "\(woundsRemaining)/\(woundCapacity)"))
                     .font(.caption.weight(.bold))
                 Spacer(minLength: 0)
-                Stepper("", value: Binding(get: { woundsRemaining }, set: onWoundsChange), in: 0...woundCapacity)
+                Stepper("", value: Binding(get: { woundsRemaining }, set: { onWoundsChange($0) }), in: 0...woundCapacity)
                     .labelsHidden()
             }
             ArmyHealthProgressBar(

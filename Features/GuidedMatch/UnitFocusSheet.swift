@@ -242,7 +242,7 @@ struct UnitFocusSheet: View {
                     String(localized: "\(woundsRemaining)"),
                     value: Binding(
                         get: { woundsRemaining },
-                        set: onWoundsChange
+                        set: { onWoundsChange($0) }
                     ),
                     in: 0...woundCapacity
                 )
@@ -406,7 +406,7 @@ struct UnitFocusSheet: View {
                 String(localized: "Health per model: \(effectiveHealthPerModel)"),
                 value: Binding(
                     get: { effectiveHealthPerModel },
-                    set: onSetHealthPerModelOverride
+                    set: { onSetHealthPerModelOverride($0) }
                 ),
                 in: 1...20
             )

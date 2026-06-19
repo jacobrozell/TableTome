@@ -1,5 +1,4 @@
 import Foundation
-import TabletomeDomain
 
 public enum UnitNameMatch {
     /// Normalize for comparison: lowercase, collapse whitespace, strip first "(...)" group.

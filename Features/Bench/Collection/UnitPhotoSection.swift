@@ -27,13 +27,14 @@ struct UnitPhotoSection: View {
     }
 
     var body: some View {
+        let pickerLabel = addPhotoLabel
         Section {
             if let cover = unit.coverPhoto {
                 coverImage(cover)
             }
 
             PhotosPicker(selection: $pickerItem, matching: .images) {
-                Label(addPhotoLabel, systemImage: "photo.badge.plus")
+                Label(pickerLabel, systemImage: "photo.badge.plus")
             }
             .accessibilityIdentifier("unitAddPhoto")
 

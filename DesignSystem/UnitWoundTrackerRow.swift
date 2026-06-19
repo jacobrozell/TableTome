@@ -43,7 +43,7 @@ struct UnitWoundTrackerRow: View {
                 String(localized: "\(woundsRemaining) left"),
                 value: Binding(
                     get: { woundsRemaining },
-                    set: onChange
+                    set: { onChange($0) }
                 ),
                 in: 0...capacity
             )

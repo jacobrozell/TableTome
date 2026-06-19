@@ -274,7 +274,7 @@ struct CombatBuffToggleRow: View {
     let onToggle: (Bool) -> Void
 
     var body: some View {
-        Toggle(isOn: Binding(get: { isOn }, set: onToggle)) {
+        Toggle(isOn: Binding(get: { isOn }, set: { onToggle($0) })) {
             VStack(alignment: .leading, spacing: 2) {
                 Text(buff.name)
                     .font(.subheadline.weight(.semibold))

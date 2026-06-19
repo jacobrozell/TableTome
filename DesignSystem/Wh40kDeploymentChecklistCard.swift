@@ -5,6 +5,12 @@ struct Wh40kDeploymentChecklistCard: View {
     let completedSteps: Set<String>
     let focusedStep: Wh40kDeploymentChecklistStep?
     let onToggle: (Wh40kDeploymentChecklistStep, Bool) -> Void
+    var gameSystemId: String = GameSystemId.wh40k11e.rawValue
+    var ruleSections: [RuleSection] = []
+
+    private var glossaryText: String {
+        Wh40kDeploymentChecklistStep.allCases.map(\.detail).joined(separator: " ")
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -33,6 +39,24 @@ struct Wh40kDeploymentChecklistCard: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityIdentifier("guidedMatch.wh40kDeployment.\(step.rawValue)")
+            }
+
+            GlossaryChipsRow(
+                text: glossaryText,
+                gameSystemId: gameSystemId,
+                ruleSections: ruleSections
+            )
+
+            if let reservesSection = ruleSections.first(where: { $0.id == "11e-reserves" }) {
+                ReferenceLinksGroup {
+                    NavigationLink(value: RuleSectionLink(gameSystemId: gameSystemId, sectionId: reservesSection.id)) {
+                        ReferenceLinkRow(
+                            title: reservesSection.title,
+                            systemImage: "doc.text"
+                        )
+                    }
+                    .accessibilityIdentifier("guidedMatch.wh40kDeployment.reservesReference")
+                }
             }
         }
         .surfaceCard()

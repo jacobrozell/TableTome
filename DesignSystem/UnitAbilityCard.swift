@@ -7,6 +7,7 @@ struct UnitAbilityCard: View {
     let isUsed: Bool
     let onMarkUsed: (() -> Void)?
     var ruleSections: [RuleSection] = []
+    var gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId
     var showsRollTools: Bool = false
     var showsEmbeddedCombatTools: Bool = false
     var onResolveAttack: (() -> Void)?
@@ -121,9 +122,7 @@ struct UnitAbilityCard: View {
     }
 
     private var rollToolLinks: some View {
-        NavigationLink {
-            UnitMatchupEvaluatorView(ruleSections: ruleSections)
-        } label: {
+        NavigationLink(value: CombatResolverLink(gameSystemId: gameSystemId)) {
             Label(String(localized: "Combat Resolver"), systemImage: "dice.fill")
                 .font(.caption.weight(.semibold))
         }

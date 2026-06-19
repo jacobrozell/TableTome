@@ -33,6 +33,9 @@ targets:
         type: folder
       - path: Resources/Assets.xcassets
         buildPhase: resources
+      - path: Resources/Catalogs
+        buildPhase: resources
+        type: folder
     dependencies:
       - target: TabletomeDomain
       - target: TabletomeData

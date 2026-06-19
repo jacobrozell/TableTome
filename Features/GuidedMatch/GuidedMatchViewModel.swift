@@ -308,8 +308,30 @@ final class GuidedMatchViewModel: ObservableObject {
     func applyStarterMatchup() {
         featuredArmies.applyStarterMatchup(to: &matchState)
         BattleTrackerStore.reset(gameSystemId: gameSystemId)
+        applyRecommendedLoadouts()
         persist()
         syncAutoCompletions()
+    }
+
+    func applyRecommendedLoadouts() {
+        guard let catalog else { return }
+        applyRecommendedLoadout(for: &matchState.playerOne, catalog: catalog)
+        applyRecommendedLoadout(for: &matchState.playerTwo, catalog: catalog)
+        persist()
+        syncAutoCompletions()
+    }
+
+    private func applyRecommendedLoadout(for player: inout PlayerArmySelection, catalog: SpearheadCatalog) {
+        guard let army = army(factionId: player.factionId, armyId: player.armyId) else { return }
+        if let enhancement = ArmyRuleOption.recommendedDefault(in: army.enhancements) {
+            player.enhancementId = enhancement.id
+        }
+        if let secondary = ArmyRuleOption.recommendedDefault(in: army.secondaryObjectives) {
+            player.secondaryObjectiveId = secondary.id
+        }
+        if let regiment = ArmyRuleOption.recommendedDefault(in: army.regimentAbilities) {
+            player.regimentAbilityId = regiment.id
+        }
     }
 
     func faction(id: String) -> SpearheadFaction? {

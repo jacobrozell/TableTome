@@ -21,9 +21,7 @@ struct BattleTrackerReferenceLinksSection: View {
     var body: some View {
         VStack(spacing: 0) {
             if capabilities.showsBattleTacticDecks {
-                NavigationLink {
-                    BattleTacticsReferenceView(ruleSections: ruleSections)
-                } label: {
+                NavigationLink(value: BattleTacticsReferenceLink(gameSystemId: gameSystemId.rawValue)) {
                     referenceLinkLabel(String(localized: "Card Decks Guide"), systemImage: "rectangle.stack")
                 }
                 .accessibilityIdentifier("battleTracker.battleTactics")
@@ -31,9 +29,7 @@ struct BattleTrackerReferenceLinksSection: View {
                 Divider().padding(.leading, DesignTokens.Spacing.md)
             }
 
-            NavigationLink {
-                RulesGlossaryView(gameSystemId: gameSystemId.rawValue, ruleSections: ruleSections)
-            } label: {
+            NavigationLink(value: RulesGlossaryBrowseLink(gameSystemId: gameSystemId.rawValue)) {
                 referenceLinkLabel(
                     GameSystemRulesLabels.glossaryTitle(gameSystemId: gameSystemId),
                     systemImage: "book.fill"
@@ -44,9 +40,7 @@ struct BattleTrackerReferenceLinksSection: View {
             if let scoringId = capabilities.scoringRuleSectionId,
                let section = ruleSections.first(where: { $0.id == scoringId }) {
                 Divider().padding(.leading, DesignTokens.Spacing.md)
-                NavigationLink {
-                    RuleSectionDetailView(section: section, allSections: ruleSections)
-                } label: {
+                NavigationLink(value: RuleSectionLink(gameSystemId: gameSystemId.rawValue, sectionId: section.id)) {
                     referenceLinkLabel(section.title, systemImage: "doc.text")
                 }
                 .accessibilityIdentifier("battleTracker.scoringRules")
@@ -241,15 +235,7 @@ struct BattleTrackerBothLoadoutsSection: View {
     private func warscrollLink(for army: SpearheadArmy) -> some View {
         let showsRoster = usesCatalogUnitReference(for: army)
         if showsRoster {
-            NavigationLink {
-                ArmyRosterView(
-                    army: army,
-                    ruleSections: ruleSections,
-                    gameSystemId: gameSystemId,
-                    featuredArmies: GuidedMatchFeaturedArmies.forGameSystem(gameSystemId)
-                        ?? SpearheadFeaturedArmies.configuration
-                )
-            } label: {
+            NavigationLink(value: ArmyRosterLink(gameSystemId: gameSystemId.rawValue, armyId: army.id)) {
                 Label(
                     unitRosterLinkTitle,
                     systemImage: "doc.richtext"

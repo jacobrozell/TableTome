@@ -6,14 +6,31 @@ struct GameSystemDetailView: View {
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @EnvironmentObject private var dependencies: AppDependencies
     @State private var gameSystem: GameSystem?
-    @State private var featuredArmies: [SpearheadArmy] = []
+    @State private var featuredArmyRows: [FeaturedArmyRow] = []
     @State private var errorMessage: String?
+
+    private struct FeaturedArmyRow: Identifiable {
+        let factionName: String
+        let army: SpearheadArmy
+        var id: String { army.id }
+    }
+
+    private var playContext: GameSystemPlayContext {
+        GameSystemPlayContext.context(for: gameSystemId)
+    }
+
+    private var showsStartHereCard: Bool {
+        playContext.isSpearhead
+            || playContext.isWh40k11e
+            || playContext.isCombatPatrol
+            || playContext.isStarCraft
+    }
 
     var body: some View {
         Group {
             if let gameSystem {
                 List {
-                    if gameSystemId == "aos-spearhead" {
+                    if playContext.isSpearhead {
                         Section {
                             NewPlayerStartHereCard()
                         }
@@ -21,7 +38,7 @@ struct GameSystemDetailView: View {
                         .listRowBackground(Color.clear)
                     }
 
-                    if gameSystemId == "wh40k-11e" {
+                    if playContext.isWh40k11e {
                         Section {
                             FortyKStartHereCard(gameSystem: gameSystem)
                         }
@@ -29,7 +46,7 @@ struct GameSystemDetailView: View {
                         .listRowBackground(Color.clear)
                     }
 
-                    if gameSystemId == "wh40k-10e-cp" {
+                    if playContext.isCombatPatrol {
                         Section {
                             CombatPatrolStartHereCard(gameSystem: gameSystem)
                         }
@@ -37,7 +54,7 @@ struct GameSystemDetailView: View {
                         .listRowBackground(Color.clear)
                     }
 
-                    if gameSystemId == "sc-tmg" {
+                    if playContext.isStarCraft {
                         Section {
                             ScStartHereCard(gameSystem: gameSystem)
                         }
@@ -45,27 +62,13 @@ struct GameSystemDetailView: View {
                         .listRowBackground(Color.clear)
                     }
 
-                    if gameSystemId == "wh40k-11e", !featuredArmies.isEmpty {
+                    if playContext.isWh40k11e, !featuredArmyRows.isEmpty {
                         Section {
-                            ForEach(featuredArmies) { army in
-                                NavigationLink {
-                                    ArmyRosterView(
-                                        army: army,
-                                        ruleSections: gameSystem.ruleSections,
-                                        gameSystemId: gameSystemId,
-                                        featuredArmies: FortyKFeaturedArmies.configuration
-                                    )
-                                } label: {
-                                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                                        Text(army.name)
-                                            .font(.headline)
-                                        Text(army.general)
-                                            .font(.caption)
-                                            .foregroundStyle(.secondary)
-                                    }
-                                    .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                            ForEach(featuredArmyRows) { row in
+                                NavigationLink(value: ArmyRosterLink(gameSystemId: gameSystemId, armyId: row.army.id)) {
+                                    starterArmyRow(factionName: row.factionName, army: row.army)
                                 }
-                                .accessibilityIdentifier("guide.armyRoster.\(army.id)")
+                                .accessibilityIdentifier("guide.armyRoster.\(row.army.id)")
                             }
                         } header: {
                             Text(String(localized: "Starter Set Armies"))
@@ -74,28 +77,14 @@ struct GameSystemDetailView: View {
                         }
                     }
 
-                    if (gameSystemId == "aos-spearhead" || gameSystemId == "sc-tmg" || gameSystemId == "wh40k-10e-cp"), !featuredArmies.isEmpty {
+                    if playContext.isSpearhead || playContext.isStarCraft || playContext.isCombatPatrol,
+                       !featuredArmyRows.isEmpty {
                         Section {
-                            ForEach(featuredArmies) { army in
-                                NavigationLink {
-                                    ArmyRosterView(
-                                        army: army,
-                                        ruleSections: gameSystem.ruleSections,
-                                        gameSystemId: gameSystemId,
-                                        featuredArmies: GuidedMatchFeaturedArmies.forGameSystem(gameSystemId)
-                                            ?? SpearheadFeaturedArmies.configuration
-                                    )
-                                } label: {
-                                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                                        Text(army.name)
-                                            .font(.headline)
-                                        Text(army.general)
-                                            .font(.caption)
-                                            .foregroundStyle(.secondary)
-                                    }
-                                    .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                            ForEach(featuredArmyRows) { row in
+                                NavigationLink(value: ArmyRosterLink(gameSystemId: gameSystemId, armyId: row.army.id)) {
+                                    starterArmyRow(factionName: row.factionName, army: row.army)
                                 }
-                                .accessibilityIdentifier("guide.armyRoster.\(army.id)")
+                                .accessibilityIdentifier("guide.armyRoster.\(row.army.id)")
                             }
                         } header: {
                             Text(starterArmiesSectionTitle)
@@ -105,47 +94,52 @@ struct GameSystemDetailView: View {
                     }
 
                     Section {
-                        NavigationLink {
-                            GettingStartedView(gameSystem: gameSystem)
-                        } label: {
-                            guideRow(
-                                title: String(localized: "Getting Started"),
-                                symbol: "map",
-                                detail: gettingStartedDetail
-                            )
-                        }
-                        .accessibilityIdentifier("guide.gettingStarted.\(gameSystemId)")
-
-                        if gameSystemId == "wh40k-10e-cp" {
-                            NavigationLink {
-                                CombatPatrolSampleTurnWalkthroughView()
-                            } label: {
+                        if !showsStartHereCard {
+                            NavigationLink(value: GettingStartedLink(gameSystemId: gameSystemId)) {
                                 guideRow(
-                                    title: String(localized: "Preview a Turn"),
-                                    symbol: "play.circle",
-                                    detail: String(localized: "Command-first tour — objectives, stratagems, and scoring")
+                                    title: String(localized: "Getting Started"),
+                                    symbol: "map",
+                                    detail: gettingStartedDetail
                                 )
                             }
-                            .accessibilityIdentifier("guide.combatPatrolSampleTurn.\(gameSystemId)")
-                        }
+                            .accessibilityIdentifier("guide.gettingStarted.\(gameSystemId)")
 
-                        if !gameSystem.editionMigrationSteps.isEmpty {
-                            NavigationLink {
-                                EditionMigrationView(gameSystem: gameSystem)
-                            } label: {
-                                guideRow(
-                                    title: editionMigrationLinkTitle,
-                                    symbol: gameSystemId == "sc-tmg" ? "gamecontroller" : "arrow.triangle.2.circlepath",
-                                    detail: editionMigrationLinkDetail
-                                )
+                            if playContext.isCombatPatrol {
+                                NavigationLink(value: CombatPatrolSampleTurnLink()) {
+                                    guideRow(
+                                        title: String(localized: "Preview a Turn"),
+                                        symbol: "play.circle",
+                                        detail: String(localized: "Command-first tour — objectives, stratagems, and scoring")
+                                    )
+                                }
+                                .accessibilityIdentifier("guide.combatPatrolSampleTurn.\(gameSystemId)")
                             }
-                            .accessibilityIdentifier("guide.whatsNew.\(gameSystemId)")
+
+                            if !gameSystem.editionMigrationSteps.isEmpty {
+                                NavigationLink(value: EditionMigrationLink(gameSystemId: gameSystemId)) {
+                                    guideRow(
+                                        title: editionMigrationLinkTitle,
+                                        symbol: playContext.isStarCraft ? "gamecontroller" : "arrow.triangle.2.circlepath",
+                                        detail: editionMigrationLinkDetail
+                                    )
+                                }
+                                .accessibilityIdentifier("guide.whatsNew.\(gameSystemId)")
+                            }
+
+                            if ReleaseSurface.showsGuidedMatch(for: gameSystemId) {
+                                NavigationLink(value: GuidedMatchLink(gameSystemId: GameSystemId(resolving: gameSystemId))) {
+                                    guideRow(
+                                        title: String(localized: "Guided Match"),
+                                        symbol: "flag.checkered",
+                                        detail: guidedMatchDetail
+                                    )
+                                }
+                                .accessibilityIdentifier("guide.guidedMatch.\(gameSystemId)")
+                            }
                         }
 
-                        if !gameSystem.ruleSections.isEmpty {
-                            NavigationLink {
-                                GameSystemRulesReferenceView(gameSystem: gameSystem)
-                            } label: {
+                        if !gameSystem.ruleSections.isEmpty, !playContext.isStarCraft {
+                            NavigationLink(value: GameSystemRulesReferenceLink(gameSystemId: gameSystemId)) {
                                 guideRow(
                                     title: GameSystemRulesLabels.rulesReferenceLinkTitle(gameSystemId: gameSystemId),
                                     symbol: "doc.text.fill",
@@ -155,34 +149,8 @@ struct GameSystemDetailView: View {
                             .accessibilityIdentifier("guide.rulesReference.\(gameSystemId)")
                         }
 
-                        if ReleaseSurface.showsGuidedMatch(for: gameSystemId) {
-                            NavigationLink {
-                                GuidedMatchView(
-                                    viewModel: dependencies.makeGuidedMatchViewModel(
-                                        gameSystemId: GameSystemId(resolving: gameSystemId)
-                                    ),
-                                    ruleSections: gameSystem.ruleSections
-                                )
-                            } label: {
-                                guideRow(
-                                    title: String(localized: "Guided Match"),
-                                    symbol: "flag.checkered",
-                                    detail: guidedMatchDetail
-                                )
-                            }
-                            .accessibilityIdentifier("guide.guidedMatch.\(gameSystemId)")
-                        }
-
                         if ReleaseSurface.showsCombatResolver(for: gameSystemId) {
-                            NavigationLink {
-                                UnitMatchupEvaluatorView(
-                                    ruleSections: gameSystem.ruleSections,
-                                    gameSystemId: gameSystemId,
-                                    catalogRepository: dependencies.catalogRepository(
-                                        for: GameSystemId(resolving: gameSystemId)
-                                    )
-                                )
-                            } label: {
+                            NavigationLink(value: CombatResolverLink(gameSystemId: gameSystemId)) {
                                 guideRow(
                                     title: String(localized: "Combat Resolver"),
                                     symbol: "dice.fill",
@@ -194,41 +162,36 @@ struct GameSystemDetailView: View {
                             .accessibilityIdentifier("guide.combatResolver.\(gameSystemId)")
                         }
                     } header: {
-                        Text(String(localized: "Play"))
+                        Text(showsStartHereCard ? String(localized: "More") : String(localized: "Play"))
                     } footer: {
-                        if gameSystemId == "aos-spearhead" {
+                        if showsStartHereCard {
+                            Text(String(localized: "Use Start here above for your first path. These links are for rules lookup and optional tools."))
+                        } else if playContext.isSpearhead {
                             Text(String(localized: "New to a term? Open AoS Glossary under Table Reference."))
-                        } else if gameSystemId == "wh40k-11e" {
+                        } else if playContext.isWh40k11e {
                             Text(String(localized: "Use Guided Match for the Armageddon starter matchup, or browse all factions in army selection."))
-                        } else if gameSystemId == "wh40k-10e-cp" {
+                        } else if playContext.isCombatPatrol {
                             Text(
                                 String(
                                     localized: """
-                                    Start with Getting Started, then open Missions Reference before your first Clash of Patrols game. \
-                                    Guided Match includes the Leviathan Combat Patrol starter setup.
+                                    Start with Getting Started, then open Missions Reference before your first game. \
+                                    Guided Match walks through setup and includes a starter matchup.
                                     """
                                 )
                             )
-                        } else if gameSystemId == "sc-tmg" {
+                        } else if playContext.isStarCraft {
                             Text(String(localized: "Start with Use Starter Matchup for the 2-Player Founders Edition."))
                         }
                     }
 
-                    if gameSystemId == "aos-spearhead" {
+                    if playContext.isSpearhead {
                         Section(String(localized: "Table Reference")) {
-                            NavigationLink {
-                                BattleTacticsReferenceView(ruleSections: gameSystem.ruleSections)
-                            } label: {
+                            NavigationLink(value: BattleTacticsReferenceLink(gameSystemId: gameSystemId)) {
                                 Label(String(localized: "Card Decks Guide"), systemImage: "rectangle.stack")
                                     .frame(minHeight: DesignTokens.minTouchTarget)
                             }
                             .accessibilityHint(String(localized: "Twist cards vs battle tactic cards — which deck is which"))
-                            NavigationLink {
-                                RulesGlossaryView(
-                                    gameSystemId: gameSystemId,
-                                    ruleSections: gameSystem.ruleSections
-                                )
-                            } label: {
+                            NavigationLink(value: RulesGlossaryBrowseLink(gameSystemId: gameSystemId)) {
                                 Label(
                                     GameSystemRulesLabels.glossaryTitle(gameSystemId: gameSystemId),
                                     systemImage: "book.fill"
@@ -238,21 +201,35 @@ struct GameSystemDetailView: View {
                         }
                     }
 
-                    if gameSystemId == "wh40k-10e-cp" {
+                    if playContext.isWh40k11e || playContext.isStarCraft {
                         Section(String(localized: "Table Reference")) {
-                            NavigationLink {
-                                CombatPatrolMissionsReferenceView(ruleSections: gameSystem.ruleSections)
-                            } label: {
+                            NavigationLink(value: RulesGlossaryBrowseLink(gameSystemId: gameSystemId)) {
+                                Label(
+                                    GameSystemRulesLabels.glossaryTitle(gameSystemId: gameSystemId),
+                                    systemImage: "book.fill"
+                                )
+                                    .frame(minHeight: DesignTokens.minTouchTarget)
+                            }
+                            if playContext.isStarCraft {
+                                NavigationLink(value: GameSystemRulesReferenceLink(gameSystemId: gameSystemId)) {
+                                    Label(
+                                        GameSystemRulesLabels.rulesReferenceLinkTitle(gameSystemId: gameSystemId),
+                                        systemImage: "doc.text.fill"
+                                    )
+                                        .frame(minHeight: DesignTokens.minTouchTarget)
+                                }
+                            }
+                        }
+                    }
+
+                    if playContext.isCombatPatrol {
+                        Section(String(localized: "Table Reference")) {
+                            NavigationLink(value: CombatPatrolMissionsLink(gameSystemId: gameSystemId)) {
                                 Label(String(localized: "Missions Reference"), systemImage: "map")
                                     .frame(minHeight: DesignTokens.minTouchTarget)
                             }
                             .accessibilityHint(String(localized: "Six Combat Patrol missions, securing rules, and scoring"))
-                            NavigationLink {
-                                RulesGlossaryView(
-                                    gameSystemId: gameSystemId,
-                                    ruleSections: gameSystem.ruleSections
-                                )
-                            } label: {
+                            NavigationLink(value: RulesGlossaryBrowseLink(gameSystemId: gameSystemId)) {
                                 Label(
                                     GameSystemRulesLabels.glossaryTitle(gameSystemId: gameSystemId),
                                     systemImage: "book.fill"
@@ -283,72 +260,86 @@ struct GameSystemDetailView: View {
         }
         .navigationTitle(navigationTitle)
         .navigationBarTitleDisplayMode(verticalSizeClass == .compact ? .inline : .large)
-        .task { await load() }
+        .task {
+            ActiveGameContextStore.setActiveGameSystem(gameSystemId)
+            await load()
+        }
     }
 
     private var navigationTitle: String {
-        guard let gameSystem else { return String(localized: "Game Guide") }
-        if gameSystemId == "wh40k-11e" {
+        guard gameSystem != nil else { return String(localized: "Game Guide") }
+        if playContext.isWh40k11e {
             return String(localized: "Warhammer 40,000")
         }
-        if gameSystemId == "wh40k-10e-cp" {
+        if playContext.isCombatPatrol {
             return String(localized: "Combat Patrol")
         }
-        if gameSystemId == "sc-tmg" {
+        if playContext.isStarCraft {
             return String(localized: "StarCraft")
         }
-        return gameSystem.name
+        return gameSystem?.name ?? String(localized: "Game Guide")
     }
 
     private var gettingStartedDetail: String {
-        switch gameSystemId {
-        case "wh40k-10e-cp":
-            String(localized: "Pick a patrol box, a mission, and play five rounds")
-        case "wh40k-11e":
-            String(localized: "What you need, army building, and how a battle works")
-        case "sc-tmg":
-            String(localized: "Minerals, supply, reserves, and five battle rounds")
-        default:
-            String(localized: "Five-minute read — what you need and how a battle works")
+        if playContext.isCombatPatrol {
+            return String(localized: "Pick a patrol box, a mission, and play five rounds")
         }
+        if playContext.isWh40k11e {
+            return String(localized: "What you need, army building, and how a battle works")
+        }
+        if playContext.isStarCraft {
+            return String(localized: "Minerals, supply, reserves, and five battle rounds")
+        }
+        return String(localized: "Five-minute read — what you need and how a battle works")
     }
 
     private var guidedMatchDetail: String {
-        switch gameSystemId {
-        case "sc-tmg":
-            String(localized: "Raynor vs Kerrigan starter — activations, Pass, and supply tracking")
-        default:
-            String(localized: "Interactive setup and battle tracker — start with Use Starter Matchup")
+        if playContext.isStarCraft {
+            return String(localized: "Raynor vs Kerrigan starter — activations, Pass, and supply tracking")
         }
+        return String(localized: "Interactive setup and battle tracker — start with Use Starter Matchup")
     }
 
     private var starterArmiesSectionTitle: String {
-        gameSystemId == "sc-tmg"
+        playContext.isStarCraft
             ? String(localized: "Founders Edition Armies")
             : String(localized: "Starter Set Armies")
     }
 
     private var starterArmiesSectionFooter: String {
-        switch gameSystemId {
-        case "sc-tmg":
-            String(localized: "Rosters and battle tools for the Terran vs Zerg starter matchup.")
-        case "wh40k-10e-cp":
-            String(localized: "Rosters and setup tools for the Leviathan Combat Patrol starter armies.")
-        default:
-            String(localized: "Full warscrolls, abilities, and battle tools for the Skaventide starter armies.")
+        if playContext.isStarCraft {
+            return String(localized: "Rosters and battle tools for the Terran vs Zerg starter matchup.")
         }
+        if playContext.isCombatPatrol {
+            return String(localized: "Rosters and setup tools for Combat Patrol starter armies.")
+        }
+        return String(localized: "Unit profiles, abilities, and battle tools for the starter armies in your box.")
     }
 
     private var editionMigrationLinkTitle: String {
-        gameSystemId == "sc-tmg"
+        playContext.isStarCraft
             ? String(localized: "RTS → Tabletop")
             : String(localized: "What's New in 11th Edition")
     }
 
     private var editionMigrationLinkDetail: String {
-        gameSystemId == "sc-tmg"
+        playContext.isStarCraft
             ? String(localized: "Supply, fog of war, and activations for SC II veterans")
             : String(localized: "Upgrading from 10th — key rule changes at the table")
+    }
+
+    private func starterArmyRow(factionName: String, army: SpearheadArmy) -> some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+            Text(factionName)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(Color.accentColor)
+            Text(army.name)
+                .font(.headline)
+            Text(army.general)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
     }
 
     private func guideRow(title: String, symbol: String, detail: String) -> some View {
@@ -372,8 +363,10 @@ struct GameSystemDetailView: View {
             let catalog = try await dependencies.catalogRepository(
                 for: GameSystemId(resolving: gameSystemId)
             ).loadCatalog()
-            featuredArmies = featuredArmyIds.compactMap { armyId in
-                catalog.factions.flatMap(\.armies).first { $0.id == armyId }
+            featuredArmyRows = catalog.factions.flatMap { faction in
+                faction.armies
+                    .filter { featuredArmyIds.contains($0.id) }
+                    .map { FeaturedArmyRow(factionName: faction.name, army: $0) }
             }
         } catch {
             errorMessage = String(localized: "This game guide could not be loaded.")

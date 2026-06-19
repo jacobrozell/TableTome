@@ -55,6 +55,28 @@ final class GuidedMatchViewModelTests: XCTestCase {
         XCTAssertEqual(loaded.playerOneVictoryPoints, 0)
         XCTAssertTrue(viewModel.matchState.hasBothArmies)
     }
+
+    func testApplyRecommendedLoadoutsSelectsDefaultsForCombatPatrol() async throws {
+        let catalog = try await BundledPlayCatalogRepository(
+            bundle: Bundle(for: GuidedMatchViewModelTests.self)
+        ).loadCatalog(for: "wh40k-10e-cp")
+
+        var state = GuidedMatchState()
+        CombatPatrolFeaturedArmies.applyStarterMatchup(to: &state)
+
+        let viewModel = GuidedMatchViewModel(
+            gameSystemId: .wh40k10eCp,
+            catalogRepository: StubSpearheadCatalogRepository(catalog: catalog),
+            initialState: state
+        )
+        await viewModel.load()
+        viewModel.applyRecommendedLoadouts()
+
+        XCTAssertNotNil(viewModel.matchState.playerOne.enhancementId)
+        XCTAssertNotNil(viewModel.matchState.playerOne.secondaryObjectiveId)
+        XCTAssertNotNil(viewModel.matchState.playerTwo.enhancementId)
+        XCTAssertNotNil(viewModel.matchState.playerTwo.secondaryObjectiveId)
+    }
 }
 
 private struct StubSpearheadCatalogRepository: SpearheadCatalogRepository {

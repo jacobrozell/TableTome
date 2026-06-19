@@ -5,8 +5,6 @@ struct GuideStepDetailView: View {
     let gameSystemId: String
     let step: GuideStep
     let ruleSections: [RuleSection]
-    @State private var isComplete = false
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         ScrollView {
@@ -22,9 +20,7 @@ struct GuideStepDetailView: View {
                 }
 
                 if step.id == "realm-battlefield" || step.id == "fight-battle", gameSystemId == "aos-spearhead" {
-                    NavigationLink {
-                        BattleTacticsReferenceView(ruleSections: ruleSections)
-                    } label: {
+                    NavigationLink(value: BattleTacticsReferenceLink(gameSystemId: gameSystemId)) {
                         Label(String(localized: "Card Decks Guide"), systemImage: "rectangle.stack")
                             .font(.headline)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -35,9 +31,7 @@ struct GuideStepDetailView: View {
                 }
 
                 if let relatedSection {
-                    NavigationLink {
-                        RuleSectionDetailView(section: relatedSection, allSections: ruleSections)
-                    } label: {
+                    NavigationLink(value: RuleSectionLink(gameSystemId: gameSystemId, sectionId: relatedSection.id)) {
                         Label(relatedSection.title, systemImage: "doc.text")
                             .font(.headline)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -68,26 +62,12 @@ struct GuideStepDetailView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
                 }
-
-                Toggle(isOn: $isComplete) {
-                    Text(String(localized: "Mark step complete"))
-                        .font(.headline)
-                }
-                .frame(minHeight: DesignTokens.minTouchTarget)
-                .accessibilityIdentifier("guide.stepComplete.\(step.id)")
-                .onChange(of: isComplete) { _, newValue in
-                    GuideProgressStore.setComplete(newValue, gameSystemId: gameSystemId, stepId: step.id)
-                }
             }
             .readableContentWidth()
             .padding(DesignTokens.Spacing.md)
         }
         .navigationTitle(step.title)
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear {
-            isComplete = GuideProgressStore.isComplete(gameSystemId: gameSystemId, stepId: step.id)
-        }
-        .animation(reduceMotion ? nil : .default, value: isComplete)
     }
 
     private var relatedSection: RuleSection? {

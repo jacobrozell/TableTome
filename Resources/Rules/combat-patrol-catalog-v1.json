@@ -33,7 +33,7 @@
             {
               "id": "champion-duellist",
               "name": "Champion Duellist",
-              "summary": "Default Warlord upgrade for Captain Octavius — see your patrol datasheet for exact rules.",
+              "summary": "Gives Captain Octavius extra melee prowess — re-roll Hit rolls in Fight and +1 Attack on his melee weapons.",
               "newPlayerHint": "Recommended first game — the default Leviathan enhancement.",
               "timing": "Pre-battle — default Enhancement"
             },
@@ -366,10 +366,10 @@
       "order": 1,
       "title": "Choose Combat Patrols",
       "summary": "Each player picks a faction and fixed patrol roster.",
-      "body": "Combat Patrol armies are fixed box-set rosters — no list building. Pick the patrol each player fields today. Use Starter Matchup for the Leviathan Space Marines vs Tyranids box.",
+      "body": "Combat Patrol armies are fixed box-set rosters — no list building. Pick the patrol each player fields today. Tap Use Starter Matchup for the built-in Space Marines vs Tyranids matchup, or choose the boxes you own.",
       "tips": [
         "Tap Use Starter Matchup for Strike Force Octavius vs The Vardenghast Swarm.",
-        "Download faction Combat Patrol PDFs from Warhammer Community for full datasheets."
+        "Datasheets for each unit appear in Guided Match after you pick armies."
       ]
     },
     {
@@ -377,9 +377,9 @@
       "order": 2,
       "title": "Pick Enhancement & Secondary",
       "summary": "Each player picks one Enhancement and one Secondary Objective.",
-      "body": "Every Combat Patrol lists two Enhancements (default and optional) and two Secondary Objectives. Pick one of each per player before setup continues. Defaults are marked on your patrol sheet.",
+      "body": "Each player picks one Enhancement (a bonus for your leader) and one Secondary Objective (an extra way to score points). Recommended defaults are marked below — tap Use recommended defaults for a first game.",
       "tips": [
-        "First game? Stick with the default Enhancement and secondary on each patrol sheet.",
+        "First game? Tap Use recommended defaults on this screen.",
         "Enhancements upgrade your Warlord; secondaries shape how you score beyond the mission primary."
       ],
       "relatedRuleSectionId": "cp-pre-battle"

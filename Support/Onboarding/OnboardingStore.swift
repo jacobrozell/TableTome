@@ -10,7 +10,11 @@ enum OnboardingStore: Sendable {
     }
 
     static var shouldPresentOnLaunch: Bool {
-        isEnabled && !UserDefaults.standard.bool(forKey: completedKey)
+        isEnabled && !hasCompletedAppTour
+    }
+
+    static var hasCompletedAppTour: Bool {
+        UserDefaults.standard.bool(forKey: completedKey)
     }
 
     static func markCompleted() {

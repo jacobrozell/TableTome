@@ -321,12 +321,13 @@
       "order": 5,
       "title": "Set Up the Battlefield",
       "summary": "Mission cards, terrain footprints, deployment, reserves.",
-      "body": "Draw your Chapter Approved mission matchup, place terrain objectives from the map, deploy armies, then confirm reserves and Deep Strike setup. Roll for first turn when deployment is complete.",
+      "body": "Draw your Chapter Approved mission matchup, place terrain objectives from the map, deploy armies, then agree which units start off the board (Strategic Reserves or Deep Strike). Roll for first turn when deployment is complete.",
       "tips": [
         "Objectives are terrain footprints in 11th Edition — not separate round markers.",
-        "Use the Chapter Approved deck from the Armageddon box."
+        "Use the Chapter Approved deck from the Armageddon box.",
+        "Reserves cannot arrive in battle round 1. Units still off the board by end of round 3 are destroyed."
       ],
-      "relatedRuleSectionId": "11e-terrain-objectives"
+      "relatedRuleSectionId": "11e-reserves"
     },
     {
       "id": "fight-battle",

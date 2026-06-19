@@ -5,6 +5,7 @@ struct AppSearchDestinationView: View {
     let result: AppSearchResult
     let ruleSections: [RuleSection]
     let gettingStartedSteps: [GuideStep]
+    let editionMigrationSteps: [GuideStep]
     let armies: [SpearheadArmy]
     var gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId
     @ObservedObject var dependencies: AppDependencies
@@ -13,18 +14,27 @@ struct AppSearchDestinationView: View {
         switch result.kind {
         case .ruleSection:
             if let section = ruleSections.first(where: { $0.id == result.referenceId }) {
-                RuleSectionDetailView(section: section, allSections: ruleSections)
+                RuleSectionDetailView(
+                    section: section,
+                    allSections: ruleSections,
+                    gameSystemId: gameSystemId
+                )
             } else {
                 AppSearchResultDetailView(result: result, gameSystemId: gameSystemId, ruleSections: ruleSections)
             }
         case .glossary:
-            RulesGlossaryView(
-                highlightedEntryId: result.referenceId,
-                gameSystemId: gameSystemId,
-                ruleSections: ruleSections
-            )
-        case .gettingStarted:
-            if let step = gettingStartedSteps.first(where: { $0.id == result.referenceId }) {
+            if let entry = glossaryEntry(for: result.referenceId) {
+                GlossaryEntryDetailView(
+                    entry: entry,
+                    gameSystemId: gameSystemId,
+                    ruleSections: ruleSections
+                )
+            } else {
+                AppSearchResultDetailView(result: result, gameSystemId: gameSystemId, ruleSections: ruleSections)
+            }
+        case .gettingStarted, .editionMigration:
+            let steps = result.kind == .gettingStarted ? gettingStartedSteps : editionMigrationSteps
+            if let step = steps.first(where: { $0.id == result.referenceId }) {
                 GuideStepDetailView(
                     gameSystemId: gameSystemId,
                     step: step,
@@ -51,6 +61,11 @@ struct AppSearchDestinationView: View {
         case .matchSetup, .deployment, .phaseTip:
             AppSearchResultDetailView(result: result, gameSystemId: gameSystemId, ruleSections: ruleSections)
         }
+    }
+
+    private func glossaryEntry(for referenceId: String) -> RulesGlossaryEntry? {
+        RulesGlossaryCatalog.entries(gameSystemId: gameSystemId, ruleSections: ruleSections)
+            .first { $0.id == referenceId }
     }
 
     @ViewBuilder

@@ -3,9 +3,10 @@ import Foundation
 /// One step in the painting pipeline. Value type so the domain engines never
 /// touch SwiftData. The Phase 4 SwiftData `PipelineStage` model will map to/from
 /// this value at the boundary.
-public struct PipelineStage: Hashable, Sendable {
-    public let key: String
-    public let hex: String
+public struct PipelineStage: Hashable, Sendable, Codable, Identifiable {
+    public var key: String
+    public var hex: String
+    public var id: String { key }
 
     public init(key: String, hex: String) {
         self.key = key
@@ -145,14 +146,16 @@ public enum Pipeline {
     /// "clear member override when it now matches the squad default" rule. Mutates
     /// the model graph in place.
     public static func advanceOneStep(_ unit: any UnitLike, _ pipeline: [PipelineStage]) {
-        let squadNext = next(after: unit.state, in: pipeline)
+        let priorSquadState = unit.state
+        let squadNext = next(after: priorSquadState, in: pipeline)
         if unit.hasSquadMembers {
-            if let squadNext { unit.state = squadNext }
-            for m in unit.orderedMembers {
-                let cur = Members.effectiveState(of: unit, at: m.index)
-                guard let n = next(after: cur, in: pipeline) else { continue }
-                m.state = (n == unit.state) ? nil : n
+            let targetSquadState = squadNext ?? priorSquadState
+            for member in unit.orderedMembers {
+                let current = member.state.flatMap { $0.isEmpty ? nil : $0 } ?? priorSquadState
+                guard let nextState = next(after: current, in: pipeline) else { continue }
+                member.state = (nextState == targetSquadState) ? nil : nextState
             }
+            if let squadNext { unit.state = squadNext }
             return
         }
         if let squadNext { unit.state = squadNext }

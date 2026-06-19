@@ -65,6 +65,7 @@ final class RulesReferenceViewModel: ObservableObject {
 
     func selectGameSystem(_ id: String) {
         selectedGameSystemId = id
+        ActiveGameContextStore.setActiveGameSystem(id)
         if let system = gameSystems.first(where: { $0.id == id }) {
             reloadSections(from: system)
         }

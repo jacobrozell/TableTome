@@ -6,6 +6,9 @@ public enum ReleaseSurface {
         ProcessInfo.processInfo.arguments.contains("-enable_full_product_surface")
     }
 
+    /// Bench (collection + paints) and Muster (roster builder) hobby pillars.
+    private static var hobbyPillarsEnabled: Bool { true }
+
     public static var shows40kEditions: Bool { true }
 
     public static var showsRollEvaluator: Bool { true }
@@ -19,15 +22,15 @@ public enum ReleaseSurface {
     // until each pillar's Phase ships. Toggle from a single point so feature gates
     // never scatter across views.
 
-    public static var showsBenchTab: Bool { fullSurfaceEnabled }
-    public static var showsMusterTab: Bool { fullSurfaceEnabled }
+    public static var showsBenchTab: Bool { hobbyPillarsEnabled }
+    public static var showsMusterTab: Bool { hobbyPillarsEnabled }
     public static var showsPlayTab: Bool { true }
     public static var showsRulesTab: Bool { true }
 
     // MARK: Cross-pillar links
 
-    public static var showsPlayFromRoster: Bool { fullSurfaceEnabled }
-    public static var showsPaintStatusInMatch: Bool { fullSurfaceEnabled }
+    public static var showsPlayFromRoster: Bool { hobbyPillarsEnabled }
+    public static var showsPaintStatusInMatch: Bool { hobbyPillarsEnabled }
 
     public static func showsNewEditionBadge(
         for gameSystemId: GameSystemId,

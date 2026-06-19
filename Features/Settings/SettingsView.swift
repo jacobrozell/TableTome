@@ -1,17 +1,25 @@
 import SwiftUI
 import TabletomeDomain
+import TabletomeHobbyData
 
 struct SettingsView: View {
     @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
-    @AppStorage("appearance") private var appearance = "system"
-    @State private var showResetConfirmation = false
+    @Environment(\.modelContext) private var modelContext
+    @AppStorage(AppearanceStore.storageKey) private var appearanceRaw = ThemePreference.system.rawValue
     @State private var showsOnboarding = false
+
+    private var themePreference: Binding<ThemePreference> {
+        Binding(
+            get: { ThemePreference(rawValue: appearanceRaw) ?? .system },
+            set: { appearanceRaw = $0.rawValue }
+        )
+    }
 
     var body: some View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                    Text(String(localized: "Offline Spearhead guide and rules reference."))
+                    Text(String(localized: "Offline tabletop companion — play, rules, collection, and lists."))
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                     Text(String(localized: "Unofficial fan app — not affiliated with Games Workshop."))
@@ -24,20 +32,86 @@ struct SettingsView: View {
                 Text(String(localized: "About"))
             }
 
+            Section {
+                Text(
+                    String(
+                        localized: """
+                        Open the Play tab and use the chooser at the top. Pick your starter box, follow Getting Started, \
+                        then run Guided Match at the table.
+                        """
+                    )
+                )
+                .font(.callout)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+
+                Button {
+                    learnNavigationCoordinator.openGameGuide(
+                        gameSystemId: OnboardingCompletion.combatPatrolGameSystemId
+                    )
+                } label: {
+                    Label(String(localized: "Open Combat Patrol guide"), systemImage: "play.circle")
+                        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                }
+                .accessibilityIdentifier("settings.openCombatPatrolGuide")
+
+                Button {
+                    learnNavigationCoordinator.openGameGuide(
+                        gameSystemId: OnboardingCompletion.spearheadGameSystemId
+                    )
+                } label: {
+                    Label(String(localized: "Open Spearhead guide"), systemImage: "shield.lefthalf.filled")
+                        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                }
+                .accessibilityIdentifier("settings.openSpearheadGuide")
+            } header: {
+                Text(String(localized: "New here?"))
+            } footer: {
+                Text(String(localized: "Replay the app tour anytime under App Tour below."))
+            }
+
             Section(String(localized: "Dice Roller")) {
-                Text(String(localized: "Simulated dice use your device's secure random number generator. For casual play."))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                Text(
+                    String(
+                        localized: """
+                        Simulated dice use your device's secure random number generator. For casual play. \
+                        Roll physical dice at the table — use the battle tracker in Guided Match for in-app dice when needed.
+                        """
+                    )
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
             }
 
             Section(String(localized: "Appearance")) {
-                Picker(String(localized: "Theme"), selection: $appearance) {
-                    Text(String(localized: "System")).tag("system")
-                    Text(String(localized: "Light")).tag("light")
-                    Text(String(localized: "Dark")).tag("dark")
+                Picker(String(localized: "Theme"), selection: themePreference) {
+                    ForEach(ThemePreference.allCases, id: \.self) { preference in
+                        Text(AppearanceStore.localizedLabel(for: preference)).tag(preference)
+                    }
                 }
                 .accessibilityIdentifier("settings.appearance")
                 .accessibilityHint(String(localized: "Changes app color scheme"))
+                .onChange(of: appearanceRaw) { _, _ in
+                    AppearancePreferenceStorage.syncToHobbyConfiguration(modelContext)
+                }
+            }
+
+            if ReleaseSurface.showsBenchTab {
+                Section {
+                    NavigationLink {
+                        HobbySettingsScreen()
+                    } label: {
+                        Label(String(localized: "Collection & Lists"), systemImage: "tray.full")
+                            .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                    }
+                    .accessibilityIdentifier("settings.hobby")
+                    .accessibilityHint(String(localized: "Import, export, pipeline stages, and Muster catalog settings"))
+                } header: {
+                    Text(String(localized: "Collection & Data"))
+                } footer: {
+                    Text(String(localized: "Data backup, painting pipeline, and army list defaults."))
+                }
             }
 
             Section(String(localized: "App Tour")) {
@@ -99,47 +173,22 @@ struct SettingsView: View {
             }
 
             Section {
-                Button(role: .destructive) {
-                    showResetConfirmation = true
-                } label: {
-                    Label(String(localized: "Reset Guide Progress"), systemImage: "arrow.counterclockwise")
-                        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                }
-                .accessibilityIdentifier("settings.resetProgress")
-                .accessibilityHint(String(localized: "Clears all Getting Started checkmarks"))
-            } header: {
-                Text(String(localized: "Data"))
-            } footer: {
-                Text(String(localized: "Guide checkmarks are stored only on this device."))
-            }
-
-            Section {
                 LabeledContent(String(localized: "Version"), value: appVersion)
                 LabeledContent(String(localized: "Build"), value: appBuild)
             }
         }
         .listStyle(.insetGrouped)
         .navigationTitle(String(localized: "Settings"))
-        .confirmationDialog(
-            String(localized: "Reset guide progress?"),
-            isPresented: $showResetConfirmation,
-            titleVisibility: .visible
-        ) {
-            Button(String(localized: "Reset"), role: .destructive) {
-                GuideProgressStore.resetAll()
-                NewPlayerTipsStore.resetAll()
-            }
-            Button(String(localized: "Cancel"), role: .cancel) {}
-        } message: {
-            Text(String(localized: "This removes Getting Started checkmarks and battle tracker tips. This cannot be undone."))
-        }
         .fullScreenCover(isPresented: $showsOnboarding) {
             OnboardingView(mode: .replay) { completion in
                 showsOnboarding = false
+                HobbyConfig.markAppTourCompleted(modelContext)
                 switch completion {
                 case .openGuidedMatch(let gameSystemId):
+                    ActiveGameContextStore.setActiveGameSystem(gameSystemId)
                     learnNavigationCoordinator.openGuidedMatch(gameSystemId: gameSystemId)
                 case .openGameGuide(let gameSystemId):
+                    ActiveGameContextStore.setActiveGameSystem(gameSystemId)
                     learnNavigationCoordinator.openGameGuide(gameSystemId: gameSystemId)
                 case .exploreApp:
                     break

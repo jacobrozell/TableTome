@@ -1,26 +1,30 @@
 import SwiftUI
+import TabletomeDomain
+import TabletomeHobbyData
 
 @main
 struct TabletomeApp: App {
     @StateObject private var dependencies = AppDependencies()
     @StateObject private var learnNavigationCoordinator = LearnNavigationCoordinator()
+    @State private var hobbyRouter = AppRouter()
+    @State private var hobbyBanner = BannerCenter()
+    @State private var hobbyUndo = UndoService.shared
 
     var body: some Scene {
         WindowGroup {
             RootTabView()
                 .environmentObject(dependencies)
                 .environmentObject(learnNavigationCoordinator)
-                .preferredColorScheme(colorScheme)
+                .environment(hobbyRouter)
+                .environment(hobbyBanner)
+                .environment(hobbyUndo)
+                .modelContainer(HobbyAppContainer.makeForLaunch())
+                .preferredColorScheme(AppearanceStore.colorScheme(for: appearanceRaw))
+                .onAppear {
+                    UnitCatalogLoader.loadIfNeeded()
+                }
         }
     }
 
-    @AppStorage("appearance") private var appearance = "system"
-
-    private var colorScheme: ColorScheme? {
-        switch appearance {
-        case "light": .light
-        case "dark": .dark
-        default: nil
-        }
-    }
+    @AppStorage(AppearanceStore.storageKey) private var appearanceRaw = ThemePreference.system.rawValue
 }

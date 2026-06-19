@@ -31,8 +31,8 @@ public enum SpearheadBattlefield: String, CaseIterable, Sendable, Identifiable {
         case .fireAndJade:
             String(
                 localized: """
-                The original 30\"×22\" Spearhead board — Realm of Fire vs Realm of Life. \
-                Each side has a different deployment map and twist deck.
+                The printed 30\"×22\" board from a Spearhead battlefield pack — Realm of Fire vs Realm of Life. \
+                Each side has its own deployment map and twist deck from that pack.
                 """
             )
         case .sandAndBone:

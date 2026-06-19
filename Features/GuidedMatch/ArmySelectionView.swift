@@ -176,14 +176,10 @@ struct ArmySelectionView: View {
 
                 if showsUnitReference(for: army) {
                     Section(String(localized: "Reference")) {
-                        NavigationLink {
-                            ArmyRosterView(
-                                army: army,
-                                ruleSections: ruleSections,
-                                gameSystemId: gameSystemId,
-                                featuredArmies: featuredArmies
-                            )
-                        } label: {
+                        NavigationLink(value: ArmyRosterLink(
+                            gameSystemId: gameSystemId.rawValue,
+                            armyId: army.id
+                        )) {
                             Label(unitReferenceLabel, systemImage: "doc.richtext")
                                 .frame(minHeight: DesignTokens.minTouchTarget)
                         }
@@ -195,6 +191,7 @@ struct ArmySelectionView: View {
         .readableContentWidth()
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
+        .playNavigationDestinations()
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Button(String(localized: "Save")) {

@@ -28,16 +28,27 @@ struct RealmSideCoinFlipCard: View {
             .foregroundStyle(.secondary)
             .fixedSize(horizontal: false, vertical: true)
 
-            Picker(String(localized: "Battlefield"), selection: $battlefield) {
+            Menu {
                 ForEach(SpearheadBattlefield.allCases) { board in
-                    Text(board.name).tag(board)
+                    Button(board.name) {
+                        battlefield = board
+                        result = nil
+                    }
                 }
+            } label: {
+                HStack {
+                    Text(String(localized: "Battlefield"))
+                        .foregroundStyle(.primary)
+                    Spacer()
+                    Text(battlefield.name)
+                        .foregroundStyle(.secondary)
+                    Image(systemName: "chevron.up.chevron.down")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.tertiary)
+                }
+                .frame(minHeight: DesignTokens.minTouchTarget)
             }
-            .pickerStyle(.menu)
             .accessibilityIdentifier("coinFlip.battlefieldPicker")
-            .onChange(of: battlefield) { _, _ in
-                result = nil
-            }
 
             Text(battlefield.newPlayerSummary)
                 .font(.caption)
@@ -48,6 +59,11 @@ struct RealmSideCoinFlipCard: View {
                 .font(.caption)
                 .foregroundStyle(.tertiary)
                 .fixedSize(horizontal: false, vertical: true)
+
+            GlossaryChipsRow(
+                text: "\(battlefield.newPlayerSummary) \(battlefield.flipCaption)",
+                gameSystemId: GameSystemId.aosSpearhead.rawValue
+            )
 
             HStack(spacing: DesignTokens.Spacing.md) {
                 ForEach(sides) { side in

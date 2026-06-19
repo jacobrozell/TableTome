@@ -1,6 +1,7 @@
 import SwiftUI
 import TabletomeDomain
 
+// swiftlint:disable:next type_body_length
 struct MatchStepDetailView: View {
     let step: MatchSetupStep
     let stepNumber: Int
@@ -36,9 +37,10 @@ struct MatchStepDetailView: View {
 
                 if let relatedSection {
                     ReferenceLinksGroup {
-                        NavigationLink {
-                            RuleSectionDetailView(section: relatedSection, allSections: ruleSections)
-                        } label: {
+                        NavigationLink(value: RuleSectionLink(
+                            gameSystemId: viewModel.gameSystemId.rawValue,
+                            sectionId: relatedSection.id
+                        )) {
                             ReferenceLinkRow(title: relatedSection.title, systemImage: "doc.text")
                         }
                         .accessibilityLabel(String(localized: "Related rule: \(relatedSection.title)"))
@@ -93,6 +95,11 @@ struct MatchStepDetailView: View {
         if isComplete {
             return String(localized: "Step complete")
         }
+        if step.id == "pick-enhancement" {
+            return String(
+                localized: "Tap Use recommended defaults, or pick one Enhancement and one Secondary for each player."
+            )
+        }
         if usesManualConfirmation {
             return String(localized: "Tap below when you've finished this step.")
         }
@@ -126,6 +133,8 @@ struct MatchStepDetailView: View {
             }
         case "enhancements":
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                recommendedDefaultsControls
+
                 armyOptionsSection(
                     title: String(localized: "Enhancements"),
                     playerOneKeyPath: \.enhancementId,
@@ -167,17 +176,38 @@ struct MatchStepDetailView: View {
     }
 
     private var wh40kDeploymentSetupSection: some View {
-        Wh40kDeploymentChecklistCard(
-            completedSteps: viewModel.deploymentCompletedSteps,
-            focusedStep: Wh40kDeploymentChecklistStep.allCases.first {
-                !Wh40kDeploymentChecklist.isComplete(step: $0, completedSteps: viewModel.deploymentCompletedSteps)
-            },
-            onToggle: viewModel.setWh40kDeploymentStep
-        )
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            Wh40kDeploymentChecklistCard(
+                completedSteps: viewModel.deploymentCompletedSteps,
+                focusedStep: Wh40kDeploymentChecklistStep.allCases.first {
+                    !Wh40kDeploymentChecklist.isComplete(step: $0, completedSteps: viewModel.deploymentCompletedSteps)
+                },
+                onToggle: viewModel.setWh40kDeploymentStep,
+                gameSystemId: viewModel.gameSystemId.rawValue,
+                ruleSections: ruleSections
+            )
+
+            if let terrainSection = ruleSections.first(where: { $0.id == "11e-terrain-objectives" }) {
+                ReferenceLinksGroup {
+                    NavigationLink(value: RuleSectionLink(
+                        gameSystemId: viewModel.gameSystemId.rawValue,
+                        sectionId: terrainSection.id
+                    )) {
+                        ReferenceLinkRow(
+                            title: terrainSection.title,
+                            systemImage: "map"
+                        )
+                    }
+                    .accessibilityIdentifier("guidedMatch.wh40kDeployment.terrainReference")
+                }
+            }
+        }
     }
 
     private var combatPatrolLoadoutSection: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            recommendedDefaultsControls
+
             armyOptionsSection(
                 title: String(localized: "Enhancements"),
                 playerOneKeyPath: \.enhancementId,
@@ -193,6 +223,29 @@ struct MatchStepDetailView: View {
                 onSelect: viewModel.setSecondaryObjective
             )
             loadoutSummarySection(showRegiment: false, showEnhancement: true, showSecondary: true)
+        }
+    }
+
+    @ViewBuilder
+    private var recommendedDefaultsControls: some View {
+        if viewModel.matchState.hasBothArmies {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                Button(String(localized: "Use recommended defaults")) {
+                    viewModel.applyRecommendedLoadouts()
+                }
+                .buttonStyle(.borderedProminent)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .accessibilityIdentifier("guidedMatch.applyRecommendedDefaults")
+
+                Text(
+                    String(
+                        localized: "Fills enhancement and objective picks recommended for newcomers."
+                    )
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            }
         }
     }
 
@@ -307,9 +360,7 @@ struct MatchStepDetailView: View {
                 onToggle: viewModel.setDeploymentStep
             )
             ReferenceLinksGroup {
-                NavigationLink {
-                    BattleTacticsReferenceView(ruleSections: ruleSections)
-                } label: {
+                NavigationLink(value: BattleTacticsReferenceLink(gameSystemId: viewModel.gameSystemId.rawValue)) {
                     ReferenceLinkRow(
                         title: String(localized: "Card Decks Guide"),
                         systemImage: "rectangle.stack"
@@ -325,9 +376,7 @@ struct MatchStepDetailView: View {
             EmptyView()
         } else {
             ReferenceLinksGroup {
-                NavigationLink {
-                    BattleTacticsReferenceView(ruleSections: ruleSections)
-                } label: {
+                NavigationLink(value: BattleTacticsReferenceLink(gameSystemId: viewModel.gameSystemId.rawValue)) {
                     ReferenceLinkRow(
                         title: String(localized: "Card Decks Guide"),
                         systemImage: "rectangle.stack"
@@ -507,7 +556,9 @@ struct MatchStepDetailView: View {
                         } label: {
                             ArmyRuleOptionCard(
                                 option: option,
-                                isSelected: selectedId == option.id
+                                isSelected: selectedId == option.id,
+                                gameSystemId: viewModel.gameSystemId.rawValue,
+                                ruleSections: ruleSections
                             )
                         }
                         .buttonStyle(.plain)
@@ -530,7 +581,7 @@ struct MatchStepDetailView: View {
         case .wh40k11e:
             String(localized: "See your Munitorum Field Manual and box datasheets for detachment options.")
         case .wh40k10eCp:
-            String(localized: "See your Combat Patrol datasheet for enhancement and secondary options.")
+            String(localized: "Choose from the options below — defaults are marked Recommended.")
         case .scTmg:
             String(localized: "Founders Edition armies ship as fixed lists — no extra options to pick.")
         default:

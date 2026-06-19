@@ -22,6 +22,9 @@ struct OnboardingGameHighlight: Identifiable {
     let edition: String
     let blurb: String
     let showsNewBadge: Bool
+    let recommendedForNewcomers: Bool
+    /// When true, the final onboarding CTA opens Guided Match; otherwise the game guide.
+    let startsGuidedMatch: Bool
 }
 
 enum OnboardingContent {
@@ -30,27 +33,59 @@ enum OnboardingContent {
             id: OnboardingCompletion.spearheadGameSystemId,
             symbol: "shield.lefthalf.filled",
             name: String(localized: "Age of Sigmar: Spearhead"),
-            edition: String(localized: "4th Edition — Spearhead"),
+            edition: String(localized: "Fantasy starter-box battles"),
             blurb: String(
                 localized: """
-                Fast tactical battles with fixed starter-box armies. Ideal if you own a Spearhead set \
-                or want a compact intro to wargaming.
+                Best first wargame if you own an Age of Sigmar Spearhead box — short rules, small armies, \
+                guided setup in about 90 minutes.
                 """
             ),
-            showsNewBadge: false
+            showsNewBadge: false,
+            recommendedForNewcomers: true,
+            startsGuidedMatch: false
+        ),
+        OnboardingGameHighlight(
+            id: OnboardingCompletion.combatPatrolGameSystemId,
+            symbol: "shield.checkered",
+            name: String(localized: "Warhammer 40,000: Combat Patrol"),
+            edition: String(localized: "Sci-fi starter-box battles"),
+            blurb: String(
+                localized: """
+                Pick this if your box says Combat Patrol — smaller 40k games with missions and a battle tracker \
+                for your first few matches.
+                """
+            ),
+            showsNewBadge: false,
+            recommendedForNewcomers: true,
+            startsGuidedMatch: false
         ),
         OnboardingGameHighlight(
             id: OnboardingCompletion.wh40k11eGameSystemId,
             symbol: "scope",
             name: String(localized: "Warhammer 40,000"),
-            edition: String(localized: "11th Edition"),
+            edition: String(localized: "Full game — 11th Edition"),
             blurb: String(
                 localized: """
-                The new edition of 40k — guided setup, what's new for 10th players, and rules reference. \
-                New to the hobby or upgrading from 10th Edition.
+                The complete Warhammer 40,000 rules — for larger armies, not the small Combat Patrol box format.
                 """
             ),
-            showsNewBadge: true
+            showsNewBadge: true,
+            recommendedForNewcomers: false,
+            startsGuidedMatch: false
+        ),
+        OnboardingGameHighlight(
+            id: OnboardingCompletion.scTmgGameSystemId,
+            symbol: "gamecontroller.fill",
+            name: String(localized: "StarCraft: The Miniatures Game"),
+            edition: String(localized: "Sci-fi skirmish"),
+            blurb: String(
+                localized: """
+                Raynor vs Kerrigan on the tabletop — good if you own the Founders Edition box or love StarCraft.
+                """
+            ),
+            showsNewBadge: false,
+            recommendedForNewcomers: false,
+            startsGuidedMatch: false
         )
     ]
 
@@ -59,23 +94,23 @@ enum OnboardingContent {
             id: 0,
             symbol: "book.closed.fill",
             title: String(localized: "Tabletome"),
-            subtitle: String(localized: "Your tabletop companion"),
+            subtitle: String(localized: "Learn and play at the table"),
             body: String(
                 localized: """
-                Offline reference and guided play for Spearhead, Warhammer 40,000, Combat Patrol, and StarCraft TMG — \
-                setup, rules, and in-game reminders in one app.
+                Your offline coach for tabletop battle games. Pick your game on the Play tab, follow step-by-step \
+                setup, search rules, and track each turn — no account or internet required.
                 """
             )
         ),
         OnboardingPage(
             id: 1,
             symbol: "gamecontroller.fill",
-            title: String(localized: "Four ways to play"),
-            subtitle: String(localized: "Pick the game at your table"),
+            title: String(localized: "Pick your game"),
+            subtitle: String(localized: "Match what's on your table"),
             body: String(
                 localized: """
-                Each game mode has its own guide, searchable rules, and guided match flow. \
-                Choose from the Play tab anytime — Spearhead, 40k, Combat Patrol, or StarCraft TMG.
+                Each game has its own guide and rules search. Not sure which you have? Choose the option that \
+                matches your starter box on the last screen, or explore Play first.
                 """
             )
         ),
@@ -86,7 +121,7 @@ enum OnboardingContent {
             subtitle: String(localized: "No account required"),
             body: String(
                 localized: """
-                Rules, army data, and guide progress live locally on this iPhone or iPad. \
+                Rules, army data, and match progress live locally on this iPhone or iPad. \
                 Works at the table with no signal.
                 """
             )
@@ -98,8 +133,8 @@ enum OnboardingContent {
             subtitle: String(localized: "Guides and match tools"),
             body: String(
                 localized: """
-                For Spearhead or 40k: preview a turn, follow Getting Started, run a Guided Match from army \
-                pick to deployment, and track battle phases with on-screen tips.
+                Open Play, choose your game, then follow Getting Started or Guided Match. The app walks through \
+                setup, explains each battle phase, and tracks score — you move models and roll dice at the table.
                 """
             )
         ),
@@ -110,20 +145,20 @@ enum OnboardingContent {
             subtitle: String(localized: "Searchable offline reference"),
             body: String(
                 localized: """
-                Search rules, glossary terms, warscrolls, and setup steps for the game mode you're playing. \
-                Filter by topic and jump between related sections from the Rules tab.
+                Search rules, unit profiles, glossary terms, and setup steps for the game you're playing. \
+                Rules Search stays matched to your selected game mode.
                 """
             )
         ),
         OnboardingPage(
             id: 5,
             symbol: "flag.checkered",
-            title: String(localized: "Ready for battle"),
-            subtitle: String(localized: "Which game are you playing?"),
+            title: String(localized: "Choose your game"),
+            subtitle: String(localized: "Which box or rules are you using?"),
             body: String(
                 localized: """
-                Jump straight into the guide for Spearhead or Warhammer 40,000. \
-                You can replay this tour anytime in Settings.
+                New to the hobby? Start with a option marked Good first game. Not sure? Tap Explore the app \
+                and use the chooser on the Play tab. Replay this tour anytime in Settings.
                 """
             )
         )
@@ -131,22 +166,44 @@ enum OnboardingContent {
 
     static let tabTourItems: [OnboardingTabTourItem] = [
         OnboardingTabTourItem(
+            id: "bench",
+            symbol: "paintbrush",
+            title: String(localized: "Models"),
+            body: String(localized: "Optional — track miniatures, painting progress, and paints (skip for your first game)")
+        ),
+        OnboardingTabTourItem(
+            id: "muster",
+            symbol: "flag.checkered",
+            title: String(localized: "Army lists"),
+            body: String(localized: "Optional — build point lists and compare them to models you own")
+        ),
+        OnboardingTabTourItem(
             id: "learn",
             symbol: "play.circle.fill",
             title: String(localized: "Play"),
-            body: String(localized: "Spearhead and 40k guides, Guided Match, Getting Started, and army rosters")
+            body: String(localized: "Start here — game guides, Guided Match, Getting Started, and match history")
         ),
         OnboardingTabTourItem(
             id: "rules",
             symbol: "magnifyingglass",
             title: String(localized: "Rules Search"),
-            body: String(localized: "Search rules, units, glossary terms, and guides for the selected game mode")
+            body: String(localized: "Look up rules, units, and glossary terms for your selected game")
         ),
         OnboardingTabTourItem(
             id: "settings",
             symbol: "gearshape.fill",
             title: String(localized: "Settings"),
-            body: String(localized: "Appearance, support links, and guide progress")
+            body: String(localized: "Appearance, data backup, replay the app tour, and support links")
         )
     ]
+
+    static var visibleTabTourItems: [OnboardingTabTourItem] {
+        tabTourItems.filter { item in
+            switch item.id {
+            case "bench": return ReleaseSurface.showsBenchTab
+            case "muster": return ReleaseSurface.showsMusterTab
+            default: return true
+            }
+        }
+    }
 }

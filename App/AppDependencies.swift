@@ -26,8 +26,9 @@ final class AppDependencies: ObservableObject {
         HomeViewModel(rulesRepository: rulesRepository)
     }
 
-    func makeRulesReferenceViewModel(gameSystemId: GameSystemId = .default) -> RulesReferenceViewModel {
-        RulesReferenceViewModel(rulesRepository: rulesRepository, gameSystemId: gameSystemId.rawValue)
+    func makeRulesReferenceViewModel(gameSystemId: GameSystemId? = nil) -> RulesReferenceViewModel {
+        let resolvedId = gameSystemId?.rawValue ?? ActiveGameContextStore.gameSystemId
+        return RulesReferenceViewModel(rulesRepository: rulesRepository, gameSystemId: resolvedId)
     }
 
     func catalogRepository(for gameSystemId: GameSystemId) -> any SpearheadCatalogRepository {
@@ -37,7 +38,7 @@ final class AppDependencies: ObservableObject {
         )
     }
 
-    func makeAppSearchViewModel(gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId) -> AppSearchViewModel {
+    func makeAppSearchViewModel(gameSystemId: String? = nil) -> AppSearchViewModel {
         AppSearchViewModel(
             rulesRepository: rulesRepository,
             catalogRepository: { [weak self] gameSystemId in
@@ -49,7 +50,7 @@ final class AppDependencies: ObservableObject {
                 }
                 return self.catalogRepository(for: GameSystemId(resolving: gameSystemId))
             },
-            gameSystemId: gameSystemId,
+            gameSystemId: gameSystemId ?? ActiveGameContextStore.gameSystemId,
             visibleGameSystemFilter: { ReleaseSurface.isGameSystemVisible($0, registry: self.gameSystemRegistry) }
         )
     }

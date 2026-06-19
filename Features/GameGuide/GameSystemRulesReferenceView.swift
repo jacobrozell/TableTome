@@ -49,9 +49,7 @@ struct GameSystemRulesReferenceView: View {
                         .foregroundStyle(.secondary)
                 } else {
                     ForEach(filteredSections) { section in
-                        NavigationLink {
-                            RuleSectionDetailView(section: section, allSections: gameSystem.ruleSections)
-                        } label: {
+                        NavigationLink(value: RuleSectionLink(gameSystemId: gameSystem.id, sectionId: section.id)) {
                             RuleSectionRow(
                                 title: section.title,
                                 category: section.category,

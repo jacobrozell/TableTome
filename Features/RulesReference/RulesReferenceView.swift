@@ -60,13 +60,21 @@ struct RulesReferenceView: View {
 
                     Section(String(localized: "Sections")) {
                         if viewModel.filteredSections.isEmpty {
-                            Text(String(localized: "No matching sections"))
-                                .foregroundStyle(.secondary)
+                            if viewModel.searchText.isEmpty {
+                                Text(String(localized: "No matching sections"))
+                                    .foregroundStyle(.secondary)
+                            } else {
+                                Text(String(localized: "No results for this search. Try a shorter phrase or check another category."))
+                                    .font(.callout)
+                                    .foregroundStyle(.secondary)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
                         } else {
                             ForEach(viewModel.filteredSections) { section in
-                                NavigationLink {
-                                    RuleSectionDetailView(section: section, allSections: viewModel.sections)
-                                } label: {
+                                NavigationLink(value: RuleSectionLink(
+                                    gameSystemId: viewModel.selectedGameSystemId,
+                                    sectionId: section.id
+                                )) {
                                     RuleSectionRow(
                                         title: section.title,
                                         category: section.category,
@@ -87,6 +95,12 @@ struct RulesReferenceView: View {
             }
         }
         .navigationTitle(GameSystemRulesLabels.rulesReferenceTitle(gameSystemId: viewModel.selectedGameSystemId))
+        .onAppear {
+            let activeId = ActiveGameContextStore.gameSystemId
+            if viewModel.selectedGameSystemId != activeId {
+                viewModel.selectGameSystem(activeId)
+            }
+        }
         .task { await viewModel.load() }
         .refreshable { await viewModel.load() }
     }
@@ -99,6 +113,7 @@ struct RulesReferenceView: View {
 struct RuleSectionDetailView: View {
     let section: RuleSection
     let allSections: [RuleSection]
+    var gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId
 
     var body: some View {
         ScrollView {
@@ -108,18 +123,20 @@ struct RuleSectionDetailView: View {
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityIdentifier("rules.sectionContent.\(section.id)")
 
+                GlossaryChipsRow(
+                    text: section.content,
+                    gameSystemId: gameSystemId,
+                    ruleSections: allSections
+                )
+
                 if !relatedSections.isEmpty {
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                        Text(String(localized: "Related"))
-                            .font(.headline)
+                    ReferenceLinksGroup {
                         ForEach(relatedSections) { related in
-                            NavigationLink {
-                                RuleSectionDetailView(section: related, allSections: allSections)
-                            } label: {
-                                Label(related.title, systemImage: "doc.text")
-                                    .font(.callout)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .frame(minHeight: DesignTokens.minTouchTarget)
+                            if related.id != relatedSections.first?.id {
+                                Divider().padding(.leading, DesignTokens.Spacing.md)
+                            }
+                            NavigationLink(value: RuleSectionLink(gameSystemId: gameSystemId, sectionId: related.id)) {
+                                ReferenceLinkRow(title: related.title, systemImage: "doc.text")
                             }
                             .accessibilityLabel(related.title)
                             .accessibilityHint(String(localized: "Opens related rule section"))
@@ -128,9 +145,10 @@ struct RuleSectionDetailView: View {
                     }
                 }
             }
-            .padding(DesignTokens.Spacing.md)
             .readableContentWidth()
+            .padding(DesignTokens.Spacing.md)
         }
+        .tabBarScrollInset()
         .navigationTitle(section.title)
         .navigationBarTitleDisplayMode(.inline)
     }

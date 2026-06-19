@@ -1,5 +1,7 @@
+import SwiftData
 import SwiftUI
 import TabletomeDomain
+import TabletomeHobbyData
 
 enum AppTab: Hashable {
     case bench
@@ -10,6 +12,8 @@ enum AppTab: Hashable {
 }
 
 struct RootTabView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Environment(AppRouter.self) private var router
     @EnvironmentObject private var dependencies: AppDependencies
     @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
     @State private var showsOnboarding = false
@@ -21,54 +25,75 @@ struct RootTabView: View {
             if ReleaseSurface.showsBenchTab {
                 BenchTab()
                     .tabItem {
-                        Label(String(localized: "Bench"), systemImage: "paintbrush")
+                        TabBarItemLabel(
+                            title: String(localized: "Models"),
+                            systemImage: "paintbrush",
+                            identifier: "tab.bench",
+                            accessibilityLabel: String(localized: "Models, track miniatures and paints")
+                        )
                     }
                     .tag(AppTab.bench)
-                    .accessibilityIdentifier("tab.bench")
             }
 
             if ReleaseSurface.showsMusterTab {
                 MusterTab()
                     .tabItem {
-                        Label(String(localized: "Muster"), systemImage: "flag.checkered")
+                        TabBarItemLabel(
+                            title: String(localized: "Lists"),
+                            systemImage: "flag.checkered",
+                            identifier: "tab.muster",
+                            accessibilityLabel: String(localized: "Army lists, build rosters")
+                        )
                     }
                     .tag(AppTab.muster)
-                    .accessibilityIdentifier("tab.muster")
             }
 
             NavigationStack(path: $learnPath) {
                 HomeView(viewModel: dependencies.makeHomeViewModel())
             }
             .tabItem {
-                Label(String(localized: "Play"), systemImage: "play.circle.fill")
+                TabBarItemLabel(
+                    title: String(localized: "Play"),
+                    systemImage: "play.circle.fill",
+                    identifier: "tab.play"
+                )
             }
             .tag(AppTab.learn)
-            .accessibilityIdentifier("tab.play")
 
             NavigationStack {
-                if ReleaseSurface.showsRulesAssistant {
-                    AppSearchView(viewModel: dependencies.makeAppSearchViewModel())
-                } else {
-                    RulesReferenceView(viewModel: dependencies.makeRulesReferenceViewModel())
+                Group {
+                    if ReleaseSurface.showsRulesAssistant {
+                        AppSearchView(viewModel: dependencies.makeAppSearchViewModel())
+                    } else {
+                        RulesReferenceView(viewModel: dependencies.makeRulesReferenceViewModel())
+                    }
                 }
+                .playNavigationDestinations()
             }
             .tabItem {
-                Label(String(localized: "Rules"), systemImage: ReleaseSurface.showsRulesAssistant ? "magnifyingglass" : "doc.text.fill")
+                TabBarItemLabel(
+                    title: String(localized: "Rules"),
+                    systemImage: ReleaseSurface.showsRulesAssistant ? "magnifyingglass" : "doc.text.fill",
+                    identifier: ReleaseSurface.showsRulesAssistant ? "tab.rulesSearch" : "tab.rules",
+                    accessibilityLabel: String(localized: "Rules Search, look up rules for your game")
+                )
             }
             .tag(AppTab.search)
-            .accessibilityLabel(String(localized: "Rules Search"))
-            .accessibilityIdentifier(
-                ReleaseSurface.showsRulesAssistant ? "tab.aosRules" : "tab.rules"
-            )
 
             NavigationStack {
                 SettingsView()
             }
             .tabItem {
-                Label(String(localized: "Settings"), systemImage: "gearshape.fill")
+                TabBarItemLabel(
+                    title: String(localized: "Settings"),
+                    systemImage: "gearshape.fill",
+                    identifier: "tab.settings"
+                )
             }
             .tag(AppTab.settings)
-            .accessibilityIdentifier("tab.settings")
+        }
+        .background {
+            TabBarAccessibilityBridge(itemIdentifiers: tabBarItemIdentifiers)
         }
         .fullScreenCover(isPresented: $showsOnboarding) {
             OnboardingView(mode: .firstLaunch, onFinished: handleOnboardingCompletion)
@@ -79,14 +104,40 @@ struct RootTabView: View {
             } else if AppLaunchArguments.shouldOpenGuidedMatch {
                 openGuidedMatch(gameSystemId: OnboardingCompletion.defaultGameSystemId)
             }
+            AppearancePreferenceStorage.migrateFromHobbyConfigurationIfNeeded(modelContext)
         }
         .onChange(of: learnNavigationCoordinator.pendingAction) { _, _ in
             applyPendingLearnNavigation()
         }
+        .onChange(of: router.tab) { _, tab in
+            switch tab {
+            case .armies, .paints:
+                if selectedTab != .bench { selectedTab = .bench }
+            case .muster:
+                if selectedTab != .muster { selectedTab = .muster }
+            }
+        }
+        .onChange(of: selectedTab) { _, tab in
+            if tab == .muster, router.tab != .muster {
+                router.tab = .muster
+            }
+        }
+        .bannerInset()
+    }
+
+    private var tabBarItemIdentifiers: [String] {
+        var identifiers: [String] = []
+        if ReleaseSurface.showsBenchTab { identifiers.append("tab.bench") }
+        if ReleaseSurface.showsMusterTab { identifiers.append("tab.muster") }
+        identifiers.append("tab.play")
+        identifiers.append(ReleaseSurface.showsRulesAssistant ? "tab.rulesSearch" : "tab.rules")
+        identifiers.append("tab.settings")
+        return identifiers
     }
 
     private func handleOnboardingCompletion(_ completion: OnboardingCompletion) {
         showsOnboarding = false
+        HobbyConfig.markAppTourCompleted(modelContext)
         switch completion {
         case .exploreApp:
             break
@@ -108,11 +159,13 @@ struct RootTabView: View {
     }
 
     private func openGuidedMatch(gameSystemId: String) {
+        ActiveGameContextStore.setActiveGameSystem(gameSystemId)
         selectedTab = .learn
         learnPath = NavigationPath([GuidedMatchLink(gameSystemId: GameSystemId(resolving: gameSystemId))])
     }
 
     private func openGameGuide(gameSystemId: String) {
+        ActiveGameContextStore.setActiveGameSystem(gameSystemId)
         selectedTab = .learn
         learnPath = NavigationPath([gameSystemId])
     }

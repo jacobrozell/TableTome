@@ -42,15 +42,19 @@ struct RulesGlossaryView: View {
             }
 
             ForEach(glossaryEntries) { entry in
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                    Text(entry.term)
-                        .font(.headline)
-                    Text(entry.definition)
-                        .font(.callout)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
+                NavigationLink(value: GlossaryEntryLink(gameSystemId: gameSystemId, entryId: entry.id)) {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                        Text(entry.term)
+                            .font(.headline)
+                        Text(entry.definition)
+                            .font(.callout)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(3)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .padding(.vertical, DesignTokens.Spacing.sm)
                 }
-                .padding(.vertical, DesignTokens.Spacing.sm)
+                .id(entry.id)
                 .listRowBackground(entry.id == highlightedEntryId ? Color.accentColor.opacity(0.08) : nil)
                 .accessibilityIdentifier("glossary.entry.\(entry.id)")
             }
@@ -78,8 +82,48 @@ struct RulesGlossaryView: View {
     }
 }
 
+struct GlossaryEntryDetailView: View {
+    let entry: RulesGlossaryEntry
+    let gameSystemId: String
+    var ruleSections: [RuleSection] = []
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                Text(entry.definition)
+                    .font(.body)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier("glossary.entryContent.\(entry.id)")
+
+                GlossaryChipsRow(
+                    text: entry.definition,
+                    gameSystemId: gameSystemId,
+                    ruleSections: ruleSections
+                )
+
+                NavigationLink(value: RulesGlossaryBrowseLink(gameSystemId: gameSystemId)) {
+                    Label(
+                        GameSystemRulesLabels.glossaryTitle(gameSystemId: gameSystemId),
+                        systemImage: "book.fill"
+                    )
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(minHeight: DesignTokens.minTouchTarget)
+                }
+                .accessibilityIdentifier("glossary.browseAll")
+            }
+            .readableContentWidth()
+            .padding(DesignTokens.Spacing.md)
+        }
+        .tabBarScrollInset()
+        .navigationTitle(entry.term)
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
 struct BattleTacticsReferenceView: View {
     let ruleSections: [RuleSection]
+    var gameSystemId: String = GameSystemId.aosSpearhead.rawValue
 
     var body: some View {
         ScrollView {
@@ -93,9 +137,7 @@ struct BattleTacticsReferenceView: View {
                 }
 
                 if let scoring = ruleSections.first(where: { $0.id == "spearhead-scoring" }) {
-                    NavigationLink {
-                        RuleSectionDetailView(section: scoring, allSections: ruleSections)
-                    } label: {
+                    NavigationLink(value: RuleSectionLink(gameSystemId: gameSystemId, sectionId: scoring.id)) {
                         Label(scoring.title, systemImage: "doc.text")
                             .font(.headline)
                             .frame(maxWidth: .infinity, alignment: .leading)

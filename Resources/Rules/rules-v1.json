@@ -1012,11 +1012,12 @@
           "title": "Turn Structure",
           "category": "core",
           "order": 2,
-          "content": "Each player turn follows five phases:\n\n1. Command Phase \u2014 Battle-shock tests, stratagems, abilities; scoring sub-step at phase end.\n2. Movement Phase \u2014 Normal moves, Advances, Falls Back, Remain Stationary; Overwatch at phase end.\n3. Shooting Phase \u2014 Normal, Assault, Close-quarters, or Indirect shooting modes.\n4. Charge Phase \u2014 Declare charges within 12\", roll 2D6, then move to engage targets.\n5. Fight Phase \u2014 Pile-in, alternating fights, consolidation.\n\nBattle rounds continue until the mission ends (typically five rounds in matched play).",
+          "content": "Each player turn follows five phases:\n\n1. Command Phase \u2014 Battle-shock tests, stratagems, abilities; scoring sub-step at phase end.\n2. Movement Phase \u2014 Normal moves, Advances, Falls Back, Remain Stationary; units in Strategic Reserves arrive with an Ingress move; Overwatch at phase end.\n3. Shooting Phase \u2014 Normal, Assault, Close-quarters, or Indirect shooting modes.\n4. Charge Phase \u2014 Declare charges within 12\", roll 2D6, then move to engage targets.\n5. Fight Phase \u2014 Pile-in, alternating fights, consolidation.\n\nBattle rounds continue until the mission ends (typically five rounds in matched play).",
           "relatedSectionIds": [
             "11e-command-phase",
             "11e-charge-fight",
-            "11e-shooting"
+            "11e-shooting",
+            "11e-reserves"
           ]
         },
         {
@@ -1116,6 +1117,19 @@
           ]
         },
         {
+          "id": "11e-reserves",
+          "title": "Reserves & Deep Strike",
+          "category": "core",
+          "order": 12,
+          "content": "Before deployment finishes, agree which units start on the board and which are held off it.\n\nStrategic Reserves units arrive from battle round 2 onward by making an Ingress move in the Movement phase: set up wholly within 6\" of a battlefield edge and more than 8\" horizontally from all enemy units. Before battle round 3, they cannot set up in the opponent's deployment zone.\n\nDeep Strike is a datasheet ability that still uses an Ingress move, but the unit can set up anywhere on the battlefield more than 8\" from enemy units — not limited to table edges.\n\nNo Strategic Reserves unit can arrive in battle round 1 unless a rule says otherwise. Any unit that started in Strategic Reserves and is not on the battlefield by the end of battle round 3 is destroyed (exceptions apply for units embarked in transports that have arrived). After an Ingress move, that unit cannot make any other move until the start of the next Charge phase.",
+          "relatedSectionIds": [
+            "glossary-strategic-reserves-11e",
+            "glossary-deep-strike-11e",
+            "glossary-ingress-11e",
+            "11e-turn-overview"
+          ]
+        },
+        {
           "id": "glossary-oc-11e",
           "title": "Objective Control (OC)",
           "category": "glossary",
@@ -1174,6 +1188,51 @@
           "content": "When a rule calls for a Hazard test, roll D6: on 1-2 the model suffers 1 mortal wound (3 on Monsters/Vehicles). Used by Hazardous weapons, emergency disembark, and Desperate Escape tests.",
           "relatedSectionIds": [
             "11e-overview"
+          ]
+        },
+        {
+          "id": "glossary-strategic-reserves-11e",
+          "title": "Strategic Reserves",
+          "category": "glossary",
+          "order": 26,
+          "content": "Units held off the battlefield at the start. From battle round 2 they arrive in your Movement phase with an Ingress move — set up within 6\" of a table edge and more than 8\" from enemies. Cannot arrive in round 1. Destroyed if still off the board by end of round 3.",
+          "relatedSectionIds": [
+            "11e-reserves",
+            "glossary-ingress-11e"
+          ]
+        },
+        {
+          "id": "glossary-deep-strike-11e",
+          "title": "Deep Strike",
+          "category": "glossary",
+          "order": 27,
+          "content": "A datasheet ability for units that start off the board. They arrive from battle round 2 with an Ingress move and can set up anywhere more than 8\" from enemy units — not limited to table edges.",
+          "relatedSectionIds": [
+            "11e-reserves",
+            "glossary-ingress-11e"
+          ]
+        },
+        {
+          "id": "glossary-ingress-11e",
+          "title": "Ingress",
+          "category": "glossary",
+          "order": 28,
+          "content": "The arrival move in your Movement phase for units in Strategic Reserves or with Deep Strike. After an Ingress move, that unit cannot make any other move until the start of the next Charge phase.",
+          "relatedSectionIds": [
+            "11e-reserves",
+            "glossary-strategic-reserves-11e",
+            "glossary-deep-strike-11e"
+          ]
+        },
+        {
+          "id": "glossary-incursion-11e",
+          "title": "Incursion",
+          "category": "glossary",
+          "order": 29,
+          "content": "A matched-play battle size of about 1,000 points per army — not a deployment rule. At Incursion you usually spend two Detachment Points. Strike Force is the standard ~2,000-point format.",
+          "relatedSectionIds": [
+            "11e-detachments",
+            "glossary-detachment-points"
           ]
         }
       ]

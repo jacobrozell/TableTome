@@ -27,8 +27,30 @@ public enum RulesGlossaryCatalog {
             return SpearheadRulesGlossary.entriesReferenced(in: text)
         }
         let lower = text.lowercased()
-        return entries(gameSystemId: gameSystemId, ruleSections: ruleSections).filter { entry in
-            lower.contains(entry.term.lowercased())
+        let allEntries = entries(gameSystemId: gameSystemId, ruleSections: ruleSections)
+        var matched = allEntries.filter { lower.contains($0.term.lowercased()) }
+        if context.isWh40k11e {
+            for entryId in wh40k11eAliasEntryIdsMatching(text: lower) {
+                guard let entry = allEntries.first(where: { $0.id == entryId }),
+                      !matched.contains(where: { $0.id == entry.id }) else { continue }
+                matched.append(entry)
+            }
+        }
+        return matched.sorted { $0.term.localizedCaseInsensitiveCompare($1.term) == .orderedAscending }
+    }
+
+    private static let wh40k11eAliasPatterns: [String: String] = [
+        "strategic reserves": "glossary-strategic-reserves-11e",
+        "deep strike": "glossary-deep-strike-11e",
+        "ingress": "glossary-ingress-11e",
+        "incursion": "glossary-incursion-11e",
+        "force disposition": "glossary-force-disposition",
+        "detachment points": "glossary-detachment-points"
+    ]
+
+    private static func wh40k11eAliasEntryIdsMatching(text lower: String) -> [String] {
+        wh40k11eAliasPatterns.compactMap { pattern, entryId in
+            lower.contains(pattern) ? entryId : nil
         }
     }
 }

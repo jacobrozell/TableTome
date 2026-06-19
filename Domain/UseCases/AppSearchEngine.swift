@@ -6,6 +6,7 @@ public enum AppSearchResultKind: String, Sendable, CaseIterable {
     case ruleSection
     case glossary
     case gettingStarted
+    case editionMigration
     case matchSetup
     case deployment
     case battleTactics
@@ -28,6 +29,11 @@ public enum AppSearchResultKind: String, Sendable, CaseIterable {
             return GameSystemRulesLabels.glossaryTitle(gameSystemId: gameSystemId)
         case .gettingStarted:
             return String(localized: "Getting Started")
+        case .editionMigration:
+            if playContext.isStarCraft {
+                return String(localized: "RTS → Tabletop")
+            }
+            return String(localized: "What's New in 11e")
         case .matchSetup:
             return String(localized: "Match Setup")
         case .deployment:
@@ -62,7 +68,7 @@ public enum AppSearchResultKind: String, Sendable, CaseIterable {
     public static func visibleKinds(for gameSystemId: String) -> [AppSearchResultKind] {
         let capabilities = GameSystemPlayContext.context(for: gameSystemId).capabilities
         var kinds: [AppSearchResultKind] = [
-            .ruleSection, .glossary, .gettingStarted, .matchSetup, .deployment,
+            .ruleSection, .glossary, .gettingStarted, .editionMigration, .matchSetup, .deployment,
             .warscroll, .armyRule, .phaseTip, .appFeature
         ]
         if capabilities.showsBattleTacticDecks {
@@ -133,7 +139,16 @@ public enum AppSearchIndexBuilder {
         var items: [AppSearchIndexItem] = []
         items.append(contentsOf: ruleSectionItems(from: gameSystem.ruleSections))
         items.append(contentsOf: glossaryItems(gameSystemId: gameSystemId, ruleSections: gameSystem.ruleSections))
-        items.append(contentsOf: guideStepItems(from: gameSystem.gettingStartedSteps))
+        items.append(contentsOf: guideStepItems(
+            from: gameSystem.gettingStartedSteps,
+            kind: .gettingStarted,
+            subtitle: String(localized: "Getting Started")
+        ))
+        items.append(contentsOf: guideStepItems(
+            from: gameSystem.editionMigrationSteps,
+            kind: .editionMigration,
+            subtitle: editionMigrationSubtitle(for: gameSystemId)
+        ))
         if let catalog {
             items.append(contentsOf: matchSetupItems(from: catalog.matchSteps))
             items.append(contentsOf: armyItems(from: catalog, gameSystemId: gameSystemId))
@@ -211,13 +226,23 @@ public enum AppSearchIndexBuilder {
         )
     }
 
-    private static func guideStepItems(from steps: [GuideStep]) -> [AppSearchIndexItem] {
+    private static func editionMigrationSubtitle(for gameSystemId: String) -> String {
+        GameSystemPlayContext.context(for: gameSystemId).isStarCraft
+            ? String(localized: "RTS → Tabletop")
+            : String(localized: "What's New in 11e")
+    }
+
+    private static func guideStepItems(
+        from steps: [GuideStep],
+        kind: AppSearchResultKind,
+        subtitle: String
+    ) -> [AppSearchIndexItem] {
         steps.map { step in
             AppSearchIndexItem(
-                id: "guide:\(step.id)",
-                kind: .gettingStarted,
+                id: "\(kind.rawValue):\(step.id)",
+                kind: kind,
                 title: step.title,
-                subtitle: String(localized: "Getting Started"),
+                subtitle: subtitle,
                 detailBody: joined([step.summary, step.body] + step.tips),
                 referenceId: step.id,
                 secondaryReferenceId: nil,
@@ -666,42 +691,42 @@ public enum AppSearchEngine {
         switch gameSystemId {
         case "wh40k-11e":
             return [
-                "command phase",
-                "battle-shock",
+                "movement phase",
+                "shooting phase",
                 "objective control",
-                "rend",
                 "deployment",
                 "charge roll",
-                "stratagem"
+                "command phase",
+                "battle-shock"
             ]
         case "wh40k-10e-cp":
             return [
                 "secure objective",
-                "reserves",
-                "battle ready",
-                "mission",
                 "command phase",
-                "deployment"
+                "deployment",
+                "mission",
+                "move and shoot",
+                "stratagem",
+                "battle ready"
             ]
         case "sc-tmg":
             return [
-                "supply",
                 "activation",
-                "surge",
+                "supply",
                 "objective",
                 "movement",
+                "surge",
                 "assault"
             ]
         default:
             return [
-                "rend",
-                "pile in",
-                "shoot in combat",
-                "battle tactic",
-                "twist card",
-                "warpfire gun",
+                "movement phase",
+                "shooting phase",
+                "victory points",
                 "deployment",
-                "priority roll"
+                "charge roll",
+                "battle rounds",
+                "coherency"
             ]
         }
     }

@@ -4,6 +4,7 @@ import TabletomeDomain
 /// Combat Patrol mission rules and scoring — curated from bundled rule sections.
 struct CombatPatrolMissionsReferenceView: View {
     let ruleSections: [RuleSection]
+    var gameSystemId: String = GameSystemId.wh40k10eCp.rawValue
 
     private var missionsSection: RuleSection? {
         ruleSections.first { $0.id == "cp-missions" }
@@ -45,9 +46,7 @@ struct CombatPatrolMissionsReferenceView: View {
                 }
 
                 ForEach(relatedMissionSections) { section in
-                    NavigationLink {
-                        RuleSectionDetailView(section: section, allSections: ruleSections)
-                    } label: {
+                    NavigationLink(value: RuleSectionLink(gameSystemId: gameSystemId, sectionId: section.id)) {
                         Label(section.title, systemImage: "map")
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .frame(minHeight: DesignTokens.minTouchTarget)

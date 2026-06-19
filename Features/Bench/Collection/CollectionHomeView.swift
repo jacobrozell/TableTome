@@ -1,0 +1,321 @@
+import SwiftUI
+import SwiftData
+import TabletomeHobbyData
+import TabletomeDomain
+#if canImport(UIKit)
+import UIKit
+#endif
+
+/// Browse all armies; search and filter without inline unit editing.
+@MainActor
+struct CollectionHomeView: View {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.modelContext) private var context
+    @Environment(BannerCenter.self) private var banner
+    @Environment(UndoService.self) private var undo
+    @Environment(AppRouter.self) private var router
+    @Query(sort: \Army.sortIndex) private var armies: [Army]
+    @Query private var configs: [AppConfiguration]
+
+    @Binding var selectedArmyId: UUID?
+    @Binding var showAddArmy: Bool
+    @Binding var showFilters: Bool
+    @Binding var showSettings: Bool
+    var onSelectArmy: (UUID) -> Void = { _ in }
+
+    @State private var search = ""
+    @State private var armyToDelete: Army?
+    @State private var armyToRename: Army?
+    @State private var loadSampleError: (title: String, message: String)?
+    @State private var filterTrigger = false
+    @State private var deleteWarningTrigger = false
+
+    init(
+        selectedArmyId: Binding<UUID?>,
+        showAddArmy: Binding<Bool>,
+        showFilters: Binding<Bool>,
+        showSettings: Binding<Bool>,
+        onSelectArmy: @escaping (UUID) -> Void = { _ in }
+    ) {
+        _selectedArmyId = selectedArmyId
+        _showAddArmy = showAddArmy
+        _showFilters = showFilters
+        _showSettings = showSettings
+        self.onSelectArmy = onSelectArmy
+    }
+
+    private var cfg: AppConfiguration { configs.first ?? HobbyConfig.current(context) }
+    private var overrides: [FactionPresetOverride] { cfg.factionOverrides }
+    private var globalPipeline: [PipelineStage]? { cfg.globalPipeline }
+    private var scoped: Bool { ArmyFilter.isActive(cfg, search: search) }
+    private var filterCount: Int { ArmyFilter.activeFilterCount(cfg) }
+
+    private var visible: [VisibleArmy] {
+        ArmyFilter.build(armies: armies, cfg: cfg, search: search, global: globalPipeline)
+    }
+
+    private var usesPadSidebarList: Bool {
+        AdaptiveLayout.usesSidebarListStyle(horizontalSizeClass)
+    }
+
+    var body: some View {
+        Group {
+            if armies.isEmpty { emptyState }
+            else { listContent }
+        }
+        .navigationTitle("Collection")
+        .searchable(text: $search, prompt: "Armies, factions, units…")
+        .toolbar { toolbarContent }
+        .sheet(isPresented: Binding(
+            get: { armyToRename != nil },
+            set: { if !$0 { armyToRename = nil } }
+        )) {
+            if let army = armyToRename {
+                RenameArmySheet(current: army.name) { ArmyStore.rename(army, to: $0, in: context) }
+                    .presentationDetents([.medium])
+            }
+        }
+        .alert(loadSampleError?.title ?? "Error", isPresented: Binding(
+            get: { loadSampleError != nil },
+            set: { if !$0 { loadSampleError = nil } }
+        )) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            if let loadSampleError { Text(loadSampleError.message) }
+        }
+        .sensoryFeedback(.selection, trigger: filterTrigger)
+        .sensoryFeedback(.warning, trigger: deleteWarningTrigger)
+        .onAppear {
+            applyPendingSource()
+            applyPendingDeepLink()
+            router.collectionSearch = search
+        }
+        .onChange(of: search) { router.collectionSearch = search }
+        .onChange(of: router.pendingSourceFilter) { applyPendingSource() }
+        .onChange(of: router.pendingDeepLink) { applyPendingDeepLink() }
+        .onChange(of: armies.count) { _, _ in autoSelectScreenshotArmyIfNeeded() }
+        .confirmationDialog(
+            "Delete entire army \"\(armyToDelete?.name ?? "")\" and all its units?",
+            isPresented: Binding(get: { armyToDelete != nil }, set: { if !$0 { armyToDelete = nil } }),
+            titleVisibility: .visible
+        ) {
+            Button("Delete", role: .destructive) {
+                if let army = armyToDelete {
+                    if army.id == selectedArmyId { selectedArmyId = nil }
+                    ArmyStore.delete(army, in: context)
+                    deleteWarningTrigger.toggle()
+                }
+                armyToDelete = nil
+            }
+            Button("Cancel", role: .cancel) { armyToDelete = nil }
+        }
+    }
+
+    @ViewBuilder private var listContent: some View {
+        let vis = visible
+        if vis.isEmpty {
+            ContentUnavailableView {
+                Label("No matching units", systemImage: "line.3.horizontal.decrease.circle")
+            } description: {
+                Text("Nothing matches your current search or filters.")
+            } actions: {
+                Button("Clear filters") { clearFilters() }.buttonStyle(.borderedProminent)
+            }
+        } else {
+            armyList
+        }
+    }
+
+    @ViewBuilder private var armyList: some View {
+        let vis = visible
+        if usesPadSidebarList {
+            List { armyListSections(vis: vis, padSidebar: true) }
+                .listStyle(.sidebar)
+        } else {
+            List { armyListSections(vis: vis, padSidebar: false) }
+                .listStyle(.insetGrouped)
+        }
+    }
+
+    @ViewBuilder
+    private func armyListSections(vis: [VisibleArmy], padSidebar: Bool) -> some View {
+        if scoped {
+            Section {
+                if dynamicTypeSize.isAccessibilitySize {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Label(filterBannerText, systemImage: "line.3.horizontal.decrease.circle")
+                            .font(.subheadline)
+                            .fixedSize(horizontal: false, vertical: true)
+                        Button("Clear") { clearFilters() }
+                            .font(.subheadline)
+                    }
+                } else {
+                    HStack {
+                        Label(filterBannerText, systemImage: "line.3.horizontal.decrease.circle")
+                            .font(.subheadline)
+                        Spacer()
+                        Button("Clear") { clearFilters() }.font(.subheadline)
+                    }
+                }
+            }
+        }
+        Section {
+            ForEach(vis) { va in
+                let pipeline = Pipeline.forArmy(va.army, global: globalPipeline)
+                let pct = Int((Pipeline.progress(of: va.units, pipeline) * 100).rounded())
+                let row = ArmyRow(army: va.army, overrides: overrides,
+                                  visibleUnitCount: va.units.count,
+                                  percentComplete: pct, scoped: scoped)
+                Group {
+                    if padSidebar {
+                        Button {
+                            selectedArmyId = va.army.id
+                            onSelectArmy(va.army.id)
+                        } label: { row }
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier("army-\(va.army.name)")
+                    } else {
+                        NavigationLink(value: CollectionRoute.army(va.army.id)) { row }
+                            .navigationLinkIndicatorVisibility(.hidden)
+                            .accessibilityIdentifier("army-\(va.army.name)")
+                    }
+                }
+                .listSidebarSelection(isSelected: va.army.id == selectedArmyId, enabled: padSidebar)
+                .contextMenu {
+                    Button("Rename", systemImage: "pencil") { armyToRename = va.army }
+                    Button("Delete", systemImage: "trash", role: .destructive) {
+                        armyToDelete = va.army
+                    }
+                }
+                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                    Button("Delete", role: .destructive) { armyToDelete = va.army }
+                        .accessibilityLabel("Delete army")
+                }
+            }
+        }
+    }
+
+    private var filterBannerText: String {
+        var parts: [String] = []
+        if filterCount > 0 { parts.append("\(filterCount) filter\(filterCount == 1 ? "" : "s")") }
+        if !search.isEmpty { parts.append("search") }
+        return parts.isEmpty ? "Filters active" : parts.joined(separator: " · ")
+    }
+
+    @ToolbarContentBuilder private var toolbarContent: some ToolbarContent {
+        ToolbarItemGroup(placement: .topBarLeading) {
+            Button("New army", systemImage: "plus") { showAddArmy = true }
+            Button("Undo", systemImage: "arrow.uturn.backward") {
+                if let msg = undo.undo(in: context) { banner.show(msg) }
+            }
+            .disabled(!undo.canUndo)
+            .accessibilityLabel("Undo")
+            .accessibilityHint(undo.canUndo ? "Reverts the last action" : "No actions to undo")
+        }
+        ToolbarItem(placement: .topBarTrailing) {
+            NavigationLink(value: CollectionRoute.overview) {
+                Label("Overview", systemImage: "chart.pie")
+            }
+            .labelStyle(.iconOnly)
+        }
+        ToolbarItem(placement: .topBarTrailing) {
+            Button("Filters", systemImage: filterCount > 0 || scoped
+                   ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle") {
+                showFilters = true
+            }
+            .accessibilityLabel(filterCount > 0 ? "Filters, \(filterCount) active" : "Filters")
+        }
+        ToolbarItem(placement: .topBarTrailing) {
+            Button("Settings", systemImage: "gearshape") { showSettings = true }
+                .accessibilityIdentifier("settings")
+        }
+    }
+
+    private var emptyState: some View {
+        ContentUnavailableView {
+            Label(String(localized: "No armies yet"), systemImage: "shield")
+        } description: {
+            if dynamicTypeSize.isAccessibilitySize {
+                Text(String(localized: "An army is a group of miniatures you paint and play. Add one here, or load sample data to explore."))
+            } else {
+                Text(String(localized: "An army is a group of miniatures you paint and play. Add one here, or load sample data below."))
+            }
+        } actions: {
+            Button(String(localized: "Load sample data")) { loadSample() }
+            .buttonStyle(.borderedProminent)
+            .accessibilityIdentifier("loadSampleData")
+            Button(String(localized: "New army")) { showAddArmy = true }
+        }
+        .adaptiveEmptyStateLayout()
+    }
+
+    private func clearFilters() {
+        ArmyFilter.clearFilters(cfg)
+        search = ""
+        router.collectionSearch = ""
+        try? context.save()
+    }
+
+    private func applyPendingSource() {
+        guard let src = router.pendingSourceFilter else { return }
+        router.pendingSourceFilter = nil
+        let match = armies.flatMap { $0.units.map(\.source) }.first { SourceMatch.matches(src, $0) }
+        cfg.sourceFilter = match ?? SourceMatch.parts(src).first ?? src
+        cfg.quickViewRaw = "all"
+        cfg.gameFilter = "All"
+        cfg.factionFilter = "All"
+        try? context.save()
+        banner.show("Filtered by source: \(cfg.sourceFilter)")
+        filterTrigger.toggle()
+    }
+
+    private func applyPendingDeepLink() {
+        guard router.pendingDeepLink == .collectionBacklog else { return }
+        router.pendingDeepLink = nil
+        ArmyFilter.clearFilters(cfg)
+        cfg.quickViewRaw = "backlog"
+        search = ""
+        router.collectionSearch = ""
+        try? context.save()
+        banner.show("Showing backlog — models on the sprue")
+        filterTrigger.toggle()
+    }
+
+    private func loadSample() {
+        let outcome = DataActions.loadSampleOutcome(ctx: context)
+        if outcome.success {
+            banner.show(outcome.message)
+            autoSelectScreenshotArmyIfNeeded()
+        } else {
+            loadSampleError = (outcome.title, outcome.message)
+        }
+    }
+
+    /// iPad split-view screenshots need an army selected; XCUITest sidebar taps are unreliable.
+    private func autoSelectScreenshotArmyIfNeeded() {
+#if canImport(UIKit)
+        guard ProcessInfo.processInfo.arguments.contains("UI-Testing"),
+              UIDevice.current.userInterfaceIdiom == .pad,
+              selectedArmyId == nil else { return }
+        Task { @MainActor in
+            for _ in 0..<30 {
+                if let army = armies.first(where: { $0.name == "Hallowed Knights" }) {
+                    selectedArmyId = army.id
+                    onSelectArmy(army.id)
+                    return
+                }
+                try? await Task.sleep(for: .milliseconds(100))
+            }
+        }
+#endif
+    }
+}
+
+#Preview {
+    CollectionTab()
+        .modelContainer(HobbyAppContainer.previewContainer())
+        .environment(BannerCenter())
+        .environment(UndoService.shared)
+        .environment(AppRouter())
+}

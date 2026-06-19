@@ -35,12 +35,12 @@ extension GameSystemId {
                     rulesSearchPrompt: String(localized: "Search AoS rules"),
                     browseIntro: String(
                         localized: """
-                        Search Age of Sigmar Spearhead rules, glossary terms, warscrolls, setup steps, and phase tips.
+                        Search Age of Sigmar Spearhead rules, glossary terms, unit profiles, setup steps, and phase tips.
                         """
                     ),
                     gameGuideBrowseTitle: String(localized: "Spearhead Guide"),
                     searchEmptyStateHint: String(
-                        localized: "No matches — try fewer words or a glossary term like “rend” or “pile in”."
+                        localized: "No matches — try fewer words, like “movement phase” or “victory points”."
                     ),
                     displayName: String(localized: "Age of Sigmar Spearhead"),
                     searchPickerLabel: String(localized: "Age of Sigmar: Spearhead"),
@@ -51,9 +51,9 @@ extension GameSystemId {
                     armyIds: ["vigilant-brotherhood", "gnawfeast-clawpack"],
                     starterMatchupTitle: "Vigilant Brotherhood vs Gnawfeast Clawpack",
                     starterSetDescription: String(
-                        localized: "Quick-start the Skaventide / Ultimate Starter Set matchup with full warscrolls, setup, and battle tools."
+                        localized: "Fill both armies automatically for the Vigilant Brotherhood vs Gnawfeast Clawpack starter matchup — setup and battle tools included."
                     ),
-                    starterSetBadge: String(localized: "Skaventide / Ultimate Starter Set"),
+                    starterSetBadge: String(localized: "Age of Sigmar starter box"),
                     playerOne: StarterArmySelection(
                         playerName: "Player 1",
                         factionId: "stormcast-eternals",

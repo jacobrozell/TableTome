@@ -48,7 +48,7 @@ final class BundledRulesRepositoryTests: XCTestCase {
         XCTAssertEqual(system.availability, .available)
         XCTAssertEqual(system.gettingStartedSteps.count, 7)
         XCTAssertEqual(system.editionMigrationSteps.count, 11)
-        XCTAssertEqual(system.ruleSections.count, 17)
+        XCTAssertEqual(system.ruleSections.count, 22)
         XCTAssertFalse(system.externalLinks?.isEmpty ?? true)
 
         let gettingStartedOrders = system.gettingStartedSteps.map(\.order)
@@ -89,6 +89,20 @@ final class BundledRulesRepositoryTests: XCTestCase {
         let section = try XCTUnwrap(system.ruleSections.first { $0.id == "11e-scoring-overview" })
         XCTAssertTrue(section.content.contains("battle round"))
         XCTAssertFalse(section.content.localizedCaseInsensitiveContains("per turn"))
+    }
+
+    func testWh40k11eReservesGlossaryMatchesDeploymentCopy() async throws {
+        let system = try await testRepository.gameSystem(id: "wh40k-11e")
+        let text = Wh40kDeploymentChecklistStep.confirmReserves.detail
+        let entries = RulesGlossaryCatalog.entriesReferenced(
+            in: text,
+            gameSystemId: GameSystemId.wh40k11e.rawValue,
+            ruleSections: system.ruleSections
+        )
+        let ids = Set(entries.map(\.id))
+        XCTAssertTrue(ids.contains("glossary-strategic-reserves-11e"))
+        XCTAssertTrue(ids.contains("glossary-deep-strike-11e"))
+        XCTAssertTrue(ids.contains("glossary-ingress-11e"))
     }
 
     func testWh40k10eCpHasGuideContent() async throws {

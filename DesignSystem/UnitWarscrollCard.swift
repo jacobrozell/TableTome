@@ -145,17 +145,12 @@ struct UnitWarscrollCard: View {
                     .font(.subheadline.weight(.semibold))
                 Spacer()
                 if weapon.numericRollProfile != nil || weapon.isRollEvaluable {
-                    NavigationLink {
-                        UnitMatchupEvaluatorView(
-                            ruleSections: ruleSections,
-                            gameSystemId: gameSystemId.rawValue,
-                            attackerPrefill: MatchupUnitPrefill(
-                                armyId: army.id,
-                                unitId: unit.id,
-                                weaponId: weapon.id
-                            )
-                        )
-                    } label: {
+                    NavigationLink(value: CombatResolverLink(
+                        gameSystemId: gameSystemId.rawValue,
+                        attackerArmyId: army.id,
+                        attackerUnitId: unit.id,
+                        attackerWeaponId: weapon.id
+                    )) {
                         Label(String(localized: "Resolve"), systemImage: "dice.fill")
                             .font(.caption.weight(.semibold))
                     }
@@ -201,17 +196,12 @@ struct UnitWarscrollCard: View {
     }
 
     private var matchupLink: some View {
-        NavigationLink {
-            UnitMatchupEvaluatorView(
-                ruleSections: ruleSections,
-                gameSystemId: gameSystemId.rawValue,
-                attackerPrefill: MatchupUnitPrefill(
-                    armyId: army.id,
-                    unitId: unit.id,
-                    weaponId: evaluableWeapons.first?.id
-                )
-            )
-        } label: {
+        NavigationLink(value: CombatResolverLink(
+            gameSystemId: gameSystemId.rawValue,
+            attackerArmyId: army.id,
+            attackerUnitId: unit.id,
+            attackerWeaponId: evaluableWeapons.first?.id
+        )) {
             Label(String(localized: "Resolve vs Unit…"), systemImage: "arrow.left.arrow.right")
                 .font(.subheadline.weight(.semibold))
                 .frame(maxWidth: .infinity, alignment: .leading)

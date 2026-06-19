@@ -417,17 +417,16 @@ struct CombatResolverPanel: View {
                 ? "10e-attack-sequence"
                 : "combat-sequence"
             if let combatSection = ruleSections.first(where: { $0.id == combatSectionId }) {
-                NavigationLink {
-                    RuleSectionDetailView(section: combatSection, allSections: ruleSections)
-                } label: {
+                NavigationLink(value: RuleSectionLink(
+                    gameSystemId: viewModel.gameSystemId,
+                    sectionId: combatSection.id
+                )) {
                     ReferenceLinkRow(title: combatSection.title, systemImage: "doc.text")
                 }
                 .accessibilityIdentifier("\(accessibilityPrefix).relatedRule")
                 Divider().padding(.leading, DesignTokens.Spacing.md)
             }
-            NavigationLink {
-                RulesGlossaryView(gameSystemId: viewModel.gameSystemId, ruleSections: ruleSections)
-            } label: {
+            NavigationLink(value: RulesGlossaryBrowseLink(gameSystemId: viewModel.gameSystemId)) {
                 ReferenceLinkRow(
                     title: GameSystemRulesLabels.glossaryTitle(gameSystemId: viewModel.gameSystemId),
                     systemImage: "book.fill"

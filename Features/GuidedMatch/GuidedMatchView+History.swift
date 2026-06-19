@@ -10,6 +10,7 @@ extension GuidedMatchView {
                     Label(String(localized: "History"), systemImage: "clock.arrow.circlepath")
                 }
                 .accessibilityIdentifier("guidedMatch.history")
+                .accessibilityHint(String(localized: "Past guided matches with scores and turn logs"))
             }
         }
     }

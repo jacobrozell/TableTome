@@ -43,26 +43,25 @@ struct EditionMigrationView: View {
                 .fixedSize(horizontal: false, vertical: true)
             }
 
-            ForEach(Array(sortedSteps.enumerated()), id: \.element.id) { index, step in
-                NavigationLink {
-                    GuideStepDetailView(
-                        gameSystemId: gameSystem.id,
-                        step: step,
-                        ruleSections: gameSystem.ruleSections
-                    )
-                } label: {
-                    GuideStepCard(
-                        stepNumber: index + 1,
-                        title: step.title,
-                        summary: step.summary,
-                        isComplete: GuideProgressStore.isComplete(gameSystemId: gameSystem.id, stepId: step.id),
-                        showsDisclosureIndicator: false,
-                        accessibilityId: "guide.migration.\(step.id)"
-                    )
+            Section {
+                ForEach(Array(sortedSteps.enumerated()), id: \.element.id) { index, step in
+                    NavigationLink(value: GuideStepLink(gameSystemId: gameSystem.id, stepId: step.id)) {
+                        GuideStepCard(
+                            stepNumber: index + 1,
+                            title: step.title,
+                            summary: step.summary,
+                            isComplete: false,
+                            showsDisclosureIndicator: false,
+                            accessibilityId: "guide.migration.\(step.id)"
+                        )
+                    }
+                    .listRowInsets(GuideStepCard.listRowInsets)
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
                 }
-                .listRowInsets(GuideStepCard.listRowInsets)
-                .listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
+            } footer: {
+                Text(String(localized: "Read in any order — reference topics, not a checklist."))
+                    .font(.callout)
             }
         }
         .listStyle(.plain)

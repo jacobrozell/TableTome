@@ -29,13 +29,28 @@ struct HomeView: View {
                         }
                         .listRowInsets(EdgeInsets())
                         .listRowBackground(Color.clear)
+
+                        Section {
+                            HomeNewPlayerChooserCard()
+                        }
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Color.clear)
                     }
 
-                    ForEach(viewModel.gameSystems) { system in
-                        NavigationLink(value: system.id) {
-                            gameSystemRow(system)
+                    Section {
+                        ForEach(viewModel.gameSystems) { system in
+                            NavigationLink(value: system.id) {
+                                gameSystemRow(system)
+                            }
+                            .accessibilityIdentifier("home.gameSystem.\(system.id)")
+                            .simultaneousGesture(TapGesture().onEnded {
+                                ActiveGameContextStore.setActiveGameSystem(system.id)
+                            })
                         }
-                        .accessibilityIdentifier("home.gameSystem.\(system.id)")
+                    } header: {
+                        Text(String(localized: "All games"))
+                    } footer: {
+                        Text(String(localized: "Not sure which to pick? Start with the chooser above."))
                     }
                 }
                 .listStyle(.insetGrouped)
@@ -47,18 +62,7 @@ struct HomeView: View {
         .navigationDestination(for: String.self) { systemId in
             GameSystemDetailView(gameSystemId: systemId)
         }
-        .navigationDestination(for: GettingStartedLink.self) { link in
-            GettingStartedDestinationView(gameSystemId: link.gameSystemId)
-        }
-        .navigationDestination(for: GuidedMatchLink.self) { link in
-            GuidedMatchDestinationView(gameSystemId: link.gameSystemId)
-        }
-        .navigationDestination(for: MatchHistoryLink.self) { _ in
-            MatchHistoryListView(viewModel: dependencies.makeMatchHistoryViewModel())
-        }
-        .navigationDestination(for: SampleTurnLink.self) { _ in
-            SampleTurnWalkthroughView()
-        }
+        .playNavigationDestinations()
         .toolbar {
             if ReleaseSurface.showsMatchHistory {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -66,6 +70,7 @@ struct HomeView: View {
                         Label(String(localized: "History"), systemImage: "clock.arrow.circlepath")
                     }
                     .accessibilityIdentifier("home.matchHistory")
+                    .accessibilityHint(String(localized: "Past guided matches with scores and turn logs"))
                 }
             }
         }
@@ -85,6 +90,11 @@ struct HomeView: View {
             Text(newcomerTagline(for: system))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
+            if let footnote = editionFootnote(for: system) {
+                Text(footnote)
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
+            }
             Text(system.edition)
                 .font(.caption)
                 .foregroundStyle(.tertiary)
@@ -105,17 +115,27 @@ struct HomeView: View {
 
     private func newcomerTagline(for system: GameSystem) -> String {
         if system.id == "aos-spearhead" {
-            return String(localized: "Learn and play with your starter-set armies")
+            return String(localized: "Fantasy starter box — best first wargame")
         }
         if system.id == "wh40k-11e" {
-            return String(localized: "New to 40k or upgrading from 10th? Guided setup and rules")
+            return String(localized: "Full 40k rules — not the small Combat Patrol format")
         }
         if system.id == "wh40k-10e-cp" {
-            return String(localized: "Quick box-set battles with guided rules and missions")
+            return String(localized: "40k starter box — guided first battles")
         }
         if system.id == "sc-tmg" {
-            return String(localized: "Guided match for Terran, Zerg, and Protoss")
+            return String(localized: "StarCraft on the tabletop — Founders Edition")
         }
         return system.tagline
+    }
+
+    private func editionFootnote(for system: GameSystem) -> String? {
+        if system.id == "wh40k-10e-cp" {
+            return String(localized: "Uses 10th Edition Combat Patrol rules")
+        }
+        if system.id == "wh40k-11e" {
+            return String(localized: "Current full-game edition")
+        }
+        return nil
     }
 }

@@ -35,10 +35,11 @@ public protocol ArmyLike: AnyObject {
 
 /// User-supplied override of a faction's crest/color. Ports `FactionPresetOverride`
 /// from MiniMuster (`js/data/factions/types.ts`).
-public struct FactionPresetOverride: Hashable, Sendable, Codable {
+public struct FactionPresetOverride: Hashable, Sendable, Codable, Identifiable {
     public let key: String   // composite "Game:Faction"
     public let crest: String
     public let hex: String
+    public var id: String { key }
 
     public init(key: String, crest: String, hex: String) {
         self.key = key

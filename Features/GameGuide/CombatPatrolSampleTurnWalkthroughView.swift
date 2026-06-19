@@ -20,8 +20,8 @@ struct CombatPatrolSampleTurnWalkthroughView: View {
             shortLabel: String(localized: "Command"),
             detail: String(
                 localized: """
-                Gain Command Points, take Battle-shock tests on damaged units, pick your Oath of Moment or Synapse actions, \
-                then secure objectives with Battleline units. Score primary VP at the end of Command from battle round 2.
+                Start your turn here. Gain Command Points (CP) to spend on abilities, test Battle-shock on badly hurt units, \
+                then score objectives with troops on the board. From battle round 2, you also earn primary victory points here.
                 """
             ),
             systemImage: "flag.checkered"
@@ -31,8 +31,8 @@ struct CombatPatrolSampleTurnWalkthroughView: View {
             shortLabel: String(localized: "Move"),
             detail: String(
                 localized: """
-                Move and Advance. Deep Strike and Reserves arrive from battle round 2 — Reserves must arrive by end of \
-                battle round 3 or are destroyed. Tyranids can use Teeming Broods during Reinforcements.
+                Move your units across the board — most can walk their full Move distance. Some units start off \
+                the table and arrive in later rounds; Guided Match reminds you when that is allowed.
                 """
             ),
             systemImage: "figure.walk"
@@ -42,8 +42,8 @@ struct CombatPatrolSampleTurnWalkthroughView: View {
             shortLabel: String(localized: "Shoot"),
             detail: String(
                 localized: """
-                Pick units to shoot with, measure range, and roll Hit and Wound tests on your datasheets. \
-                Use stratagems like Gene-wrought Resilience or Hyper-reactive when the opponent fires back.
+                Pick a unit, choose a target in range, and roll dice to see if shots hit and wound. Each unit's \
+                datasheet in Guided Match shows what to roll and how much damage to deal.
                 """
             ),
             systemImage: "scope"
@@ -53,8 +53,8 @@ struct CombatPatrolSampleTurnWalkthroughView: View {
             shortLabel: String(localized: "Fight"),
             detail: String(
                 localized: """
-                Declare charges (2D6 must reach), then fight in engagement range. Track wounds in Army Health and \
-                mark stratagems used on the Table State card.
+                Roll to charge into melee, then fight with the close-combat weapons on your datasheet. The battle \
+                tracker helps you remember wounds taken and which units have already fought this phase.
                 """
             ),
             systemImage: "figure.fencing"
@@ -64,8 +64,8 @@ struct CombatPatrolSampleTurnWalkthroughView: View {
             shortLabel: String(localized: "Score"),
             detail: String(
                 localized: """
-                Score secondaries and end-of-turn mission VP, then pass the phone. Round 5: the second-turn player scores \
-                primary VP here instead of in Command phase.
+                Add up mission points for holding objectives and completing your goals, then pass the phone. \
+                Players alternate turns until all five battle rounds are finished.
                 """
             ),
             systemImage: "star.circle.fill"
@@ -78,7 +78,7 @@ struct CombatPatrolSampleTurnWalkthroughView: View {
                 header
                 phaseStrip
                 stepCard
-                GlossaryChipsRow(text: steps[step].detail)
+                GlossaryChipsRow(text: steps[step].detail, gameSystemId: GameSystemId.wh40k10eCp.rawValue)
                 navigationButtons
             }
             .readableContentWidth()
@@ -98,8 +98,8 @@ struct CombatPatrolSampleTurnWalkthroughView: View {
             Text(
                 String(
                     localized: """
-                    Five battle rounds, Command-first turns. Tabletome tracks phases, objectives, stratagems, and VP — \
-                    you roll dice and move models at the table.
+                    A battle lasts five rounds. Each round, players alternate turns — Command, Move, Shoot, then Charge and Fight. \
+                    Tabletome tracks phases and score; you roll dice and move models at the table. Tap Key terms below any step for definitions.
                     """
                 )
             )
@@ -196,7 +196,7 @@ struct CombatPatrolSampleTurnWalkthroughView: View {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                     Text(
                         String(
-                            localized: "Ready for Clash of Patrols? Use Starter Matchup for Octavius vs Vardenghast."
+                            localized: "Ready to play? Open Guided Match and tap Use Starter Matchup."
                         )
                     )
                     .font(.callout)

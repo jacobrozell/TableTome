@@ -7,13 +7,7 @@ struct GlossaryChip: View {
     var ruleSections: [RuleSection] = []
 
     var body: some View {
-        NavigationLink {
-            RulesGlossaryView(
-                highlightedEntryId: entry.id,
-                gameSystemId: gameSystemId,
-                ruleSections: ruleSections
-            )
-        } label: {
+        NavigationLink(value: GlossaryEntryLink(gameSystemId: gameSystemId, entryId: entry.id)) {
             Text(entry.term)
                 .font(.caption2.weight(.semibold))
                 .adaptiveLineLimit(2)

@@ -81,6 +81,14 @@ final class AppSearchEngineTests: XCTestCase {
         XCTAssertFalse(topics.contains { $0.localizedCaseInsensitiveContains("warpfire") })
     }
 
+    func testSpearheadSuggestedTopicsUseBeginnerPhrases() {
+        let topics = AppSearchEngine.suggestedTopics(for: "aos-spearhead")
+        XCTAssertTrue(topics.contains { $0.localizedCaseInsensitiveContains("movement") })
+        XCTAssertTrue(topics.contains { $0.localizedCaseInsensitiveContains("victory") })
+        XCTAssertFalse(topics.contains { $0.localizedCaseInsensitiveContains("rend") })
+        XCTAssertFalse(topics.contains { $0.localizedCaseInsensitiveContains("warpfire") })
+    }
+
     func testStarCraftIndexExcludesSpearheadOnlyTopics() async throws {
         let rulesRepository = BundledRulesRepository(bundle: Bundle(for: AppSearchEngineTests.self))
         let catalogRepository = BundledPlayCatalogRepository(bundle: Bundle(for: AppSearchEngineTests.self))
@@ -104,5 +112,15 @@ final class AppSearchEngineTests: XCTestCase {
         XCTAssertTrue(cpIndex.contains { $0.title == "Duty and Honour" && $0.subtitle.contains("Stratagem") })
         XCTAssertTrue(cpIndex.contains { $0.title == "Captain Octavius" && $0.kind == .warscroll })
         XCTAssertTrue(cpIndex.contains { $0.id == "mission:clash-of-patrols" })
+    }
+
+    func testStarCraftIndexIncludesEditionMigrationTopics() async throws {
+        let rulesRepository = BundledRulesRepository(bundle: Bundle(for: AppSearchEngineTests.self))
+        let catalogRepository = BundledPlayCatalogRepository(bundle: Bundle(for: AppSearchEngineTests.self))
+        let gameSystem = try await rulesRepository.gameSystem(id: "sc-tmg")
+        let catalog = try await catalogRepository.loadCatalog(for: "sc-tmg")
+        let starCraftIndex = AppSearchIndexBuilder.build(gameSystem: gameSystem, catalog: catalog)
+
+        XCTAssertTrue(starCraftIndex.contains { $0.kind == .editionMigration && $0.referenceId == "rts-economy" })
     }
 }

@@ -18,7 +18,9 @@ extension BattlePhaseTrackerView {
                 Wh40kDeploymentChecklistCard(
                     completedSteps: viewModel.trackerState.completedDeploymentSteps,
                     focusedStep: viewModel.focusedWh40kDeploymentStep,
-                    onToggle: viewModel.setWh40kDeploymentStep
+                    onToggle: viewModel.setWh40kDeploymentStep,
+                    gameSystemId: viewModel.gameSystemId.rawValue,
+                    ruleSections: ruleSections
                 )
             } else if viewModel.playContext.isCombatPatrol {
                 CombatPatrolDeploymentChecklistCard(

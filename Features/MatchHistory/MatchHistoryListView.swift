@@ -9,6 +9,7 @@ struct MatchHistoryDetailLink: Hashable {
 
 struct MatchHistoryListView: View {
     @StateObject private var viewModel: MatchHistoryViewModel
+    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
     @State private var filters: [(id: String?, label: String)] = []
 
     init(viewModel: MatchHistoryViewModel) {
@@ -41,7 +42,21 @@ struct MatchHistoryListView: View {
                     ContentUnavailableView {
                         Label(String(localized: "No Matches Yet"), systemImage: "clock.arrow.circlepath")
                     } description: {
-                        Text(String(localized: "Finished games appear here after you complete a guided match."))
+                        Text(
+                            String(
+                                localized: """
+                                Finished guided matches are saved here with scores and a turn-by-turn log. \
+                                Complete a game in Guided Match to see your first entry.
+                                """
+                            )
+                        )
+                    } actions: {
+                        Button(String(localized: "Open Spearhead Guided Match")) {
+                            learnNavigationCoordinator.openGuidedMatch(
+                                gameSystemId: OnboardingCompletion.spearheadGameSystemId
+                            )
+                        }
+                        .accessibilityIdentifier("matchHistory.openGuidedMatch")
                     }
                 }
             } else {

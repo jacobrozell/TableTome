@@ -32,3 +32,9 @@ identifier_name:
 excluded:
   - DerivedData
   - .build
+  - Data/Hobby
+  - Features/Bench
+  - Features/Muster
+  - DesignSystem/Hobby
+  - Support/Hobby
+  - Domain/Muster

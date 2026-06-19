@@ -71,6 +71,7 @@ struct GuidedMatchView: View {
         .navigationDestination(for: MatchHistoryLink.self) { _ in
             MatchHistoryListView(viewModel: dependencies.makeMatchHistoryViewModel())
         }
+        .playNavigationDestinations()
         .confirmationDialog(
             String(localized: "Reset Match"),
             isPresented: $showsResetConfirmation,
@@ -139,7 +140,85 @@ struct GuidedMatchView: View {
 
     @ViewBuilder
     private func guidedMatchDetail(catalog: SpearheadCatalog) -> some View {
-        switch selectedDestination {
+        if let selectedDestination {
+            guidedMatchScreen(
+                destination: selectedDestination,
+                catalog: catalog,
+                dismissesArmySelectionOnSave: false
+            )
+        } else {
+            guidedMatchPadWelcome(catalog: catalog)
+        }
+    }
+
+    @ViewBuilder
+    private func guidedMatchPadWelcome(catalog: SpearheadCatalog) -> some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                guidedMatchPlaceholder(
+                    title: String(localized: "Start here"),
+                    message: String(
+                        localized: """
+                        New to tabletop battles? Tap Use Starter Matchup to load both armies, or pick each player below.
+                        """
+                    )
+                )
+
+                if !viewModel.matchState.hasBothArmies {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                        Button(String(localized: "Use Starter Matchup")) {
+                            viewModel.applyStarterMatchup()
+                            selectedDestination = .battleTracker
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+                        .accessibilityIdentifier("guidedMatch.starterMatchup.detail")
+                        .accessibilityLabel(String(localized: "Use Starter Matchup"))
+                        .accessibilityHint(
+                            String(
+                                localized: "Fills both armies and recommended enhancement and objective picks."
+                            )
+                        )
+
+                        Button {
+                            selectedDestination = .playerOne
+                        } label: {
+                            PlayerArmyRow(
+                                label: String(localized: "Player 1"),
+                                selection: viewModel.matchState.playerOne,
+                                catalog: catalog
+                            )
+                        }
+                        .buttonStyle(.bordered)
+                        .accessibilityIdentifier("guidedMatch.playerOne.detail")
+
+                        Button {
+                            selectedDestination = .playerTwo
+                        } label: {
+                            PlayerArmyRow(
+                                label: String(localized: "Player 2"),
+                                selection: viewModel.matchState.playerTwo,
+                                catalog: catalog
+                            )
+                        }
+                        .buttonStyle(.bordered)
+                        .accessibilityIdentifier("guidedMatch.playerTwo.detail")
+                    }
+                }
+            }
+            .padding(DesignTokens.Spacing.md)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .navigationTitle(String(localized: "Guided Match"))
+    }
+
+    @ViewBuilder
+    private func guidedMatchScreen(
+        destination: GuidedMatchDestination,
+        catalog: SpearheadCatalog,
+        dismissesArmySelectionOnSave: Bool
+    ) -> some View {
+        switch destination {
         case .playerOne:
                     ArmySelectionView(
                         title: String(localized: "Player 1 Army"),
@@ -148,7 +227,7 @@ struct GuidedMatchView: View {
                         featuredArmies: featuredArmies,
                         ruleSections: ruleSections,
                         gameSystemId: viewModel.gameSystemId,
-                        dismissesOnSave: false,
+                        dismissesOnSave: dismissesArmySelectionOnSave,
                         onSave: viewModel.updatePlayerOne
                     )
         case .playerTwo:
@@ -159,7 +238,7 @@ struct GuidedMatchView: View {
                         featuredArmies: featuredArmies,
                         ruleSections: ruleSections,
                         gameSystemId: viewModel.gameSystemId,
-                        dismissesOnSave: false,
+                        dismissesOnSave: dismissesArmySelectionOnSave,
                         onSave: viewModel.updatePlayerTwo
                     )
         case .battleTracker:
@@ -193,11 +272,6 @@ struct GuidedMatchView: View {
                     message: String(localized: "This step could not be loaded.")
                 )
             }
-        case nil:
-            guidedMatchPlaceholder(
-                title: String(localized: "Guided Match"),
-                message: String(localized: "Select a player, step, or the battle tracker from the sidebar.")
-            )
         }
     }
 
@@ -211,6 +285,13 @@ struct GuidedMatchView: View {
         .listStyle(.insetGrouped)
         .tabBarScrollInset()
         .readableContentWidth()
+        .navigationDestination(for: GuidedMatchDestination.self) { destination in
+            guidedMatchScreen(
+                destination: destination,
+                catalog: catalog,
+                dismissesArmySelectionOnSave: true
+            )
+        }
     }
 
     // MARK: - Shared list content
@@ -251,11 +332,9 @@ struct GuidedMatchView: View {
     private var sampleTurnSection: some View {
         if gameSystemId == .aosSpearhead {
             Section {
-                NavigationLink {
-                    SampleTurnWalkthroughView()
-                } label: {
+                NavigationLink(value: SampleTurnLink()) {
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                        Label(String(localized: "Preview a Turn"), systemImage: "play.circle")
+                        Label(String(localized: "Preview a Spearhead Turn"), systemImage: "play.circle")
                             .font(.headline)
                         Text(String(localized: "Two-minute tour — movement, shooting, dice, and scoring"))
                             .font(.caption)
@@ -267,9 +346,7 @@ struct GuidedMatchView: View {
             }
         } else if gameSystemId == .wh40k10eCp {
             Section {
-                NavigationLink {
-                    CombatPatrolSampleTurnWalkthroughView()
-                } label: {
+                NavigationLink(value: CombatPatrolSampleTurnLink()) {
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                         Label(String(localized: "Preview a Turn"), systemImage: "play.circle")
                             .font(.headline)
@@ -325,14 +402,7 @@ struct GuidedMatchView: View {
                 .listRowSeparator(.hidden)
                 .disabled(!viewModel.matchState.hasBothArmies && step.id != "choose-armies")
             } else {
-                NavigationLink {
-                    MatchStepDetailView(
-                        step: step,
-                        stepNumber: index + 1,
-                        viewModel: viewModel,
-                        ruleSections: ruleSections
-                    )
-                } label: {
+                NavigationLink(value: GuidedMatchDestination.step(step.id)) {
                     GuideStepCard(
                         stepNumber: index + 1,
                         title: step.title,
@@ -353,29 +423,46 @@ struct GuidedMatchView: View {
     @ViewBuilder
     private var matchupSection: some View {
         Section {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                Label {
-                    Text(featuredArmies.starterMatchupTitle)
-                        .font(.headline)
-                } icon: {
-                    Image(systemName: "flag.2.crossed.fill")
-                        .foregroundStyle(Color.accentColor)
+            Button {
+                viewModel.applyStarterMatchup()
+                if usesPadSplitNavigation {
+                    selectedDestination = .battleTracker
                 }
-                Text(featuredArmies.starterSetDescription)
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-                Button(String(localized: "Use Starter Matchup")) {
-                    viewModel.applyStarterMatchup()
-                    if usesPadSplitNavigation {
-                        selectedDestination = .battleTracker
+            } label: {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                    Label {
+                        Text(featuredArmies.starterMatchupTitle)
+                            .font(.headline)
+                            .multilineTextAlignment(.leading)
+                    } icon: {
+                        Image(systemName: "flag.2.crossed.fill")
+                            .foregroundStyle(Color.accentColor)
                     }
+                    Text(featuredArmies.starterSetDescription)
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text(String(localized: "Use Starter Matchup"))
+                        .font(.subheadline.weight(.semibold))
+                        .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+                        .foregroundStyle(Color.white)
+                        .background(Color.accentColor, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
                 }
-                .buttonStyle(.borderedProminent)
-                .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-                .accessibilityIdentifier("guidedMatch.starterMatchup")
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .padding(.vertical, DesignTokens.Spacing.xs)
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("guidedMatch.starterMatchup")
+            .accessibilityLabel(
+                String(
+                    localized: "Use Starter Matchup, \(featuredArmies.starterMatchupTitle)"
+                )
+            )
+            .accessibilityHint(
+                String(
+                    localized: "Fills both armies and recommended enhancement and objective picks."
+                )
+            )
         } header: {
             Text(String(localized: "Starter Set"))
         }
@@ -417,6 +504,10 @@ struct GuidedMatchView: View {
                     ProgressView(value: viewModel.setupProgressFraction)
                         .tint(.accentColor)
                         .accessibilityLabel(String(localized: "Match setup progress"))
+                    GuidedMatchSetupProgressList(
+                        steps: viewModel.sortedMatchSteps,
+                        completedStepIds: viewModel.matchState.completedStepIds
+                    )
                 }
                 .accessibilityIdentifier("guidedMatch.setupProgress")
             }
@@ -442,14 +533,7 @@ struct GuidedMatchView: View {
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
                 } else {
-                    NavigationLink {
-                        MatchStepDetailView(
-                            step: next,
-                            stepNumber: index + 1,
-                            viewModel: viewModel,
-                            ruleSections: ruleSections
-                        )
-                    } label: {
+                    NavigationLink(value: GuidedMatchDestination.step(next.id)) {
                         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                             Text(String(localized: "Continue Setup"))
                                 .font(.caption.weight(.semibold))
@@ -491,17 +575,7 @@ struct GuidedMatchView: View {
                     destination: .playerTwo
                 )
             } else {
-                NavigationLink {
-                    ArmySelectionView(
-                        title: String(localized: "Player 1 Army"),
-                        selection: viewModel.matchState.playerOne,
-                        factions: viewModel.sortedFactions,
-                        featuredArmies: featuredArmies,
-                        ruleSections: ruleSections,
-                        gameSystemId: viewModel.gameSystemId,
-                        onSave: viewModel.updatePlayerOne
-                    )
-                } label: {
+                NavigationLink(value: GuidedMatchDestination.playerOne) {
                     PlayerArmyRow(
                         label: String(localized: "Player 1"),
                         selection: viewModel.matchState.playerOne,
@@ -510,17 +584,7 @@ struct GuidedMatchView: View {
                 }
                 .accessibilityIdentifier("guidedMatch.playerOne")
 
-                NavigationLink {
-                    ArmySelectionView(
-                        title: String(localized: "Player 2 Army"),
-                        selection: viewModel.matchState.playerTwo,
-                        factions: viewModel.sortedFactions,
-                        featuredArmies: featuredArmies,
-                        ruleSections: ruleSections,
-                        gameSystemId: viewModel.gameSystemId,
-                        onSave: viewModel.updatePlayerTwo
-                    )
-                } label: {
+                NavigationLink(value: GuidedMatchDestination.playerTwo) {
                     PlayerArmyRow(
                         label: String(localized: "Player 2"),
                         selection: viewModel.matchState.playerTwo,
@@ -544,17 +608,15 @@ struct GuidedMatchView: View {
                     .tag(GuidedMatchDestination.battleTracker)
                     .disabled(!viewModel.matchState.hasBothArmies)
                     .accessibilityIdentifier("guidedMatch.battleTracker")
-            } else {
-                NavigationLink {
-                    BattlePhaseTrackerShell(
-                        gameSystemId: gameSystemId,
-                        matchState: viewModel.matchState,
-                        catalog: catalog,
-                        ruleSections: ruleSections,
-                        onMatchStateChange: { viewModel.reloadFromStore() },
-                        onVictoryComplete: handleVictoryComplete
+                    .accessibilityLabel(String(localized: "Battle Phase Tracker"))
+                    .accessibilityHint(
+                        viewModel.matchState.hasBothArmies
+                            ? String(localized: "Opens the guided battle tracker.")
+                            : String(localized: "Choose both player armies first.")
                     )
-                } label: {
+                    .accessibilityAddTraits(.isButton)
+            } else {
+                NavigationLink(value: GuidedMatchDestination.battleTracker) {
                     if setupComplete {
                         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                             Label(String(localized: "Start the Battle"), systemImage: "flag.checkered")
@@ -616,6 +678,26 @@ struct GuidedMatchView: View {
         PlayerArmyRow(label: label, selection: selection, catalog: catalog)
             .tag(destination)
             .accessibilityIdentifier(destination == .playerOne ? "guidedMatch.playerOne" : "guidedMatch.playerTwo")
+            .accessibilityLabel(playerSidebarAccessibilityLabel(label: label, selection: selection, catalog: catalog))
+            .accessibilityHint(String(localized: "Opens army selection for this player."))
+            .accessibilityAddTraits(.isButton)
+    }
+
+    private func playerSidebarAccessibilityLabel(
+        label: String,
+        selection: PlayerArmySelection,
+        catalog: SpearheadCatalog
+    ) -> String {
+        let name = selection.playerName.isEmpty ? label : selection.playerName
+        return "\(name), \(playerArmySubtitle(selection: selection, catalog: catalog))"
+    }
+
+    private func playerArmySubtitle(selection: PlayerArmySelection, catalog: SpearheadCatalog) -> String {
+        guard let faction = catalog.factions.first(where: { $0.id == selection.factionId }),
+              let army = faction.armies.first(where: { $0.id == selection.armyId }) else {
+            return String(localized: "Tap to choose faction and army")
+        }
+        return "\(faction.name) — \(army.name)"
     }
 
     private func guidedMatchPlaceholder(title: String, message: String) -> some View {

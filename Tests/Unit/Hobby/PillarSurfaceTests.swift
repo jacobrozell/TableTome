@@ -7,13 +7,13 @@ final class PillarSurfaceTests: XCTestCase {
         XCTAssertTrue(ReleaseSurface.showsRulesTab)
     }
 
-    func testBenchAndMusterPillarsHiddenWithoutLaunchArg() {
-        XCTAssertFalse(ReleaseSurface.showsBenchTab)
-        XCTAssertFalse(ReleaseSurface.showsMusterTab)
+    func testBenchAndMusterPillarsVisibleDuringPort() {
+        XCTAssertTrue(ReleaseSurface.showsBenchTab)
+        XCTAssertTrue(ReleaseSurface.showsMusterTab)
     }
 
-    func testCrossPillarLinksHiddenWithoutLaunchArg() {
-        XCTAssertFalse(ReleaseSurface.showsPlayFromRoster)
-        XCTAssertFalse(ReleaseSurface.showsPaintStatusInMatch)
+    func testCrossPillarLinksVisibleDuringPort() {
+        XCTAssertTrue(ReleaseSurface.showsPlayFromRoster)
+        XCTAssertTrue(ReleaseSurface.showsPaintStatusInMatch)
     }
 }

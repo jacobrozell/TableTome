@@ -9,6 +9,7 @@ final class AppSearchViewModel: ObservableObject {
     @Published private(set) var index: [AppSearchResult] = []
     @Published private(set) var ruleSections: [RuleSection] = []
     @Published private(set) var gettingStartedSteps: [GuideStep] = []
+    @Published private(set) var editionMigrationSteps: [GuideStep] = []
     @Published private(set) var armies: [SpearheadArmy] = []
     @Published private(set) var isLoading = false
     @Published private(set) var errorMessage: String?
@@ -55,6 +56,7 @@ final class AppSearchViewModel: ObservableObject {
     func selectGameSystem(_ id: String) {
         guard id != selectedGameSystemId else { return }
         selectedGameSystemId = id
+        ActiveGameContextStore.setActiveGameSystem(id)
         searchText = ""
         Task { await load() }
     }
@@ -77,6 +79,7 @@ final class AppSearchViewModel: ObservableObject {
             let gameSystem = try await rulesRepository.gameSystem(id: selectedGameSystemId)
             ruleSections = gameSystem.ruleSections
             gettingStartedSteps = gameSystem.gettingStartedSteps
+            editionMigrationSteps = gameSystem.editionMigrationSteps
 
             let catalog = try await catalogRepository(selectedGameSystemId).loadCatalog()
             armies = catalog.factions.flatMap(\.armies)

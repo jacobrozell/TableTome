@@ -1,7 +1,7 @@
 import SwiftUI
 import TabletomeDomain
 
-/// Short, self-contained walkthrough of one turn's phases — no match state required.
+/// Short, self-contained Spearhead walkthrough of one turn's phases — no match state required.
 struct SampleTurnWalkthroughView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -90,14 +90,14 @@ struct SampleTurnWalkthroughView: View {
             .padding(DesignTokens.Spacing.md)
         }
         .tabBarScrollInset()
-        .navigationTitle(String(localized: "Preview a Turn"))
+        .navigationTitle(String(localized: "Preview a Spearhead Turn"))
         .navigationBarTitleDisplayMode(.inline)
         .accessibilityIdentifier("sampleTurn.screen")
     }
 
     private var header: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            Label(String(localized: "How a turn works"), systemImage: "play.circle.fill")
+            Label(String(localized: "How a Spearhead turn works"), systemImage: "play.circle.fill")
                 .font(.headline)
                 .foregroundStyle(Color.accentColor)
             Text(
@@ -201,14 +201,14 @@ struct SampleTurnWalkthroughView: View {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                     Text(
                         String(
-                            localized: "You're ready to set up a real match. Use Starter Matchup if you own the Skaventide box."
+                            localized: "You're ready to set up a real match. Open Guided Match and tap Use Starter Matchup."
                         )
                     )
                     .font(.callout)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
 
-                    NavigationLink(value: GuidedMatchLink(gameSystemId: .default)) {
+                    NavigationLink(value: GuidedMatchLink(gameSystemId: .aosSpearhead)) {
                         Label(String(localized: "Open Guided Match"), systemImage: "flag.checkered")
                             .font(.headline)
                             .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)

@@ -8,5 +8,7 @@ enum OnboardingCompletion: Sendable, Equatable {
 
     static let spearheadGameSystemId = GameSystemId.aosSpearhead.rawValue
     static let wh40k11eGameSystemId = GameSystemId.wh40k11e.rawValue
+    static let combatPatrolGameSystemId = GameSystemId.wh40k10eCp.rawValue
+    static let scTmgGameSystemId = GameSystemId.scTmg.rawValue
     static let defaultGameSystemId = GameSystemId.default.rawValue
 }

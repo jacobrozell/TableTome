@@ -176,7 +176,14 @@ struct OnboardingView: View {
                 HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
                     Text(game.name)
                         .font(.headline)
-                    if game.showsNewBadge {
+                    if game.recommendedForNewcomers {
+                        Text(String(localized: "Good first game"))
+                            .font(.caption2.weight(.bold))
+                            .foregroundStyle(Color.accentColor)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Color.accentColor.opacity(0.14), in: Capsule())
+                    } else if game.showsNewBadge {
                         Text(String(localized: "NEW"))
                             .font(.caption2.weight(.bold))
                             .foregroundStyle(Color.accentColor)
@@ -208,13 +215,13 @@ struct OnboardingView: View {
                     alignment: .leading,
                     spacing: 12
                 ) {
-                    ForEach(OnboardingContent.tabTourItems) { item in
+                    ForEach(OnboardingContent.visibleTabTourItems) { item in
                         tourCard(item)
                     }
                 }
             } else {
                 VStack(alignment: .leading, spacing: 12) {
-                    ForEach(OnboardingContent.tabTourItems) { item in
+                    ForEach(OnboardingContent.visibleTabTourItems) { item in
                         tourCard(item)
                     }
                 }
@@ -302,13 +309,25 @@ struct OnboardingView: View {
     private var wideFooter: some View {
         VStack(spacing: 10) {
             if page < pages.count - 1 {
-                HStack(spacing: 16) {
-                    pageIndicator
-                    Spacer(minLength: 0)
-                    Button(String(localized: "Continue")) { page += 1 }
-                        .buttonStyle(.borderedProminent)
+                VStack(spacing: 10) {
+                    HStack(spacing: 16) {
+                        pageIndicator
+                        Spacer(minLength: 0)
+                        Button(String(localized: "Continue")) { page += 1 }
+                            .buttonStyle(.borderedProminent)
+                            .controlSize(.regular)
+                            .accessibilityIdentifier("onboarding.continue")
+                    }
+
+                    if page == 0 {
+                        Button(String(localized: "Pick my game now")) {
+                            page = pages.count - 1
+                        }
+                        .buttonStyle(.bordered)
                         .controlSize(.regular)
-                        .accessibilityIdentifier("onboarding.continue")
+                        .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+                        .accessibilityIdentifier("onboarding.pickGameNow")
+                    }
                 }
             } else {
                 VStack(spacing: 10) {
@@ -336,11 +355,23 @@ struct OnboardingView: View {
     @ViewBuilder
     private var footerActions: some View {
         if page < pages.count - 1 {
-            Button(String(localized: "Continue")) { page += 1 }
-                .buttonStyle(.borderedProminent)
-                .controlSize(largeText ? .regular : .large)
-                .frame(maxWidth: .infinity)
-                .accessibilityIdentifier("onboarding.continue")
+            VStack(spacing: 10) {
+                Button(String(localized: "Continue")) { page += 1 }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(largeText ? .regular : .large)
+                    .frame(maxWidth: .infinity)
+                    .accessibilityIdentifier("onboarding.continue")
+
+                if page == 0 {
+                    Button(String(localized: "Pick my game now")) {
+                        page = pages.count - 1
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(largeText ? .regular : .large)
+                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+                    .accessibilityIdentifier("onboarding.pickGameNow")
+                }
+            }
         } else {
             VStack(spacing: 10) {
                 gameStartButtons(controlSize: largeText ? .regular : .large)
@@ -358,32 +389,53 @@ struct OnboardingView: View {
 
     private func gameStartButtons(controlSize: ControlSize) -> some View {
         VStack(spacing: 10) {
-            Button {
-                complete(.openGuidedMatch(gameSystemId: OnboardingCompletion.spearheadGameSystemId))
-            } label: {
-                Label(String(localized: "Start with Spearhead"), systemImage: "shield.lefthalf.filled")
-                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+            ForEach(OnboardingContent.gameHighlights) { game in
+                gameStartButton(for: game, controlSize: controlSize)
             }
-            .buttonStyle(.borderedProminent)
-            .controlSize(controlSize)
-            .accessibilityIdentifier("onboarding.startSpearhead")
+        }
+    }
 
-            Button {
-                complete(.openGameGuide(gameSystemId: OnboardingCompletion.wh40k11eGameSystemId))
-            } label: {
-                HStack(spacing: DesignTokens.Spacing.sm) {
-                    Label(String(localized: "Start with Warhammer 40,000"), systemImage: "scope")
-                    Text(String(localized: "NEW"))
-                        .font(.caption2.weight(.bold))
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
-                        .background(Color.white.opacity(0.2), in: Capsule())
-                }
-                .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+    @ViewBuilder
+    private func gameStartButton(for game: OnboardingGameHighlight, controlSize: ControlSize) -> some View {
+        let label = HStack(spacing: DesignTokens.Spacing.sm) {
+            Label(game.name, systemImage: game.symbol)
+            if game.recommendedForNewcomers {
+                Text(String(localized: "Good first game"))
+                    .font(.caption2.weight(.bold))
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(Color.white.opacity(0.2), in: Capsule())
+            } else if game.showsNewBadge {
+                Text(String(localized: "NEW"))
+                    .font(.caption2.weight(.bold))
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(Color.white.opacity(0.2), in: Capsule())
             }
+        }
+        .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+
+        if game.startsGuidedMatch {
+            Button {
+                complete(.openGuidedMatch(gameSystemId: game.id))
+            } label: { label }
             .buttonStyle(.borderedProminent)
             .controlSize(controlSize)
-            .accessibilityIdentifier("onboarding.startWh40k11e")
+            .accessibilityIdentifier("onboarding.start.\(game.id)")
+        } else if game.recommendedForNewcomers || game.showsNewBadge {
+            Button {
+                complete(.openGameGuide(gameSystemId: game.id))
+            } label: { label }
+            .buttonStyle(.borderedProminent)
+            .controlSize(controlSize)
+            .accessibilityIdentifier("onboarding.start.\(game.id)")
+        } else {
+            Button {
+                complete(.openGameGuide(gameSystemId: game.id))
+            } label: { label }
+            .buttonStyle(.bordered)
+            .controlSize(controlSize)
+            .accessibilityIdentifier("onboarding.start.\(game.id)")
         }
     }
 
@@ -420,6 +472,12 @@ struct OnboardingView: View {
     private func complete(_ completion: OnboardingCompletion) {
         if mode == .firstLaunch {
             OnboardingStore.markCompleted()
+        }
+        switch completion {
+        case .exploreApp:
+            break
+        case .openGuidedMatch(let gameSystemId), .openGameGuide(let gameSystemId):
+            ActiveGameContextStore.setActiveGameSystem(gameSystemId)
         }
         onFinished(completion)
     }

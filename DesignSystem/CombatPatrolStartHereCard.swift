@@ -3,7 +3,6 @@ import TabletomeDomain
 
 struct CombatPatrolStartHereCard: View {
     let gameSystem: GameSystem
-    @EnvironmentObject private var dependencies: AppDependencies
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -14,8 +13,8 @@ struct CombatPatrolStartHereCard: View {
             Text(
                 String(
                     localized: """
-                    New to Combat Patrol or 10th Edition? Follow this path for your first Leviathan box-set battle \
-                    with guided setup, dice tools, and scoring.
+                    New to Warhammer 40,000 or small-box games? Follow this path for your first Combat Patrol \
+                    battle — guided setup, dice help, and scoring in the app.
                     """
                 )
             )
@@ -23,15 +22,33 @@ struct CombatPatrolStartHereCard: View {
             .foregroundStyle(.secondary)
             .fixedSize(horizontal: false, vertical: true)
 
+            CombatPatrolWhatYouNeedCard()
+
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                step(String(localized: "Getting Started"), String(localized: "Board size, phases, and the 8-step pre-battle sequence."))
-                step(String(localized: "Preview a Turn"), String(localized: "Walk through Command → Fight on the Turn tab."))
-                step(String(localized: "Guided Match"), String(localized: "Space Marines vs Tyranids — Clash of Patrols starter."))
+                TappableGuidePathStep(
+                    number: 1,
+                    title: String(localized: "Getting Started"),
+                    detail: String(localized: "What you need, board size, and how a turn works."),
+                    destination: GettingStartedLink(gameSystemId: gameSystem.id),
+                    accessibilityId: "guide.combatPatrol.path.gettingStarted"
+                )
+                TappableGuidePathStep(
+                    number: 2,
+                    title: String(localized: "Preview a Turn"),
+                    detail: String(localized: "Optional — walk through each battle phase in order."),
+                    destination: CombatPatrolSampleTurnLink(),
+                    accessibilityId: "guide.combatPatrol.path.sampleTurn"
+                )
+                TappableGuidePathStep(
+                    number: 3,
+                    title: String(localized: "Guided Match"),
+                    detail: String(localized: "Tap Use Starter Matchup for built-in armies, or pick your patrol boxes."),
+                    destination: GuidedMatchLink(gameSystemId: .wh40k10eCp),
+                    accessibilityId: "guide.combatPatrol.path.guidedMatch"
+                )
             }
 
-            NavigationLink {
-                GettingStartedView(gameSystem: gameSystem)
-            } label: {
+            NavigationLink(value: GettingStartedLink(gameSystemId: gameSystem.id)) {
                 Label(String(localized: "Getting Started"), systemImage: "map")
                     .font(.subheadline.weight(.semibold))
                     .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
@@ -39,9 +56,7 @@ struct CombatPatrolStartHereCard: View {
             .buttonStyle(.borderedProminent)
             .accessibilityIdentifier("guide.combatPatrol.gettingStarted")
 
-            NavigationLink {
-                CombatPatrolSampleTurnWalkthroughView()
-            } label: {
+            NavigationLink(value: CombatPatrolSampleTurnLink()) {
                 Label(String(localized: "Preview a Turn"), systemImage: "arrow.triangle.2.circlepath")
                     .font(.subheadline.weight(.semibold))
                     .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
@@ -49,12 +64,7 @@ struct CombatPatrolStartHereCard: View {
             .buttonStyle(.bordered)
             .accessibilityIdentifier("guide.combatPatrol.sampleTurn")
 
-            NavigationLink {
-                GuidedMatchView(
-                    viewModel: dependencies.makeGuidedMatchViewModel(gameSystemId: .wh40k10eCp),
-                    ruleSections: gameSystem.ruleSections
-                )
-            } label: {
+            NavigationLink(value: GuidedMatchLink(gameSystemId: .wh40k10eCp)) {
                 Label(String(localized: "Guided Match"), systemImage: "flag.checkered")
                     .font(.subheadline.weight(.semibold))
                     .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
@@ -66,22 +76,5 @@ struct CombatPatrolStartHereCard: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.lg))
         .accessibilityIdentifier("guide.combatPatrol.startHere")
-    }
-
-    private func step(_ title: String, _ detail: String) -> some View {
-        HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
-            Image(systemName: "checkmark.circle.fill")
-                .foregroundStyle(Color.accentColor)
-                .font(.caption)
-                .padding(.top, 2)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.subheadline.weight(.semibold))
-                Text(detail)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-        }
     }
 }

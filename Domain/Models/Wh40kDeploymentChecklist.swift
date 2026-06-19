@@ -13,7 +13,7 @@ public enum Wh40kDeploymentChecklistStep: String, CaseIterable, Codable, Sendabl
         case .chooseMission: String(localized: "Pick mission matchup")
         case .setupTerrain: String(localized: "Set up terrain objectives")
         case .deployArmies: String(localized: "Deploy armies")
-        case .confirmReserves: String(localized: "Confirm reserves and deep strike")
+        case .confirmReserves: String(localized: "Confirm units arriving later")
         }
     }
 
@@ -43,8 +43,10 @@ public enum Wh40kDeploymentChecklistStep: String, CaseIterable, Codable, Sendabl
         case .confirmReserves:
             String(
                 localized: """
-                Mark units in Strategic Reserves or set up per Deep Strike / Ingress rules. \
-                Roll for first turn when deployment is finished.
+                Which units start off the board? Strategic Reserves arrive from battle round 2 near a table edge \
+                with an Ingress move, more than 8\" from enemies. Units with Deep Strike on their datasheet can \
+                arrive the same way but anywhere on the board. None can arrive in round 1. Roll for first turn \
+                when deployment is finished.
                 """
             )
         }

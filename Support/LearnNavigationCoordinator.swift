@@ -3,7 +3,7 @@ import Foundation
 @MainActor
 final class LearnNavigationCoordinator: ObservableObject {
     enum Action: Equatable {
-        case openGuidedMatch(gameSystemId: String)
+        case openGuidedMatch(gameSystemId: String, opensBattleTab: Bool = false)
         case openGameGuide(gameSystemId: String)
         case openRulesSearch(gameSystemId: String, query: String)
     }
@@ -11,8 +11,11 @@ final class LearnNavigationCoordinator: ObservableObject {
     @Published private(set) var pendingAction: Action?
     @Published private(set) var pendingRulesSearchQuery: String?
 
-    func openGuidedMatch(gameSystemId: String = OnboardingCompletion.defaultGameSystemId) {
-        pendingAction = .openGuidedMatch(gameSystemId: gameSystemId)
+    func openGuidedMatch(
+        gameSystemId: String = OnboardingCompletion.defaultGameSystemId,
+        opensBattleTab: Bool = false
+    ) {
+        pendingAction = .openGuidedMatch(gameSystemId: gameSystemId, opensBattleTab: opensBattleTab)
     }
 
     func openGameGuide(gameSystemId: String) {

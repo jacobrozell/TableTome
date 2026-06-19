@@ -12,9 +12,16 @@ struct PlayContinuation: Equatable, Sendable {
     let title: String
     let message: String
     let buttonTitle: String
+    /// When true, Guided Match should land on the battle tracker (in-progress table session).
+    let opensBattleTab: Bool
 }
 
 enum PlayContinuationResolver {
+    /// True when Guided Match should open on the Battle hub with the embedded tracker.
+    static func shouldOpenBattleTab(gameSystemId: String) -> Bool {
+        hasBattleSession(gameSystemId: gameSystemId)
+    }
+
     static func current() -> PlayContinuation? {
         if let resume = resumableMatch() {
             return resume
@@ -107,7 +114,8 @@ enum PlayContinuationResolver {
             destination: .guidedMatch,
             title: String(localized: "Resume your match"),
             message: message,
-            buttonTitle: resumeGuidedMatchButtonTitle(for: resolvedId)
+            buttonTitle: resumeGuidedMatchButtonTitle(for: resolvedId),
+            opensBattleTab: false
         )
     }
 
@@ -133,7 +141,8 @@ enum PlayContinuationResolver {
                 \(gameName) — \(round) · \(phase) · \(activeName). Pick up the battle tracker at the table.
                 """
             ),
-            buttonTitle: String(localized: "Return to battle")
+            buttonTitle: String(localized: "Return to battle"),
+            opensBattleTab: true
         )
     }
 
@@ -143,7 +152,8 @@ enum PlayContinuationResolver {
             destination: .gameGuide,
             title: String(localized: "Continue your path"),
             message: openGuideMessage(for: gameSystemId),
-            buttonTitle: openGuideButtonTitle(for: gameSystemId)
+            buttonTitle: openGuideButtonTitle(for: gameSystemId),
+            opensBattleTab: false
         )
     }
 

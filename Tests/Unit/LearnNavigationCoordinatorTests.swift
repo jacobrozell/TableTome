@@ -10,7 +10,7 @@ final class LearnNavigationCoordinatorTests: XCTestCase {
 
         XCTAssertEqual(
             coordinator.consumePendingAction(),
-            .openGuidedMatch(gameSystemId: "aos-spearhead")
+            .openGuidedMatch(gameSystemId: "aos-spearhead", opensBattleTab: false)
         )
         XCTAssertNil(coordinator.consumePendingAction())
     }

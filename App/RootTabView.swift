@@ -16,6 +16,7 @@ struct RootTabView: View {
     @Environment(AppRouter.self) private var router
     @EnvironmentObject private var dependencies: AppDependencies
     @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
+    @Environment(TabBarChrome.self) private var tabBarChrome
     @State private var showsOnboarding = false
     @State private var selectedTab: AppTab = .learn
     @State private var learnPath = NavigationPath()
@@ -92,6 +93,7 @@ struct RootTabView: View {
             }
             .tag(AppTab.settings)
         }
+        .toolbar(tabBarChrome.isHidden ? .hidden : .visible, for: .tabBar)
         .background {
             TabBarAccessibilityBridge(itemIdentifiers: tabBarItemIdentifiers)
         }
@@ -153,8 +155,8 @@ struct RootTabView: View {
     private func applyPendingLearnNavigation() {
         guard let action = learnNavigationCoordinator.consumePendingAction() else { return }
         switch action {
-        case .openGuidedMatch(let gameSystemId):
-            openGuidedMatch(gameSystemId: gameSystemId)
+        case .openGuidedMatch(let gameSystemId, let opensBattleTab):
+            openGuidedMatch(gameSystemId: gameSystemId, opensBattleTab: opensBattleTab)
         case .openGameGuide(let gameSystemId):
             openGameGuide(gameSystemId: gameSystemId)
         case .openRulesSearch(let gameSystemId, _):
@@ -162,10 +164,15 @@ struct RootTabView: View {
         }
     }
 
-    private func openGuidedMatch(gameSystemId: String) {
+    private func openGuidedMatch(gameSystemId: String, opensBattleTab: Bool = false) {
         ActiveGameContextStore.setActiveGameSystem(gameSystemId)
         selectedTab = .learn
-        learnPath = NavigationPath([GuidedMatchLink(gameSystemId: GameSystemId(resolving: gameSystemId))])
+        learnPath = NavigationPath([
+            GuidedMatchLink(
+                gameSystemId: GameSystemId(resolving: gameSystemId),
+                opensBattleTab: opensBattleTab
+            )
+        ])
     }
 
     private func openGameGuide(gameSystemId: String) {

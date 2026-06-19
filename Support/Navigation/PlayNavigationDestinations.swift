@@ -19,7 +19,10 @@ private struct PlayNavigationDestinationsModifier: ViewModifier {
                 EditionMigrationDestinationView(gameSystemId: link.gameSystemId)
             }
             .navigationDestination(for: GuidedMatchLink.self) { link in
-                GuidedMatchDestinationView(gameSystemId: link.gameSystemId)
+                GuidedMatchDestinationView(
+                    gameSystemId: link.gameSystemId,
+                    opensBattleTab: link.opensBattleTab
+                )
             }
             .navigationDestination(for: SampleTurnLink.self) { _ in
                 SampleTurnWalkthroughView()
@@ -86,7 +89,10 @@ struct GuideStepDestinationView: View {
                     ruleSections: gameSystem.ruleSections
                 )
             } else if let errorMessage {
-                EmptyStateView(title: String(localized: "Not Found"), message: errorMessage)
+                EmptyStateView(
+                    title: String(localized: "Guide topic unavailable"),
+                    message: errorMessage
+                )
             } else {
                 ProgressView(String(localized: "Loading guide…"))
             }
@@ -129,7 +135,10 @@ struct RuleSectionDestinationView: View {
                     gameSystemId: gameSystemId
                 )
             } else if let errorMessage {
-                EmptyStateView(title: String(localized: "Not Found"), message: errorMessage)
+                EmptyStateView(
+                    title: String(localized: "Rules section unavailable"),
+                    message: errorMessage
+                )
             } else {
                 ProgressView(String(localized: "Loading rules…"))
             }
@@ -165,7 +174,10 @@ struct RulesGlossaryBrowseDestinationView: View {
                     ruleSections: ruleSections
                 )
             } else if let errorMessage {
-                EmptyStateView(title: String(localized: "Not Found"), message: errorMessage)
+                EmptyStateView(
+                    title: String(localized: "Glossary unavailable"),
+                    message: errorMessage
+                )
             } else {
                 ProgressView(String(localized: "Loading glossary…"))
             }
@@ -200,7 +212,10 @@ struct GlossaryEntryDestinationView: View {
                     ruleSections: ruleSections
                 )
             } else if let errorMessage {
-                EmptyStateView(title: String(localized: "Not Found"), message: errorMessage)
+                EmptyStateView(
+                    title: String(localized: "Term unavailable"),
+                    message: errorMessage
+                )
             } else {
                 ProgressView(String(localized: "Loading term…"))
             }
@@ -237,7 +252,10 @@ struct BattleTacticsReferenceDestinationView: View {
             if let ruleSections {
                 BattleTacticsReferenceView(ruleSections: ruleSections, gameSystemId: gameSystemId)
             } else if let errorMessage {
-                EmptyStateView(title: String(localized: "Not Found"), message: errorMessage)
+                EmptyStateView(
+                    title: String(localized: "Reference unavailable"),
+                    message: errorMessage
+                )
             } else {
                 ProgressView(String(localized: "Loading reference…"))
             }
@@ -267,7 +285,10 @@ struct GameSystemRulesReferenceDestinationView: View {
             if let gameSystem {
                 GameSystemRulesReferenceView(gameSystem: gameSystem)
             } else if let errorMessage {
-                EmptyStateView(title: String(localized: "Not Found"), message: errorMessage)
+                EmptyStateView(
+                    title: String(localized: "Rules unavailable"),
+                    message: errorMessage
+                )
             } else {
                 ProgressView(String(localized: "Loading rules…"))
             }
@@ -312,7 +333,10 @@ struct CombatResolverDestinationView: View {
                     attackerPrefill: attackerPrefill
                 )
             } else if let errorMessage {
-                EmptyStateView(title: String(localized: "Not Found"), message: errorMessage)
+                EmptyStateView(
+                    title: String(localized: "Combat tools unavailable"),
+                    message: errorMessage
+                )
             } else {
                 ProgressView(String(localized: "Loading combat tools…"))
             }
@@ -349,7 +373,10 @@ struct ArmyRosterDestinationView: View {
                     featuredArmies: featuredArmies
                 )
             } else if let errorMessage {
-                EmptyStateView(title: String(localized: "Not Found"), message: errorMessage)
+                EmptyStateView(
+                    title: String(localized: "Army roster unavailable"),
+                    message: errorMessage
+                )
             } else {
                 ProgressView(String(localized: "Loading army…"))
             }
@@ -394,7 +421,10 @@ struct CombatPatrolMissionsDestinationView: View {
             if let ruleSections {
                 CombatPatrolMissionsReferenceView(ruleSections: ruleSections, gameSystemId: gameSystemId)
             } else if let errorMessage {
-                EmptyStateView(title: String(localized: "Not Found"), message: errorMessage)
+                EmptyStateView(
+                    title: String(localized: "Missions unavailable"),
+                    message: errorMessage
+                )
             } else {
                 ProgressView(String(localized: "Loading missions…"))
             }
@@ -450,7 +480,10 @@ struct AppSearchResultDestinationView: View {
                     dependencies: dependencies
                 )
             } else if let errorMessage {
-                EmptyStateView(title: String(localized: "Not Found"), message: errorMessage)
+                EmptyStateView(
+                    title: String(localized: "Search result unavailable"),
+                    message: errorMessage
+                )
             } else {
                 ProgressView(String(localized: "Loading…"))
             }

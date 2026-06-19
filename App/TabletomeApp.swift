@@ -9,6 +9,7 @@ struct TabletomeApp: App {
     @State private var hobbyRouter = AppRouter()
     @State private var hobbyBanner = BannerCenter()
     @State private var hobbyUndo = UndoService.shared
+    @State private var tabBarChrome = TabBarChrome()
 
     var body: some Scene {
         WindowGroup {
@@ -18,8 +19,13 @@ struct TabletomeApp: App {
                 .environment(hobbyRouter)
                 .environment(hobbyBanner)
                 .environment(hobbyUndo)
+                .environment(tabBarChrome)
                 .modelContainer(HobbyAppContainer.makeForLaunch())
                 .preferredColorScheme(AppearanceStore.colorScheme(for: appearanceRaw))
+                .onOpenURL { url in
+                    guard let destination = AppDeepLink.destination(from: url) else { return }
+                    hobbyRouter.open(destination)
+                }
                 .onAppear {
                     UnitCatalogLoader.loadIfNeeded()
                 }

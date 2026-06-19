@@ -65,7 +65,7 @@ Living checklist for iOS app delivery. See the full prompt library in the origin
 
 - [x] **8.1** Polished Settings (about, legal links, reset confirmation, version/build)
 - [x] **8.2** GitHub Pages site in `docs/` (index, privacy, support, accessibility, styles)
-- [x] **8.3** `AppLinks` → `jacobrozell.github.io/Tabletome`
+- [x] **8.3** `AppLinks` → `jacobrozell.github.io/TableTome`
 - [x] **8.4** `AppLinksTests`
 
 ## Quick reference

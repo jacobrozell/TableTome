@@ -11,6 +11,6 @@ final class AppLinksTests: XCTestCase {
 
     func testSourceRepositoryURL() {
         XCTAssertEqual(AppLinks.sourceRepository.host, "github.com")
-        XCTAssertTrue(AppLinks.sourceRepository.path.contains("Tabletome"))
+        XCTAssertTrue(AppLinks.sourceRepository.path.contains("TableTome"))
     }
 }

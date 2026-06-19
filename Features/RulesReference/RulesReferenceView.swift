@@ -13,6 +13,8 @@ struct RulesReferenceView: View {
             if viewModel.isLoading && viewModel.sections.isEmpty {
                 ProgressView(String(localized: "Loading rules…"))
                     .accessibilityIdentifier("rules.loading")
+                    .accessibilityLabel(String(localized: "Loading rules"))
+                    .accessibilityHint(String(localized: "Rules content is being loaded."))
             } else if let error = viewModel.errorMessage {
                 EmptyStateView(
                     title: String(localized: "Unable to Load"),
@@ -33,6 +35,14 @@ struct RulesReferenceView: View {
                                 viewModel.selectGameSystem(newValue)
                             }
                             .accessibilityIdentifier("rules.gameSystemPicker")
+                            .accessibilityLabel(String(localized: "Which game are you playing?"))
+                            .accessibilityHint(
+                                String(
+                                    localized: """
+                                    Matches the game you picked on the Play tab. Change it here to browse a different rules set.
+                                    """
+                                )
+                            )
                         } footer: {
                             Text(
                                 String(
@@ -73,6 +83,7 @@ struct RulesReferenceView: View {
                                 .tag(Optional(category))
                             }
                         }
+                        .accessibilityLabel(String(localized: "Category"))
                         .accessibilityHint(String(localized: "Filters rule sections by category"))
                         .accessibilityIdentifier("rules.categoryPicker")
                     }

@@ -43,6 +43,7 @@ public struct RuleSectionRow: View {
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(title), \(categoryLabel)")
+        .accessibilityHint(String(localized: "Opens this rule section."))
         .accessibilityIdentifier(accessibilityId)
     }
 }

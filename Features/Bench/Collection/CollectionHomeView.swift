@@ -122,6 +122,7 @@ struct CollectionHomeView: View {
             } actions: {
                 Button(String(localized: "Clear filters")) { clearFilters() }.buttonStyle(.borderedProminent)
             }
+            .adaptiveEmptyStateLayout()
         } else {
             armyList
         }

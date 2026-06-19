@@ -156,6 +156,9 @@ struct UnitFocusSheet: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(String(localized: "Done")) { dismiss() }
+                        .accessibilityIdentifier("unitFocus.done")
+                        .accessibilityLabel(String(localized: "Done"))
+                        .accessibilityHint(String(localized: "Closes unit details and returns to the battle tracker."))
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     if unit.hasWarscroll || !unit.abilities.isEmpty {
@@ -163,6 +166,8 @@ struct UnitFocusSheet: View {
                             showsFullWarscroll = true
                         }
                         .accessibilityIdentifier("unitFocus.warscroll.\(unit.id)")
+                        .accessibilityLabel(unitDetailTitle)
+                        .accessibilityHint(String(localized: "Opens the full warscroll reference for this unit."))
                     }
                 }
             }
@@ -249,6 +254,7 @@ struct UnitFocusSheet: View {
                 .labelsHidden()
                 .accessibilityLabel(String(localized: "\(unit.name) wounds remaining"))
                 .accessibilityValue(String(localized: "\(woundsRemaining)"))
+                .accessibilityHint(String(localized: "Adjusts remaining wounds for this unit."))
                 .accessibilityIdentifier("unitFocus.wounds.\(army.id).\(unit.id)")
             }
 
@@ -360,6 +366,8 @@ struct UnitFocusSheet: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .accessibilityIdentifier("unitFocus.resolve.\(unit.id).\(weapon.id)")
+                .accessibilityLabel(String(localized: "Resolve · \(weapon.name)"))
+                .accessibilityHint(String(localized: "Opens the combat resolver for this weapon."))
             }
         }
         .padding(DesignTokens.Spacing.md)

@@ -30,7 +30,9 @@ struct HobbySettingsScreen: View {
                     Text(String(localized: "Customize painting stages and how armies appear in your collection."))
                 }
 
-                MusterSettingsSection(cfg: cfg)
+                if ReleaseSurface.showsMusterTab {
+                    MusterSettingsSection(cfg: cfg)
+                }
 
                 SettingsDataSection()
 

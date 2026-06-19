@@ -19,7 +19,11 @@ struct SettingsView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                    Text(String(localized: "Offline tabletop companion — play, rules, collection, and lists."))
+                    Text(
+                        ReleaseSurface.showsMusterTab
+                            ? String(localized: "Offline tabletop companion — play, rules, collection, and lists.")
+                            : String(localized: "Offline tabletop companion — play, rules, and collection.")
+                    )
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                     Text(String(localized: "Unofficial fan app — not affiliated with Games Workshop."))
@@ -45,15 +49,18 @@ struct SettingsView: View {
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
 
-                Button {
-                    learnNavigationCoordinator.openGameGuide(
-                        gameSystemId: OnboardingCompletion.combatPatrolGameSystemId
-                    )
-                } label: {
-                    Label(String(localized: "Open Combat Patrol guide"), systemImage: "play.circle")
-                        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                if ReleaseSurface.isGameSystemIdVisible(OnboardingCompletion.combatPatrolGameSystemId) {
+                    Button {
+                        learnNavigationCoordinator.openGameGuide(
+                            gameSystemId: OnboardingCompletion.combatPatrolGameSystemId
+                        )
+                    } label: {
+                        Label(String(localized: "Open Combat Patrol guide"), systemImage: "play.circle")
+                            .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                    }
+                    .accessibilityIdentifier("settings.openCombatPatrolGuide")
+                    .accessibilityHint(String(localized: "Opens the Combat Patrol game guide on the Play tab."))
                 }
-                .accessibilityIdentifier("settings.openCombatPatrolGuide")
 
                 Button {
                     learnNavigationCoordinator.openGameGuide(
@@ -64,6 +71,7 @@ struct SettingsView: View {
                         .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
                 }
                 .accessibilityIdentifier("settings.openSpearheadGuide")
+                .accessibilityHint(String(localized: "Opens the Spearhead game guide on the Play tab."))
             } header: {
                 Text(String(localized: "New here?"))
             } footer: {
@@ -106,11 +114,19 @@ struct SettingsView: View {
                             .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
                     }
                     .accessibilityIdentifier("settings.hobby")
-                    .accessibilityHint(String(localized: "Import, export, pipeline stages, and Muster catalog settings"))
+                    .accessibilityHint(
+                        ReleaseSurface.showsMusterTab
+                            ? String(localized: "Import, export, pipeline stages, and Muster catalog settings")
+                            : String(localized: "Import, export, and painting pipeline settings")
+                    )
                 } header: {
                     Text(String(localized: "Collection & Data"))
                 } footer: {
-                    Text(String(localized: "Data backup, painting pipeline, and army list defaults."))
+                    Text(
+                        ReleaseSurface.showsMusterTab
+                            ? String(localized: "Data backup, painting pipeline, and army list defaults.")
+                            : String(localized: "Data backup and painting pipeline.")
+                    )
                 }
             }
 

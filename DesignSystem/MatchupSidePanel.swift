@@ -41,6 +41,9 @@ struct MatchupSidePanel: View {
                 }
                 .pickerStyle(.menu)
                 .onChange(of: armyId) { _, newValue in onArmyChange(newValue) }
+                .accessibilityIdentifier("matchup.armyPicker")
+                .accessibilityLabel(String(localized: "Army"))
+                .accessibilityHint(String(localized: "Chooses which army this side uses in the matchup."))
             } else {
                 Text(armyName)
                     .font(usesCompactStyle ? .caption.weight(.semibold) : .subheadline.weight(.semibold))
@@ -114,6 +117,13 @@ struct MatchupSidePanel: View {
         }
         .pickerStyle(.menu)
         .onChange(of: unitId) { _, newValue in onUnitChange(newValue) }
+        .accessibilityIdentifier("matchup.unitPicker")
+        .accessibilityLabel(
+            selectedUnit == nil
+                ? String(localized: "Unit")
+                : String(localized: "Change unit")
+        )
+        .accessibilityHint(String(localized: "Chooses which unit to evaluate in this matchup."))
     }
 
     private var weaponSelection: some View {
@@ -152,6 +162,12 @@ struct MatchupSidePanel: View {
                     }
                     .buttonStyle(.plain)
                     .accessibilityIdentifier("matchup.weapon.\(weapon.id)")
+                    .accessibilityLabel(weapon.name)
+                    .accessibilityHint(
+                        weaponId == weapon.id
+                            ? String(localized: "Selected weapon profile.")
+                            : String(localized: "Selects this weapon profile for the attack.")
+                    )
                 }
             }
 
@@ -174,6 +190,9 @@ struct MatchupSidePanel: View {
             }
             .pickerStyle(.menu)
             .onChange(of: weaponId) { _, newValue in onWeaponChange(newValue) }
+            .accessibilityIdentifier("matchup.weaponPicker")
+            .accessibilityLabel(String(localized: "Weapon"))
+            .accessibilityHint(String(localized: "Chooses which weapon profile to use for the attack."))
 
             if let unit = selectedUnit, !armyId.isEmpty {
                 WarscrollInfoButton(
@@ -287,5 +306,7 @@ struct CombatBuffToggleRow: View {
         .toggleStyle(.switch)
         .frame(minHeight: DesignTokens.minTouchTarget)
         .accessibilityIdentifier("matchup.buff.\(buff.id)")
+        .accessibilityLabel(buff.name)
+        .accessibilityHint(buff.summary)
     }
 }

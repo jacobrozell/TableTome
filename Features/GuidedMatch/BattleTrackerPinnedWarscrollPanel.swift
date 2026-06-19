@@ -62,6 +62,10 @@ struct BattleTrackerPinnedWarscrollPanel: View {
                 Spacer(minLength: 0)
                 Stepper("", value: Binding(get: { woundsRemaining }, set: { onWoundsChange($0) }), in: 0...woundCapacity)
                     .labelsHidden()
+                    .accessibilityLabel(String(localized: "\(unit.name) wounds remaining"))
+                    .accessibilityValue(String(localized: "\(woundsRemaining) of \(woundCapacity)"))
+                    .accessibilityHint(String(localized: "Adjusts remaining wounds for this unit."))
+                    .accessibilityIdentifier("battleTracker.pinnedWarscroll.wounds.\(army.id).\(unit.id)")
             }
             ArmyHealthProgressBar(
                 fraction: woundCapacity > 0 ? Double(woundsRemaining) / Double(woundCapacity) : 0,
@@ -75,10 +79,12 @@ struct BattleTrackerPinnedWarscrollPanel: View {
             if let save = unit.save {
                 statLine(String(localized: "Save"), "\(save)+")
             }
-            statLine(
-                String(localized: "Health"),
-                hasHealthOverride ? "\(effectiveHealthPerModel)*" : "\(effectiveHealthPerModel)"
-            )
+            if let health = unit.health {
+                statLine(
+                    String(localized: "Health"),
+                    hasHealthOverride ? "\(effectiveHealthPerModel)*" : "\(health)"
+                )
+            }
             if let move = unit.move {
                 statLine(String(localized: "Move"), move)
             }

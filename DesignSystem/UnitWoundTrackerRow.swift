@@ -47,6 +47,9 @@ struct UnitWoundTrackerRow: View {
                 ),
                 in: 0...capacity
             )
+            .accessibilityLabel(String(localized: "\(unit.name) wounds remaining"))
+            .accessibilityValue(String(localized: "\(woundsRemaining) of \(capacity)"))
+            .accessibilityHint(String(localized: "Adjusts remaining wounds for this unit."))
             .accessibilityIdentifier("battleTracker.wounds.\(armyId).\(unit.id)")
         }
         .frame(minHeight: DesignTokens.minTouchTarget)

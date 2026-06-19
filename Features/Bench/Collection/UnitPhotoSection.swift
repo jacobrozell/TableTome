@@ -37,6 +37,8 @@ struct UnitPhotoSection: View {
                 Label(pickerLabel, systemImage: "photo.badge.plus")
             }
             .accessibilityIdentifier("unitAddPhoto")
+            .accessibilityLabel(pickerLabel)
+            .accessibilityHint(String(localized: "Adds a photo from your library to this unit."))
 
             if unit.photos.count > 1 {
                 ForEach(unit.orderedPhotos) { photo in
@@ -160,6 +162,10 @@ struct UnitPhotoSection: View {
                     PhotoStore.setCover(photo, in: context)
                 }
                 .font(.caption)
+                .frame(minHeight: DesignTokens.minTouchTarget)
+                .accessibilityIdentifier("unitPhoto.setCover")
+                .accessibilityLabel(String(localized: "Set cover"))
+                .accessibilityHint(String(localized: "Uses this photo as the unit's cover image."))
             }
             Button(role: .destructive) {
                 photoToDelete = photo
@@ -167,7 +173,10 @@ struct UnitPhotoSection: View {
                 Image(systemName: "trash")
             }
             .buttonStyle(.borderless)
+            .frame(minWidth: DesignTokens.minTouchTarget, minHeight: DesignTokens.minTouchTarget)
+            .accessibilityIdentifier("unitPhoto.delete")
             .accessibilityLabel(String(localized: "Delete photo"))
+            .accessibilityHint(String(localized: "Removes this photo from the unit."))
         }
     }
 #endif

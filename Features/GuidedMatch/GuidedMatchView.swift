@@ -684,6 +684,16 @@ struct GuidedMatchView: View {
                 }
                 .disabled(!viewModel.matchState.hasBothArmies)
                 .accessibilityIdentifier("guidedMatch.battleTracker")
+                .accessibilityLabel(
+                    setupComplete
+                        ? String(localized: "Start the Battle")
+                        : String(localized: "Battle Phase Tracker")
+                )
+                .accessibilityHint(
+                    viewModel.matchState.hasBothArmies
+                        ? String(localized: "Opens the guided battle tracker.")
+                        : String(localized: "Choose both player armies first.")
+                )
             }
         } header: {
             Text(String(localized: "During the Battle"))

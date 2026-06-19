@@ -33,9 +33,21 @@ public enum BattleTrackerStore: Sendable {
     ) {
         guard let data = try? JSONEncoder().encode(state) else { return }
         UserDefaults.standard.set(data, forKey: stateKey(for: gameSystemId))
+        if state.hasBattleProgress {
+            MatchSessionStore.markStartedIfNeeded(gameSystemId: gameSystemId)
+        }
         if notifySync {
             MatchSyncNotifications.postStateDidChange()
         }
+    }
+
+    /// True when battle tracking has moved past a pristine default state.
+    public static func hasResumableBattleProgress(gameSystemId: GameSystemId) -> Bool {
+        hasResumableBattleProgress(gameSystemId: gameSystemId.rawValue)
+    }
+
+    public static func hasResumableBattleProgress(gameSystemId: String) -> Bool {
+        load(gameSystemId: gameSystemId).hasBattleProgress
     }
 
     public static func reset(gameSystemId: GameSystemId) {

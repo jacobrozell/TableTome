@@ -19,7 +19,7 @@ struct PlayContinuation: Equatable, Sendable {
 enum PlayContinuationResolver {
     /// True when Guided Match should open on the Battle hub with the embedded tracker.
     static func shouldOpenBattleTab(gameSystemId: String) -> Bool {
-        hasBattleSession(gameSystemId: gameSystemId)
+        hasBattleProgress(gameSystemId: gameSystemId)
     }
 
     static func current() -> PlayContinuation? {
@@ -34,24 +34,47 @@ enum PlayContinuationResolver {
     }
 
     private static func resumableMatch() -> PlayContinuation? {
+        let onboarding = FirstSessionStore.onboardingChoice
+        let active = ActiveGameContextStore.gameSystemId
+
+        var best: PlayContinuation?
+        var bestScore = Int.min
+
         for gameSystemId in candidateGameSystemIds() {
-            if let continuation = resumeContinuation(for: gameSystemId) {
-                return continuation
+            guard let continuation = resumeContinuation(for: gameSystemId) else { continue }
+            let score = resumeScore(
+                for: gameSystemId,
+                continuation: continuation,
+                onboardingChoice: onboarding,
+                activeGameSystemId: active
+            )
+            if score > bestScore {
+                bestScore = score
+                best = continuation
             }
         }
-        return nil
+        return best
     }
 
     private static func candidateGameSystemIds() -> [String] {
-        var ids: [String] = []
-        let active = ActiveGameContextStore.gameSystemId
-        if !ids.contains(active) {
-            ids.append(active)
+        var ids = Set(GameSystemId.allCases.map(\.rawValue))
+        ids.insert(ActiveGameContextStore.gameSystemId)
+        if let choice = FirstSessionStore.onboardingChoice {
+            ids.insert(choice)
         }
-        if let choice = FirstSessionStore.onboardingChoice, !ids.contains(choice) {
-            ids.append(choice)
-        }
-        return ids
+        return Array(ids)
+    }
+
+    private static func resumeScore(
+        for gameSystemId: String,
+        continuation: PlayContinuation,
+        onboardingChoice: String?,
+        activeGameSystemId: String
+    ) -> Int {
+        var score = continuation.opensBattleTab ? 100 : 10
+        if gameSystemId == onboardingChoice { score += 5 }
+        if gameSystemId == activeGameSystemId { score += 1 }
+        return score
     }
 
     private static func resumeContinuation(for gameSystemId: String) -> PlayContinuation? {
@@ -59,17 +82,14 @@ enum PlayContinuationResolver {
         guard matchState.hasGuidedMatchProgress else { return nil }
 
         let resolvedId = GameSystemId(resolving: gameSystemId)
-        if hasBattleSession(gameSystemId: gameSystemId) {
+        if hasBattleProgress(gameSystemId: gameSystemId) {
             return battleResume(for: gameSystemId, resolvedId: resolvedId, matchState: matchState)
         }
         return setupResume(for: gameSystemId, resolvedId: resolvedId, matchState: matchState)
     }
 
-    private static func hasBattleSession(gameSystemId: String) -> Bool {
-        if MatchSessionStore.startedAt(gameSystemId: gameSystemId) != nil {
-            return true
-        }
-        return BattleTrackerStore.load(gameSystemId: gameSystemId).hasBattleProgress
+    private static func hasBattleProgress(gameSystemId: String) -> Bool {
+        BattleTrackerStore.hasResumableBattleProgress(gameSystemId: gameSystemId)
     }
 
     private static func setupResume(

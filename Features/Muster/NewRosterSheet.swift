@@ -362,14 +362,20 @@ struct NewRosterSheet: View {
 
     private func openGuidedMatch(gameSystemId: String) {
         dismiss()
-        learnNavigationCoordinator.openGuidedMatch(gameSystemId: gameSystemId)
+        learnNavigationCoordinator.openGuidedMatch(
+            gameSystemId: gameSystemId,
+            opensBattleTab: PlayContinuationResolver.shouldOpenBattleTab(gameSystemId: gameSystemId)
+        )
     }
 
     private func skipToPlay() {
         let gameSystemId = resolvedPlayGameSystemId
         dismiss()
         if NewRosterPrefillResolver.isFixedRosterGameSystem(gameSystemId) {
-            learnNavigationCoordinator.openGuidedMatch(gameSystemId: gameSystemId)
+            learnNavigationCoordinator.openGuidedMatch(
+                gameSystemId: gameSystemId,
+                opensBattleTab: PlayContinuationResolver.shouldOpenBattleTab(gameSystemId: gameSystemId)
+            )
         } else {
             learnNavigationCoordinator.openGameGuide(gameSystemId: gameSystemId)
         }

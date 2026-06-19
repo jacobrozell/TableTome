@@ -40,6 +40,6 @@ extension GuidedMatchView {
             viewModel.resetMatch()
         }
         selectedDestination = nil
-        hubTab = .armies
+        hubTab = suggestedHubTab
     }
 }

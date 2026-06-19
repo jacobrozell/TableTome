@@ -25,9 +25,11 @@ final class PlayContinuationResolverTests: XCTestCase {
         UserDefaults.standard.removeObject(forKey: matchKey)
         UserDefaults.standard.removeObject(forKey: trackerKey)
         UserDefaults.standard.removeObject(forKey: sessionKey)
-        UserDefaults.standard.removeObject(forKey: "guided_match_state_\(GameSystemId.default.rawValue)")
-        UserDefaults.standard.removeObject(forKey: "battle_tracker_state_\(GameSystemId.default.rawValue)")
-        UserDefaults.standard.removeObject(forKey: "match_session_started_\(GameSystemId.default.rawValue)")
+        for id in GameSystemId.allCases.map(\.rawValue) {
+            UserDefaults.standard.removeObject(forKey: "guided_match_state_\(id)")
+            UserDefaults.standard.removeObject(forKey: "battle_tracker_state_\(id)")
+            UserDefaults.standard.removeObject(forKey: "match_session_started_\(id)")
+        }
     }
 
     func testOpenGuideWhenChoiceRecordedAndGuideNotOpened() {
@@ -52,7 +54,7 @@ final class PlayContinuationResolverTests: XCTestCase {
         XCTAssertEqual(continuation?.gameSystemId, gameSystemId)
     }
 
-    func testResumeBattleWhenSessionStarted() {
+    func testResumeBattleWhenTrackerHasProgress() {
         FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
         FirstSessionStore.recordGameGuideOpened()
 
@@ -73,7 +75,6 @@ final class PlayContinuationResolverTests: XCTestCase {
         tracker.battleRound = 2
         tracker.currentPhase = .movement
         BattleTrackerStore.save(tracker, gameSystemId: gameSystemId)
-        MatchSessionStore.markStartedIfNeeded(gameSystemId: gameSystemId)
 
         let continuation = PlayContinuationResolver.current()
 
@@ -83,7 +84,24 @@ final class PlayContinuationResolverTests: XCTestCase {
         XCTAssertEqual(continuation?.opensBattleTab, true)
     }
 
-    func testShouldOpenBattleTabWhenSessionStarted() {
+    func testShouldOpenBattleTabWhenTrackerHasProgress() {
+        FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
+        var state = GuidedMatchState()
+        state.playerOne.armyId = "vigilant-brotherhood"
+        state.playerOne.factionId = "stormcast-eternals"
+        state.playerTwo.armyId = "gnawfeast-clawpack"
+        state.playerTwo.factionId = "skaven"
+        MatchSetupStore.save(state, gameSystemId: gameSystemId)
+
+        var tracker = BattleTrackerStore.load(gameSystemId: gameSystemId)
+        tracker.battleRound = 2
+        tracker.currentPhase = .movement
+        BattleTrackerStore.save(tracker, gameSystemId: gameSystemId)
+
+        XCTAssertTrue(PlayContinuationResolver.shouldOpenBattleTab(gameSystemId: gameSystemId))
+    }
+
+    func testSessionAloneDoesNotOpenBattleTab() {
         FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
         var state = GuidedMatchState()
         state.playerOne.armyId = "vigilant-brotherhood"
@@ -93,7 +111,56 @@ final class PlayContinuationResolverTests: XCTestCase {
         MatchSetupStore.save(state, gameSystemId: gameSystemId)
         MatchSessionStore.markStartedIfNeeded(gameSystemId: gameSystemId)
 
-        XCTAssertTrue(PlayContinuationResolver.shouldOpenBattleTab(gameSystemId: gameSystemId))
+        XCTAssertFalse(PlayContinuationResolver.shouldOpenBattleTab(gameSystemId: gameSystemId))
+    }
+
+    func testSessionAloneResumesSetupNotBattle() {
+        FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
+        FirstSessionStore.recordGameGuideOpened()
+        var state = GuidedMatchState()
+        state.playerOne.armyId = "vigilant-brotherhood"
+        state.playerOne.factionId = "stormcast-eternals"
+        MatchSetupStore.save(state, gameSystemId: gameSystemId)
+        MatchSessionStore.markStartedIfNeeded(gameSystemId: gameSystemId)
+
+        let continuation = PlayContinuationResolver.current()
+
+        XCTAssertEqual(continuation?.opensBattleTab, false)
+        XCTAssertEqual(continuation?.buttonTitle, String(localized: "Resume Spearhead match"))
+    }
+
+    func testOnboardingBattleProgressPreferredOverActiveSetupProgress() {
+        let otherSystemId = GameSystemId.wh40k10eCp.rawValue
+        FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
+        FirstSessionStore.recordGameGuideOpened()
+        ActiveGameContextStore.setActiveGameSystem(otherSystemId)
+
+        var cpState = GuidedMatchState()
+        cpState.playerOne.armyId = "space-marines"
+        cpState.playerOne.factionId = "space-marines"
+        MatchSetupStore.save(cpState, gameSystemId: otherSystemId)
+
+        var spearheadState = GuidedMatchState()
+        spearheadState.playerOne = PlayerArmySelection(
+            playerName: "Alex",
+            factionId: "stormcast-eternals",
+            armyId: "vigilant-brotherhood"
+        )
+        spearheadState.playerTwo = PlayerArmySelection(
+            playerName: "Friend",
+            factionId: "skaven",
+            armyId: "gnawfeast-clawpack"
+        )
+        MatchSetupStore.save(spearheadState, gameSystemId: gameSystemId)
+        var tracker = BattleTrackerStore.load(gameSystemId: gameSystemId)
+        tracker.battleRound = 2
+        tracker.currentPhase = .movement
+        BattleTrackerStore.save(tracker, gameSystemId: gameSystemId)
+
+        let continuation = PlayContinuationResolver.current()
+
+        XCTAssertEqual(continuation?.gameSystemId, gameSystemId)
+        XCTAssertEqual(continuation?.opensBattleTab, true)
     }
 
     func testShouldNotOpenBattleTabForSetupOnlyProgress() {

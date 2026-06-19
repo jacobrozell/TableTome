@@ -6,6 +6,7 @@ final class MatchSessionStoreTests: XCTestCase {
 
     override func tearDown() {
         MatchSessionStore.clear(gameSystemId: gameSystemId)
+        BattleTrackerStore.reset(gameSystemId: gameSystemId)
         super.tearDown()
     }
 
@@ -27,6 +28,21 @@ final class MatchSessionStoreTests: XCTestCase {
     }
 
     func testStartedAtReturnsNilWhenUnset() {
+        XCTAssertNil(MatchSessionStore.startedAt(gameSystemId: gameSystemId))
+    }
+
+    func testSaveMarksSessionWhenTrackerHasProgress() {
+        var state = BattleTrackerState()
+        state.battleRound = 2
+        state.currentPhase = .movement
+        BattleTrackerStore.save(state, gameSystemId: gameSystemId)
+
+        XCTAssertNotNil(MatchSessionStore.startedAt(gameSystemId: gameSystemId))
+    }
+
+    func testSaveDoesNotMarkSessionForPristineTracker() {
+        BattleTrackerStore.save(BattleTrackerState(), gameSystemId: gameSystemId)
+
         XCTAssertNil(MatchSessionStore.startedAt(gameSystemId: gameSystemId))
     }
 }

@@ -828,11 +828,11 @@ extension GuidedMatchView {
             }
         }
         .onChange(of: viewModel.matchState.hasBothArmies) { _, _ in
-            guard initialHubTab == nil else { return }
+            guard hasAppliedInitialHubTab, !hasResumableBattleSession else { return }
             hubTab = suggestedHubTab
         }
         .onChange(of: viewModel.matchState.completedStepIds) { _, _ in
-            if initialHubTab == nil, setupIsComplete, hubTab == .setup {
+            if setupIsComplete, hubTab == .setup {
                 hubTab = .battle
             }
         }

@@ -30,10 +30,7 @@ extension GuidedMatchView {
     }
 
     var hasResumableBattleSession: Bool {
-        if MatchSessionStore.startedAt(gameSystemId: gameSystemId.rawValue) != nil {
-            return true
-        }
-        return BattleTrackerStore.load(gameSystemId: gameSystemId).hasBattleProgress
+        BattleTrackerStore.hasResumableBattleProgress(gameSystemId: gameSystemId)
     }
 
     func battleTrackerSummaryLine() -> String? {

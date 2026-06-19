@@ -122,7 +122,6 @@ struct BattlePhaseTrackerView: View {
             victoryScreen
         }
         .onAppear {
-            MatchSessionStore.markStartedIfNeeded(gameSystemId: viewModel.gameSystemId)
             MatchLogRecorder.ensureSession(gameSystemId: viewModel.gameSystemId)
             showsBattleTrackerCoach = supportsBattleTracker && !NewPlayerTipsStore.hasSeenBattleTrackerCoach
             FirstSessionStore.recordSetupComplete()

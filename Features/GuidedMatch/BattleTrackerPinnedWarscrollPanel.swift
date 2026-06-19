@@ -29,6 +29,11 @@ struct BattleTrackerPinnedWarscrollPanel: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(
+            GameSystemPlayContext(gameSystemId: gameSystemId)
+                .unitRulesInfoAccessibilityLabel(unitName: unit.name)
+        )
         .accessibilityIdentifier("battleTracker.pinnedWarscroll")
     }
 

@@ -19,6 +19,7 @@ struct HomeContinueCard: View {
             NavigationLink(value: gameSystemId) {
                 Label(openGuideLabel, systemImage: "play.circle.fill")
                     .font(.subheadline.weight(.semibold))
+                    .multilineTextAlignment(.center)
                     .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
             }
             .buttonStyle(.borderedProminent)

@@ -140,6 +140,30 @@ struct CollectionHomeView: View {
 
     @ViewBuilder
     private func armyListSections(vis: [VisibleArmy], padSidebar: Bool) -> some View {
+        if ReleaseSurface.showsMusterTab, !armies.isEmpty {
+            Section {
+                Button {
+                    router.tab = .muster
+                } label: {
+                    Label(
+                        String(localized: "Build an army list on Lists"),
+                        systemImage: "flag"
+                    )
+                    .font(.subheadline)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .buttonStyle(.plain)
+                .accessibilityHint(
+                    String(localized: "Opens the Lists tab to count points and link this collection.")
+                )
+            } footer: {
+                Text(
+                    String(
+                        localized: "Link a list to a Models army to track which roster units you own."
+                    )
+                )
+            }
+        }
         if scoped {
             Section {
                 if dynamicTypeSize.isAccessibilitySize {

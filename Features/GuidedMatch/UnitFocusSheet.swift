@@ -117,13 +117,7 @@ struct UnitFocusSheet: View {
     }
 
     private var unitDetailTitle: String {
-        if playContext.isWh40k {
-            return String(localized: "Unit details")
-        }
-        if playContext.isStarCraft {
-            return String(localized: "Unit card")
-        }
-        return String(localized: "Full warscroll")
+        playContext.unitRulesDetailTitle
     }
 
     private var evaluableWeapons: [SpearheadWeapon] {
@@ -466,7 +460,7 @@ struct UnitFocusSheet: View {
         if playContext.isWh40k {
             return String(
                 localized: """
-                If your datasheet differs from what's bundled here, set wounds per model for this match only.
+                If your unit card differs from what's bundled here, set wounds per model for this match only.
                 """
             )
         }
@@ -485,32 +479,14 @@ struct UnitFocusSheet: View {
     }
 
     private var catalogHealthValueLabel: String {
-        if playContext.isWh40k {
-            return String(localized: "Datasheet")
-        }
-        if playContext.isStarCraft {
-            return String(localized: "Unit card")
-        }
-        return String(localized: "Spearhead app")
+        playContext.catalogHealthValueLabel
     }
 
     private var useCatalogHealthValueLabel: String {
-        if playContext.isWh40k {
-            return String(localized: "Use datasheet value")
-        }
-        if playContext.isStarCraft {
-            return String(localized: "Use unit card value")
-        }
-        return String(localized: "Use Spearhead value")
+        playContext.useCatalogHealthValueLabel
     }
 
     private var unitSourceLabel: String {
-        if playContext.isWh40k {
-            return String(localized: "Source: bundled unit notes — verify stats on your datasheet.")
-        }
-        if playContext.isStarCraft {
-            return String(localized: "Source: bundled unit card notes — verify stats in Command Center.")
-        }
-        return String(localized: "Source: Spearhead warscroll (bundled PDF data).")
+        playContext.bundledUnitSourceAttribution
     }
 }

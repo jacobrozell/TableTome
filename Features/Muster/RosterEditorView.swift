@@ -54,7 +54,7 @@ struct RosterEditorView: View {
     var body: some View {
         Group {
             if let roster { editor(roster) }
-            else { ContentUnavailableView("List not found", systemImage: "flag") }
+            else { ContentUnavailableView(String(localized: "List not found"), systemImage: "flag") }
         }
     }
 
@@ -104,13 +104,13 @@ struct RosterEditorView: View {
                         Button {
                             router.openCollection(armyId: army.id)
                         } label: {
-                            Label("Linked: \(army.name)", systemImage: "link")
+                            Label(String(localized: "Linked: \(army.name)"), systemImage: "link")
                                 .font(dynamicTypeSize.isAccessibilitySize ? .subheadline : .caption)
                                 .multilineTextAlignment(.leading)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        .accessibilityLabel("Linked collection army \(army.name)")
-                        .accessibilityHint("Opens army in Collection tab")
+                        .accessibilityLabel(String(localized: "Linked collection army \(army.name)"))
+                        .accessibilityHint(String(localized: "Opens army in Collection tab"))
                     }
                     if !roster.notes.isEmpty {
                         Text(roster.notes).font(.caption).foregroundStyle(.secondary)
@@ -118,10 +118,13 @@ struct RosterEditorView: View {
                 }
                 .padding(.vertical, 4)
             }
-            Section("Units") {
+            Section {
                 if roster.orderedEntries.isEmpty {
-                    ContentUnavailableView("No units", systemImage: "figure.stand",
-                                           description: Text("Tap + to add units from the catalog."))
+                    ContentUnavailableView {
+                        Label(String(localized: "No units"), systemImage: "figure.stand")
+                    } description: {
+                        Text(String(localized: "Tap + to add units from the catalog."))
+                    }
                     .listRowBackground(Color.clear)
                 } else {
                     ForEach(roster.orderedEntries) { entry in
@@ -137,6 +140,18 @@ struct RosterEditorView: View {
                         }
                     }
                 }
+            } header: {
+                Text(String(localized: "Units"))
+            } footer: {
+                if roster.linkedArmyId == nil, ReleaseSurface.showsBenchTab {
+                    Text(
+                        String(
+                            localized: """
+                            Link this list to a Models army to see which units you own. Use List actions → Link army.
+                            """
+                        )
+                    )
+                }
             }
         }
         .listStyle(.insetGrouped)
@@ -147,26 +162,26 @@ struct RosterEditorView: View {
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button("Add unit", systemImage: "plus") { showCatalog = true }
+                Button(String(localized: "Add unit"), systemImage: "plus") { showCatalog = true }
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
                     ShareLink(item: RosterExport.plainText(roster: roster, overrides: overrides)) {
-                        Label("Share…", systemImage: "square.and.arrow.up")
+                        Label(String(localized: "Share…"), systemImage: "square.and.arrow.up")
                     }
                     .accessibilityIdentifier("musterShare")
-                    Button("Duplicate", systemImage: "doc.on.doc") { duplicate(roster) }
-                    Button("Link army", systemImage: "link") { showLinkArmy = true }
-                    Button("Add missing to collection", systemImage: "tray.and.arrow.down") {
+                    Button(String(localized: "Duplicate"), systemImage: "doc.on.doc") { duplicate(roster) }
+                    Button(String(localized: "Link army"), systemImage: "link") { showLinkArmy = true }
+                    Button(String(localized: "Add missing to collection"), systemImage: "tray.and.arrow.down") {
                         addMissing(roster)
                     }
                     Divider()
-                    Button("Rename", systemImage: "pencil") { showRename = true }
-                    Button("Delete list", systemImage: "trash", role: .destructive) { confirmDelete = true }
+                    Button(String(localized: "Rename"), systemImage: "pencil") { showRename = true }
+                    Button(String(localized: "Delete list"), systemImage: "trash", role: .destructive) { confirmDelete = true }
                 } label: {
                     Image(systemName: "ellipsis.circle")
                 }
-                .accessibilityLabel("List actions")
+                .accessibilityLabel(String(localized: "List actions"))
             }
         }
         .sheet(isPresented: $showCatalog) {
@@ -195,8 +210,12 @@ struct RosterEditorView: View {
             }
             .presentationDetents([.medium])
         }
-        .confirmationDialog("Delete \"\(roster.name)\"?", isPresented: $confirmDelete, titleVisibility: .visible) {
-            Button("Delete", role: .destructive) {
+        .confirmationDialog(
+            String(localized: "Delete \"\(roster.name)\"?"),
+            isPresented: $confirmDelete,
+            titleVisibility: .visible
+        ) {
+            Button(String(localized: "Delete"), role: .destructive) {
                 RosterStore.delete(roster, in: context)
                 dismiss()
             }
@@ -218,18 +237,22 @@ struct RosterEditorView: View {
         do {
             let copy = try RosterStore.duplicate(roster, in: context)
             router.openMuster(rosterId: copy.id)
-            banner.show("Duplicated \"\(copy.name)\"")
+            banner.show(String(localized: "Duplicated \"\(copy.name)\""))
         } catch {
-            banner.show("Could not duplicate list")
+            banner.show(String(localized: "Could not duplicate list"))
         }
     }
 
     private func addMissing(_ roster: Roster) {
         do {
             let n = try RosterStore.importMissingToCollection(roster: roster, pipeline: pipeline, in: context)
-            banner.show(n > 0 ? "Added \(n) unit\(n == 1 ? "" : "s") to collection" : "Nothing to add")
+            if n > 0 {
+                banner.show(String(localized: "Added \(n) unit\(n == 1 ? "" : "s") to collection"))
+            } else {
+                banner.show(String(localized: "Nothing to add"))
+            }
         } catch {
-            banner.show("Could not add missing units")
+            banner.show(String(localized: "Could not add missing units"))
         }
     }
 }
@@ -245,19 +268,21 @@ private struct LinkArmySheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Picker("Collection army", selection: $selection) {
-                    Text("None").tag(UUID?.none)
+                Picker(String(localized: "Collection army"), selection: $selection) {
+                    Text(String(localized: "None")).tag(UUID?.none)
                     ForEach(armies) { army in
                         Text(army.name).tag(Optional(army.id))
                     }
                 }
                 .formNavigationPickerStyle()
             }
-            .navigationTitle("Link army")
+            .navigationTitle(String(localized: "Link army"))
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(String(localized: "Cancel")) { dismiss() }
+                }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
+                    Button(String(localized: "Save")) {
                         onSelect(selection)
                         dismiss()
                     }

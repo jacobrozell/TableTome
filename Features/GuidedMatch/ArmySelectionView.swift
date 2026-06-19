@@ -129,7 +129,12 @@ struct ArmySelectionView: View {
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                         if gameSystemId != .scTmg {
                             Text(
-                                "Badges show how much rules help is built in: army list, full setup options, or in-battle ability reminders."
+                                String(
+                                    localized: """
+                                    Badges show how much rules help is built in: army list, full setup options, or \
+                                    in-battle ability reminders.
+                                    """
+                                )
                             )
                         }
                         if let army = sortedArmies.first(where: { $0.id == selectedArmyId }) {
@@ -239,13 +244,7 @@ struct ArmySelectionView: View {
     }
 
     private var unitReferenceLabel: String {
-        if playContext.isWh40k {
-            return String(localized: "Units & Abilities")
-        }
-        if playContext.isStarCraft {
-            return String(localized: "Unit Cards & Abilities")
-        }
-        return String(localized: "Warscrolls & Abilities")
+        playContext.unitReferenceLinkTitle
     }
 
     private func showsUnitReference(for army: SpearheadArmy) -> Bool {

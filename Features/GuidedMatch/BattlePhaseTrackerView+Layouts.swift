@@ -4,10 +4,12 @@ import TabletomeDomain
 extension BattlePhaseTrackerView {
     var regularPortraitLayout: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            modelsMilestoneSection
             deploymentSection
             armyTrackerSection(wideLayout: true, compactSidebar: false)
             HStack(alignment: .top, spacing: DesignTokens.Spacing.lg) {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                    phasePlaybookSection
                     turnHandoffSection
                     scoringReminderSection
                     roundOpenerSection
@@ -38,7 +40,7 @@ extension BattlePhaseTrackerView {
     var landscapeLayout: some View {
         BattleTrackerLandscapeLayout(
             coach: EmptyView(),
-            banners: EmptyView(),
+            banners: modelsMilestoneSection,
             guide: guideSection,
             deployment: deploymentSection,
             roundAndScore: roundAndScoreSection,
@@ -78,7 +80,7 @@ extension BattlePhaseTrackerView {
                     : viewModel.playContext.usesGuidedBattleTracker
                     ? String(
                         localized: """
-                        Ability reminders for this army aren't in Tabletome yet. Use your box datasheets and the \
+                        Ability reminders for this army aren't in Tabletome yet. Use your box unit cards and the \
                         official core rules for full detail.
                         """
                     )

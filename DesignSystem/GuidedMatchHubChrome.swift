@@ -37,17 +37,49 @@ enum GuidedMatchHubTab: String, CaseIterable, Identifiable {
 struct GuidedMatchHubTabBar: View {
     @Binding var selection: GuidedMatchHubTab
     let hasBothArmies: Bool
+    let setupComplete: Bool
 
     var body: some View {
         Picker(String(localized: "Guided match section"), selection: $selection) {
             ForEach(GuidedMatchHubTab.allCases) { tab in
                 Label(tab.title, systemImage: tab.systemImage)
                     .tag(tab)
-                    .disabled(tab == .setup && !hasBothArmies)
+                    .disabled(isDisabled(tab))
+                    .accessibilityHint(accessibilityHint(for: tab))
             }
         }
         .pickerStyle(.segmented)
         .accessibilityIdentifier("guidedMatch.hubTabs")
+    }
+
+    private func accessibilityHint(for tab: GuidedMatchHubTab) -> String {
+        switch tab {
+        case .armies:
+            String(
+                localized: "Pick both armies or use starter matchup. Required before setup unlocks."
+            )
+        case .setup:
+            String(
+                localized: "Mission, deployment, and pre-battle steps. Unlocks after both armies are chosen."
+            )
+        case .battle:
+            if setupComplete {
+                String(localized: "Turn phases, scoring, and unit health at the table.")
+            } else {
+                String(localized: "Unlocks after setup steps are complete.")
+            }
+        }
+    }
+
+    private func isDisabled(_ tab: GuidedMatchHubTab) -> Bool {
+        switch tab {
+        case .armies:
+            false
+        case .setup:
+            !hasBothArmies
+        case .battle:
+            !hasBothArmies || !setupComplete
+        }
     }
 }
 
@@ -59,6 +91,7 @@ struct GuidedMatchStatusBar: View {
     let setupTotal: Int
     let nextStepTitle: String?
     let setupComplete: Bool
+    var battleTrackerSummary: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
@@ -66,14 +99,17 @@ struct GuidedMatchStatusBar: View {
                 HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
                     Text(playerOneSummary)
                         .font(.caption.weight(.semibold))
-                        .lineLimit(1)
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.85)
                     Text(String(localized: "vs"))
                         .font(.caption)
                         .foregroundStyle(.tertiary)
                     Text(playerTwoSummary)
                         .font(.caption.weight(.semibold))
-                        .lineLimit(1)
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.85)
                 }
+                .fixedSize(horizontal: false, vertical: true)
 
                 if setupTotal > 0, !setupComplete {
                     HStack(spacing: DesignTokens.Spacing.sm) {
@@ -85,12 +121,20 @@ struct GuidedMatchStatusBar: View {
                         Text(self.setupProgressLabel)
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                        .lineLimit(2)
+                        .lineLimit(3)
+                        .fixedSize(horizontal: false, vertical: true)
                     }
                 } else if setupComplete {
-                    Label(String(localized: "Setup complete — open Battle"), systemImage: "checkmark.circle.fill")
-                        .font(.caption.weight(.medium))
-                        .foregroundStyle(Color.accentColor)
+                    if let battleTrackerSummary {
+                        Label(battleTrackerSummary, systemImage: "flag.checkered")
+                            .font(.caption.weight(.medium))
+                            .foregroundStyle(Color.accentColor)
+                            .lineLimit(2)
+                    } else {
+                        Label(String(localized: "Setup complete — open Battle"), systemImage: "checkmark.circle.fill")
+                            .font(.caption.weight(.medium))
+                            .foregroundStyle(Color.accentColor)
+                    }
                 }
             } else {
                 Text(String(localized: "Choose both armies to unlock setup"))

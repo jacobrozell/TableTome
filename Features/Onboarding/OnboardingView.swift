@@ -61,7 +61,7 @@ struct OnboardingView: View {
             .background { onboardingBackground.ignoresSafeArea() }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    if page < pages.count - 1 {
+                    if page < 2 {
                         Button(String(localized: "Skip")) {
                             complete(.exploreApp)
                         }
@@ -104,8 +104,8 @@ struct OnboardingView: View {
                     .padding(.bottom, 8)
             }
 
-            if item.id == 3 {
-                tabTourCards(twoColumn: widePageLayout)
+            if item.id == 2 {
+                tabTourSection(twoColumn: widePageLayout)
                     .frame(maxWidth: contentMaxWidth)
                     .frame(maxWidth: .infinity)
                     .padding(.horizontal, horizontalPadding)
@@ -207,6 +207,17 @@ struct OnboardingView: View {
         .accessibilityIdentifier("onboarding.game.\(game.id)")
     }
 
+    private func tabTourSection(twoColumn: Bool) -> some View {
+        DisclosureGroup(String(localized: "About the tabs")) {
+            tabTourCards(twoColumn: twoColumn)
+                .padding(.top, DesignTokens.Spacing.sm)
+        }
+        .font(.headline)
+        .padding(DesignTokens.Spacing.md)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+    }
+
     private func tabTourCards(twoColumn: Bool) -> some View {
         Group {
             if twoColumn {
@@ -227,9 +238,7 @@ struct OnboardingView: View {
                 }
             }
         }
-        .padding(DesignTokens.Spacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
     }
 
     private func tourCard(_ item: OnboardingTabTourItem) -> some View {
@@ -308,45 +317,7 @@ struct OnboardingView: View {
 
     private var wideFooter: some View {
         VStack(spacing: 10) {
-            if page < pages.count - 1 {
-                VStack(spacing: 10) {
-                    HStack(spacing: 16) {
-                        pageIndicator
-                        Spacer(minLength: 0)
-                        Button(String(localized: "Continue")) { page += 1 }
-                            .buttonStyle(.borderedProminent)
-                            .controlSize(.regular)
-                            .accessibilityIdentifier("onboarding.continue")
-                    }
-
-                    if page == 0 {
-                        Button(String(localized: "Pick my game now")) {
-                            page = pages.count - 1
-                        }
-                        .buttonStyle(.bordered)
-                        .controlSize(.regular)
-                        .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-                        .accessibilityIdentifier("onboarding.pickGameNow")
-                    }
-                }
-            } else {
-                VStack(spacing: 10) {
-                    HStack(spacing: 12) {
-                        pageIndicator
-                        Spacer(minLength: 0)
-                    }
-
-                    gameStartButtons(controlSize: .regular)
-
-                    Button(String(localized: "Explore the app")) {
-                        complete(.exploreApp)
-                    }
-                    .buttonStyle(.bordered)
-                    .controlSize(.regular)
-                    .frame(maxWidth: .infinity)
-                    .accessibilityIdentifier("onboarding.exploreApp")
-                }
-            }
+            onboardingFooterContent(controlSize: .regular)
         }
         .frame(maxWidth: contentMaxWidth)
         .frame(maxWidth: .infinity)
@@ -354,35 +325,94 @@ struct OnboardingView: View {
 
     @ViewBuilder
     private var footerActions: some View {
-        if page < pages.count - 1 {
-            VStack(spacing: 10) {
-                Button(String(localized: "Continue")) { page += 1 }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(largeText ? .regular : .large)
-                    .frame(maxWidth: .infinity)
-                    .accessibilityIdentifier("onboarding.continue")
+        onboardingFooterContent(controlSize: largeText ? .regular : .large)
+    }
 
-                if page == 0 {
-                    Button(String(localized: "Pick my game now")) {
-                        page = pages.count - 1
+    @ViewBuilder
+    private func onboardingFooterContent(controlSize: ControlSize) -> some View {
+        switch page {
+        case 0:
+            VStack(spacing: 10) {
+                if widePageLayout {
+                    HStack(spacing: 16) {
+                        pageIndicator
+                        Spacer(minLength: 0)
+                        Button(String(localized: "Continue")) { page += 1 }
+                            .buttonStyle(.borderedProminent)
+                            .controlSize(controlSize)
+                            .accessibilityIdentifier("onboarding.continue")
                     }
-                    .buttonStyle(.bordered)
-                    .controlSize(largeText ? .regular : .large)
-                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-                    .accessibilityIdentifier("onboarding.pickGameNow")
+                } else {
+                    Button(String(localized: "Continue")) { page += 1 }
+                        .buttonStyle(.borderedProminent)
+                        .controlSize(controlSize)
+                        .frame(maxWidth: .infinity)
+                        .accessibilityIdentifier("onboarding.continue")
+                }
+
+                Button(String(localized: "Pick my game now")) {
+                    page = 1
+                }
+                .buttonStyle(.bordered)
+                .controlSize(controlSize)
+                .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+                .accessibilityIdentifier("onboarding.pickGameNow")
+
+                if !widePageLayout {
+                    pageIndicator
                 }
             }
-        } else {
+        case 1:
             VStack(spacing: 10) {
-                gameStartButtons(controlSize: largeText ? .regular : .large)
+                if widePageLayout {
+                    HStack(spacing: 12) {
+                        pageIndicator
+                        Spacer(minLength: 0)
+                    }
+                }
+
+                gameStartButtons(controlSize: controlSize)
+
+                Button(String(localized: "About the tabs")) {
+                    page = 2
+                }
+                .buttonStyle(.bordered)
+                .controlSize(controlSize)
+                .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+                .accessibilityIdentifier("onboarding.aboutTabs")
 
                 Button(String(localized: "Explore the app")) {
                     complete(.exploreApp)
                 }
                 .buttonStyle(.bordered)
-                .controlSize(largeText ? .regular : .large)
+                .controlSize(controlSize)
                 .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
                 .accessibilityIdentifier("onboarding.exploreApp")
+
+                if !widePageLayout {
+                    pageIndicator
+                }
+            }
+        default:
+            VStack(spacing: 10) {
+                if widePageLayout {
+                    HStack(spacing: 12) {
+                        pageIndicator
+                        Spacer(minLength: 0)
+                    }
+                }
+
+                Button(String(localized: "Explore the app")) {
+                    complete(.exploreApp)
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(controlSize)
+                .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+                .accessibilityIdentifier("onboarding.exploreApp")
+
+                if !widePageLayout {
+                    pageIndicator
+                }
             }
         }
     }
@@ -478,6 +508,7 @@ struct OnboardingView: View {
             break
         case .openGuidedMatch(let gameSystemId), .openGameGuide(let gameSystemId):
             ActiveGameContextStore.setActiveGameSystem(gameSystemId)
+            FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
         }
         onFinished(completion)
     }

@@ -97,8 +97,8 @@ enum OnboardingContent {
             subtitle: String(localized: "Learn and play at the table"),
             body: String(
                 localized: """
-                Your offline coach for tabletop battle games. Pick your game on the Play tab, follow step-by-step \
-                setup, search rules, and track each turn — no account or internet required.
+                Your offline coach for tabletop battle games. Pick your game, follow step-by-step setup, search rules, \
+                and track each turn — no account or internet required. Everything stays on this device.
                 """
             )
         ),
@@ -109,56 +109,20 @@ enum OnboardingContent {
             subtitle: String(localized: "Match what's on your table"),
             body: String(
                 localized: """
-                Each game has its own guide and rules search. Not sure which you have? Choose the option that \
-                matches your starter box on the last screen, or explore Play first.
+                Each game has its own guide and rules search. Choose the option that matches your starter box — \
+                or tap Explore the app and use the chooser on Play.
                 """
             )
         ),
         OnboardingPage(
             id: 2,
-            symbol: "lock.iphone",
-            title: String(localized: "Stays on your device"),
-            subtitle: String(localized: "No account required"),
-            body: String(
-                localized: """
-                Rules, army data, and match progress live locally on this iPhone or iPad. \
-                Works at the table with no signal.
-                """
-            )
-        ),
-        OnboardingPage(
-            id: 3,
             symbol: "map.fill",
-            title: String(localized: "Learn as you play"),
-            subtitle: String(localized: "Guides and match tools"),
+            title: String(localized: "How the app is organized"),
+            subtitle: String(localized: "Optional quick tour"),
             body: String(
                 localized: """
-                Open Play, choose your game, then follow Getting Started or Guided Match. The app walks through \
-                setup, explains each battle phase, and tracks score — you move models and roll dice at the table.
-                """
-            )
-        ),
-        OnboardingPage(
-            id: 4,
-            symbol: "doc.text.fill",
-            title: String(localized: "Rules at your fingertips"),
-            subtitle: String(localized: "Searchable offline reference"),
-            body: String(
-                localized: """
-                Search rules, unit profiles, glossary terms, and setup steps for the game you're playing. \
-                Rules Search stays matched to your selected game mode.
-                """
-            )
-        ),
-        OnboardingPage(
-            id: 5,
-            symbol: "flag.checkered",
-            title: String(localized: "Choose your game"),
-            subtitle: String(localized: "Which box or rules are you using?"),
-            body: String(
-                localized: """
-                New to the hobby? Start with a option marked Good first game. Not sure? Tap Explore the app \
-                and use the chooser on the Play tab. Replay this tour anytime in Settings.
+                Play is where you start. Models and Army lists are optional until after your first game. \
+                Rules Search looks up terms for the game you picked.
                 """
             )
         )

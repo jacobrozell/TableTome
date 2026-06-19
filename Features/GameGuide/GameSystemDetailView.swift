@@ -109,7 +109,7 @@ struct GameSystemDetailView: View {
                                     guideRow(
                                         title: String(localized: "Preview a Turn"),
                                         symbol: "play.circle",
-                                        detail: String(localized: "Command-first tour — objectives, stratagems, and scoring")
+                                        detail: String(localized: "~2 minutes — each battle phase, dice, and scoring")
                                     )
                                 }
                                 .accessibilityIdentifier("guide.combatPatrolSampleTurn.\(gameSystemId)")
@@ -255,13 +255,14 @@ struct GameSystemDetailView: View {
             } else if let errorMessage {
                 EmptyStateView(title: String(localized: "Not Found"), message: errorMessage)
             } else {
-                ProgressView()
+                ProgressView(String(localized: "Loading game guide…"))
             }
         }
         .navigationTitle(navigationTitle)
         .navigationBarTitleDisplayMode(verticalSizeClass == .compact ? .inline : .large)
         .task {
             ActiveGameContextStore.setActiveGameSystem(gameSystemId)
+            FirstSessionStore.recordGameGuideOpened()
             await load()
         }
     }

@@ -142,8 +142,10 @@ struct RootTabView: View {
         case .exploreApp:
             break
         case .openGuidedMatch(let gameSystemId):
+            FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
             openGuidedMatch(gameSystemId: gameSystemId)
         case .openGameGuide(let gameSystemId):
+            FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
             openGameGuide(gameSystemId: gameSystemId)
         }
     }
@@ -155,6 +157,8 @@ struct RootTabView: View {
             openGuidedMatch(gameSystemId: gameSystemId)
         case .openGameGuide(let gameSystemId):
             openGameGuide(gameSystemId: gameSystemId)
+        case .openRulesSearch(let gameSystemId, _):
+            openRulesSearch(gameSystemId: gameSystemId)
         }
     }
 
@@ -168,5 +172,10 @@ struct RootTabView: View {
         ActiveGameContextStore.setActiveGameSystem(gameSystemId)
         selectedTab = .learn
         learnPath = NavigationPath([gameSystemId])
+    }
+
+    private func openRulesSearch(gameSystemId: String) {
+        ActiveGameContextStore.setActiveGameSystem(gameSystemId)
+        selectedTab = .search
     }
 }

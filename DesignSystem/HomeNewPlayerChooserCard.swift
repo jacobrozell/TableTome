@@ -3,6 +3,8 @@ import TabletomeDomain
 
 /// Helps complete beginners pick the right game mode from the Play tab.
 struct HomeNewPlayerChooserCard: View {
+    @State private var showsBoxHelper = false
+
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Label(String(localized: "New to wargaming?"), systemImage: "sparkles")
@@ -19,6 +21,16 @@ struct HomeNewPlayerChooserCard: View {
             .font(.callout)
             .foregroundStyle(.secondary)
             .fixedSize(horizontal: false, vertical: true)
+
+            Button {
+                showsBoxHelper = true
+            } label: {
+                Label(String(localized: "Not sure what you have?"), systemImage: "questionmark.circle")
+                    .font(.subheadline.weight(.semibold))
+                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+            }
+            .buttonStyle(.bordered)
+            .accessibilityIdentifier("home.chooser.boxHelper")
 
             chooserRow(
                 title: String(localized: "I bought a Warhammer 40,000 starter box"),
@@ -75,6 +87,9 @@ struct HomeNewPlayerChooserCard: View {
         }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("home.newPlayerChooser")
+        .sheet(isPresented: $showsBoxHelper) {
+            BoxIdentificationSheet()
+        }
     }
 
     private func chooserRow(
@@ -126,6 +141,7 @@ struct HomeNewPlayerChooserCard: View {
         .buttonStyle(.plain)
         .simultaneousGesture(TapGesture().onEnded {
             ActiveGameContextStore.setActiveGameSystem(gameSystemId)
+            FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
         })
         .accessibilityIdentifier(identifier)
     }

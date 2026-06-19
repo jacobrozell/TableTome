@@ -24,17 +24,26 @@ struct HomeView: View {
             } else {
                 List {
                     if !viewModel.gameSystems.isEmpty {
-                        Section {
-                            HomeWelcomeCard()
-                        }
-                        .listRowInsets(EdgeInsets())
-                        .listRowBackground(Color.clear)
+                        if FirstSessionStore.shouldShowContinueCard(),
+                           let choice = FirstSessionStore.onboardingChoice {
+                            Section {
+                                HomeContinueCard(gameSystemId: choice)
+                            }
+                            .listRowInsets(EdgeInsets())
+                            .listRowBackground(Color.clear)
+                        } else {
+                            Section {
+                                HomeWelcomeCard()
+                            }
+                            .listRowInsets(EdgeInsets())
+                            .listRowBackground(Color.clear)
 
-                        Section {
-                            HomeNewPlayerChooserCard()
+                            Section {
+                                HomeNewPlayerChooserCard()
+                            }
+                            .listRowInsets(EdgeInsets())
+                            .listRowBackground(Color.clear)
                         }
-                        .listRowInsets(EdgeInsets())
-                        .listRowBackground(Color.clear)
                     }
 
                     Section {

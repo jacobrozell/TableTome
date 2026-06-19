@@ -17,10 +17,14 @@ enum DataActions {
         defer { if scoped { url.stopAccessingSecurityScopedResource() } }
         let data = try Data(contentsOf: url)
         guard data.count <= HobbyLimits.maxImportBytes else {
-            throw Failure("File is too large (max \(HobbyLimits.maxImportBytes / (1024 * 1024)) MB).")
+            throw Failure(
+                String(
+                    localized: "File is too large (max \(HobbyLimits.maxImportBytes / (1024 * 1024)) MB)."
+                )
+            )
         }
         guard let text = String(data: data, encoding: .utf8) else {
-            throw Failure("Could not read file as UTF-8 text.")
+            throw Failure(String(localized: "Could not read file as UTF-8 text."))
         }
         return text
     }
@@ -39,7 +43,9 @@ enum DataActions {
                                         pipeline: Pipeline.resolve(cfg.globalPipeline),
                                         overrides: cfg.factionOverrides)
             guard result.ok, let armies = result.armies else {
-                return "Import failed: \(result.errors.first ?? "unknown error")"
+                return String(
+                    localized: "Import failed: \(result.errors.first ?? String(localized: "unknown error"))"
+                )
             }
             switch mode {
             case .replace: CollectionStore.replaceArmies(armies, in: ctx)
@@ -55,7 +61,9 @@ enum DataActions {
             let text = try readText(at: url)
             let result = PaintCSV.import(CSV.parse(text))
             guard result.ok, let paints = result.paints else {
-                return "Import failed: \(result.errors.first ?? "unknown error")"
+                return String(
+                    localized: "Import failed: \(result.errors.first ?? String(localized: "unknown error"))"
+                )
             }
             switch mode {
             case .replace: CollectionStore.replacePaints(paints, in: ctx)
@@ -67,9 +75,13 @@ enum DataActions {
 
     private static func summary(_ r: ImportResult, noun: String, warnings: [String]) -> String {
         let n = noun == "paints" ? (r.stats["paints"] ?? 0) : (r.stats["units"] ?? 0)
-        let unit = noun == "paints" ? "paints" : "unit entries"
-        let warn = warnings.isEmpty ? "" : " (\(warnings.count) warning\(warnings.count == 1 ? "" : "s"))"
-        return "Imported \(n) \(unit)\(warn)."
+        let unit = noun == "paints"
+            ? String(localized: "paints")
+            : String(localized: "unit entries")
+        let warn = warnings.isEmpty
+            ? ""
+            : String(localized: " (\(warnings.count) warning\(warnings.count == 1 ? "" : "s"))")
+        return String(localized: "Imported \(n) \(unit)\(warn).")
     }
 
     struct ImportOutcome: Identifiable, Sendable {
@@ -87,7 +99,7 @@ enum DataActions {
     static func importArmiesOutcome(from url: URL, mode: Mode, ctx: ModelContext) -> ImportOutcome {
         do {
             if let hint = fileImportHint(url.lastPathComponent) {
-                return .failure(title: "Import failed", message: hint)
+                return .failure(title: String(localized: "Import failed"), message: hint)
             }
             let text = try readText(at: url)
             let cfg = HobbyConfig.current(ctx)
@@ -95,19 +107,25 @@ enum DataActions {
                                         pipeline: Pipeline.resolve(cfg.globalPipeline),
                                         overrides: cfg.factionOverrides)
             guard result.ok, let armies = result.armies else {
-                return .failure(title: "Import failed",
-                                message: result.errors.first ?? "Unknown error")
+                return .failure(
+                    title: String(localized: "Import failed"),
+                    message: result.errors.first ?? String(localized: "Unknown error")
+                )
             }
             switch mode {
             case .replace: CollectionStore.replaceArmies(armies, in: ctx)
             case .append:  CollectionStore.appendArmies(armies, in: ctx)
             }
             WidgetUpdater.refresh(context: ctx)
-            return ImportOutcome(id: UUID(), success: true, title: "Armies imported",
-                                 message: summary(result, noun: "armies", warnings: result.warnings),
-                                 warnings: result.warnings)
+            return ImportOutcome(
+                id: UUID(),
+                success: true,
+                title: String(localized: "Armies imported"),
+                message: summary(result, noun: "armies", warnings: result.warnings),
+                warnings: result.warnings
+            )
         } catch {
-            return .failure(title: "Import failed", message: error.localizedDescription)
+            return .failure(title: String(localized: "Import failed"), message: error.localizedDescription)
         }
     }
 
@@ -116,15 +134,20 @@ enum DataActions {
             let text = try readText(at: url)
             switch BackupSanitizer.parse(text, byteLength: text.utf8.count) {
             case .failure(let err):
-                return .failure(title: "Restore failed", message: err.message)
+                return .failure(title: String(localized: "Restore failed"), message: err.message)
             case .success(let backup):
                 BackupCodec.restore(backup, into: ctx)
                 WidgetUpdater.refresh(context: ctx)
-                return ImportOutcome(id: UUID(), success: true, title: "Restore complete",
-                                     message: "Backup restored: \(backup.preview).", warnings: [])
+                return ImportOutcome(
+                    id: UUID(),
+                    success: true,
+                    title: String(localized: "Restore complete"),
+                    message: String(localized: "Backup restored: \(backup.preview)."),
+                    warnings: []
+                )
             }
         } catch {
-            return .failure(title: "Restore failed", message: error.localizedDescription)
+            return .failure(title: String(localized: "Restore failed"), message: error.localizedDescription)
         }
     }
 
@@ -132,36 +155,44 @@ enum DataActions {
         do {
             let counts = try DemoLoader.load(into: ctx)
             WidgetUpdater.refresh(context: ctx)
-            return ImportOutcome(id: UUID(), success: true, title: "Sample loaded",
-                                 message: "Sample loaded: \(counts.armies) armies, \(counts.paints) paints.",
+            return ImportOutcome(id: UUID(), success: true, title: String(localized: "Sample loaded"),
+                                 message: String(
+                                    localized: "Sample loaded: \(counts.armies) armies, \(counts.paints) paints."
+                                 ),
                                  warnings: [])
         } catch {
-            return .failure(title: "Sample failed",
-                            message: "Could not load sample data (resources missing).")
+            return .failure(title: String(localized: "Sample failed"),
+                            message: String(localized: "Could not load sample data (resources missing)."))
         }
     }
 
     static func importPaintsOutcome(from url: URL, mode: Mode, ctx: ModelContext) -> ImportOutcome {
         do {
             if let hint = fileImportHint(url.lastPathComponent) {
-                return .failure(title: "Import failed", message: hint)
+                return .failure(title: String(localized: "Import failed"), message: hint)
             }
             let text = try readText(at: url)
             let result = PaintCSV.import(CSV.parse(text))
             guard result.ok, let paints = result.paints else {
-                return .failure(title: "Import failed",
-                                message: result.errors.first ?? "Unknown error")
+                return .failure(
+                    title: String(localized: "Import failed"),
+                    message: result.errors.first ?? String(localized: "Unknown error")
+                )
             }
             switch mode {
             case .replace: CollectionStore.replacePaints(paints, in: ctx)
             case .append:  CollectionStore.appendPaints(paints, in: ctx)
             }
             WidgetUpdater.refresh(context: ctx)
-            return ImportOutcome(id: UUID(), success: true, title: "Paints imported",
-                                 message: summary(result, noun: "paints", warnings: result.warnings),
-                                 warnings: result.warnings)
+            return ImportOutcome(
+                id: UUID(),
+                success: true,
+                title: String(localized: "Paints imported"),
+                message: summary(result, noun: "paints", warnings: result.warnings),
+                warnings: result.warnings
+            )
         } catch {
-            return .failure(title: "Import failed", message: error.localizedDescription)
+            return .failure(title: String(localized: "Import failed"), message: error.localizedDescription)
         }
     }
 
@@ -174,7 +205,7 @@ enum DataActions {
             case .failure(let err): return err.message
             case .success(let backup):
                 BackupCodec.restore(backup, into: ctx)
-                return "Backup restored: \(backup.preview)."
+                return String(localized: "Backup restored: \(backup.preview).")
             }
         } catch { return error.localizedDescription }
     }
@@ -184,8 +215,10 @@ enum DataActions {
     static func loadSample(ctx: ModelContext) -> String {
         do {
             let counts = try DemoLoader.load(into: ctx)
-            return "Sample loaded: \(counts.armies) armies, \(counts.paints) paints."
-        } catch { return "Could not load sample data (resources missing)." }
+            return String(
+                localized: "Sample loaded: \(counts.armies) armies, \(counts.paints) paints."
+            )
+        } catch { return String(localized: "Could not load sample data (resources missing).") }
     }
 
     // MARK: Export builders

@@ -68,7 +68,7 @@ final class UndoService {
             guard let army = army(named: snap.armyName, in: ctx) else { return nil }
             restore(snap, into: army, ctx: ctx)
             try? ctx.save()
-            return "Restored \(snap.name)"
+            return String(localized: "Restored \(snap.name)")
         case .deleteArmy(let snap):
             let army = Army(name: snap.name, game: snap.game, faction: snap.faction, sortIndex: snap.sortIndex)
             army.crestOverride = snap.crestOverride
@@ -78,15 +78,15 @@ final class UndoService {
             ctx.insert(army)
             for u in snap.units { restore(u, into: army, ctx: ctx) }
             try? ctx.save()
-            return "Restored \(snap.name)"
+            return String(localized: "Restored \(snap.name)")
         case .unitState(let id, let previous):
             unit(id: id, in: ctx)?.state = previous
             try? ctx.save()
-            return "Undone"
+            return String(localized: "Undone")
         case .batchStates(let changes):
             for c in changes { unit(id: c.id, in: ctx)?.state = c.previous }
             try? ctx.save()
-            return "Undone"
+            return String(localized: "Undone")
         }
     }
 

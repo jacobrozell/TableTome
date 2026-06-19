@@ -2,18 +2,42 @@ import SwiftUI
 
 /// Shared copy for form section footers.
 enum FormHints {
-    static let source = "Box, kit, or set name. Links paints and units in your collection."
-    static let paintSource = "Same string on units lets you jump from paint to collection."
-    static let notesTags = "Add #tags in notes to filter later."
-    static let paintLow = "Flag bottles you want to restock."
-    static let uniqueName = "Names must be unique."
-    static let rosterLink = "Match painted models to units on this list."
-    static let pipelineStages = "Stages run left to right. Drag to reorder, swipe to delete."
-    static let factionCrest = "Short abbreviation shown on army rows. Up to 8 characters."
-    static let filterQuickView = "Preset views for common painting progress slices."
-    static let filterNarrow = "Combine filters to focus on one army, state, or box."
-    static let filterSort = "Applies to the current filtered list."
-    static let paintFilter = "Filter your paint shelf by type, brand, or restock needs."
+    static var source: String {
+        String(localized: "Box, kit, or set name. Links paints and units in your collection.")
+    }
+    static var paintSource: String {
+        String(localized: "Same string on units lets you jump from paint to collection.")
+    }
+    static var notesTags: String {
+        String(localized: "Add #tags in notes to filter later.")
+    }
+    static var paintLow: String {
+        String(localized: "Flag bottles you want to restock.")
+    }
+    static var uniqueName: String {
+        String(localized: "Names must be unique.")
+    }
+    static var rosterLink: String {
+        String(localized: "Match painted models to units on this list.")
+    }
+    static var pipelineStages: String {
+        String(localized: "Stages run left to right. Drag to reorder, swipe to delete.")
+    }
+    static var factionCrest: String {
+        String(localized: "Short abbreviation shown on army rows. Up to 8 characters.")
+    }
+    static var filterQuickView: String {
+        String(localized: "Preset views for common painting progress slices.")
+    }
+    static var filterNarrow: String {
+        String(localized: "Combine filters to focus on one army, state, or box.")
+    }
+    static var filterSort: String {
+        String(localized: "Applies to the current filtered list.")
+    }
+    static var paintFilter: String {
+        String(localized: "Filter your paint shelf by type, brand, or restock needs.")
+    }
 }
 
 /// Consistent quantity control used across collection and paint forms.
@@ -24,7 +48,7 @@ struct QuantityStepper: View {
 
     var body: some View {
         Stepper(value: $value, in: range) {
-            Text("\(label): \(value)")
+            Text(String(localized: "\(label): \(value)"))
         }
         .accessibilityValue("\(value)")
     }

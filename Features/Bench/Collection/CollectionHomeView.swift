@@ -64,8 +64,8 @@ struct CollectionHomeView: View {
             if armies.isEmpty { emptyState }
             else { listContent }
         }
-        .navigationTitle("Collection")
-        .searchable(text: $search, prompt: "Armies, factions, units…")
+        .navigationTitle(String(localized: "Collection"))
+        .searchable(text: $search, prompt: String(localized: "Armies, factions, units…"))
         .toolbar { toolbarContent }
         .sheet(isPresented: Binding(
             get: { armyToRename != nil },
@@ -76,11 +76,11 @@ struct CollectionHomeView: View {
                     .presentationDetents([.medium])
             }
         }
-        .alert(loadSampleError?.title ?? "Error", isPresented: Binding(
+        .alert(loadSampleError?.title ?? String(localized: "Error"), isPresented: Binding(
             get: { loadSampleError != nil },
             set: { if !$0 { loadSampleError = nil } }
         )) {
-            Button("OK", role: .cancel) {}
+            Button(String(localized: "OK"), role: .cancel) {}
         } message: {
             if let loadSampleError { Text(loadSampleError.message) }
         }
@@ -96,11 +96,11 @@ struct CollectionHomeView: View {
         .onChange(of: router.pendingDeepLink) { applyPendingDeepLink() }
         .onChange(of: armies.count) { _, _ in autoSelectScreenshotArmyIfNeeded() }
         .confirmationDialog(
-            "Delete entire army \"\(armyToDelete?.name ?? "")\" and all its units?",
+            String(localized: "Delete entire army \"\(armyToDelete?.name ?? "")\" and all its units?"),
             isPresented: Binding(get: { armyToDelete != nil }, set: { if !$0 { armyToDelete = nil } }),
             titleVisibility: .visible
         ) {
-            Button("Delete", role: .destructive) {
+            Button(String(localized: "Delete"), role: .destructive) {
                 if let army = armyToDelete {
                     if army.id == selectedArmyId { selectedArmyId = nil }
                     ArmyStore.delete(army, in: context)
@@ -108,7 +108,7 @@ struct CollectionHomeView: View {
                 }
                 armyToDelete = nil
             }
-            Button("Cancel", role: .cancel) { armyToDelete = nil }
+            Button(String(localized: "Cancel"), role: .cancel) { armyToDelete = nil }
         }
     }
 
@@ -116,11 +116,11 @@ struct CollectionHomeView: View {
         let vis = visible
         if vis.isEmpty {
             ContentUnavailableView {
-                Label("No matching units", systemImage: "line.3.horizontal.decrease.circle")
+                Label(String(localized: "No matching units"), systemImage: "line.3.horizontal.decrease.circle")
             } description: {
-                Text("Nothing matches your current search or filters.")
+                Text(String(localized: "Nothing matches your current search or filters."))
             } actions: {
-                Button("Clear filters") { clearFilters() }.buttonStyle(.borderedProminent)
+                Button(String(localized: "Clear filters")) { clearFilters() }.buttonStyle(.borderedProminent)
             }
         } else {
             armyList
@@ -147,7 +147,7 @@ struct CollectionHomeView: View {
                         Label(filterBannerText, systemImage: "line.3.horizontal.decrease.circle")
                             .font(.subheadline)
                             .fixedSize(horizontal: false, vertical: true)
-                        Button("Clear") { clearFilters() }
+                        Button(String(localized: "Clear")) { clearFilters() }
                             .font(.subheadline)
                     }
                 } else {
@@ -155,7 +155,7 @@ struct CollectionHomeView: View {
                         Label(filterBannerText, systemImage: "line.3.horizontal.decrease.circle")
                             .font(.subheadline)
                         Spacer()
-                        Button("Clear") { clearFilters() }.font(.subheadline)
+                        Button(String(localized: "Clear")) { clearFilters() }.font(.subheadline)
                     }
                 }
             }
@@ -183,14 +183,14 @@ struct CollectionHomeView: View {
                 }
                 .listSidebarSelection(isSelected: va.army.id == selectedArmyId, enabled: padSidebar)
                 .contextMenu {
-                    Button("Rename", systemImage: "pencil") { armyToRename = va.army }
-                    Button("Delete", systemImage: "trash", role: .destructive) {
+                    Button(String(localized: "Rename"), systemImage: "pencil") { armyToRename = va.army }
+                    Button(String(localized: "Delete"), systemImage: "trash", role: .destructive) {
                         armyToDelete = va.army
                     }
                 }
                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                    Button("Delete", role: .destructive) { armyToDelete = va.army }
-                        .accessibilityLabel("Delete army")
+                    Button(String(localized: "Delete"), role: .destructive) { armyToDelete = va.army }
+                        .accessibilityLabel(String(localized: "Delete army"))
                 }
             }
         }
@@ -198,36 +198,48 @@ struct CollectionHomeView: View {
 
     private var filterBannerText: String {
         var parts: [String] = []
-        if filterCount > 0 { parts.append("\(filterCount) filter\(filterCount == 1 ? "" : "s")") }
-        if !search.isEmpty { parts.append("search") }
-        return parts.isEmpty ? "Filters active" : parts.joined(separator: " · ")
+        if filterCount > 0 {
+            parts.append(String(localized: "\(filterCount) filter\(filterCount == 1 ? "" : "s")"))
+        }
+        if !search.isEmpty { parts.append(String(localized: "search")) }
+        return parts.isEmpty
+            ? String(localized: "Filters active")
+            : parts.joined(separator: " · ")
     }
 
     @ToolbarContentBuilder private var toolbarContent: some ToolbarContent {
         ToolbarItemGroup(placement: .topBarLeading) {
-            Button("New army", systemImage: "plus") { showAddArmy = true }
-            Button("Undo", systemImage: "arrow.uturn.backward") {
+            Button(String(localized: "New army"), systemImage: "plus") { showAddArmy = true }
+            Button(String(localized: "Undo"), systemImage: "arrow.uturn.backward") {
                 if let msg = undo.undo(in: context) { banner.show(msg) }
             }
             .disabled(!undo.canUndo)
-            .accessibilityLabel("Undo")
-            .accessibilityHint(undo.canUndo ? "Reverts the last action" : "No actions to undo")
+            .accessibilityLabel(String(localized: "Undo"))
+            .accessibilityHint(
+                undo.canUndo
+                    ? String(localized: "Reverts the last action")
+                    : String(localized: "No actions to undo")
+            )
         }
         ToolbarItem(placement: .topBarTrailing) {
             NavigationLink(value: CollectionRoute.overview) {
-                Label("Overview", systemImage: "chart.pie")
+                Label(String(localized: "Overview"), systemImage: "chart.pie")
             }
             .labelStyle(.iconOnly)
         }
         ToolbarItem(placement: .topBarTrailing) {
-            Button("Filters", systemImage: filterCount > 0 || scoped
+            Button(String(localized: "Filters"), systemImage: filterCount > 0 || scoped
                    ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle") {
                 showFilters = true
             }
-            .accessibilityLabel(filterCount > 0 ? "Filters, \(filterCount) active" : "Filters")
+            .accessibilityLabel(
+                filterCount > 0
+                    ? String(localized: "Filters, \(filterCount) active")
+                    : String(localized: "Filters")
+            )
         }
         ToolbarItem(placement: .topBarTrailing) {
-            Button("Settings", systemImage: "gearshape") { showSettings = true }
+            Button(String(localized: "Settings"), systemImage: "gearshape") { showSettings = true }
                 .accessibilityIdentifier("settings")
         }
     }
@@ -236,15 +248,42 @@ struct CollectionHomeView: View {
         ContentUnavailableView {
             Label(String(localized: "No armies yet"), systemImage: "shield")
         } description: {
-            if dynamicTypeSize.isAccessibilitySize {
-                Text(String(localized: "An army is a group of miniatures you paint and play. Add one here, or load sample data to explore."))
+            if FirstSessionStore.shouldPromoteSampleData() {
+                if dynamicTypeSize.isAccessibilitySize {
+                    Text(
+                        String(
+                            localized: """
+                            Optional until after your first game. An army is a group of miniatures you paint and play — \
+                            add one here, or load sample data to explore.
+                            """
+                        )
+                    )
+                } else {
+                    Text(
+                        String(
+                            localized: """
+                            Optional until after your first game. An army is a group of miniatures you paint and play — \
+                            add one here, or load sample data below.
+                            """
+                        )
+                    )
+                }
             } else {
-                Text(String(localized: "An army is a group of miniatures you paint and play. Add one here, or load sample data below."))
+                Text(
+                    String(
+                        localized: """
+                        Optional until after your first game. An army is a group of miniatures you paint and play — \
+                        tap New army when you're ready to track models.
+                        """
+                    )
+                )
             }
         } actions: {
-            Button(String(localized: "Load sample data")) { loadSample() }
-            .buttonStyle(.borderedProminent)
-            .accessibilityIdentifier("loadSampleData")
+            if FirstSessionStore.shouldPromoteSampleData() {
+                Button(String(localized: "Load sample data")) { loadSample() }
+                    .buttonStyle(.borderedProminent)
+                    .accessibilityIdentifier("loadSampleData")
+            }
             Button(String(localized: "New army")) { showAddArmy = true }
         }
         .adaptiveEmptyStateLayout()
@@ -266,7 +305,7 @@ struct CollectionHomeView: View {
         cfg.gameFilter = "All"
         cfg.factionFilter = "All"
         try? context.save()
-        banner.show("Filtered by source: \(cfg.sourceFilter)")
+        banner.show(String(localized: "Filtered by source: \(cfg.sourceFilter)"))
         filterTrigger.toggle()
     }
 
@@ -278,7 +317,7 @@ struct CollectionHomeView: View {
         search = ""
         router.collectionSearch = ""
         try? context.save()
-        banner.show("Showing backlog — models on the sprue")
+        banner.show(String(localized: "Showing backlog — models on the sprue"))
         filterTrigger.toggle()
     }
 

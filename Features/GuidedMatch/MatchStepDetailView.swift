@@ -11,6 +11,7 @@ struct MatchStepDetailView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
 
     private var usesSideBySideColumns: Bool {
         TabletomeLayout.usesSideBySideLayout(
@@ -32,6 +33,10 @@ struct MatchStepDetailView: View {
                     .fixedSize(horizontal: false, vertical: true)
 
                 GlossaryChipsRow(text: step.body, gameSystemId: viewModel.gameSystemId.rawValue, ruleSections: ruleSections)
+
+                if ReleaseSurface.showsRulesAssistant {
+                    rulesSearchButton
+                }
 
                 stepSpecificContent
 
@@ -63,6 +68,20 @@ struct MatchStepDetailView: View {
         .onAppear {
             viewModel.syncAutoCompletions()
         }
+    }
+
+    private var rulesSearchButton: some View {
+        Button {
+            learnNavigationCoordinator.openRulesSearch(
+                gameSystemId: viewModel.gameSystemId.rawValue,
+                query: step.title
+            )
+        } label: {
+            Label(String(localized: "Look this up in Rules Search"), systemImage: "magnifyingglass")
+                .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+        }
+        .buttonStyle(.bordered)
+        .accessibilityIdentifier("guidedMatch.rulesSearch.\(step.id)")
     }
 
     @ViewBuilder

@@ -26,4 +26,17 @@ final class LearnNavigationCoordinatorTests: XCTestCase {
         )
         XCTAssertNil(coordinator.consumePendingAction())
     }
+
+    func testOpenRulesSearchQueuesActionAndQuery() {
+        let coordinator = LearnNavigationCoordinator()
+
+        coordinator.openRulesSearch(gameSystemId: "wh40k-10e-cp", query: "Command Phase")
+
+        XCTAssertEqual(
+            coordinator.consumePendingAction(),
+            .openRulesSearch(gameSystemId: "wh40k-10e-cp", query: "Command Phase")
+        )
+        XCTAssertEqual(coordinator.consumePendingRulesSearchQuery(), "Command Phase")
+        XCTAssertNil(coordinator.consumePendingRulesSearchQuery())
+    }
 }

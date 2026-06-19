@@ -32,6 +32,7 @@ struct MusterTab: View {
         }
         .onAppear {
             UnitCatalogLoader.loadIfNeeded()
+            _ = FirstSessionStore.incrementListsVisits()
             consumePendingRoster()
             checkMusterIntro()
         }
@@ -75,7 +76,7 @@ struct MusterTab: View {
                                 String(
                                     localized: """
                                     Optional — count points and see which units fit. Tap New list in the sidebar \
-                                    when you're ready to plan a larger game.
+                                    when you're ready to plan a larger game. Link a list to Models to track fieldable units.
                                     """
                                 )
                             )
@@ -123,8 +124,12 @@ struct MusterTab: View {
 
     private func checkMusterIntro() {
         guard !AppInfo.isUITesting else { return }
-        guard let cfg = configs.first, !cfg.hasSeenMusterIntro else { return }
-        guard OnboardingStore.hasCompletedAppTour || cfg.hasSeenOnboarding else { return }
+        guard let cfg = configs.first else { return }
+        let onboardingComplete = OnboardingStore.hasCompletedAppTour || cfg.hasSeenOnboarding
+        guard FirstSessionStore.shouldOfferMusterIntro(
+            hasSeenMusterIntro: cfg.hasSeenMusterIntro,
+            onboardingComplete: onboardingComplete
+        ) else { return }
         showMusterIntro = true
     }
 }

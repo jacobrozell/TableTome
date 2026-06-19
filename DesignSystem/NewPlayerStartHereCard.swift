@@ -32,24 +32,14 @@ struct NewPlayerStartHereCard: View {
                 )
                 TappableGuidePathStep(
                     number: 2,
-                    title: String(localized: "Read Getting Started"),
-                    detail: String(localized: "Five setup steps — each battle lasts 4 rounds, not 5."),
-                    destination: GettingStartedLink(gameSystemId: GameSystemId.aosSpearhead.rawValue),
-                    accessibilityId: "guide.path.gettingStarted"
-                )
-                TappableGuidePathStep(
-                    number: 3,
-                    title: String(localized: "Open Guided Match"),
-                    detail: String(localized: "Tap Use Starter Matchup to fill both armies automatically, then walk through setup."),
+                    title: String(localized: "Guided Match"),
+                    detail: String(
+                        localized: """
+                        Tap Use Starter Matchup to fill both armies, walk through setup, then open the battle tracker.
+                        """
+                    ),
                     destination: GuidedMatchLink(gameSystemId: .aosSpearhead),
                     accessibilityId: "guide.path.guidedMatch"
-                )
-                TappableGuidePathStep(
-                    number: 4,
-                    title: String(localized: "Start the Battle"),
-                    detail: String(localized: "Open the battle tracker, pass the phone each turn, and follow the on-screen tips."),
-                    destination: GuidedMatchLink(gameSystemId: .aosSpearhead),
-                    accessibilityId: "guide.path.battleTracker"
                 )
             }
 

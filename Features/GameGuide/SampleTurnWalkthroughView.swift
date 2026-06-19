@@ -5,6 +5,7 @@ import TabletomeDomain
 struct SampleTurnWalkthroughView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
     @State private var step = 0
     @State private var showsCombatPrimer = true
 
@@ -83,6 +84,19 @@ struct SampleTurnWalkthroughView: View {
                 }
 
                 GlossaryChipsRow(text: steps[step].detail)
+                if ReleaseSurface.showsRulesAssistant {
+                    Button {
+                        learnNavigationCoordinator.openRulesSearch(
+                            gameSystemId: GameSystemId.aosSpearhead.rawValue,
+                            query: steps[step].title
+                        )
+                    } label: {
+                        Label(String(localized: "Look this up in Rules Search"), systemImage: "magnifyingglass")
+                            .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                    }
+                    .buttonStyle(.bordered)
+                    .accessibilityIdentifier("sampleTurn.rulesSearch")
+                }
 
                 navigationButtons
             }

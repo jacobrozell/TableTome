@@ -5,6 +5,7 @@ import TabletomeDomain
 struct CombatPatrolSampleTurnWalkthroughView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
     @State private var step = 0
 
     private struct WalkthroughStep {
@@ -20,8 +21,9 @@ struct CombatPatrolSampleTurnWalkthroughView: View {
             shortLabel: String(localized: "Command"),
             detail: String(
                 localized: """
-                Start your turn here. Gain Command Points (CP) to spend on abilities, test Battle-shock on badly hurt units, \
-                then score objectives with troops on the board. From battle round 2, you also earn primary victory points here.
+                Start your turn here. Gain points to spend on special abilities, check whether badly hurt units hold \
+                their ground, then score objectives with troops on the board. From battle round 2, you also earn \
+                primary mission points in this phase.
                 """
             ),
             systemImage: "flag.checkered"
@@ -79,6 +81,19 @@ struct CombatPatrolSampleTurnWalkthroughView: View {
                 phaseStrip
                 stepCard
                 GlossaryChipsRow(text: steps[step].detail, gameSystemId: GameSystemId.wh40k10eCp.rawValue)
+                if ReleaseSurface.showsRulesAssistant {
+                    Button {
+                        learnNavigationCoordinator.openRulesSearch(
+                            gameSystemId: GameSystemId.wh40k10eCp.rawValue,
+                            query: steps[step].title
+                        )
+                    } label: {
+                        Label(String(localized: "Look this up in Rules Search"), systemImage: "magnifyingglass")
+                            .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                    }
+                    .buttonStyle(.bordered)
+                    .accessibilityIdentifier("combatPatrolSampleTurn.rulesSearch")
+                }
                 navigationButtons
             }
             .readableContentWidth()

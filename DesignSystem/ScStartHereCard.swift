@@ -77,16 +77,11 @@ struct ScStartHereCard: View {
             TappableGuidePathStep(
                 number: 2,
                 title: String(localized: "Guided Match"),
-                detail: String(localized: "Founders Edition — Raynor vs Kerrigan starter matchup."),
+                detail: String(
+                    localized: "Founders Edition — Raynor vs Kerrigan starter matchup with battle tracker coaching."
+                ),
                 destination: GuidedMatchLink(gameSystemId: .scTmg),
                 accessibilityId: "guide.scTmg.path.new.guidedMatch"
-            )
-            TappableGuidePathStep(
-                number: 3,
-                title: String(localized: "Battle tracker"),
-                detail: String(localized: "Activations, Pass, and supply coaching at the table."),
-                destination: GuidedMatchLink(gameSystemId: .scTmg),
-                accessibilityId: "guide.scTmg.path.new.battleTracker"
             )
         }
     }

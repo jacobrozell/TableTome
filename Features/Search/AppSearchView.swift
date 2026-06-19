@@ -4,6 +4,7 @@ import TabletomeDomain
 struct AppSearchView: View {
     @StateObject private var viewModel: AppSearchViewModel
     @EnvironmentObject private var dependencies: AppDependencies
+    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
 
     init(viewModel: AppSearchViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -44,12 +45,26 @@ struct AppSearchView: View {
         .navigationTitle(String(localized: "Rules Search"))
         .task { await viewModel.load() }
         .onAppear {
-            let activeId = ActiveGameContextStore.gameSystemId
-            if viewModel.selectedGameSystemId != activeId {
-                viewModel.selectGameSystem(activeId)
-            }
+            syncActiveGameSystem()
+            applyPendingRulesSearchQuery()
+        }
+        .onChange(of: learnNavigationCoordinator.pendingRulesSearchQuery) { _, _ in
+            applyPendingRulesSearchQuery()
         }
         .refreshable { await viewModel.load() }
+    }
+
+    private func syncActiveGameSystem() {
+        let activeId = ActiveGameContextStore.gameSystemId
+        if viewModel.selectedGameSystemId != activeId {
+            viewModel.selectGameSystem(activeId)
+        }
+    }
+
+    private func applyPendingRulesSearchQuery() {
+        guard let query = learnNavigationCoordinator.consumePendingRulesSearchQuery() else { return }
+        syncActiveGameSystem()
+        viewModel.searchText = query
     }
 
     private var gameSystemPickerSection: some View {
@@ -109,7 +124,7 @@ struct AppSearchView: View {
             .fixedSize(horizontal: false, vertical: true)
         }
 
-        Section(String(localized: "Try asking")) {
+        Section {
             ForEach(AppSearchEngine.suggestedTopics(for: viewModel.scopedGameSystemId), id: \.self) { topic in
                 Button {
                     viewModel.searchText = topic
@@ -120,6 +135,12 @@ struct AppSearchView: View {
                 }
                 .accessibilityHint(String(localized: "Searches for this topic"))
                 .accessibilityIdentifier("search.suggested.\(topic)")
+            }
+        } header: {
+            Text(String(localized: "Try asking"))
+        } footer: {
+            if !FirstSessionStore.hasOpenedGameGuide {
+                Text(String(localized: "Most beginners start on Play — use Rules Search when a term comes up in setup."))
             }
         }
 

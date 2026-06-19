@@ -47,7 +47,10 @@ struct CollectionTab: View {
         .onChange(of: detailPath) { _, path in
             if path.isEmpty { selectedUnitId = nil }
         }
-        .onAppear { consumePendingCollection() }
+        .onAppear {
+            _ = FirstSessionStore.incrementCollectionVisits()
+            consumePendingCollection()
+        }
         .onChange(of: router.pendingCollectionArmyId) { _, _ in consumePendingCollection() }
         .sheet(isPresented: $showAddArmy) {
             AddArmySheet { game, faction, name in

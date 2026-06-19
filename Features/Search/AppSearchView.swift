@@ -219,6 +219,7 @@ private struct AppSearchResultRow: View {
             }
         }
         .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+        .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(result.title), \(result.subtitle)")
         .accessibilityHint(result.snippet)

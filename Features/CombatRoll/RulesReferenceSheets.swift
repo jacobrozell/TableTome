@@ -53,6 +53,7 @@ struct RulesGlossaryView: View {
                             .fixedSize(horizontal: false, vertical: true)
                     }
                     .padding(.vertical, DesignTokens.Spacing.sm)
+                    .contentShape(Rectangle())
                 }
                 .id(entry.id)
                 .listRowBackground(entry.id == highlightedEntryId ? Color.accentColor.opacity(0.08) : nil)

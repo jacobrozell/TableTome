@@ -22,6 +22,7 @@ struct PaintRow: View {
             }
         }
         .padding(.vertical, 2)
+        .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
         .accessibilityLabel(accessibilityText)
     }

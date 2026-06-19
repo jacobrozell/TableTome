@@ -40,6 +40,7 @@ public struct RuleSectionRow: View {
                 .accessibilityHidden(true)
         }
         .frame(minHeight: DesignTokens.minTouchTarget)
+        .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(title), \(categoryLabel)")
         .accessibilityIdentifier(accessibilityId)

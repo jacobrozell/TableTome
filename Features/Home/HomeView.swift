@@ -114,6 +114,7 @@ struct HomeView: View {
                 .foregroundStyle(.tertiary)
         }
         .padding(.vertical, DesignTokens.Spacing.xs)
+        .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
         .accessibilityLabel(homeRowAccessibilityLabel(for: system))
     }

@@ -70,6 +70,7 @@ public struct GuideStepCard: View {
             }
         }
         .surfaceCard()
+        .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(title). \(summary)")
         .accessibilityHint(isComplete ? "Completed step" : "Opens step details")

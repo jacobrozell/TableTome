@@ -187,5 +187,6 @@ private struct MatchHistoryRow: View {
             }
         }
         .padding(.vertical, DesignTokens.Spacing.xs)
+        .contentShape(Rectangle())
     }
 }

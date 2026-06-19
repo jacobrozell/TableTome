@@ -290,6 +290,7 @@ private struct ArmyOptionRow: View {
             }
         }
         .frame(minHeight: DesignTokens.minTouchTarget)
+        .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
         .accessibilityLabel(
             "\(army.name), general \(army.general), \(army.contentCoverage.playerFacingTitle(gameSystemId: gameSystemId.rawValue))"

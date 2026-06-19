@@ -363,6 +363,7 @@ struct GameSystemDetailView: View {
                 .foregroundStyle(.secondary)
         }
         .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+        .contentShape(Rectangle())
     }
 
     private func guideRow(title: String, symbol: String, detail: String) -> some View {
@@ -373,6 +374,7 @@ struct GameSystemDetailView: View {
                 .foregroundStyle(.secondary)
         }
         .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+        .contentShape(Rectangle())
     }
 
     private func load() async {

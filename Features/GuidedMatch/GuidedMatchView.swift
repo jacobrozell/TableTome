@@ -367,6 +367,7 @@ struct GuidedMatchView: View {
                             .foregroundStyle(.secondary)
                     }
                     .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                    .contentShape(Rectangle())
                 }
                 .accessibilityIdentifier("guidedMatch.sampleTurn")
             }
@@ -381,6 +382,7 @@ struct GuidedMatchView: View {
                             .foregroundStyle(.secondary)
                     }
                     .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                    .contentShape(Rectangle())
                 }
                 .accessibilityIdentifier("guidedMatch.combatPatrolSampleTurn")
             }
@@ -674,6 +676,7 @@ struct GuidedMatchView: View {
                                 .foregroundStyle(.secondary)
                         }
                         .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                        .contentShape(Rectangle())
                     } else {
                         Label(String(localized: "Battle Phase Tracker"), systemImage: "list.bullet.rectangle")
                             .frame(minHeight: DesignTokens.minTouchTarget)
@@ -1039,6 +1042,7 @@ private struct PlayerArmyRow: View {
             }
         }
         .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+        .contentShape(Rectangle())
     }
 
     private var armySubtitle: String {

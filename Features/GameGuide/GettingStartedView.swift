@@ -27,6 +27,7 @@ struct GettingStartedView: View {
                                 .foregroundStyle(.secondary)
                         }
                         .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                        .contentShape(Rectangle())
                     }
                     .accessibilityIdentifier("guide.gettingStarted.combatPatrolSampleTurn")
                 }
@@ -49,6 +50,7 @@ struct GettingStartedView: View {
                                 .foregroundStyle(.secondary)
                         }
                         .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                        .contentShape(Rectangle())
                     }
                     .accessibilityIdentifier("guide.gettingStarted.sampleTurn")
                 }
@@ -90,6 +92,7 @@ struct GettingStartedView: View {
                                 .foregroundStyle(.secondary)
                         }
                         .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                        .contentShape(Rectangle())
                     }
                     .accessibilityIdentifier("guide.gettingStarted.continueGuidedMatch")
                 } footer: {

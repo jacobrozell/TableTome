@@ -52,9 +52,6 @@ struct HomeView: View {
                                 gameSystemRow(system)
                             }
                             .accessibilityIdentifier("home.gameSystem.\(system.id)")
-                            .simultaneousGesture(TapGesture().onEnded {
-                                ActiveGameContextStore.setActiveGameSystem(system.id)
-                            })
                         }
                     } header: {
                         Text(String(localized: "All games"))

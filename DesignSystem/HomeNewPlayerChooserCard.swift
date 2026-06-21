@@ -3,6 +3,7 @@ import TabletomeDomain
 
 /// Helps complete beginners pick the right game mode from the Play tab.
 struct HomeNewPlayerChooserCard: View {
+    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
     @State private var showsBoxHelper = false
 
     var body: some View {
@@ -129,7 +130,9 @@ struct HomeNewPlayerChooserCard: View {
         showsRecommendedBadge: Bool = false,
         recommendedBadgeLabel: String = String(localized: "Good first game")
     ) -> some View {
-        NavigationLink(value: gameSystemId) {
+        Button {
+            openGameGuide(gameSystemId: gameSystemId)
+        } label: {
             HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
                 Image(systemName: systemImage)
                     .font(.title3)
@@ -167,10 +170,12 @@ struct HomeNewPlayerChooserCard: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .simultaneousGesture(TapGesture().onEnded {
-            ActiveGameContextStore.setActiveGameSystem(gameSystemId)
-            FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
-        })
         .accessibilityIdentifier(identifier)
+    }
+
+    private func openGameGuide(gameSystemId: String) {
+        ActiveGameContextStore.setActiveGameSystem(gameSystemId)
+        FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
+        learnNavigationCoordinator.openGameGuide(gameSystemId: gameSystemId)
     }
 }

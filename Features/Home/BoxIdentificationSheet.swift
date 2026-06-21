@@ -4,6 +4,7 @@ import TabletomeDomain
 /// Helps beginners who do not know which game mode matches their box.
 struct BoxIdentificationSheet: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
 
     @State private var step = 0
     @State private var genre: Genre?
@@ -274,14 +275,12 @@ struct BoxIdentificationSheet: View {
         if let recommendedGameSystemId {
             Section {
                 recommendationRow(for: recommendedGameSystemId)
-                NavigationLink(value: recommendedGameSystemId) {
+                Button {
+                    openRecommendedGuide(recommendedGameSystemId)
+                } label: {
                     Label(String(localized: "Open this guide"), systemImage: "play.circle.fill")
                 }
-                .simultaneousGesture(TapGesture().onEnded {
-                    ActiveGameContextStore.setActiveGameSystem(recommendedGameSystemId)
-                    FirstSessionStore.recordOnboardingChoice(gameSystemId: recommendedGameSystemId)
-                    dismiss()
-                })
+                .accessibilityIdentifier("boxIdentification.openGuide")
             } header: {
                 Text(String(localized: "We suggest"))
             } footer: {
@@ -299,6 +298,13 @@ struct BoxIdentificationSheet: View {
                 }
             }
         }
+    }
+
+    private func openRecommendedGuide(_ gameSystemId: String) {
+        ActiveGameContextStore.setActiveGameSystem(gameSystemId)
+        FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
+        learnNavigationCoordinator.openGameGuide(gameSystemId: gameSystemId)
+        dismiss()
     }
 
     private func goBack() {

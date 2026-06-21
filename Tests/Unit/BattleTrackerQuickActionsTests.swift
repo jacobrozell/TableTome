@@ -57,7 +57,7 @@ final class BattleTrackerQuickActionsTests: XCTestCase {
         XCTAssertTrue(actions.contains { $0.target == .victoryPoints })
     }
 
-    func testWh40kShootingPhaseOmitsCombatResolver() {
+    func testWh40k11eShootingPhaseIncludesCombatResolver() {
         let actions = BattleTrackerQuickActions.actions(
             phase: .shooting,
             gameSystemId: "wh40k-11e",
@@ -67,7 +67,8 @@ final class BattleTrackerQuickActionsTests: XCTestCase {
             shootInCombatEligibleCount: 0,
             activePlayerName: "Alex"
         )
-        XCTAssertFalse(actions.contains { $0.id == "resolve-combat" })
-        XCTAssertTrue(actions.contains { $0.id == "shooting-reminder" })
+        XCTAssertTrue(actions.contains { $0.id == "shooting-units" })
+        XCTAssertTrue(actions.contains { $0.id == "resolve-combat" })
+        XCTAssertFalse(actions.contains { $0.id == "shooting-reminder" })
     }
 }

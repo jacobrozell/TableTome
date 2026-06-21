@@ -26,9 +26,15 @@ struct SettingsView: View {
                     )
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
-                    Text(String(localized: "Unofficial fan app — not affiliated with Games Workshop."))
-                        .font(.caption)
-                        .foregroundStyle(.tertiary)
+                    Text(String(localized: """
+                        Unofficial fan-made companion. Not affiliated with, endorsed, or sponsored by Games Workshop. \
+                        Warhammer, Age of Sigmar, Warhammer 40,000, Spearhead, Combat Patrol, and all associated names, \
+                        logos, and images are trademarks of Games Workshop Limited. Rules content is original explanation \
+                        written for learning and play, not reproduced from official publications.
+                        """))
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 .padding(.vertical, DesignTokens.Spacing.xs)
                 .accessibilityElement(children: .combine)

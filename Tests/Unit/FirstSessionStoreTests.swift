@@ -3,6 +3,13 @@ import XCTest
 @testable import TabletomeDomain
 
 final class FirstSessionStoreTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+        FirstSessionStore.clearPersistedState()
+        ActiveGameContextStore.clearPersistedState()
+        clearMatchPersistence()
+    }
+
     override func tearDown() {
         super.tearDown()
         FirstSessionStore.clearPersistedState()
@@ -11,7 +18,7 @@ final class FirstSessionStoreTests: XCTestCase {
     }
 
     private func clearMatchPersistence() {
-        for id in ["wh40k-10e-cp", GameSystemId.aosSpearhead.rawValue, GameSystemId.default.rawValue] {
+        for id in GameSystemId.allCases.map(\.rawValue) {
             UserDefaults.standard.removeObject(forKey: "guided_match_state_\(id)")
             UserDefaults.standard.removeObject(forKey: "battle_tracker_state_\(id)")
             UserDefaults.standard.removeObject(forKey: "match_session_started_\(id)")

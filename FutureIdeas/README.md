@@ -2,6 +2,10 @@
 
 Non-authoritative backlog. Promote to `specs/` when behavior locks.
 
+## App Store review audit
+
+Reviewer-perspective simulator pass (2026-06-20): strengthened the IP/trademark disclaimer and fixed a Play-tab navigation dead-tap; remaining onboarding-chooser nav follow-up tracked: [AppStoreReviewAudit.md](AppStoreReviewAudit.md). Continuation plan for next agent: [ReviewerReadinessHandoff.md](ReviewerReadinessHandoff.md).
+
 ## Unified app (Tabletome + MiniMuster)
 
 Merge hobby tracking (prep), roster building (muster), and guided play into one app. **Canonical repo: Tabletome.** MiniMuster iOS is frozen as port source.

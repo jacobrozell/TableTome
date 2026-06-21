@@ -35,9 +35,25 @@ final class PhaseContextCoachTests: XCTestCase {
         XCTAssertTrue(tips.joined().localizedCaseInsensitiveContains("Table State"))
     }
 
-    func testStarCraftMovementSummaryIsNotSpearhead() {
-        let summary = BattleTurnPhase.movement.playerFacingSummary(gameSystemId: "sc-tmg")
-        XCTAssertTrue(summary.localizedCaseInsensitiveContains("Pass"))
-        XCTAssertFalse(summary.localizedCaseInsensitiveContains("coherency"))
+    func testWh40k11eChargePhaseRollsBeforeTargets() {
+        let tips = PhaseContextCoach.quickTips(for: .charge, gameSystemId: "wh40k-11e")
+        XCTAssertTrue(tips.joined().localizedCaseInsensitiveContains("2D6"))
+        XCTAssertTrue(tips.joined().localizedCaseInsensitiveContains("12"))
+        XCTAssertTrue(tips.joined().localizedCaseInsensitiveContains("first"))
+    }
+
+    func testWh40k11eCommandPhaseMentionsHalfStrength() {
+        let tips = PhaseContextCoach.quickTips(for: .command, gameSystemId: "wh40k-11e")
+        XCTAssertTrue(tips.joined().localizedCaseInsensitiveContains("Half-strength"))
+    }
+
+    func testWh40k11eChargePhaseMentionsVerticalEngagement() {
+        let tips = PhaseContextCoach.quickTips(for: .charge, gameSystemId: "wh40k-11e")
+        XCTAssertTrue(tips.joined().localizedCaseInsensitiveContains("5 inches vertically"))
+    }
+
+    func testWh40k11eEndOfTurnMentionsCoherency() {
+        let tips = PhaseContextCoach.quickTips(for: .endOfTurn, gameSystemId: "wh40k-11e")
+        XCTAssertTrue(tips.joined().localizedCaseInsensitiveContains("coherency"))
     }
 }

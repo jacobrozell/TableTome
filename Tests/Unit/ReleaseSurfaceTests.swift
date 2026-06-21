@@ -95,12 +95,12 @@ final class ReleaseSurfaceTests: XCTestCase {
         XCTAssertFalse(ReleaseSurface.showsCombatResolver(for: "wh40k-10e-cp"))
     }
 
-    func testCombatResolverHiddenForWh40k11eByDefault() {
-        XCTAssertFalse(ReleaseSurface.showsCombatResolver(for: "wh40k-11e"))
+    func testCombatResolverEnabledForWh40k11eInRelease() {
+        XCTAssertTrue(ReleaseSurface.showsCombatResolver(for: "wh40k-11e"))
     }
 
-    func testWh40kCombatResolverGateRequiresLaunchArg() {
-        XCTAssertFalse(ReleaseSurface.showsWh40kCombatResolver)
+    func testCombatPatrolHiddenWithoutLaunchArg() {
+        XCTAssertFalse(ReleaseSurface.showsCombatPatrol)
     }
 
     func testReleaseTabs() {

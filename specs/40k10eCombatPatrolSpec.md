@@ -13,7 +13,7 @@ As a Combat Patrol player at the table, I pick my patrol box, walk through missi
 | 3 | **Track all table state needed to play** — selected secondary (one per player from two options), stratagem usage, Battle Ready (+10 VP), VP tally, secured objectives, mission-specific flags (razed markers, claimed sites, intel recovered, etc.). |
 | 4 | **Bundle rules in-app** — full 10e core + Combat Patrol format in `rules-v1.json`. Section ids **must use mode-specific prefixes** (`10e-*`, `cp-*`, `glossary-cp-*`) — never reuse AoS or 11e ids. See `DataSchemaSpec.md` naming table. Import via `Scripts/import_combat_patrol_from_wahapedia.py`. |
 | 5 | Clone Spearhead guided-play engine; separate catalog `combat-patrol-catalog-v1.json`. |
-| 6 | Combat resolver ships for CP (10e engine); 11e stays behind `-enable_wh40k_combat_resolver` until ready. |
+| 6 | Combat Patrol uses `Wh40k10eCombatRollEngine`; 11e uses separate `Wh40k11eCombatRollEngine` — never share. |
 | 7 | Featured launch: Leviathan **Space Marines CP vs Tyranids CP**. |
 
 **Source rules:** [GW Combat Patrol rules PDF](https://assets.warhammer-community.com/warhammer40000_combatpatrol_rules_eng.24.09-rbtns7zwbh.pdf) (Sept 2024), [WHC Combat Patrol hub](https://www.warhammer-community.com/en-gb/articles/TDeIzUX3/combat-patrol-rules-and-missions-everything-you-need-to-play-this-fresh-new-mode/), per-faction CP PDFs on Warhammer Community downloads.
@@ -307,7 +307,7 @@ Summaries in our words; link to official PDFs. No verbatim stratagem/secondary c
 - `specs/GuidedMatchSpec.md` — Spearhead reference
 - `specs/SpearheadContentSpec.md` — army JSON pipeline
 - `specs/RulesReferenceSpec.md` — v0.3 CP scope
-- `FutureIdeas/40k11eLaunchPlan.md` — parallel 11e track
+- `docs/game-modes/wh40k-11e/launch-plan.md` — parallel 11e track
 - `FutureIdeas/CombatPatrolVsSpearheadFAQ.md` — cross-format FAQ
 
 ---

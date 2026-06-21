@@ -9,8 +9,9 @@
 
 | Launch argument | Unlocks |
 |-----------------|---------|
-| `-enable_full_product_surface` | Lists tab, Paints, Combat Patrol, StarCraft, Rules Q&A, 40k 10e, cross-pillar links |
-| `-enable_wh40k_combat_resolver` | 11e combat resolver (can combine with full surface) |
+| `-enable_full_product_surface` | Lists tab, Paints, StarCraft, Rules Q&A, 40k 10e, cross-pillar links |
+| `-enable_combat_patrol` | Combat Patrol only (10e engine — SM/Tyranids today) |
+| `-enable_wh40k11e_combat_resolver` | 11e combat resolver (`Wh40k11eCombatRollEngine` — not Combat Patrol) |
 
 **Simulator / Xcode:** Edit Scheme → Run → Arguments Passed On Launch.
 
@@ -26,11 +27,11 @@
 | Lists (Muster) | Partial | ❌ | ❌ | ❌ | Polish + QA pass |
 | Play from roster | ❌ | ❌ | ❌ | ❌ | Depends on Muster |
 | Paint status in match | ❌ | ❌ | ❌ | ❌ | Depends on Paints |
-| Combat Patrol (10e CP) | ✅ Strong | ❌ | ❌ | ❌ | End-to-end Play QA |
+| Combat Patrol (10e CP) | ✅ Strong | Partial | ❌ | ❌ | All armies + polish |
 | StarCraft TMG | ✅ Strong | ❌ | ❌ | ❌ | End-to-end Play QA |
 | Rules Q&A assistant | Partial | ❌ | ❌ | ❌ | Quality + licensing review |
 | 40k 10e (coming soon) | N/A | ❌ | ❌ | ❌ | Content not ready |
-| 11e combat resolver | Partial | ❌ | ❌ | ❌ | Separate launch arg QA |
+| 40k 11e combat resolver | Partial | Partial | ❌ | ❌ | 11e rules engine + invuln QA |
 
 **Legend:** ✅ = meaningful automated coverage exists; Partial = domain only, not surface/integration; ❌ = not done for ungate sign-off.
 
@@ -111,7 +112,7 @@
 
 ## 3. Combat Patrol (40k 10e CP)
 
-**Gate:** `ReleaseSurface.isGameSystemVisible("wh40k-10e-cp")` (full surface only in 1.0.0)
+**Gate:** `ReleaseSurface.showsCombatPatrol` (`-enable_combat_patrol`) — **not** unlocked by `-enable_full_product_surface`
 
 ### Existing automated coverage
 
@@ -124,13 +125,11 @@
 
 **Unit / integration**
 
-- [ ] `ReleaseSurfaceTests` — full-surface visibility + guided match + combat resolver for `wh40k-10e-cp`
+- [ ] `ReleaseSurfaceTests` — `showsCombatPatrol` false by default; CP visible only with launch arg
 - [ ] Guided Match CP mission selection and stratagem phase flow
 - [ ] Match history record/reopen for CP game system id
 
-**Manual QA**
-
-- [ ] Home row shows Combat Patrol; onboarding picker includes CP
+**Manual QA** (with `-enable_combat_patrol`)
 - [ ] Getting Started + Guided Match (SM vs Tyranids starter)
 - [ ] Combat resolver in battle tracker (10e engine)
 - [ ] Rules reference CP categories and missions
@@ -138,10 +137,10 @@
 
 **UI automation**
 
-- [ ] `-enable_full_product_surface` + `-open_guided_match` with CP system context
+- [ ] `-enable_combat_patrol` + `-open_guided_match` with CP system context
 - [ ] Battle tracker combat resolver entry for CP
 
-**Promotion criteria:** Parity with Spearhead smoke checklist in [release_checklist.md](release_checklist.md).
+**Promotion criteria:** All CP armies in catalog; manual QA checklist complete; product polish sign-off.
 
 ---
 
@@ -226,21 +225,32 @@
 
 ## 7. 40k 11e combat resolver
 
-**Gate:** `-enable_wh40k_combat_resolver` (separate from full surface)
+**Gate:** `-enable_wh40k11e_combat_resolver` · **Engine:** `Wh40k11eCombatRollEngine` (not `Wh40k10eCombatRollEngine`)
+
+Combat Patrol (10e) and 11th Edition are separate game systems with separate roll engines. Do not route 11e through the Combat Patrol engine.
 
 ### Existing automated coverage
 
-- `Wh40k10eCombatRollEngineTests.swift` (10e engine; 11e may share or extend)
-- `ReleaseSurfaceTests.testCombatResolverHiddenForWh40k11eByDefault`
+- `Wh40k11eCombatRollEngine.swift`, `Wh40k11eCombatRollResolution.swift`
+- `Wh40k11eCombatRollEngineTests.swift`, `CombatRollEngineRouter.rulesEdition`
+- `ReleaseSurfaceTests.testCombatResolverEnabledForWh40k11eWithLaunchArg`
+- `GameSystemRegistryTests.testWh40k11eUsesDedicated11eCombatRollEngine`
 
-### Still needed
+### Still needed before ungate
 
-**Manual QA** (with `-enable_wh40k_combat_resolver`)
+**Rules engine**
 
-- [ ] Resolver entry visible in 11e battle tracker only when arg set
-- [ ] Roll flow matches 11e rules; trust tests updated if engine differs from 10e CP
+- [ ] Invulnerable saves — wound fails only when **both** armour and invuln fail (dual-save UI)
+- [ ] 11e-specific edge cases from [content-verification.md](../game-modes/wh40k-11e/content-verification.md)
 
-**Promotion criteria:** Flip default in `ReleaseSurface` or manifest capability without launch arg.
+**Manual QA** (with `-enable_wh40k11e_combat_resolver`)
+
+- [ ] Resolver visible in 11e battle tracker during shooting/combat phases
+- [ ] Standalone Combat Resolver link on 40k 11e game guide
+- [ ] Roll flow uses 11e engine labels (Armour Save, AP)
+- [ ] Apply damage syncs to unit focus / wounds remaining
+
+**Promotion criteria:** Flip default in `ReleaseSurface` without launch arg; 11e rules sign-off complete.
 
 ---
 

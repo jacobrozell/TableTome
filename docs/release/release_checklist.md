@@ -13,7 +13,7 @@
 ## Core flows
 
 - [ ] Spearhead Getting Started — all steps on iPhone and iPad
-- [ ] 40k 11e Getting Started / Guided Match — starter armies load
+- [ ] 40k 11e Getting Started / Guided Match — starter armies load; Preview a 40k Turn walkthrough
 - [ ] Rules browser — search + category filter for both systems
 - [ ] Models — add army, backlog, basic collection flow
 - [ ] Match history — record and reopen from Play

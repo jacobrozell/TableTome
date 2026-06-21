@@ -37,6 +37,10 @@ tmp/
 build/
 .xcodebuildmcp/
 
+# Local GW reference PDFs (not bundled in app)
+FutureIdeas/aos-downloads/
+FutureIdeas/gw-downloads/
+
 # Fastlane
 fastlane/report.xml
 fastlane/Preview.html

@@ -13,7 +13,7 @@ Shipped in TestFlight without launch arguments:
 
 - **Tabs:** Models (Collection only), Play, Rules, Settings
 - **Game systems:** Age of Sigmar Spearhead, Warhammer 40,000 11th Edition
-- **Play:** Guided Match, battle tracker, match history, Spearhead combat resolver
+- **Play:** Guided Match, battle tracker, match history, Spearhead combat resolver (11e resolver gated)
 
 Gated until after 1.0.0 polish (see [ReleaseSurfaceSpec.md](../../specs/ReleaseSurfaceSpec.md)):
 
@@ -23,7 +23,9 @@ Gated until after 1.0.0 polish (see [ReleaseSurfaceSpec.md](../../specs/ReleaseS
 
 ## Dogfood / internal builds
 
-Add `-enable_full_product_surface` in **Edit Scheme → Run → Arguments** to unlock gated tabs, game systems, and Rules Q&A.
+Add `-enable_full_product_surface` in **Edit Scheme → Run → Arguments** to unlock Lists, Paints, StarCraft, Rules Q&A, etc.
+
+Add `-enable_combat_patrol` to dogfood Combat Patrol (independent of full surface).
 
 ## Related docs
 

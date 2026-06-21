@@ -7,7 +7,7 @@ Non-authoritative. Summaries in our own words. Verify against the official core 
 
 **Structured draft:** [../Resources/Rules/wh40k-11e-content-draft.json](../Resources/Rules/wh40k-11e-content-draft.json)
 
-**Verification audit:** [40k11eContentVerification.md](40k11eContentVerification.md) — errors found 2026-06-17 and fixes applied.
+**Verification audit:** [content-verification.md](content-verification.md) — errors found 2026-06-17 and fixes applied.
 
 ---
 
@@ -137,5 +137,5 @@ Flag in UI copy where full detail lives in GW app or MFM:
 
 ## Related
 
-- [40k11eLaunchPlan.md](40k11eLaunchPlan.md)
+- [launch-plan.md](launch-plan.md)
 - [CombatPatrolVsSpearheadFAQ.md](CombatPatrolVsSpearheadFAQ.md) — pattern for 10e→11e FAQ sibling

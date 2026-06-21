@@ -97,4 +97,29 @@ final class SpearheadWarscrollAuditTests: XCTestCase {
             )
         }
     }
+
+    func testAllSpearheadArmiesReachWarscrollCoverage() async throws {
+        let catalog = try await BundledSpearheadCatalogRepository().loadCatalog()
+        let armies = catalog.factions.flatMap(\.armies)
+
+        XCTAssertEqual(armies.count, 48)
+
+        for army in armies {
+            XCTAssertEqual(
+                army.contentCoverage,
+                .warscrolls,
+                "\(army.id) should expose full tabletop support"
+            )
+            for unit in army.units {
+                XCTAssertTrue(
+                    unit.hasWarscroll,
+                    "\(army.id)/\(unit.id) should declare warscroll stats"
+                )
+                XCTAssertFalse(
+                    unit.weapons.isEmpty,
+                    "\(army.id)/\(unit.id) should declare weapon profiles for the roll evaluator"
+                )
+            }
+        }
+    }
 }

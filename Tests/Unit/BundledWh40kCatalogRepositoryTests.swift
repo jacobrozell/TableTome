@@ -30,6 +30,31 @@ final class BundledWh40kCatalogRepositoryTests: XCTestCase {
         XCTAssertFalse(waaagh.units.isEmpty)
         XCTAssertTrue(imperator.supportsBattleTracker)
         XCTAssertTrue(waaagh.supportsBattleTracker)
+
+        XCTAssertTrue(imperator.units.allSatisfy(\.hasWarscroll))
+        XCTAssertTrue(waaagh.units.allSatisfy(\.hasWarscroll))
+        XCTAssertTrue(imperator.units.allSatisfy { !$0.weapons.isEmpty })
+        XCTAssertTrue(waaagh.units.allSatisfy { !$0.weapons.isEmpty })
+    }
+
+    func testBattleforceArmiesExistWithDetails() async throws {
+        let catalog = try await repository.loadCatalog(for: "wh40k-11e")
+        let battleforces: [(faction: String, army: String)] = [
+            ("astra-militarum", "astra-militarum-platoon"),
+            ("tyranids", "tyranid-swarm"),
+            ("chaos-space-marines", "chaos-space-marines-warband"),
+            ("necrons", "necron-host")
+        ]
+
+        for entry in battleforces {
+            let faction = try XCTUnwrap(catalog.factions.first { $0.id == entry.faction })
+            let army = try XCTUnwrap(faction.armies.first { $0.id == entry.army })
+            XCTAssertFalse(army.roster.isEmpty)
+            XCTAssertFalse(army.units.isEmpty)
+            XCTAssertTrue(army.supportsBattleTracker)
+        }
+
+        XCTAssertEqual(catalog.battleTrackerArmyCount, 6)
     }
 
     func testFeaturedArmiesApplyStarterMatchup() {

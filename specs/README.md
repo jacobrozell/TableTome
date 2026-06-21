@@ -2,6 +2,8 @@
 
 Authoritative behavior contracts. Brainstorm (`docs/brainstorm.md`) is **not** authoritative.
 
+**Game mode docs** (verification, launch plans, scope): [docs/game-modes/](../docs/game-modes/)
+
 | Spec | Scope |
 |------|-------|
 | [ArchitectureSpec.md](ArchitectureSpec.md) | Layers, modules, dependency rules |

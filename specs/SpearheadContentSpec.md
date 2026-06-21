@@ -91,7 +91,7 @@ Resources ship as a `Rules/` folder reference in the app bundle (`Rules/spearhea
 | `vigilant-brotherhood` | Stormcast Eternals |
 | `gnawfeast-clawpack` | Skaven |
 
-These armies ship full detail overlays: battle traits, unit abilities, warscroll stats, and weapons. Use **Use Starter Matchup** in Guided Match for a one-tap Vigilant vs Gnawfeast setup.
+These armies ship hand-curated detail overlays (preserved by the import script). All other armies are generated from Wahapedia via `Scripts/import_spearhead_warscrolls.py`. Use **Use Starter Matchup** in Guided Match for a one-tap Vigilant vs Gnawfeast setup.
 
 Unit warscroll fields in detail JSON:
 
@@ -141,5 +141,8 @@ Weapons with numeric `damage` link to the Roll Evaluator with prefilled hit/woun
 | Field | Value |
 |-------|-------|
 | Target release | v0.2 |
-| Last verified | 2026-06-17 |
+| Last verified | 2026-06-19 (48/48 armies at `warscrolls`) |
+| Audit checklist | `docs/game-modes/aos-spearhead/content-verification.md` |
+| Standard AoS scope | Not supported — `docs/game-modes/aos-standard/scope.md` |
+| Local GW PDFs | `FutureIdeas/aos-downloads/` (reference only, not bundled) |
 | Code paths | `Domain/Models/SpearheadArmyDetail.swift`, `Domain/UseCases/SpearheadArmyMerger.swift`, `Domain/UseCases/SpearheadCatalogValidator.swift`, `Data/JSON/BundledSpearheadCatalogRepository.swift`, `Resources/Rules/Spearhead/armies/`, `Scripts/import_spearhead_from_wahapedia.py`, `Scripts/import_spearhead_warscrolls.py`, `Tests/Unit/SpearheadCatalogCompletenessTests.swift`, `Tests/Unit/SpearheadWarscrollAuditTests.swift` |

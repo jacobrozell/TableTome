@@ -63,17 +63,27 @@ Play-engine taxonomy and phased roadmap for franchises beyond Warhammer — **af
 
 Skirmish companion for Archon/Blizzard’s SC TMG — supply/reserves, alternating activations, guided match clone. Research draft: [StarCraftTMGLaunchPlan.md](StarCraftTMGLaunchPlan.md). Rules PDF free at [starcraft-tmg.com/downloads](https://starcraft-tmg.com/downloads).
 
+## Game mode documentation
+
+Per-mode research, verification audits, and scope notes: [docs/game-modes/](../docs/game-modes/).
+
 ## 40k Combat Patrol (10th Edition)
 
-**Promoted to spec:** [40k10eCombatPatrolSpec.md](../specs/40k10eCombatPatrolSpec.md) — guided play for CP box sets; separate home row from 11e.
+**Promoted to spec:** [40k10eCombatPatrolSpec.md](../specs/40k10eCombatPatrolSpec.md) — guided play for CP box sets; separate home row from 11e. Mode hub: [docs/game-modes/combat-patrol/](../docs/game-modes/combat-patrol/).
 
 ## 40k 11th Edition launch
 
-Ship plan, guided-play clone of Spearhead, home row + NEW badge: [40k11eLaunchPlan.md](40k11eLaunchPlan.md).
+Ship plan, guided-play clone of Spearhead, home row + NEW badge: [docs/game-modes/wh40k-11e/launch-plan.md](../docs/game-modes/wh40k-11e/launch-plan.md).
 
-Rules research + draft JSON: [40k11eRulesContent.md](40k11eRulesContent.md) → `Resources/Rules/wh40k-11e-content-draft.json`.
+Rules research + draft JSON: [docs/game-modes/wh40k-11e/rules-content.md](../docs/game-modes/wh40k-11e/rules-content.md) → `Resources/Rules/wh40k-11e-content-draft.json`.
+
+Verification audit: [docs/game-modes/wh40k-11e/content-verification.md](../docs/game-modes/wh40k-11e/content-verification.md).
 
 Separate `gameSystems` entries with edition-specific combat engines (10e vs 11e may diverge).
+
+## AoS Spearhead content
+
+Verification checklist + army pull workflow: [docs/game-modes/aos-spearhead/content-verification.md](../docs/game-modes/aos-spearhead/content-verification.md). Standard AoS scope: [docs/game-modes/aos-standard/scope.md](../docs/game-modes/aos-standard/scope.md).
 
 ## Battle Tactic Card Browser
 

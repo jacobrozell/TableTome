@@ -1,9 +1,10 @@
 # 40k 11e Content Verification Audit
 
 **First audit:** 2026-06-17  
-**Second audit:** 2026-06-17 (re-check requested)  
+**Third audit:** 2026-06-19 — line-check against official Core Rules booklet PDF in [FutureIdeas/gw-downloads/11e_rules.pdf](../../../FutureIdeas/gw-downloads/11e_rules.pdf) (88 pages, June 2026).  
+**Fourth audit:** 2026-06-19 — expanded high-level topics (movement, indirect fire, consolidation, coherency regaining).  
 **Bundle:** `Resources/Rules/rules-v1.json` → `wh40k-11e`  
-**Method:** Cross-check against [GW missions article](https://www.warhammer-community.com/en-gb/articles/oefzq9fg/new40k-how-your-army-affects-your-mission/), [GW Chapter Approved deck article](https://www.warhammer-community.com/en-gb/articles/p3i6aa3h/the-chapter-approved-deck-what-is-it-and-how-does-it-work/), [Goonhammer deep dives](https://www.goonhammer.com/11th-edition-40k-rules-deep-dive-command-phase/) (Command, Charge/Fight, Terrain, Missions), [WH40K 11th Ed Field Manual](https://artificialanaleptic.github.io/WH40K11thEd.FieldManual/) fan transcription.
+**Method:** Cross-check against official [FutureIdeas/gw-downloads/11e_rules.pdf](../../../FutureIdeas/gw-downloads/11e_rules.pdf), GW mission articles, Goonhammer deep dives, and fan Field Manual.
 
 Tabletome copy is summarized in our own words. **Always defer to the official core rules PDF** for disputes.
 
@@ -25,10 +26,32 @@ Tabletome copy is summarized in our own words. **Always defer to the official co
 
 | Issue | Was | Corrected to | Source |
 |-------|-----|--------------|--------|
-| Hidden terrain eligibility | Dense terrain only | Terrain area with **Light or Dense** feature | Goonhammer terrain deep dive (app rules) |
-| Hidden trigger | "did not shoot" | Unit has not made **ranged attacks** this/last turn | Goonhammer terrain deep dive |
+| Hidden terrain eligibility | Dense terrain only | ~~Light or Dense~~ → **Dense only** (corrected in third pass) | Goonhammer; superseded by PDF 13.09 |
+| Hidden trigger | "did not shoot" | Unit did not make **ranged attacks** this/last turn | Goonhammer; PDF 13.09 |
 | Battle-shock stratagems | "cannot use Stratagems" | **Cannot be targeted by** Stratagems | Goonhammer command phase; Field Manual |
 | AP glossary wording | "use whichever save succeeds" | Wound fails only if **both** saves fail | Goonhammer shooting deep dive |
+
+### Third pass (2026-06-19) — official PDF
+
+| Issue | Was | Corrected to | PDF ref |
+|-------|-----|--------------|---------|
+| Hidden terrain | Light or Dense feature | **Dense** terrain feature only | 13.09 |
+| Coherency | 9" between all models | 2"/5" to one model; 9"/5" to all | 03.03 |
+| Engagement range | 2" only | 2" horizontal, 5" vertical | 03.04 |
+| Core CP | implied active player only | **Both players** gain 1 Core CP each Command phase | 08.02 |
+| Strategic Reserves | no points cap | Combined SR units ≤ **50%** of battle size | 20.01 |
+| Gone to Ground | in cover/hidden summary | Removed (not in core booklet Hidden/Cover rules) | — |
+
+### Fourth pass (2026-06-19) — high-level topics
+
+| Issue | Was | Corrected to | PDF ref |
+|-------|-----|--------------|---------|
+| Indirect Fire hit threshold | "usually 6+" | Unmodified 1–5 fail; 1–3 fail with stationary spotter | 10.07 |
+| Consolidation | "3\" toward enemies" | Ongoing / Engaging / Objective modes | 12.08 |
+| Coherency regaining | not documented | End of Turn: remove models until coherency restored | 03.03 |
+| Fall Back / Desperate Escape | not documented | Ordered Retreat vs hazard-roll escape | 09.07 |
+| Emergency disembark | not documented | Battle-shocked + cannot charge | 18.05 |
+| Battle flow guide (11e) | 10e charge order ("both dice") | Roll 2D6 first; 11e-specific phase copy | — |
 
 ---
 
@@ -39,7 +62,7 @@ Tabletome copy is summarized in our own words. **Always defer to the official co
 | Battle-shock: pass on `2D6 >= Ld` | Field Manual; Wargamer; Goonhammer |
 | VP caps: 45/game, 15/battle round for primary & secondary | GW missions article; Goonhammer missions intro |
 | Charge: roll 2D6 **then** pick targets | Goonhammer charge/fight deep dive |
-| Engagement range 2" | Goonhammer; Field Manual |
+| Engagement range 2" horizontal, 5" vertical | PDF 03.04; Goonhammer; Field Manual |
 | Overwatch end of Movement phase only | Goonhammer; Field Manual |
 | OC becomes `"-"` when Battle-shocked (not 0) | Goonhammer command phase |
 | Detachment Points 2 @ 1k / 3 @ 2k | Wargamer detachments |
@@ -57,19 +80,16 @@ Tabletome copy is summarized in our own words. **Always defer to the official co
 
 ## Intentionally high-level (not wrong, but incomplete)
 
-- Indirect fire spotter details (6+ vs 4+ with stationary spotter)
-- Consolidation modes (ongoing / engaging / objective)
-- End-of-turn coherency (2" + 9" rules)
-- Desperate Escape on Battle-shocked Fall Back
-- CP gain at Command phase start
-- Cover determined per attacking model (split attacks)
-- Emergency Disembark auto–Battle-shocks
+- Cover determined per attacking model when models in a unit have mixed visibility
+- Rapid / Tactical / Combat disembark modes in detail
+- Attached unit ability persistence edge cases
+- Mission deck card text (physical cards remain source of truth)
 
 ---
 
 ## Ongoing verification process
 
-1. After each GW FAQ or MFM update, re-check caps and battle-shock wording.
+1. After each GW FAQ or MFM update, re-check caps and battle-shock wording against `FutureIdeas/gw-downloads/11e_rules.pdf` and WHC downloads.
 2. Do not paste GW card or detachment text into the bundle.
 3. Link out via `externalLinks` for authoritative detail.
 4. When Guided Match ships, update `first-game` step and `FortyKStartHereCard` copy.

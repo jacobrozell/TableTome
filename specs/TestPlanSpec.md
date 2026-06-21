@@ -33,8 +33,9 @@ Split targets per checklist. Launch args:
 - `-open_guided_match`
 - `-open_battle_tracker` — starter matchup + full setup + Battle tab tracker (MCP / UI automation)
 - `-apply_starter_matchup`
-- `-enable_full_product_surface` — **required** to automation-test Lists, Paints, CP, SC, Rules Q&A
-- `-enable_wh40k_combat_resolver` — 11e combat resolver QA
+- `-enable_full_product_surface` — **required** to automation-test Lists, Paints, SC, Rules Q&A
+- `-enable_combat_patrol` — Combat Patrol QA (10e engine)
+- `-enable_wh40k11e_combat_resolver` — 11e combat resolver QA (separate engine)
 - `-reset_user_defaults`
 
 Per-feature UI and manual QA checklists: [gated-features-testing.md](../docs/release/gated-features-testing.md).

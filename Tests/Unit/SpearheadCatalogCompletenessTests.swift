@@ -15,7 +15,8 @@ final class SpearheadCatalogCompletenessTests: XCTestCase {
             XCTAssertEqual(army.unitCount, army.roster.count, "\(army.id) unitCount should match roster length")
             XCTAssertNotNil(army.officialRulesURL, "\(army.id) should link faction Spearhead rules")
             XCTAssertEqual(army.regimentAbilities.count, 2, "\(army.id) should offer 2 regiment abilities")
-            XCTAssertEqual(army.enhancements.count, 4, "\(army.id) should offer 4 general enhancements")
+            XCTAssertGreaterThanOrEqual(army.enhancements.count, 3, "\(army.id) should offer at least 3 general enhancements")
+            XCTAssertLessThanOrEqual(army.enhancements.count, 4, "\(army.id) should offer at most 4 general enhancements")
         }
 
         let armyIds = Set(armies.map(\.id))

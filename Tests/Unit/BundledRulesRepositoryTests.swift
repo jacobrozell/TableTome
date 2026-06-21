@@ -48,7 +48,7 @@ final class BundledRulesRepositoryTests: XCTestCase {
         XCTAssertEqual(system.availability, .available)
         XCTAssertEqual(system.gettingStartedSteps.count, 7)
         XCTAssertEqual(system.editionMigrationSteps.count, 11)
-        XCTAssertEqual(system.ruleSections.count, 22)
+        XCTAssertEqual(system.ruleSections.count, 27)
         XCTAssertFalse(system.externalLinks?.isEmpty ?? true)
 
         let gettingStartedOrders = system.gettingStartedSteps.map(\.order)
@@ -76,10 +76,10 @@ final class BundledRulesRepositoryTests: XCTestCase {
         XCTAssertFalse(section.content.contains("cannot use Stratagems"))
     }
 
-    func testWh40k11eHiddenRequiresLightOrDenseAndNoRangedAttacks() async throws {
+    func testWh40k11eHiddenRequiresDenseTerrainAndNoRangedAttacks() async throws {
         let system = try await testRepository.gameSystem(id: "wh40k-11e")
         let section = try XCTUnwrap(system.ruleSections.first { $0.id == "11e-cover-hidden" })
-        XCTAssertTrue(section.content.contains("Light or Dense"))
+        XCTAssertTrue(section.content.contains("Dense"))
         XCTAssertTrue(section.content.contains("ranged attacks"))
         XCTAssertFalse(section.content.localizedCaseInsensitiveContains("did not shoot"))
     }
@@ -103,6 +103,20 @@ final class BundledRulesRepositoryTests: XCTestCase {
         XCTAssertTrue(ids.contains("glossary-strategic-reserves-11e"))
         XCTAssertTrue(ids.contains("glossary-deep-strike-11e"))
         XCTAssertTrue(ids.contains("glossary-ingress-11e"))
+    }
+
+    func testWh40k11eIndirectFireUsesSpotterThresholds() async throws {
+        let system = try await testRepository.gameSystem(id: "wh40k-11e")
+        let section = try XCTUnwrap(system.ruleSections.first { $0.id == "11e-shooting" })
+        XCTAssertTrue(section.content.contains("1–5 fail"))
+        XCTAssertTrue(section.content.contains("1–3 fail"))
+    }
+
+    func testWh40k11eMovementCoversCoherencyRegaining() async throws {
+        let system = try await testRepository.gameSystem(id: "wh40k-11e")
+        let section = try XCTUnwrap(system.ruleSections.first { $0.id == "11e-movement" })
+        XCTAssertTrue(section.content.localizedCaseInsensitiveContains("End of Turn"))
+        XCTAssertTrue(section.content.localizedCaseInsensitiveContains("Desperate Escape"))
     }
 
     func testWh40k10eCpHasGuideContent() async throws {

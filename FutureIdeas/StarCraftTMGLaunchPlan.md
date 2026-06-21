@@ -412,7 +412,7 @@ Ship together — not a rules-only interim.
 
 ## Related docs
 
-- `FutureIdeas/40k11eLaunchPlan.md` — multi-game-system rollout pattern
+- `docs/game-modes/wh40k-11e/launch-plan.md` — multi-game-system rollout pattern
 - `specs/GuidedMatchSpec.md` — shell to clone
 - `specs/BattleTableFlowSpec.md` — Unit Focus / table flow (reuse when unit JSON exists)
 - `specs/DataSchemaSpec.md` — bundle conventions

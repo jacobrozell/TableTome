@@ -384,4 +384,4 @@ When an engine + first franchise lock behavior:
 | Blood Bowl | `FutureIdeas/BloodBowlLaunchPlan.md` |
 | Star Wars Legion | `FutureIdeas/StarWarsLegionLaunchPlan.md` |
 | Middle-earth SBG | `FutureIdeas/MiddleEarthSBGLaunchPlan.md` |
-| Kill Team | Extend `40k11eLaunchPlan.md` or separate KT doc |
+| Kill Team | Extend [wh40k-11e launch plan](../docs/game-modes/wh40k-11e/launch-plan.md) or separate KT doc |

@@ -9,68 +9,498 @@
       "save": 4,
       "health": 3,
       "control": 1,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "celestite-weapons",
+          "name": "Celestite Weapons",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "scaled-protectors",
+          "name": "Scaled Protectors",
+          "source": "Sunblood Pack",
+          "flavor": "The saurus bodyguard know no other purpose than to follow and protect their Sunblood leader until their dying breath.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While this unit includes a Sunblood , ignore the first damage point that would be allocated to this unit each phase and add 1 to this unit\u2019s control score .",
+          "kind": "passive"
+        },
+        {
+          "id": "savage-bellow",
+          "name": "Savage Bellow",
+          "source": "Sunblood Pack",
+          "flavor": "The Sunblood looses a fearsome bellow, inspiring a fearsome savagery in his warriors.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible friendly unit wholly within 12\" of this unit to be the target and roll a dice.",
+          "effect": "On a 3+, the target\u2019s weapons have Crit (2 Hits) for the rest of the turn, including Companion weapons.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "saurus-warriors",
       "name": "Saurus Warriors",
       "move": "5\"",
-      "save": 4,
-      "health": 2,
+      "save": 5,
+      "health": 8,
       "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "keywords": [
+        "Beast",
+        "Infantry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "glob-of-flame-acid",
+          "name": "Glob of Flame Acid",
+          "rangeInches": 16,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "D3+3"
+        },
+        {
+          "id": "fiery-maw",
+          "name": "Fiery Maw",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 3,
+          "rend": 2,
+          "damage": "3"
+        },
+        {
+          "id": "celestite-club",
+          "name": "Celestite Club",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "sun-acolytes",
+          "name": "Sun Acolytes",
+          "source": "Saurus Warriors",
+          "flavor": "The Sun Acolytes that accompany a Spawn of Chotec carry out complex tasks upon the battlefield safe in the knowledge that the salamander serves as a deadly deterrent to would be attackers.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "This unit has a crew of 3 Sun Acolytes that are tokens . Add 1 to this unit\u2019s control score for each Sun Acolyte it has. If this unit has no Sun Acolytes , it has a maximum control score of 1. Each time you make an unmodified save roll of 1 for this unit, remove 1 of its Sun Acolytes from the battlefield after the Attack ability has been resolved (the damage point is still inflicted).",
+          "kind": "passive"
+        },
+        {
+          "id": "ordered-cohorts",
+          "name": "Ordered Cohorts",
+          "source": "Saurus Warriors",
+          "flavor": "Devoted servants of the Old Ones, Saurus Warriors are as intractable in defence as they are relentless upon the attack.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to save rolls for this unit while it is contesting an objective you control .",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "saurus-warriors-2",
       "name": "Saurus Warriors",
       "move": "5\"",
-      "save": 4,
-      "health": 2,
+      "save": 5,
+      "health": 8,
       "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "keywords": [
+        "Beast",
+        "Infantry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "glob-of-flame-acid",
+          "name": "Glob of Flame Acid",
+          "rangeInches": 16,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "D3+3"
+        },
+        {
+          "id": "fiery-maw",
+          "name": "Fiery Maw",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 3,
+          "rend": 2,
+          "damage": "3"
+        },
+        {
+          "id": "celestite-club",
+          "name": "Celestite Club",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "sun-acolytes",
+          "name": "Sun Acolytes",
+          "source": "Saurus Warriors",
+          "flavor": "The Sun Acolytes that accompany a Spawn of Chotec carry out complex tasks upon the battlefield safe in the knowledge that the salamander serves as a deadly deterrent to would be attackers.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "This unit has a crew of 3 Sun Acolytes that are tokens . Add 1 to this unit\u2019s control score for each Sun Acolyte it has. If this unit has no Sun Acolytes , it has a maximum control score of 1. Each time you make an unmodified save roll of 1 for this unit, remove 1 of its Sun Acolytes from the battlefield after the Attack ability has been resolved (the damage point is still inflicted).",
+          "kind": "passive"
+        },
+        {
+          "id": "ordered-cohorts",
+          "name": "Ordered Cohorts",
+          "source": "Saurus Warriors",
+          "flavor": "Devoted servants of the Old Ones, Saurus Warriors are as intractable in defence as they are relentless upon the attack.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to save rolls for this unit while it is contesting an objective you control .",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "hunters-of-huanchi",
       "name": "Hunters of Huanchi",
-      "move": "8\"",
-      "save": 6,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
-    },
-    {
-      "id": "hunters-of-huanchi-2",
-      "name": "Hunters of Huanchi",
-      "move": "8\"",
-      "save": 6,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
-    },
-    {
-      "id": "terrawings",
-      "name": "Terrawings",
       "move": "12\"",
       "save": 5,
       "health": 2,
       "control": 1,
-      "keywords": [],
-      "modelCount": 3
+      "keywords": [
+        "Beast",
+        "Fly",
+        "Reinforcements",
+        "Infantry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "snapping-beaks",
+          "name": "Snapping Beaks",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "dartpipe",
+          "name": "Dartpipe",
+          "rangeInches": 10,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "feeble-claws",
+          "name": "Feeble Claws",
+          "rangeInches": 0,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "nerve-shredding-screeches",
+          "name": "Nerve-Shredding Screeches",
+          "source": "Hunters of Huanchi",
+          "flavor": "The shrill cries of a Terrawing flock can cause disarray across the enemy line.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit in combat with this unit to be the target.",
+          "effect": "Roll a dice. On a 4+, subtract 1 from hit rolls for the target\u2019s combat attacks for the rest of the turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "star-venom",
+          "name": "Star-Venom",
+          "source": "Hunters of Huanchi",
+          "flavor": "The blowdarts used by the Hunters of Huanchi are coated in deadly toxins.",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit that had any damage points allocated to it this turn by attacks made with this unit\u2019s Dartpipe to be the target.",
+          "effect": "Roll a dice. On a 2+, subtract 1 from wound rolls for the target\u2019s combat attacks for the rest of the turn.",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "hunters-of-huanchi-2",
+      "name": "Hunters of Huanchi",
+      "move": "12\"",
+      "save": 5,
+      "health": 2,
+      "control": 1,
+      "keywords": [
+        "Beast",
+        "Fly",
+        "Reinforcements",
+        "Infantry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "snapping-beaks",
+          "name": "Snapping Beaks",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "dartpipe",
+          "name": "Dartpipe",
+          "rangeInches": 10,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "feeble-claws",
+          "name": "Feeble Claws",
+          "rangeInches": 0,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "nerve-shredding-screeches",
+          "name": "Nerve-Shredding Screeches",
+          "source": "Hunters of Huanchi",
+          "flavor": "The shrill cries of a Terrawing flock can cause disarray across the enemy line.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit in combat with this unit to be the target.",
+          "effect": "Roll a dice. On a 4+, subtract 1 from hit rolls for the target\u2019s combat attacks for the rest of the turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "star-venom",
+          "name": "Star-Venom",
+          "source": "Hunters of Huanchi",
+          "flavor": "The blowdarts used by the Hunters of Huanchi are coated in deadly toxins.",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit that had any damage points allocated to it this turn by attacks made with this unit\u2019s Dartpipe to be the target.",
+          "effect": "Roll a dice. On a 2+, subtract 1 from wound rolls for the target\u2019s combat attacks for the rest of the turn.",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "terrawings",
+      "name": "Terrawings",
+      "move": "5\"",
+      "save": 4,
+      "health": 2,
+      "control": 1,
+      "keywords": [
+        "Infantry",
+        "Beast",
+        "Fly",
+        "Reinforcements"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "celestite-club",
+          "name": "Celestite Club",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "snapping-beaks",
+          "name": "Snapping Beaks",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "ordered-cohorts",
+          "name": "Ordered Cohorts",
+          "source": "Terrawings",
+          "flavor": "Devoted servants of the Old Ones, Saurus Warriors are as intractable in defence as they are relentless upon the attack.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to save rolls for this unit while it is contesting an objective you control .",
+          "kind": "passive"
+        },
+        {
+          "id": "nerve-shredding-screeches",
+          "name": "Nerve-Shredding Screeches",
+          "source": "Terrawings",
+          "flavor": "The shrill cries of a Terrawing flock can cause disarray across the enemy line.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit in combat with this unit to be the target.",
+          "effect": "Roll a dice. On a 4+, subtract 1 from hit rolls for the target\u2019s combat attacks for the rest of the turn.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "spawn-of-chotec",
       "name": "Spawn of Chotec",
       "move": "5\"",
-      "save": 5,
-      "health": 8,
+      "save": 4,
+      "health": 3,
       "control": 1,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Beast"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "celestite-weapons",
+          "name": "Celestite Weapons",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "glob-of-flame-acid",
+          "name": "Glob of Flame Acid",
+          "rangeInches": 16,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "D3+3"
+        },
+        {
+          "id": "fiery-maw",
+          "name": "Fiery Maw",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 3,
+          "rend": 2,
+          "damage": "3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "scaled-protectors",
+          "name": "Scaled Protectors",
+          "source": "Spawn of Chotec",
+          "flavor": "The saurus bodyguard know no other purpose than to follow and protect their Sunblood leader until their dying breath.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While this unit includes a Sunblood , ignore the first damage point that would be allocated to this unit each phase and add 1 to this unit\u2019s control score .",
+          "kind": "passive"
+        },
+        {
+          "id": "savage-bellow",
+          "name": "Savage Bellow",
+          "source": "Spawn of Chotec",
+          "flavor": "The Sunblood looses a fearsome bellow, inspiring a fearsome savagery in his warriors.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible friendly unit wholly within 12\" of this unit to be the target and roll a dice.",
+          "effect": "On a 3+, the target\u2019s weapons have Crit (2 Hits) for the rest of the turn, including Companion weapons.",
+          "kind": "ability"
+        },
+        {
+          "id": "sun-acolytes",
+          "name": "Sun Acolytes",
+          "source": "Spawn of Chotec",
+          "flavor": "The Sun Acolytes that accompany a Spawn of Chotec carry out complex tasks upon the battlefield safe in the knowledge that the salamander serves as a deadly deterrent to would be attackers.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "This unit has a crew of 3 Sun Acolytes that are tokens . Add 1 to this unit\u2019s control score for each Sun Acolyte it has. If this unit has no Sun Acolytes , it has a maximum control score of 1. Each time you make an unmodified save roll of 1 for this unit, remove 1 of its Sun Acolytes from the battlefield after the Attack ability has been resolved (the damage point is still inflicted).",
+          "kind": "passive"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "chameleon-ambush",
+      "name": "Chameleon Ambush",
+      "summary": "Set up this unit anywhere on the battlefield more than 6\" from all enemy units",
+      "timing": null,
+      "declare": null,
+      "effect": "Set up this unit anywhere on the battlefield more than 6\" from all enemy units.",
+      "phases": [
+        "movement"
+      ],
+      "usageLimit": "eachTurn",
+      "kind": "ability"
     }
   ]
 }

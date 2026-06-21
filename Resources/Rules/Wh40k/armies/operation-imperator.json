@@ -5,140 +5,626 @@
     {
       "id": "captain-relic-shield",
       "name": "Captain with Relic Shield",
-      "keywords": ["Character", "Infantry"],
+      "keywords": [
+        "Character",
+        "Infantry",
+        "Explosives",
+        "Imperium",
+        "Tacticus"
+      ],
       "modelCount": 1,
-      "notes": "See your Armageddon datasheet card for exact stats and wargear.",
-      "abilities": [
+      "move": "6\"",
+      "save": 3,
+      "health": 6,
+      "control": 1,
+      "weapons": [
         {
-          "id": "captain-lead-from-front",
-          "name": "Lead From the Front",
-          "source": "Captain with Relic Shield",
-          "effect": "A front-line leader built to trade blows and protect nearby battleline units.",
-          "phases": ["command", "charge", "combat"],
-          "usageLimit": "passive",
-          "kind": "ability"
+          "id": "heavy-bolt-pistol",
+          "name": "Heavy Bolt Pistol",
+          "attacks": "1",
+          "hit": 2,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1",
+          "rangeInches": 18,
+          "ability": "Close-quarters"
+        },
+        {
+          "id": "master-crafted-power-weapon",
+          "name": "Master-crafted Power Weapon",
+          "attacks": "6",
+          "hit": 2,
+          "wound": 5,
+          "rend": 2,
+          "damage": "2"
         }
-      ]
-    },
-    {
-      "id": "librarian",
-      "name": "Librarian",
-      "keywords": ["Character", "Infantry", "Psyker"],
-      "modelCount": 1,
-      "notes": "Psychic support — check datasheet for powers and weapon profiles.",
+      ],
       "abilities": [
         {
-          "id": "librarian-psychic",
-          "name": "Psychic Assault",
-          "source": "Librarian",
-          "effect": "Channels psychic power through a force staff — strong at range and in melee.",
-          "phases": ["command", "shooting", "combat"],
+          "id": "captain-rites-of-battle",
+          "name": "Rites of Battle",
+          "source": "Captain with Relic Shield",
+          "effect": "Once per battle round, per army: when a Stratagem targets this unit, you can reduce its cost by 1CP for that use.",
+          "phases": [
+            "command"
+          ],
           "usageLimit": "eachTurn",
           "kind": "ability"
+        },
+        {
+          "id": "captain-finest-hour",
+          "name": "Finest Hour",
+          "source": "Captain with Relic Shield",
+          "effect": "Once per battle, in the Fight phase when this unit is selected to fight: this model's melee weapons have +3 A and [Devastating Wounds] until end of phase.",
+          "phases": [
+            "combat"
+          ],
+          "usageLimit": "oncePerBattle",
+          "kind": "ability"
         }
-      ]
+      ],
+      "notes": "Leader. Relic Shield (+1 W included). 4+ invulnerable save. GW Armageddon Space Marines datasheet PDF (June 2026).",
+      "invulnerableSave": 4
     },
     {
       "id": "chaplain-jump-pack",
       "name": "Chaplain with Jump Pack",
-      "keywords": ["Character", "Infantry", "Jump Pack"],
+      "keywords": [
+        "Character",
+        "Infantry",
+        "Jump Pack",
+        "Fly",
+        "Imperium"
+      ],
       "modelCount": 1,
+      "move": "12\"",
+      "save": 3,
+      "health": 4,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "absolvor-bolt-pistol",
+          "name": "Absolvor Bolt Pistol",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 5,
+          "rend": 1,
+          "damage": "2",
+          "rangeInches": 18,
+          "ability": "Close-quarters"
+        },
+        {
+          "id": "crozius-arcanum",
+          "name": "Crozius Arcanum",
+          "attacks": "5",
+          "hit": 2,
+          "wound": 6,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
       "abilities": [
         {
-          "id": "chaplain-oratory",
-          "name": "Fiery Oratory",
+          "id": "chaplain-litany-of-hate",
+          "name": "Litany of Hate",
           "source": "Chaplain with Jump Pack",
-          "effect": "Leads Vanguard Veterans in a fast assault — attach during list building.",
-          "phases": ["command", "charge"],
+          "effect": "This unit's melee weapons have +1 to wound rolls.",
+          "phases": [
+            "combat"
+          ],
+          "usageLimit": "passive",
+          "kind": "ability"
+        },
+        {
+          "id": "chaplain-exhortation-of-rage",
+          "name": "Exhortation of Rage",
+          "source": "Chaplain with Jump Pack",
+          "effect": "In the Fight phase, when this unit is selected to fight, select one enemy unit it is engaged with and roll one D6: on 4-5 that unit suffers D3 mortal wounds; on 6 it suffers 3 mortal wounds.",
+          "phases": [
+            "combat"
+          ],
+          "usageLimit": "eachTurn",
+          "kind": "ability"
+        }
+      ],
+      "notes": "Leader. Deep Strike. 4+ invulnerable save (Rosarius). GW Armageddon Space Marines datasheet PDF (June 2026).",
+      "invulnerableSave": 4
+    },
+    {
+      "id": "librarian",
+      "name": "Librarian",
+      "keywords": [
+        "Character",
+        "Infantry",
+        "Explosives",
+        "Psyker",
+        "Imperium",
+        "Tacticus"
+      ],
+      "modelCount": 1,
+      "move": "6\"",
+      "save": 3,
+      "health": 4,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "bolt-pistol",
+          "name": "Bolt Pistol",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 12,
+          "ability": "Close-quarters"
+        },
+        {
+          "id": "smite-witchfire",
+          "name": "Smite — witchfire",
+          "attacks": "D6",
+          "hit": 3,
+          "wound": 5,
+          "rend": 1,
+          "damage": "D3",
+          "rangeInches": 24,
+          "ability": "Psychic"
+        },
+        {
+          "id": "smite-focused",
+          "name": "Smite — focused witchfire",
+          "attacks": "D6",
+          "hit": 3,
+          "wound": 6,
+          "rend": 2,
+          "damage": "D3",
+          "rangeInches": 24,
+          "ability": "Devastating Wounds, Hazardous, Psychic"
+        },
+        {
+          "id": "force-weapon",
+          "name": "Force Weapon",
+          "attacks": "4",
+          "hit": 3,
+          "wound": 6,
+          "rend": 1,
+          "damage": "D3",
+          "ability": "Psychic"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "librarian-psychic-hood",
+          "name": "Psychic Hood",
+          "source": "Librarian",
+          "effect": "This unit has Feel No Pain 4+ against psychic attacks and abilities.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "passive",
+          "kind": "ability"
+        },
+        {
+          "id": "librarian-mental-fortress",
+          "name": "Mental Fortress",
+          "source": "Librarian",
+          "effect": "This unit has a 4+ invulnerable save.",
+          "phases": [
+            "anyCombat"
+          ],
           "usageLimit": "passive",
           "kind": "ability"
         }
-      ]
+      ],
+      "notes": "Leader. GW Armageddon Space Marines datasheet PDF (June 2026).",
+      "invulnerableSave": 4
     },
     {
       "id": "ancient",
       "name": "Ancient",
-      "keywords": ["Character", "Infantry", "Ancient"],
+      "keywords": [
+        "Character",
+        "Infantry",
+        "Explosives",
+        "Imperium",
+        "Tacticus"
+      ],
       "modelCount": 1,
+      "move": "6\"",
+      "save": 3,
+      "health": 4,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "bolt-pistol",
+          "name": "Bolt Pistol",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 12,
+          "ability": "Close-quarters"
+        },
+        {
+          "id": "bolt-rifle",
+          "name": "Bolt Rifle",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1",
+          "rangeInches": 24,
+          "ability": "Assault, Heavy"
+        },
+        {
+          "id": "close-combat-weapon",
+          "name": "Close Combat Weapon",
+          "attacks": "5",
+          "hit": 2,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
       "abilities": [
         {
-          "id": "ancient-banner",
-          "name": "Armageddon Campaign Banner",
+          "id": "ancient-relic-banner",
+          "name": "Relic Banner",
           "source": "Ancient",
-          "effect": "Inspires nearby Intercessors and boosts your hold on terrain objectives.",
-          "phases": ["command"],
+          "effect": "This unit has +1 OC.",
+          "phases": [
+            "command"
+          ],
+          "usageLimit": "passive",
+          "kind": "ability"
+        },
+        {
+          "id": "ancient-unbreakable-resolve",
+          "name": "Unbreakable Resolve",
+          "source": "Ancient",
+          "effect": "While this model is within range of an objective or within 6\" of the centre of the battlefield, it has Feel No Pain 4+.",
+          "phases": [
+            "anyCombat"
+          ],
           "usageLimit": "passive",
           "kind": "ability"
         }
-      ]
+      ],
+      "notes": "Support. GW Armageddon Space Marines datasheet PDF (June 2026)."
     },
     {
       "id": "intercessors",
       "name": "Intercessor Squad",
-      "keywords": ["Battleline", "Infantry"],
+      "keywords": [
+        "Battleline",
+        "Infantry",
+        "Explosives",
+        "Imperium",
+        "Tacticus"
+      ],
       "modelCount": 10,
+      "move": "6\"",
+      "save": 3,
+      "health": 2,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "bolt-pistol",
+          "name": "Bolt Pistol",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 12,
+          "ability": "Close-quarters"
+        },
+        {
+          "id": "bolt-rifle",
+          "name": "Bolt Rifle",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1",
+          "rangeInches": 24,
+          "ability": "Assault, Heavy"
+        },
+        {
+          "id": "grenade-launcher-frag",
+          "name": "Astartes Grenade Launcher — frag",
+          "attacks": "D3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 24,
+          "ability": "Blast"
+        },
+        {
+          "id": "grenade-launcher-krak",
+          "name": "Astartes Grenade Launcher — krak",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 9,
+          "rend": 2,
+          "damage": "D3",
+          "rangeInches": 24
+        },
+        {
+          "id": "chainsword",
+          "name": "Chainsword",
+          "attacks": "5",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "close-combat-weapon",
+          "name": "Close Combat Weapon",
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
       "abilities": [
         {
-          "id": "intercessors-objectives",
-          "name": "Objective Anchors",
+          "id": "intercessors-objective-secured",
+          "name": "Objective Secured",
           "source": "Intercessor Squad",
-          "effect": "Flexible battleline troops — solid shooting and decent melee for holding footprints.",
-          "phases": ["shooting", "combat"],
+          "effect": "At the end of your Command phase, if this unit controls an objective, that objective is secured by your army.",
+          "phases": [
+            "command"
+          ],
           "usageLimit": "passive",
           "kind": "ability"
+        },
+        {
+          "id": "intercessors-hail-of-bolts",
+          "name": "Hail of Bolts",
+          "source": "Intercessor Squad",
+          "effect": "In your Shooting phase, when this unit is selected to shoot you can select one enemy unit visible to this unit. While making attacks, this unit's bolt rifles that targeted that selected unit have +2 A.",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "eachTurn",
+          "kind": "ability"
         }
-      ]
+      ],
+      "notes": "Sergeant has chainsword; one model has grenade launcher. GW Armageddon Space Marines datasheet PDF (June 2026)."
     },
     {
       "id": "vanguard-veterans",
-      "name": "Vanguard Veterans",
-      "keywords": ["Infantry", "Jump Pack"],
+      "name": "Vanguard Veteran Squad with Jump Packs",
+      "keywords": [
+        "Infantry",
+        "Explosives",
+        "Jump Pack",
+        "Fly",
+        "Imperium"
+      ],
       "modelCount": 5,
+      "move": "12\"",
+      "save": 3,
+      "health": 2,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "heavy-bolt-pistol",
+          "name": "Heavy Bolt Pistol",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1",
+          "rangeInches": 18,
+          "ability": "Close-quarters"
+        },
+        {
+          "id": "plasma-pistol-standard",
+          "name": "Plasma Pistol — standard",
+          "attacks": "D3",
+          "hit": 3,
+          "wound": 7,
+          "rend": 2,
+          "damage": "1",
+          "rangeInches": 12,
+          "ability": "Close-quarters"
+        },
+        {
+          "id": "plasma-pistol-supercharge",
+          "name": "Plasma Pistol — supercharge",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 8,
+          "rend": 3,
+          "damage": "2",
+          "rangeInches": 12,
+          "ability": "Close-quarters, Hazardous"
+        },
+        {
+          "id": "master-crafted-power-weapon",
+          "name": "Master-crafted Power Weapon",
+          "attacks": "3",
+          "hit": 3,
+          "wound": 5,
+          "rend": 2,
+          "damage": "2"
+        }
+      ],
       "abilities": [
         {
+          "id": "vanguard-deep-strike",
+          "name": "Deep Strike",
+          "source": "Vanguard Veteran Squad with Jump Packs",
+          "effect": "Core ability — can arrive from Strategic Reserves.",
+          "phases": [
+            "command"
+          ],
+          "usageLimit": "passive",
+          "kind": "ability"
+        },
+        {
           "id": "vanguard-assault",
-          "name": "Spearhead Assault",
-          "source": "Vanguard Veterans",
-          "effect": "Fast melee specialists — ideal for hunting characters or seizing a footprint.",
-          "phases": ["movement", "charge", "combat"],
+          "name": "Vanguard Assault",
+          "source": "Vanguard Veteran Squad with Jump Packs",
+          "effect": "In a turn in which this unit made a charge move, this unit's melee weapons have [Lethal Hits].",
+          "phases": [
+            "charge",
+            "combat"
+          ],
           "usageLimit": "passive",
           "kind": "ability"
         }
-      ]
+      ],
+      "notes": "3 models with heavy bolt pistol; 1 with plasma pistol. GW Armageddon Space Marines datasheet PDF (June 2026)."
     },
     {
       "id": "eradicators",
-      "name": "Eradicator Squad",
-      "keywords": ["Infantry", "Gravis"],
+      "name": "Eradicator Squad with Heavy Bolters",
+      "keywords": [
+        "Infantry",
+        "Imperium",
+        "Gravis"
+      ],
       "modelCount": 3,
+      "move": "5\"",
+      "save": 3,
+      "health": 3,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "bolt-pistol",
+          "name": "Bolt Pistol",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 12,
+          "ability": "Close-quarters"
+        },
+        {
+          "id": "heavy-bolter",
+          "name": "Heavy Bolter",
+          "attacks": "3",
+          "hit": 3,
+          "wound": 5,
+          "rend": 1,
+          "damage": "2",
+          "rangeInches": 36,
+          "ability": "Heavy, Sustained Hits 1"
+        },
+        {
+          "id": "close-combat-weapon",
+          "name": "Close Combat Weapon",
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
       "abilities": [
         {
-          "id": "eradicators-heavy-bolters",
-          "name": "Heavy Bolter Barrage",
-          "source": "Eradicator Squad",
-          "effect": "Heavy Gravis infantry — devastating against Ork hordes at medium range.",
-          "phases": ["shooting"],
-          "usageLimit": "passive",
+          "id": "eradicators-overlapping-detonations",
+          "name": "Overlapping Detonations",
+          "source": "Eradicator Squad with Heavy Bolters",
+          "effect": "In your Shooting phase, when this unit is selected to shoot you can select one non-MONSTER/VEHICLE enemy unit visible to it. While making attacks, this unit's heavy bolters that targeted that selected unit have [Blast 1].",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "eachTurn",
           "kind": "ability"
         }
-      ]
+      ],
+      "notes": "GW Armageddon Space Marines datasheet PDF (June 2026)."
     },
     {
       "id": "land-speeder",
       "name": "Land Speeder",
-      "keywords": ["Vehicle", "Fly"],
+      "keywords": [
+        "Vehicle",
+        "Fly",
+        "Imperium"
+      ],
       "modelCount": 1,
+      "move": "14\"",
+      "save": 3,
+      "health": 9,
+      "control": 3,
+      "weapons": [
+        {
+          "id": "multi-melta",
+          "name": "Multi-melta",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 9,
+          "rend": 4,
+          "damage": "D6",
+          "rangeInches": 18,
+          "ability": "Melta 2"
+        },
+        {
+          "id": "onslaught-gatling-cannon",
+          "name": "Onslaught Gatling Cannon",
+          "attacks": "8",
+          "hit": 3,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 24,
+          "ability": "Devastating Wounds"
+        },
+        {
+          "id": "stormfury-missile-launcher",
+          "name": "Stormfury Missile Launcher",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 12,
+          "rend": 3,
+          "damage": "D6+1",
+          "rangeInches": 48
+        },
+        {
+          "id": "close-combat-weapon",
+          "name": "Close Combat Weapon",
+          "attacks": "4",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
       "abilities": [
         {
-          "id": "land-speeder-strike",
-          "name": "Hunter-Killer",
+          "id": "land-speeder-deep-strike",
+          "name": "Deep Strike",
           "source": "Land Speeder",
-          "effect": "Fast anti-grav striker — reposition after shooting to stay on objectives or flank.",
-          "phases": ["movement", "shooting"],
+          "effect": "Core ability — can arrive from Strategic Reserves.",
+          "phases": [
+            "command"
+          ],
           "usageLimit": "passive",
           "kind": "ability"
+        },
+        {
+          "id": "land-speeder-purgation-run",
+          "name": "Purgation Run",
+          "source": "Land Speeder",
+          "effect": "In your Shooting phase, after this unit has shot, it can make a Normal move of up to D6\". If it does, until end of turn this unit is not eligible to declare a charge.",
+          "phases": [
+            "movement",
+            "shooting"
+          ],
+          "usageLimit": "eachTurn",
+          "kind": "ability"
         }
-      ]
+      ],
+      "notes": "Box loadout: multi-melta, onslaught gatling cannon, stormfury missile launcher. GW Armageddon Space Marines datasheet PDF (June 2026)."
     }
   ]
 }

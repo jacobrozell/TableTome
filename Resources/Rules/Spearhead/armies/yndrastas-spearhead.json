@@ -3,64 +3,443 @@
   "armyId": "yndrastas-spearhead",
   "units": [
     {
-      "id": "yndrasta-the-celestial-spear",
-      "name": "Yndrasta the Celestial Spear",
+      "id": "yndrasta",
+      "name": "Yndrasta",
       "move": "12\"",
       "save": 3,
       "health": 8,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Fly",
+        "Ward",
+        "Infantry"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "thengavar",
+          "name": "Thengavar",
+          "rangeInches": 12,
+          "attacks": "1",
+          "hit": 3,
+          "wound": 2,
+          "rend": 2,
+          "damage": "4"
+        },
+        {
+          "id": "blade-of-the-high-heavens",
+          "name": "Blade of the High Heavens",
+          "rangeInches": 0,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 3,
+          "rend": 2,
+          "damage": "3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "champion-of-sigmar",
+          "name": "Champion Of Sigmar",
+          "source": "Yndrasta",
+          "flavor": "Forged by Sigmar\u2019s own hand, Yndrasta is protected by a divine aura so potent that swords and arrows simply rebound off her.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "oncePerBattle",
+          "declare": null,
+          "effect": "This unit has WARD ( 5+ ) this phase.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "knight-vexillor",
       "name": "Knight-Vexillor",
-      "move": "5\"",
+      "move": "10\"",
       "save": 3,
-      "health": 6,
-      "control": 5,
-      "keywords": [],
-      "modelCount": 1
+      "health": 10,
+      "control": 2,
+      "keywords": [
+        "War",
+        "Machine",
+        "Hero",
+        "Infantry"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "great-stormbow",
+          "name": "Great Stormbow",
+          "rangeInches": 18,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "stormstrike-axe",
+          "name": "Stormstrike Axe",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "gryph-chargers-beaks-and-claws",
+          "name": "Gryph-chargers\u2019 Beaks and Claws",
+          "rangeInches": 0,
+          "attacks": "6",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "sigmarite-warblade",
+          "name": "Sigmarite Warblade",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "azyr-unleashed",
+          "name": "Azyr Unleashed",
+          "source": "Knight-Vexillor",
+          "flavor": "The impact of a Stormstrike Chariot on the charge can obliterate even the most durable of shieldwalls.",
+          "phases": [
+            "charge"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "If this unit charged this phase, pick an enemy unit within 1\" of it to be the target and roll a dice.",
+          "effect": "On a 2+, inflict D3 mortal damage on the target.",
+          "kind": "ability"
+        },
+        {
+          "id": "banner-of-the-reforged",
+          "name": "Banner Of The Reforged",
+          "source": "Knight-Vexillor",
+          "flavor": "When a Banner of Apotheosis is planted, its energies heal flesh and restore armour.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of this unit to be the target.",
+          "effect": "Heal (D3) the target. In addition, add 3 to that unit\u2019s control score until the start of your next turn.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "annihilators",
       "name": "Annihilators",
-      "move": "4\"",
-      "save": 2,
-      "health": 3,
+      "move": "5\"",
+      "save": 3,
+      "health": 2,
       "control": 1,
-      "keywords": [],
-      "modelCount": 3
+      "keywords": [
+        "Move",
+        "Core",
+        "Charge",
+        "Spell",
+        "Prayer",
+        "Unlimited",
+        "Run",
+        "Retreat",
+        "Infantry"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "celestial-greatsword",
+          "name": "Celestial Greatsword",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "meteoric-hammer",
+          "name": "Meteoric Hammer",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "lightning-strikes",
+          "name": "Lightning Strikes",
+          "source": "Annihilators",
+          "flavor": "Vanquishers utilise a stance that allows them to make a flurry of rapid strikes against a numerous foe.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to the Damage characteristic of this unit\u2019s Celestial Greatswords for attacks that target an enemy unit that has 5 or more models.",
+          "kind": "passive"
+        },
+        {
+          "id": "force-of-a-falling-star",
+          "name": "Force Of A Falling Star",
+          "source": "Annihilators",
+          "flavor": "As Annihilators build up momentum, their charge turns the shockwave of their arrival into a deadly bludgeoning assault.",
+          "phases": [
+            "charge"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "If this unit charged this phase and the unmodified charge roll was 8+, pick an enemy unit within 1\" of it to be the target.",
+          "effect": "The target has STRIKE-LAST this turn.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "vanquishers",
       "name": "Vanquishers",
       "move": "5\"",
       "save": 3,
-      "health": 2,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "health": 6,
+      "control": 5,
+      "keywords": [
+        "Hero",
+        "Infantry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "sigmarite-warblade",
+          "name": "Sigmarite Warblade",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "celestial-greatsword",
+          "name": "Celestial Greatsword",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "banner-of-the-reforged",
+          "name": "Banner Of The Reforged",
+          "source": "Vanquishers",
+          "flavor": "When a Banner of Apotheosis is planted, its energies heal flesh and restore armour.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of this unit to be the target.",
+          "effect": "Heal (D3) the target. In addition, add 3 to that unit\u2019s control score until the start of your next turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "lightning-strikes",
+          "name": "Lightning Strikes",
+          "source": "Vanquishers",
+          "flavor": "Vanquishers utilise a stance that allows them to make a flurry of rapid strikes against a numerous foe.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to the Damage characteristic of this unit\u2019s Celestial Greatswords for attacks that target an enemy unit that has 5 or more models.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "vanquishers-2",
       "name": "Vanquishers",
       "move": "5\"",
       "save": 3,
-      "health": 2,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "health": 6,
+      "control": 5,
+      "keywords": [
+        "Hero",
+        "Infantry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "sigmarite-warblade",
+          "name": "Sigmarite Warblade",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "celestial-greatsword",
+          "name": "Celestial Greatsword",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "banner-of-the-reforged",
+          "name": "Banner Of The Reforged",
+          "source": "Vanquishers",
+          "flavor": "When a Banner of Apotheosis is planted, its energies heal flesh and restore armour.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of this unit to be the target.",
+          "effect": "Heal (D3) the target. In addition, add 3 to that unit\u2019s control score until the start of your next turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "lightning-strikes",
+          "name": "Lightning Strikes",
+          "source": "Vanquishers",
+          "flavor": "Vanquishers utilise a stance that allows them to make a flurry of rapid strikes against a numerous foe.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to the Damage characteristic of this unit\u2019s Celestial Greatswords for attacks that target an enemy unit that has 5 or more models.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "stormstrike-chariot",
       "name": "Stormstrike Chariot",
-      "move": "10\"",
+      "move": "12\"",
       "save": 3,
-      "health": 10,
+      "health": 8,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Fly",
+        "Ward",
+        "Infantry",
+        "War",
+        "Machine"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "thengavar",
+          "name": "Thengavar",
+          "rangeInches": 12,
+          "attacks": "1",
+          "hit": 3,
+          "wound": 2,
+          "rend": 2,
+          "damage": "4"
+        },
+        {
+          "id": "blade-of-the-high-heavens",
+          "name": "Blade of the High Heavens",
+          "rangeInches": 0,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 3,
+          "rend": 2,
+          "damage": "3"
+        },
+        {
+          "id": "great-stormbow",
+          "name": "Great Stormbow",
+          "rangeInches": 18,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "stormstrike-axe",
+          "name": "Stormstrike Axe",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "gryph-chargers-beaks-and-claws",
+          "name": "Gryph-chargers\u2019 Beaks and Claws",
+          "rangeInches": 0,
+          "attacks": "6",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "champion-of-sigmar",
+          "name": "Champion Of Sigmar",
+          "source": "Stormstrike Chariot",
+          "flavor": "Forged by Sigmar\u2019s own hand, Yndrasta is protected by a divine aura so potent that swords and arrows simply rebound off her.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "oncePerBattle",
+          "declare": null,
+          "effect": "This unit has WARD ( 5+ ) this phase.",
+          "kind": "ability"
+        },
+        {
+          "id": "azyr-unleashed",
+          "name": "Azyr Unleashed",
+          "source": "Stormstrike Chariot",
+          "flavor": "The impact of a Stormstrike Chariot on the charge can obliterate even the most durable of shieldwalls.",
+          "phases": [
+            "charge"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "If this unit charged this phase, pick an enemy unit within 1\" of it to be the target and roll a dice.",
+          "effect": "On a 2+, inflict D3 mortal damage on the target.",
+          "kind": "ability"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "lightning-strike-arrival",
+      "name": "Lightning-Strike Arrival",
+      "summary": "Set up this unit anywhere on the battlefield more than 6\" from all enemy units",
+      "timing": null,
+      "declare": null,
+      "effect": "Set up this unit anywhere on the battlefield more than 6\" from all enemy units. KEYWORDS CORE",
+      "phases": [
+        "movement"
+      ],
+      "usageLimit": "eachTurn",
+      "kind": "ability"
     }
   ]
 }

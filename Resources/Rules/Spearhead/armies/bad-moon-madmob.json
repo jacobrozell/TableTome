@@ -9,58 +9,436 @@
       "save": 4,
       "health": 5,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "moon-slicer",
+          "name": "Moon-slicer",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "im-da-boss",
+          "name": "I'M Da Boss",
+          "source": "Loonboss",
+          "flavor": "Loonbosses prefer to make their minions do all the fighting.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly Moonclan Stabbas unit wholly within 12\" of this unit to be the target.",
+          "effect": "Pick 1: Beckon the Loonatic Hordes: If the target unit is not in combat , you can return D6 slain models to it. Stab \u2019Em Good!: Add 1 to hit rolls for attacks made by the target unit until the start of your next turn.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "moonclan-stabbas",
       "name": "Moonclan Stabbas",
-      "move": "5\"",
-      "save": 5,
-      "health": 1,
+      "move": "D6+8\"",
+      "save": 6,
+      "health": 2,
       "control": 1,
-      "keywords": [],
-      "modelCount": 10
+      "keywords": [
+        "Cavalry",
+        "Fly",
+        "Infantry"
+      ],
+      "modelCount": 10,
+      "weapons": [
+        {
+          "id": "slitta",
+          "name": "Slitta",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "squig-s-fang-filled-gob",
+          "name": "Squig\u2019s Fang-filled Gob",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "stabba",
+          "name": "Stabba",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "boing-boing-boing",
+          "name": "Boing! Boing! Boing!",
+          "source": "Moonclan Stabbas",
+          "flavor": "Squig Hoppers can cause considerable damage simply by bouncing on top of their foes as they make their way across the battlefield.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit that any models in this unit passed across this phase to be the target, then roll a dice for each model in this unit that did so.",
+          "effect": "For each 4+, inflict 1 mortal damage on the target.",
+          "kind": "ability"
+        },
+        {
+          "id": "netters",
+          "name": "Netters",
+          "source": "Moonclan Stabbas",
+          "flavor": "Moonclan grots use throwing nets to capture Cave Squigs and entangle their foes.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy INFANTRY unit in combat with this unit to be the target.",
+          "effect": "Roll a dice. On a 2+, subtract 1 from hit rolls for attacks made by the target unit this phase.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "moonclan-stabbas-2",
       "name": "Moonclan Stabbas",
-      "move": "5\"",
-      "save": 5,
-      "health": 1,
+      "move": "D6+8\"",
+      "save": 6,
+      "health": 2,
       "control": 1,
-      "keywords": [],
-      "modelCount": 10
+      "keywords": [
+        "Cavalry",
+        "Fly",
+        "Infantry"
+      ],
+      "modelCount": 10,
+      "weapons": [
+        {
+          "id": "slitta",
+          "name": "Slitta",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "squig-s-fang-filled-gob",
+          "name": "Squig\u2019s Fang-filled Gob",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "stabba",
+          "name": "Stabba",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "boing-boing-boing",
+          "name": "Boing! Boing! Boing!",
+          "source": "Moonclan Stabbas",
+          "flavor": "Squig Hoppers can cause considerable damage simply by bouncing on top of their foes as they make their way across the battlefield.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit that any models in this unit passed across this phase to be the target, then roll a dice for each model in this unit that did so.",
+          "effect": "For each 4+, inflict 1 mortal damage on the target.",
+          "kind": "ability"
+        },
+        {
+          "id": "netters",
+          "name": "Netters",
+          "source": "Moonclan Stabbas",
+          "flavor": "Moonclan grots use throwing nets to capture Cave Squigs and entangle their foes.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy INFANTRY unit in combat with this unit to be the target.",
+          "effect": "Roll a dice. On a 2+, subtract 1 from hit rolls for attacks made by the target unit this phase.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "squig-hoppers",
       "name": "Squig Hoppers",
-      "move": "D6+8\"",
-      "save": 6,
-      "health": 2,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "move": "5\"",
+      "save": 4,
+      "health": 5,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Ward",
+        "Cavalry",
+        "Fly"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "moon-slicer",
+          "name": "Moon-slicer",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "slitta",
+          "name": "Slitta",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "squig-s-fang-filled-gob",
+          "name": "Squig\u2019s Fang-filled Gob",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "im-da-boss",
+          "name": "I'M Da Boss",
+          "source": "Squig Hoppers",
+          "flavor": "Loonbosses prefer to make their minions do all the fighting.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly Moonclan Stabbas unit wholly within 12\" of this unit to be the target.",
+          "effect": "Pick 1: Beckon the Loonatic Hordes: If the target unit is not in combat , you can return D6 slain models to it. Stab \u2019Em Good!: Add 1 to hit rolls for attacks made by the target unit until the start of your next turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "boing-boing-boing",
+          "name": "Boing! Boing! Boing!",
+          "source": "Squig Hoppers",
+          "flavor": "Squig Hoppers can cause considerable damage simply by bouncing on top of their foes as they make their way across the battlefield.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit that any models in this unit passed across this phase to be the target, then roll a dice for each model in this unit that did so.",
+          "effect": "For each 4+, inflict 1 mortal damage on the target.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "squig-hoppers-2",
       "name": "Squig Hoppers",
-      "move": "D6+8\"",
-      "save": 6,
-      "health": 2,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "move": "5\"",
+      "save": 4,
+      "health": 5,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Ward",
+        "Cavalry",
+        "Fly"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "moon-slicer",
+          "name": "Moon-slicer",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "slitta",
+          "name": "Slitta",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "squig-s-fang-filled-gob",
+          "name": "Squig\u2019s Fang-filled Gob",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "im-da-boss",
+          "name": "I'M Da Boss",
+          "source": "Squig Hoppers",
+          "flavor": "Loonbosses prefer to make their minions do all the fighting.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly Moonclan Stabbas unit wholly within 12\" of this unit to be the target.",
+          "effect": "Pick 1: Beckon the Loonatic Hordes: If the target unit is not in combat , you can return D6 slain models to it. Stab \u2019Em Good!: Add 1 to hit rolls for attacks made by the target unit until the start of your next turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "boing-boing-boing",
+          "name": "Boing! Boing! Boing!",
+          "source": "Squig Hoppers",
+          "flavor": "Squig Hoppers can cause considerable damage simply by bouncing on top of their foes as they make their way across the battlefield.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit that any models in this unit passed across this phase to be the target, then roll a dice for each model in this unit that did so.",
+          "effect": "For each 4+, inflict 1 mortal damage on the target.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "rockgut-troggoths",
       "name": "Rockgut Troggoths",
-      "move": "6\"",
-      "save": 4,
-      "health": 5,
-      "control": 2,
-      "keywords": [],
-      "modelCount": 3
+      "move": "5\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [
+        "Core",
+        "Move",
+        "Charge",
+        "Spell",
+        "Run",
+        "Retreat",
+        "Attack",
+        "Shoot",
+        "Fight",
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "stabba",
+          "name": "Stabba",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "throwin-boulders",
+          "name": "Throwin\u2019 Boulders",
+          "rangeInches": 10,
+          "attacks": "1",
+          "hit": 5,
+          "wound": 2,
+          "rend": 2,
+          "damage": "D3"
+        },
+        {
+          "id": "massive-stone-maul",
+          "name": "Massive Stone Maul",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "netters",
+          "name": "Netters",
+          "source": "Rockgut Troggoths",
+          "flavor": "Moonclan grots use throwing nets to capture Cave Squigs and entangle their foes.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy INFANTRY unit in combat with this unit to be the target.",
+          "effect": "Roll a dice. On a 2+, subtract 1 from hit rolls for attacks made by the target unit this phase.",
+          "kind": "ability"
+        },
+        {
+          "id": "regeneration",
+          "name": "Regeneration",
+          "source": "Rockgut Troggoths",
+          "flavor": "Troggoths are able to regrow injured flesh almost as quickly as it is harmed.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "Heal (D3) this unit.",
+          "kind": "ability"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "squigalanche",
+      "name": "Squigalanche",
+      "summary": "Set up this unit wholly within your territory, wholly within 3\" of a battlefield edge and more than 6\" from all enemy units",
+      "timing": null,
+      "declare": null,
+      "effect": "Set up this unit wholly within your territory, wholly within 3\" of a battlefield edge and more than 6\" from all enemy units.",
+      "phases": [
+        "movement"
+      ],
+      "usageLimit": "eachTurn",
+      "kind": "ability"
     }
   ]
 }

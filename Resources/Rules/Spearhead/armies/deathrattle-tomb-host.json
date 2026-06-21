@@ -9,48 +9,346 @@
       "save": 3,
       "health": 5,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "baleful-tomb-blade-crit-mortal",
+          "name": "Baleful Tomb Blade Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "king-of-shambling-bones",
+          "name": "King Of Shambling Bones",
+          "source": "Wight King",
+          "flavor": "In the presence of their sovereign, the footsoldiers of the Deathrattle kingdoms assume a sliver of their former warlike vigour.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of this unit to be the target.",
+          "effect": "Roll a dice. On a 2+, add 1 to hit rolls for combat attacks made by the target for the rest of the turn.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "barrow-guard",
       "name": "Barrow Guard",
       "move": "4\"",
-      "save": 4,
+      "save": 5,
       "health": 1,
       "control": 1,
-      "keywords": [],
-      "modelCount": 10
+      "keywords": [
+        "Deploy",
+        "Terrain",
+        "Spell",
+        "Core",
+        "Move",
+        "Charge",
+        "Run",
+        "Retreat",
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 10,
+      "weapons": [
+        {
+          "id": "ancient-weapon",
+          "name": "Ancient Weapon",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "wight-blade-crit-mortal",
+          "name": "Wight Blade Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "skeleton-legion",
+          "name": "Skeleton Legion",
+          "source": "Barrow Guard",
+          "flavor": "As necromantic energies blanket the battlefield, long-dead warriors stagger to their feet once more, eye sockets aglow with killing light.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "You can return D3 slain models to this unit.",
+          "kind": "ability"
+        },
+        {
+          "id": "guardians-of-the-king",
+          "name": "Guardians Of The King",
+          "source": "Barrow Guard",
+          "flavor": "The Barrow Guard stand alongside the liege lord to whom they are bound.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While your general is within this unit\u2019s combat range , both this unit and your general have WARD ( 5+ ) .",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "barrow-knights",
       "name": "Barrow Knights",
-      "move": "10\"",
-      "save": 4,
-      "health": 3,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "move": "4\"",
+      "save": 3,
+      "health": 5,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Ward",
+        "Cavalry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "baleful-tomb-blade-crit-mortal",
+          "name": "Baleful Tomb Blade Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "barrow-lance-crit-mortal-charge-1-damage",
+          "name": "Barrow Lance Crit (Mortal) , Charge (+1 Damage)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "skeletal-steed-s-hooves-and-teeth",
+          "name": "Skeletal Steed\u2019s Hooves and Teeth",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "king-of-shambling-bones",
+          "name": "King Of Shambling Bones",
+          "source": "Barrow Knights",
+          "flavor": "In the presence of their sovereign, the footsoldiers of the Deathrattle kingdoms assume a sliver of their former warlike vigour.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of this unit to be the target.",
+          "effect": "Roll a dice. On a 2+, add 1 to hit rolls for combat attacks made by the target for the rest of the turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "cursed-to-rise-once-more",
+          "name": "Cursed To Rise Once More",
+          "source": "Barrow Knights",
+          "flavor": "Necrotic flames wreathe the shattered remains of an undead knight, compelling them to rejoin the battle.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "You can return 1 slain model to this unit.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "deathrattle-skeletons",
       "name": "Deathrattle Skeletons",
-      "move": "4\"",
-      "save": 5,
-      "health": 1,
+      "move": "10\"",
+      "save": 4,
+      "health": 3,
       "control": 1,
-      "keywords": [],
-      "modelCount": 10
+      "keywords": [
+        "Cavalry",
+        "Ward",
+        "Infantry"
+      ],
+      "modelCount": 10,
+      "weapons": [
+        {
+          "id": "barrow-lance-crit-mortal-charge-1-damage",
+          "name": "Barrow Lance Crit (Mortal) , Charge (+1 Damage)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "skeletal-steed-s-hooves-and-teeth",
+          "name": "Skeletal Steed\u2019s Hooves and Teeth",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "ancient-weapon",
+          "name": "Ancient Weapon",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "cursed-to-rise-once-more",
+          "name": "Cursed To Rise Once More",
+          "source": "Deathrattle Skeletons",
+          "flavor": "Necrotic flames wreathe the shattered remains of an undead knight, compelling them to rejoin the battle.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "You can return 1 slain model to this unit.",
+          "kind": "ability"
+        },
+        {
+          "id": "skeleton-legion",
+          "name": "Skeleton Legion",
+          "source": "Deathrattle Skeletons",
+          "flavor": "As necromantic energies blanket the battlefield, long-dead warriors stagger to their feet once more, eye sockets aglow with killing light.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "You can return D3 slain models to this unit.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "deathrattle-skeletons-2",
       "name": "Deathrattle Skeletons",
-      "move": "4\"",
-      "save": 5,
-      "health": 1,
+      "move": "10\"",
+      "save": 4,
+      "health": 3,
       "control": 1,
-      "keywords": [],
-      "modelCount": 10
+      "keywords": [
+        "Cavalry",
+        "Ward",
+        "Infantry"
+      ],
+      "modelCount": 10,
+      "weapons": [
+        {
+          "id": "barrow-lance-crit-mortal-charge-1-damage",
+          "name": "Barrow Lance Crit (Mortal) , Charge (+1 Damage)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "skeletal-steed-s-hooves-and-teeth",
+          "name": "Skeletal Steed\u2019s Hooves and Teeth",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "ancient-weapon",
+          "name": "Ancient Weapon",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "cursed-to-rise-once-more",
+          "name": "Cursed To Rise Once More",
+          "source": "Deathrattle Skeletons",
+          "flavor": "Necrotic flames wreathe the shattered remains of an undead knight, compelling them to rejoin the battle.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "You can return 1 slain model to this unit.",
+          "kind": "ability"
+        },
+        {
+          "id": "skeleton-legion",
+          "name": "Skeleton Legion",
+          "source": "Deathrattle Skeletons",
+          "flavor": "As necromantic energies blanket the battlefield, long-dead warriors stagger to their feet once more, eye sockets aglow with killing light.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "You can return D3 slain models to this unit.",
+          "kind": "ability"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "the-rising-dead",
+      "name": "The Rising Dead",
+      "summary": "Set up this unit anywhere on the battlefield wholly within 3\" of a battlefield edge and more than 6\" from all enemy units",
+      "timing": null,
+      "declare": null,
+      "effect": "Set up this unit anywhere on the battlefield wholly within 3\" of a battlefield edge and more than 6\" from all enemy units.",
+      "phases": [
+        "movement"
+      ],
+      "usageLimit": "oncePerBattle",
+      "kind": "ability"
     }
   ]
 }

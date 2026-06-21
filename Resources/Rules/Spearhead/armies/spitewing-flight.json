@@ -9,28 +9,199 @@
       "save": 4,
       "health": 6,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Fly"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "arch-revenant-s-glaive",
+          "name": "Arch-Revenant\u2019s Glaive",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "heartwood-hunting-horn",
+          "name": "Heartwood Hunting Horn",
+          "source": "Arch-Revenant",
+          "flavor": "Grown in the forests of Kurnotheal, this horn emits a bold note that sends the thrill of the hunt rushing through the veins of their warriors.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible friendly unit wholly within 12\" of this unit to be the target.",
+          "effect": "Until the start of your next turn, when determining which effects of the \u2018 Song of the Hunt \u2019 ability apply to the target, you count as having 1 additional chord.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "gossamid-archers",
       "name": "Gossamid Archers",
       "move": "12\"",
-      "save": 5,
-      "health": 2,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "save": 4,
+      "health": 6,
+      "control": 2,
+      "keywords": [
+        "Move",
+        "Hero",
+        "Infantry",
+        "Fly"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "arch-revenant-s-glaive",
+          "name": "Arch-Revenant\u2019s Glaive",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "gossamid-bow",
+          "name": "Gossamid Bow",
+          "rangeInches": 12,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "cruel-talons",
+          "name": "Cruel Talons",
+          "rangeInches": 0,
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "heartwood-hunting-horn",
+          "name": "Heartwood Hunting Horn",
+          "source": "Gossamid Archers",
+          "flavor": "Grown in the forests of Kurnotheal, this horn emits a bold note that sends the thrill of the hunt rushing through the veins of their warriors.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible friendly unit wholly within 12\" of this unit to be the target.",
+          "effect": "Until the start of your next turn, when determining which effects of the \u2018 Song of the Hunt \u2019 ability apply to the target, you count as having 1 additional chord.",
+          "kind": "ability"
+        },
+        {
+          "id": "zephyrspites",
+          "name": "Zephyrspites",
+          "source": "Gossamid Archers",
+          "flavor": "These symbiotic winged spites offer their hosts unparalleled manoeuvrability, allowing them to swiftly reposition after loosing a deadly volley.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "reaction",
+          "declare": null,
+          "effect": "After that SHOOT ability has been resolved, this unit can move up to D6\". It cannot move into combat during any part of that move. KEYWORDS MOVE",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "spiterider-lancers",
       "name": "Spiterider Lancers",
       "move": "12\"",
-      "save": 4,
-      "health": 5,
-      "control": 2,
-      "keywords": [],
-      "modelCount": 3
+      "save": 5,
+      "health": 2,
+      "control": 1,
+      "keywords": [
+        "Move",
+        "Infantry",
+        "Fly",
+        "Cavalry"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "gossamid-bow",
+          "name": "Gossamid Bow",
+          "rangeInches": 12,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "cruel-talons",
+          "name": "Cruel Talons",
+          "rangeInches": 0,
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "spiterider-lance-charge-1-damage",
+          "name": "Spiterider Lance Charge (+1 Damage)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "dragonspites-mandibles",
+          "name": "Dragonspite's Mandibles",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "zephyrspites",
+          "name": "Zephyrspites",
+          "source": "Spiterider Lancers",
+          "flavor": "These symbiotic winged spites offer their hosts unparalleled manoeuvrability, allowing them to swiftly reposition after loosing a deadly volley.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "reaction",
+          "declare": null,
+          "effect": "After that SHOOT ability has been resolved, this unit can move up to D6\". It cannot move into combat during any part of that move. KEYWORDS MOVE",
+          "kind": "ability"
+        },
+        {
+          "id": "spiterider-charge",
+          "name": "Spiterider Charge",
+          "source": "Spiterider Lancers",
+          "flavor": "Lance-armed Spiteriders train to inflict the greatest damage possible on the charge, destroying chosen targets in a series of blistering attacks.",
+          "phases": [
+            "charge"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "If this unit charged this phase, pick a visible enemy unit within 1\" of it to be the target.",
+          "effect": "Roll a D3. Add 1 to the roll if the target is the enemy quarry . On a 2+, inflict an amount of mortal damage on the target equal to the roll.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "revenant-seekers",
@@ -39,8 +210,107 @@
       "save": 4,
       "health": 5,
       "control": 2,
-      "keywords": [],
-      "modelCount": 3
+      "keywords": [
+        "Cavalry",
+        "Fly"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "spiterider-lance-charge-1-damage",
+          "name": "Spiterider Lance Charge (+1 Damage)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "dragonspites-mandibles",
+          "name": "Dragonspite's Mandibles",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "seeker-s-sickle-crit-mortal",
+          "name": "Seeker\u2019s Sickle Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "dragonspites-mandibles-2",
+          "name": "Dragonspite's Mandibles",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "spiterider-charge",
+          "name": "Spiterider Charge",
+          "source": "Revenant Seekers",
+          "flavor": "Lance-armed Spiteriders train to inflict the greatest damage possible on the charge, destroying chosen targets in a series of blistering attacks.",
+          "phases": [
+            "charge"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "If this unit charged this phase, pick a visible enemy unit within 1\" of it to be the target.",
+          "effect": "Roll a D3. Add 1 to the roll if the target is the enemy quarry . On a 2+, inflict an amount of mortal damage on the target equal to the roll.",
+          "kind": "ability"
+        },
+        {
+          "id": "deafening-drone",
+          "name": "Deafening Drone",
+          "source": "Revenant Seekers",
+          "flavor": "Revenant Seekers circle over the melee, cutting throats and piercing skulls with swipes of their sickles. The buzzing roar of their dragonspites\u2019 wings soon disorientate enemies who engage them in protracted combat.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "If this unit did not charge this turn, pick an enemy unit in combat with it to be the target.",
+          "effect": "Roll a dice. If the roll exceeds the target\u2019s Control characteristic, subtract 1 from the Attacks characteristic of the target\u2019s melee weapons for the rest of the turn.",
+          "kind": "ability"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "target-of-vengeance",
+      "name": "Target Of Vengeance",
+      "summary": "The target is the quarry for the rest of the battle",
+      "timing": null,
+      "declare": "If there is no enemy quarry on the battlefield, pick an enemy unit on the battlefield to be the target.",
+      "effect": "The target is the quarry for the rest of the battle.",
+      "phases": [
+        "hero"
+      ],
+      "usageLimit": "oncePerBattle",
+      "kind": "ability"
+    },
+    {
+      "id": "airborne-cohesion",
+      "name": "Airborne Cohesion",
+      "summary": "Friendly units have a coherency range of 2\"",
+      "timing": null,
+      "declare": null,
+      "effect": "Friendly units have a coherency range of 2\".",
+      "phases": [],
+      "usageLimit": "passive",
+      "kind": "passive"
     }
   ]
 }

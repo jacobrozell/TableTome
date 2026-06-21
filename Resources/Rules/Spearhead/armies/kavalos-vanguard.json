@@ -9,38 +9,300 @@
       "save": 3,
       "health": 7,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Cavalry",
+        "Ward"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "commander-s-blade-charge-1-damage",
+          "name": "Commander\u2019s Blade Charge (+1 Damage)",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "kavalos-steed-s-hooves-teeth-and-barbed-tails",
+          "name": "Kavalos Steed\u2019s Hooves, Teeth and Barbed Tails",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "signal-the-advance",
+          "name": "Signal The Advance",
+          "source": "Liege-Kavalos",
+          "flavor": "With a gesture of their blade, the Liege-Kavalos orders their warriors to ride forth.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible friendly unit wholly within 12\" of this unit to be the target.",
+          "effect": "Roll a dice. On a 3+, add 1 to charge rolls for the target for the rest of the turn.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "kavalos-deathriders",
       "name": "Kavalos Deathriders",
-      "move": "10\"",
-      "save": 4,
-      "health": 3,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
-    },
-    {
-      "id": "kavalos-deathriders-2",
-      "name": "Kavalos Deathriders",
-      "move": "10\"",
-      "save": 4,
-      "health": 3,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
-    },
-    {
-      "id": "teratic-cohort",
-      "name": "Teratic Cohort",
       "move": "7\"",
       "save": 5,
       "health": 1,
       "control": 1,
-      "keywords": [],
-      "modelCount": 8
+      "keywords": [
+        "Core",
+        "Move",
+        "Beast",
+        "Ward",
+        "Reinforcements",
+        "Cavalry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "cohort-weapons",
+          "name": "Cohort Weapons",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1",
+          "ability": "Companion"
+        },
+        {
+          "id": "kavalos-blade",
+          "name": "Kavalos Blade",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1",
+          "ability": "Companion"
+        },
+        {
+          "id": "kavalos-steed-s-hooves-and-teeth",
+          "name": "Kavalos Steed\u2019s Hooves and Teeth",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1",
+          "ability": "Companion"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "bone-deep-savagery",
+          "name": "Bone-Deep Savagery",
+          "source": "Kavalos Deathriders",
+          "flavor": "The impure materials used in the creation of the Teratic Cohort has lent them an innate savagery that is all but impossible to truly control in the heat of battle.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "This unit can move 3\". If it can move into combat , it must. If it was in combat at the start of the move, it must end that move in combat. KEYWORDS CORE, MOVE",
+          "kind": "ability"
+        },
+        {
+          "id": "wheel-about",
+          "name": "Wheel About",
+          "source": "Kavalos Deathriders",
+          "flavor": "The Kavalos Deathriders plunge through the enemy ranks, disengaging before the enemy can strike back.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "If this unit charged this turn, roll a dice. On a 3+, this unit can move a distance up to its Move characteristic. It can move through the combat ranges of enemy units but cannot end that move in combat .",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "kavalos-deathriders-2",
+      "name": "Kavalos Deathriders",
+      "move": "7\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [
+        "Core",
+        "Move",
+        "Beast",
+        "Ward",
+        "Reinforcements",
+        "Cavalry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "cohort-weapons",
+          "name": "Cohort Weapons",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1",
+          "ability": "Companion"
+        },
+        {
+          "id": "kavalos-blade",
+          "name": "Kavalos Blade",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1",
+          "ability": "Companion"
+        },
+        {
+          "id": "kavalos-steed-s-hooves-and-teeth",
+          "name": "Kavalos Steed\u2019s Hooves and Teeth",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1",
+          "ability": "Companion"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "bone-deep-savagery",
+          "name": "Bone-Deep Savagery",
+          "source": "Kavalos Deathriders",
+          "flavor": "The impure materials used in the creation of the Teratic Cohort has lent them an innate savagery that is all but impossible to truly control in the heat of battle.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "This unit can move 3\". If it can move into combat , it must. If it was in combat at the start of the move, it must end that move in combat. KEYWORDS CORE, MOVE",
+          "kind": "ability"
+        },
+        {
+          "id": "wheel-about",
+          "name": "Wheel About",
+          "source": "Kavalos Deathriders",
+          "flavor": "The Kavalos Deathriders plunge through the enemy ranks, disengaging before the enemy can strike back.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "If this unit charged this turn, roll a dice. On a 3+, this unit can move a distance up to its Move characteristic. It can move through the combat ranges of enemy units but cannot end that move in combat .",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "teratic-cohort",
+      "name": "Teratic Cohort",
+      "move": "10\"",
+      "save": 3,
+      "health": 7,
+      "control": 2,
+      "keywords": [
+        "Core",
+        "Move",
+        "Hero",
+        "Cavalry",
+        "Ward",
+        "Beast",
+        "Reinforcements"
+      ],
+      "modelCount": 8,
+      "weapons": [
+        {
+          "id": "commander-s-blade-charge-1-damage",
+          "name": "Commander\u2019s Blade Charge (+1 Damage)",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "kavalos-steed-s-hooves-teeth-and-barbed-tails",
+          "name": "Kavalos Steed\u2019s Hooves, Teeth and Barbed Tails",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "cohort-weapons",
+          "name": "Cohort Weapons",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "signal-the-advance",
+          "name": "Signal The Advance",
+          "source": "Teratic Cohort",
+          "flavor": "With a gesture of their blade, the Liege-Kavalos orders their warriors to ride forth.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible friendly unit wholly within 12\" of this unit to be the target.",
+          "effect": "Roll a dice. On a 3+, add 1 to charge rolls for the target for the rest of the turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "bone-deep-savagery",
+          "name": "Bone-Deep Savagery",
+          "source": "Teratic Cohort",
+          "flavor": "The impure materials used in the creation of the Teratic Cohort has lent them an innate savagery that is all but impossible to truly control in the heat of battle.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "This unit can move 3\". If it can move into combat , it must. If it was in combat at the start of the move, it must end that move in combat. KEYWORDS CORE, MOVE",
+          "kind": "ability"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "calculated-feint",
+      "name": "Calculated Feint",
+      "summary": "No mortal damage is inflicted on friendly CAVALRY units by RETREAT abilities",
+      "timing": null,
+      "declare": null,
+      "effect": "No mortal damage is inflicted on friendly CAVALRY units by RETREAT abilities.",
+      "phases": [],
+      "usageLimit": "passive",
+      "kind": "passive"
     }
   ]
 }

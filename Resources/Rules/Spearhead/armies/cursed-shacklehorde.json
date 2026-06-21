@@ -9,68 +9,493 @@
       "save": 5,
       "health": 5,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Fly",
+        "Ward"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "shacklegheist-chains-crit-auto-wound",
+          "name": "Shacklegheist Chains Crit (Auto-wound)",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "captured-soul-energy",
+          "name": "Captured Soul Energy",
+          "source": "Spirit Torment",
+          "flavor": "The Spirit Torment of a Cursed Shacklehorde uses the souls captured in their padlock to imbue their minions with deathly might.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of this unit to be the target.",
+          "effect": "Roll a dice. On a 3+, add 1 to wound rolls for the target\u2019s combat attacks for the rest of the turn.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "chainghasts",
       "name": "Chainghasts",
       "move": "8\"",
-      "save": 6,
-      "health": 3,
+      "save": 5,
+      "health": 5,
       "control": 2,
-      "keywords": [],
-      "modelCount": 2
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Fly",
+        "Ward"
+      ],
+      "modelCount": 2,
+      "weapons": [
+        {
+          "id": "shacklegheist-chains-crit-auto-wound",
+          "name": "Shacklegheist Chains Crit (Auto-wound)",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "ghastflails-crit-auto-wound",
+          "name": "Ghastflails Crit (Auto-wound)",
+          "rangeInches": 12,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 2,
+          "damage": "1"
+        },
+        {
+          "id": "ghastflails-crit-auto-wound-2",
+          "name": "Ghastflails Crit (Auto-wound)",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 2,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "captured-soul-energy",
+          "name": "Captured Soul Energy",
+          "source": "Chainghasts",
+          "flavor": "The Spirit Torment of a Cursed Shacklehorde uses the souls captured in their padlock to imbue their minions with deathly might.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of this unit to be the target.",
+          "effect": "Roll a dice. On a 3+, add 1 to wound rolls for the target\u2019s combat attacks for the rest of the turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "another-link-in-the-chain",
+          "name": "Another Link In The Chain",
+          "source": "Chainghasts",
+          "flavor": "Chainghasts act as conduits for Spirit Torments, ensuring all nearby Nighthaunt are invigorated by deathly energies.",
+          "phases": [
+            "combat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "Roll a dice. Add 1 to the roll if this unit is wholly within 12\" of any friendly Spirit Torments . On a 3+, for the rest of the turn, add 1 to hit rolls for combat attacks made by friendly units while they are wholly within 12\" of this unit.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "bladegheist-revenants",
       "name": "Bladegheist Revenants",
-      "move": "8\"",
+      "move": "12\"",
       "save": 6,
-      "health": 2,
+      "health": 3,
       "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "keywords": [
+        "Cavalry",
+        "Fly",
+        "Ward",
+        "Infantry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "dreadblade-crit-auto-wound",
+          "name": "Dreadblade Crit (Auto-wound)",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "ethereal-steed-s-ghostly-hooves-and-teeth-companion-crit-auto-wound",
+          "name": "Ethereal Steed\u2019s Ghostly Hooves and Teeth Companion , Crit (Auto-wound)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "tomb-greatblade-crit-auto-wound",
+          "name": "Tomb Greatblade Crit (Auto-wound)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "phantasmal-discorporation",
+          "name": "Phantasmal Discorporation",
+          "source": "Bladegheist Revenants",
+          "flavor": "Dreadblade Harrows are able to disappear in a spectral mist.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "oncePerBattle",
+          "declare": null,
+          "effect": "Remove this unit from the battlefield and set it up again on the battlefield more than 6\" from all enemy units.",
+          "kind": "ability"
+        },
+        {
+          "id": "thrashing-desperation",
+          "name": "Thrashing Desperation",
+          "source": "Bladegheist Revenants",
+          "flavor": "Only the bravest and most determined of charges can get within striking range of the veritable wall of thrashing blades that are the Bladegheist Revenants.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While this unit contest s an objective you control , enemy units cannot end a charge move within \u00bd\" of this unit unless the unmodified charge roll was 5 or more.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "bladegheist-revenants-2",
       "name": "Bladegheist Revenants",
-      "move": "8\"",
+      "move": "12\"",
       "save": 6,
-      "health": 2,
+      "health": 3,
       "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "keywords": [
+        "Cavalry",
+        "Fly",
+        "Ward",
+        "Infantry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "dreadblade-crit-auto-wound",
+          "name": "Dreadblade Crit (Auto-wound)",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "ethereal-steed-s-ghostly-hooves-and-teeth-companion-crit-auto-wound",
+          "name": "Ethereal Steed\u2019s Ghostly Hooves and Teeth Companion , Crit (Auto-wound)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "tomb-greatblade-crit-auto-wound",
+          "name": "Tomb Greatblade Crit (Auto-wound)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "phantasmal-discorporation",
+          "name": "Phantasmal Discorporation",
+          "source": "Bladegheist Revenants",
+          "flavor": "Dreadblade Harrows are able to disappear in a spectral mist.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "oncePerBattle",
+          "declare": null,
+          "effect": "Remove this unit from the battlefield and set it up again on the battlefield more than 6\" from all enemy units.",
+          "kind": "ability"
+        },
+        {
+          "id": "thrashing-desperation",
+          "name": "Thrashing Desperation",
+          "source": "Bladegheist Revenants",
+          "flavor": "Only the bravest and most determined of charges can get within striking range of the veritable wall of thrashing blades that are the Bladegheist Revenants.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While this unit contest s an objective you control , enemy units cannot end a charge move within \u00bd\" of this unit unless the unmodified charge roll was 5 or more.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "dreadscythe-harridans",
       "name": "Dreadscythe Harridans",
       "move": "8\"",
       "save": 6,
-      "health": 2,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "health": 3,
+      "control": 2,
+      "keywords": [
+        "Infantry",
+        "Fly",
+        "Ward"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "ghastflails-crit-auto-wound",
+          "name": "Ghastflails Crit (Auto-wound)",
+          "rangeInches": 12,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 2,
+          "damage": "1"
+        },
+        {
+          "id": "ghastflails-crit-auto-wound-2",
+          "name": "Ghastflails Crit (Auto-wound)",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 2,
+          "damage": "1"
+        },
+        {
+          "id": "scythed-limbs-crit-auto-wound",
+          "name": "Scythed Limbs Crit (Auto-wound)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "another-link-in-the-chain",
+          "name": "Another Link In The Chain",
+          "source": "Dreadscythe Harridans",
+          "flavor": "Chainghasts act as conduits for Spirit Torments, ensuring all nearby Nighthaunt are invigorated by deathly energies.",
+          "phases": [
+            "combat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "Roll a dice. Add 1 to the roll if this unit is wholly within 12\" of any friendly Spirit Torments . On a 3+, for the rest of the turn, add 1 to hit rolls for combat attacks made by friendly units while they are wholly within 12\" of this unit.",
+          "kind": "ability"
+        },
+        {
+          "id": "harrowing-shrieks",
+          "name": "Harrowing Shrieks",
+          "source": "Dreadscythe Harridans",
+          "flavor": "The chilling cries of the Dreadscythe Harridans drive all hope from the hearts of their foes.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Enemy units cannot be healed or have slain models returned to them while they are in combat with this unit.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "dreadscythe-harridans-2",
       "name": "Dreadscythe Harridans",
       "move": "8\"",
       "save": 6,
-      "health": 2,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "health": 3,
+      "control": 2,
+      "keywords": [
+        "Infantry",
+        "Fly",
+        "Ward"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "ghastflails-crit-auto-wound",
+          "name": "Ghastflails Crit (Auto-wound)",
+          "rangeInches": 12,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 2,
+          "damage": "1"
+        },
+        {
+          "id": "ghastflails-crit-auto-wound-2",
+          "name": "Ghastflails Crit (Auto-wound)",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 2,
+          "damage": "1"
+        },
+        {
+          "id": "scythed-limbs-crit-auto-wound",
+          "name": "Scythed Limbs Crit (Auto-wound)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "another-link-in-the-chain",
+          "name": "Another Link In The Chain",
+          "source": "Dreadscythe Harridans",
+          "flavor": "Chainghasts act as conduits for Spirit Torments, ensuring all nearby Nighthaunt are invigorated by deathly energies.",
+          "phases": [
+            "combat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "Roll a dice. Add 1 to the roll if this unit is wholly within 12\" of any friendly Spirit Torments . On a 3+, for the rest of the turn, add 1 to hit rolls for combat attacks made by friendly units while they are wholly within 12\" of this unit.",
+          "kind": "ability"
+        },
+        {
+          "id": "harrowing-shrieks",
+          "name": "Harrowing Shrieks",
+          "source": "Dreadscythe Harridans",
+          "flavor": "The chilling cries of the Dreadscythe Harridans drive all hope from the hearts of their foes.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Enemy units cannot be healed or have slain models returned to them while they are in combat with this unit.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "dreadblade-harrows",
       "name": "Dreadblade Harrows",
-      "move": "12\"",
+      "move": "8\"",
       "save": 6,
-      "health": 3,
+      "health": 2,
       "control": 1,
-      "keywords": [],
-      "modelCount": 2
+      "keywords": [
+        "Infantry",
+        "Fly",
+        "Ward",
+        "Cavalry"
+      ],
+      "modelCount": 2,
+      "weapons": [
+        {
+          "id": "scythed-limbs-crit-auto-wound",
+          "name": "Scythed Limbs Crit (Auto-wound)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "dreadblade-crit-auto-wound",
+          "name": "Dreadblade Crit (Auto-wound)",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "ethereal-steed-s-ghostly-hooves-and-teeth-companion-crit-auto-wound",
+          "name": "Ethereal Steed\u2019s Ghostly Hooves and Teeth Companion , Crit (Auto-wound)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "harrowing-shrieks",
+          "name": "Harrowing Shrieks",
+          "source": "Dreadblade Harrows",
+          "flavor": "The chilling cries of the Dreadscythe Harridans drive all hope from the hearts of their foes.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Enemy units cannot be healed or have slain models returned to them while they are in combat with this unit.",
+          "kind": "passive"
+        },
+        {
+          "id": "phantasmal-discorporation",
+          "name": "Phantasmal Discorporation",
+          "source": "Dreadblade Harrows",
+          "flavor": "Dreadblade Harrows are able to disappear in a spectral mist.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "oncePerBattle",
+          "declare": null,
+          "effect": "Remove this unit from the battlefield and set it up again on the battlefield more than 6\" from all enemy units.",
+          "kind": "ability"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "cackling-arrival",
+      "name": "Cackling Arrival",
+      "summary": "Set up that unit anywhere on the battlefield more than 6\" from all enemy units",
+      "timing": null,
+      "declare": "Pick 1 of your units in reserve .",
+      "effect": "Set up that unit anywhere on the battlefield more than 6\" from all enemy units.",
+      "phases": [
+        "movement"
+      ],
+      "usageLimit": "eachTurn",
+      "kind": "ability"
     }
   ]
 }

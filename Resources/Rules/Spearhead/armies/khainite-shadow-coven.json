@@ -3,64 +3,429 @@
   "armyId": "khainite-shadow-coven",
   "units": [
     {
-      "id": "slaughter-queen-on-cauldron-of-blood",
-      "name": "Slaughter Queen on Cauldron of Blood",
+      "id": "slaughter-queen",
+      "name": "Slaughter Queen",
       "move": "6\"",
       "save": 4,
       "health": 12,
       "control": 5,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Priest",
+        "War",
+        "Machine",
+        "Ward"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "shrine-guardians-blades",
+          "name": "Shrine Guardians\u2019 Blades",
+          "rangeInches": null,
+          "attacks": "9",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "consecrated-revulsion",
+          "name": "Consecrated Revulsion",
+          "source": "Slaughter Queen",
+          "flavor": "The Slaughter Queen\u2019s fanaticism is so intense that her deity provides protection for her followers from the attacks of heathens and weaklings.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible friendly INFANTRY unit wholly within 12\" of this unit to be the target.",
+          "effect": "Roll a dice. On a 3+, add 1 to save rolls for the target until the start of your next turn.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "hag-queen",
       "name": "Hag Queen",
       "move": "6\"",
-      "save": 5,
-      "health": 5,
-      "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "save": 4,
+      "health": 12,
+      "control": 5,
+      "keywords": [
+        "Hero",
+        "Priest",
+        "War",
+        "Machine",
+        "Ward",
+        "Infantry"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "shrine-guardians-blades",
+          "name": "Shrine Guardians\u2019 Blades",
+          "rangeInches": null,
+          "attacks": "9",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "blade-of-khaine",
+          "name": "Blade of Khaine",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "consecrated-revulsion",
+          "name": "Consecrated Revulsion",
+          "source": "Hag Queen",
+          "flavor": "The Slaughter Queen\u2019s fanaticism is so intense that her deity provides protection for her followers from the attacks of heathens and weaklings.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible friendly INFANTRY unit wholly within 12\" of this unit to be the target.",
+          "effect": "Roll a dice. On a 3+, add 1 to save rolls for the target until the start of your next turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "bloody-incitement",
+          "name": "Bloody Incitement",
+          "source": "Hag Queen",
+          "flavor": "The Hag Queen drives her followers into a violent rage.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible friendly unit wholly within 12\" of this unit to be the target.",
+          "effect": "If this unit is in combat , the target\u2019s melee weapons have Crit (Auto-wound) for the rest of the turn. If this unit is not in combat, roll a dice. On a 3+, the target\u2019s melee weapons have Crit (Auto-wound) for the rest of the turn.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "bloodwrack-medusa",
       "name": "Bloodwrack Medusa",
-      "move": "8\"",
-      "save": 5,
-      "health": 6,
-      "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "move": "6\"",
+      "save": 6,
+      "health": 1,
+      "control": 1,
+      "keywords": [
+        "Core",
+        "Move",
+        "Charge",
+        "Prayer",
+        "Unlimited",
+        "Spell",
+        "Run",
+        "Retreat",
+        "Attack",
+        "Shoot",
+        "Fight",
+        "Infantry",
+        "Reinforcements",
+        "Ward",
+        "Hero",
+        "Wizard"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "kruiplash",
+          "name": "Kruiplash",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "bloodwrack-spear",
+          "name": "Bloodwrack Spear",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "dance-of-death",
+          "name": "Dance Of Death",
+          "source": "Bloodwrack Medusa",
+          "flavor": "Sisters of Slaughter delight in frustrating foes with acts of incredible acrobatics and martial skill.",
+          "phases": [
+            "combat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "If this unit is in combat , it can move 2D6\". It can move through the combat ranges of enemy units but must end that move in combat.",
+          "kind": "ability"
+        },
+        {
+          "id": "exsanguinating-glare",
+          "name": "Exsanguinating Glare",
+          "source": "Bloodwrack Medusa",
+          "flavor": "The Bloodwrack Medusa\u2019s eyes blaze with pure hatred, and her victim's blood explodes violently from their every pore.",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "If this unit is in combat , pick an enemy unit in combat with it to be the target. Otherwise, pick a visible enemy unit within 12\" of it to be the target.",
+          "effect": "Roll a dice. On a 3+, inflict 1 mortal damage on the target. Then, if any enemy models were slain by that mortal damage, inflict an additional 1 mortal damage on the target.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "khainite-shadowstalkers",
       "name": "Khainite Shadowstalkers",
       "move": "6\"",
       "save": 5,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 9
+      "health": 5,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Priest",
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 9,
+      "weapons": [
+        {
+          "id": "blade-of-khaine",
+          "name": "Blade of Khaine",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "cursed-bolts-and-missiles",
+          "name": "Cursed Bolts and Missiles",
+          "rangeInches": 10,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "blades-of-murder",
+          "name": "Blades of Murder",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "bloody-incitement",
+          "name": "Bloody Incitement",
+          "source": "Khainite Shadowstalkers",
+          "flavor": "The Hag Queen drives her followers into a violent rage.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible friendly unit wholly within 12\" of this unit to be the target.",
+          "effect": "If this unit is in combat , the target\u2019s melee weapons have Crit (Auto-wound) for the rest of the turn. If this unit is not in combat, roll a dice. On a 3+, the target\u2019s melee weapons have Crit (Auto-wound) for the rest of the turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "shadow-leap",
+          "name": "Shadow Leap",
+          "source": "Khainite Shadowstalkers",
+          "flavor": "Shadowstalkers can vanish and reappear at will as they navigate the Umbral Web.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "oncePerBattle",
+          "declare": null,
+          "effect": "Remove this unit from the battlefield and set it up again on the battlefield more than 6\" from all enemy units.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "sisters-of-slaughter",
       "name": "Sisters of Slaughter",
       "move": "6\"",
-      "save": 6,
+      "save": 5,
       "health": 1,
       "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "keywords": [
+        "Infantry",
+        "Ward",
+        "Reinforcements"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "cursed-bolts-and-missiles",
+          "name": "Cursed Bolts and Missiles",
+          "rangeInches": 10,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "blades-of-murder",
+          "name": "Blades of Murder",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "kruiplash",
+          "name": "Kruiplash",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "shadow-leap",
+          "name": "Shadow Leap",
+          "source": "Sisters of Slaughter",
+          "flavor": "Shadowstalkers can vanish and reappear at will as they navigate the Umbral Web.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "oncePerBattle",
+          "declare": null,
+          "effect": "Remove this unit from the battlefield and set it up again on the battlefield more than 6\" from all enemy units.",
+          "kind": "ability"
+        },
+        {
+          "id": "dance-of-death",
+          "name": "Dance Of Death",
+          "source": "Sisters of Slaughter",
+          "flavor": "Sisters of Slaughter delight in frustrating foes with acts of incredible acrobatics and martial skill.",
+          "phases": [
+            "combat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "If this unit is in combat , it can move 2D6\". It can move through the combat ranges of enemy units but must end that move in combat.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "sisters-of-slaughter-2",
       "name": "Sisters of Slaughter",
       "move": "6\"",
-      "save": 6,
+      "save": 5,
       "health": 1,
       "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "keywords": [
+        "Infantry",
+        "Ward",
+        "Reinforcements"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "cursed-bolts-and-missiles",
+          "name": "Cursed Bolts and Missiles",
+          "rangeInches": 10,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "blades-of-murder",
+          "name": "Blades of Murder",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "kruiplash",
+          "name": "Kruiplash",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "shadow-leap",
+          "name": "Shadow Leap",
+          "source": "Sisters of Slaughter",
+          "flavor": "Shadowstalkers can vanish and reappear at will as they navigate the Umbral Web.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "oncePerBattle",
+          "declare": null,
+          "effect": "Remove this unit from the battlefield and set it up again on the battlefield more than 6\" from all enemy units.",
+          "kind": "ability"
+        },
+        {
+          "id": "dance-of-death",
+          "name": "Dance Of Death",
+          "source": "Sisters of Slaughter",
+          "flavor": "Sisters of Slaughter delight in frustrating foes with acts of incredible acrobatics and martial skill.",
+          "phases": [
+            "combat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "If this unit is in combat , it can move 2D6\". It can move through the combat ranges of enemy units but must end that move in combat.",
+          "kind": "ability"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "shadowmasked",
+      "name": "Shadowmasked",
+      "summary": "Subtract 1 from hit rolls and wound rolls for combat attacks that target that friendly unit for the rest of the turn",
+      "timing": null,
+      "declare": "Pick a friendly INFANTRY unit that is in combat and did not charge this turn to be the target.",
+      "effect": "Subtract 1 from hit rolls and wound rolls for combat attacks that target that friendly unit for the rest of the turn.",
+      "phases": [
+        "charge"
+      ],
+      "usageLimit": "eachTurn",
+      "kind": "ability"
     }
   ]
 }

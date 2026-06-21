@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "armyId": "chaos-space-marines-warband",
+  "units": [
+    {
+      "id": "lord-discordant",
+      "name": "Lord Discordant",
+      "keywords": ["Character", "Vehicle", "Daemon"],
+      "modelCount": 1,
+      "notes": "See your Battleforce datasheet card for exact stats.",
+      "abilities": [
+        {
+          "id": "discordant-hunter",
+          "name": "Daemon Engine Hunter",
+          "source": "Lord Discordant",
+          "effect": "Warp-infused warlord — leads the warband and tears through vehicles.",
+          "phases": ["command", "combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "obliterators",
+      "name": "Obliterators",
+      "keywords": ["Infantry", "Daemon"],
+      "modelCount": 2,
+      "abilities": [
+        {
+          "id": "obliterators-firepower",
+          "name": "Warp-Touched Firepower",
+          "source": "Obliterators",
+          "effect": "Heavy ranged platform — flexible weapons for picking off key targets.",
+          "phases": ["shooting"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "venomcrawler",
+      "name": "Venomcrawler",
+      "keywords": ["Vehicle", "Daemon"],
+      "modelCount": 1,
+      "abilities": [
+        {
+          "id": "venomcrawler-rampage",
+          "name": "Daemon Engine Rampage",
+          "source": "Venomcrawler",
+          "effect": "Fast melee daemon engine — supports the Lord Discordant's push.",
+          "phases": ["movement", "combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "chaos-cultists",
+      "name": "Chaos Cultists",
+      "keywords": ["Battleline", "Infantry"],
+      "modelCount": 20,
+      "notes": "Run as one 20-model unit or split per your list — see datasheet.",
+      "abilities": [
+        {
+          "id": "cultists-objectives",
+          "name": "Objective Rabble",
+          "source": "Chaos Cultists",
+          "effect": "Cheap bodies to secure footprints and screen for Legionaries.",
+          "phases": ["combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "chaos-legionaries",
+      "name": "Chaos Legionaries",
+      "keywords": ["Battleline", "Infantry"],
+      "modelCount": 10,
+      "notes": "Alternatively run as two Cultist squads and five Legionaries — see datasheet.",
+      "abilities": [
+        {
+          "id": "legionaries-core",
+          "name": "Legion Core",
+          "source": "Chaos Legionaries",
+          "effect": "Durable battleline troops — hold terrain while characters and engines strike.",
+          "phases": ["shooting", "combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    }
+  ]
+}

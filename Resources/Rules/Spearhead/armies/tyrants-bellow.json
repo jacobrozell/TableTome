@@ -9,38 +9,305 @@
       "save": 4,
       "health": 8,
       "control": 5,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "ogor-pistols",
+          "name": "Ogor Pistols",
+          "rangeInches": 10,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "thundermace",
+          "name": "Thundermace",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "3"
+        },
+        {
+          "id": "beastskewer-glaive-anti-monster-1-rend",
+          "name": "Beastskewer Glaive Anti- MONSTER (+1 Rend)",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "bully-of-the-first-degree",
+          "name": "Bully Of The First Degree",
+          "source": "Tyrant",
+          "flavor": "Tyrants use abrupt violence to help them maintain an iron rule over their warglutt.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of this unit to be the target. You cannot pick this unit.",
+          "effect": "Add 3 to the control score of the target until the start of your next turn.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "mournfang-pack",
       "name": "Mournfang Pack",
-      "move": "9\"",
-      "save": 4,
-      "health": 6,
+      "move": "6\"",
+      "save": 5,
+      "health": 4,
       "control": 2,
-      "keywords": [],
-      "modelCount": 2
+      "keywords": [
+        "Core",
+        "Move",
+        "Charge",
+        "Run",
+        "Retreat",
+        "Spell",
+        "Prayer",
+        "Unlimited",
+        "Infantry",
+        "Cavalry"
+      ],
+      "modelCount": 2,
+      "weapons": [
+        {
+          "id": "leadbelcher-gun",
+          "name": "Leadbelcher Gun",
+          "rangeInches": 15,
+          "attacks": "D3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "bludgeoning-blow",
+          "name": "Bludgeoning Blow",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 2,
+          "rend": 0,
+          "damage": "2"
+        },
+        {
+          "id": "culling-clubs-and-hackers",
+          "name": "Culling Clubs and Hackers",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "mournfangs-tusks",
+          "name": "Mournfang's Tusks",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "firing-from-the-belly",
+          "name": "Firing From The Belly",
+          "source": "Mournfang Pack",
+          "flavor": "An ogor\u2019s sturdy frame easily absorbs the recoil of even cannon-sized weapons.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to hit rolls for this unit\u2019s shooting attacks if it has not used a MOVE ability this turn.",
+          "kind": "passive"
+        },
+        {
+          "id": "linebreakers",
+          "name": "Linebreakers",
+          "source": "Mournfang Pack",
+          "flavor": "The thick hides of Mournfangs protect them from incoming missile fire as they charge headlong into the enemy\u2019s battleline.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Subtract 1 from wound rolls for shooting attacks that target this unit.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "ogor-gluttons",
       "name": "Ogor Gluttons",
-      "move": "6\"",
-      "save": 5,
-      "health": 4,
+      "move": "9\"",
+      "save": 4,
+      "health": 9,
       "control": 2,
-      "keywords": [],
-      "modelCount": 3
+      "keywords": [
+        "War",
+        "Machine",
+        "Infantry"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "ironblaster-cannon",
+          "name": "Ironblaster Cannon",
+          "rangeInches": 18,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "D3+3"
+        },
+        {
+          "id": "clubber",
+          "name": "Clubber",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 2,
+          "rend": 0,
+          "damage": "2"
+        },
+        {
+          "id": "rhinoxs-sharp-horns",
+          "name": "Rhinox's Sharp Horns",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "ogor-weapons",
+          "name": "Ogor Weapons",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "rhinox-charge",
+          "name": "Rhinox Charge",
+          "source": "Ogor Gluttons",
+          "flavor": "A rhinox\u2019s double-horned skull can inflict considerable damage when the beast charges into the foe.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "The Damage characteristic of this unit\u2019s Rhinox\u2019s Sharp Horns is 3 if it charged in the same turn.",
+          "kind": "passive"
+        },
+        {
+          "id": "driven-by-hunger",
+          "name": "Driven By Hunger",
+          "source": "Ogor Gluttons",
+          "flavor": "Gutbusters cannot wait to meet and eat the enemy.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to charge rolls for this unit.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "ogor-gluttons-2",
       "name": "Ogor Gluttons",
-      "move": "6\"",
-      "save": 5,
-      "health": 4,
+      "move": "9\"",
+      "save": 4,
+      "health": 9,
       "control": 2,
-      "keywords": [],
-      "modelCount": 3
+      "keywords": [
+        "War",
+        "Machine",
+        "Infantry"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "ironblaster-cannon",
+          "name": "Ironblaster Cannon",
+          "rangeInches": 18,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "D3+3"
+        },
+        {
+          "id": "clubber",
+          "name": "Clubber",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 2,
+          "rend": 0,
+          "damage": "2"
+        },
+        {
+          "id": "rhinoxs-sharp-horns",
+          "name": "Rhinox's Sharp Horns",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "ogor-weapons",
+          "name": "Ogor Weapons",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "rhinox-charge",
+          "name": "Rhinox Charge",
+          "source": "Ogor Gluttons",
+          "flavor": "A rhinox\u2019s double-horned skull can inflict considerable damage when the beast charges into the foe.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "The Damage characteristic of this unit\u2019s Rhinox\u2019s Sharp Horns is 3 if it charged in the same turn.",
+          "kind": "passive"
+        },
+        {
+          "id": "driven-by-hunger",
+          "name": "Driven By Hunger",
+          "source": "Ogor Gluttons",
+          "flavor": "Gutbusters cannot wait to meet and eat the enemy.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to charge rolls for this unit.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "leadbelchers",
@@ -49,18 +316,184 @@
       "save": 5,
       "health": 4,
       "control": 2,
-      "keywords": [],
-      "modelCount": 4
+      "keywords": [
+        "Infantry"
+      ],
+      "modelCount": 4,
+      "weapons": [
+        {
+          "id": "ogor-weapons",
+          "name": "Ogor Weapons",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "leadbelcher-gun",
+          "name": "Leadbelcher Gun",
+          "rangeInches": 15,
+          "attacks": "D3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "bludgeoning-blow",
+          "name": "Bludgeoning Blow",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 2,
+          "rend": 0,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "driven-by-hunger",
+          "name": "Driven By Hunger",
+          "source": "Leadbelchers",
+          "flavor": "Gutbusters cannot wait to meet and eat the enemy.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to charge rolls for this unit.",
+          "kind": "passive"
+        },
+        {
+          "id": "firing-from-the-belly",
+          "name": "Firing From The Belly",
+          "source": "Leadbelchers",
+          "flavor": "An ogor\u2019s sturdy frame easily absorbs the recoil of even cannon-sized weapons.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to hit rolls for this unit\u2019s shooting attacks if it has not used a MOVE ability this turn.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "ironblaster",
       "name": "Ironblaster",
-      "move": "9\"",
+      "move": "6\"",
       "save": 4,
-      "health": 9,
-      "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "health": 8,
+      "control": 5,
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "War",
+        "Machine"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "ogor-pistols",
+          "name": "Ogor Pistols",
+          "rangeInches": 10,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "thundermace",
+          "name": "Thundermace",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "3"
+        },
+        {
+          "id": "beastskewer-glaive-anti-monster-1-rend",
+          "name": "Beastskewer Glaive Anti- MONSTER (+1 Rend)",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "ironblaster-cannon",
+          "name": "Ironblaster Cannon",
+          "rangeInches": 18,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "D3+3"
+        },
+        {
+          "id": "clubber",
+          "name": "Clubber",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 2,
+          "rend": 0,
+          "damage": "2"
+        },
+        {
+          "id": "rhinoxs-sharp-horns",
+          "name": "Rhinox's Sharp Horns",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "bully-of-the-first-degree",
+          "name": "Bully Of The First Degree",
+          "source": "Ironblaster",
+          "flavor": "Tyrants use abrupt violence to help them maintain an iron rule over their warglutt.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of this unit to be the target. You cannot pick this unit.",
+          "effect": "Add 3 to the control score of the target until the start of your next turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "rhinox-charge",
+          "name": "Rhinox Charge",
+          "source": "Ironblaster",
+          "flavor": "A rhinox\u2019s double-horned skull can inflict considerable damage when the beast charges into the foe.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "The Damage characteristic of this unit\u2019s Rhinox\u2019s Sharp Horns is 3 if it charged in the same turn.",
+          "kind": "passive"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "bellowing-arrival",
+      "name": "Bellowing Arrival",
+      "summary": "Set up this unit anywhere on the battlefield, within 1\" of a battlefield edge and more than 6\" from all enemy units",
+      "timing": null,
+      "declare": null,
+      "effect": "Set up this unit anywhere on the battlefield, within 1\" of a battlefield edge and more than 6\" from all enemy units. KEYWORDS CORE",
+      "phases": [
+        "movement"
+      ],
+      "usageLimit": "eachTurn",
+      "kind": "ability"
     }
   ]
 }

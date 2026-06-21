@@ -9,48 +9,315 @@
       "save": 3,
       "health": 5,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Wizard",
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "dynastic-war-relic",
+          "name": "Dynastic War-relic",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "vile-transference",
+          "name": "Vile Transference",
+          "source": "Vampire Lord",
+          "flavor": "The Vampire Lord siphons the animus from nearby enemies and uses it to rejuvenate their ageless form.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible enemy unit within 6\" of this unit to be the target, then make a casting roll of 2D6.",
+          "effect": "On a 6+, roll a number of dice equal to the target\u2019s Health characteristic. For each 5+, inflict 1 mortal damage on the target and Heal (1) this unit.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "deathrattle-skeletons",
       "name": "Deathrattle Skeletons",
-      "move": "4\"",
-      "save": 5,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 10
-    },
-    {
-      "id": "deathrattle-skeletons-2",
-      "name": "Deathrattle Skeletons",
-      "move": "4\"",
-      "save": 5,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 10
-    },
-    {
-      "id": "blood-knights",
-      "name": "Blood Knights",
-      "move": "10\"",
-      "save": 3,
-      "health": 3,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
-    },
-    {
-      "id": "vargheists",
-      "name": "Vargheists",
       "move": "12\"",
       "save": 5,
       "health": 4,
       "control": 1,
-      "keywords": [],
-      "modelCount": 3
+      "keywords": [
+        "Infantry",
+        "Fly",
+        "Ward"
+      ],
+      "modelCount": 10,
+      "weapons": [
+        {
+          "id": "murderous-fangs-and-talons-crit-2-hits",
+          "name": "Murderous Fangs and Talons Crit (2 Hits)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "ancient-weapon",
+          "name": "Ancient Weapon",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "the-scent-of-gore",
+          "name": "The Scent Of Gore",
+          "source": "Deathrattle Skeletons",
+          "flavor": "The taste of hot blood on the tongue sends these abominations into a killing mania.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to wound rolls for attacks made by this unit that target a damaged unit.",
+          "kind": "passive"
+        },
+        {
+          "id": "skeleton-legion",
+          "name": "Skeleton Legion",
+          "source": "Deathrattle Skeletons",
+          "flavor": "As necromantic energies blanket the battlefield, long-dead warriors stagger to their feet once more, eye sockets aglow with killing light.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "You can return D3 slain models to this unit.",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "deathrattle-skeletons-2",
+      "name": "Deathrattle Skeletons",
+      "move": "12\"",
+      "save": 5,
+      "health": 4,
+      "control": 1,
+      "keywords": [
+        "Infantry",
+        "Fly",
+        "Ward"
+      ],
+      "modelCount": 10,
+      "weapons": [
+        {
+          "id": "murderous-fangs-and-talons-crit-2-hits",
+          "name": "Murderous Fangs and Talons Crit (2 Hits)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "ancient-weapon",
+          "name": "Ancient Weapon",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "the-scent-of-gore",
+          "name": "The Scent Of Gore",
+          "source": "Deathrattle Skeletons",
+          "flavor": "The taste of hot blood on the tongue sends these abominations into a killing mania.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to wound rolls for attacks made by this unit that target a damaged unit.",
+          "kind": "passive"
+        },
+        {
+          "id": "skeleton-legion",
+          "name": "Skeleton Legion",
+          "source": "Deathrattle Skeletons",
+          "flavor": "As necromantic energies blanket the battlefield, long-dead warriors stagger to their feet once more, eye sockets aglow with killing light.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "You can return D3 slain models to this unit.",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "blood-knights",
+      "name": "Blood Knights",
+      "move": "4\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [
+        "Infantry",
+        "Ward",
+        "Cavalry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "ancient-weapon",
+          "name": "Ancient Weapon",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "templar-lance-or-templar-blade-charge-1-damage",
+          "name": "Templar Lance or Templar Blade Charge (+1 Damage)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "nightmare-s-hooves-and-teeth",
+          "name": "Nightmare\u2019s Hooves and Teeth",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "skeleton-legion",
+          "name": "Skeleton Legion",
+          "source": "Blood Knights",
+          "flavor": "As necromantic energies blanket the battlefield, long-dead warriors stagger to their feet once more, eye sockets aglow with killing light.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "You can return D3 slain models to this unit.",
+          "kind": "ability"
+        },
+        {
+          "id": "riders-of-ruin",
+          "name": "Riders Of Ruin",
+          "source": "Blood Knights",
+          "flavor": "Blood Knights barge through lesser foes to strike at more worthy challengers.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Models in this unit can pass across enemy INFANTRY models as if this unit had FLY .",
+          "kind": "passive"
+        }
+      ]
+    },
+    {
+      "id": "vargheists",
+      "name": "Vargheists",
+      "move": "6\"",
+      "save": 3,
+      "health": 5,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Wizard",
+        "Infantry",
+        "Ward",
+        "Fly"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "dynastic-war-relic",
+          "name": "Dynastic War-relic",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "murderous-fangs-and-talons-crit-2-hits",
+          "name": "Murderous Fangs and Talons Crit (2 Hits)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "vile-transference",
+          "name": "Vile Transference",
+          "source": "Vargheists",
+          "flavor": "The Vampire Lord siphons the animus from nearby enemies and uses it to rejuvenate their ageless form.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible enemy unit within 6\" of this unit to be the target, then make a casting roll of 2D6.",
+          "effect": "On a 6+, roll a number of dice equal to the target\u2019s Health characteristic. For each 5+, inflict 1 mortal damage on the target and Heal (1) this unit.",
+          "kind": "ability"
+        },
+        {
+          "id": "the-scent-of-gore",
+          "name": "The Scent Of Gore",
+          "source": "Vargheists",
+          "flavor": "The taste of hot blood on the tongue sends these abominations into a killing mania.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to wound rolls for attacks made by this unit that target a damaged unit.",
+          "kind": "passive"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "swoop-down",
+      "name": "Swoop Down",
+      "summary": "Set up this unit anywhere on the battlefield more than 6\" from all enemy units",
+      "timing": null,
+      "declare": null,
+      "effect": "Set up this unit anywhere on the battlefield more than 6\" from all enemy units. KEYWORDS CORE",
+      "phases": [
+        "movement"
+      ],
+      "usageLimit": "eachTurn",
+      "kind": "ability"
     }
   ]
 }

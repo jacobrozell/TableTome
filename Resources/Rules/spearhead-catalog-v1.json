@@ -491,12 +491,6 @@
               "name": "Shield Bash",
               "summary": "With a bellow, the Ogor Warhulk drives their shield forward, forcing the enemy back",
               "timing": null
-            },
-            {
-              "id": "point-blank-volley",
-              "name": "Point-Blank Volley",
-              "summary": "A deadly round of shots are fired off at close range",
-              "timing": null
             }
           ]
         },
@@ -2525,7 +2519,7 @@
           "enhancements": [
             {
               "id": "amberstone-whetstone",
-              "name": "Amberstone Whetstone",
+              "name": "Amberbone Whetstone",
               "summary": "This prized sharpening stone, laced with veins of realmstone, is found deep in the crags of Ghur. It is loved by the Ironjawz for its ability to make a weapon \u2018ded sharp\u2019. Effect: The Rend characteristic of your general\u2019s melee weapons is 2",
               "timing": null
             },
@@ -3175,7 +3169,7 @@
           "regimentAbilities": [
             {
               "id": "inpenetrable-ranks",
-              "name": "Inpenetrable Ranks",
+              "name": "Impenetrable Ranks",
               "summary": "If given the order, Ossiarch warriors will snap into an unyielding defensive line",
               "timing": null
             },
@@ -3206,9 +3200,9 @@
               "timing": null
             },
             {
-              "id": "marrowpact",
-              "name": "Marrowpact",
-              "summary": "The glyphs borne to war by your general bind those who view them in arcane pacts. Effect: Each time your general uses a FIGHT ability , after all of their attacks have been resolved, Heal (X) your general where X is the number of damage points allocated by those attacks",
+              "id": "nadirite-assault",
+              "name": "Nadirite Assault",
+              "summary": "The weapons of the Ossiarch legions can siphon souls with a single cut, stealing the foe\u2019s life force. Effect: Until the end of the phase, this unit\u2019s melee weapons have Crit (2 Hits)",
               "timing": null
             }
           ]

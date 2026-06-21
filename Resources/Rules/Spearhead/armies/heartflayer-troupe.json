@@ -9,48 +9,402 @@
       "save": 5,
       "health": 6,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "keldrisa-th",
+          "name": "Keldrisa\u00edth",
+          "rangeInches": 12,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "keldrisa-th-2",
+          "name": "Keldrisa\u00edth",
+          "rangeInches": 0,
+          "attacks": "6",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "all-out-slaughter",
+          "name": "All-Out Slaughter",
+          "source": "Melusai Ironscale",
+          "flavor": "The Melusai Ironscale exhorts their warriors to commit acts of terrible bloodshed.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of this unit to be the target. You cannot pick this unit.",
+          "effect": "Add 1 to the Attacks characteristic of the target\u2019s melee weapons for the rest of the turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "turned-to-crystal",
+          "name": "Turned To Crystal",
+          "source": "Melusai Ironscale",
+          "flavor": "The touch of an Ironscale can permanently transmute an enemy into a crystal statue.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit within 1\" of this unit to be the target and roll a dice.",
+          "effect": "On a 2+, inflict 1 mortal damage on the target.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "witch-aelves",
       "name": "Witch Aelves",
-      "move": "6\"",
-      "save": 6,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
-    },
-    {
-      "id": "witch-aelves-2",
-      "name": "Witch Aelves",
-      "move": "6\"",
-      "save": 6,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
-    },
-    {
-      "id": "doomfire-warlocks",
-      "name": "Doomfire Warlocks",
-      "move": "14\"",
-      "save": 5,
-      "health": 3,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
-    },
-    {
-      "id": "blood-stalkers",
-      "name": "Blood Stalkers",
       "move": "8\"",
       "save": 5,
       "health": 2,
       "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "keywords": [
+        "Infantry",
+        "Ward",
+        "Reinforcements"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "heartseeker-bow-crit-auto-wound",
+          "name": "Heartseeker Bow Crit (Auto-wound)",
+          "rangeInches": 18,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "scianlar",
+          "name": "Scianlar",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "paired-scians-crit-auto-wound",
+          "name": "Paired Scians\u00e1 Crit (Auto-wound)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "heartseekers",
+          "name": "Heartseekers",
+          "source": "Witch Aelves",
+          "flavor": "The bloodblessed arrows loosed by these Melusai unerringly seek out the enemy\u2019s vital organs.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Shooting attacks made by this unit score critical hits on unmodified hit rolls of 5+ if this unit did not use a MOVE ability in the same turn.",
+          "kind": "passive"
+        },
+        {
+          "id": "frenzied-fervour",
+          "name": "Frenzied Fervour",
+          "source": "Witch Aelves",
+          "flavor": "Witch Aelves hurl themselves at the enemy with no fear of death, cutting down foes in a whirlwind of blades.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to the Rend characteristic of this unit\u2019s melee weapons if it charged in the same turn.",
+          "kind": "passive"
+        }
+      ]
+    },
+    {
+      "id": "witch-aelves-2",
+      "name": "Witch Aelves",
+      "move": "8\"",
+      "save": 5,
+      "health": 2,
+      "control": 1,
+      "keywords": [
+        "Infantry",
+        "Ward",
+        "Reinforcements"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "heartseeker-bow-crit-auto-wound",
+          "name": "Heartseeker Bow Crit (Auto-wound)",
+          "rangeInches": 18,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "scianlar",
+          "name": "Scianlar",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "paired-scians-crit-auto-wound",
+          "name": "Paired Scians\u00e1 Crit (Auto-wound)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "heartseekers",
+          "name": "Heartseekers",
+          "source": "Witch Aelves",
+          "flavor": "The bloodblessed arrows loosed by these Melusai unerringly seek out the enemy\u2019s vital organs.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Shooting attacks made by this unit score critical hits on unmodified hit rolls of 5+ if this unit did not use a MOVE ability in the same turn.",
+          "kind": "passive"
+        },
+        {
+          "id": "frenzied-fervour",
+          "name": "Frenzied Fervour",
+          "source": "Witch Aelves",
+          "flavor": "Witch Aelves hurl themselves at the enemy with no fear of death, cutting down foes in a whirlwind of blades.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to the Rend characteristic of this unit\u2019s melee weapons if it charged in the same turn.",
+          "kind": "passive"
+        }
+      ]
+    },
+    {
+      "id": "doomfire-warlocks",
+      "name": "Doomfire Warlocks",
+      "move": "8\"",
+      "save": 5,
+      "health": 6,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Ward",
+        "Cavalry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "keldrisa-th",
+          "name": "Keldrisa\u00edth",
+          "rangeInches": 12,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "keldrisa-th-2",
+          "name": "Keldrisa\u00edth",
+          "rangeInches": 0,
+          "attacks": "6",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "doomfire-crossbow",
+          "name": "Doomfire Crossbow",
+          "rangeInches": 10,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "cursed-scimitar",
+          "name": "Cursed Scimitar",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "dark-steed-s-vicious-bite",
+          "name": "Dark Steed\u2019s Vicious Bite",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "all-out-slaughter",
+          "name": "All-Out Slaughter",
+          "source": "Doomfire Warlocks",
+          "flavor": "The Melusai Ironscale exhorts their warriors to commit acts of terrible bloodshed.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of this unit to be the target. You cannot pick this unit.",
+          "effect": "Add 1 to the Attacks characteristic of the target\u2019s melee weapons for the rest of the turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "turned-to-crystal",
+          "name": "Turned To Crystal",
+          "source": "Doomfire Warlocks",
+          "flavor": "The touch of an Ironscale can permanently transmute an enemy into a crystal statue.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit within 1\" of this unit to be the target and roll a dice.",
+          "effect": "On a 2+, inflict 1 mortal damage on the target.",
+          "kind": "ability"
+        },
+        {
+          "id": "doomfire",
+          "name": "Doomfire",
+          "source": "Doomfire Warlocks",
+          "flavor": "The Doomfire Warlocks hurl bolts of blazing black flame at their foes.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible enemy unit within 12\" of this unit to be the target, then make a casting roll of 2D6.",
+          "effect": "On a 6+, inflict D3 mortal damage on the target.",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "blood-stalkers",
+      "name": "Blood Stalkers",
+      "move": "14\"",
+      "save": 5,
+      "health": 3,
+      "control": 1,
+      "keywords": [
+        "Cavalry",
+        "Ward",
+        "Infantry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "doomfire-crossbow",
+          "name": "Doomfire Crossbow",
+          "rangeInches": 10,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "cursed-scimitar",
+          "name": "Cursed Scimitar",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "dark-steed-s-vicious-bite",
+          "name": "Dark Steed\u2019s Vicious Bite",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "heartseeker-bow-crit-auto-wound",
+          "name": "Heartseeker Bow Crit (Auto-wound)",
+          "rangeInches": 18,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "scianlar",
+          "name": "Scianlar",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "doomfire",
+          "name": "Doomfire",
+          "source": "Blood Stalkers",
+          "flavor": "The Doomfire Warlocks hurl bolts of blazing black flame at their foes.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible enemy unit within 12\" of this unit to be the target, then make a casting roll of 2D6.",
+          "effect": "On a 6+, inflict D3 mortal damage on the target.",
+          "kind": "ability"
+        },
+        {
+          "id": "heartseekers",
+          "name": "Heartseekers",
+          "source": "Blood Stalkers",
+          "flavor": "The bloodblessed arrows loosed by these Melusai unerringly seek out the enemy\u2019s vital organs.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Shooting attacks made by this unit score critical hits on unmodified hit rolls of 5+ if this unit did not use a MOVE ability in the same turn.",
+          "kind": "passive"
+        }
+      ]
     }
   ]
 }

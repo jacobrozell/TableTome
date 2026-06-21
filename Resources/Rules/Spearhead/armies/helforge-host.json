@@ -9,48 +9,372 @@
       "save": 3,
       "health": 6,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "daemonflame-glaive-crit-mortal",
+          "name": "Daemonflame Glaive Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "black-hearted-conqueror",
+          "name": "Black-Hearted Conqueror",
+          "source": "War Despot",
+          "flavor": "Those sworn to serve beneath a Despot must offer them conquest and tribute or suffer the consequences\u2026",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While this unit has any daemonic power points , friendly units with 0 daemonic power points count as having 1 daemonic power point while they are wholly within 6\" of and visible to this unit. For each daemonic power point this unit has, add 3\" to the range of this ability.",
+          "kind": "passive"
+        }
+      ]
     },
     {
-      "id": "dominator-engine-with-immolation-cannons",
-      "name": "Dominator Engine with Immolation Cannons",
-      "move": "6\"",
-      "save": 2,
-      "health": 10,
-      "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "id": "dominator-engine",
+      "name": "Dominator Engine",
+      "move": "4\"",
+      "save": 3,
+      "health": 1,
+      "control": 1,
+      "keywords": [
+        "Infantry",
+        "Reinforcements",
+        "War",
+        "Machine"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "hashutite-spear-anti-charge-1-rend",
+          "name": "Hashutite Spear Anti-charge (+1 Rend)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "immolation-cannons",
+          "name": "Immolation Cannons",
+          "rangeInches": 8,
+          "attacks": "5",
+          "hit": 2,
+          "wound": 4,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "horns-and-pummelling-strikes",
+          "name": "Horns and Pummelling Strikes",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "strike-the-gongs",
+          "name": "Strike The Gongs",
+          "source": "Dominator Engine",
+          "flavor": "Borne by straining hobgrots, these gongs are holy relics to the servants of Hashut.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "oncePerBattle",
+          "declare": null,
+          "effect": "This unit\u2019s Gong Carrier (if any) is a token . You can remove its Gong Carrier from the battlefield and return D3 slain models to this unit.",
+          "kind": "ability"
+        },
+        {
+          "id": "daemonic-resilience",
+          "name": "Daemonic Resilience",
+          "source": "Dominator Engine",
+          "flavor": "Spitting contempt from between their tusks, these duardin refuse to show the slightest shred of weakness.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Apply the effect below that corresponds with the number of daemonic power points (DPP) this unit has: DPP Effect 1 This unit has WARD ( 6+ ) . 2 This unit has WARD ( 5+ ) . 3 This unit has WARD ( 5+ ) and you ignore the first damage point allocated to this unit in each phase.",
+          "kind": "passive"
+        },
+        {
+          "id": "daemonic-strength",
+          "name": "Daemonic Strength",
+          "source": "Dominator Engine",
+          "flavor": "When empowered with a surplus of daemonic energy, Dominator Engines are made faster and deadlier still.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "For each daemonic power point this unit has: Add 1\" to its Move characteristic. Add 1 to the Attacks characteristic of its weapons.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "tormentor-bombard",
       "name": "Tormentor Bombard",
-      "move": "4\"",
-      "save": 3,
-      "health": 8,
+      "move": "6\"",
+      "save": 2,
+      "health": 10,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Spell",
+        "Unlimited",
+        "Unbind",
+        "Banish",
+        "Prayer",
+        "Move",
+        "Core",
+        "Attack",
+        "Shoot",
+        "Charge",
+        "Run",
+        "Retreat",
+        "Fight",
+        "War",
+        "Machine",
+        "Reinforcements"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "immolation-cannons",
+          "name": "Immolation Cannons",
+          "rangeInches": 8,
+          "attacks": "5",
+          "hit": 2,
+          "wound": 4,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "horns-and-pummelling-strikes",
+          "name": "Horns and Pummelling Strikes",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "torrent-of-ruinous-energy-anti-infantry-1-rend-anti-cavalry-1-rend",
+          "name": "Torrent of Ruinous Energy Anti- INFANTRY (+1 Rend) , Anti- CAVALRY (+1 Rend)",
+          "rangeInches": 30,
+          "attacks": "4",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "artillerist-weapons",
+          "name": "Artillerist Weapons",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "daemonic-strength",
+          "name": "Daemonic Strength",
+          "source": "Tormentor Bombard",
+          "flavor": "When empowered with a surplus of daemonic energy, Dominator Engines are made faster and deadlier still.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "For each daemonic power point this unit has: Add 1\" to its Move characteristic. Add 1 to the Attacks characteristic of its weapons.",
+          "kind": "passive"
+        },
+        {
+          "id": "calculated-trajectory",
+          "name": "Calculated Trajectory",
+          "source": "Tormentor Bombard",
+          "flavor": "The warhosts of the Chaos duardin revel in overwhelming their foes with excessive, punishing firepower.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to hit rolls for this unit\u2019s shooting attacks that target an enemy unit with 5 or more models that is more than 12\" from this unit.",
+          "kind": "passive"
+        },
+        {
+          "id": "ruinous-bombardment",
+          "name": "Ruinous Bombardment",
+          "source": "Tormentor Bombard",
+          "flavor": "Those who survive the initial unmaking wave of raw Chaos energy laid down by a Tormentor Bombard are left addled and disoriented.",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "If this unit used a SHOOT ability this turn and all of its attacks targeted the same enemy unit, that enemy unit is the target. Then, you can pick a number of enemy units within 6\" of the target equal to the number of daemonic power points this unit has to be additional targets.",
+          "effect": "Roll a dice for each target. On a 3+, subtract 3 from the target\u2019s control score for the rest of the turn.",
+          "kind": "ability"
+        }
+      ]
     },
     {
-      "id": "infernal-cohort-with-hashutite-spears",
-      "name": "Infernal Cohort with Hashutite Spears",
+      "id": "infernal-cohort",
+      "name": "Infernal Cohort",
       "move": "4\"",
       "save": 3,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "health": 6,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Reinforcements"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "daemonflame-glaive-crit-mortal",
+          "name": "Daemonflame Glaive Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "hashutite-spear-anti-charge-1-rend",
+          "name": "Hashutite Spear Anti-charge (+1 Rend)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "black-hearted-conqueror",
+          "name": "Black-Hearted Conqueror",
+          "source": "Infernal Cohort",
+          "flavor": "Those sworn to serve beneath a Despot must offer them conquest and tribute or suffer the consequences\u2026",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While this unit has any daemonic power points , friendly units with 0 daemonic power points count as having 1 daemonic power point while they are wholly within 6\" of and visible to this unit. For each daemonic power point this unit has, add 3\" to the range of this ability.",
+          "kind": "passive"
+        },
+        {
+          "id": "strike-the-gongs",
+          "name": "Strike The Gongs",
+          "source": "Infernal Cohort",
+          "flavor": "Borne by straining hobgrots, these gongs are holy relics to the servants of Hashut.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "oncePerBattle",
+          "declare": null,
+          "effect": "This unit\u2019s Gong Carrier (if any) is a token . You can remove its Gong Carrier from the battlefield and return D3 slain models to this unit.",
+          "kind": "ability"
+        },
+        {
+          "id": "daemonic-resilience",
+          "name": "Daemonic Resilience",
+          "source": "Infernal Cohort",
+          "flavor": "Spitting contempt from between their tusks, these duardin refuse to show the slightest shred of weakness.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Apply the effect below that corresponds with the number of daemonic power points (DPP) this unit has: DPP Effect 1 This unit has WARD ( 6+ ) . 2 This unit has WARD ( 5+ ) . 3 This unit has WARD ( 5+ ) and you ignore the first damage point allocated to this unit in each phase.",
+          "kind": "passive"
+        }
+      ]
     },
     {
-      "id": "infernal-cohort-with-hashutite-spears-2",
-      "name": "Infernal Cohort with Hashutite Spears",
+      "id": "infernal-cohort-2",
+      "name": "Infernal Cohort",
       "move": "4\"",
       "save": 3,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "health": 6,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Reinforcements"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "daemonflame-glaive-crit-mortal",
+          "name": "Daemonflame Glaive Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "hashutite-spear-anti-charge-1-rend",
+          "name": "Hashutite Spear Anti-charge (+1 Rend)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "black-hearted-conqueror",
+          "name": "Black-Hearted Conqueror",
+          "source": "Infernal Cohort",
+          "flavor": "Those sworn to serve beneath a Despot must offer them conquest and tribute or suffer the consequences\u2026",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While this unit has any daemonic power points , friendly units with 0 daemonic power points count as having 1 daemonic power point while they are wholly within 6\" of and visible to this unit. For each daemonic power point this unit has, add 3\" to the range of this ability.",
+          "kind": "passive"
+        },
+        {
+          "id": "strike-the-gongs",
+          "name": "Strike The Gongs",
+          "source": "Infernal Cohort",
+          "flavor": "Borne by straining hobgrots, these gongs are holy relics to the servants of Hashut.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "oncePerBattle",
+          "declare": null,
+          "effect": "This unit\u2019s Gong Carrier (if any) is a token . You can remove its Gong Carrier from the battlefield and return D3 slain models to this unit.",
+          "kind": "ability"
+        },
+        {
+          "id": "daemonic-resilience",
+          "name": "Daemonic Resilience",
+          "source": "Infernal Cohort",
+          "flavor": "Spitting contempt from between their tusks, these duardin refuse to show the slightest shred of weakness.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Apply the effect below that corresponds with the number of daemonic power points (DPP) this unit has: DPP Effect 1 This unit has WARD ( 6+ ) . 2 This unit has WARD ( 5+ ) . 3 This unit has WARD ( 5+ ) and you ignore the first damage point allocated to this unit in each phase.",
+          "kind": "passive"
+        }
+      ]
     }
   ]
 }

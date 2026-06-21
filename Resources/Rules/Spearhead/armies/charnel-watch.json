@@ -9,38 +9,286 @@
       "save": 5,
       "health": 7,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Wizard",
+        "Infantry",
+        "Fly",
+        "Ward"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "gory-talons-and-fangs",
+          "name": "Gory Talons and Fangs",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "sound-the-pursuit",
+          "name": "Sound The Pursuit!",
+          "source": "Abhorrant Gorewarden",
+          "flavor": "With a howl that echoes like a winding horn, the Gorewarden infuses their minions with a feverish desire to hunt and feast.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of this unit to be the target, then make a casting roll of 2D6.",
+          "effect": "On a 6+, until the start of your next turn, when making charge rolls for the target, add 1 to the number of dice rolled, to a maximum of 3, then remove 1 dice of your choice and use the remaining dice as the charge roll.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "royal-beastflayers",
       "name": "Royal Beastflayers",
-      "move": "6\"",
-      "save": 6,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 10
-    },
-    {
-      "id": "crypt-horrors",
-      "name": "Crypt Horrors",
       "move": "7\"",
       "save": 5,
       "health": 4,
       "control": 1,
-      "keywords": [],
-      "modelCount": 3
+      "keywords": [
+        "Infantry",
+        "Reinforcements",
+        "Ward"
+      ],
+      "modelCount": 10,
+      "weapons": [
+        {
+          "id": "club-and-septic-talons",
+          "name": "Club and Septic Talons",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "beastflayer-weapons",
+          "name": "Beastflayer Weapons",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "holy-blades-of-bone",
+          "name": "Holy Blades Of Bone",
+          "source": "Royal Beastflayers",
+          "flavor": "Crypt Horrors wield huge, monstrous femurs \u2013 as well as other grisly relics \u2013 as if they were blessed weapons.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit in combat with this unit and that charged this turn to be the target.",
+          "effect": "Roll a dice for each model in the target unit. For each 5+, inflict 1 mortal damage on the target unit.",
+          "kind": "ability"
+        },
+        {
+          "id": "lie-of-the-land",
+          "name": "Lie Of The Land",
+          "source": "Royal Beastflayers",
+          "flavor": "The Beastflayers\u2019 familiarity with their hunting grounds allows them to easily outflank their prey.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "If this unit is not in combat and is wholly within 6\" of a battlefield edge, remove this unit from the battlefield and set it up again wholly within 6\" of a battlefield edge and more than 6\" from all enemy units",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "crypt-horrors",
+      "name": "Crypt Horrors",
+      "move": "12\"",
+      "save": 5,
+      "health": 7,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Wizard",
+        "Infantry",
+        "Fly",
+        "Ward",
+        "Reinforcements"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "gory-talons-and-fangs",
+          "name": "Gory Talons and Fangs",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "club-and-septic-talons",
+          "name": "Club and Septic Talons",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "sound-the-pursuit",
+          "name": "Sound The Pursuit!",
+          "source": "Crypt Horrors",
+          "flavor": "With a howl that echoes like a winding horn, the Gorewarden infuses their minions with a feverish desire to hunt and feast.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of this unit to be the target, then make a casting roll of 2D6.",
+          "effect": "On a 6+, until the start of your next turn, when making charge rolls for the target, add 1 to the number of dice rolled, to a maximum of 3, then remove 1 dice of your choice and use the remaining dice as the charge roll.",
+          "kind": "ability"
+        },
+        {
+          "id": "holy-blades-of-bone",
+          "name": "Holy Blades Of Bone",
+          "source": "Crypt Horrors",
+          "flavor": "Crypt Horrors wield huge, monstrous femurs \u2013 as well as other grisly relics \u2013 as if they were blessed weapons.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit in combat with this unit and that charged this turn to be the target.",
+          "effect": "Roll a dice for each model in the target unit. For each 5+, inflict 1 mortal damage on the target unit.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "crypt-flayers",
       "name": "Crypt Flayers",
-      "move": "12\"",
-      "save": 5,
-      "health": 4,
+      "move": "6\"",
+      "save": 6,
+      "health": 1,
       "control": 1,
-      "keywords": [],
-      "modelCount": 3
+      "keywords": [
+        "Core",
+        "Move",
+        "Charge",
+        "Attack",
+        "Shoot",
+        "Fight",
+        "Banish",
+        "Prayer",
+        "Unlimited",
+        "Spell",
+        "Run",
+        "Retreat",
+        "Infantry",
+        "Ward",
+        "Fly"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "beastflayer-weapons",
+          "name": "Beastflayer Weapons",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "death-scream",
+          "name": "Death Scream",
+          "rangeInches": 10,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 3,
+          "rend": 2,
+          "damage": "1"
+        },
+        {
+          "id": "piercing-talons",
+          "name": "Piercing Talons",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "lie-of-the-land",
+          "name": "Lie Of The Land",
+          "source": "Crypt Flayers",
+          "flavor": "The Beastflayers\u2019 familiarity with their hunting grounds allows them to easily outflank their prey.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "If this unit is not in combat and is wholly within 6\" of a battlefield edge, remove this unit from the battlefield and set it up again wholly within 6\" of a battlefield edge and more than 6\" from all enemy units",
+          "kind": "ability"
+        },
+        {
+          "id": "unholy-chorus",
+          "name": "Unholy Chorus",
+          "source": "Crypt Flayers",
+          "flavor": "The shrieks of a Crypt Flayer pack leave their enemies disoriented and harrowed.",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible enemy unit within 10\" of this unit to be the target.",
+          "effect": "For the rest of the turn, subtract an amount from the target\u2019s control score equal to the number of damage points allocated to the target this phase by this unit\u2019s shooting attacks .",
+          "kind": "ability"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "delusions-and-madness",
+      "name": "Delusions And Madness",
+      "summary": "On a 1-3, you must pick a different DELUSION to the one you picked last time",
+      "timing": null,
+      "declare": "You must use this ability at the start of each battle round. If it is the first battle round, pick a DELUSION . Otherwise, make a delusion roll by rolling a D6.",
+      "effect": "On a 1-3, you must pick a different DELUSION to the one you picked last time. On a 4+, you must pick the same DELUSION as last time. For the rest of the battle round, you believe the DELUSION you picked.",
+      "phases": [
+        "hero"
+      ],
+      "usageLimit": "oncePerBattle",
+      "kind": "ability"
+    },
+    {
+      "id": "delusion-of-the-great-feast",
+      "name": "Delusion Of The Great Feast",
+      "summary": "Heal (1) each target",
+      "timing": null,
+      "declare": "If you believe this DELUSION , pick each friendly unit on the battlefield to be the targets.",
+      "effect": "Heal (1) each target. If the target is a SERFS unit, return D3 slain models to it instead. KEYWORDS DELUSION",
+      "phases": [
+        "endOfTurn"
+      ],
+      "usageLimit": "eachTurn",
+      "kind": "ability"
     }
   ]
 }

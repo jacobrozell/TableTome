@@ -762,6 +762,11 @@
           "url": "https://www.warhammer-community.com/en-gb/articles/p3i6aa3h/the-chapter-approved-deck-what-is-it-and-how-does-it-work/"
         },
         {
+          "id": "battleforces-reveal",
+          "title": "11th Edition Battleforces Revealed",
+          "url": "https://www.warhammer-community.com/en-gb/articles/n5pspedx/new-warhammer-40000-battleforces-revealed/"
+        },
+        {
           "id": "armageddon-box",
           "title": "Warhammer 40,000: Armageddon \u2014 What's in the Box",
           "url": "https://www.warhammer-community.com/en-gb/articles/x2allqya/warhammer-40000-armageddon-whats-in-the-box/"
@@ -783,7 +788,7 @@
           "order": 1,
           "title": "What You Need",
           "summary": "Miniatures, dice, a measuring tool, terrain, and the free core rules.",
-          "body": "Warhammer 40,000 is a two-player miniatures wargame. You need an army of models, six-sided dice, a tape measure (inches), a battlefield with terrain, and the rules. The 11th Edition core rules are free on Warhammer Community. The Armageddon launch box is an optional starter with Space Marines, Orks, mission cards, and a rulebook \u2014 about 1,000 points per side.",
+          "body": "Warhammer 40,000 is a two-player miniatures wargame. You need an army of models, six-sided dice, a tape measure (inches), a battlefield with terrain, and the rules. The 11th Edition core rules are free on Warhammer Community. The Warhammer 40,000: Armageddon launch box includes Space Marines, Orks, a slim core rules booklet, Chapter Approved mission deck, Dominatus narrative deck, and datasheet cards — about 1,000 points per side.",
           "tips": [
             "You do not need every codex on day one \u2014 your existing 10th Edition codex still works in 11th.",
             "Paint models for the Battle Ready bonus in matched play (+10 VP)."
@@ -807,7 +812,7 @@
           "order": 3,
           "title": "Set Up the Battlefield",
           "summary": "Terrain footprints are objectives \u2014 not just circles on a mat.",
-          "body": "Place terrain before deployment. In 11th Edition, key locations are often terrain footprints \u2014 ruins, fortifications, or areas on the board \u2014 rather than round objective markers. Use the Chapter Approved mission deck (in the Armageddon box or as a separate product) to pick deployment and missions from your armies' Force Dispositions.",
+          "body": "Place terrain before deployment. In 11th Edition, key locations are often terrain footprints \u2014 ruins, fortifications, or areas on the board \u2014 rather than round objective markers. Use the Chapter Approved mission deck from the Armageddon box (or sold separately) to pick deployment and missions from your armies' Force Dispositions. The Dominatus deck adds optional narrative campaign play.",
           "tips": [
             "Dense terrain (ruins, woods) interacts with cover, Hidden, and objective control.",
             "Casual play can use simplified terrain maps from the mission deck."
@@ -819,10 +824,11 @@
           "order": 4,
           "title": "How a Turn Works",
           "summary": "Command, Move, Shoot, Charge, Fight \u2014 then score.",
-          "body": "Each battle round, players alternate turns. On your turn you run five phases in order: Command (battle-shock tests, stratagems, abilities), Movement, Shooting, Charge, and Fight. Pass the device when your turn ends. Victory points are scored from primary missions, secondary objectives, and the Battle Ready bonus \u2014 mission details come from your Chapter Approved cards.",
+          "body": "Each battle round, players alternate turns. On your turn you run five phases in order: Command (battle-shock tests, stratagems, abilities), Movement, Shooting, Charge, and Fight. The End of Turn step follows \u2014 score mission triggers, remove models to regain coherency if needed, then pass the device. Victory points come from primary missions, secondary objectives, and the Battle Ready bonus \u2014 mission details come from your Chapter Approved cards.",
           "tips": [
             "Battle-shock tests happen in the Command phase \u2014 not only when a unit first breaks.",
-            "Overwatch fires at the end of the enemy Movement phase, not during Charges."
+            "Overwatch fires at the end of the enemy Movement phase, not during Charges.",
+            "Out-of-coherency units lose models at end of turn until coherency is restored."
           ],
           "relatedRuleSectionId": "11e-turn-overview"
         },
@@ -834,7 +840,7 @@
           "body": "Each attack uses the target's Ballistic Skill (shooting) or Weapon Skill (melee). Roll to hit, then to wound comparing Strength to Toughness, then the defender rolls saves. A wound fails only if it fails both the Armour save (after AP) and the Invulnerable save \u2014 invulnerable saves are not optional. Failed saves inflict damage; remove models when wounds are exceeded. Identical attacks are rolled together; the defender sets wound allocation order before saves.",
           "tips": [
             "Cover imposes -1 BS on the shooter \u2014 not +1 to your armour save.",
-            "Engagement range is 2 inches for charges and melee."
+            "Engagement range is 2 inches horizontally and 5 inches vertically for charges and melee."
           ],
           "relatedRuleSectionId": "11e-attack-sequence"
         },
@@ -915,7 +921,7 @@
           "order": 5,
           "title": "Cover & Hidden",
           "summary": "Cover hurts the shooter's BS; units can hide in ruins.",
-          "body": "Benefit of Cover is now -1 Ballistic Skill to the firing unit, not +1 to your armour save. Infantry, Beasts, and Swarms in a terrain area with at least one Light or Dense feature can become Hidden if the unit has not made any ranged attacks this turn or last turn and is beyond the enemy's Detection Range (usually 15 inches). Hidden units cannot be targeted unless the shooter is close enough. AP-1 weapons bite harder into cover-granting targets.",
+          "body": "Benefit of Cover is now -1 Ballistic Skill to the firing unit (the attack's BS is worsened by 1), not +1 to your armour save. Infantry, Beasts, and Swarms in a terrain area with at least one Dense terrain feature can become Hidden if their unit did not make ranged attacks this turn or last turn and they are beyond the enemy's Detection Range (usually 15 inches). Hidden models cannot be targeted unless the shooter is within Detection Range.",
           "tips": [
             "Vehicles and Monsters generally need obscurement, not footprints, for cover.",
             "Plunging Fire: +1 BS when shooting from terrain at least 3 inches tall."
@@ -927,7 +933,7 @@
           "order": 6,
           "title": "Charge: Roll First, Target After",
           "summary": "Less stranded charges; 2 inch engagement.",
-          "body": "Declare a charge if an enemy is within 12 inches, roll 2D6, then choose enemy unit(s) you can reach with a charge move. Engagement range is now 2 inches. You need not base models on enemies \u2014 ending within 1 inch of targets if possible is the goal. You may decline to move after a good roll if every reachable target is unappealing.",
+          "body": "Declare a charge if an enemy is within 12 inches, roll 2D6 for maximum charge distance, then select charge target(s) you can reach. Engagement range is 2 inches horizontally and 5 inches vertically. Models that can end within 1 inch of charge targets must do so; models that can end engaged must do so. You may decline to move after rolling if no charge is possible.",
           "tips": [
             "Successful charges grant Fights First \u2014 but the active player still picks which Fights First unit goes first.",
             "Deep Strike charges still need 9+ on 2D6 where setup must be more than 8 inches away."
@@ -939,10 +945,10 @@
           "order": 7,
           "title": "Fight Phase Overhaul",
           "summary": "Pile-in together, active player activates first, consolidate at the end.",
-          "body": "All pile-in moves happen before any fights resolve. The active player selects the first unit to fight (including Fights First). Players alternate until done. Overrun Fights give an extra pile-in if a unit is eligible but not engaged when selected. After all fights, eligible units consolidate 3 inches in a shared step. Supporting Attacks are gone \u2014 2 inch engagement range only.",
+          "body": "All pile-in moves happen before any fights resolve. The active player selects the first unit to fight (including Fights First). Players alternate until done. Overrun Fights give an extra pile-in if a unit is eligible but not engaged when selected. After all fights, eligible units consolidate up to 3 inches in a shared step \u2014 pick Ongoing (already engaged), Engaging (enemies within 3\"), or Objective (objective within 3\"). Supporting Attacks are gone \u2014 engagement range is 2 inches horizontally and 5 inches vertically.",
           "tips": [
             "Fights First is weaker than in 10th because chargers on the active turn swing before defensive Fights First.",
-            "Watch for consolidation pulling new enemy units into combat."
+            "Engaging consolidation can pull you into combat with units that have not fought yet."
           ],
           "relatedRuleSectionId": "11e-charge-fight"
         },
@@ -963,7 +969,7 @@
           "order": 9,
           "title": "Shooting & Overwatch",
           "summary": "Batch saves, indirect nerfs, Overwatch at end of Movement.",
-          "body": "Defenders group models by save profile and allocate lowest save dice first \u2014 characters take spillover last. Indirect Fire is weaker: cover to target, no hit re-rolls, and usually hit only on 6+ without a stationary spotter. Overwatch triggers once at the end of the enemy Movement phase (not after each move or in the Charge phase) and cannot re-roll hits.",
+          "body": "Defenders group models by save profile and allocate lowest save dice first \u2014 characters take spillover last. Indirect Fire: target gets cover, no hit re-rolls, and unmodified 1\u20135 fail unless your unit remained stationary and the target is visible to a friendly spotter (then 1\u20133 fail). Overwatch triggers once at the end of the enemy Movement phase (not after each move or in the Charge phase) and cannot re-roll hits.",
           "tips": [
             "Torrent weapons are strong Overwatch picks.",
             "Close-quarters shooting while engaged penalises non-Close-quarters weapons."
@@ -975,7 +981,7 @@
           "order": 10,
           "title": "List Building Tweaks",
           "summary": "9 inch coherency, free rotation, attached characters.",
-          "body": "Unit coherency requires every model to be within 9 inches of every other model in the unit \u2014 wide conga lines are harder. Models rotate for free during moves and can move through friendly units. Leaders and Support Characters attach during list building; if the bodyguard is destroyed, the character remains the same unit for resurrection effects. Warlord must match your Army Faction keyword.",
+          "body": "Unit coherency: each model must be within 2 inches horizontally and 5 inches vertically of at least one other model, and within 9 inches horizontally and 5 inches vertically of every other model. Models rotate for free during moves and can move through friendly units. Leaders and Support Characters attach during list building; if the bodyguard is destroyed, the character remains the same unit for resurrection effects. Warlord must match your Army Faction keyword.",
           "tips": [
             "Some Enhancements are Upgrades on non-characters \u2014 still one Enhancement per unit.",
             "Invulnerable saves are no longer optional when taking saves."
@@ -1012,12 +1018,14 @@
           "title": "Turn Structure",
           "category": "core",
           "order": 2,
-          "content": "Each player turn follows five phases:\n\n1. Command Phase \u2014 Battle-shock tests, stratagems, abilities; scoring sub-step at phase end.\n2. Movement Phase \u2014 Normal moves, Advances, Falls Back, Remain Stationary; units in Strategic Reserves arrive with an Ingress move; Overwatch at phase end.\n3. Shooting Phase \u2014 Normal, Assault, Close-quarters, or Indirect shooting modes.\n4. Charge Phase \u2014 Declare charges within 12\", roll 2D6, then move to engage targets.\n5. Fight Phase \u2014 Pile-in, alternating fights, consolidation.\n\nBattle rounds continue until the mission ends (typically five rounds in matched play).",
+          "content": "Each player turn follows five phases, then an End of Turn step:\n\n1. Command Phase \u2014 Both players gain 1 Core CP; Battle-shock tests; stratagems and abilities; scoring sub-step at phase end.\n2. Movement Phase \u2014 Normal moves, Advances, Falls Back, Remain Stationary; units in Strategic Reserves arrive with an Ingress move; Overwatch at phase end.\n3. Shooting Phase \u2014 Normal, Assault, Close-quarters, or Indirect shooting modes.\n4. Charge Phase \u2014 Roll 2D6, then select charge target(s) within 12\".\n5. Fight Phase \u2014 Pile-in, alternating fights, consolidation.\n6. End of Turn \u2014 Mission scoring; remove models from out-of-coherency units until coherency is restored.\n\nBattle rounds continue until the mission ends (typically five rounds in matched play).",
           "relatedSectionIds": [
             "11e-command-phase",
+            "11e-movement",
             "11e-charge-fight",
             "11e-shooting",
-            "11e-reserves"
+            "11e-reserves",
+            "glossary-coherency-11e"
           ]
         },
         {
@@ -1025,7 +1033,7 @@
           "title": "Command Phase",
           "category": "core",
           "order": 3,
-          "content": "The Command Phase has defined start and end steps. After start-of-phase effects, Battle-shocked units and units at or below Half-strength take Leadership tests. Failed tests apply Battle-shock. Other Command abilities resolve in a dedicated step after Battle-shock. Mission scoring at the end of the Command Phase always uses the board state after all other end-of-phase effects.",
+          "content": "The Command Phase has defined start and end steps. Both players gain 1 Core Command Point, then the active player makes Battle-shock tests for units at or below Half-strength and units that were already Battle-shocked. Other Command abilities resolve after Battle-shock. At the end of the Command Phase, resolve other end-of-phase rules first, then consult your mission for scoring triggered at this point.",
           "relatedSectionIds": [
             "11e-battle-shock",
             "11e-scoring-overview"
@@ -1035,7 +1043,7 @@
           "id": "11e-attack-sequence",
           "title": "Attack Sequence",
           "category": "core",
-          "order": 4,
+          "order": 5,
           "content": "When a unit attacks:\n\n1. Select targets in range (and visible, unless Indirect rules apply).\n2. Group identical attacks (same BS/WS, S, AP, D, and abilities).\n3. Roll hits, then wounds for the group.\n4. Defender groups models by save profile; allocates lowest save rolls to non-character groups first, characters last.\n5. Apply damage; remove destroyed models. Mortal wounds from the group resolve before the next group.\n\nRepeat for each target unit and weapon group.",
           "relatedSectionIds": [
             "11e-shooting",
@@ -1046,28 +1054,44 @@
           "id": "11e-shooting",
           "title": "Shooting Phase",
           "category": "core",
-          "order": 5,
-          "content": "Eligible units shoot unless they Advanced (except Assault weapons), Fell Back, started an Action, or are blocked by other rules.\n\nShooting modes:\n\u2022 Normal \u2014 did not Advance; not Engaged.\n\u2022 Assault \u2014 Advanced; Assault weapons only.\n\u2022 Close-quarters \u2014 Engaged; Pistols/Close-quarters at engaged foes; Monsters/Vehicles have penalties on non-Close-quarters weapons.\n\u2022 Indirect \u2014 Indirect Fire weapons at non-visible targets with severe hit penalties unless stationary with a spotter.\n\nCover imposes -1 BS on the attacker. Overwatch occurs at the end of the enemy Movement phase: one unit, visible target within 24\", hit on 6+, no re-rolls.",
+          "order": 6,
+          "content": "Eligible units shoot unless they Advanced (except Assault weapons), Fell Back, started an Action, or are blocked by other rules.\n\nShooting modes:\n\u2022 Normal \u2014 did not Advance; not Engaged.\n\u2022 Assault \u2014 Advanced; Assault weapons only.\n\u2022 Close-quarters \u2014 Engaged; Pistols/Close-quarters at engaged foes; Monsters/Vehicles have penalties on non-Close-quarters weapons.\n\u2022 Indirect \u2014 [INDIRECT FIRE] weapons may target non-visible units. Each such attack: target has Benefit of Cover; no hit re-rolls; unmodified hit rolls of 1\u20135 fail unless your unit remained stationary this turn and the target is visible to one or more friendly units (then 1\u20133 fail).\n\nCover imposes -1 BS on the attacker per attack where every target model has cover. Overwatch occurs at the end of the enemy Movement phase: one unit, visible target within 24\", hit on 6+, no re-rolls.",
           "relatedSectionIds": [
             "11e-cover-hidden",
-            "11e-attack-sequence"
+            "11e-attack-sequence",
+            "glossary-indirect-fire-11e"
           ]
         },
         {
           "id": "11e-charge-fight",
           "title": "Charge & Fight Phases",
           "category": "core",
-          "order": 6,
-          "content": "Charge: eligible units within 12\" of enemies roll 2D6, then select target(s) in range and charge move. Engagement range is 2\". Successful charges grant Fights First.\n\nFight: all pile-ins (active player first), then alternate choosing units to fight (active player chooses first Fights First unit). Models fight if within 2\" of an enemy. Overrun Fights add a pile-in before attacking when a unit becomes eligible while unengaged. After all fights, units that could fight may consolidate 3\" toward enemies or objectives per consolidation mode.",
+          "order": 7,
+          "content": "Charge: eligible units within 12\" of enemies roll 2D6, then select target(s) in range and charge move. Engagement range is 2\" horizontally and 5\" vertically. Successful charges grant Fights First.\n\nFight: all pile-ins (active player first), then alternate choosing units to fight (active player chooses first Fights First unit). Models fight if within engagement range of an enemy. Overrun Fights add a pile-in before attacking when a unit becomes eligible while unengaged.\n\nConsolidate: after all fights, each eligible unit may move up to 3\" once. Pick a mode in order \u2014 Ongoing (engaged: stay engaged with selected foes), Engaging (unengaged with enemies within 3\": end engaged if possible), or Objective (no nearby enemies: move within range of a nearby objective). Active player consolidates all chosen units, then the opponent.",
           "relatedSectionIds": [
-            "11e-turn-overview"
+            "11e-turn-overview",
+            "glossary-consolidation-11e"
+          ]
+        },
+        {
+          "id": "11e-movement",
+          "title": "Movement Phase",
+          "category": "core",
+          "order": 4,
+          "content": "Each unit is selected once per Movement phase. Move types include Remain Stationary, Normal move, Advance, Fall Back, Disembark, and Ingress (Strategic Reserves / Deep Strike).\n\nFall Back (engaged units): pick Ordered Retreat if not Battle-shocked, or Desperate Escape if Battle-shocked (or by choice). Desperate Escape makes a hazard roll per model; models may move through enemies; if not Battle-shocked afterward, test Battle-shock again. After any Fall Back, the unit cannot shoot, charge, or start Actions this turn.\n\nAdvance adds D6 to Move but usually blocks charging and Actions. Overwatch triggers at the end of the enemy Movement phase.\n\nCoherency: multi-model units must end every move within 2\"/5\" of one other model and 9\"/5\" of every model. At End of Turn, remove models one at a time from out-of-coherency units until coherency is restored \u2014 removed models are destroyed without triggering on-destroy rules.\n\nEmergency disembark when a Transport is destroyed: set up within 6\", hazard roll per model, then the unit is Battle-shocked and cannot charge this turn.",
+          "relatedSectionIds": [
+            "11e-turn-overview",
+            "11e-reserves",
+            "glossary-coherency-11e",
+            "glossary-fall-back-11e",
+            "glossary-hazardous"
           ]
         },
         {
           "id": "11e-battle-shock",
           "title": "Battle-shock",
           "category": "core",
-          "order": 7,
+          "order": 8,
           "content": "In the Command phase, roll 2D6 for each:\n\u2022 Unit at or below Half-strength.\n\u2022 Unit that was Battle-shocked when the phase began.\n\nThe test is passed if the result is equal to or greater than the unit's Leadership. If a unit fails, it is Battle-shocked until it passes a later test. While Battle-shocked: Objective Control is \"-\" (a null value that cannot be modified up), cannot be targeted by Stratagems, cannot start or continue Actions. Insane Bravery (once per game) auto-passes one test on a unit that is not already Battle-shocked.",
           "relatedSectionIds": [
             "glossary-oc-11e",
@@ -1078,7 +1102,7 @@
           "id": "11e-detachments",
           "title": "Detachments & Force Dispositions",
           "category": "core",
-          "order": 8,
+          "order": 9,
           "content": "Army construction uses Detachment Points (typically 2 at 1,000 pts, 3 at 2,000 pts) to buy one or more detachments. Each detachment has a point cost, rules, stratagems, enhancements, and a Force Disposition. Dispositions: Take and Hold, Purge the Foe, Reconnaissance, Disruption, Priority Assets. Your chosen disposition and your opponent's set the Chapter Approved mission matchup. See the Munitorum Field Manual and faction packs for detachment costs \u2014 not duplicated here.",
           "relatedSectionIds": [
             "11e-scoring-overview"
@@ -1088,7 +1112,7 @@
           "id": "11e-scoring-overview",
           "title": "Scoring & Missions",
           "category": "core",
-          "order": 9,
+          "order": 10,
           "content": "Matched play uses the Chapter Approved mission deck. Each player may have different primary objectives from the matchup. Typical caps per player: up to 45 VP from primaries and up to 45 VP from secondaries over the game, with a maximum of 15 VP from primaries and 15 VP from secondaries in any single battle round. Draw two secondary cards in your Command phase each turn and keep unscored cards \u2014 there is no hand size limit. Battle Ready awards 10 VP if your army is fully painted. Fixed secondaries (pick two, score up to 20 VP each) remain an option. Twist cards are optional. Full mission text is on physical or digital cards \u2014 Tabletome summarizes the system only.",
           "relatedSectionIds": [
             "11e-detachments",
@@ -1099,7 +1123,7 @@
           "id": "11e-terrain-objectives",
           "title": "Terrain & Objectives",
           "category": "core",
-          "order": 10,
+          "order": 11,
           "content": "Objectives are terrain footprints and marked areas, not separate round markers. Terrain categories include Exposed, Light, and Dense. Dense features use footprints and are often Solid (no line of sight through). Models on a footprint can see and be seen through it with any part of their base on the footprint. Control is measured against the terrain area per mission rules.",
           "relatedSectionIds": [
             "11e-cover-hidden",
@@ -1110,8 +1134,8 @@
           "id": "11e-cover-hidden",
           "title": "Cover & Hidden",
           "category": "core",
-          "order": 11,
-          "content": "Benefit of Cover: attackers suffer -1 BS when shooting eligible targets in cover (Infantry/Beasts/Swarms in terrain footprints or not fully visible; vehicles/monsters need obscurement). Hidden: eligible Infantry/Beast/Swarm units in a terrain area with at least one Light or Dense feature that have not made ranged attacks this or last turn cannot be targeted from beyond Detection Range (usually 15\"). Gone to Ground reduces Detection Range by 3\" when partially obscured by Solid terrain. Plunging Fire grants +1 BS from height \u22653\".",
+          "order": 12,
+          "content": "Benefit of Cover: each ranged attack that targets a unit where every model has cover worsens that attack's BS by 1 (Infantry/Beasts/Swarms within a terrain area, or not fully visible due to terrain). Hidden: an Infantry/Beast/Swarm model in a terrain area with at least one Dense feature is hidden while its unit made no ranged attacks this turn or last turn; hidden models are only visible to enemies within Detection Range (usually 15\"). Obscuring terrain areas contain Light or Dense features and can block line of sight between models outside them. Plunging Fire grants +1 BS from height \u22653\".",
           "relatedSectionIds": [
             "11e-shooting"
           ]
@@ -1120,13 +1144,23 @@
           "id": "11e-reserves",
           "title": "Reserves & Deep Strike",
           "category": "core",
-          "order": 12,
-          "content": "Before deployment finishes, agree which units start on the board and which are held off it.\n\nStrategic Reserves units arrive from battle round 2 onward by making an Ingress move in the Movement phase: set up wholly within 6\" of a battlefield edge and more than 8\" horizontally from all enemy units. Before battle round 3, they cannot set up in the opponent's deployment zone.\n\nDeep Strike is a datasheet ability that still uses an Ingress move, but the unit can set up anywhere on the battlefield more than 8\" from enemy units — not limited to table edges.\n\nNo Strategic Reserves unit can arrive in battle round 1 unless a rule says otherwise. Any unit that started in Strategic Reserves and is not on the battlefield by the end of battle round 3 is destroyed (exceptions apply for units embarked in transports that have arrived). After an Ingress move, that unit cannot make any other move until the start of the next Charge phase.",
+          "order": 13,
+          "content": "Before deployment, you can place units in Strategic Reserves instead of on the board. Their combined points value cannot exceed 50% of your battle size unless a rule says otherwise.\n\nStrategic Reserves units arrive from battle round 2 onward by making an Ingress move in the Movement phase: set up wholly within 6\" of a battlefield edge and more than 8\" horizontally from all enemy units. Before battle round 3, they cannot set up in the opponent's deployment zone.\n\nDeep Strike is a datasheet ability that still uses an Ingress move, but the unit can set up anywhere on the battlefield more than 8\" from enemy units — not limited to table edges.\n\nNo Strategic Reserves unit can arrive in battle round 1 unless a rule says otherwise. Any unit that started in Strategic Reserves and is not on the battlefield by the end of battle round 3 is destroyed (exceptions apply for units embarked in transports that have arrived). After an Ingress move, that unit cannot make any other move until the start of the next Charge phase.",
           "relatedSectionIds": [
             "glossary-strategic-reserves-11e",
             "glossary-deep-strike-11e",
             "glossary-ingress-11e",
             "11e-turn-overview"
+          ]
+        },
+        {
+          "id": "glossary-coherency-11e",
+          "title": "Coherency",
+          "category": "glossary",
+          "order": 19,
+          "content": "Multi-model units must be in coherency when set up and after every move: each model within 2\" horizontally and 5\" vertically of at least one other model in the unit, and within 9\" horizontally and 5\" vertically of every other model. At End of Turn, remove models one at a time from out-of-coherency units until coherency is restored \u2014 those models are destroyed without triggering on-destroy abilities.",
+          "relatedSectionIds": [
+            "11e-movement"
           ]
         },
         {
@@ -1175,7 +1209,7 @@
           "title": "Hidden",
           "category": "glossary",
           "order": 24,
-          "content": "A visibility state. Hidden units cannot be targeted by attacks unless the attacking unit is within Detection Range. Indirect Fire can still target them with penalties.",
+          "content": "A visibility state for Infantry/Beast/Swarm models in a terrain area with Dense features. While hidden, a model is only visible to enemy models within its Detection Range (usually 15\"). The unit must not have made ranged attacks this turn or last turn.",
           "relatedSectionIds": [
             "11e-cover-hidden"
           ]
@@ -1191,11 +1225,42 @@
           ]
         },
         {
+          "id": "glossary-indirect-fire-11e",
+          "title": "Indirect Fire",
+          "category": "glossary",
+          "order": 26,
+          "content": "Units with [INDIRECT FIRE] weapons may use indirect shooting at targets not visible to the attacking model. Each indirect attack: the target has Benefit of Cover; you cannot re-roll hit rolls; unmodified hit rolls of 1\u20135 fail unless your unit remained stationary this turn and the target is visible to one or more friendly units (then 1\u20133 fail).",
+          "relatedSectionIds": [
+            "11e-shooting"
+          ]
+        },
+        {
+          "id": "glossary-consolidation-11e",
+          "title": "Consolidation",
+          "category": "glossary",
+          "order": 27,
+          "content": "After all fights in the Fight phase, eligible units may make one consolidation move up to 3\". Pick a mode in order: Ongoing (already engaged \u2014 stay engaged with selected foes), Engaging (enemies within 3\" \u2014 end engaged if possible), or Objective (objective within 3\" \u2014 end within range). Active player resolves all consolidations, then the opponent.",
+          "relatedSectionIds": [
+            "11e-charge-fight"
+          ]
+        },
+        {
+          "id": "glossary-fall-back-11e",
+          "title": "Fall Back",
+          "category": "glossary",
+          "order": 28,
+          "content": "Engaged units may Fall Back up to their Move characteristic and must end unengaged. Ordered Retreat if not Battle-shocked; Desperate Escape if Battle-shocked (or by choice) \u2014 hazard roll per model, may move through enemies, and test Battle-shock again if not already shocked. After Fall Back, the unit cannot shoot, charge, or start Actions this turn.",
+          "relatedSectionIds": [
+            "11e-movement",
+            "glossary-hazardous"
+          ]
+        },
+        {
           "id": "glossary-strategic-reserves-11e",
           "title": "Strategic Reserves",
           "category": "glossary",
-          "order": 26,
-          "content": "Units held off the battlefield at the start. From battle round 2 they arrive in your Movement phase with an Ingress move — set up within 6\" of a table edge and more than 8\" from enemies. Cannot arrive in round 1. Destroyed if still off the board by end of round 3.",
+          "order": 29,
+          "content": "Units held off the battlefield at the start. Combined points cannot exceed 50% of your battle size unless a rule says otherwise. From battle round 2 they arrive in your Movement phase with an Ingress move — set up within 6\" of a table edge and more than 8\" from enemies. Cannot arrive in round 1. Destroyed if still off the board by end of round 3.",
           "relatedSectionIds": [
             "11e-reserves",
             "glossary-ingress-11e"
@@ -1205,7 +1270,7 @@
           "id": "glossary-deep-strike-11e",
           "title": "Deep Strike",
           "category": "glossary",
-          "order": 27,
+          "order": 30,
           "content": "A datasheet ability for units that start off the board. They arrive from battle round 2 with an Ingress move and can set up anywhere more than 8\" from enemy units — not limited to table edges.",
           "relatedSectionIds": [
             "11e-reserves",
@@ -1216,7 +1281,7 @@
           "id": "glossary-ingress-11e",
           "title": "Ingress",
           "category": "glossary",
-          "order": 28,
+          "order": 31,
           "content": "The arrival move in your Movement phase for units in Strategic Reserves or with Deep Strike. After an Ingress move, that unit cannot make any other move until the start of the next Charge phase.",
           "relatedSectionIds": [
             "11e-reserves",
@@ -1228,7 +1293,7 @@
           "id": "glossary-incursion-11e",
           "title": "Incursion",
           "category": "glossary",
-          "order": 29,
+          "order": 32,
           "content": "A matched-play battle size of about 1,000 points per army — not a deployment rule. At Incursion you usually spend two Detachment Points. Strike Force is the standard ~2,000-point format.",
           "relatedSectionIds": [
             "11e-detachments",

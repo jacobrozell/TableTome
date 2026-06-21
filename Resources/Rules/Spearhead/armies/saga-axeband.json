@@ -9,18 +9,123 @@
       "save": 5,
       "health": 5,
       "control": 5,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "ancestral-battle-axe",
+          "name": "Ancestral Battle-axe",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "icon-of-grimnir",
+          "name": "Icon Of Grimnir",
+          "source": "Battlesmith",
+          "flavor": "The Battlesmith raises his icon of Grimnir, inspiring his allies so that they fight until the bitter end.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to save rolls for friendly units while they are wholly within 12\" of this unit.",
+          "kind": "passive"
+        },
+        {
+          "id": "plant-the-icon",
+          "name": "Plant The Icon",
+          "source": "Battlesmith",
+          "flavor": "The Battlesmith slams the pommel of his icon into the earth, setting the urgold runes of nearby allies ablaze.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "oncePerBattle",
+          "declare": null,
+          "effect": "For the rest of the turn, friendly units have WARD ( 5+ ) while they are wholly within 12\" of this unit.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "hearthguard-berzerkers",
       "name": "Hearthguard Berzerkers",
       "move": "4\"",
-      "save": 6,
-      "health": 2,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "save": 5,
+      "health": 5,
+      "control": 5,
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "ancestral-battle-axe",
+          "name": "Ancestral Battle-axe",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "flamestrike-poleaxe-crit-mortal",
+          "name": "Flamestrike Poleaxe Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "icon-of-grimnir",
+          "name": "Icon Of Grimnir",
+          "source": "Hearthguard Berzerkers",
+          "flavor": "The Battlesmith raises his icon of Grimnir, inspiring his allies so that they fight until the bitter end.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to save rolls for friendly units while they are wholly within 12\" of this unit.",
+          "kind": "passive"
+        },
+        {
+          "id": "plant-the-icon",
+          "name": "Plant The Icon",
+          "source": "Hearthguard Berzerkers",
+          "flavor": "The Battlesmith slams the pommel of his icon into the earth, setting the urgold runes of nearby allies ablaze.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "oncePerBattle",
+          "declare": null,
+          "effect": "For the rest of the turn, friendly units have WARD ( 5+ ) while they are wholly within 12\" of this unit.",
+          "kind": "ability"
+        },
+        {
+          "id": "duty-unto-death",
+          "name": "Duty Unto Death",
+          "source": "Hearthguard Berzerkers",
+          "flavor": "Hearthguard Berzerkers are sworn to protect their lodge and its masters until their dying breath.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While your general is wholly within this unit\u2019s combat range , both this unit and your general have WARD ( 5+ ) .",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "vulkite-berzerkers",
@@ -29,8 +134,67 @@
       "save": 6,
       "health": 2,
       "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "keywords": [
+        "Core",
+        "Move",
+        "Charge",
+        "Prayer",
+        "Unlimited",
+        "Run",
+        "Retreat",
+        "Attack",
+        "Shoot",
+        "Fight",
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "flamestrike-poleaxe-crit-mortal",
+          "name": "Flamestrike Poleaxe Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "fyresteel-handaxes-anti-charge-1-rend",
+          "name": "Fyresteel Handaxes Anti-charge (+1 Rend)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "duty-unto-death",
+          "name": "Duty Unto Death",
+          "source": "Vulkite Berzerkers",
+          "flavor": "Hearthguard Berzerkers are sworn to protect their lodge and its masters until their dying breath.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While your general is wholly within this unit\u2019s combat range , both this unit and your general have WARD ( 5+ ) .",
+          "kind": "passive"
+        },
+        {
+          "id": "whirlwind-of-destruction",
+          "name": "Whirlwind Of Destruction",
+          "source": "Vulkite Berzerkers",
+          "flavor": "With the light of Grimnir burning in their eyes, these impetuous warriors hurl themselves into the fray.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to the Attacks characteristic of this unit\u2019s melee weapons if it charged in the same turn.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "vulkite-berzerkers-2",
@@ -39,8 +203,67 @@
       "save": 6,
       "health": 2,
       "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "keywords": [
+        "Core",
+        "Move",
+        "Charge",
+        "Prayer",
+        "Unlimited",
+        "Run",
+        "Retreat",
+        "Attack",
+        "Shoot",
+        "Fight",
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "flamestrike-poleaxe-crit-mortal",
+          "name": "Flamestrike Poleaxe Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "fyresteel-handaxes-anti-charge-1-rend",
+          "name": "Fyresteel Handaxes Anti-charge (+1 Rend)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "duty-unto-death",
+          "name": "Duty Unto Death",
+          "source": "Vulkite Berzerkers",
+          "flavor": "Hearthguard Berzerkers are sworn to protect their lodge and its masters until their dying breath.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While your general is wholly within this unit\u2019s combat range , both this unit and your general have WARD ( 5+ ) .",
+          "kind": "passive"
+        },
+        {
+          "id": "whirlwind-of-destruction",
+          "name": "Whirlwind Of Destruction",
+          "source": "Vulkite Berzerkers",
+          "flavor": "With the light of Grimnir burning in their eyes, these impetuous warriors hurl themselves into the fray.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to the Attacks characteristic of this unit\u2019s melee weapons if it charged in the same turn.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "vulkite-berzerkers-3",
@@ -49,8 +272,67 @@
       "save": 6,
       "health": 2,
       "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "keywords": [
+        "Core",
+        "Move",
+        "Charge",
+        "Prayer",
+        "Unlimited",
+        "Run",
+        "Retreat",
+        "Attack",
+        "Shoot",
+        "Fight",
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "flamestrike-poleaxe-crit-mortal",
+          "name": "Flamestrike Poleaxe Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "fyresteel-handaxes-anti-charge-1-rend",
+          "name": "Fyresteel Handaxes Anti-charge (+1 Rend)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "duty-unto-death",
+          "name": "Duty Unto Death",
+          "source": "Vulkite Berzerkers",
+          "flavor": "Hearthguard Berzerkers are sworn to protect their lodge and its masters until their dying breath.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While your general is wholly within this unit\u2019s combat range , both this unit and your general have WARD ( 5+ ) .",
+          "kind": "passive"
+        },
+        {
+          "id": "whirlwind-of-destruction",
+          "name": "Whirlwind Of Destruction",
+          "source": "Vulkite Berzerkers",
+          "flavor": "With the light of Grimnir burning in their eyes, these impetuous warriors hurl themselves into the fray.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to the Attacks characteristic of this unit\u2019s melee weapons if it charged in the same turn.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "vulkite-berzerkers-4",
@@ -59,8 +341,82 @@
       "save": 6,
       "health": 2,
       "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "keywords": [
+        "Core",
+        "Move",
+        "Charge",
+        "Prayer",
+        "Unlimited",
+        "Run",
+        "Retreat",
+        "Attack",
+        "Shoot",
+        "Fight",
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "flamestrike-poleaxe-crit-mortal",
+          "name": "Flamestrike Poleaxe Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "fyresteel-handaxes-anti-charge-1-rend",
+          "name": "Fyresteel Handaxes Anti-charge (+1 Rend)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "duty-unto-death",
+          "name": "Duty Unto Death",
+          "source": "Vulkite Berzerkers",
+          "flavor": "Hearthguard Berzerkers are sworn to protect their lodge and its masters until their dying breath.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While your general is wholly within this unit\u2019s combat range , both this unit and your general have WARD ( 5+ ) .",
+          "kind": "passive"
+        },
+        {
+          "id": "whirlwind-of-destruction",
+          "name": "Whirlwind Of Destruction",
+          "source": "Vulkite Berzerkers",
+          "flavor": "With the light of Grimnir burning in their eyes, these impetuous warriors hurl themselves into the fray.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to the Attacks characteristic of this unit\u2019s melee weapons if it charged in the same turn.",
+          "kind": "passive"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "awaken-the-runes",
+      "name": "Awaken The Runes",
+      "summary": "On a 1-5, the rune\u2019s standard effect applies",
+      "timing": null,
+      "declare": "Pick 1 of the ur-gold runes from the ur-gold runes table, then make an activation roll of D6. Each urgold rune can only be activated once per battle.",
+      "effect": "On a 1-5, the rune\u2019s standard effect applies. On a 6, the rune\u2019s enhanced effect applies as well. The effects last until the start of your next turn.",
+      "phases": [
+        "hero"
+      ],
+      "usageLimit": "oncePerBattle",
+      "kind": "ability"
     }
   ]
 }

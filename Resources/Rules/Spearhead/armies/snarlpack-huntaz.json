@@ -9,58 +9,531 @@
       "save": 5,
       "health": 5,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Cavalry"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "boss-loppa",
+          "name": "Boss Loppa",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "snarlfang-s-slavering-jaws",
+          "name": "Snarlfang\u2019s Slavering Jaws",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "great-snarlin-howl",
+          "name": "Great Snarlin' Howl",
+          "source": "Snarlboss",
+          "flavor": "The howls of this boss\u2019s Snarlfang Alpha drive its pack into a frenzy.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick this unit and another friendly unit within this unit\u2019s combat range to be the targets.",
+          "effect": "Roll a dice. On a 3+, add 1 to the Rend characteristic and the Attacks characteristic of the targets\u2019 Companion melee weapons for the rest of the turn.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "wolfgit-retinue",
       "name": "Wolfgit Retinue",
       "move": "12\"",
-      "save": 5,
-      "health": 2,
+      "save": 4,
+      "health": 3,
       "control": 1,
-      "keywords": [],
-      "modelCount": 2
+      "keywords": [
+        "Cavalry"
+      ],
+      "modelCount": 2,
+      "weapons": [
+        {
+          "id": "pointy-skewas-charge-1-damage",
+          "name": "Pointy Skewas Charge (+1 Damage)",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "giant-snarlfang-s-jaws",
+          "name": "Giant Snarlfang\u2019s Jaws",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "2"
+        },
+        {
+          "id": "grot-bow",
+          "name": "Grot Bow",
+          "rangeInches": 15,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "stabbin-stikka",
+          "name": "Stabbin\u2019 Stikka",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "snarlfang-s-slavering-jaws",
+          "name": "Snarlfang\u2019s Slavering Jaws",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "frazzleburned-scrap",
+          "name": "Frazzleburned Scrap",
+          "source": "Wolfgit Retinue",
+          "flavor": "After the boss, Snarlpack Cavalry often get first dibs on loot, and they have an eye for the scrap and wotsits with the best light-absorbing properties. In battle, they have learned how to unleash these energies from their weapons at just the right moment, dazzling the enemy as their charge hits home.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "This unit has STRIKE-FIRST if it charged in the same turn.",
+          "kind": "passive"
+        },
+        {
+          "id": "i-got-dis-boss",
+          "name": "I Got Dis, Boss",
+          "source": "Wolfgit Retinue",
+          "flavor": "Wolfgitz look out for their Snarlboss in battle, if only because it makes knifin\u2019 him later easier once he\u2019s let his guard down.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While a friendly Snarlboss is within this unit\u2019s combat range , both this unit and that Snarlboss have WARD ( 5+ ) .",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "snarlpack-cavalry",
       "name": "Snarlpack Cavalry",
       "move": "12\"",
       "save": 4,
-      "health": 3,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 3
+      "health": 6,
+      "control": 2,
+      "keywords": [
+        "Core",
+        "Move",
+        "War",
+        "Machine",
+        "Cavalry"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "grot-bow",
+          "name": "Grot Bow",
+          "rangeInches": 15,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "wheela-slicers-and-stabbin-stikka",
+          "name": "Wheela Slicers and Stabbin\u2019 Stikka",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "snarlfangs-slavering-jaws",
+          "name": "Snarlfangs\u2019 Slavering Jaws",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "2"
+        },
+        {
+          "id": "pointy-skewas-charge-1-damage",
+          "name": "Pointy Skewas Charge (+1 Damage)",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "giant-snarlfang-s-jaws",
+          "name": "Giant Snarlfang\u2019s Jaws",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "careening-destruction",
+          "name": "Careening Destruction",
+          "source": "Snarlpack Cavalry",
+          "flavor": "Lurching uncontrollably across the battlefield at death-defying speed, Sunsteala Wheelas careen straight through their enemies leaving behind trails of devastation.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "This unit can move a distance up to its Move characteristic. It can pass through other models and the combat ranges of enemy units, but it cannot end that move in combat . Then, pick up to 1 enemy INFANTRY unit that this unit passed across during that move to be the target. Inflict D3 mortal damage on the target. Designer\u2019s Note: This unit can use this ability even if it is in combat. KEYWORDS CORE, MOVE",
+          "kind": "ability"
+        },
+        {
+          "id": "frazzleburned-scrap",
+          "name": "Frazzleburned Scrap",
+          "source": "Snarlpack Cavalry",
+          "flavor": "After the boss, Snarlpack Cavalry often get first dibs on loot, and they have an eye for the scrap and wotsits with the best light-absorbing properties. In battle, they have learned how to unleash these energies from their weapons at just the right moment, dazzling the enemy as their charge hits home.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "This unit has STRIKE-FIRST if it charged in the same turn.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "snarlpack-cavalry-2",
       "name": "Snarlpack Cavalry",
       "move": "12\"",
       "save": 4,
-      "health": 3,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 3
+      "health": 6,
+      "control": 2,
+      "keywords": [
+        "Core",
+        "Move",
+        "War",
+        "Machine",
+        "Cavalry"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "grot-bow",
+          "name": "Grot Bow",
+          "rangeInches": 15,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "wheela-slicers-and-stabbin-stikka",
+          "name": "Wheela Slicers and Stabbin\u2019 Stikka",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "snarlfangs-slavering-jaws",
+          "name": "Snarlfangs\u2019 Slavering Jaws",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "2"
+        },
+        {
+          "id": "pointy-skewas-charge-1-damage",
+          "name": "Pointy Skewas Charge (+1 Damage)",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "giant-snarlfang-s-jaws",
+          "name": "Giant Snarlfang\u2019s Jaws",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "careening-destruction",
+          "name": "Careening Destruction",
+          "source": "Snarlpack Cavalry",
+          "flavor": "Lurching uncontrollably across the battlefield at death-defying speed, Sunsteala Wheelas careen straight through their enemies leaving behind trails of devastation.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "This unit can move a distance up to its Move characteristic. It can pass through other models and the combat ranges of enemy units, but it cannot end that move in combat . Then, pick up to 1 enemy INFANTRY unit that this unit passed across during that move to be the target. Inflict D3 mortal damage on the target. Designer\u2019s Note: This unit can use this ability even if it is in combat. KEYWORDS CORE, MOVE",
+          "kind": "ability"
+        },
+        {
+          "id": "frazzleburned-scrap",
+          "name": "Frazzleburned Scrap",
+          "source": "Snarlpack Cavalry",
+          "flavor": "After the boss, Snarlpack Cavalry often get first dibs on loot, and they have an eye for the scrap and wotsits with the best light-absorbing properties. In battle, they have learned how to unleash these energies from their weapons at just the right moment, dazzling the enemy as their charge hits home.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "This unit has STRIKE-FIRST if it charged in the same turn.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "sunsteala-wheelas",
       "name": "Sunsteala Wheelas",
       "move": "12\"",
-      "save": 4,
-      "health": 6,
+      "save": 5,
+      "health": 5,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Core",
+        "Move",
+        "Hero",
+        "Cavalry",
+        "War",
+        "Machine"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "boss-loppa",
+          "name": "Boss Loppa",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "snarlfang-s-slavering-jaws",
+          "name": "Snarlfang\u2019s Slavering Jaws",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "2"
+        },
+        {
+          "id": "grot-bow",
+          "name": "Grot Bow",
+          "rangeInches": 15,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "wheela-slicers-and-stabbin-stikka",
+          "name": "Wheela Slicers and Stabbin\u2019 Stikka",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "snarlfangs-slavering-jaws",
+          "name": "Snarlfangs\u2019 Slavering Jaws",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "great-snarlin-howl",
+          "name": "Great Snarlin' Howl",
+          "source": "Sunsteala Wheelas",
+          "flavor": "The howls of this boss\u2019s Snarlfang Alpha drive its pack into a frenzy.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick this unit and another friendly unit within this unit\u2019s combat range to be the targets.",
+          "effect": "Roll a dice. On a 3+, add 1 to the Rend characteristic and the Attacks characteristic of the targets\u2019 Companion melee weapons for the rest of the turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "careening-destruction",
+          "name": "Careening Destruction",
+          "source": "Sunsteala Wheelas",
+          "flavor": "Lurching uncontrollably across the battlefield at death-defying speed, Sunsteala Wheelas careen straight through their enemies leaving behind trails of devastation.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "This unit can move a distance up to its Move characteristic. It can pass through other models and the combat ranges of enemy units, but it cannot end that move in combat . Then, pick up to 1 enemy INFANTRY unit that this unit passed across during that move to be the target. Inflict D3 mortal damage on the target. Designer\u2019s Note: This unit can use this ability even if it is in combat. KEYWORDS CORE, MOVE",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "sunsteala-wheelas-2",
       "name": "Sunsteala Wheelas",
       "move": "12\"",
-      "save": 4,
-      "health": 6,
+      "save": 5,
+      "health": 5,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Core",
+        "Move",
+        "Hero",
+        "Cavalry",
+        "War",
+        "Machine"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "boss-loppa",
+          "name": "Boss Loppa",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "snarlfang-s-slavering-jaws",
+          "name": "Snarlfang\u2019s Slavering Jaws",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "2"
+        },
+        {
+          "id": "grot-bow",
+          "name": "Grot Bow",
+          "rangeInches": 15,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "wheela-slicers-and-stabbin-stikka",
+          "name": "Wheela Slicers and Stabbin\u2019 Stikka",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "snarlfangs-slavering-jaws",
+          "name": "Snarlfangs\u2019 Slavering Jaws",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "great-snarlin-howl",
+          "name": "Great Snarlin' Howl",
+          "source": "Sunsteala Wheelas",
+          "flavor": "The howls of this boss\u2019s Snarlfang Alpha drive its pack into a frenzy.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick this unit and another friendly unit within this unit\u2019s combat range to be the targets.",
+          "effect": "Roll a dice. On a 3+, add 1 to the Rend characteristic and the Attacks characteristic of the targets\u2019 Companion melee weapons for the rest of the turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "careening-destruction",
+          "name": "Careening Destruction",
+          "source": "Sunsteala Wheelas",
+          "flavor": "Lurching uncontrollably across the battlefield at death-defying speed, Sunsteala Wheelas careen straight through their enemies leaving behind trails of devastation.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "This unit can move a distance up to its Move characteristic. It can pass through other models and the combat ranges of enemy units, but it cannot end that move in combat . Then, pick up to 1 enemy INFANTRY unit that this unit passed across during that move to be the target. Inflict D3 mortal damage on the target. Designer\u2019s Note: This unit can use this ability even if it is in combat. KEYWORDS CORE, MOVE",
+          "kind": "ability"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "fast-as-frazzlegit",
+      "name": "Fast As Frazzlegit",
+      "summary": "Friendly units can use CHARGE abilities even if they used a RETREAT ability in the same turn",
+      "timing": null,
+      "declare": null,
+      "effect": "Friendly units can use CHARGE abilities even if they used a RETREAT ability in the same turn. In addition, no mortal damage is inflicted on friendly units by RETREAT abilities.",
+      "phases": [],
+      "usageLimit": "passive",
+      "kind": "passive"
     }
   ]
 }

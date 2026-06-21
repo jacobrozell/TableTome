@@ -9,38 +9,227 @@
       "save": 5,
       "health": 6,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "the-blades-of-thirteen-cuts-crit-mortal",
+          "name": "The Blades of Thirteen Cuts Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "13",
+          "hit": 2,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "go-go-hunt-them-down",
+          "name": "Go-Go, Hunt Them Down",
+          "source": "Deathmaster Crixxit",
+          "flavor": "Crixxit dispatches his Gutter Runners to pounce on unsuspecting prey.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible friendly Gutter Runners unit wholly within 12\" of this unit to be the target. Then, roll a dice.",
+          "effect": "On a 3+, add 1 to charge rolls for the target for the rest of the turn",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "deathmaster",
       "name": "Deathmaster",
       "move": "7\"",
       "save": 5,
-      "health": 5,
+      "health": 6,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "the-blades-of-thirteen-cuts-crit-mortal",
+          "name": "The Blades of Thirteen Cuts Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "13",
+          "hit": 2,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "weeping-blade-anti-hero-1-rend-crit-mortal",
+          "name": "Weeping Blade Anti- HERO (+1 Rend) , Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "go-go-hunt-them-down",
+          "name": "Go-Go, Hunt Them Down",
+          "source": "Deathmaster",
+          "flavor": "Crixxit dispatches his Gutter Runners to pounce on unsuspecting prey.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible friendly Gutter Runners unit wholly within 12\" of this unit to be the target. Then, roll a dice.",
+          "effect": "On a 3+, add 1 to charge rolls for the target for the rest of the turn",
+          "kind": "ability"
+        },
+        {
+          "id": "shadowy-killers",
+          "name": "Shadowy Killers",
+          "source": "Deathmaster",
+          "flavor": "Ulguan illusions and other tools of misdirection shroud Deathmasters in perpetual darkness, keeping them from harm.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "If the unmodified hit roll for an attack that targets this unit is 1-4, the attack fails and the attack sequence ends.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "gutter-runners",
       "name": "Gutter Runners",
       "move": "7\"",
-      "save": 6,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "save": 5,
+      "health": 5,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Ward",
+        "Reinforcements"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "weeping-blade-anti-hero-1-rend-crit-mortal",
+          "name": "Weeping Blade Anti- HERO (+1 Rend) , Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "eshin-specialist-blades-crit-mortal",
+          "name": "Eshin Specialist Blades Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "shadowy-killers",
+          "name": "Shadowy Killers",
+          "source": "Gutter Runners",
+          "flavor": "Ulguan illusions and other tools of misdirection shroud Deathmasters in perpetual darkness, keeping them from harm.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "If the unmodified hit roll for an attack that targets this unit is 1-4, the attack fails and the attack sequence ends.",
+          "kind": "passive"
+        },
+        {
+          "id": "bomb-rats",
+          "name": "Bomb Rats",
+          "source": "Gutter Runners",
+          "flavor": "Many Gutter Runners are experts in the use of improvised explosives, using skittering Bomb Rats to rush the enemy and detonate amongst them in a burst of warpstone-fuelled fury.",
+          "phases": [
+            "charge"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "You can only use this ability if this unit has a Bomb Rat token . Pick an enemy unit within 9\" of this unit to be the target. Then, roll a dice.",
+          "effect": "On a 3+, inflict 1 mortal damage on the target. On a 1-2, remove this unit\u2019s Bomb Rat token from the battlefield.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "gutter-runners-2",
       "name": "Gutter Runners",
       "move": "7\"",
-      "save": 6,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "save": 5,
+      "health": 5,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Ward",
+        "Reinforcements"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "weeping-blade-anti-hero-1-rend-crit-mortal",
+          "name": "Weeping Blade Anti- HERO (+1 Rend) , Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "eshin-specialist-blades-crit-mortal",
+          "name": "Eshin Specialist Blades Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "shadowy-killers",
+          "name": "Shadowy Killers",
+          "source": "Gutter Runners",
+          "flavor": "Ulguan illusions and other tools of misdirection shroud Deathmasters in perpetual darkness, keeping them from harm.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "If the unmodified hit roll for an attack that targets this unit is 1-4, the attack fails and the attack sequence ends.",
+          "kind": "passive"
+        },
+        {
+          "id": "bomb-rats",
+          "name": "Bomb Rats",
+          "source": "Gutter Runners",
+          "flavor": "Many Gutter Runners are experts in the use of improvised explosives, using skittering Bomb Rats to rush the enemy and detonate amongst them in a burst of warpstone-fuelled fury.",
+          "phases": [
+            "charge"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "You can only use this ability if this unit has a Bomb Rat token . Pick an enemy unit within 9\" of this unit to be the target. Then, roll a dice.",
+          "effect": "On a 3+, inflict 1 mortal damage on the target. On a 1-2, remove this unit\u2019s Bomb Rat token from the battlefield.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "night-runners",
@@ -49,8 +238,87 @@
       "save": 6,
       "health": 1,
       "control": 1,
-      "keywords": [],
-      "modelCount": 10
+      "keywords": [
+        "Infantry",
+        "Reinforcements",
+        "Ward"
+      ],
+      "modelCount": 10,
+      "weapons": [
+        {
+          "id": "eshin-specialist-blades-crit-mortal",
+          "name": "Eshin Specialist Blades Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "slings-and-poisoned-stars-shoot-in-combat-crit-auto-wound",
+          "name": "Slings and Poisoned Stars Shoot in Combat , Crit (Auto-wound)",
+          "rangeInches": 10,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "poisoned-blades-crit-mortal",
+          "name": "Poisoned Blades Crit (Mortal)",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "bomb-rats",
+          "name": "Bomb Rats",
+          "source": "Night Runners",
+          "flavor": "Many Gutter Runners are experts in the use of improvised explosives, using skittering Bomb Rats to rush the enemy and detonate amongst them in a burst of warpstone-fuelled fury.",
+          "phases": [
+            "charge"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "You can only use this ability if this unit has a Bomb Rat token . Pick an enemy unit within 9\" of this unit to be the target. Then, roll a dice.",
+          "effect": "On a 3+, inflict 1 mortal damage on the target. On a 1-2, remove this unit\u2019s Bomb Rat token from the battlefield.",
+          "kind": "ability"
+        },
+        {
+          "id": "smoke-bombs",
+          "name": "Smoke Bombs",
+          "source": "Night Runners",
+          "flavor": "The Clans Eshin use smoke bombs to cause confusion and disorientate the enemy.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "This unit can only use this ability if it is in combat . Roll a dice.",
+          "effect": "On a 4+, this unit can immediately use the \u2018 Retreat \u2019 ability as if it were your movement phase.",
+          "kind": "ability"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "cloaked-in-shadow",
+      "name": "Cloaked In Shadow",
+      "summary": "Make a shadow-travel roll of D6",
+      "timing": null,
+      "declare": "Pick a friendly HERO to use this ability. Then, pick a different friendly unit that has 2 or more models to be the target.",
+      "effect": "Make a shadow-travel roll of D6. On a 3+, remove the HERO using this ability from the battlefield and set them up again wholly within 6\" of the target. They can be set up in combat with any enemy units that are already in combat.",
+      "phases": [
+        "anyCombat"
+      ],
+      "usageLimit": "eachTurn",
+      "kind": "ability"
     }
   ]
 }

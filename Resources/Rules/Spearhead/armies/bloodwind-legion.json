@@ -9,48 +9,407 @@
       "save": 3,
       "health": 6,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "reaperblade-crit-mortal",
+          "name": "Reaperblade Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "favoured-of-the-pantheon",
+          "name": "Favoured Of The Pantheon",
+          "source": "Chaos Lord",
+          "flavor": "The gods watch this warlord\u2019s deeds particularly closely.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "Roll a dice. On a 4+, you can roll on the Eye of the Gods table for this unit.",
+          "kind": "ability"
+        },
+        {
+          "id": "iron-willed-champion",
+          "name": "Iron-Willed Champion",
+          "source": "Chaos Lord",
+          "flavor": "This champion of Chaos demands that their warriors give no quarter.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of this unit to be the target and roll a dice. You cannot pick this unit.",
+          "effect": "On a 2+, add 1 to hit rolls for attacks made by the target unit this phase.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "chaos-chariot",
       "name": "Chaos Chariot",
-      "move": "10\"",
-      "save": 4,
-      "health": 7,
+      "move": "5\"",
+      "save": 3,
+      "health": 6,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "War",
+        "Machine"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "reaperblade-crit-mortal",
+          "name": "Reaperblade Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "chaos-war-flail",
+          "name": "Chaos War-flail",
+          "rangeInches": null,
+          "attacks": "6",
+          "hit": 3,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "driver-s-lashing-whip",
+          "name": "Driver\u2019s Lashing Whip",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "warhorses-trampling-hooves",
+          "name": "Warhorses\u2019 Trampling Hooves",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "favoured-of-the-pantheon",
+          "name": "Favoured Of The Pantheon",
+          "source": "Chaos Chariot",
+          "flavor": "The gods watch this warlord\u2019s deeds particularly closely.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "Roll a dice. On a 4+, you can roll on the Eye of the Gods table for this unit.",
+          "kind": "ability"
+        },
+        {
+          "id": "iron-willed-champion",
+          "name": "Iron-Willed Champion",
+          "source": "Chaos Chariot",
+          "flavor": "This champion of Chaos demands that their warriors give no quarter.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of this unit to be the target and roll a dice. You cannot pick this unit.",
+          "effect": "On a 2+, add 1 to hit rolls for attacks made by the target unit this phase.",
+          "kind": "ability"
+        },
+        {
+          "id": "swift-death",
+          "name": "Swift Death",
+          "source": "Chaos Chariot",
+          "flavor": "Chaos Chariots are at their most deadly on the charge, causing devastation with their bladed wheels and hurtling mass.",
+          "phases": [
+            "charge"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "If this unit charged this phase, pick an enemy unit within 1\" of it to be the target and roll a dice.",
+          "effect": "On a 2+, inflict D3 mortal damage on the target.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "chaos-warriors",
       "name": "Chaos Warriors",
-      "move": "5\"",
-      "save": 3,
-      "health": 2,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "move": "10\"",
+      "save": 4,
+      "health": 7,
+      "control": 2,
+      "keywords": [
+        "War",
+        "Machine",
+        "Infantry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "chaos-war-flail",
+          "name": "Chaos War-flail",
+          "rangeInches": null,
+          "attacks": "6",
+          "hit": 3,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "driver-s-lashing-whip",
+          "name": "Driver\u2019s Lashing Whip",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "warhorses-trampling-hooves",
+          "name": "Warhorses\u2019 Trampling Hooves",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "rune-etched-halberd",
+          "name": "Rune-etched Halberd",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "swift-death",
+          "name": "Swift Death",
+          "source": "Chaos Warriors",
+          "flavor": "Chaos Chariots are at their most deadly on the charge, causing devastation with their bladed wheels and hurtling mass.",
+          "phases": [
+            "charge"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "If this unit charged this phase, pick an enemy unit within 1\" of it to be the target and roll a dice.",
+          "effect": "On a 2+, inflict D3 mortal damage on the target.",
+          "kind": "ability"
+        },
+        {
+          "id": "bringers-of-desolation",
+          "name": "Bringers Of Desolation",
+          "source": "Chaos Warriors",
+          "flavor": "Paragons of the Dark Gods, Chaos Warriors cut a swathe through the enemy lines, leaving nothing but blood and ruin in their wake.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to wound rolls for combat attacks made by this unit that target an enemy unit that is contesting an objective you do not control.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "chaos-warriors-2",
       "name": "Chaos Warriors",
-      "move": "5\"",
-      "save": 3,
-      "health": 2,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "move": "10\"",
+      "save": 4,
+      "health": 7,
+      "control": 2,
+      "keywords": [
+        "War",
+        "Machine",
+        "Infantry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "chaos-war-flail",
+          "name": "Chaos War-flail",
+          "rangeInches": null,
+          "attacks": "6",
+          "hit": 3,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "driver-s-lashing-whip",
+          "name": "Driver\u2019s Lashing Whip",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "warhorses-trampling-hooves",
+          "name": "Warhorses\u2019 Trampling Hooves",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "rune-etched-halberd",
+          "name": "Rune-etched Halberd",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "swift-death",
+          "name": "Swift Death",
+          "source": "Chaos Warriors",
+          "flavor": "Chaos Chariots are at their most deadly on the charge, causing devastation with their bladed wheels and hurtling mass.",
+          "phases": [
+            "charge"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "If this unit charged this phase, pick an enemy unit within 1\" of it to be the target and roll a dice.",
+          "effect": "On a 2+, inflict D3 mortal damage on the target.",
+          "kind": "ability"
+        },
+        {
+          "id": "bringers-of-desolation",
+          "name": "Bringers Of Desolation",
+          "source": "Chaos Warriors",
+          "flavor": "Paragons of the Dark Gods, Chaos Warriors cut a swathe through the enemy lines, leaving nothing but blood and ruin in their wake.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to wound rolls for combat attacks made by this unit that target an enemy unit that is contesting an objective you do not control.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "chaos-knights",
       "name": "Chaos Knights",
-      "move": "10\"",
+      "move": "5\"",
       "save": 3,
-      "health": 4,
+      "health": 2,
       "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "keywords": [
+        "Core",
+        "Move",
+        "Charge",
+        "Attack",
+        "Shoot",
+        "Fight",
+        "Spell",
+        "Unbind",
+        "Run",
+        "Retreat",
+        "Infantry",
+        "Cavalry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "rune-etched-halberd",
+          "name": "Rune-etched Halberd",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "cursed-lance-charge-1-damage",
+          "name": "Cursed Lance Charge (+1 Damage)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "chaos-steed-s-trampling-hooves",
+          "name": "Chaos Steed\u2019s Trampling Hooves",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "bringers-of-desolation",
+          "name": "Bringers Of Desolation",
+          "source": "Chaos Knights",
+          "flavor": "Paragons of the Dark Gods, Chaos Warriors cut a swathe through the enemy lines, leaving nothing but blood and ruin in their wake.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to wound rolls for combat attacks made by this unit that target an enemy unit that is contesting an objective you do not control.",
+          "kind": "passive"
+        },
+        {
+          "id": "impaling-charge",
+          "name": "Impaling Charge",
+          "source": "Chaos Knights",
+          "flavor": "A charging Chaos Knight is capable of spitting several enemies at once with the point of their ensorcelled polearm.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to the Rend characteristic of this unit\u2019s Cursed Lances if it charged in the same turn.",
+          "kind": "passive"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "dreaded-arrival",
+      "name": "Dreaded Arrival",
+      "summary": "Set up this unit wholly within your territory, within 1\" of a battlefield edge and more than 6\" from all enemy units",
+      "timing": null,
+      "declare": null,
+      "effect": "Set up this unit wholly within your territory, within 1\" of a battlefield edge and more than 6\" from all enemy units.",
+      "phases": [
+        "movement"
+      ],
+      "usageLimit": "eachTurn",
+      "kind": "ability"
     }
   ]
 }

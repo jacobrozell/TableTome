@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "armyId": "necron-host",
+  "units": [
+    {
+      "id": "catacomb-command-barge",
+      "name": "Catacomb Command Barge",
+      "keywords": ["Character", "Vehicle"],
+      "modelCount": 1,
+      "notes": "See your Battleforce datasheet card for exact stats.",
+      "abilities": [
+        {
+          "id": "command-barge-will",
+          "name": "Dynastic Will",
+          "source": "Catacomb Command Barge",
+          "effect": "Mobile command node — repositions to buff warriors and punish exposed foes.",
+          "phases": ["command", "movement", "shooting"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "canoptek-doomstalker",
+      "name": "Canoptek Doomstalker",
+      "keywords": ["Vehicle", "Canoptek"],
+      "modelCount": 1,
+      "abilities": [
+        {
+          "id": "doomstalker-annihilation",
+          "name": "Annihilation Beam",
+          "source": "Canoptek Doomstalker",
+          "effect": "Long-range anti-armour platform — clears space for warrior blocks.",
+          "phases": ["shooting"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "ophydian-destroyers",
+      "name": "Ophydian Destroyers",
+      "keywords": ["Infantry", "Destroyer Cult"],
+      "modelCount": 3,
+      "abilities": [
+        {
+          "id": "ophydian-hunt",
+          "name": "Destroyer Hunt",
+          "source": "Ophydian Destroyers",
+          "effect": "Fast destroyer cultists — hunt characters and weak backfield units.",
+          "phases": ["movement", "combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "flayed-ones",
+      "name": "Flayed Ones",
+      "keywords": ["Infantry"],
+      "modelCount": 5,
+      "abilities": [
+        {
+          "id": "flayed-ones-terror",
+          "name": "Terror From Below",
+          "source": "Flayed Ones",
+          "effect": "Stealthy melee specialists — ideal for surprising units on objectives.",
+          "phases": ["combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "necron-warriors",
+      "name": "Necron Warriors",
+      "keywords": ["Battleline", "Infantry"],
+      "modelCount": 20,
+      "abilities": [
+        {
+          "id": "warriors-phalanx",
+          "name": "Warrior Phalanx",
+          "source": "Necron Warriors",
+          "effect": "Core battleline — reanimation protocols make them stubborn objective holders.",
+          "phases": ["shooting", "combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "scarab-swarms",
+      "name": "Canoptek Scarab Swarms",
+      "keywords": ["Swarm", "Canoptek"],
+      "modelCount": 6,
+      "abilities": [
+        {
+          "id": "scarabs-screen",
+          "name": "Canoptek Screen",
+          "source": "Canoptek Scarab Swarms",
+          "effect": "Fast swarms that tie up charges and contest footprints cheaply.",
+          "phases": ["movement", "combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    }
+  ]
+}

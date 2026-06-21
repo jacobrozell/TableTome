@@ -9,48 +9,354 @@
       "save": 5,
       "health": 6,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Wizard",
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "rotwood-staff",
+          "name": "Rotwood Staff",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "fleshy-abundance",
+          "name": "Fleshy Abundance",
+          "source": "Rotbringer Sorcerer",
+          "flavor": "The sorcerer generously bestows a growth spurt of the most repulsive kind upon their allies, causing their bodies to bloat with great wobbling mounds of grey-green fat.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of this unit to be the target, then make a casting roll of 2D6.",
+          "effect": "On a 6+, subtract 1 from wound rolls for attacks that target that friendly unit until the start of your next turn",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "nurglings",
       "name": "Nurglings",
       "move": "4\"",
-      "save": 6,
-      "health": 4,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 3
+      "save": 5,
+      "health": 6,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Wizard",
+        "Infantry",
+        "Ward",
+        "Beast"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "rotwood-staff",
+          "name": "Rotwood Staff",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "tiny-razor-sharp-teeth-crit-auto-wound",
+          "name": "Tiny Razor-sharp Teeth Crit (Auto-wound)",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 5,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "fleshy-abundance",
+          "name": "Fleshy Abundance",
+          "source": "Nurglings",
+          "flavor": "The sorcerer generously bestows a growth spurt of the most repulsive kind upon their allies, causing their bodies to bloat with great wobbling mounds of grey-green fat.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of this unit to be the target, then make a casting roll of 2D6.",
+          "effect": "On a 6+, subtract 1 from wound rolls for attacks that target that friendly unit until the start of your next turn",
+          "kind": "ability"
+        },
+        {
+          "id": "endless-swarm",
+          "name": "Endless Swarm",
+          "source": "Nurglings",
+          "flavor": "The presence of Nurglings in the realms continuously draws more of their number from the Grandfather\u2019s Garden, making their swarms extremely hard to eradicate.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "Heal (D3) this unit.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "nurglings-2",
       "name": "Nurglings",
       "move": "4\"",
-      "save": 6,
-      "health": 4,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 3
+      "save": 5,
+      "health": 6,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Wizard",
+        "Infantry",
+        "Ward",
+        "Beast"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "rotwood-staff",
+          "name": "Rotwood Staff",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "tiny-razor-sharp-teeth-crit-auto-wound",
+          "name": "Tiny Razor-sharp Teeth Crit (Auto-wound)",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 5,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "fleshy-abundance",
+          "name": "Fleshy Abundance",
+          "source": "Nurglings",
+          "flavor": "The sorcerer generously bestows a growth spurt of the most repulsive kind upon their allies, causing their bodies to bloat with great wobbling mounds of grey-green fat.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of this unit to be the target, then make a casting roll of 2D6.",
+          "effect": "On a 6+, subtract 1 from wound rolls for attacks that target that friendly unit until the start of your next turn",
+          "kind": "ability"
+        },
+        {
+          "id": "endless-swarm",
+          "name": "Endless Swarm",
+          "source": "Nurglings",
+          "flavor": "The presence of Nurglings in the realms continuously draws more of their number from the Grandfather\u2019s Garden, making their swarms extremely hard to eradicate.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "Heal (D3) this unit.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "beast-of-nurgle",
       "name": "Beast of Nurgle",
-      "move": "7\"",
-      "save": 5,
-      "health": 8,
+      "move": "4\"",
+      "save": 6,
+      "health": 4,
       "control": 1,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Beast",
+        "Ward"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "tiny-razor-sharp-teeth-crit-auto-wound",
+          "name": "Tiny Razor-sharp Teeth Crit (Auto-wound)",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 5,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "filthy-claws-and-slobbering-maw",
+          "name": "Filthy Claws and Slobbering Maw",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "endless-swarm",
+          "name": "Endless Swarm",
+          "source": "Beast of Nurgle",
+          "flavor": "The presence of Nurglings in the realms continuously draws more of their number from the Grandfather\u2019s Garden, making their swarms extremely hard to eradicate.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "Heal (D3) this unit.",
+          "kind": "ability"
+        },
+        {
+          "id": "attention-seekers",
+          "name": "Attention Seekers",
+          "source": "Beast of Nurgle",
+          "flavor": "Beasts of Nurgle seek out playmates with an enthusiasm that is rarely reciprocated by the horrified source of their fascination.",
+          "phases": [
+            "charge"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "If this unit charged this phase, pick an enemy unit in combat with it to be the target.",
+          "effect": "Roll a D3. On a 2+, inflict an amount of mortal damage on the target equal to the roll.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "rotmire-creed",
       "name": "Rotmire Creed",
-      "move": "5\"",
-      "save": 6,
-      "health": 1,
+      "move": "7\"",
+      "save": 5,
+      "health": 8,
       "control": 1,
-      "keywords": [],
-      "modelCount": 10
+      "keywords": [
+        "Core",
+        "Move",
+        "Charge",
+        "Attack",
+        "Shoot",
+        "Fight",
+        "Run",
+        "Retreat",
+        "Prayer",
+        "Unlimited",
+        "Spell",
+        "Banish",
+        "Beast",
+        "Ward",
+        "Infantry"
+      ],
+      "modelCount": 10,
+      "weapons": [
+        {
+          "id": "filthy-claws-and-slobbering-maw",
+          "name": "Filthy Claws and Slobbering Maw",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "contagion-blowpipes-crit-auto-wound",
+          "name": "Contagion Blowpipes Crit (Auto-wound)",
+          "rangeInches": 12,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "bilewood-weapons",
+          "name": "Bilewood Weapons",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "attention-seekers",
+          "name": "Attention Seekers",
+          "source": "Rotmire Creed",
+          "flavor": "Beasts of Nurgle seek out playmates with an enthusiasm that is rarely reciprocated by the horrified source of their fascination.",
+          "phases": [
+            "charge"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "If this unit charged this phase, pick an enemy unit in combat with it to be the target.",
+          "effect": "Roll a D3. On a 2+, inflict an amount of mortal damage on the target equal to the roll.",
+          "kind": "ability"
+        },
+        {
+          "id": "bilewood-stilts",
+          "name": "Bilewood Stilts",
+          "source": "Rotmire Creed",
+          "flavor": "Rotmire Creed use their stilts to cover ground more quickly.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "No mortal damage is inflicted on this unit when it uses RETREAT abilities.",
+          "kind": "passive"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "numberless-pests",
+      "name": "Numberless Pests",
+      "summary": "Subtract 1 from hit rolls for attacks that target friendly units",
+      "timing": null,
+      "declare": null,
+      "effect": "Subtract 1 from hit rolls for attacks that target friendly units. KEYWORDS CYCLE",
+      "phases": [],
+      "usageLimit": "passive",
+      "kind": "passive"
+    },
+    {
+      "id": "nauseous-revulsion",
+      "name": "Nauseous Revulsion",
+      "summary": "Subtract 1 from charge rolls for enemy units",
+      "timing": null,
+      "declare": null,
+      "effect": "Subtract 1 from charge rolls for enemy units. KEYWORDS CYCLE",
+      "phases": [],
+      "usageLimit": "passive",
+      "kind": "passive"
+    },
+    {
+      "id": "plague-of-misery",
+      "name": "Plague Of Misery",
+      "summary": "While enemy units are within 6\" of any friendly units, they cannot use abilities that heal or return slain models to a unit",
+      "timing": null,
+      "declare": null,
+      "effect": "While enemy units are within 6\" of any friendly units, they cannot use abilities that heal or return slain models to a unit. KEYWORDS CYCLE",
+      "phases": [],
+      "usageLimit": "passive",
+      "kind": "passive"
     }
   ]
 }

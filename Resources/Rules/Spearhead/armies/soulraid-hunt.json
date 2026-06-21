@@ -9,48 +9,400 @@
       "save": 5,
       "health": 5,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "scryfish-shoal-shoot-in-combat",
+          "name": "Scryfish Shoal Shoot in Combat ,",
+          "rangeInches": 10,
+          "attacks": "8",
+          "hit": 5,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "abyssal-touch",
+          "name": "Abyssal Touch",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "ritual-of-the-creeping-mist",
+          "name": "Ritual Of The Creeping Mist",
+          "source": "Isharann Soulscryer",
+          "flavor": "This ritual beckons the chilling fogs of the ethersea to blind the enemy.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible friendly unit wholly within 12\" of this unit to be the target, then roll a dice.",
+          "effect": "On a 3+, until the start of your next turn, subtract 1 from wound rolls for attacks that target that unit.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "akhelian-morrsarr-guard",
       "name": "Akhelian Morrsarr Guard",
-      "move": "14\"",
-      "save": 4,
-      "health": 4,
+      "move": "6\"",
+      "save": 5,
+      "health": 1,
       "control": 1,
-      "keywords": [],
-      "modelCount": 3
+      "keywords": [
+        "Banish",
+        "Core",
+        "Move",
+        "Run",
+        "Retreat",
+        "Charge",
+        "Spell",
+        "Tidal",
+        "Deploy",
+        "Unbind",
+        "Infantry",
+        "Reinforcements",
+        "Cavalry",
+        "Fly"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "lanmari-anti-infantry-1-rend",
+          "name": "Lanmari Anti- INFANTRY (+1 Rend)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "voltspear-charge-1-damage",
+          "name": "Voltspear Charge (+1 Damage)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "fangmora-s-fangs-and-lashing-tail",
+          "name": "Fangmora\u2019s Fangs and Lashing Tail",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "sweeping-blows",
+          "name": "Sweeping Blows",
+          "source": "Akhelian Morrsarr Guard",
+          "flavor": "Lanmari can cut through weaker opponents as an Allopex cuts through a shoal of Scryfish, or they can be used to inflict grievous wounds on larger enemies.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to the Damage characteristic of this unit\u2019s Lanmari for attacks that target an enemy MONSTER .",
+          "kind": "passive"
+        },
+        {
+          "id": "biovoltaic-blast",
+          "name": "Biovoltaic Blast",
+          "source": "Akhelian Morrsarr Guard",
+          "flavor": "The biovoltaic energy produced by Fangmora Eels is stored by Morrsarr Guard, ready to be discharged as a bolt of force when the time is right.",
+          "phases": [
+            "charge"
+          ],
+          "usageLimit": "oncePerBattle",
+          "declare": "If this unit charged this phase, pick an enemy unit within 1\" of it to be the target, then roll a number of dice equal to the number of models in this unit.",
+          "effect": "For each 4-5, inflict 1 mortal damage on the target. For each 6+, inflict D3 mortal damage on the target. Add 1 to each roll if there are more models in the target unit than this unit.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "akhelian-allopex",
       "name": "Akhelian Allopex",
-      "move": "12\"",
-      "save": 4,
-      "health": 8,
+      "move": "6\"",
+      "save": 5,
+      "health": 5,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Cavalry",
+        "Fly",
+        "Reinforcements"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "scryfish-shoal-shoot-in-combat",
+          "name": "Scryfish Shoal Shoot in Combat ,",
+          "rangeInches": 10,
+          "attacks": "8",
+          "hit": 5,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "abyssal-touch",
+          "name": "Abyssal Touch",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "D3"
+        },
+        {
+          "id": "razorshell-harpoon-launcher-anti-monster-1-rend",
+          "name": "Razorshell Harpoon Launcher Anti- MONSTER (+1 Rend)",
+          "rangeInches": 18,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 2,
+          "rend": 1,
+          "damage": "3"
+        },
+        {
+          "id": "barbed-hooks-and-blades",
+          "name": "Barbed Hooks and Blades",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "allopex-s-ferocious-bite",
+          "name": "Allopex\u2019s Ferocious Bite",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "ritual-of-the-creeping-mist",
+          "name": "Ritual Of The Creeping Mist",
+          "source": "Akhelian Allopex",
+          "flavor": "This ritual beckons the chilling fogs of the ethersea to blind the enemy.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible friendly unit wholly within 12\" of this unit to be the target, then roll a dice.",
+          "effect": "On a 3+, until the start of your next turn, subtract 1 from wound rolls for attacks that target that unit.",
+          "kind": "ability"
+        },
+        {
+          "id": "bloodthirsty-predators",
+          "name": "Bloodthirsty Predators",
+          "source": "Akhelian Allopex",
+          "flavor": "Allopexes are drawn towards the scent of freshly spilt blood.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to the Attacks characteristic of this unit\u2019s Allopex\u2019s Ferocious Bite if it is within 6\" of any damaged enemy units or if it is within 6\" of any enemy units that have had any models slain in the same turn.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "namarti-thralls",
       "name": "Namarti Thralls",
-      "move": "6\"",
-      "save": 5,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "move": "12\"",
+      "save": 4,
+      "health": 8,
+      "control": 2,
+      "keywords": [
+        "Cavalry",
+        "Fly",
+        "Reinforcements",
+        "Infantry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "razorshell-harpoon-launcher-anti-monster-1-rend",
+          "name": "Razorshell Harpoon Launcher Anti- MONSTER (+1 Rend)",
+          "rangeInches": 18,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 2,
+          "rend": 1,
+          "damage": "3"
+        },
+        {
+          "id": "barbed-hooks-and-blades",
+          "name": "Barbed Hooks and Blades",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "allopex-s-ferocious-bite",
+          "name": "Allopex\u2019s Ferocious Bite",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "2"
+        },
+        {
+          "id": "lanmari-anti-infantry-1-rend",
+          "name": "Lanmari Anti- INFANTRY (+1 Rend)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "bloodthirsty-predators",
+          "name": "Bloodthirsty Predators",
+          "source": "Namarti Thralls",
+          "flavor": "Allopexes are drawn towards the scent of freshly spilt blood.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to the Attacks characteristic of this unit\u2019s Allopex\u2019s Ferocious Bite if it is within 6\" of any damaged enemy units or if it is within 6\" of any enemy units that have had any models slain in the same turn.",
+          "kind": "passive"
+        },
+        {
+          "id": "sweeping-blows",
+          "name": "Sweeping Blows",
+          "source": "Namarti Thralls",
+          "flavor": "Lanmari can cut through weaker opponents as an Allopex cuts through a shoal of Scryfish, or they can be used to inflict grievous wounds on larger enemies.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to the Damage characteristic of this unit\u2019s Lanmari for attacks that target an enemy MONSTER .",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "namarti-thralls-2",
       "name": "Namarti Thralls",
-      "move": "6\"",
-      "save": 5,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "move": "12\"",
+      "save": 4,
+      "health": 8,
+      "control": 2,
+      "keywords": [
+        "Cavalry",
+        "Fly",
+        "Reinforcements",
+        "Infantry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "razorshell-harpoon-launcher-anti-monster-1-rend",
+          "name": "Razorshell Harpoon Launcher Anti- MONSTER (+1 Rend)",
+          "rangeInches": 18,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 2,
+          "rend": 1,
+          "damage": "3"
+        },
+        {
+          "id": "barbed-hooks-and-blades",
+          "name": "Barbed Hooks and Blades",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "allopex-s-ferocious-bite",
+          "name": "Allopex\u2019s Ferocious Bite",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "2"
+        },
+        {
+          "id": "lanmari-anti-infantry-1-rend",
+          "name": "Lanmari Anti- INFANTRY (+1 Rend)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "bloodthirsty-predators",
+          "name": "Bloodthirsty Predators",
+          "source": "Namarti Thralls",
+          "flavor": "Allopexes are drawn towards the scent of freshly spilt blood.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to the Attacks characteristic of this unit\u2019s Allopex\u2019s Ferocious Bite if it is within 6\" of any damaged enemy units or if it is within 6\" of any enemy units that have had any models slain in the same turn.",
+          "kind": "passive"
+        },
+        {
+          "id": "sweeping-blows",
+          "name": "Sweeping Blows",
+          "source": "Namarti Thralls",
+          "flavor": "Lanmari can cut through weaker opponents as an Allopex cuts through a shoal of Scryfish, or they can be used to inflict grievous wounds on larger enemies.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to the Damage characteristic of this unit\u2019s Lanmari for attacks that target an enemy MONSTER .",
+          "kind": "passive"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "tides-of-death-the-idoneth-deepkin-destroy-their",
+      "name": "Battle Trait",
+      "summary": "TIDES OF DEATH The Idoneth Deepkin destroy their enemies like the relentless tides of a perilous sea, building up their attack to a crashing crescendo and then receding to leave nothing but death in their wake. In each battle round, all friendly units have the Tides of Death passive ability that corresponds to the curr",
+      "effect": "TIDES OF DEATH The Idoneth Deepkin destroy their enemies like the relentless tides of a perilous sea, building up their attack to a crashing crescendo and then receding to leave nothing but death in their wake. In each battle round, all friendly units have the Tides of Death passive ability that corresponds to the current battle round number , as shown in the table below. ROUND ABILITY 1 LOW TIDE: The Idoneth move towards the foe, their appearance eerily refracted and distort",
+      "phases": [
+        "movement"
+      ],
+      "usageLimit": "oncePerBattle",
+      "kind": "ability"
     }
   ]
 }

@@ -3,64 +3,438 @@
   "armyId": "zenestras-zealots",
   "units": [
     {
-      "id": "freeguild-marshal-and-relic-envoy",
-      "name": "Freeguild Marshal and Relic Envoy",
+      "id": "freeguild-marshal",
+      "name": "Freeguild Marshal",
       "move": "5\"",
       "save": 3,
       "health": 5,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "duelling-pistols",
+          "name": "Duelling Pistols",
+          "rangeInches": 10,
+          "attacks": "4",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "master-forged-weapon",
+          "name": "Master-forged Weapon",
+          "rangeInches": 0,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "marshal-s-orders",
+          "name": "Marshal\u2019S Orders",
+          "source": "Freeguild Marshal",
+          "flavor": "The Relic Envoy rushes across the battlefield to hand-deliver a message.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible friendly unit wholly within 12\" of this unit to be the target.",
+          "effect": "Remove this unit\u2019s Relic Envoy token from the battlefield, then give it to the target.",
+          "kind": "ability"
+        },
+        {
+          "id": "relic-envoy",
+          "name": "Relic Envoy",
+          "source": "Freeguild Marshal",
+          "flavor": "Relic Envoys relay orders from the Freeguild Marshal to the soldiers of the line.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While a friendly unit other than this unit has the Relic Envoy token , add 1 to wound rolls for that unit\u2019s combat attacks . If this unit is destroyed, remove the Relic Envoy token from the battlefield.",
+          "kind": "passive"
+        }
+      ]
     },
     {
-      "id": "pontifex-zenestra-matriarch-of-the-great-wheel",
-      "name": "Pontifex Zenestra Matriarch of the Great Wheel",
+      "id": "pontifex-zenestra",
+      "name": "Pontifex Zenestra",
       "move": "5\"",
-      "save": 5,
-      "health": 9,
+      "save": 3,
+      "health": 5,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Priest",
+        "Ward"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "duelling-pistols",
+          "name": "Duelling Pistols",
+          "rangeInches": 10,
+          "attacks": "4",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "master-forged-weapon",
+          "name": "Master-forged Weapon",
+          "rangeInches": 0,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "sceptre-of-the-wheel",
+          "name": "Sceptre of the Wheel",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "marshal-s-orders",
+          "name": "Marshal\u2019S Orders",
+          "source": "Pontifex Zenestra",
+          "flavor": "The Relic Envoy rushes across the battlefield to hand-deliver a message.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible friendly unit wholly within 12\" of this unit to be the target.",
+          "effect": "Remove this unit\u2019s Relic Envoy token from the battlefield, then give it to the target.",
+          "kind": "ability"
+        },
+        {
+          "id": "relic-envoy",
+          "name": "Relic Envoy",
+          "source": "Pontifex Zenestra",
+          "flavor": "Relic Envoys relay orders from the Freeguild Marshal to the soldiers of the line.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While a friendly unit other than this unit has the Relic Envoy token , add 1 to wound rolls for that unit\u2019s combat attacks . If this unit is destroyed, remove the Relic Envoy token from the battlefield.",
+          "kind": "passive"
+        },
+        {
+          "id": "vessel-of-sigmar",
+          "name": "Vessel Of Sigmar",
+          "source": "Pontifex Zenestra",
+          "flavor": "Channelling the divine might of the God-King, Pontifex Zenestra is a powerful beacon of faith who bolsters the righteous and smites the corrupt.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick up to 3 visible friendly or enemy units to be the targets.",
+          "effect": "Roll a D3 for each target. On a 2+: If it is a friendly target, it has WARD ( 5+ ) until the start of your next turn. If it is an enemy target, inflict an amount of mortal damage on it equal to the roll.",
+          "kind": "ability"
+        }
+      ]
     },
     {
-      "id": "freeguild-command-corps",
-      "name": "Freeguild Command Corps",
+      "id": "freeguild-marshal-2",
+      "name": "Freeguild Marshal",
       "move": "5\"",
-      "save": 6,
-      "health": 3,
+      "save": 3,
+      "health": 5,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "duelling-pistols",
+          "name": "Duelling Pistols",
+          "rangeInches": 10,
+          "attacks": "4",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "master-forged-weapon",
+          "name": "Master-forged Weapon",
+          "rangeInches": 0,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "marshal-s-orders",
+          "name": "Marshal\u2019S Orders",
+          "source": "Freeguild Marshal",
+          "flavor": "The Relic Envoy rushes across the battlefield to hand-deliver a message.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible friendly unit wholly within 12\" of this unit to be the target.",
+          "effect": "Remove this unit\u2019s Relic Envoy token from the battlefield, then give it to the target.",
+          "kind": "ability"
+        },
+        {
+          "id": "relic-envoy",
+          "name": "Relic Envoy",
+          "source": "Freeguild Marshal",
+          "flavor": "Relic Envoys relay orders from the Freeguild Marshal to the soldiers of the line.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While a friendly unit other than this unit has the Relic Envoy token , add 1 to wound rolls for that unit\u2019s combat attacks . If this unit is destroyed, remove the Relic Envoy token from the battlefield.",
+          "kind": "passive"
+        }
+      ]
     },
     {
-      "id": "freeguild-command-corps-2",
-      "name": "Freeguild Command Corps",
+      "id": "freeguild-marshal-3",
+      "name": "Freeguild Marshal",
       "move": "5\"",
-      "save": 6,
-      "health": 3,
+      "save": 3,
+      "health": 5,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "duelling-pistols",
+          "name": "Duelling Pistols",
+          "rangeInches": 10,
+          "attacks": "4",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "master-forged-weapon",
+          "name": "Master-forged Weapon",
+          "rangeInches": 0,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "marshal-s-orders",
+          "name": "Marshal\u2019S Orders",
+          "source": "Freeguild Marshal",
+          "flavor": "The Relic Envoy rushes across the battlefield to hand-deliver a message.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible friendly unit wholly within 12\" of this unit to be the target.",
+          "effect": "Remove this unit\u2019s Relic Envoy token from the battlefield, then give it to the target.",
+          "kind": "ability"
+        },
+        {
+          "id": "relic-envoy",
+          "name": "Relic Envoy",
+          "source": "Freeguild Marshal",
+          "flavor": "Relic Envoys relay orders from the Freeguild Marshal to the soldiers of the line.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While a friendly unit other than this unit has the Relic Envoy token , add 1 to wound rolls for that unit\u2019s combat attacks . If this unit is destroyed, remove the Relic Envoy token from the battlefield.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "freeguild-steelhelms",
       "name": "Freeguild Steelhelms",
       "move": "5\"",
       "save": 4,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "health": 2,
+      "control": 2,
+      "keywords": [
+        "Core",
+        "Move",
+        "Charge",
+        "Attack",
+        "Shoot",
+        "Fight",
+        "Banish",
+        "Run",
+        "Retreat",
+        "Spell",
+        "Prayer",
+        "Unlimited",
+        "Infantry",
+        "Reinforcements"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "command-weapons",
+          "name": "Command Weapons",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "freeguild-weapon",
+          "name": "Freeguild Weapon",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "talented-champions",
+          "name": "Talented Champions",
+          "source": "Freeguild Steelhelms",
+          "flavor": "Each member of the Command Corps has their own special skills to be employed.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "reaction",
+          "declare": null,
+          "effect": "After that command has been resolved, return the card to your hand. Designer\u2019s Note: This allows you to either use the command a second time or score the battle tactic on that card as well.",
+          "kind": "ability"
+        },
+        {
+          "id": "fanatical-followers",
+          "name": "Fanatical Followers",
+          "source": "Freeguild Steelhelms",
+          "flavor": "Such is the zealous frenzy that fills these warriors that even after suffering mortal wounds, they will drag themselves to their feet and continue to fight.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "Return 1 slain model to this unit.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "freeguild-steelhelms-2",
       "name": "Freeguild Steelhelms",
       "move": "5\"",
       "save": 4,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "health": 2,
+      "control": 2,
+      "keywords": [
+        "Core",
+        "Move",
+        "Charge",
+        "Attack",
+        "Shoot",
+        "Fight",
+        "Banish",
+        "Run",
+        "Retreat",
+        "Spell",
+        "Prayer",
+        "Unlimited",
+        "Infantry",
+        "Reinforcements"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "command-weapons",
+          "name": "Command Weapons",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "freeguild-weapon",
+          "name": "Freeguild Weapon",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "talented-champions",
+          "name": "Talented Champions",
+          "source": "Freeguild Steelhelms",
+          "flavor": "Each member of the Command Corps has their own special skills to be employed.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "reaction",
+          "declare": null,
+          "effect": "After that command has been resolved, return the card to your hand. Designer\u2019s Note: This allows you to either use the command a second time or score the battle tactic on that card as well.",
+          "kind": "ability"
+        },
+        {
+          "id": "fanatical-followers",
+          "name": "Fanatical Followers",
+          "source": "Freeguild Steelhelms",
+          "flavor": "Such is the zealous frenzy that fills these warriors that even after suffering mortal wounds, they will drag themselves to their feet and continue to fight.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "Return 1 slain model to this unit.",
+          "kind": "ability"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "sudden-ambush",
+      "name": "Sudden Ambush",
+      "summary": "Set up this unit within 6\" of an enemy unit and not in combat ",
+      "timing": null,
+      "declare": null,
+      "effect": "Set up this unit within 6\" of an enemy unit and not in combat .",
+      "phases": [
+        "movement"
+      ],
+      "usageLimit": "eachTurn",
+      "kind": "ability"
     }
   ]
 }

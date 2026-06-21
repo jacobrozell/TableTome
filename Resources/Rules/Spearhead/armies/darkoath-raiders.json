@@ -9,28 +9,185 @@
       "save": 5,
       "health": 5,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "rune-etched-axe-crit-mortal",
+          "name": "Rune-etched Axe Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "oath-of-supremacy",
+          "name": "Oath Of Supremacy",
+          "source": "Darkoath Warqueen",
+          "flavor": "By the will of the gods, this warrior leads her barbarous horde into the lands of the enemy, allowing none to oppose them.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of your general to be the target.",
+          "effect": "Until the start of your next turn, add 1 to hit rolls for attacks made by the target.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "darkoath-savagers",
       "name": "Darkoath Savagers",
-      "move": "5\"",
-      "save": 5,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 10
-    },
-    {
-      "id": "darkoath-fellriders",
-      "name": "Darkoath Fellriders",
       "move": "12\"",
       "save": 5,
       "health": 3,
       "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "keywords": [
+        "Cavalry",
+        "Reinforcements",
+        "Infantry"
+      ],
+      "modelCount": 10,
+      "weapons": [
+        {
+          "id": "fellrider-blades-charge-1-damage",
+          "name": "Fellrider Blades Charge (+1 Damage)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "warsteed-s-hooves",
+          "name": "Warsteed\u2019s Hooves",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "darkoath-weapons-crit-mortal",
+          "name": "Darkoath Weapons Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "swift-attackers",
+          "name": "Swift Attackers",
+          "source": "Darkoath Savagers",
+          "flavor": "As they close in on the enemy at frightening speed, these skilled horsemen are nigh impossible to hit with missile fire.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Subtract 1 from hit rolls for shooting attacks that target this unit.",
+          "kind": "passive"
+        },
+        {
+          "id": "visions-of-glory",
+          "name": "Visions Of Glory",
+          "source": "Darkoath Savagers",
+          "flavor": "Godspeakers use their powers of divination to scry the future and see what glory awaits their kin.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "If this unit includes a Godspeaker, roll 8 dice. For each 4+, until the start of your next turn, you can re-roll 1 hit roll , 1 wound roll , 1 run roll or 1 save roll for this unit.",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "darkoath-fellriders",
+      "name": "Darkoath Fellriders",
+      "move": "5\"",
+      "save": 5,
+      "health": 5,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Ward",
+        "Cavalry",
+        "Reinforcements"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "rune-etched-axe-crit-mortal",
+          "name": "Rune-etched Axe Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "fellrider-blades-charge-1-damage",
+          "name": "Fellrider Blades Charge (+1 Damage)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "warsteed-s-hooves",
+          "name": "Warsteed\u2019s Hooves",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "oath-of-supremacy",
+          "name": "Oath Of Supremacy",
+          "source": "Darkoath Fellriders",
+          "flavor": "By the will of the gods, this warrior leads her barbarous horde into the lands of the enemy, allowing none to oppose them.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of your general to be the target.",
+          "effect": "Until the start of your next turn, add 1 to hit rolls for attacks made by the target.",
+          "kind": "ability"
+        },
+        {
+          "id": "swift-attackers",
+          "name": "Swift Attackers",
+          "source": "Darkoath Fellriders",
+          "flavor": "As they close in on the enemy at frightening speed, these skilled horsemen are nigh impossible to hit with missile fire.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Subtract 1 from hit rolls for shooting attacks that target this unit.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "darkoath-marauders",
@@ -39,8 +196,59 @@
       "save": 5,
       "health": 1,
       "control": 1,
-      "keywords": [],
-      "modelCount": 10
+      "keywords": [
+        "Infantry",
+        "Reinforcements"
+      ],
+      "modelCount": 10,
+      "weapons": [
+        {
+          "id": "darkoath-weapons-crit-mortal",
+          "name": "Darkoath Weapons Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "raider-weapons",
+          "name": "Raider Weapons",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "visions-of-glory",
+          "name": "Visions Of Glory",
+          "source": "Darkoath Marauders",
+          "flavor": "Godspeakers use their powers of divination to scry the future and see what glory awaits their kin.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "If this unit includes a Godspeaker, roll 8 dice. For each 4+, until the start of your next turn, you can re-roll 1 hit roll , 1 wound roll , 1 run roll or 1 save roll for this unit.",
+          "kind": "ability"
+        },
+        {
+          "id": "glorious-death",
+          "name": "Glorious Death",
+          "source": "Darkoath Marauders",
+          "flavor": "Ever keen to earn the favour of their tribe, when the eyes of the fiercest fighters are upon them, these warriors will not go down without a fight.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Each time a model in this unit is slain by a combat attack and that model was in combat with the attacking model, roll a dice. On a 5+, inflict 1 mortal damage on the attacking unit after the FIGHT ability has been resolved.",
+          "kind": "passive"
+        }
+      ]
     }
   ]
 }

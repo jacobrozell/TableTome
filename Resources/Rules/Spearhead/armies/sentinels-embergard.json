@@ -3,54 +3,372 @@
   "armyId": "sentinels-embergard",
   "units": [
     {
-      "id": "jorvan-kreel-heir-of-the-kraken",
-      "name": "Jorvan Kreel Heir of the Kraken",
+      "id": "jorvan-kreel",
+      "name": "Jorvan Kreel",
       "move": "6\"",
       "save": 4,
       "health": 5,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "ranger-blades",
+          "name": "Ranger Blades",
+          "rangeInches": null,
+          "attacks": "6",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "veteran-skirmishers",
+          "name": "Veteran Skirmishers",
+          "source": "Jorvan Kreel",
+          "flavor": "Kreel has trained his ragtag soldiers well, emphasising speed and surety of foot over headlong sprints.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of this unit to be the target.",
+          "effect": "Roll a dice. On a 3+, for the rest of the turn, add 2\" to the target\u2019s Move characteristic but it cannot use RUN abilities.",
+          "kind": "ability"
+        },
+        {
+          "id": "prowling-ash-panther",
+          "name": "Prowling Ash Panther",
+          "source": "Jorvan Kreel",
+          "flavor": "Thexa prowls the shadows, waiting for the right moment to pounce.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "If this unit has the Thexa token , give that token to an enemy unit within 6\" of this unit. If an enemy unit has the Thexa token, inflict D3 mortal damage on that enemy unit. Then, give this unit the Thexa token.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "mallus-forgepriest",
       "name": "Mallus Forgepriest",
-      "move": "5\"",
+      "move": "6\"",
       "save": 4,
       "health": 5,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Priest"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "ranger-blades",
+          "name": "Ranger Blades",
+          "rangeInches": null,
+          "attacks": "6",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "sigmarite-warhammer",
+          "name": "Sigmarite Warhammer",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "veteran-skirmishers",
+          "name": "Veteran Skirmishers",
+          "source": "Mallus Forgepriest",
+          "flavor": "Kreel has trained his ragtag soldiers well, emphasising speed and surety of foot over headlong sprints.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of this unit to be the target.",
+          "effect": "Roll a dice. On a 3+, for the rest of the turn, add 2\" to the target\u2019s Move characteristic but it cannot use RUN abilities.",
+          "kind": "ability"
+        },
+        {
+          "id": "prowling-ash-panther",
+          "name": "Prowling Ash Panther",
+          "source": "Mallus Forgepriest",
+          "flavor": "Thexa prowls the shadows, waiting for the right moment to pounce.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "If this unit has the Thexa token , give that token to an enemy unit within 6\" of this unit. If an enemy unit has the Thexa token, inflict D3 mortal damage on that enemy unit. Then, give this unit the Thexa token.",
+          "kind": "ability"
+        },
+        {
+          "id": "consecrate-the-land",
+          "name": "Consecrate The Land",
+          "source": "Mallus Forgepriest",
+          "flavor": "Bellowing Sigmarite hymns, the priest purges the taint of Chaos from the land and consecrates it in the name of the God-King.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an objective within 12\" of this unit, then make a chanting roll of D6.",
+          "effect": "On a 3+, for the rest of the turn, friendly units have WARD ( 5+ ) while they are contesting that objective.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "freeguild-gallants",
       "name": "Freeguild Gallants",
       "move": "5\"",
-      "save": 3,
-      "health": 2,
+      "save": 4,
+      "health": 1,
       "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "keywords": [
+        "Infantry",
+        "Reinforcements"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "ruin-sweeper-arsenal",
+          "name": "Ruin-sweeper Arsenal",
+          "rangeInches": 10,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "1"
+        },
+        {
+          "id": "grenadier-bardiche",
+          "name": "Grenadier Bardiche",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "weapons-of-gallantry",
+          "name": "Weapons of Gallantry",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "cinder-and-ash",
+          "name": "Cinder And Ash",
+          "source": "Freeguild Gallants",
+          "flavor": "Freeguild Grenadiers carry specialised gear to reduce dug-in enemies to a panicked, screaming bonfire of melting flesh and charred hair.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick up to 1 terrain feature contested by this unit and up to 1 objective contested by this unit, then pick any enemy units also contesting them to be the targets.",
+          "effect": "Roll a dice for each target. On a 3+, inflict 1 mortal damage on the target.",
+          "kind": "ability"
+        },
+        {
+          "id": "unbreachable-will",
+          "name": "Unbreachable Will",
+          "source": "Freeguild Gallants",
+          "flavor": "Having each survived punishing trials, Freeguild Gallants break before no foe.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "If this unit has not charged this turn, pick an enemy unit in combat with it to be the target.",
+          "effect": "For the rest of the turn, subtract 1 from the Rend characteristic of the target\u2019s weapons for attacks that target this unit.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "freeguild-grenadiers",
       "name": "Freeguild Grenadiers",
       "move": "5\"",
       "save": 4,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "health": 5,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Priest",
+        "Infantry",
+        "Reinforcements"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "sigmarite-warhammer",
+          "name": "Sigmarite Warhammer",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "ruin-sweeper-arsenal",
+          "name": "Ruin-sweeper Arsenal",
+          "rangeInches": 10,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "1"
+        },
+        {
+          "id": "grenadier-bardiche",
+          "name": "Grenadier Bardiche",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "consecrate-the-land",
+          "name": "Consecrate The Land",
+          "source": "Freeguild Grenadiers",
+          "flavor": "Bellowing Sigmarite hymns, the priest purges the taint of Chaos from the land and consecrates it in the name of the God-King.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an objective within 12\" of this unit, then make a chanting roll of D6.",
+          "effect": "On a 3+, for the rest of the turn, friendly units have WARD ( 5+ ) while they are contesting that objective.",
+          "kind": "ability"
+        },
+        {
+          "id": "cinder-and-ash",
+          "name": "Cinder And Ash",
+          "source": "Freeguild Grenadiers",
+          "flavor": "Freeguild Grenadiers carry specialised gear to reduce dug-in enemies to a panicked, screaming bonfire of melting flesh and charred hair.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick up to 1 terrain feature contested by this unit and up to 1 objective contested by this unit, then pick any enemy units also contesting them to be the targets.",
+          "effect": "Roll a dice for each target. On a 3+, inflict 1 mortal damage on the target.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "freeguild-grenadiers-2",
       "name": "Freeguild Grenadiers",
       "move": "5\"",
       "save": 4,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "health": 5,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Priest",
+        "Infantry",
+        "Reinforcements"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "sigmarite-warhammer",
+          "name": "Sigmarite Warhammer",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "ruin-sweeper-arsenal",
+          "name": "Ruin-sweeper Arsenal",
+          "rangeInches": 10,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "1"
+        },
+        {
+          "id": "grenadier-bardiche",
+          "name": "Grenadier Bardiche",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "consecrate-the-land",
+          "name": "Consecrate The Land",
+          "source": "Freeguild Grenadiers",
+          "flavor": "Bellowing Sigmarite hymns, the priest purges the taint of Chaos from the land and consecrates it in the name of the God-King.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an objective within 12\" of this unit, then make a chanting roll of D6.",
+          "effect": "On a 3+, for the rest of the turn, friendly units have WARD ( 5+ ) while they are contesting that objective.",
+          "kind": "ability"
+        },
+        {
+          "id": "cinder-and-ash",
+          "name": "Cinder And Ash",
+          "source": "Freeguild Grenadiers",
+          "flavor": "Freeguild Grenadiers carry specialised gear to reduce dug-in enemies to a panicked, screaming bonfire of melting flesh and charred hair.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick up to 1 terrain feature contested by this unit and up to 1 objective contested by this unit, then pick any enemy units also contesting them to be the targets.",
+          "effect": "Roll a dice for each target. On a 3+, inflict 1 mortal damage on the target.",
+          "kind": "ability"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "ranger-doctrines",
+      "name": "Ranger Doctrines",
+      "summary": "Immediately after that FIGHT ability has been resolved, pick a point on the battlefield within 6\" of your general",
+      "timing": null,
+      "declare": null,
+      "effect": "Immediately after that FIGHT ability has been resolved, pick a point on the battlefield within 6\" of your general. Remove the unit using this ability from the battlefield and set it up again within 1\" of that point and not in combat .",
+      "phases": [
+        "hero"
+      ],
+      "usageLimit": "reaction",
+      "kind": "ability"
     }
   ]
 }

@@ -94,7 +94,56 @@
       "id": "astra-militarum",
       "name": "Astra Militarum",
       "alliance": "order",
-      "armies": []
+      "armies": [
+        {
+          "id": "astra-militarum-platoon",
+          "name": "Astra Militarum Platoon",
+          "general": "Cadian Command Squad",
+          "tagline": "Combined-arms Battleforce for 11th Edition",
+          "playstyle": "Shock Troops hold footprints while the Basilisk, Field Ordnance Battery, and Rogal Dorn battle tank deliver long-range punishment.",
+          "unitCount": 20,
+          "roster": [
+            "Cadian Command Squad",
+            "Commissar",
+            "10 Cadian Shock Troops",
+            "Field Ordnance Battery",
+            "Basilisk",
+            "Rogal Dorn Battle Tank"
+          ],
+          "battleTraitName": "Platoon Combined Arms",
+          "officialRulesURL": "https://www.warhammer-community.com/en-gb/articles/n5pspedx/new-warhammer-40000-battleforces-revealed/",
+          "regimentAbilities": [
+            {
+              "id": "disposition-take-and-hold",
+              "name": "Take and Hold",
+              "summary": "Primary missions reward holding terrain objectives — Shock Troops and the Rogal Dorn anchor the line.",
+              "newPlayerHint": "Solid default for a first game with this box.",
+              "timing": "Pre-battle — Force Disposition"
+            },
+            {
+              "id": "disposition-purge-the-foe",
+              "name": "Purge the Foe",
+              "summary": "Primary missions reward destroying enemy units while artillery softens targets.",
+              "timing": "Pre-battle — Force Disposition"
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "enhancement-commissar-line",
+              "name": "Commissar With the Line",
+              "summary": "Keep the Commissar with Shock Troops for morale and melee insurance.",
+              "newPlayerHint": "Pairs with Take and Hold missions.",
+              "timing": "List building — check Munitorum Field Manual for limits"
+            },
+            {
+              "id": "enhancement-rogal-dorn-spear",
+              "name": "Rogal Dorn Spearhead",
+              "summary": "Build around the battle tank pushing mid-board while artillery stays back.",
+              "timing": "List building — check Munitorum Field Manual for limits"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "grey-knights",
@@ -118,7 +167,49 @@
       "id": "chaos-space-marines",
       "name": "Chaos Space Marines",
       "alliance": "chaos",
-      "armies": []
+      "armies": [
+        {
+          "id": "chaos-space-marines-warband",
+          "name": "Chaos Space Marines Warband",
+          "general": "Lord Discordant",
+          "tagline": "Dark crusade Battleforce for 11th Edition",
+          "playstyle": "Cultists and Legionaries secure objectives while the Lord Discordant, Obliterators, and Venomcrawler burn through the enemy.",
+          "unitCount": 34,
+          "roster": [
+            "Lord Discordant",
+            "2 Obliterators",
+            "Venomcrawler",
+            "20 Chaos Cultists",
+            "10 Chaos Legionaries"
+          ],
+          "battleTraitName": "Warband of the Dark Gods",
+          "officialRulesURL": "https://www.warhammer-community.com/en-gb/articles/n5pspedx/new-warhammer-40000-battleforces-revealed/",
+          "regimentAbilities": [
+            {
+              "id": "disposition-purge-the-foe",
+              "name": "Purge the Foe",
+              "summary": "Primary missions reward hunting enemy units — natural for a Lord Discordant-led push.",
+              "newPlayerHint": "Aggressive default for a first game with this box.",
+              "timing": "Pre-battle — Force Disposition"
+            },
+            {
+              "id": "disposition-disruption",
+              "name": "Disruption",
+              "summary": "Primary missions reward denying the opponent's plan while Cultists grab secondary points.",
+              "timing": "Pre-battle — Force Disposition"
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "enhancement-discordant-hunt",
+              "name": "Discordant's Hunt",
+              "summary": "Lead with the Lord Discordant and Venomcrawler while Obliterators provide fire support.",
+              "newPlayerHint": "Strong when you expect to fight Monsters and Vehicles.",
+              "timing": "List building — check Munitorum Field Manual for limits"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "chaos-daemons",
@@ -254,7 +345,49 @@
       "id": "necrons",
       "name": "Necrons",
       "alliance": "destruction",
-      "armies": []
+      "armies": [
+        {
+          "id": "necron-host",
+          "name": "Necron Host",
+          "general": "Catacomb Command Barge",
+          "tagline": "Tomb legion Battleforce for 11th Edition",
+          "playstyle": "Warriors and Scarabs flood objectives while the Command Barge, Doomstalker, and Destroyers eliminate priority targets.",
+          "unitCount": 36,
+          "roster": [
+            "Catacomb Command Barge",
+            "Canoptek Doomstalker",
+            "3 Ophydian Destroyers",
+            "5 Flayed Ones",
+            "20 Necron Warriors",
+            "6 Canoptek Scarab Swarms"
+          ],
+          "battleTraitName": "Host of the Dynast",
+          "officialRulesURL": "https://www.warhammer-community.com/en-gb/articles/n5pspedx/new-warhammer-40000-battleforces-revealed/",
+          "regimentAbilities": [
+            {
+              "id": "disposition-take-and-hold",
+              "name": "Take and Hold",
+              "summary": "Primary missions reward holding terrain — Warrior blocks and Scarabs excel here.",
+              "newPlayerHint": "Safest default for a first game with this box.",
+              "timing": "Pre-battle — Force Disposition"
+            },
+            {
+              "id": "disposition-priority-assets",
+              "name": "Priority Assets",
+              "summary": "Primary missions reward controlling key locations — spread Warriors across footprints.",
+              "timing": "Pre-battle — Force Disposition"
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "enhancement-barge-command",
+              "name": "Barge Command Node",
+              "summary": "Keep the Command Barge near Warrior blocks to re-roll hits and reposition quickly.",
+              "timing": "List building — check Munitorum Field Manual for limits"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "tau-empire",
@@ -266,7 +399,50 @@
       "id": "tyranids",
       "name": "Tyranids",
       "alliance": "destruction",
-      "armies": []
+      "armies": [
+        {
+          "id": "tyranid-swarm",
+          "name": "Tyranid Swarm",
+          "general": "Hive Tyrant",
+          "tagline": "Hive fleet Battleforce for 11th Edition",
+          "playstyle": "Hormagaunts and Termagants swarm objectives while the Hive Tyrant, Warriors, and Leapers deliver the killing blow.",
+          "unitCount": 28,
+          "roster": [
+            "Hive Tyrant",
+            "3 Tyranid Warriors",
+            "Lictor",
+            "3 Von Ryan's Leapers",
+            "10 Hormagaunts",
+            "10 Termagants"
+          ],
+          "battleTraitName": "Consuming Swarm",
+          "officialRulesURL": "https://www.warhammer-community.com/en-gb/articles/n5pspedx/new-warhammer-40000-battleforces-revealed/",
+          "regimentAbilities": [
+            {
+              "id": "disposition-purge-the-foe",
+              "name": "Purge the Foe",
+              "summary": "Primary missions reward destroying enemy units — charge with Hormagaunts and the Hive Tyrant.",
+              "newPlayerHint": "Natural pick for an aggressive first game.",
+              "timing": "Pre-battle — Force Disposition"
+            },
+            {
+              "id": "disposition-reconnaissance",
+              "name": "Reconnaissance",
+              "summary": "Primary missions reward board pressure — Leapers and the Lictor threaten the backfield.",
+              "timing": "Pre-battle — Force Disposition"
+            }
+          ],
+          "enhancements": [
+            {
+              "id": "enhancement-tyrant-synapse",
+              "name": "Tyrant Synapse Hub",
+              "summary": "Keep the Hive Tyrant near gaunt broods so the swarm stays coordinated.",
+              "newPlayerHint": "Build as Swarmlord if you want a slower, buff-focused game.",
+              "timing": "List building — check Munitorum Field Manual for limits"
+            }
+          ]
+        }
+      ]
     }
   ],
   "matchSteps": [
@@ -275,9 +451,10 @@
       "order": 1,
       "title": "Choose Armies",
       "summary": "Each player picks a faction and army list.",
-      "body": "For the Armageddon box, use the fixed Operation Imperator and Waaagh! Armageddon rosters — about 1,000 points per side. Other factions can be added in future app updates with your own lists.",
+      "body": "For the Armageddon box, use the fixed Operation Imperator and Waaagh! Armageddon rosters — about 1,000 points per side. If you bought a Battleforce (Astra Militarum, Tyranids, Chaos Space Marines, or Necrons), pick that army below. Find a friend with their own list for matched play.",
       "tips": [
         "Tap Use Starter Matchup for the Armageddon box armies.",
+        "Battleforce boxes include one faction — each player picks their own army in Guided Match.",
         "Characters attach to units during list building in matched play."
       ]
     },

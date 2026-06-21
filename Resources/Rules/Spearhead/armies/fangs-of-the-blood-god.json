@@ -9,38 +9,241 @@
       "save": 5,
       "health": 7,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Beast",
+        "Ward"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "savage-maws-and-goreslick-claws-anti-hero-1-rend",
+          "name": "Savage Maws and Goreslick Claws Anti- HERO (+1 Rend)",
+          "rangeInches": null,
+          "attacks": "6",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "stalk-the-prey",
+          "name": "Stalk The Prey",
+          "source": "Karanak",
+          "flavor": "Karanak's quarry is relentlessly and mercilessly run to the ground.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "This unit can move D6\". It cannot end that move in combat unless it was in combat at the start of that move and, if there is an enemy quarry on the battlefield, it must end that move closer to the quarry .",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "flesh-hounds",
       "name": "Flesh Hounds",
       "move": "8\"",
-      "save": 6,
-      "health": 2,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "save": 5,
+      "health": 7,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Beast",
+        "Ward",
+        "Reinforcements"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "savage-maws-and-goreslick-claws-anti-hero-1-rend",
+          "name": "Savage Maws and Goreslick Claws Anti- HERO (+1 Rend)",
+          "rangeInches": null,
+          "attacks": "6",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "blood-dark-claws",
+          "name": "Blood-dark Claws",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "stalk-the-prey",
+          "name": "Stalk The Prey",
+          "source": "Flesh Hounds",
+          "flavor": "Karanak's quarry is relentlessly and mercilessly run to the ground.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "This unit can move D6\". It cannot end that move in combat unless it was in combat at the start of that move and, if there is an enemy quarry on the battlefield, it must end that move closer to the quarry .",
+          "kind": "ability"
+        },
+        {
+          "id": "unflagging-hunters",
+          "name": "Unflagging Hunters",
+          "source": "Flesh Hounds",
+          "flavor": "When blood is scented, nothing will keep a Flesh Hound from its prey.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to charge rolls for this unit.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "flesh-hounds-2",
       "name": "Flesh Hounds",
       "move": "8\"",
-      "save": 6,
-      "health": 2,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "save": 5,
+      "health": 7,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Beast",
+        "Ward",
+        "Reinforcements"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "savage-maws-and-goreslick-claws-anti-hero-1-rend",
+          "name": "Savage Maws and Goreslick Claws Anti- HERO (+1 Rend)",
+          "rangeInches": null,
+          "attacks": "6",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "blood-dark-claws",
+          "name": "Blood-dark Claws",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "stalk-the-prey",
+          "name": "Stalk The Prey",
+          "source": "Flesh Hounds",
+          "flavor": "Karanak's quarry is relentlessly and mercilessly run to the ground.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "This unit can move D6\". It cannot end that move in combat unless it was in combat at the start of that move and, if there is an enemy quarry on the battlefield, it must end that move closer to the quarry .",
+          "kind": "ability"
+        },
+        {
+          "id": "unflagging-hunters",
+          "name": "Unflagging Hunters",
+          "source": "Flesh Hounds",
+          "flavor": "When blood is scented, nothing will keep a Flesh Hound from its prey.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to charge rolls for this unit.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "claws-of-karanak",
       "name": "Claws of Karanak",
-      "move": "6\"",
-      "save": 5,
-      "health": 1,
+      "move": "8\"",
+      "save": 6,
+      "health": 2,
       "control": 1,
-      "keywords": [],
-      "modelCount": 8
+      "keywords": [
+        "Beast",
+        "Ward",
+        "Reinforcements",
+        "Infantry"
+      ],
+      "modelCount": 8,
+      "weapons": [
+        {
+          "id": "blood-dark-claws",
+          "name": "Blood-dark Claws",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "weapons-of-the-hunt-crit-2-hits",
+          "name": "Weapons of the Hunt Crit (2 Hits)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "unflagging-hunters",
+          "name": "Unflagging Hunters",
+          "source": "Claws of Karanak",
+          "flavor": "When blood is scented, nothing will keep a Flesh Hound from its prey.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to charge rolls for this unit.",
+          "kind": "passive"
+        },
+        {
+          "id": "pack-hunters",
+          "name": "Pack Hunters",
+          "source": "Claws of Karanak",
+          "flavor": "The howls of the Flesh Hounds sends these killers into a blood-mad frenzy.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": "Pick an enemy unit in combat with both this unit and a friendly Flesh Hounds unit to be the target.",
+          "effect": "For the rest of the turn, this unit\u2019s combat attacks that target that enemy unit score critical hits on unmodified hit rolls of 5+.",
+          "kind": "passive"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "the-quarry",
+      "name": "The Quarry",
+      "summary": "If no enemy units are the quarry, pick an enemy unit to be the quarry (you can pick an enemy unit in reserve )",
+      "timing": null,
+      "declare": null,
+      "effect": "If no enemy units are the quarry, pick an enemy unit to be the quarry (you can pick an enemy unit in reserve ).",
+      "phases": [
+        "hero"
+      ],
+      "usageLimit": "eachTurn",
+      "kind": "ability"
     }
   ]
 }

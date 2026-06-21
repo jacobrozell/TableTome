@@ -9,38 +9,336 @@
       "save": 5,
       "health": 5,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Wizard",
+        "Infantry",
+        "Fly"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "windblast-vortex",
+          "name": "Windblast Vortex",
+          "rangeInches": 12,
+          "attacks": "1",
+          "hit": 2,
+          "wound": 3,
+          "rend": 2,
+          "damage": "D3"
+        },
+        {
+          "id": "aspiragillum",
+          "name": "Aspiragillum",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "guide-the-gusts",
+          "name": "Guide The Gusts",
+          "source": "Hurakan Windmage",
+          "flavor": "The Hurakan Windmage calls upon the wind spirits to give nearby allies a helpful push in the right direction.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible friendly unit wholly within 12\" of this unit to be the target, then make a casting roll of 2D6.",
+          "effect": "On a 6+, for the rest of the turn: The target can use RETREAT abilities and still use SHOOT and/or CHARGE abilities later in the turn. No mortal damage is inflicted on the target by RETREAT abilities.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "hurakan-windchargers",
       "name": "Hurakan Windchargers",
-      "move": "14\"",
-      "save": 4,
-      "health": 3,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
-    },
-    {
-      "id": "vanari-auralan-wardens",
-      "name": "Vanari Auralan Wardens",
       "move": "6\"",
       "save": 4,
       "health": 1,
       "control": 1,
-      "keywords": [],
-      "modelCount": 10
+      "keywords": [
+        "Ride",
+        "Hurricane",
+        "Infantry",
+        "Reinforcements",
+        "Cavalry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "warden-pike-and-blade-crit-mortal-anti-charge-1-rend",
+          "name": "Warden Pike and Blade Crit (Mortal) , Anti-charge (+1 Rend)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "windcharger-bow",
+          "name": "Windcharger Bow",
+          "rangeInches": 12,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "windcharger-blade",
+          "name": "Windcharger Blade",
+          "rangeInches": 0,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "treerunner-s-claws",
+          "name": "Treerunner\u2019s Claws",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "wall-of-blades",
+          "name": "Wall Of Blades",
+          "source": "Hurakan Windchargers",
+          "flavor": "When Auralan Wardens stand shoulder to shoulder, they present a bristling wall of pikes to the foe.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "If this unit did not charge this turn and is in combat with an enemy unit that charged this turn, roll a dice. Add 1 to the roll if that enemy unit is CAVALRY . On a 3+, this unit has STRIKE-FIRST for the rest of the turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "leap-into-the-storm",
+          "name": "Leap Into The Storm",
+          "source": "Hurakan Windchargers",
+          "flavor": "Windchargers can leap great heights and ride the winds to a more advantageous position.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "If this unit is not in combat , remove it from the battlefield and set it up again wholly within 3\" of the leeward battlefield edge and more than 6\" from all enemy units. KEYWORDS RIDE THE HURRICANE",
+          "kind": "ability"
+        }
+      ]
     },
     {
-      "id": "hurakan-spirit-of-the-wind",
-      "name": "Hurakan Spirit of the Wind",
+      "id": "vanari-auralan-wardens",
+      "name": "Vanari Auralan Wardens",
       "move": "18\"",
       "save": 4,
       "health": 8,
       "control": 5,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Monster",
+        "Fly",
+        "Ward",
+        "Infantry",
+        "Reinforcements"
+      ],
+      "modelCount": 10,
+      "weapons": [
+        {
+          "id": "bow-of-the-wind-s-vengeance",
+          "name": "Bow of the Wind\u2019s Vengeance",
+          "rangeInches": 15,
+          "attacks": "4",
+          "hit": 2,
+          "wound": 3,
+          "rend": 2,
+          "damage": "2"
+        },
+        {
+          "id": "swirling-shards",
+          "name": "Swirling Shards",
+          "rangeInches": 0,
+          "attacks": "6",
+          "hit": 2,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "warden-pike-and-blade-crit-mortal-anti-charge-1-rend",
+          "name": "Warden Pike and Blade Crit (Mortal) , Anti-charge (+1 Rend)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "eye-of-the-storm",
+          "name": "Eye Of The Storm",
+          "source": "Vanari Auralan Wardens",
+          "flavor": "The Spirit of the Wind surrounds itself with a powerful cyclone that obscures nearby allies and disrupts the attacks of their enemies.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Subtract 1 from hit rolls for attacks that target friendly units while they are wholly within 6\" of this unit.",
+          "kind": "passive"
+        },
+        {
+          "id": "hurricane-winds",
+          "name": "Hurricane Winds",
+          "source": "Vanari Auralan Wardens",
+          "flavor": "The arrows of the Spirits of the Wind are followed by a blast of wind, throwing enemies to the ground.",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit that had any damage points allocated to it this turn by this unit\u2019s shooting attacks to be the target.",
+          "effect": "Roll a dice. On a 3+, the target has STRIKE-LAST for the rest of the turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "wall-of-blades",
+          "name": "Wall Of Blades",
+          "source": "Vanari Auralan Wardens",
+          "flavor": "When Auralan Wardens stand shoulder to shoulder, they present a bristling wall of pikes to the foe.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "If this unit did not charge this turn and is in combat with an enemy unit that charged this turn, roll a dice. Add 1 to the roll if that enemy unit is CAVALRY . On a 3+, this unit has STRIKE-FIRST for the rest of the turn.",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "hurakan-spirit-of-the-wind",
+      "name": "Hurakan Spirit of the Wind",
+      "move": "12\"",
+      "save": 5,
+      "health": 5,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Wizard",
+        "Infantry",
+        "Fly",
+        "Monster",
+        "Ward"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "windblast-vortex",
+          "name": "Windblast Vortex",
+          "rangeInches": 12,
+          "attacks": "1",
+          "hit": 2,
+          "wound": 3,
+          "rend": 2,
+          "damage": "D3"
+        },
+        {
+          "id": "aspiragillum",
+          "name": "Aspiragillum",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "bow-of-the-wind-s-vengeance",
+          "name": "Bow of the Wind\u2019s Vengeance",
+          "rangeInches": 15,
+          "attacks": "4",
+          "hit": 2,
+          "wound": 3,
+          "rend": 2,
+          "damage": "2"
+        },
+        {
+          "id": "swirling-shards",
+          "name": "Swirling Shards",
+          "rangeInches": 0,
+          "attacks": "6",
+          "hit": 2,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "eye-of-the-storm",
+          "name": "Eye Of The Storm",
+          "source": "Hurakan Spirit of the Wind",
+          "flavor": "The Spirit of the Wind surrounds itself with a powerful cyclone that obscures nearby allies and disrupts the attacks of their enemies.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Subtract 1 from hit rolls for attacks that target friendly units while they are wholly within 6\" of this unit.",
+          "kind": "passive"
+        },
+        {
+          "id": "hurricane-winds",
+          "name": "Hurricane Winds",
+          "source": "Hurakan Spirit of the Wind",
+          "flavor": "The arrows of the Spirits of the Wind are followed by a blast of wind, throwing enemies to the ground.",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit that had any damage points allocated to it this turn by this unit\u2019s shooting attacks to be the target.",
+          "effect": "Roll a dice. On a 3+, the target has STRIKE-LAST for the rest of the turn.",
+          "kind": "ability"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "storm-brewing",
+      "name": "Storm Brewing",
+      "summary": "That battlefield edge is leeward ",
+      "timing": null,
+      "declare": "Pick a battlefield edge to be the target.",
+      "effect": "That battlefield edge is leeward . For the rest of the battle, each time a friendly RIDE THE HURRICANE ability is used, after that ability has been resolved, change the leeward battlefield edge to the next edge clockwise.",
+      "phases": [
+        "hero"
+      ],
+      "usageLimit": "eachTurn",
+      "kind": "ability"
+    },
+    {
+      "id": "pulled-by-winds",
+      "name": "Pulled By Winds",
+      "summary": "The target can move D6\" but must end that move closer to the leeward battlefield edge",
+      "timing": null,
+      "declare": "Pick a friendly unit that is not in combat to be the target.",
+      "effect": "The target can move D6\" but must end that move closer to the leeward battlefield edge. It can pass through the combat ranges of enemy units but cannot end that move in combat. KEYWORDS RIDE THE HURRICANE",
+      "phases": [
+        "movement"
+      ],
+      "usageLimit": "eachTurn",
+      "kind": "ability"
     }
   ]
 }

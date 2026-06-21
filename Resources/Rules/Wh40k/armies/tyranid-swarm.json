@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "armyId": "tyranid-swarm",
+  "units": [
+    {
+      "id": "hive-tyrant",
+      "name": "Hive Tyrant",
+      "keywords": ["Character", "Monster", "Synapse"],
+      "modelCount": 1,
+      "notes": "Build as Hive Tyrant, Swarmlord, or Hive Tyrant with Wings — see datasheet.",
+      "abilities": [
+        {
+          "id": "hive-tyrant-synapse",
+          "name": "Synapse Control",
+          "source": "Hive Tyrant",
+          "effect": "Army centerpiece — keeps smaller creatures coordinated while it tears through the enemy.",
+          "phases": ["command", "combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "tyranid-warriors",
+      "name": "Tyranid Warriors",
+      "keywords": ["Infantry", "Synapse"],
+      "modelCount": 3,
+      "abilities": [
+        {
+          "id": "warriors-elite",
+          "name": "Elite Brood",
+          "source": "Tyranid Warriors",
+          "effect": "Durable synapse node with flexible shooting and melee — spearhead the swarm.",
+          "phases": ["shooting", "combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "lictor",
+      "name": "Lictor",
+      "keywords": ["Infantry"],
+      "modelCount": 1,
+      "abilities": [
+        {
+          "id": "lictor-stalker",
+          "name": "Ambush Predator",
+          "source": "Lictor",
+          "effect": "Stealthy hunter — ideal for picking off characters or scoring secondary objectives.",
+          "phases": ["movement", "combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "von-ryans-leapers",
+      "name": "Von Ryan's Leapers",
+      "keywords": ["Infantry"],
+      "modelCount": 3,
+      "abilities": [
+        {
+          "id": "leapers-pounce",
+          "name": "Pouncing Strike",
+          "source": "Von Ryan's Leapers",
+          "effect": "Fast leap predators that threaten backfield units and weak objectives.",
+          "phases": ["movement", "charge", "combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "hormagaunts",
+      "name": "Hormagaunt Brood",
+      "keywords": ["Battleline", "Infantry"],
+      "modelCount": 10,
+      "abilities": [
+        {
+          "id": "hormagaunts-wave",
+          "name": "Assault Wave",
+          "source": "Hormagaunt Brood",
+          "effect": "Cheap melee flood — overwhelm objectives and tie up shooting units.",
+          "phases": ["charge", "combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "termagants",
+      "name": "Termagant Brood",
+      "keywords": ["Battleline", "Infantry"],
+      "modelCount": 10,
+      "abilities": [
+        {
+          "id": "termagants-screen",
+          "name": "Screening Brood",
+          "source": "Termagant Brood",
+          "effect": "Ranged chaff that holds footprints and screens for synapse creatures.",
+          "phases": ["shooting"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    }
+  ]
+}

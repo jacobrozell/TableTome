@@ -9,18 +9,145 @@
       "save": 3,
       "health": 7,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Cavalry",
+        "Fly"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "akhelian-royal-weapons",
+          "name": "Akhelian Royal Weapons",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "deepmare-s-fangs-talons-and-lashing-tails",
+          "name": "Deepmare\u2019s Fangs, Talons and Lashing Tails",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "raiders-resolve",
+          "name": "Raiders' Resolve",
+          "source": "Akhelian King",
+          "flavor": "The Akhelian King orders the warriors under their command to stand firm in the face of the enemy.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick another friendly unit wholly within this unit\u2019s combat range to be the target.",
+          "effect": "Roll a dice. On a 3+, add 1 to save rolls for the target until the start of your next turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "wave-rider",
+          "name": "Wave Rider",
+          "source": "Akhelian King",
+          "flavor": "When an Akhelian King charges the foe, they hit with the power of a crashing wave.",
+          "phases": [
+            "charge"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "If this unit charged this phase, pick an enemy unit within 1\" of it to be the target.",
+          "effect": "Roll a D3. On a 2+, inflict an amount of mortal damage on the target equal to the roll.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "akhelian-morrsarr-guard",
       "name": "Akhelian Morrsarr Guard",
-      "move": "14\"",
-      "save": 4,
-      "health": 4,
+      "move": "7\"",
+      "save": 5,
+      "health": 1,
       "control": 1,
-      "keywords": [],
-      "modelCount": 3
+      "keywords": [
+        "Infantry",
+        "Reinforcements",
+        "Cavalry",
+        "Fly"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "whisperbow-crit-auto-wound",
+          "name": "Whisperbow Crit (Auto-wound)",
+          "rangeInches": 12,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "keening-blade",
+          "name": "Keening Blade",
+          "rangeInches": 0,
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "voltspear-charge-1-damage",
+          "name": "Voltspear Charge (+1 Damage)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "fangmora-s-fangs-and-lashing-tail",
+          "name": "Fangmora\u2019s Fangs and Lashing Tail",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "strike-on-the-move",
+          "name": "Strike On The Move",
+          "source": "Akhelian Morrsarr Guard",
+          "flavor": "Namarti Reavers are experts at running out from cover to unleash a hail of deadly arrows.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "This unit can use SHOOT abilities even if it used a RUN or RETREAT ability in the same turn.",
+          "kind": "passive"
+        },
+        {
+          "id": "biovoltaic-blast",
+          "name": "Biovoltaic Blast",
+          "source": "Akhelian Morrsarr Guard",
+          "flavor": "The biovoltaic energy produced by Fangmora Eels is stored by Morrsarr Guard, ready to be discharged as a bolt of force when the time is right.",
+          "phases": [
+            "charge"
+          ],
+          "usageLimit": "oncePerBattle",
+          "declare": "If this unit charged this phase, pick an enemy unit within 1\" of it to be the target, then roll a number of dice equal to the number of models in this unit.",
+          "effect": "For each 4-5, inflict 1 mortal damage on the target. For each 6+, inflict D3 mortal damage on the target. Add 1 to each roll if there are more models in the target unit than this unit.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "akhelian-ishlaen-guard",
@@ -29,18 +156,193 @@
       "save": 4,
       "health": 4,
       "control": 1,
-      "keywords": [],
-      "modelCount": 3
+      "keywords": [
+        "Cavalry",
+        "Fly"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "voltspear-charge-1-damage",
+          "name": "Voltspear Charge (+1 Damage)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "fangmora-s-fangs-and-lashing-tail",
+          "name": "Fangmora\u2019s Fangs and Lashing Tail",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "helsabre",
+          "name": "Helsabre",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "fangmora-s-fangs-and-lashing-tail-2",
+          "name": "Fangmora\u2019s Fangs and Lashing Tail",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "biovoltaic-blast",
+          "name": "Biovoltaic Blast",
+          "source": "Akhelian Ishlaen Guard",
+          "flavor": "The biovoltaic energy produced by Fangmora Eels is stored by Morrsarr Guard, ready to be discharged as a bolt of force when the time is right.",
+          "phases": [
+            "charge"
+          ],
+          "usageLimit": "oncePerBattle",
+          "declare": "If this unit charged this phase, pick an enemy unit within 1\" of it to be the target, then roll a number of dice equal to the number of models in this unit.",
+          "effect": "For each 4-5, inflict 1 mortal damage on the target. For each 6+, inflict D3 mortal damage on the target. Add 1 to each roll if there are more models in the target unit than this unit.",
+          "kind": "ability"
+        },
+        {
+          "id": "biovoltaic-barrier",
+          "name": "Biovoltaic Barrier",
+          "source": "Akhelian Ishlaen Guard",
+          "flavor": "The biovoltaic energy produced by Fangmora Eels is channelled by Ishlaen Guard into a crackling luminescent energy field that protects them from harm.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "oncePerBattle",
+          "declare": "Pick an enemy unit in combat with this unit to be the target.",
+          "effect": "Roll a dice. On a 3+, subtract 1 from the Attacks characteristic of the target unit\u2019s weapons for the rest of the turn.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "namarti-reavers",
       "name": "Namarti Reavers",
-      "move": "7\"",
-      "save": 5,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 10
+      "move": "12\"",
+      "save": 3,
+      "health": 7,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Cavalry",
+        "Fly",
+        "Infantry",
+        "Reinforcements"
+      ],
+      "modelCount": 10,
+      "weapons": [
+        {
+          "id": "akhelian-royal-weapons",
+          "name": "Akhelian Royal Weapons",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "deepmare-s-fangs-talons-and-lashing-tails",
+          "name": "Deepmare\u2019s Fangs, Talons and Lashing Tails",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "whisperbow-crit-auto-wound",
+          "name": "Whisperbow Crit (Auto-wound)",
+          "rangeInches": 12,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "keening-blade",
+          "name": "Keening Blade",
+          "rangeInches": 0,
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "raiders-resolve",
+          "name": "Raiders' Resolve",
+          "source": "Namarti Reavers",
+          "flavor": "The Akhelian King orders the warriors under their command to stand firm in the face of the enemy.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick another friendly unit wholly within this unit\u2019s combat range to be the target.",
+          "effect": "Roll a dice. On a 3+, add 1 to save rolls for the target until the start of your next turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "wave-rider",
+          "name": "Wave Rider",
+          "source": "Namarti Reavers",
+          "flavor": "When an Akhelian King charges the foe, they hit with the power of a crashing wave.",
+          "phases": [
+            "charge"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "If this unit charged this phase, pick an enemy unit within 1\" of it to be the target.",
+          "effect": "Roll a D3. On a 2+, inflict an amount of mortal damage on the target equal to the roll.",
+          "kind": "ability"
+        },
+        {
+          "id": "strike-on-the-move",
+          "name": "Strike On The Move",
+          "source": "Namarti Reavers",
+          "flavor": "Namarti Reavers are experts at running out from cover to unleash a hail of deadly arrows.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "This unit can use SHOOT abilities even if it used a RUN or RETREAT ability in the same turn.",
+          "kind": "passive"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "royal-imperative",
+      "name": "Royal Imperative",
+      "summary": "Pick 1 of the following effects to apply for the rest of the battle round: Into Them!: Friendly units have STRIKE-FIRST ",
+      "timing": null,
+      "declare": null,
+      "effect": "Pick 1 of the following effects to apply for the rest of the battle round: Into Them!: Friendly units have STRIKE-FIRST . Strike Sure: Friendly units\u2019 melee weapons have Crit (Mortal) .",
+      "phases": [
+        "anyCombat"
+      ],
+      "usageLimit": "oncePerBattle",
+      "kind": "ability"
     }
   ]
 }

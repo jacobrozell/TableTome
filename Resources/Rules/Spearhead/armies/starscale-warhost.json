@@ -3,44 +3,340 @@
   "armyId": "starscale-warhost",
   "units": [
     {
-      "id": "saurus-oldblood-on-carnosaur",
-      "name": "Saurus Oldblood on Carnosaur",
+      "id": "saurus-oldblood",
+      "name": "Saurus Oldblood",
       "move": "10\"",
       "save": 4,
       "health": 14,
       "control": 5,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Monster"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "sunbolt-gauntlet",
+          "name": "Sunbolt Gauntlet",
+          "rangeInches": 12,
+          "attacks": "D6",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "relic-celestite-weapon",
+          "name": "Relic Celestite Weapon",
+          "rangeInches": 0,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "carnosaur-s-massive-jaws",
+          "name": "Carnosaur\u2019s Massive Jaws",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "battle-damaged",
+          "name": "Battle Damaged",
+          "source": "Saurus Oldblood",
+          "flavor": null,
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While this unit has 10 or more damage points, the Attacks characteristic of its Carnosaur\u2019s Massive Jaws is 1.",
+          "kind": "passive"
+        },
+        {
+          "id": "ancient-warlord",
+          "name": "Ancient Warlord",
+          "source": "Saurus Oldblood",
+          "flavor": "An Oldblood commands their saurian brethren with relentless focus and drive.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of this unit to be the target. You cannot pick this unit.",
+          "effect": "Until the start of your next turn, add 1 to charge rolls for the target.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "saurus-warriors",
       "name": "Saurus Warriors",
-      "move": "5\"",
+      "move": "10\"",
       "save": 4,
-      "health": 2,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "health": 14,
+      "control": 5,
+      "keywords": [
+        "Hero",
+        "Monster",
+        "Infantry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "sunbolt-gauntlet",
+          "name": "Sunbolt Gauntlet",
+          "rangeInches": 12,
+          "attacks": "D6",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "relic-celestite-weapon",
+          "name": "Relic Celestite Weapon",
+          "rangeInches": 0,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "carnosaur-s-massive-jaws",
+          "name": "Carnosaur\u2019s Massive Jaws",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "3"
+        },
+        {
+          "id": "celestite-club",
+          "name": "Celestite Club",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "battle-damaged",
+          "name": "Battle Damaged",
+          "source": "Saurus Warriors",
+          "flavor": null,
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While this unit has 10 or more damage points, the Attacks characteristic of its Carnosaur\u2019s Massive Jaws is 1.",
+          "kind": "passive"
+        },
+        {
+          "id": "ancient-warlord",
+          "name": "Ancient Warlord",
+          "source": "Saurus Warriors",
+          "flavor": "An Oldblood commands their saurian brethren with relentless focus and drive.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of this unit to be the target. You cannot pick this unit.",
+          "effect": "Until the start of your next turn, add 1 to charge rolls for the target.",
+          "kind": "ability"
+        },
+        {
+          "id": "ordered-cohorts",
+          "name": "Ordered Cohorts",
+          "source": "Saurus Warriors",
+          "flavor": "Devoted servants of the Old Ones, Saurus Warriors are as intractable in defence as they are relentless upon the attack.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to save rolls for this unit while it is contesting an objective you control .",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "saurus-warriors-2",
       "name": "Saurus Warriors",
-      "move": "5\"",
+      "move": "10\"",
       "save": 4,
-      "health": 2,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "health": 14,
+      "control": 5,
+      "keywords": [
+        "Hero",
+        "Monster",
+        "Infantry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "sunbolt-gauntlet",
+          "name": "Sunbolt Gauntlet",
+          "rangeInches": 12,
+          "attacks": "D6",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "relic-celestite-weapon",
+          "name": "Relic Celestite Weapon",
+          "rangeInches": 0,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "carnosaur-s-massive-jaws",
+          "name": "Carnosaur\u2019s Massive Jaws",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "3"
+        },
+        {
+          "id": "celestite-club",
+          "name": "Celestite Club",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "battle-damaged",
+          "name": "Battle Damaged",
+          "source": "Saurus Warriors",
+          "flavor": null,
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While this unit has 10 or more damage points, the Attacks characteristic of its Carnosaur\u2019s Massive Jaws is 1.",
+          "kind": "passive"
+        },
+        {
+          "id": "ancient-warlord",
+          "name": "Ancient Warlord",
+          "source": "Saurus Warriors",
+          "flavor": "An Oldblood commands their saurian brethren with relentless focus and drive.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 12\" of this unit to be the target. You cannot pick this unit.",
+          "effect": "Until the start of your next turn, add 1 to charge rolls for the target.",
+          "kind": "ability"
+        },
+        {
+          "id": "ordered-cohorts",
+          "name": "Ordered Cohorts",
+          "source": "Saurus Warriors",
+          "flavor": "Devoted servants of the Old Ones, Saurus Warriors are as intractable in defence as they are relentless upon the attack.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to save rolls for this unit while it is contesting an objective you control .",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "kroxigor",
       "name": "Kroxigor",
       "move": "5\"",
       "save": 4,
-      "health": 6,
-      "control": 2,
-      "keywords": [],
-      "modelCount": 3
+      "health": 2,
+      "control": 1,
+      "keywords": [
+        "Spell",
+        "Core",
+        "Move",
+        "Charge",
+        "Run",
+        "Retreat",
+        "Infantry"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "celestite-club",
+          "name": "Celestite Club",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "drakebite-maul",
+          "name": "Drakebite Maul",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "ordered-cohorts",
+          "name": "Ordered Cohorts",
+          "source": "Kroxigor",
+          "flavor": "Devoted servants of the Old Ones, Saurus Warriors are as intractable in defence as they are relentless upon the attack.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to save rolls for this unit while it is contesting an objective you control .",
+          "kind": "passive"
+        },
+        {
+          "id": "brutal-blows",
+          "name": "Brutal Blows",
+          "source": "Kroxigor",
+          "flavor": "Kroxigor swing their weapons in wide arcs, smashing aside a multitude of foes with each blow.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "This unit\u2019s melee weapons have Crit (2 Hits) if the target unit has 5 or more models.",
+          "kind": "passive"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "beast-of-the-dark-jungles",
+      "name": "Beast Of The Dark Jungles",
+      "summary": "Pick 1 of the following: Gargantuan Jaws: Pick an enemy unit in combat with your general and roll a dice",
+      "timing": null,
+      "declare": "Pick your general to use this ability if they are in combat .",
+      "effect": "Pick 1 of the following: Gargantuan Jaws: Pick an enemy unit in combat with your general and roll a dice. If the roll exceeds that unit\u2019s Health characteristic, 1 model in that unit is slain. Roar: Pick an enemy unit in combat with your general. Subtract D6 from that unit\u2019s control score this turn.",
+      "phases": [
+        "anyCombat"
+      ],
+      "usageLimit": "eachTurn",
+      "kind": "ability"
     }
   ]
 }

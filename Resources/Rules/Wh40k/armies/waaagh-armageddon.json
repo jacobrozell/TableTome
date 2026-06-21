@@ -5,156 +5,562 @@
     {
       "id": "warboss",
       "name": "Warboss",
-      "keywords": ["Character", "Infantry"],
+      "keywords": [
+        "Character",
+        "Infantry",
+        "Explosives"
+      ],
       "modelCount": 1,
-      "notes": "See your Armageddon datasheet card for exact stats.",
+      "move": "6\"",
+      "save": 4,
+      "health": 6,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "kustom-shoota",
+          "name": "Kustom Shoota",
+          "attacks": "4",
+          "hit": 5,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 18,
+          "ability": "Rapid Fire 2"
+        },
+        {
+          "id": "kustom-choppa",
+          "name": "Kustom Choppa",
+          "attacks": "6",
+          "hit": 2,
+          "wound": 8,
+          "rend": 2,
+          "damage": "2",
+          "ability": "Cleave 1"
+        }
+      ],
       "abilities": [
         {
-          "id": "warboss-waaagh",
-          "name": "Da Boss",
+          "id": "warboss-might-is-right",
+          "name": "Might Is Right",
           "source": "Warboss",
-          "effect": "The biggest Ork in the mob — buffs nearby Boyz and hits brutally hard in melee.",
-          "phases": ["command", "combat"],
+          "effect": "This unit's melee weapons have +1 to hit rolls.",
+          "phases": [
+            "combat"
+          ],
+          "usageLimit": "passive",
+          "kind": "ability"
+        },
+        {
+          "id": "warboss-da-biggest",
+          "name": "Da Biggest and da Best",
+          "source": "Warboss",
+          "effect": "While the Waaagh! is active for this unit, this model's melee weapons have +4 A.",
+          "phases": [
+            "combat"
+          ],
           "usageLimit": "passive",
           "kind": "ability"
         }
-      ]
+      ],
+      "notes": "Leader. 5+ invulnerable save. GW Armageddon Orks datasheet PDF (June 2026).",
+      "invulnerableSave": 5
     },
     {
       "id": "bigboss",
       "name": "Bigboss",
-      "keywords": ["Character", "Infantry"],
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
       "modelCount": 1,
+      "move": "6\"",
+      "save": 4,
+      "health": 5,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "slugga",
+          "name": "Slugga",
+          "attacks": "1",
+          "hit": 5,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 12,
+          "ability": "Close-quarters"
+        },
+        {
+          "id": "two-handed-big-choppa",
+          "name": "Two-handed Big Choppa",
+          "attacks": "5",
+          "hit": 3,
+          "wound": 7,
+          "rend": 1,
+          "damage": "2",
+          "ability": "Cleave 1"
+        }
+      ],
       "abilities": [
         {
-          "id": "bigboss-discipline",
-          "name": "Keep Da Boyz In Line",
+          "id": "bigboss-breaking-heads",
+          "name": "Breakin' Heads",
           "source": "Bigboss",
-          "effect": "Secondary leader who keeps mobs fighting and punishes stragglers.",
-          "phases": ["command", "combat"],
+          "effect": "This unit's melee weapons have [Sustained Hits 1].",
+          "phases": [
+            "combat"
+          ],
+          "usageLimit": "passive",
+          "kind": "ability"
+        },
+        {
+          "id": "bigboss-something-to-prove",
+          "name": "Somethin' to Prove",
+          "source": "Bigboss",
+          "effect": "This unit has +1 to charge rolls.",
+          "phases": [
+            "charge"
+          ],
           "usageLimit": "passive",
           "kind": "ability"
         }
-      ]
+      ],
+      "notes": "Leader. GW Armageddon Orks datasheet PDF (June 2026)."
     },
     {
       "id": "bannernob",
       "name": "Bannernob",
-      "keywords": ["Character", "Infantry"],
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
       "modelCount": 1,
+      "move": "6\"",
+      "save": 4,
+      "health": 4,
+      "control": 6,
+      "weapons": [
+        {
+          "id": "shoota",
+          "name": "Shoota",
+          "attacks": "2",
+          "hit": 5,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 18,
+          "ability": "Rapid Fire 1"
+        },
+        {
+          "id": "choppa",
+          "name": "Choppa",
+          "attacks": "5",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
       "abilities": [
         {
           "id": "bannernob-waaagh-banner",
           "name": "Waaagh! Banner",
           "source": "Bannernob",
-          "effect": "Carries a prized banner — Orks nearby fight harder when the icon is on the table.",
-          "phases": ["command"],
+          "effect": "This unit has a 5+ invulnerable save. While the Waaagh! is active for this unit, this unit has +1 T.",
+          "phases": [
+            "command",
+            "anyCombat"
+          ],
           "usageLimit": "passive",
           "kind": "ability"
         }
-      ]
+      ],
+      "notes": "Support. GW Armageddon Orks datasheet PDF (June 2026).",
+      "invulnerableSave": 5
     },
     {
       "id": "painboy",
-      "name": "Painboy and Grot",
-      "keywords": ["Character", "Infantry"],
-      "modelCount": 2,
+      "name": "Painboy",
+      "keywords": [
+        "Character",
+        "Infantry"
+      ],
+      "modelCount": 1,
+      "move": "6\"",
+      "save": 5,
+      "health": 3,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "doks-toolz",
+          "name": "Dok's Toolz",
+          "attacks": "3",
+          "hit": 4,
+          "wound": 9,
+          "rend": 2,
+          "damage": "2"
+        },
+        {
+          "id": "urty-syringe",
+          "name": "'Urty Syringe",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 2,
+          "rend": 0,
+          "damage": "1",
+          "ability": "Anti-infantry 4+, Extra Attacks, Precision"
+        }
+      ],
       "abilities": [
         {
-          "id": "painboy-surgery",
-          "name": "Dok's Surgery",
+          "id": "painboy-doks-toolz",
+          "name": "Dok's Toolz",
           "source": "Painboy",
-          "effect": "Patches Boyz back together — risky but can keep key units on objectives.",
-          "phases": ["command"],
-          "usageLimit": "eachTurn",
+          "effect": "This unit has Feel No Pain 5+.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "passive",
+          "kind": "ability"
+        },
+        {
+          "id": "painboy-hold-still",
+          "name": "Hold Still and Say Aargh",
+          "source": "Painboy",
+          "effect": "When this model scores a critical wound with its 'urty syringe against a non-VEHICLE unit, it also inflicts D6 mortal wounds to that unit.",
+          "phases": [
+            "combat"
+          ],
+          "usageLimit": "passive",
+          "kind": "ability"
+        },
+        {
+          "id": "painboy-grot-orderly",
+          "name": "Grot Orderly",
+          "source": "Painboy",
+          "effect": "Once per battle, in your Command phase, if this unit is below starting strength, you can return up to D3 destroyed bodyguard models to this unit.",
+          "phases": [
+            "command"
+          ],
+          "usageLimit": "oncePerBattle",
           "kind": "ability"
         }
-      ]
+      ],
+      "notes": "Support. Includes Grot Orderly. GW Armageddon Orks datasheet PDF (June 2026)."
     },
     {
       "id": "weirdboy",
       "name": "Weirdboy",
-      "keywords": ["Character", "Infantry", "Psyker"],
+      "keywords": [
+        "Character",
+        "Infantry",
+        "Psyker"
+      ],
       "modelCount": 1,
+      "move": "6\"",
+      "save": 5,
+      "health": 4,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "eadbanger",
+          "name": "'Eadbanger",
+          "attacks": "1",
+          "hit": 4,
+          "wound": 6,
+          "rend": 3,
+          "damage": "1",
+          "rangeInches": 24,
+          "ability": "Precision, Psychic"
+        },
+        {
+          "id": "waaagh-staff",
+          "name": "Waaagh! Staff",
+          "attacks": "3",
+          "hit": 3,
+          "wound": 8,
+          "rend": 1,
+          "damage": "D3",
+          "ability": "Psychic"
+        }
+      ],
       "abilities": [
         {
-          "id": "weirdboy-powers",
-          "name": "Weirdboy Powers",
+          "id": "weirdboy-waaagh-energy",
+          "name": "Waaagh! Energy",
           "source": "Weirdboy",
-          "effect": "Unpredictable psychic violence — can swing a fight but risks blowing up.",
-          "phases": ["command", "shooting"],
+          "effect": "For every 5 models in this unit, add 1 to the S and D of this model's 'Eadbanger weapon. While this unit contains 10 or more models, that weapon has [Hazardous].",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "passive",
+          "kind": "ability"
+        },
+        {
+          "id": "weirdboy-da-jump",
+          "name": "Da Jump",
+          "source": "Weirdboy",
+          "effect": "Once per turn, per army (Psychic): in your Movement phase, roll one D6 — on 1 this unit suffers D6 mortal wounds; on 2-6 place this unit in Strategic Reserves, it gains Deep Strike until end of phase, then can make an Ingress move (including during the first battle round).",
+          "phases": [
+            "movement"
+          ],
           "usageLimit": "eachTurn",
           "kind": "ability"
         }
-      ]
+      ],
+      "notes": "Leader. Deadly Demise D3. GW Armageddon Orks datasheet PDF (June 2026)."
     },
     {
       "id": "boyz",
       "name": "Boyz",
-      "keywords": ["Battleline", "Infantry"],
+      "keywords": [
+        "Battleline",
+        "Infantry",
+        "Mob",
+        "Explosives"
+      ],
       "modelCount": 20,
+      "move": "6\"",
+      "save": 5,
+      "health": 1,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "shoota",
+          "name": "Shoota",
+          "attacks": "2",
+          "hit": 5,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 18,
+          "ability": "Rapid Fire 1"
+        },
+        {
+          "id": "slugga",
+          "name": "Slugga",
+          "attacks": "1",
+          "hit": 5,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 12,
+          "ability": "Close-quarters"
+        },
+        {
+          "id": "kustom-shoota",
+          "name": "Kustom Shoota",
+          "attacks": "4",
+          "hit": 5,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 18,
+          "ability": "Rapid Fire 2"
+        },
+        {
+          "id": "choppa",
+          "name": "Choppa",
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "big-choppa",
+          "name": "Big Choppa",
+          "attacks": "3",
+          "hit": 3,
+          "wound": 7,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
       "abilities": [
         {
-          "id": "boyz-mob",
-          "name": "Choppa and Shoota",
+          "id": "boyz-get-da-good-bitz",
+          "name": "Get da Good Bitz",
           "source": "Boyz",
-          "effect": "Core mob unit — volume of attacks and bodies for holding terrain footprints.",
-          "phases": ["shooting", "combat"],
+          "effect": "At the end of your Command phase, if this unit controls an objective, that objective is secured by your army.",
+          "phases": [
+            "command"
+          ],
           "usageLimit": "passive",
           "kind": "ability"
         }
-      ]
+      ],
+      "notes": "Two 10-model units (1 Boss Nob + 9 Boyz each). Boss Nob has 2W. GW Armageddon Orks datasheet PDF (June 2026)."
     },
     {
       "id": "gretchin",
       "name": "Gretchin",
-      "keywords": ["Infantry"],
+      "keywords": [
+        "Infantry",
+        "Grots"
+      ],
       "modelCount": 10,
+      "move": "6\"",
+      "save": 7,
+      "health": 1,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "blasta",
+          "name": "Blasta",
+          "attacks": "1",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 12,
+          "ability": "Close-quarters"
+        },
+        {
+          "id": "close-combat-weapon",
+          "name": "Close Combat Weapon",
+          "attacks": "1",
+          "hit": 5,
+          "wound": 2,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
       "abilities": [
         {
-          "id": "gretchin-screen",
-          "name": "Cower and Shoot",
+          "id": "gretchin-thievin-scavengers",
+          "name": "Thievin' Scavengers",
           "source": "Gretchin",
-          "effect": "Cheap screens that chip away with ranged attacks when safe.",
-          "phases": ["shooting"],
-          "usageLimit": "passive",
+          "effect": "At the start of your Movement phase, for each objective you control that has one or more friendly non-battle-shocked units with this ability within range, roll one D6. If one or more of those rolls is a 4+, you gain 1CP.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "eachTurn",
           "kind": "ability"
         }
-      ]
+      ],
+      "notes": "GW Armageddon Orks datasheet PDF (June 2026)."
     },
     {
       "id": "wartrakk",
       "name": "Wartrakk",
-      "keywords": ["Vehicle"],
+      "keywords": [
+        "Mounted",
+        "Speed Freeks"
+      ],
       "modelCount": 1,
+      "move": "12\"",
+      "save": 4,
+      "health": 7,
+      "control": 3,
+      "weapons": [
+        {
+          "id": "kustom-shoota",
+          "name": "Kustom Shoota",
+          "attacks": "2",
+          "hit": 5,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 18,
+          "ability": "Rapid Fire 2"
+        },
+        {
+          "id": "rokkit-launcha",
+          "name": "Rokkit Launcha",
+          "attacks": "D3+3",
+          "hit": 5,
+          "wound": 10,
+          "rend": 2,
+          "damage": "3",
+          "rangeInches": 24
+        },
+        {
+          "id": "choppas",
+          "name": "Choppas",
+          "attacks": "5",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
       "abilities": [
         {
-          "id": "wartrakk-rokkits",
-          "name": "Rokkit Support",
+          "id": "wartrakk-indiscriminate-detonations",
+          "name": "Indiscriminate Detonations",
           "source": "Wartrakk",
-          "effect": "Fast rokkit platform — reposition for side shots on Space Marine vehicles.",
-          "phases": ["movement", "shooting"],
-          "usageLimit": "passive",
+          "effect": "In your Shooting phase, when this unit has resolved its attacks, select one enemy unit hit by one or more of those attacks. That enemy unit is suppressed until the start of your next Command phase (while suppressed, it has -1 to hit rolls).",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "eachTurn",
           "kind": "ability"
         }
-      ]
+      ],
+      "notes": "6+ invulnerable save. GW Armageddon Orks datasheet PDF (June 2026).",
+      "invulnerableSave": 6
     },
     {
       "id": "big-mek-dakkarig",
       "name": "Big Mek Dakkarig",
-      "keywords": ["Character", "Vehicle", "Walker"],
+      "keywords": [
+        "Vehicle",
+        "Walker",
+        "Big Mek"
+      ],
       "modelCount": 1,
+      "move": "8\"",
+      "save": 3,
+      "health": 11,
+      "control": 3,
+      "weapons": [
+        {
+          "id": "blitzkannon",
+          "name": "Blitzkannon",
+          "attacks": "8",
+          "hit": 5,
+          "wound": 7,
+          "rend": 2,
+          "damage": "2",
+          "rangeInches": 24,
+          "ability": "Heavy, Sustained Hits 1"
+        },
+        {
+          "id": "rokkit-launcha",
+          "name": "Rokkit Launcha",
+          "attacks": "6",
+          "hit": 5,
+          "wound": 10,
+          "rend": 2,
+          "damage": "3",
+          "rangeInches": 24,
+          "ability": "Heavy"
+        },
+        {
+          "id": "stompy-feet",
+          "name": "Stompy Feet",
+          "attacks": "4",
+          "hit": 3,
+          "wound": 6,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
       "abilities": [
         {
-          "id": "dakkarig-blitz",
-          "name": "Blitzcannon Platform",
+          "id": "dakkarig-dakkablitz",
+          "name": "Dakkablitz",
           "source": "Big Mek Dakkarig",
-          "effect": "Walking gun platform and army centerpiece — flexible shooting at multiple targets.",
-          "phases": ["shooting", "combat"],
+          "effect": "In your Shooting phase, while making attacks with this unit, if its blitzkannon targeted a non-MONSTER/VEHICLE unit, that weapon has +6 A.",
+          "phases": [
+            "shooting"
+          ],
           "usageLimit": "passive",
           "kind": "ability"
         }
-      ]
+      ],
+      "notes": "5+ invulnerable save (kustom force field). GW Armageddon Orks datasheet PDF (June 2026).",
+      "invulnerableSave": 5
     }
   ]
 }

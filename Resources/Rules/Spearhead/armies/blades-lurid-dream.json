@@ -9,48 +9,386 @@
       "save": 5,
       "health": 5,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Wizard",
+        "Infantry"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "haze-staff",
+          "name": "Haze Staff",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "vision-of-damnation",
+          "name": "Vision Of Damnation",
+          "source": "Shardspeaker of Slaanesh",
+          "flavor": "The sorcerer conjures a vision of excess so intense that reality itself shimmers and distorts.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Make a casting roll of 2D6.",
+          "effect": "On a 6+, roll 6 dice. For each 4+, you receive 1 depravity point .",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "blissbarb-archers",
       "name": "Blissbarb Archers",
       "move": "6\"",
-      "save": 6,
-      "health": 1,
+      "save": 5,
+      "health": 3,
       "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "keywords": [
+        "Core",
+        "Move",
+        "Run",
+        "Retreat",
+        "Charge",
+        "Spell",
+        "Unbind",
+        "Banish",
+        "Infantry",
+        "Reinforcements"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "razor-sharp-claw-and-gilded-weapon",
+          "name": "Razor-sharp Claw and Gilded Weapon",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "razor-sharp-claws",
+          "name": "Razor-sharp Claws",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "blissbarb-bow",
+          "name": "Blissbarb Bow",
+          "rangeInches": 18,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "sybarite-blade",
+          "name": "Sybarite Blade",
+          "rangeInches": 0,
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "slaughter-at-any-cost",
+          "name": "Slaughter At Any Cost",
+          "source": "Blissbarb Archers",
+          "flavor": "When stirred by the excesses of battle, Fiendbloods waste no time in hunting down their victims.",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "This unit can use this ability if any damage points were allocated to it this turn.",
+          "effect": "This unit can use the \u2018 Normal Move \u2019 ability as if it were your movement phase.",
+          "kind": "ability"
+        },
+        {
+          "id": "light-footed-killers",
+          "name": "Light-Footed Killers",
+          "source": "Blissbarb Archers",
+          "flavor": "Blissbarb Archers can deliver pinpoint shots even while cavorting wildly across the battlefield.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "This unit can use SHOOT abilities even if it used a RUN ability in the same turn.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "blissbarb-archers-2",
       "name": "Blissbarb Archers",
       "move": "6\"",
-      "save": 6,
-      "health": 1,
+      "save": 5,
+      "health": 3,
       "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "keywords": [
+        "Core",
+        "Move",
+        "Run",
+        "Retreat",
+        "Charge",
+        "Spell",
+        "Unbind",
+        "Banish",
+        "Infantry",
+        "Reinforcements"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "razor-sharp-claw-and-gilded-weapon",
+          "name": "Razor-sharp Claw and Gilded Weapon",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "razor-sharp-claws",
+          "name": "Razor-sharp Claws",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "blissbarb-bow",
+          "name": "Blissbarb Bow",
+          "rangeInches": 18,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "sybarite-blade",
+          "name": "Sybarite Blade",
+          "rangeInches": 0,
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "slaughter-at-any-cost",
+          "name": "Slaughter At Any Cost",
+          "source": "Blissbarb Archers",
+          "flavor": "When stirred by the excesses of battle, Fiendbloods waste no time in hunting down their victims.",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "This unit can use this ability if any damage points were allocated to it this turn.",
+          "effect": "This unit can use the \u2018 Normal Move \u2019 ability as if it were your movement phase.",
+          "kind": "ability"
+        },
+        {
+          "id": "light-footed-killers",
+          "name": "Light-Footed Killers",
+          "source": "Blissbarb Archers",
+          "flavor": "Blissbarb Archers can deliver pinpoint shots even while cavorting wildly across the battlefield.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "This unit can use SHOOT abilities even if it used a RUN ability in the same turn.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "slickblade-seekers",
       "name": "Slickblade Seekers",
-      "move": "12\"",
+      "move": "6\"",
       "save": 5,
-      "health": 4,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "health": 5,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Wizard",
+        "Infantry",
+        "Cavalry",
+        "Reinforcements"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "haze-staff",
+          "name": "Haze Staff",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "slickblade-glaive-charge-1-damage",
+          "name": "Slickblade Glaive Charge (+1 Damage)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "exalted-steed-s-poisoned-tongue",
+          "name": "Exalted Steed\u2019s Poisoned Tongue",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "vision-of-damnation",
+          "name": "Vision Of Damnation",
+          "source": "Slickblade Seekers",
+          "flavor": "The sorcerer conjures a vision of excess so intense that reality itself shimmers and distorts.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Make a casting roll of 2D6.",
+          "effect": "On a 6+, roll 6 dice. For each 4+, you receive 1 depravity point .",
+          "kind": "ability"
+        },
+        {
+          "id": "unrivalled-velocity",
+          "name": "Unrivalled Velocity",
+          "source": "Slickblade Seekers",
+          "flavor": "Slickblade Seekers are obsessed with high-speed kills, tearing towards the foe with relentless haste.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "You can re-roll charge rolls for this unit.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "slaangor-fiendbloods",
       "name": "Slaangor Fiendbloods",
-      "move": "6\"",
+      "move": "12\"",
       "save": 5,
-      "health": 3,
+      "health": 4,
       "control": 1,
-      "keywords": [],
-      "modelCount": 3
+      "keywords": [
+        "Cavalry",
+        "Reinforcements",
+        "Infantry"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "slickblade-glaive-charge-1-damage",
+          "name": "Slickblade Glaive Charge (+1 Damage)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "exalted-steed-s-poisoned-tongue",
+          "name": "Exalted Steed\u2019s Poisoned Tongue",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "razor-sharp-claw-and-gilded-weapon",
+          "name": "Razor-sharp Claw and Gilded Weapon",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "razor-sharp-claws",
+          "name": "Razor-sharp Claws",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "unrivalled-velocity",
+          "name": "Unrivalled Velocity",
+          "source": "Slaangor Fiendbloods",
+          "flavor": "Slickblade Seekers are obsessed with high-speed kills, tearing towards the foe with relentless haste.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "You can re-roll charge rolls for this unit.",
+          "kind": "passive"
+        },
+        {
+          "id": "slaughter-at-any-cost",
+          "name": "Slaughter At Any Cost",
+          "source": "Slaangor Fiendbloods",
+          "flavor": "When stirred by the excesses of battle, Fiendbloods waste no time in hunting down their victims.",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "This unit can use this ability if any damage points were allocated to it this turn.",
+          "effect": "This unit can use the \u2018 Normal Move \u2019 ability as if it were your movement phase.",
+          "kind": "ability"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "temptations-of-slaanesh-wherever-the-hedonites-o",
+      "name": "Battle Trait",
+      "summary": "TEMPTATIONS OF SLAANESH Wherever the Hedonites of Slaanesh roam, reality is unmade. Those who stand against them are assailed by titillating phantasms and mind-bending illusions until they become slaves to their own base urges. You receive 6 temptation dice at the start of the battle round. Each time your opponent make",
+      "effect": "TEMPTATIONS OF SLAANESH Wherever the Hedonites of Slaanesh roam, reality is unmade. Those who stand against them are assailed by titillating phantasms and mind-bending illusions until they become slaves to their own base urges. You receive 6 temptation dice at the start of the battle round. Each time your opponent makes a failed hit roll , a failed wound roll or a failed save roll , you can offer them a temptation dice. If they accept your offer, that roll is replaced with a ",
+      "phases": [
+        "movement"
+      ],
+      "usageLimit": "oncePerBattle",
+      "kind": "ability"
     }
   ]
 }

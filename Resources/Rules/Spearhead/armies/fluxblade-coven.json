@@ -3,64 +3,492 @@
   "armyId": "fluxblade-coven",
   "units": [
     {
-      "id": "magister-on-disc-of-tzeentch",
-      "name": "Magister on Disc of Tzeentch",
+      "id": "magister",
+      "name": "Magister",
       "move": "14\"",
       "save": 4,
       "health": 6,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Wizard",
+        "Cavalry",
+        "Fly"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "tzeentchian-runestaff",
+          "name": "Tzeentchian Runestaff",
+          "rangeInches": 18,
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "D3"
+        },
+        {
+          "id": "warpsteel-sword",
+          "name": "Warpsteel Sword",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "D3"
+        },
+        {
+          "id": "disc-s-teeth-and-horns",
+          "name": "Disc\u2019s Teeth and Horns",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "bolt-of-change",
+          "name": "Bolt Of Change",
+          "source": "Magister",
+          "flavor": "The Magister hurls a coruscating bolt of energy at the foe, causing their flesh to run like wax and remould into a form more pleasing to Tzeentch.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible enemy unit within 18\" of this unit to be the target, then make a casting roll of 2D6.",
+          "effect": "On a 6+, inflict D3 mortal damage on the target. If any models are slain by this ability, you can pick a friendly Tzaangors unit wholly within 18\" of this unit and return 1 slain model to that Tzaangors unit.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "flamers-of-tzeentch",
       "name": "Flamers of Tzeentch",
-      "move": "9\"",
+      "move": "14\"",
       "save": 5,
-      "health": 2,
+      "health": 3,
       "control": 1,
-      "keywords": [],
-      "modelCount": 3
+      "keywords": [
+        "Beast",
+        "Fly",
+        "Ward",
+        "Infantry"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "lamprey-bite",
+          "name": "Lamprey Bite",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "wyrdflame",
+          "name": "Wyrdflame",
+          "rangeInches": 12,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "D3"
+        },
+        {
+          "id": "flaming-maws",
+          "name": "Flaming Maws",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "slashing-fins",
+          "name": "Slashing Fins",
+          "source": "Flamers of Tzeentch",
+          "flavor": "Screamers swoop from discoloured skies to slash at their foes, performing fly-by attacks and effortless manoeuvres.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit that any models in this unit passed across this phase to be the target, then roll a dice for each model in this unit that did so.",
+          "effect": "For each 4+, inflict 1 mortal damage on the target.",
+          "kind": "ability"
+        },
+        {
+          "id": "capricious-wyrdflame",
+          "name": "Capricious Wyrdflame",
+          "source": "Flamers of Tzeentch",
+          "flavor": "The lurid fires of change spread as though they were possessed of a malign, mischievous sentience.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to hit rolls for attacks made by this unit if the target unit has 5 or more models.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "screamers-of-tzeentch",
       "name": "Screamers of Tzeentch",
       "move": "14\"",
-      "save": 5,
-      "health": 3,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 3
+      "save": 4,
+      "health": 6,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Wizard",
+        "Cavalry",
+        "Fly",
+        "Beast",
+        "Ward"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "tzeentchian-runestaff",
+          "name": "Tzeentchian Runestaff",
+          "rangeInches": 18,
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "D3"
+        },
+        {
+          "id": "warpsteel-sword",
+          "name": "Warpsteel Sword",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "D3"
+        },
+        {
+          "id": "disc-s-teeth-and-horns",
+          "name": "Disc\u2019s Teeth and Horns",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "lamprey-bite",
+          "name": "Lamprey Bite",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "bolt-of-change",
+          "name": "Bolt Of Change",
+          "source": "Screamers of Tzeentch",
+          "flavor": "The Magister hurls a coruscating bolt of energy at the foe, causing their flesh to run like wax and remould into a form more pleasing to Tzeentch.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible enemy unit within 18\" of this unit to be the target, then make a casting roll of 2D6.",
+          "effect": "On a 6+, inflict D3 mortal damage on the target. If any models are slain by this ability, you can pick a friendly Tzaangors unit wholly within 18\" of this unit and return 1 slain model to that Tzaangors unit.",
+          "kind": "ability"
+        },
+        {
+          "id": "slashing-fins",
+          "name": "Slashing Fins",
+          "source": "Screamers of Tzeentch",
+          "flavor": "Screamers swoop from discoloured skies to slash at their foes, performing fly-by attacks and effortless manoeuvres.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit that any models in this unit passed across this phase to be the target, then roll a dice for each model in this unit that did so.",
+          "effect": "For each 4+, inflict 1 mortal damage on the target.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "tzaangors",
       "name": "Tzaangors",
-      "move": "6\"",
-      "save": 5,
-      "health": 2,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
-    },
-    {
-      "id": "tzaangors-2",
-      "name": "Tzaangors",
-      "move": "6\"",
-      "save": 5,
-      "health": 2,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
-    },
-    {
-      "id": "kairic-acolytes",
-      "name": "Kairic Acolytes",
       "move": "5\"",
       "save": 5,
       "health": 1,
       "control": 1,
-      "keywords": [],
-      "modelCount": 10
+      "keywords": [
+        "Spell",
+        "Deploy",
+        "Terrain",
+        "Unbind",
+        "Core",
+        "Move",
+        "Charge",
+        "Attack",
+        "Shoot",
+        "Fight",
+        "Banish",
+        "Run",
+        "Retreat",
+        "Infantry",
+        "Reinforcements"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "sorcerous-bolts",
+          "name": "Sorcerous Bolts",
+          "rangeInches": 18,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "cursed-blade",
+          "name": "Cursed Blade",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "savage-blade-and-vicious-beak",
+          "name": "Savage Blade and Vicious Beak",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "gestalt-sorcery",
+          "name": "Gestalt Sorcery",
+          "source": "Tzaangors",
+          "flavor": "Through combined worship, a cult of Acolytes can swell their arcane power to new levels of ferocity.",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Make a casting roll of 2D6.",
+          "effect": "On a 6+, add 1 to the Rend characteristic of this unit\u2019s Sorcerous Bolts this phase.",
+          "kind": "ability"
+        },
+        {
+          "id": "long-planned-strike",
+          "name": "Long-Planned Strike",
+          "source": "Tzaangors",
+          "flavor": "Tzaangors are fearsome agents of change on the attack, pushing their longplanned assault into enemy territory with impressive skill and strength.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While this unit is wholly within enemy territory, its melee weapons have Crit (2 Hits) .",
+          "kind": "passive"
+        }
+      ]
+    },
+    {
+      "id": "tzaangors-2",
+      "name": "Tzaangors",
+      "move": "5\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [
+        "Spell",
+        "Deploy",
+        "Terrain",
+        "Unbind",
+        "Core",
+        "Move",
+        "Charge",
+        "Attack",
+        "Shoot",
+        "Fight",
+        "Banish",
+        "Run",
+        "Retreat",
+        "Infantry",
+        "Reinforcements"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "sorcerous-bolts",
+          "name": "Sorcerous Bolts",
+          "rangeInches": 18,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "cursed-blade",
+          "name": "Cursed Blade",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "savage-blade-and-vicious-beak",
+          "name": "Savage Blade and Vicious Beak",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "gestalt-sorcery",
+          "name": "Gestalt Sorcery",
+          "source": "Tzaangors",
+          "flavor": "Through combined worship, a cult of Acolytes can swell their arcane power to new levels of ferocity.",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Make a casting roll of 2D6.",
+          "effect": "On a 6+, add 1 to the Rend characteristic of this unit\u2019s Sorcerous Bolts this phase.",
+          "kind": "ability"
+        },
+        {
+          "id": "long-planned-strike",
+          "name": "Long-Planned Strike",
+          "source": "Tzaangors",
+          "flavor": "Tzaangors are fearsome agents of change on the attack, pushing their longplanned assault into enemy territory with impressive skill and strength.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While this unit is wholly within enemy territory, its melee weapons have Crit (2 Hits) .",
+          "kind": "passive"
+        }
+      ]
+    },
+    {
+      "id": "kairic-acolytes",
+      "name": "Kairic Acolytes",
+      "move": "9\"",
+      "save": 5,
+      "health": 2,
+      "control": 1,
+      "keywords": [
+        "Infantry",
+        "Fly",
+        "Ward",
+        "Reinforcements"
+      ],
+      "modelCount": 10,
+      "weapons": [
+        {
+          "id": "wyrdflame",
+          "name": "Wyrdflame",
+          "rangeInches": 12,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "D3"
+        },
+        {
+          "id": "flaming-maws",
+          "name": "Flaming Maws",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "sorcerous-bolts",
+          "name": "Sorcerous Bolts",
+          "rangeInches": 18,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "cursed-blade",
+          "name": "Cursed Blade",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "capricious-wyrdflame",
+          "name": "Capricious Wyrdflame",
+          "source": "Kairic Acolytes",
+          "flavor": "The lurid fires of change spread as though they were possessed of a malign, mischievous sentience.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to hit rolls for attacks made by this unit if the target unit has 5 or more models.",
+          "kind": "passive"
+        },
+        {
+          "id": "gestalt-sorcery",
+          "name": "Gestalt Sorcery",
+          "source": "Kairic Acolytes",
+          "flavor": "Through combined worship, a cult of Acolytes can swell their arcane power to new levels of ferocity.",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Make a casting roll of 2D6.",
+          "effect": "On a 6+, add 1 to the Rend characteristic of this unit\u2019s Sorcerous Bolts this phase.",
+          "kind": "ability"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "masters-of-destiny",
+      "name": "Masters Of Destiny",
+      "summary": "Roll 9 dice and put them to one side",
+      "timing": null,
+      "declare": null,
+      "effect": "Roll 9 dice and put them to one side. These are your destiny dice . During the battle, instead of rolling the dice for 1 of the rolls from the list below, you can pick one of your destiny dice and use it as the roll. Once a destiny dice has been used, it is discarded. If you want to replace a roll that uses more than one D6, you must use the same number of destiny dice (e.g. you would need to use 2 destiny dice in place of a 2D6 casting roll). Rolls that are replaced count as unmodified rolls and cannot be re-rolled or modified unless noted. The following rolls can be replaced with destiny dice: Casting rolls Run rolls Charge rolls Hit rolls Wound rolls Save rolls \u2013 you must still modify the roll by the Rend characteristic of the attacking weapon.",
+      "phases": [
+        "hero"
+      ],
+      "usageLimit": "oncePerBattle",
+      "kind": "ability"
     }
   ]
 }

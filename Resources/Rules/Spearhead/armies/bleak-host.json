@@ -9,58 +9,430 @@
       "save": 5,
       "health": 5,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "disgusting-sneezes",
+          "name": "Disgusting Sneezes",
+          "rangeInches": 7,
+          "attacks": "D6",
+          "hit": 2,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "distended-maw",
+          "name": "Distended Maw",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "keep-counting-im-watching-you",
+          "name": "Keep Counting, I'M Watching You",
+          "source": "Spoilpox Scrivener",
+          "flavor": "Spoilpox Scriveners are responsible for making sure that the Plaguebearers of the tallybands do not shirk their duties",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly Plaguebearers unit wholly within 14\" of this unit to be the target.",
+          "effect": "Pick 1 of the following. The effect lasts until the start of your next turn. Tally of Blows: Add 1 to the Attacks characteristic of the target unit\u2019s melee weapons. Recorded Stamina: Add 1 to save rolls for the target unit.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "pusgoyle-blightlord",
       "name": "Pusgoyle Blightlord",
-      "move": "8\"",
-      "save": 4,
-      "health": 8,
-      "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "move": "4\"",
+      "save": 3,
+      "health": 3,
+      "control": 1,
+      "keywords": [
+        "Infantry",
+        "Ward",
+        "Cavalry",
+        "Fly"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "blighted-weapon",
+          "name": "Blighted Weapon",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "blighted-scythe",
+          "name": "Blighted Scythe",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 3,
+          "rend": 2,
+          "damage": "1"
+        },
+        {
+          "id": "rot-fly-s-mouthparts-and-sting",
+          "name": "Rot Fly\u2019s Mouthparts and Sting",
+          "rangeInches": null,
+          "attacks": "6",
+          "hit": 4,
+          "wound": 2,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "relentless-attackers",
+          "name": "Relentless Attackers",
+          "source": "Pusgoyle Blightlord",
+          "flavor": "Blightkings grind through the battlelines of lesser foes, shattering their morale and hacking down the stunned survivors with contemptuous ease.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy INFANTRY unit in combat with this unit to be the target and roll a dice for each model in this unit that is within the target unit\u2019s combat range .",
+          "effect": "For each roll that exceeds the target\u2019s Health characteristic, inflict 1 mortal damage on it.",
+          "kind": "ability"
+        },
+        {
+          "id": "wrack-and-ruin",
+          "name": "Wrack And Ruin",
+          "source": "Pusgoyle Blightlord",
+          "flavor": "Mortal Maggotkin who ride Rot Flies act as brutal linebreakers, using their sheer bulk to smash enemy formations asunder.",
+          "phases": [
+            "charge"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "If this unit charged this phase, pick an enemy unit within 1\" of it to be the target and roll a dice.",
+          "effect": "On a 2+, inflict D3 mortal damage on the target.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "pusgoyle-blightlord-2",
       "name": "Pusgoyle Blightlord",
-      "move": "8\"",
-      "save": 4,
-      "health": 8,
-      "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "move": "4\"",
+      "save": 3,
+      "health": 3,
+      "control": 1,
+      "keywords": [
+        "Infantry",
+        "Ward",
+        "Cavalry",
+        "Fly"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "blighted-weapon",
+          "name": "Blighted Weapon",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "blighted-scythe",
+          "name": "Blighted Scythe",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 3,
+          "rend": 2,
+          "damage": "1"
+        },
+        {
+          "id": "rot-fly-s-mouthparts-and-sting",
+          "name": "Rot Fly\u2019s Mouthparts and Sting",
+          "rangeInches": null,
+          "attacks": "6",
+          "hit": 4,
+          "wound": 2,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "relentless-attackers",
+          "name": "Relentless Attackers",
+          "source": "Pusgoyle Blightlord",
+          "flavor": "Blightkings grind through the battlelines of lesser foes, shattering their morale and hacking down the stunned survivors with contemptuous ease.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy INFANTRY unit in combat with this unit to be the target and roll a dice for each model in this unit that is within the target unit\u2019s combat range .",
+          "effect": "For each roll that exceeds the target\u2019s Health characteristic, inflict 1 mortal damage on it.",
+          "kind": "ability"
+        },
+        {
+          "id": "wrack-and-ruin",
+          "name": "Wrack And Ruin",
+          "source": "Pusgoyle Blightlord",
+          "flavor": "Mortal Maggotkin who ride Rot Flies act as brutal linebreakers, using their sheer bulk to smash enemy formations asunder.",
+          "phases": [
+            "charge"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "If this unit charged this phase, pick an enemy unit within 1\" of it to be the target and roll a dice.",
+          "effect": "On a 2+, inflict D3 mortal damage on the target.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "putrid-blightkings",
       "name": "Putrid Blightkings",
       "move": "4\"",
-      "save": 3,
-      "health": 3,
+      "save": 6,
+      "health": 2,
       "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "keywords": [
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "plaguesword-crit-mortal",
+          "name": "Plaguesword Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "blighted-weapon",
+          "name": "Blighted Weapon",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "cloud-of-flies",
+          "name": "Cloud Of Flies",
+          "source": "Putrid Blightkings",
+          "flavor": "Plaguebearer tallybands are surrounded at all times by blinding swarms of daemon-flies.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Subtract 1 from hit rolls for shooting attacks that target this unit.",
+          "kind": "passive"
+        },
+        {
+          "id": "relentless-attackers",
+          "name": "Relentless Attackers",
+          "source": "Putrid Blightkings",
+          "flavor": "Blightkings grind through the battlelines of lesser foes, shattering their morale and hacking down the stunned survivors with contemptuous ease.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy INFANTRY unit in combat with this unit to be the target and roll a dice for each model in this unit that is within the target unit\u2019s combat range .",
+          "effect": "For each roll that exceeds the target\u2019s Health characteristic, inflict 1 mortal damage on it.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "plaguebearers",
       "name": "Plaguebearers",
       "move": "4\"",
-      "save": 6,
-      "health": 2,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "save": 5,
+      "health": 5,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "disgusting-sneezes",
+          "name": "Disgusting Sneezes",
+          "rangeInches": 7,
+          "attacks": "D6",
+          "hit": 2,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "distended-maw",
+          "name": "Distended Maw",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "plaguesword-crit-mortal",
+          "name": "Plaguesword Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "keep-counting-im-watching-you",
+          "name": "Keep Counting, I'M Watching You",
+          "source": "Plaguebearers",
+          "flavor": "Spoilpox Scriveners are responsible for making sure that the Plaguebearers of the tallybands do not shirk their duties",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly Plaguebearers unit wholly within 14\" of this unit to be the target.",
+          "effect": "Pick 1 of the following. The effect lasts until the start of your next turn. Tally of Blows: Add 1 to the Attacks characteristic of the target unit\u2019s melee weapons. Recorded Stamina: Add 1 to save rolls for the target unit.",
+          "kind": "ability"
+        },
+        {
+          "id": "cloud-of-flies",
+          "name": "Cloud Of Flies",
+          "source": "Plaguebearers",
+          "flavor": "Plaguebearer tallybands are surrounded at all times by blinding swarms of daemon-flies.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Subtract 1 from hit rolls for shooting attacks that target this unit.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "plaguebearers-2",
       "name": "Plaguebearers",
       "move": "4\"",
-      "save": 6,
-      "health": 2,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "save": 5,
+      "health": 5,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "disgusting-sneezes",
+          "name": "Disgusting Sneezes",
+          "rangeInches": 7,
+          "attacks": "D6",
+          "hit": 2,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "distended-maw",
+          "name": "Distended Maw",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "plaguesword-crit-mortal",
+          "name": "Plaguesword Crit (Mortal)",
+          "rangeInches": null,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "keep-counting-im-watching-you",
+          "name": "Keep Counting, I'M Watching You",
+          "source": "Plaguebearers",
+          "flavor": "Spoilpox Scriveners are responsible for making sure that the Plaguebearers of the tallybands do not shirk their duties",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly Plaguebearers unit wholly within 14\" of this unit to be the target.",
+          "effect": "Pick 1 of the following. The effect lasts until the start of your next turn. Tally of Blows: Add 1 to the Attacks characteristic of the target unit\u2019s melee weapons. Recorded Stamina: Add 1 to save rolls for the target unit.",
+          "kind": "ability"
+        },
+        {
+          "id": "cloud-of-flies",
+          "name": "Cloud Of Flies",
+          "source": "Plaguebearers",
+          "flavor": "Plaguebearer tallybands are surrounded at all times by blinding swarms of daemon-flies.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Subtract 1 from hit rolls for shooting attacks that target this unit.",
+          "kind": "passive"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "daemonic-summoning",
+      "name": "Daemonic Summoning",
+      "summary": "Set up this unit anywhere on the battlefield more than 6\" from all enemy units",
+      "timing": null,
+      "declare": null,
+      "effect": "Set up this unit anywhere on the battlefield more than 6\" from all enemy units. KEYWORDS CORE",
+      "phases": [
+        "movement"
+      ],
+      "usageLimit": "eachTurn",
+      "kind": "ability"
+    },
+    {
+      "id": "diseased",
+      "name": "Diseased",
+      "summary": "Each time an attack made by a friendly model scores a critical hit , you receive 1 disease point , to a maximum of 7",
+      "timing": null,
+      "declare": null,
+      "effect": "Each time an attack made by a friendly model scores a critical hit , you receive 1 disease point , to a maximum of 7.",
+      "phases": [],
+      "usageLimit": "passive",
+      "kind": "passive"
     }
   ]
 }

@@ -9,38 +9,282 @@
       "save": 5,
       "health": 6,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "gory-talons-and-fangs",
+          "name": "Gory Talons and Fangs",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "deranged-transformation",
+          "name": "Deranged Transformation",
+          "source": "Abhorrant Archregent",
+          "flavor": "Wielding the power of their curse, the abhorrant causes the limbs of a nearby pack to bulge and lengthen, allowing the creatures to charge forwards at a furious pace.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible friendly unit wholly within 18\" of this unit to be the target, then make a casting roll of 2D6.",
+          "effect": "On a 6+, until the start of your next turn, add 2\" to the target\u2019s Move characteristic and add 1 to wound rolls for its attacks.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "cryptguard",
       "name": "Cryptguard",
       "move": "6\"",
-      "save": 6,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 10
+      "save": 5,
+      "health": 6,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Ward",
+        "Reinforcements"
+      ],
+      "modelCount": 10,
+      "weapons": [
+        {
+          "id": "gory-talons-and-fangs",
+          "name": "Gory Talons and Fangs",
+          "rangeInches": null,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "cursed-weapon",
+          "name": "Cursed Weapon",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "deranged-transformation",
+          "name": "Deranged Transformation",
+          "source": "Cryptguard",
+          "flavor": "Wielding the power of their curse, the abhorrant causes the limbs of a nearby pack to bulge and lengthen, allowing the creatures to charge forwards at a furious pace.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible friendly unit wholly within 18\" of this unit to be the target, then make a casting roll of 2D6.",
+          "effect": "On a 6+, until the start of your next turn, add 2\" to the target\u2019s Move characteristic and add 1 to wound rolls for its attacks.",
+          "kind": "ability"
+        },
+        {
+          "id": "royal-bodyguard",
+          "name": "Royal Bodyguard",
+          "source": "Cryptguard",
+          "flavor": "In battle, it falls to the tenacious Cryptguard to form a half-living shield for their vampiric overlords.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to ward rolls for friendly HEROES that are wholly within this unit\u2019s combat range .",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "morbheg-knights",
       "name": "Morbheg Knights",
-      "move": "12\"",
-      "save": 4,
-      "health": 4,
+      "move": "6\"",
+      "save": 6,
+      "health": 1,
       "control": 1,
-      "keywords": [],
-      "modelCount": 3
+      "keywords": [
+        "Infantry",
+        "Reinforcements",
+        "Ward",
+        "Cavalry",
+        "Fly"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "cursed-weapon",
+          "name": "Cursed Weapon",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "grisly-lance-charge-1-damage",
+          "name": "Grisly Lance Charge (+1 Damage)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "nightshrieker-s-claws-and-teeth",
+          "name": "Nightshrieker\u2019s Claws and Teeth",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "royal-bodyguard",
+          "name": "Royal Bodyguard",
+          "source": "Morbheg Knights",
+          "flavor": "In battle, it falls to the tenacious Cryptguard to form a half-living shield for their vampiric overlords.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to ward rolls for friendly HEROES that are wholly within this unit\u2019s combat range .",
+          "kind": "passive"
+        },
+        {
+          "id": "predators-pounce",
+          "name": "Predator's Pounce",
+          "source": "Morbheg Knights",
+          "flavor": "Though they lack the power of true flight, Nightshriekers can leap clean over obstacles and the heads of the foe, allowing Morbheg Knights to strike and disengage at will.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "This unit can use CHARGE abilities even if it used a RETREAT ability in the same turn. In addition, no mortal damage is inflicted on this unit when it uses RETREAT abilities.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "varghulf-courtier",
       "name": "Varghulf Courtier",
-      "move": "10\"",
-      "save": 5,
-      "health": 8,
-      "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "move": "12\"",
+      "save": 4,
+      "health": 4,
+      "control": 1,
+      "keywords": [
+        "Cavalry",
+        "Fly",
+        "Ward",
+        "Hero",
+        "Infantry"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "grisly-lance-charge-1-damage",
+          "name": "Grisly Lance Charge (+1 Damage)",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "nightshrieker-s-claws-and-teeth",
+          "name": "Nightshrieker\u2019s Claws and Teeth",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "immense-claws",
+          "name": "Immense Claws",
+          "rangeInches": null,
+          "attacks": "7",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "dagger-like-fangs",
+          "name": "Dagger-like Fangs",
+          "rangeInches": null,
+          "attacks": "1",
+          "hit": 3,
+          "wound": 2,
+          "rend": 2,
+          "damage": "3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "predators-pounce",
+          "name": "Predator's Pounce",
+          "source": "Varghulf Courtier",
+          "flavor": "Though they lack the power of true flight, Nightshriekers can leap clean over obstacles and the heads of the foe, allowing Morbheg Knights to strike and disengage at will.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "This unit can use CHARGE abilities even if it used a RETREAT ability in the same turn. In addition, no mortal damage is inflicted on this unit when it uses RETREAT abilities.",
+          "kind": "passive"
+        },
+        {
+          "id": "victory-feast",
+          "name": "Victory Feast",
+          "source": "Varghulf Courtier",
+          "flavor": "A Varghulf rampages through the enemy\u2019s ranks at will, its wounds sealing with unholy rapidity as it guzzles the flesh of the savaged foe.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "If any models were slain by this unit this turn, Heal (D6) this unit, and this unit can immediately use the \u2018 Retreat \u2019 ability without any mortal damage being inflicted on it.",
+          "kind": "ability"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "noble-deeds",
+      "name": "Noble Deeds",
+      "summary": "Each time a friendly HERO uses a FIGHT ability , after its attacks have been resolved, give that HERO a number of noble deeds points equal to the number of damage points allocated by that ability",
+      "timing": null,
+      "declare": null,
+      "effect": "Each time a friendly HERO uses a FIGHT ability , after its attacks have been resolved, give that HERO a number of noble deeds points equal to the number of damage points allocated by that ability. Each HERO can have a maximum of 6 noble deeds points at any time.",
+      "phases": [],
+      "usageLimit": "passive",
+      "kind": "passive"
+    },
+    {
+      "id": "feeding-frenzy",
+      "name": "Feeding Frenzy",
+      "summary": "Add 1 to the Attacks characteristic of melee weapons used by friendly units while they are wholly within 12\" of any friendly HEROES that have 6 noble deeds points ",
+      "timing": null,
+      "declare": null,
+      "effect": "Add 1 to the Attacks characteristic of melee weapons used by friendly units while they are wholly within 12\" of any friendly HEROES that have 6 noble deeds points .",
+      "phases": [],
+      "usageLimit": "passive",
+      "kind": "passive"
     }
   ]
 }

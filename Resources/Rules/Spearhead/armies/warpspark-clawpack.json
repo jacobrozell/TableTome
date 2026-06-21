@@ -9,48 +9,402 @@
       "save": 6,
       "health": 5,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Wizard",
+        "Infantry"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "warpstone-staff",
+          "name": "Warpstone Staff",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "will-of-the-horned-rat",
+          "name": "Will Of The Horned Rat",
+          "source": "Grey Seer",
+          "flavor": "None among the Skaven clans may defy the commands of a Grey Seer \u2013 openly, at least\u2026",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 13\" of this unit to be the target, then roll a dice.",
+          "effect": "On a 3+, add the roll to the target\u2019s control score until the start of your next turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "wither",
+          "name": "Wither",
+          "source": "Grey Seer",
+          "flavor": "The Grey Seer hurls a glowing green globe of magical energy at the foe. Anyone touched by the globe starts to shrivel and wither away.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible enemy unit within 13\" of this unit to be the target, then make a casting roll of 2D6.",
+          "effect": "On a 6+, inflict D3 mortal damage on the target.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "stormfiends",
       "name": "Stormfiends",
       "move": "6\"",
-      "save": 4,
-      "health": 6,
-      "control": 2,
-      "keywords": [],
-      "modelCount": 3
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "keywords": [
+        "Infantry",
+        "Reinforcements"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "rusty-blade",
+          "name": "Rusty Blade",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "ratling-cannons",
+          "name": "Ratling Cannons",
+          "rangeInches": 15,
+          "attacks": "3D6",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "windlaunchers",
+          "name": "Windlaunchers",
+          "rangeInches": 15,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 2,
+          "damage": "D3"
+        },
+        {
+          "id": "shock-gauntlets",
+          "name": "Shock Gauntlets",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "clubbing-blows",
+          "name": "Clubbing Blows",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 2,
+          "rend": 0,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "seething-swarm",
+          "name": "Seething Swarm",
+          "source": "Stormfiends",
+          "flavor": "Sweeping forward in a chittering mass, Clanrats overwhelm their enemies with their seemingly limitless numbers, biting, stabbing, screeching and trampling their own fallen beneath their bloody claws.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "You can return D3 slain models to this unit.",
+          "kind": "ability"
+        },
+        {
+          "id": "shock-gauntlets",
+          "name": "Shock Gauntlets",
+          "source": "Stormfiends",
+          "flavor": "Sometimes the electrical discharge created by a pair of shock gauntlets triggers a series of linked explosions.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Each time an attack made with this unit\u2019s Shock Gauntlets scores a critical hit , that attack scores D6 hits instead of 1 (make a wound roll for each hit).",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "warp-lightning-cannon",
       "name": "Warp Lightning Cannon",
-      "move": "3\"",
+      "move": "6\"",
       "save": 4,
-      "health": 8,
+      "health": 6,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Prayer",
+        "Unlimited",
+        "Spell",
+        "Core",
+        "Move",
+        "Run",
+        "Retreat",
+        "Charge",
+        "Infantry",
+        "War",
+        "Machine"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "ratling-cannons",
+          "name": "Ratling Cannons",
+          "rangeInches": 15,
+          "attacks": "3D6",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "windlaunchers",
+          "name": "Windlaunchers",
+          "rangeInches": 15,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 2,
+          "damage": "D3"
+        },
+        {
+          "id": "shock-gauntlets",
+          "name": "Shock Gauntlets",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "clubbing-blows",
+          "name": "Clubbing Blows",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 2,
+          "rend": 0,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "shock-gauntlets",
+          "name": "Shock Gauntlets",
+          "source": "Warp Lightning Cannon",
+          "flavor": "Sometimes the electrical discharge created by a pair of shock gauntlets triggers a series of linked explosions.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Each time an attack made with this unit\u2019s Shock Gauntlets scores a critical hit , that attack scores D6 hits instead of 1 (make a wound roll for each hit).",
+          "kind": "passive"
+        },
+        {
+          "id": "warp-lightning-blast",
+          "name": "Warp Lightning Blast",
+          "source": "Warp Lightning Cannon",
+          "flavor": "A Warp Lightning Cannon fires massive bolts of warp lightning that disintegrate any who are struck by them.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Each attack made with this weapon in a single phase must target the same enemy unit. Each hit inflicts 1 mortal damage on the target and the attack sequence ends.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "clanrats",
       "name": "Clanrats",
       "move": "6\"",
-      "save": 5,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 10
+      "save": 6,
+      "health": 5,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Wizard",
+        "Infantry",
+        "Reinforcements"
+      ],
+      "modelCount": 10,
+      "weapons": [
+        {
+          "id": "warpstone-staff",
+          "name": "Warpstone Staff",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "rusty-blade",
+          "name": "Rusty Blade",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "will-of-the-horned-rat",
+          "name": "Will Of The Horned Rat",
+          "source": "Clanrats",
+          "flavor": "None among the Skaven clans may defy the commands of a Grey Seer \u2013 openly, at least\u2026",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 13\" of this unit to be the target, then roll a dice.",
+          "effect": "On a 3+, add the roll to the target\u2019s control score until the start of your next turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "wither",
+          "name": "Wither",
+          "source": "Clanrats",
+          "flavor": "The Grey Seer hurls a glowing green globe of magical energy at the foe. Anyone touched by the globe starts to shrivel and wither away.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible enemy unit within 13\" of this unit to be the target, then make a casting roll of 2D6.",
+          "effect": "On a 6+, inflict D3 mortal damage on the target.",
+          "kind": "ability"
+        },
+        {
+          "id": "seething-swarm",
+          "name": "Seething Swarm",
+          "source": "Clanrats",
+          "flavor": "Sweeping forward in a chittering mass, Clanrats overwhelm their enemies with their seemingly limitless numbers, biting, stabbing, screeching and trampling their own fallen beneath their bloody claws.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "You can return D3 slain models to this unit.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "clanrats-2",
       "name": "Clanrats",
       "move": "6\"",
-      "save": 5,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 10
+      "save": 6,
+      "health": 5,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Wizard",
+        "Infantry",
+        "Reinforcements"
+      ],
+      "modelCount": 10,
+      "weapons": [
+        {
+          "id": "warpstone-staff",
+          "name": "Warpstone Staff",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "rusty-blade",
+          "name": "Rusty Blade",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "will-of-the-horned-rat",
+          "name": "Will Of The Horned Rat",
+          "source": "Clanrats",
+          "flavor": "None among the Skaven clans may defy the commands of a Grey Seer \u2013 openly, at least\u2026",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit wholly within 13\" of this unit to be the target, then roll a dice.",
+          "effect": "On a 3+, add the roll to the target\u2019s control score until the start of your next turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "wither",
+          "name": "Wither",
+          "source": "Clanrats",
+          "flavor": "The Grey Seer hurls a glowing green globe of magical energy at the foe. Anyone touched by the globe starts to shrivel and wither away.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible enemy unit within 13\" of this unit to be the target, then make a casting roll of 2D6.",
+          "effect": "On a 6+, inflict D3 mortal damage on the target.",
+          "kind": "ability"
+        },
+        {
+          "id": "seething-swarm",
+          "name": "Seething Swarm",
+          "source": "Clanrats",
+          "flavor": "Sweeping forward in a chittering mass, Clanrats overwhelm their enemies with their seemingly limitless numbers, biting, stabbing, screeching and trampling their own fallen beneath their bloody claws.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "You can return D3 slain models to this unit.",
+          "kind": "ability"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "always-three-clawsteps-ahead",
+      "name": "Always Three Clawsteps Ahead",
+      "summary": "That unit can use the \u2018 Normal Move \u2019 ability as if it were your movement phase",
+      "timing": null,
+      "declare": "Pick a friendly unit that is not in combat .",
+      "effect": "That unit can use the \u2018 Normal Move \u2019 ability as if it were your movement phase.",
+      "phases": [
+        "movement"
+      ],
+      "usageLimit": "oncePerPhase",
+      "kind": "ability"
     }
   ]
 }

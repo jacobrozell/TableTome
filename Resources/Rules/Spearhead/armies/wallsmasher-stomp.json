@@ -9,8 +9,85 @@
       "save": 5,
       "health": 12,
       "control": 10,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Rampage",
+        "Core",
+        "Move",
+        "Charge",
+        "Prayer",
+        "Unlimited",
+        "Monster",
+        "Reinforcements"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "throwin-rocks",
+          "name": "Throwin\u2019 Rocks",
+          "rangeInches": 12,
+          "attacks": "1",
+          "hit": 5,
+          "wound": 2,
+          "rend": 2,
+          "damage": "D3"
+        },
+        {
+          "id": "massive-club",
+          "name": "Massive Club",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "eadbutt",
+          "name": "'Eadbutt",
+          "rangeInches": 0,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "4"
+        },
+        {
+          "id": "mighty-kick",
+          "name": "Mighty Kick",
+          "rangeInches": 0,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "stuff-em-in-me-bag",
+          "name": "Stuff 'Em In Me Bag",
+          "source": "Mancrusher Gargant",
+          "flavor": "Gargants are known to grab hapless warriors and stuff them screaming into their bags \u2018for later\u2019\u2026",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit in combat with this unit to be the target, then roll a dice.",
+          "effect": "If the roll is at least double the target unit\u2019s Health characteristic, 1 model in that unit is slain.",
+          "kind": "ability"
+        },
+        {
+          "id": "timber",
+          "name": "Timber!",
+          "source": "Mancrusher Gargant",
+          "flavor": "A dying gargant is a weapon of ruin in its own right, though it is anyone\u2019s guess where \u2013 and on whom \u2013 their body will fall.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "If this model is slain, before removing it from the battlefield, the players must roll off . The winner picks a point on the battlefield up to 3\" from this model. Inflict D3 mortal damage on each enemy unit within 2\" of that point. This model is then removed from the battlefield.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "mancrusher-gargant-2",
@@ -19,8 +96,85 @@
       "save": 5,
       "health": 12,
       "control": 10,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Rampage",
+        "Core",
+        "Move",
+        "Charge",
+        "Prayer",
+        "Unlimited",
+        "Monster",
+        "Reinforcements"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "throwin-rocks",
+          "name": "Throwin\u2019 Rocks",
+          "rangeInches": 12,
+          "attacks": "1",
+          "hit": 5,
+          "wound": 2,
+          "rend": 2,
+          "damage": "D3"
+        },
+        {
+          "id": "massive-club",
+          "name": "Massive Club",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "eadbutt",
+          "name": "'Eadbutt",
+          "rangeInches": 0,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "4"
+        },
+        {
+          "id": "mighty-kick",
+          "name": "Mighty Kick",
+          "rangeInches": 0,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "stuff-em-in-me-bag",
+          "name": "Stuff 'Em In Me Bag",
+          "source": "Mancrusher Gargant",
+          "flavor": "Gargants are known to grab hapless warriors and stuff them screaming into their bags \u2018for later\u2019\u2026",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit in combat with this unit to be the target, then roll a dice.",
+          "effect": "If the roll is at least double the target unit\u2019s Health characteristic, 1 model in that unit is slain.",
+          "kind": "ability"
+        },
+        {
+          "id": "timber",
+          "name": "Timber!",
+          "source": "Mancrusher Gargant",
+          "flavor": "A dying gargant is a weapon of ruin in its own right, though it is anyone\u2019s guess where \u2013 and on whom \u2013 their body will fall.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "If this model is slain, before removing it from the battlefield, the players must roll off . The winner picks a point on the battlefield up to 3\" from this model. Inflict D3 mortal damage on each enemy unit within 2\" of that point. This model is then removed from the battlefield.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "mancrusher-gargant-3",
@@ -29,8 +183,100 @@
       "save": 5,
       "health": 12,
       "control": 10,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Rampage",
+        "Core",
+        "Move",
+        "Charge",
+        "Prayer",
+        "Unlimited",
+        "Monster",
+        "Reinforcements"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "throwin-rocks",
+          "name": "Throwin\u2019 Rocks",
+          "rangeInches": 12,
+          "attacks": "1",
+          "hit": 5,
+          "wound": 2,
+          "rend": 2,
+          "damage": "D3"
+        },
+        {
+          "id": "massive-club",
+          "name": "Massive Club",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "eadbutt",
+          "name": "'Eadbutt",
+          "rangeInches": 0,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "4"
+        },
+        {
+          "id": "mighty-kick",
+          "name": "Mighty Kick",
+          "rangeInches": 0,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "stuff-em-in-me-bag",
+          "name": "Stuff 'Em In Me Bag",
+          "source": "Mancrusher Gargant",
+          "flavor": "Gargants are known to grab hapless warriors and stuff them screaming into their bags \u2018for later\u2019\u2026",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit in combat with this unit to be the target, then roll a dice.",
+          "effect": "If the roll is at least double the target unit\u2019s Health characteristic, 1 model in that unit is slain.",
+          "kind": "ability"
+        },
+        {
+          "id": "timber",
+          "name": "Timber!",
+          "source": "Mancrusher Gargant",
+          "flavor": "A dying gargant is a weapon of ruin in its own right, though it is anyone\u2019s guess where \u2013 and on whom \u2013 their body will fall.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "If this model is slain, before removing it from the battlefield, the players must roll off . The winner picks a point on the battlefield up to 3\" from this model. Inflict D3 mortal damage on each enemy unit within 2\" of that point. This model is then removed from the battlefield.",
+          "kind": "passive"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "bellowing-roar",
+      "name": "Bellowing Roar",
+      "summary": "On a 2+, subtract 1 from hit rolls for attacks made by the target unit this phase",
+      "timing": null,
+      "declare": "Pick a friendly unit to use this ability, pick an enemy unit in combat with it to be the target, then roll a dice.",
+      "effect": "On a 2+, subtract 1 from hit rolls for attacks made by the target unit this phase.",
+      "phases": [
+        "anyCombat"
+      ],
+      "usageLimit": "eachTurn",
+      "kind": "ability"
     }
   ]
 }

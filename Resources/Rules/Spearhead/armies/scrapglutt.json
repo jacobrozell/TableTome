@@ -9,58 +9,537 @@
       "save": 5,
       "health": 7,
       "control": 5,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "mantrapper-crossbow",
+          "name": "Mantrapper Crossbow",
+          "rangeInches": 12,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "frost-sabres-fangs",
+          "name": "Frost Sabre's Fangs",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "culling-knife",
+          "name": "Culling Knife",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "staying-useful",
+          "name": "Staying Useful",
+          "source": "Mantrappers",
+          "flavor": "The Hunter's companions are handy spotters and trackers.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While any of this unit\u2019s Gnoblar or Frost Sabre tokens are on the battlefield, this unit has WARD ( 5+ ) . Each time you make a successful ward roll for this unit, remove 1 of this unit\u2019s tokens from the battlefield. If this unit\u2019s Frost Sabre token has been removed, it can no longer attack with its Frost Sabre\u2019s Fangs .",
+          "kind": "passive"
+        },
+        {
+          "id": "no-slacking",
+          "name": "No Slacking!",
+          "source": "Mantrappers",
+          "flavor": "The Icebrow Hunter that leads the Mantrappers gets his followers in line with a menacing snort.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly INFANTRY unit wholly within 12\" of this unit.",
+          "effect": "Roll a dice On a 3+, add the result to the target\u2019s control score until the start of your next turn.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "ironguts",
       "name": "Ironguts",
       "move": "6\"",
       "save": 5,
-      "health": 4,
-      "control": 2,
-      "keywords": [],
-      "modelCount": 2
+      "health": 7,
+      "control": 5,
+      "keywords": [
+        "Hero",
+        "Infantry"
+      ],
+      "modelCount": 2,
+      "weapons": [
+        {
+          "id": "mantrapper-crossbow",
+          "name": "Mantrapper Crossbow",
+          "rangeInches": 12,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "frost-sabres-fangs",
+          "name": "Frost Sabre's Fangs",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "culling-knife",
+          "name": "Culling Knife",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "irongut-weapon",
+          "name": "Irongut Weapon",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "staying-useful",
+          "name": "Staying Useful",
+          "source": "Ironguts",
+          "flavor": "The Hunter's companions are handy spotters and trackers.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While any of this unit\u2019s Gnoblar or Frost Sabre tokens are on the battlefield, this unit has WARD ( 5+ ) . Each time you make a successful ward roll for this unit, remove 1 of this unit\u2019s tokens from the battlefield. If this unit\u2019s Frost Sabre token has been removed, it can no longer attack with its Frost Sabre\u2019s Fangs .",
+          "kind": "passive"
+        },
+        {
+          "id": "no-slacking",
+          "name": "No Slacking!",
+          "source": "Ironguts",
+          "flavor": "The Icebrow Hunter that leads the Mantrappers gets his followers in line with a menacing snort.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly INFANTRY unit wholly within 12\" of this unit.",
+          "effect": "Roll a dice On a 3+, add the result to the target\u2019s control score until the start of your next turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "down-to-the-ironguts",
+          "name": "Down To The Ironguts",
+          "source": "Ironguts",
+          "flavor": "It is not often that a mawtribe\u2019s battleline falters, but if it does, the Tyrant will call upon their Ironguts to turn the battle back in their favour.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Ignore negative modifiers to this unit\u2019s control score .",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "ironguts-2",
       "name": "Ironguts",
       "move": "6\"",
       "save": 5,
-      "health": 4,
-      "control": 2,
-      "keywords": [],
-      "modelCount": 2
+      "health": 7,
+      "control": 5,
+      "keywords": [
+        "Hero",
+        "Infantry"
+      ],
+      "modelCount": 2,
+      "weapons": [
+        {
+          "id": "mantrapper-crossbow",
+          "name": "Mantrapper Crossbow",
+          "rangeInches": 12,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "frost-sabres-fangs",
+          "name": "Frost Sabre's Fangs",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "culling-knife",
+          "name": "Culling Knife",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "irongut-weapon",
+          "name": "Irongut Weapon",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "staying-useful",
+          "name": "Staying Useful",
+          "source": "Ironguts",
+          "flavor": "The Hunter's companions are handy spotters and trackers.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While any of this unit\u2019s Gnoblar or Frost Sabre tokens are on the battlefield, this unit has WARD ( 5+ ) . Each time you make a successful ward roll for this unit, remove 1 of this unit\u2019s tokens from the battlefield. If this unit\u2019s Frost Sabre token has been removed, it can no longer attack with its Frost Sabre\u2019s Fangs .",
+          "kind": "passive"
+        },
+        {
+          "id": "no-slacking",
+          "name": "No Slacking!",
+          "source": "Ironguts",
+          "flavor": "The Icebrow Hunter that leads the Mantrappers gets his followers in line with a menacing snort.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly INFANTRY unit wholly within 12\" of this unit.",
+          "effect": "Roll a dice On a 3+, add the result to the target\u2019s control score until the start of your next turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "down-to-the-ironguts",
+          "name": "Down To The Ironguts",
+          "source": "Ironguts",
+          "flavor": "It is not often that a mawtribe\u2019s battleline falters, but if it does, the Tyrant will call upon their Ironguts to turn the battle back in their favour.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Ignore negative modifiers to this unit\u2019s control score .",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "ironguts-3",
       "name": "Ironguts",
       "move": "6\"",
       "save": 5,
-      "health": 4,
-      "control": 2,
-      "keywords": [],
-      "modelCount": 4
+      "health": 7,
+      "control": 5,
+      "keywords": [
+        "Hero",
+        "Infantry"
+      ],
+      "modelCount": 4,
+      "weapons": [
+        {
+          "id": "mantrapper-crossbow",
+          "name": "Mantrapper Crossbow",
+          "rangeInches": 12,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "frost-sabres-fangs",
+          "name": "Frost Sabre's Fangs",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "culling-knife",
+          "name": "Culling Knife",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "irongut-weapon",
+          "name": "Irongut Weapon",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "staying-useful",
+          "name": "Staying Useful",
+          "source": "Ironguts",
+          "flavor": "The Hunter's companions are handy spotters and trackers.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "While any of this unit\u2019s Gnoblar or Frost Sabre tokens are on the battlefield, this unit has WARD ( 5+ ) . Each time you make a successful ward roll for this unit, remove 1 of this unit\u2019s tokens from the battlefield. If this unit\u2019s Frost Sabre token has been removed, it can no longer attack with its Frost Sabre\u2019s Fangs .",
+          "kind": "passive"
+        },
+        {
+          "id": "no-slacking",
+          "name": "No Slacking!",
+          "source": "Ironguts",
+          "flavor": "The Icebrow Hunter that leads the Mantrappers gets his followers in line with a menacing snort.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly INFANTRY unit wholly within 12\" of this unit.",
+          "effect": "Roll a dice On a 3+, add the result to the target\u2019s control score until the start of your next turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "down-to-the-ironguts",
+          "name": "Down To The Ironguts",
+          "source": "Ironguts",
+          "flavor": "It is not often that a mawtribe\u2019s battleline falters, but if it does, the Tyrant will call upon their Ironguts to turn the battle back in their favour.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Ignore negative modifiers to this unit\u2019s control score .",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "gnoblars",
       "name": "Gnoblars",
-      "move": "5\"",
-      "save": 6,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 12
-    },
-    {
-      "id": "gnoblar-scraplauncher",
-      "name": "Gnoblar Scraplauncher",
       "move": "9\"",
       "save": 4,
       "health": 9,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "War",
+        "Machine",
+        "Infantry",
+        "Reinforcements"
+      ],
+      "modelCount": 12,
+      "weapons": [
+        {
+          "id": "piles-of-old-scrap-crit-auto-wound",
+          "name": "Piles of Old Scrap Crit (Auto-wound)",
+          "rangeInches": 24,
+          "attacks": "3D6",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "scrappers-stabbers",
+          "name": "Scrappers\u2019 Stabbers",
+          "rangeInches": 0,
+          "attacks": "7",
+          "hit": 5,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "rhinox-s-sharp-horns",
+          "name": "Rhinox\u2019s Sharp Horns",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "sharp-stuff",
+          "name": "Sharp Stuff",
+          "rangeInches": 8,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "motley-assortment-of-weapons",
+          "name": "Motley Assortment of Weapons",
+          "rangeInches": 0,
+          "attacks": "1",
+          "hit": 5,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "rain-of-scrap",
+          "name": "Rain Of Scrap",
+          "source": "Gnoblars",
+          "flavor": "Salvaged weapons and shards of metal rain down upon the enemy, forcing them to take cover or dodge out of the way.",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit that had any models slain this turn by this unit\u2019s shooting attacks to be the target.",
+          "effect": "Subtract 1 from hit rolls for the target\u2019s attacks for the rest of the turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "no-shortage-of-volunteers",
+          "name": "No Shortage Of Volunteers",
+          "source": "Gnoblars",
+          "flavor": "When your choices are potentially dying at the hands of the enemy or being eaten alive by a hungry ogor, most Gnoblars are willing to take their chances with the enemy.",
+          "phases": [
+            "endOfTurn"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "You can return D3 models to this unit.",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "gnoblar-scraplauncher",
+      "name": "Gnoblar Scraplauncher",
+      "move": "6\"",
+      "save": 5,
+      "health": 4,
+      "control": 2,
+      "keywords": [
+        "Infantry",
+        "War",
+        "Machine"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "irongut-weapon",
+          "name": "Irongut Weapon",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "3"
+        },
+        {
+          "id": "piles-of-old-scrap-crit-auto-wound",
+          "name": "Piles of Old Scrap Crit (Auto-wound)",
+          "rangeInches": 24,
+          "attacks": "3D6",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "scrappers-stabbers",
+          "name": "Scrappers\u2019 Stabbers",
+          "rangeInches": 0,
+          "attacks": "7",
+          "hit": 5,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "rhinox-s-sharp-horns",
+          "name": "Rhinox\u2019s Sharp Horns",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 2,
+          "rend": 1,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "down-to-the-ironguts",
+          "name": "Down To The Ironguts",
+          "source": "Gnoblar Scraplauncher",
+          "flavor": "It is not often that a mawtribe\u2019s battleline falters, but if it does, the Tyrant will call upon their Ironguts to turn the battle back in their favour.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Ignore negative modifiers to this unit\u2019s control score .",
+          "kind": "passive"
+        },
+        {
+          "id": "rain-of-scrap",
+          "name": "Rain Of Scrap",
+          "source": "Gnoblar Scraplauncher",
+          "flavor": "Salvaged weapons and shards of metal rain down upon the enemy, forcing them to take cover or dodge out of the way.",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit that had any models slain this turn by this unit\u2019s shooting attacks to be the target.",
+          "effect": "Subtract 1 from hit rolls for the target\u2019s attacks for the rest of the turn.",
+          "kind": "ability"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "lets-get-stuck-in",
+      "name": "Let's Get Stuck In",
+      "summary": "Set up this unit wholly within friendly territory, wholly within 6\" of the battlefield edge, and not in combat ",
+      "timing": null,
+      "declare": null,
+      "effect": "Set up this unit wholly within friendly territory, wholly within 6\" of the battlefield edge, and not in combat .",
+      "phases": [
+        "movement"
+      ],
+      "usageLimit": "eachTurn",
+      "kind": "ability"
     }
   ]
 }

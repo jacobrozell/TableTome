@@ -9,28 +9,215 @@
       "save": 5,
       "health": 6,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Wizard",
+        "Cavalry",
+        "Fly"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "staff-of-change-and-ritual-dagger",
+          "name": "Staff of Change and Ritual Dagger",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "disc-s-teeth-and-horns",
+          "name": "Disc\u2019s Teeth and Horns",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "mutative-aura",
+          "name": "Mutative Aura",
+          "source": "Tzaangor Shaman",
+          "flavor": "Those who strike a Tzaangor Shaman are oft reduced to bubbling pools of twisted flesh.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible enemy unit within 18\" of this unit to be the target, then make a casting roll of 2D6.",
+          "effect": "On a 7+, until the start of your next turn, each time an unmodified hit roll for a combat attack made by the target is 1, inflict 1 mortal damage on the target after the FIGHT ability has been resolved.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "tzaangors",
       "name": "Tzaangors",
-      "move": "6\"",
-      "save": 5,
-      "health": 2,
+      "move": "14\"",
+      "save": 4,
+      "health": 4,
       "control": 1,
-      "keywords": [],
-      "modelCount": 10
+      "keywords": [
+        "Cavalry",
+        "Fly",
+        "Infantry"
+      ],
+      "modelCount": 10,
+      "weapons": [
+        {
+          "id": "arrow-of-fate",
+          "name": "Arrow of Fate",
+          "rangeInches": 18,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "bow-stave-and-vicious-beak",
+          "name": "Bow Stave and Vicious Beak",
+          "rangeInches": 0,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "disc-s-teeth-and-horns",
+          "name": "Disc\u2019s Teeth and Horns",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "savage-blade-and-vicious-beak",
+          "name": "Savage Blade and Vicious Beak",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "destined-quarry",
+          "name": "Destined Quarry",
+          "source": "Tzaangors",
+          "flavor": "Skyfires often select a target to utterly obliterate and erase from the tapestry of fate.",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit that had any damage points allocated to it this phase by this unit\u2019s shooting attacks to be the target.",
+          "effect": "Add 1 to hit rolls for combat attacks made by friendly units that target that enemy unit for the rest of the turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "eldritch-raiders",
+          "name": "Eldritch Raiders",
+          "source": "Tzaangors",
+          "flavor": "Tzaangors plunge into enemy lands, desperately seeking the arcane trinkets and treasures they crave \u2013 as well as victims to be transformed in their own bird-like image.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to wound rolls for this unit\u2019s attacks while it is wholly within enemy territory.",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "tzaangor-enlightened",
       "name": "Tzaangor Enlightened",
       "move": "14\"",
-      "save": 4,
-      "health": 4,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 3
+      "save": 5,
+      "health": 6,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Wizard",
+        "Cavalry",
+        "Fly"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "staff-of-change-and-ritual-dagger",
+          "name": "Staff of Change and Ritual Dagger",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "disc-s-teeth-and-horns",
+          "name": "Disc\u2019s Teeth and Horns",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "tzeentchian-spear-and-vicious-beak",
+          "name": "Tzeentchian Spear and Vicious Beak",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "disc-s-teeth-and-horns-2",
+          "name": "Disc\u2019s Teeth and Horns",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "mutative-aura",
+          "name": "Mutative Aura",
+          "source": "Tzaangor Enlightened",
+          "flavor": "Those who strike a Tzaangor Shaman are oft reduced to bubbling pools of twisted flesh.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible enemy unit within 18\" of this unit to be the target, then make a casting roll of 2D6.",
+          "effect": "On a 7+, until the start of your next turn, each time an unmodified hit roll for a combat attack made by the target is 1, inflict 1 mortal damage on the target after the FIGHT ability has been resolved.",
+          "kind": "ability"
+        },
+        {
+          "id": "deliver-on-fate",
+          "name": "Deliver On Fate",
+          "source": "Tzaangor Enlightened",
+          "flavor": "When on the back foot, the Enlightened use the knowledge they have of their enemy\u2019s past battles to predict their movements, taking great satisfaction in running their destined prey to ground.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to charge rolls for this unit while you are the underdog .",
+          "kind": "passive"
+        }
+      ]
     },
     {
       "id": "tzaangor-skyfires",
@@ -39,8 +226,117 @@
       "save": 4,
       "health": 4,
       "control": 1,
-      "keywords": [],
-      "modelCount": 3
+      "keywords": [
+        "Cavalry",
+        "Fly"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "tzeentchian-spear-and-vicious-beak",
+          "name": "Tzeentchian Spear and Vicious Beak",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "disc-s-teeth-and-horns",
+          "name": "Disc\u2019s Teeth and Horns",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "arrow-of-fate",
+          "name": "Arrow of Fate",
+          "rangeInches": 18,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "bow-stave-and-vicious-beak",
+          "name": "Bow Stave and Vicious Beak",
+          "rangeInches": 0,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "disc-s-teeth-and-horns-2",
+          "name": "Disc\u2019s Teeth and Horns",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "deliver-on-fate",
+          "name": "Deliver On Fate",
+          "source": "Tzaangor Skyfires",
+          "flavor": "When on the back foot, the Enlightened use the knowledge they have of their enemy\u2019s past battles to predict their movements, taking great satisfaction in running their destined prey to ground.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to charge rolls for this unit while you are the underdog .",
+          "kind": "passive"
+        },
+        {
+          "id": "destined-quarry",
+          "name": "Destined Quarry",
+          "source": "Tzaangor Skyfires",
+          "flavor": "Skyfires often select a target to utterly obliterate and erase from the tapestry of fate.",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit that had any damage points allocated to it this phase by this unit\u2019s shooting attacks to be the target.",
+          "effect": "Add 1 to hit rolls for combat attacks made by friendly units that target that enemy unit for the rest of the turn.",
+          "kind": "ability"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "fated-arrival",
+      "name": "Fated Arrival",
+      "summary": "Set up this unit wholly within friendly territory, within 1\" of a battlefield edge and more than 6\" from all enemy units",
+      "timing": null,
+      "declare": null,
+      "effect": "Set up this unit wholly within friendly territory, within 1\" of a battlefield edge and more than 6\" from all enemy units.",
+      "phases": [
+        "movement"
+      ],
+      "usageLimit": "eachTurn",
+      "kind": "ability"
+    },
+    {
+      "id": "predict-the-future",
+      "name": "Predict The Future",
+      "summary": "You can look at up to 3 cards from the top of your battle tactic deck without adding them to your hand",
+      "timing": null,
+      "declare": null,
+      "effect": "You can look at up to 3 cards from the top of your battle tactic deck without adding them to your hand. Then, in any order, return each card face down to either the top or the bottom of your battle tactic deck.",
+      "phases": [
+        "hero"
+      ],
+      "usageLimit": "eachTurn",
+      "kind": "ability"
     }
   ]
 }

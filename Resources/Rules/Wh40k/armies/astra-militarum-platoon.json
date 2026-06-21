@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "armyId": "astra-militarum-platoon",
+  "units": [
+    {
+      "id": "cadian-command-squad",
+      "name": "Cadian Command Squad",
+      "keywords": ["Character", "Infantry"],
+      "modelCount": 5,
+      "notes": "See your Battleforce datasheet card and Imperial Faction Pack for exact stats.",
+      "abilities": [
+        {
+          "id": "command-squad-lead",
+          "name": "Combined Arms Command",
+          "source": "Cadian Command Squad",
+          "effect": "Officers coordinate infantry, artillery, and armour — attach leaders during list building.",
+          "phases": ["command"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "commissar",
+      "name": "Commissar",
+      "keywords": ["Character", "Infantry"],
+      "modelCount": 1,
+      "notes": "See your Battleforce datasheet card for exact stats.",
+      "abilities": [
+        {
+          "id": "commissar-discipline",
+          "name": "Summary Execution",
+          "source": "Commissar",
+          "effect": "Keeps the line steady under fire — a classic Guard morale anchor.",
+          "phases": ["command"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "cadian-shock-troops",
+      "name": "Cadian Shock Troops",
+      "keywords": ["Battleline", "Infantry"],
+      "modelCount": 10,
+      "abilities": [
+        {
+          "id": "shock-troops-line",
+          "name": "Infantry Core",
+          "source": "Cadian Shock Troops",
+          "effect": "Flexible battleline troops to hold terrain footprints and screen for your tanks.",
+          "phases": ["shooting", "combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "field-ordnance-battery",
+      "name": "Field Ordnance Battery",
+      "keywords": ["Artillery", "Infantry"],
+      "modelCount": 2,
+      "notes": "One Field Ordnance Battery — two weapon platforms.",
+      "abilities": [
+        {
+          "id": "ordnance-bombardment",
+          "name": "Indirect Bombardment",
+          "source": "Field Ordnance Battery",
+          "effect": "Long-range artillery that punishes exposed units — watch Indirect Fire rules.",
+          "phases": ["shooting"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "basilisk",
+      "name": "Basilisk",
+      "keywords": ["Vehicle", "Artillery"],
+      "modelCount": 1,
+      "abilities": [
+        {
+          "id": "basilisk-earthshaker",
+          "name": "Earthshaker Cannon",
+          "source": "Basilisk",
+          "effect": "Heavy artillery platform — ideal for clearing objectives before the infantry advance.",
+          "phases": ["shooting"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "rogal-dorn",
+      "name": "Rogal Dorn Battle Tank",
+      "keywords": ["Vehicle"],
+      "modelCount": 1,
+      "abilities": [
+        {
+          "id": "rogal-dorn-spearhead",
+          "name": "Armoured Spearhead",
+          "source": "Rogal Dorn Battle Tank",
+          "effect": "The box centerpiece — pushes the line forward with heavy firepower and durability.",
+          "phases": ["movement", "shooting"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    }
+  ]
+}

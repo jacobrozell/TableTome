@@ -3,44 +3,414 @@
   "armyId": "grundstok-trailblazers",
   "units": [
     {
-      "id": "endrinmaster-with-dirigible-suit",
-      "name": "Endrinmaster with Dirigible Suit",
+      "id": "endrinmaster",
+      "name": "Endrinmaster",
       "move": "12\"",
       "save": 3,
       "health": 8,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Fly"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "aethercannon",
+          "name": "Aethercannon",
+          "rangeInches": 18,
+          "attacks": "1",
+          "hit": 3,
+          "wound": 3,
+          "rend": 2,
+          "damage": "3"
+        },
+        {
+          "id": "dirigible-suit-weapon-battery",
+          "name": "Dirigible Suit Weapon Battery",
+          "rangeInches": 12,
+          "attacks": "6",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "upgraded-aethermatic-saw",
+          "name": "Upgraded Aethermatic Saw",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 3,
+          "wound": 3,
+          "rend": 2,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "endrinmaster-extraordinaire",
+          "name": "Endrinmaster Extraordinaire",
+          "source": "Endrinmaster",
+          "flavor": "This Endrinmaster\u2019s rig bristles with tools and gizmos that allow them to perform battlefield repairs with great haste.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit with the FLY keyword that is wholly within 12\" of this unit to be the target.",
+          "effect": "Roll a D3. On a 2+, Heal (X) the target where X is equal to the roll.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "grundstok-thunderers",
       "name": "Grundstok Thunderers",
-      "move": "4\"",
-      "save": 3,
-      "health": 2,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
-    },
-    {
-      "id": "grundstok-gunhauler",
-      "name": "Grundstok Gunhauler",
       "move": "14\"",
       "save": 2,
       "health": 10,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "War",
+        "Machine",
+        "Fly",
+        "Infantry",
+        "Reinforcements"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "sky-ordnance",
+          "name": "Sky Ordnance",
+          "rangeInches": 15,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 2,
+          "damage": "3"
+        },
+        {
+          "id": "boarding-weapons",
+          "name": "Boarding Weapons",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "aethershot-rifle",
+          "name": "Aethershot Rifle",
+          "rangeInches": 18,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "aetheric-fumigator-or-decksweeper",
+          "name": "Aetheric Fumigator or Decksweeper",
+          "rangeInches": 10,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "grundstok-mortar-or-aethercannon",
+          "name": "Grundstok Mortar or Aethercannon",
+          "rangeInches": 18,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "gun-butt",
+          "name": "Gun Butt",
+          "rangeInches": 0,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "gunhauler-overwatch",
+          "name": "Gunhauler Overwatch",
+          "source": "Grundstok Thunderers",
+          "flavor": "At the last moment, the Gunhauler\u2019s crew loose a hasty fusillade at a charging group of foes.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit that charged this turn and is in combat with this unit to be the target.",
+          "effect": "Roll a D3. On a 2+, inflict an amount of mortal damage on the target equal to the roll.",
+          "kind": "ability"
+        },
+        {
+          "id": "bewilderblast-rounds",
+          "name": "Bewilderblast Rounds",
+          "source": "Grundstok Thunderers",
+          "flavor": "These specialist rounds emit a riot of light and sound, severely disrupting the targets\u2019 cohesion.",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "oncePerBattle",
+          "declare": "Pick an enemy unit that had any damage points allocated to it this phase by this unit\u2019s shooting attacks to be the target.",
+          "effect": "Subtract D6 from the target\u2019s control score for the rest of the turn.",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "grundstok-gunhauler",
+      "name": "Grundstok Gunhauler",
+      "move": "12\"",
+      "save": 3,
+      "health": 8,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Infantry",
+        "Fly",
+        "War",
+        "Machine"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "aethercannon",
+          "name": "Aethercannon",
+          "rangeInches": 18,
+          "attacks": "1",
+          "hit": 3,
+          "wound": 3,
+          "rend": 2,
+          "damage": "3"
+        },
+        {
+          "id": "dirigible-suit-weapon-battery",
+          "name": "Dirigible Suit Weapon Battery",
+          "rangeInches": 12,
+          "attacks": "6",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "upgraded-aethermatic-saw",
+          "name": "Upgraded Aethermatic Saw",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 3,
+          "wound": 3,
+          "rend": 2,
+          "damage": "2"
+        },
+        {
+          "id": "sky-ordnance",
+          "name": "Sky Ordnance",
+          "rangeInches": 15,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 2,
+          "damage": "3"
+        },
+        {
+          "id": "boarding-weapons",
+          "name": "Boarding Weapons",
+          "rangeInches": 0,
+          "attacks": "4",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "endrinmaster-extraordinaire",
+          "name": "Endrinmaster Extraordinaire",
+          "source": "Grundstok Gunhauler",
+          "flavor": "This Endrinmaster\u2019s rig bristles with tools and gizmos that allow them to perform battlefield repairs with great haste.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly unit with the FLY keyword that is wholly within 12\" of this unit to be the target.",
+          "effect": "Roll a D3. On a 2+, Heal (X) the target where X is equal to the roll.",
+          "kind": "ability"
+        },
+        {
+          "id": "gunhauler-overwatch",
+          "name": "Gunhauler Overwatch",
+          "source": "Grundstok Gunhauler",
+          "flavor": "At the last moment, the Gunhauler\u2019s crew loose a hasty fusillade at a charging group of foes.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick an enemy unit that charged this turn and is in combat with this unit to be the target.",
+          "effect": "Roll a D3. On a 2+, inflict an amount of mortal damage on the target equal to the roll.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "endrinriggers",
       "name": "Endrinriggers",
-      "move": "12\"",
+      "move": "4\"",
       "save": 3,
       "health": 2,
       "control": 1,
-      "keywords": [],
-      "modelCount": 3
+      "keywords": [
+        "Infantry",
+        "Reinforcements",
+        "Fly"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "aethershot-rifle",
+          "name": "Aethershot Rifle",
+          "rangeInches": 18,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "aetheric-fumigator-or-decksweeper",
+          "name": "Aetheric Fumigator or Decksweeper",
+          "rangeInches": 10,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "grundstok-mortar-or-aethercannon",
+          "name": "Grundstok Mortar or Aethercannon",
+          "rangeInches": 18,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "gun-butt",
+          "name": "Gun Butt",
+          "rangeInches": 0,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "rapid-fire-rivet-gun",
+          "name": "Rapid-fire Rivet Gun",
+          "rangeInches": 10,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "aethermatic-volley-gun-crit-2-hits",
+          "name": "Aethermatic Volley Gun Crit (2 Hits)",
+          "rangeInches": 15,
+          "attacks": "2D6",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "skyrigger-heavy-weapon-anti-monster-1-rend",
+          "name": "Skyrigger Heavy Weapon Anti- MONSTER (+1 Rend)",
+          "rangeInches": 15,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "D3"
+        },
+        {
+          "id": "aethermatic-saw-anti-charge-1-rend",
+          "name": "Aethermatic Saw Anti-charge (+1 Rend)",
+          "rangeInches": 0,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "gun-butt-2",
+          "name": "Gun Butt",
+          "rangeInches": 0,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "bewilderblast-rounds",
+          "name": "Bewilderblast Rounds",
+          "source": "Endrinriggers",
+          "flavor": "These specialist rounds emit a riot of light and sound, severely disrupting the targets\u2019 cohesion.",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "oncePerBattle",
+          "declare": "Pick an enemy unit that had any damage points allocated to it this phase by this unit\u2019s shooting attacks to be the target.",
+          "effect": "Subtract D6 from the target\u2019s control score for the rest of the turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "cloudweaving-skyfarers",
+          "name": "Cloudweaving Skyfarers",
+          "source": "Endrinriggers",
+          "flavor": "It is not only the Kharadron\u2019s vessels that prowl the skies: one-duardin endrinsphere harnesses grant their wearers the power of flight, making them manoeuvrable troops indeed.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "Roll a dice. On a 3+, this unit can use the \u2018 Normal Move \u2019 ability as if it were your movement phase.",
+          "kind": "ability"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "gunhauler-escort",
+      "name": "Gunhauler Escort",
+      "summary": "Subtract 1 from hit rolls for attacks that target friendly KHARADRON OVERLORDS INFANTRY units while they are wholly within 6\" of a friendly Grundstok Gunhauler ",
+      "timing": null,
+      "declare": null,
+      "effect": "Subtract 1 from hit rolls for attacks that target friendly KHARADRON OVERLORDS INFANTRY units while they are wholly within 6\" of a friendly Grundstok Gunhauler .",
+      "phases": [],
+      "usageLimit": "passive",
+      "kind": "passive"
     }
   ]
 }

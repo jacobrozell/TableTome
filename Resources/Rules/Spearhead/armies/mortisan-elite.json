@@ -9,38 +9,252 @@
       "save": 4,
       "health": 5,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Wizard",
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "ossified-talons",
+          "name": "Ossified Talons",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "refined-creations",
+          "name": "Refined Creations",
+          "source": "Mortisan Ossifector",
+          "flavor": "Ossifectors are always looking to improve upon their work, wielding necrotic sorcery to augment their creations in battle.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible friendly unit wholly within 12\" of this unit to be the target, then make a casting roll of 2D6.",
+          "effect": "On a 5+, the target\u2019s melee weapons have Crit (2 Hits) until the start of your next turn.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "immortis-guard",
       "name": "Immortis Guard",
-      "move": "5\"",
-      "save": 3,
-      "health": 4,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 3
-    },
-    {
-      "id": "necropolis-stalkers",
-      "name": "Necropolis Stalkers",
       "move": "6\"",
       "save": 4,
       "health": 4,
       "control": 1,
-      "keywords": [],
-      "modelCount": 3
+      "keywords": [
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "stalker-blades",
+          "name": "Stalker Blades",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 3,
+          "wound": 3,
+          "rend": 2,
+          "damage": "1"
+        },
+        {
+          "id": "dread-halberd",
+          "name": "Dread Halberd",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "switch-aspects",
+          "name": "Switch Aspects",
+          "source": "Immortis Guard",
+          "flavor": "Stalkers are imbued with a powerful skill by whichever of their skulls faces the foe, switching from defence to offence in the blink of an eye.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "Pick 1 of the following effects to apply for the rest of the turn: Blade-parry Aspect: Subtract 1 from hit rolls for combat attacks that target this unit. Destroyer Aspect: Ward rolls cannot be made for damage points inflicted by this unit\u2019s combat attacks.",
+          "kind": "ability"
+        },
+        {
+          "id": "soulbound-protectors",
+          "name": "Soulbound Protectors",
+          "source": "Immortis Guard",
+          "flavor": "Immortis Guard will use their own bodies to shield their rulers from harm.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Your general has WARD ( 5+ ) while they are within this unit\u2019s combat range .",
+          "kind": "passive"
+        }
+      ]
+    },
+    {
+      "id": "necropolis-stalkers",
+      "name": "Necropolis Stalkers",
+      "move": "5\"",
+      "save": 4,
+      "health": 5,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Wizard",
+        "Infantry",
+        "Ward"
+      ],
+      "modelCount": 3,
+      "weapons": [
+        {
+          "id": "ossified-talons",
+          "name": "Ossified Talons",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "2"
+        },
+        {
+          "id": "stalker-blades",
+          "name": "Stalker Blades",
+          "rangeInches": null,
+          "attacks": "4",
+          "hit": 3,
+          "wound": 3,
+          "rend": 2,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "refined-creations",
+          "name": "Refined Creations",
+          "source": "Necropolis Stalkers",
+          "flavor": "Ossifectors are always looking to improve upon their work, wielding necrotic sorcery to augment their creations in battle.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a visible friendly unit wholly within 12\" of this unit to be the target, then make a casting roll of 2D6.",
+          "effect": "On a 5+, the target\u2019s melee weapons have Crit (2 Hits) until the start of your next turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "switch-aspects",
+          "name": "Switch Aspects",
+          "source": "Necropolis Stalkers",
+          "flavor": "Stalkers are imbued with a powerful skill by whichever of their skulls faces the foe, switching from defence to offence in the blink of an eye.",
+          "phases": [
+            "anyCombat"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": null,
+          "effect": "Pick 1 of the following effects to apply for the rest of the turn: Blade-parry Aspect: Subtract 1 from hit rolls for combat attacks that target this unit. Destroyer Aspect: Ward rolls cannot be made for damage points inflicted by this unit\u2019s combat attacks.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "morghast-archai",
       "name": "Morghast Archai",
-      "move": "10\"",
+      "move": "5\"",
       "save": 3,
-      "health": 6,
-      "control": 2,
-      "keywords": [],
-      "modelCount": 2
+      "health": 4,
+      "control": 1,
+      "keywords": [
+        "Core",
+        "Move",
+        "Charge",
+        "Attack",
+        "Shoot",
+        "Fight",
+        "Spell",
+        "Run",
+        "Banish",
+        "Unbind",
+        "Retreat",
+        "Infantry",
+        "Ward",
+        "Fly"
+      ],
+      "modelCount": 2,
+      "weapons": [
+        {
+          "id": "dread-halberd",
+          "name": "Dread Halberd",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "spirit-weapons",
+          "name": "Spirit Weapons",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 3,
+          "wound": 2,
+          "rend": 2,
+          "damage": "3"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "soulbound-protectors",
+          "name": "Soulbound Protectors",
+          "source": "Morghast Archai",
+          "flavor": "Immortis Guard will use their own bodies to shield their rulers from harm.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Your general has WARD ( 5+ ) while they are within this unit\u2019s combat range .",
+          "kind": "passive"
+        },
+        {
+          "id": "heralds-of-nagash",
+          "name": "Heralds Of Nagash",
+          "source": "Morghast Archai",
+          "flavor": "The Morghast are the embodiment of Nagash's will and require no commander to function with utmost efficacy as a result.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Add 1 to discipline rolls for this unit while it is not wholly within 12\" of your general .",
+          "kind": "passive"
+        }
+      ]
+    }
+  ],
+  "battleTraits": [
+    {
+      "id": "dread-descent",
+      "name": "Dread Descent",
+      "summary": "Set up this unit anywhere on the battlefield more than 6\" from all enemy units",
+      "timing": null,
+      "declare": null,
+      "effect": "Set up this unit anywhere on the battlefield more than 6\" from all enemy units.",
+      "phases": [
+        "movement"
+      ],
+      "usageLimit": "eachTurn",
+      "kind": "ability"
     }
   ]
 }

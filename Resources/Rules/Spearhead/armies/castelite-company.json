@@ -9,48 +9,403 @@
       "save": 3,
       "health": 7,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "Hero",
+        "Cavalry"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "dragoon-pistol",
+          "name": "Dragoon Pistol",
+          "rangeInches": 10,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "master-forged-longsword",
+          "name": "Master-forged Longsword",
+          "rangeInches": 0,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "warhorse-s-steel-shod-hooves",
+          "name": "Warhorse\u2019s Steel-shod Hooves",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "decisive-commander",
+          "name": "Decisive Commander",
+          "source": "Freeguild Cavalier-Marshal",
+          "flavor": "In the face of the oncoming enemy, Freeguild Marshals employ rousing oratory to inspire their soldiers to stand strong in the name of Sigmar.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly Freeguild Steelhelms unit wholly within 12\" of this unit to be the target and roll a dice.",
+          "effect": "On a 2+, pick 1: On Your Feet!: If the target unit is not in combat , you can return D3 slain models to it. Yield No Quarter!: Add 3 to the target unit\u2019s control score until the start of your next turn.",
+          "kind": "ability"
+        }
+      ]
     },
     {
       "id": "freeguild-steelhelms",
       "name": "Freeguild Steelhelms",
-      "move": "5\"",
-      "save": 4,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
-    },
-    {
-      "id": "freeguild-steelhelms-2",
-      "name": "Freeguild Steelhelms",
-      "move": "5\"",
-      "save": 4,
-      "health": 1,
-      "control": 1,
-      "keywords": [],
-      "modelCount": 5
-    },
-    {
-      "id": "freeguild-cavaliers",
-      "name": "Freeguild Cavaliers",
       "move": "10\"",
       "save": 3,
       "health": 3,
       "control": 1,
-      "keywords": [],
-      "modelCount": 5
+      "keywords": [
+        "Cavalry",
+        "Reinforcements",
+        "Infantry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "cavalier-weapon-charge-1-damage",
+          "name": "Cavalier Weapon Charge (+1 Damage)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "warhorse-s-steel-shod-hooves",
+          "name": "Warhorse\u2019s Steel-shod Hooves",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "freeguild-weapon",
+          "name": "Freeguild Weapon",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "devastating-charge",
+          "name": "Devastating Charge",
+          "source": "Freeguild Steelhelms",
+          "flavor": "Thundering across the battlefield, the Cavaliers build up momentum before smashing deep into the enemy\u2019s ranks, laying about themselves with blade, axe, hammer and flail.",
+          "phases": [
+            "charge"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "If this unit charged this phase, pick an enemy unit in combat with it to be the target and roll a dice.",
+          "effect": "On a 2+, inflict D3 mortal damage on the target.",
+          "kind": "ability"
+        },
+        {
+          "id": "consecrate-the-land",
+          "name": "Consecrate The Land",
+          "source": "Freeguild Steelhelms",
+          "flavor": "Bellowing Sigmarite hymns, the Battle Priest who accompanies the Steelhelms purges the taint of Chaos from the land and consecrates it in the name of the God-King.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "If this unit is contesting an objective you control that is not contested by any enemy models, roll a dice.",
+          "effect": "On a 3+, that objective is considered by you to be consecrated . Friendly units have WARD ( 6+ ) while they are contesting a consecrated objective. If your opponent gains control of a consecrated objective, it is no longer consecrated.",
+          "kind": "ability"
+        }
+      ]
     },
     {
-      "id": "ironweld-great-cannon",
-      "name": "Ironweld Great Cannon",
+      "id": "freeguild-steelhelms-2",
+      "name": "Freeguild Steelhelms",
+      "move": "10\"",
+      "save": 3,
+      "health": 3,
+      "control": 1,
+      "keywords": [
+        "Cavalry",
+        "Reinforcements",
+        "Infantry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "cavalier-weapon-charge-1-damage",
+          "name": "Cavalier Weapon Charge (+1 Damage)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "warhorse-s-steel-shod-hooves",
+          "name": "Warhorse\u2019s Steel-shod Hooves",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "freeguild-weapon",
+          "name": "Freeguild Weapon",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "devastating-charge",
+          "name": "Devastating Charge",
+          "source": "Freeguild Steelhelms",
+          "flavor": "Thundering across the battlefield, the Cavaliers build up momentum before smashing deep into the enemy\u2019s ranks, laying about themselves with blade, axe, hammer and flail.",
+          "phases": [
+            "charge"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "If this unit charged this phase, pick an enemy unit in combat with it to be the target and roll a dice.",
+          "effect": "On a 2+, inflict D3 mortal damage on the target.",
+          "kind": "ability"
+        },
+        {
+          "id": "consecrate-the-land",
+          "name": "Consecrate The Land",
+          "source": "Freeguild Steelhelms",
+          "flavor": "Bellowing Sigmarite hymns, the Battle Priest who accompanies the Steelhelms purges the taint of Chaos from the land and consecrates it in the name of the God-King.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "If this unit is contesting an objective you control that is not contested by any enemy models, roll a dice.",
+          "effect": "On a 3+, that objective is considered by you to be consecrated . Friendly units have WARD ( 6+ ) while they are contesting a consecrated objective. If your opponent gains control of a consecrated objective, it is no longer consecrated.",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "freeguild-cavaliers",
+      "name": "Freeguild Cavaliers",
       "move": "3\"",
       "save": 4,
       "health": 8,
       "control": 2,
-      "keywords": [],
-      "modelCount": 1
+      "keywords": [
+        "War",
+        "Machine",
+        "Reinforcements",
+        "Cavalry"
+      ],
+      "modelCount": 5,
+      "weapons": [
+        {
+          "id": "great-cannon-cannonball",
+          "name": "Great Cannon: Cannonball",
+          "rangeInches": 24,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "D3+2"
+        },
+        {
+          "id": "great-cannon-grapeshot",
+          "name": "Great Cannon: Grapeshot",
+          "rangeInches": 12,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "crew-s-tools-and-sidearms",
+          "name": "Crew\u2019s Tools and Sidearms",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "cavalier-weapon-charge-1-damage",
+          "name": "Cavalier Weapon Charge (+1 Damage)",
+          "rangeInches": null,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "warhorse-s-steel-shod-hooves",
+          "name": "Warhorse\u2019s Steel-shod Hooves",
+          "rangeInches": null,
+          "attacks": "2",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "shot-and-shell",
+          "name": "Shot And Shell",
+          "source": "Freeguild Cavaliers",
+          "flavor": "The engineers of the Ironweld Arsenal have developed different ammunition for the Great Cannon to fire.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Each time this unit uses a SHOOT ability, choose either the Cannonball or Grapeshot weapon characteristics for all the attacks it makes with its Great Cannon. The Cannonball can only be chosen if this unit has not used a MOVE ability that turn.",
+          "kind": "passive"
+        },
+        {
+          "id": "devastating-charge",
+          "name": "Devastating Charge",
+          "source": "Freeguild Cavaliers",
+          "flavor": "Thundering across the battlefield, the Cavaliers build up momentum before smashing deep into the enemy\u2019s ranks, laying about themselves with blade, axe, hammer and flail.",
+          "phases": [
+            "charge"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "If this unit charged this phase, pick an enemy unit in combat with it to be the target and roll a dice.",
+          "effect": "On a 2+, inflict D3 mortal damage on the target.",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "ironweld-great-cannon",
+      "name": "Ironweld Great Cannon",
+      "move": "10\"",
+      "save": 3,
+      "health": 7,
+      "control": 2,
+      "keywords": [
+        "Hero",
+        "Cavalry",
+        "War",
+        "Machine",
+        "Reinforcements"
+      ],
+      "modelCount": 1,
+      "weapons": [
+        {
+          "id": "dragoon-pistol",
+          "name": "Dragoon Pistol",
+          "rangeInches": 10,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "master-forged-longsword",
+          "name": "Master-forged Longsword",
+          "rangeInches": 0,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "warhorse-s-steel-shod-hooves",
+          "name": "Warhorse\u2019s Steel-shod Hooves",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 5,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "great-cannon-cannonball",
+          "name": "Great Cannon: Cannonball",
+          "rangeInches": 24,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 2,
+          "rend": 2,
+          "damage": "D3+2"
+        },
+        {
+          "id": "great-cannon-grapeshot",
+          "name": "Great Cannon: Grapeshot",
+          "rangeInches": 12,
+          "attacks": "5",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "crew-s-tools-and-sidearms",
+          "name": "Crew\u2019s Tools and Sidearms",
+          "rangeInches": 0,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "decisive-commander",
+          "name": "Decisive Commander",
+          "source": "Ironweld Great Cannon",
+          "flavor": "In the face of the oncoming enemy, Freeguild Marshals employ rousing oratory to inspire their soldiers to stand strong in the name of Sigmar.",
+          "phases": [
+            "hero"
+          ],
+          "usageLimit": "eachTurn",
+          "declare": "Pick a friendly Freeguild Steelhelms unit wholly within 12\" of this unit to be the target and roll a dice.",
+          "effect": "On a 2+, pick 1: On Your Feet!: If the target unit is not in combat , you can return D3 slain models to it. Yield No Quarter!: Add 3 to the target unit\u2019s control score until the start of your next turn.",
+          "kind": "ability"
+        },
+        {
+          "id": "shot-and-shell",
+          "name": "Shot And Shell",
+          "source": "Ironweld Great Cannon",
+          "flavor": "The engineers of the Ironweld Arsenal have developed different ammunition for the Great Cannon to fire.",
+          "phases": [],
+          "usageLimit": "passive",
+          "declare": null,
+          "effect": "Each time this unit uses a SHOOT ability, choose either the Cannonball or Grapeshot weapon characteristics for all the attacks it makes with its Great Cannon. The Cannonball can only be chosen if this unit has not used a MOVE ability that turn.",
+          "kind": "passive"
+        }
+      ]
     }
   ]
 }

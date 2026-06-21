@@ -605,12 +605,7 @@ public enum AppSearchIndexBuilder {
     }
 
     private static func showsCombatResolverSearchFeature(for gameSystemId: String) -> Bool {
-        let capabilities = GameSystemPlayContext.context(for: gameSystemId).capabilities
-        if capabilities.showsCombatResolver {
-            return true
-        }
-        return ProcessInfo.processInfo.arguments.contains("-enable_wh40k_combat_resolver")
-            && gameSystemId == GameSystemId.wh40k11e.rawValue
+        GameSystemPlayContext.context(for: gameSystemId).capabilities.showsCombatResolver
     }
 
     private static func ruleSectionSubtitle(_ category: RuleSectionCategory) -> String {

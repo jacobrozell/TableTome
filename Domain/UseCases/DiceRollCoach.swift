@@ -75,8 +75,13 @@ public enum DiceRollCoach: Sendable {
             return Hint(text: String(localized: "Natural 1 — always fails."), passed: false)
         }
         if CombatRollEngineRouter.usesWh40kRules(gameSystemId: gameSystemId) {
-            let needed = Wh40k10eCombatRollResolution.effectiveSaveNeeded(input)
-            let passed = Wh40k10eCombatRollResolution.saveSucceeded(input)
+            let is11e = CombatRollEngineRouter.rulesEdition(for: gameSystemId) == .wh40k11e
+            let needed = is11e
+                ? Wh40k11eCombatRollResolution.effectiveSaveNeeded(input)
+                : Wh40k10eCombatRollResolution.effectiveSaveNeeded(input)
+            let passed = is11e
+                ? Wh40k11eCombatRollResolution.armourSaveSucceeded(input)
+                : Wh40k10eCombatRollResolution.saveSucceeded(input)
             let outcome = passed ? String(localized: "Saved") : String(localized: "Failed save")
             let apNote = input.rend > 0 ? String(localized: " (AP \(input.rend))") : ""
             return Hint(
@@ -105,6 +110,9 @@ public enum DiceRollCoach: Sendable {
     }
 
     public static func wardHint(input: AttackRollInput, gameSystemId: String = "aos-spearhead") -> Hint? {
+        if CombatRollEngineRouter.rulesEdition(for: gameSystemId) == .wh40k11e {
+            return invulnHint(input: input)
+        }
         guard !CombatRollEngineRouter.usesWh40kRules(gameSystemId: gameSystemId) else { return nil }
         guard let wardTarget = input.wardTarget, input.wardRoll != nil else { return nil }
         let wardRoll = input.wardRoll ?? 4
@@ -114,6 +122,21 @@ public enum DiceRollCoach: Sendable {
         let passed = CombatRollResolution.wardSucceeded(input)
         return Hint(
             text: String(localized: "Rolled \(wardRoll) — need \(wardTarget)+. \(passed ? "Ward holds" : "Ward fails")."),
+            passed: passed
+        )
+    }
+
+    public static func invulnHint(input: AttackRollInput) -> Hint? {
+        guard let invulnTarget = input.wardTarget, input.wardRoll != nil else { return nil }
+        let invulnRoll = input.wardRoll ?? 4
+        if invulnRoll == 1 {
+            return Hint(text: String(localized: "Natural 1 — invulnerable save fails."), passed: false)
+        }
+        let passed = Wh40k11eCombatRollResolution.invulnerableSaveSucceeded(input)
+        return Hint(
+            text: String(
+                localized: "Rolled \(invulnRoll) vs \(invulnTarget)+ invulnerable — \(passed ? "Saved" : "Failed save")."
+            ),
             passed: passed
         )
     }

@@ -45,7 +45,11 @@ public enum RulesGlossaryCatalog {
         "ingress": "glossary-ingress-11e",
         "incursion": "glossary-incursion-11e",
         "force disposition": "glossary-force-disposition",
-        "detachment points": "glossary-detachment-points"
+        "detachment points": "glossary-detachment-points",
+        "coherency": "glossary-coherency-11e",
+        "consolidation": "glossary-consolidation-11e",
+        "fall back": "glossary-fall-back-11e",
+        "indirect fire": "glossary-indirect-fire-11e"
     ]
 
     private static func wh40k11eAliasEntryIdsMatching(text lower: String) -> [String] {

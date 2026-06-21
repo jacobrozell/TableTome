@@ -371,6 +371,21 @@ struct GuidedMatchView: View {
                 }
                 .accessibilityIdentifier("guidedMatch.sampleTurn")
             }
+        } else if gameSystemId == .wh40k11e {
+            Section {
+                NavigationLink(value: Wh40k11eSampleTurnLink()) {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                        Label(String(localized: "Preview a 40k Turn"), systemImage: "play.circle")
+                            .font(.headline)
+                        Text(String(localized: "Command through Fight — 11e charge and pile-in rules"))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                    .contentShape(Rectangle())
+                }
+                .accessibilityIdentifier("guidedMatch.wh40k11eSampleTurn")
+            }
         } else if gameSystemId == .wh40k10eCp {
             Section {
                 NavigationLink(value: CombatPatrolSampleTurnLink()) {

@@ -165,7 +165,7 @@ public enum BattleFlowGuide {
             if round >= roundCount {
                 return battleCompleteStep(roundCount: roundCount)
             }
-            return wh40kEndOfTurnHandoffStep()
+            return wh40kEndOfTurnHandoffStep(gameSystemId: gameSystemId)
         }
 
         return turnPhaseGuide(
@@ -192,16 +192,25 @@ public enum BattleFlowGuide {
         )
     }
 
-    private static func wh40kEndOfTurnHandoffStep() -> BattleFlowGuideStep {
-        BattleFlowGuideStep(
-            kind: .turnPhase(.endOfTurn),
-            title: String(localized: "End of Turn"),
-            instruction: String(
+    private static func wh40kEndOfTurnHandoffStep(gameSystemId: String) -> BattleFlowGuideStep {
+        let context = GameSystemPlayContext.context(for: gameSystemId)
+        let instruction = context.isWh40k11e
+            ? String(
+                localized: """
+                Score primary and secondary objectives, remove models from out-of-coherency units, then pass the turn. \
+                Both players gain 1 Core Command Point at the start of the next Command phase.
+                """
+            )
+            : String(
                 localized: """
                 Score primary and secondary objectives, resolve end-of-turn abilities, then pass the turn. \
                 Command Points refresh at the start of each player's next Command phase.
                 """
-            ),
+            )
+        return BattleFlowGuideStep(
+            kind: .turnPhase(.endOfTurn),
+            title: String(localized: "End of Turn"),
+            instruction: instruction,
             actionLabel: String(localized: "Next Player's Turn")
         )
     }
@@ -452,7 +461,7 @@ private extension BattleTurnPhase {
             return cpGuidance(round: round, matchState: matchState, activePlayerIsOne: activePlayerIsOne)
         }
         if context.isWh40k {
-            return wh40kGuidance
+            return wh40kGuidance(for: gameSystemId)
         }
         return defaultGuidance
     }
@@ -469,7 +478,62 @@ private extension BattleTurnPhase {
         }
     }
 
-    private var wh40kGuidance: String {
+    private func wh40kGuidance(for gameSystemId: String) -> String {
+        if GameSystemPlayContext.context(for: gameSystemId).isWh40k11e {
+            return wh40k11eGuidance
+        }
+        return wh40k10eGuidance
+    }
+
+    private var wh40k11eGuidance: String {
+        switch self {
+        case .command:
+            String(
+                localized: """
+                Both players gain 1 Core Command Point. The active player tests Battle-shock on units at or below \
+                Half-strength, uses stratagems, draws secondary cards, then scores objectives at end of Command phase.
+                """
+            )
+        case .movement:
+            String(
+                localized: """
+                Move, Advance, or Fall Back — units must end in coherency. Reserves arrive from battle round 2. \
+                Overwatch fires once at the end of this phase.
+                """
+            )
+        case .shooting:
+            String(
+                localized: """
+                Pick units to shoot. Cover is -1 BS when every target model has cover. Indirect Fire needs 6+ unless \
+                your unit stayed still and a friendly unit can see the target (4+).
+                """
+            )
+        case .charge:
+            String(
+                localized: """
+                Roll 2D6 for charge distance, then pick target(s) within 12 inches you can reach. Engagement range is \
+                2 inches horizontally and 5 inches vertically.
+                """
+            )
+        case .combat:
+            String(
+                localized: """
+                All pile-ins first, then alternate fights (you pick the first unit). After fights, consolidate up to \
+                3 inches using Ongoing, Engaging, or Objective mode.
+                """
+            )
+        case .endOfTurn:
+            String(
+                localized: """
+                Score mission triggers, remove models from out-of-coherency units, then pass the phone.
+                """
+            )
+        default:
+            defaultGuidance
+        }
+    }
+
+    private var wh40k10eGuidance: String {
         switch self {
         case .command:
             String(
@@ -545,7 +609,7 @@ private extension BattleTurnPhase {
                 """
             )
         case .shooting, .charge, .combat:
-            return wh40kGuidance
+            return wh40k10eGuidance
         case .endOfTurn:
             return String(
                 localized: """
@@ -554,7 +618,7 @@ private extension BattleTurnPhase {
                 """
             )
         default:
-            return wh40kGuidance
+            return wh40k10eGuidance
         }
     }
 

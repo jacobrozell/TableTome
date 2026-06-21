@@ -46,7 +46,7 @@ enum SimulatedAttackRollSupport {
             hitModifier: mods.hit,
             woundModifier: mods.wound,
             saveModifier: mods.save,
-            wardTarget: mods.wardTarget,
+            wardTarget: viewModel.activeInvulnTarget ?? mods.wardTarget,
             critAutoWound: options.critAutoWound,
             critMortal: options.critMortal,
             mortalDamage: options.mortalDamage,

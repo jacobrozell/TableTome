@@ -13,7 +13,10 @@ public struct PlayCapabilities: Sendable, Equatable {
     public let showsScTmgDeploymentChecklist: Bool
     public let showsCombatPatrolMode: Bool
     public let showsDedicatedCombatTab: Bool
-    public let usesWh40kCombatRollEngine: Bool
+    /// 10th Edition Combat Patrol combat resolver — not 11e.
+    public let usesWh40k10eCombatRollEngine: Bool
+    /// 11th Edition full-game combat resolver — not Combat Patrol.
+    public let usesWh40k11eCombatRollEngine: Bool
     public let scoringRuleSectionId: String?
     public let ruleCategories: [RuleSectionCategory]
     public let showsNewEditionBadge: Bool
@@ -33,7 +36,8 @@ public struct PlayCapabilities: Sendable, Equatable {
         showsScTmgDeploymentChecklist: Bool = false,
         showsCombatPatrolMode: Bool = false,
         showsDedicatedCombatTab: Bool = true,
-        usesWh40kCombatRollEngine: Bool = false,
+        usesWh40k10eCombatRollEngine: Bool = false,
+        usesWh40k11eCombatRollEngine: Bool = false,
         scoringRuleSectionId: String? = nil,
         ruleCategories: [RuleSectionCategory] = RuleSectionCategory.allCases,
         showsNewEditionBadge: Bool = false,
@@ -52,7 +56,8 @@ public struct PlayCapabilities: Sendable, Equatable {
         self.showsScTmgDeploymentChecklist = showsScTmgDeploymentChecklist
         self.showsCombatPatrolMode = showsCombatPatrolMode
         self.showsDedicatedCombatTab = showsDedicatedCombatTab
-        self.usesWh40kCombatRollEngine = usesWh40kCombatRollEngine
+        self.usesWh40k10eCombatRollEngine = usesWh40k10eCombatRollEngine
+        self.usesWh40k11eCombatRollEngine = usesWh40k11eCombatRollEngine
         self.scoringRuleSectionId = scoringRuleSectionId
         self.ruleCategories = ruleCategories
         self.showsNewEditionBadge = showsNewEditionBadge

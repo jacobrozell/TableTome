@@ -66,11 +66,12 @@ enum OnboardingContent {
             edition: String(localized: "Full game — 11th Edition"),
             blurb: String(
                 localized: """
-                The complete Warhammer 40,000 rules — for larger armies, not the small Combat Patrol box format.
+                The current Warhammer 40,000 rules — ideal with the Armageddon launch box (Space Marines vs Orks) \
+                or your own 1,000-point lists. Mission cards come from Chapter Approved.
                 """
             ),
             showsNewBadge: true,
-            recommendedForNewcomers: false,
+            recommendedForNewcomers: true,
             startsGuidedMatch: false
         ),
         OnboardingGameHighlight(

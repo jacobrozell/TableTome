@@ -265,6 +265,7 @@ public struct SpearheadUnit: Codable, Sendable, Identifiable, Equatable {
     public let name: String
     public let move: String?
     public let save: Int?
+    public let invulnerableSave: Int?
     public let health: Int?
     public let control: Int?
     public let keywords: [String]
@@ -278,6 +279,7 @@ public struct SpearheadUnit: Codable, Sendable, Identifiable, Equatable {
         name: String,
         move: String? = nil,
         save: Int? = nil,
+        invulnerableSave: Int? = nil,
         health: Int? = nil,
         control: Int? = nil,
         keywords: [String] = [],
@@ -290,6 +292,7 @@ public struct SpearheadUnit: Codable, Sendable, Identifiable, Equatable {
         self.name = name
         self.move = move
         self.save = save
+        self.invulnerableSave = invulnerableSave
         self.health = health
         self.control = control
         self.keywords = keywords
@@ -305,6 +308,7 @@ public struct SpearheadUnit: Codable, Sendable, Identifiable, Equatable {
         name = try container.decode(String.self, forKey: .name)
         move = try container.decodeIfPresent(String.self, forKey: .move)
         save = try container.decodeIfPresent(Int.self, forKey: .save)
+        invulnerableSave = try container.decodeIfPresent(Int.self, forKey: .invulnerableSave)
         health = try container.decodeIfPresent(Int.self, forKey: .health)
         control = try container.decodeIfPresent(Int.self, forKey: .control)
         keywords = try container.decodeIfPresent([String].self, forKey: .keywords) ?? []

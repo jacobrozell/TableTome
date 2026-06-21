@@ -133,7 +133,7 @@ struct HomeView: View {
             return String(localized: "Fantasy starter box — best first wargame")
         }
         if system.id == "wh40k-11e" {
-            return String(localized: "Full 40k rules — not the small Combat Patrol format")
+            return String(localized: "11th Edition — Armageddon box or your own lists")
         }
         if system.id == "wh40k-10e-cp" {
             return String(localized: "40k starter box — guided first battles")
@@ -149,7 +149,7 @@ struct HomeView: View {
             return String(localized: "Uses 10th Edition Combat Patrol rules")
         }
         if system.id == "wh40k-11e" {
-            return String(localized: "Current full-game edition")
+            return String(localized: "Free core rules + Chapter Approved missions")
         }
         return nil
     }

@@ -7,6 +7,11 @@ public enum ReleaseSurface {
         ProcessInfo.processInfo.arguments.contains("-enable_full_product_surface")
     }
 
+    /// Combat Patrol — separate from full surface until all armies ship and polish is done.
+    public static var showsCombatPatrol: Bool {
+        ProcessInfo.processInfo.arguments.contains("-enable_combat_patrol")
+    }
+
     /// Game systems shipped in App Store 1.0.0.
     private static let releaseGameSystemIds: Set<String> = [
         GameSystemId.aosSpearhead.rawValue,
@@ -39,6 +44,9 @@ public enum ReleaseSurface {
         _ gameSystemId: String,
         registry: GameSystemRegistry = .bundled
     ) -> Bool {
+        if gameSystemId == GameSystemId.wh40k10eCp.rawValue {
+            return showsCombatPatrol
+        }
         if fullSurfaceEnabled {
             if let capabilities = registry.capabilities(for: gameSystemId) {
                 if capabilities.requiresFullSurfaceFlag {
@@ -104,12 +112,7 @@ public enum ReleaseSurface {
         if capabilities.showsCombatResolver {
             return true
         }
-        return showsWh40kCombatResolver && gameSystemId == GameSystemId.wh40k11e.rawValue
-    }
-
-    /// Optional override for 11e resolver QA before general release.
-    public static var showsWh40kCombatResolver: Bool {
-        ProcessInfo.processInfo.arguments.contains("-enable_wh40k_combat_resolver")
+        return false
     }
 
     public static func isGameSystemVisible(

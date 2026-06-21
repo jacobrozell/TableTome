@@ -30,6 +30,9 @@ private struct PlayNavigationDestinationsModifier: ViewModifier {
             .navigationDestination(for: CombatPatrolSampleTurnLink.self) { _ in
                 CombatPatrolSampleTurnWalkthroughView()
             }
+            .navigationDestination(for: Wh40k11eSampleTurnLink.self) { _ in
+                Wh40k11eSampleTurnWalkthroughView()
+            }
             .navigationDestination(for: MatchHistoryLink.self) { _ in
                 MatchHistoryListView(viewModel: dependencies.makeMatchHistoryViewModel())
             }

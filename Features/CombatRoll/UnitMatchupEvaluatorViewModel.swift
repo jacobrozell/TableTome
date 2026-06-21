@@ -104,6 +104,11 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
         return CombatMatchupBuffCatalog.aggregateModifiers(from: matchupBuffs, enabledIds: enabledBuffIds).wardTarget
     }
 
+    var activeInvulnTarget: Int? {
+        guard CombatRollEngineRouter.rulesEdition(for: gameSystemId) == .wh40k11e else { return nil }
+        return selectedDefenderUnit?.invulnerableSave
+    }
+
     func load() async {
         do {
             let catalog = try await catalogRepository.loadCatalog()
@@ -341,6 +346,7 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
 
         let mods = CombatMatchupBuffCatalog.aggregateModifiers(from: matchupBuffs, enabledIds: enabledBuffIds)
         let options = resolvedRollOptions()
+        let invulnTarget = activeInvulnTarget
         return AttackRollInput(
             hitTarget: weapon.hit,
             woundTarget: weapon.wound,
@@ -353,8 +359,8 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
             hitModifier: mods.hit,
             woundModifier: mods.wound,
             saveModifier: mods.save,
-            wardTarget: mods.wardTarget,
-            wardRoll: mods.wardTarget == nil ? nil : wardRoll,
+            wardTarget: invulnTarget ?? mods.wardTarget,
+            wardRoll: (invulnTarget ?? mods.wardTarget) == nil ? nil : wardRoll,
             critAutoWound: options.critAutoWound,
             critMortal: options.critMortal,
             mortalDamage: options.mortalDamage

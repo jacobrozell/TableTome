@@ -85,9 +85,11 @@ extension GameSystemId {
                 ),
                 capabilities: PlayCapabilities(
                     showsGuidedMatch: true,
+                    showsCombatResolver: true,
                     showsVictoryPoints: true,
                     showsWh40kDeploymentChecklist: true,
                     showsDedicatedCombatTab: false,
+                    usesWh40k11eCombatRollEngine: true,
                     ruleCategories: [.core, .glossary],
                     showsNewEditionBadge: true
                 ),
@@ -104,7 +106,7 @@ extension GameSystemId {
                     ),
                     gameGuideBrowseTitle: String(localized: "40k Guide"),
                     searchEmptyStateHint: String(
-                        localized: "No matches — try fewer words or a term like “objective control” or “rend”."
+                        localized: "No matches — try fewer words or a term like \"objective control\" or \"AP\"."
                     ),
                     displayName: String(localized: "Warhammer 40,000"),
                     searchPickerLabel: String(localized: "Warhammer 40,000: 11th Edition"),
@@ -150,7 +152,7 @@ extension GameSystemId {
                     showsCombatResolver: true,
                     showsVictoryPoints: true,
                     showsCombatPatrolMode: true,
-                    usesWh40kCombatRollEngine: true,
+                    usesWh40k10eCombatRollEngine: true,
                     scoringRuleSectionId: "cp-scoring",
                     ruleCategories: [.core, .combatPatrol, .glossary]
                 ),

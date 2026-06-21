@@ -32,40 +32,68 @@ struct HomeNewPlayerChooserCard: View {
             .buttonStyle(.bordered)
             .accessibilityIdentifier("home.chooser.boxHelper")
 
-            chooserRow(
-                title: String(localized: "I bought a Warhammer 40,000 starter box"),
-                detail: String(localized: "Small box-set battles — best if your box says Combat Patrol"),
-                systemImage: "shippingbox.fill",
-                gameSystemId: GameSystemId.wh40k10eCp.rawValue,
-                identifier: "home.chooser.combatPatrol",
-                showsRecommendedBadge: true,
-                recommendedBadgeLabel: String(localized: "If box says Combat Patrol")
-            )
+            if ReleaseSurface.isGameSystemIdVisible(GameSystemId.wh40k10eCp.rawValue) {
+                chooserRow(
+                    title: String(localized: "I bought a Warhammer 40,000 starter box"),
+                    detail: String(localized: "Small box-set battles — best if your box says Combat Patrol"),
+                    systemImage: "shippingbox.fill",
+                    gameSystemId: GameSystemId.wh40k10eCp.rawValue,
+                    identifier: "home.chooser.combatPatrol",
+                    showsRecommendedBadge: true,
+                    recommendedBadgeLabel: String(localized: "If box says Combat Patrol")
+                )
+            }
 
-            chooserRow(
-                title: String(localized: "I bought an Age of Sigmar starter box"),
-                detail: String(localized: "Fast intro battles — look for Spearhead on the box"),
-                systemImage: "shield.lefthalf.filled",
-                gameSystemId: GameSystemId.aosSpearhead.rawValue,
-                identifier: "home.chooser.spearhead",
-                showsRecommendedBadge: true
-            )
+            if ReleaseSurface.isGameSystemIdVisible(GameSystemId.aosSpearhead.rawValue) {
+                chooserRow(
+                    title: String(localized: "I bought an Age of Sigmar starter box"),
+                    detail: String(localized: "Fast intro battles — look for Spearhead on the box"),
+                    systemImage: "shield.lefthalf.filled",
+                    gameSystemId: GameSystemId.aosSpearhead.rawValue,
+                    identifier: "home.chooser.spearhead",
+                    showsRecommendedBadge: true
+                )
+            }
 
-            chooserRow(
-                title: String(localized: "I play full Warhammer 40,000"),
-                detail: String(localized: "Larger armies and the current 11th Edition rules"),
-                systemImage: "scope",
-                gameSystemId: GameSystemId.wh40k11e.rawValue,
-                identifier: "home.chooser.wh40k11e"
-            )
+            if ReleaseSurface.isGameSystemIdVisible(GameSystemId.wh40k11e.rawValue) {
+                chooserRow(
+                    title: String(localized: "I bought a Warhammer 40,000 Battleforce"),
+                    detail: String(
+                        localized: "11th Edition single-faction box — Astra Militarum, Tyranids, Chaos, or Necrons"
+                    ),
+                    systemImage: "shippingbox",
+                    gameSystemId: GameSystemId.wh40k11e.rawValue,
+                    identifier: "home.chooser.wh40k11eBattleforce"
+                )
 
-            chooserRow(
-                title: String(localized: "I'm trying StarCraft: The Miniatures Game"),
-                detail: String(localized: "Terran vs Zerg starter — no prior wargame needed"),
-                systemImage: "gamecontroller.fill",
-                gameSystemId: GameSystemId.scTmg.rawValue,
-                identifier: "home.chooser.scTmg"
-            )
+                chooserRow(
+                    title: String(localized: "I have Warhammer 40,000: Armageddon"),
+                    detail: String(localized: "11th Edition launch box — Space Marines vs Orks with mission cards"),
+                    systemImage: "shippingbox.fill",
+                    gameSystemId: GameSystemId.wh40k11e.rawValue,
+                    identifier: "home.chooser.wh40k11eArmageddon",
+                    showsRecommendedBadge: true,
+                    recommendedBadgeLabel: String(localized: "Launch box")
+                )
+
+                chooserRow(
+                    title: String(localized: "I play full Warhammer 40,000"),
+                    detail: String(localized: "Larger armies at 1,000+ points — any faction, 11th Edition rules"),
+                    systemImage: "scope",
+                    gameSystemId: GameSystemId.wh40k11e.rawValue,
+                    identifier: "home.chooser.wh40k11e"
+                )
+            }
+
+            if ReleaseSurface.isGameSystemIdVisible(GameSystemId.scTmg.rawValue) {
+                chooserRow(
+                    title: String(localized: "I'm trying StarCraft: The Miniatures Game"),
+                    detail: String(localized: "Terran vs Zerg starter — no prior wargame needed"),
+                    systemImage: "gamecontroller.fill",
+                    gameSystemId: GameSystemId.scTmg.rawValue,
+                    identifier: "home.chooser.scTmg"
+                )
+            }
 
             Text(
                 String(

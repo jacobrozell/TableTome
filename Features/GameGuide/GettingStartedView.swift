@@ -33,6 +33,29 @@ struct GettingStartedView: View {
                 }
             }
 
+            if gameSystem.id == "wh40k-11e" {
+                Section {
+                    Wh40k11eWhatYouNeedCard()
+                }
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(Color.clear)
+
+                Section {
+                    NavigationLink(value: Wh40k11eSampleTurnLink()) {
+                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                            Label(String(localized: "Preview a 40k Turn"), systemImage: "play.circle")
+                                .font(.headline)
+                            Text(String(localized: "~3 minutes — Command through Fight with 11e rules"))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                        .contentShape(Rectangle())
+                    }
+                    .accessibilityIdentifier("guide.gettingStarted.wh40k11eSampleTurn")
+                }
+            }
+
             if gameSystem.id == "aos-spearhead" {
                 Section {
                     WhatYouNeedCard()

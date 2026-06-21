@@ -1,7 +1,7 @@
 import Foundation
 
-/// 10th Edition Combat Patrol hit / wound / save predicates — not used for 11e.
-public enum Wh40k10eCombatRollResolution: Sendable {
+/// 11th Edition Warhammer 40,000 hit / wound / save predicates — not shared with Combat Patrol (10e).
+public enum Wh40k11eCombatRollResolution: Sendable {
     public static func effectiveHit(_ input: AttackRollInput) -> Int {
         input.hitRoll + input.hitModifier
     }
@@ -10,7 +10,7 @@ public enum Wh40k10eCombatRollResolution: Sendable {
         input.woundRoll + input.woundModifier
     }
 
-    /// `rend` stores AP magnitude — higher AP worsens the required save.
+    /// `rend` stores AP magnitude — higher AP worsens the required armour save.
     public static func saveNeededOnDice(saveTarget: Int, ap: Int, saveModifier: Int) -> Int {
         min(7, max(2, saveTarget + ap - saveModifier))
     }
@@ -35,8 +35,19 @@ public enum Wh40k10eCombatRollResolution: Sendable {
         input.mortalDamage
     }
 
-    public static func saveSucceeded(_ input: AttackRollInput) -> Bool {
+    /// Armour save only — invulnerable save is evaluated separately.
+    public static func armourSaveSucceeded(_ input: AttackRollInput) -> Bool {
         input.saveRoll != 1 && input.saveRoll >= effectiveSaveNeeded(input)
+    }
+
+    /// Invulnerable save ignores AP; stored in `wardTarget` / `wardRoll` for roll input.
+    public static func invulnerableSaveSucceeded(_ input: AttackRollInput) -> Bool {
+        guard let target = input.wardTarget, let roll = input.wardRoll else { return false }
+        return roll != 1 && roll >= target
+    }
+
+    public static func saveSucceeded(_ input: AttackRollInput) -> Bool {
+        armourSaveSucceeded(input) || invulnerableSaveSucceeded(input)
     }
 
     public static func damageWouldBeDealt(_ input: AttackRollInput) -> Bool {

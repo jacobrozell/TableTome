@@ -9,6 +9,36 @@ struct BoxIdentificationSheet: View {
     @State private var genre: Genre?
     @State private var sciFiBoxKind: SciFiBoxKind?
     @State private var isCombatPatrolBox: Bool?
+    @State private var sciFiStarterFormat: SciFiStarterFormat?
+
+    enum SciFiStarterFormat: String, CaseIterable, Identifiable {
+        case armageddon
+        case battleforce
+
+        var id: String { rawValue }
+
+        var label: String {
+            switch self {
+            case .armageddon:
+                String(localized: "Armageddon — Space Marines vs Orks")
+            case .battleforce:
+                String(localized: "Battleforce — one faction army box")
+            }
+        }
+
+        var detail: String {
+            switch self {
+            case .armageddon:
+                String(localized: "Two-player launch box with mission decks and datasheet cards")
+            case .battleforce:
+                String(
+                    localized: """
+                    Astra Militarum, Tyranids, Chaos Space Marines, or Necrons — build one army for matched play
+                    """
+                )
+            }
+        }
+    }
 
     enum Genre: String, CaseIterable, Identifiable {
         case fantasy
@@ -57,9 +87,11 @@ struct BoxIdentificationSheet: View {
         case .sciFi:
             switch sciFiBoxKind {
             case .starter:
-                return isCombatPatrolBox == true
-                    ? GameSystemId.wh40k10eCp.rawValue
-                    : GameSystemId.wh40k11e.rawValue
+                if isCombatPatrolBox == true,
+                   ReleaseSurface.isGameSystemIdVisible(GameSystemId.wh40k10eCp.rawValue) {
+                    return GameSystemId.wh40k10eCp.rawValue
+                }
+                return GameSystemId.wh40k11e.rawValue
             case .full:
                 return GameSystemId.wh40k11e.rawValue
             case nil:
@@ -70,19 +102,30 @@ struct BoxIdentificationSheet: View {
         }
     }
 
+    private var combatPatrolFallbackActive: Bool {
+        genre == .sciFi
+            && sciFiBoxKind == .starter
+            && isCombatPatrolBox == true
+            && !ReleaseSurface.showsCombatPatrol
+    }
+
+    private var visibleGenres: [Genre] {
+        Genre.allCases.filter { genre in
+            switch genre {
+            case .fantasy:
+                ReleaseSurface.isGameSystemIdVisible(GameSystemId.aosSpearhead.rawValue)
+            case .sciFi:
+                ReleaseSurface.isGameSystemIdVisible(GameSystemId.wh40k11e.rawValue)
+            case .starCraft:
+                ReleaseSurface.isGameSystemIdVisible(GameSystemId.scTmg.rawValue)
+            }
+        }
+    }
+
     var body: some View {
         NavigationStack {
             Form {
-                switch step {
-                case 0:
-                    genreStep
-                case 1:
-                    sciFiSizeStep
-                case 2:
-                    combatPatrolStep
-                default:
-                    resultStep
-                }
+                currentStepContent
             }
             .navigationTitle(String(localized: "Which box do I have?"))
             .navigationBarTitleDisplayMode(.inline)
@@ -99,13 +142,36 @@ struct BoxIdentificationSheet: View {
         }
     }
 
+    @ViewBuilder
+    private var currentStepContent: some View {
+        switch step {
+        case 0:
+            genreStep
+        case 1:
+            sciFiSizeStep
+        case 2:
+            if sciFiBoxKind == .starter {
+                if ReleaseSurface.showsCombatPatrol, isCombatPatrolBox == nil {
+                    combatPatrolStep
+                } else {
+                    starterFormatStep
+                }
+            } else {
+                resultStep
+            }
+        default:
+            resultStep
+        }
+    }
+
     private var genreStep: some View {
         Section {
-            ForEach(Genre.allCases) { option in
+            ForEach(visibleGenres) { option in
                 Button {
                     genre = option
                     sciFiBoxKind = nil
                     isCombatPatrolBox = nil
+                    sciFiStarterFormat = nil
                     step = option == .sciFi ? 1 : 3
                 } label: {
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
@@ -134,7 +200,14 @@ struct BoxIdentificationSheet: View {
                 Button {
                     sciFiBoxKind = kind
                     isCombatPatrolBox = kind == .full ? false : nil
-                    step = kind == .starter ? 2 : 3
+                    sciFiStarterFormat = kind == .full ? nil : nil
+                    if kind == .starter, ReleaseSurface.showsCombatPatrol {
+                        step = 2
+                    } else if kind == .starter {
+                        step = 2
+                    } else {
+                        step = 3
+                    }
                 } label: {
                     Text(kind.label)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -145,15 +218,49 @@ struct BoxIdentificationSheet: View {
         }
     }
 
+    private var starterFormatStep: some View {
+        Section {
+            ForEach(SciFiStarterFormat.allCases) { format in
+                Button {
+                    sciFiStarterFormat = format
+                    step = 3
+                } label: {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                        Text(format.label)
+                            .font(.headline)
+                            .foregroundStyle(.primary)
+                        Text(format.detail)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.leading)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.vertical, DesignTokens.Spacing.xs)
+                }
+            }
+        } header: {
+            Text(String(localized: "Which 40k starter box?"))
+        } footer: {
+            Text(
+                String(
+                    localized: """
+                    Combat Patrol is a different format — go back if your box says Combat Patrol on the cover.
+                    """
+                )
+            )
+        }
+    }
+
     private var combatPatrolStep: some View {
         Section {
             Button(String(localized: "Yes — Combat Patrol on the cover")) {
                 isCombatPatrolBox = true
+                sciFiStarterFormat = nil
                 step = 3
             }
             Button(String(localized: "No — different starter format")) {
                 isCombatPatrolBox = false
-                step = 3
+                step = 2
             }
         } header: {
             Text(String(localized: "Does the box say Combat Patrol?"))
@@ -178,20 +285,48 @@ struct BoxIdentificationSheet: View {
             } header: {
                 Text(String(localized: "We suggest"))
             } footer: {
-                Text(String(localized: "You can change this anytime from the chooser on Play."))
+                if combatPatrolFallbackActive {
+                    Text(
+                        String(
+                            localized: """
+                            Combat Patrol mode is not available in this build yet — we suggest full 40k 11th Edition \
+                            Guided Match for starter-box play.
+                            """
+                        )
+                    )
+                } else {
+                    Text(String(localized: "You can change this anytime from the chooser on Play."))
+                }
             }
         }
     }
 
     private func goBack() {
         switch step {
+        case 3:
+            if sciFiStarterFormat != nil {
+                sciFiStarterFormat = nil
+                step = 2
+            } else if isCombatPatrolBox == true {
+                isCombatPatrolBox = nil
+                step = 2
+            } else if sciFiBoxKind != nil {
+                step = 1
+                sciFiBoxKind = nil
+                isCombatPatrolBox = nil
+            } else {
+                step = 0
+                genre = nil
+            }
         case 2:
             step = 1
+            sciFiStarterFormat = nil
             isCombatPatrolBox = nil
         case 1:
             step = 0
             genre = nil
             sciFiBoxKind = nil
+            sciFiStarterFormat = nil
         default:
             break
         }
@@ -223,9 +358,25 @@ struct BoxIdentificationSheet: View {
                 String(localized: "Small sci-fi starter box with missions and a battle tracker.")
             )
         case GameSystemId.wh40k11e.rawValue:
+            if sciFiStarterFormat == .armageddon {
+                return (
+                    String(localized: "Warhammer 40,000: Armageddon"),
+                    String(localized: "11th Edition launch box — tap Use Starter Matchup for both armies.")
+                )
+            }
+            if sciFiStarterFormat == .battleforce {
+                return (
+                    String(localized: "Warhammer 40,000 — Battleforce"),
+                    String(
+                        localized: """
+                        Pick your Battleforce army in Guided Match — Astra Militarum, Tyranids, Chaos Space Marines, or Necrons.
+                        """
+                    )
+                )
+            }
             return (
                 String(localized: "Warhammer 40,000"),
-                String(localized: "Full 40k rules for larger armies — not the Combat Patrol format.")
+                String(localized: "11th Edition matched play — Armageddon, Battleforces, or your own lists.")
             )
         case GameSystemId.scTmg.rawValue:
             return (

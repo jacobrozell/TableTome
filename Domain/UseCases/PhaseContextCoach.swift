@@ -7,11 +7,11 @@ public enum PhaseContextCoach {
         gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId
     ) -> [String] {
         let context = GameSystemPlayContext.context(for: gameSystemId)
+        if context.isWh40k11e {
+            return wh40k11eQuickTips(for: phase)
+        }
         if context.isCombatPatrol {
             return combatPatrolQuickTips(for: phase)
-        }
-        if context.isWh40k11e {
-            return wh40kQuickTips(for: phase)
         }
         if context.isStarCraft {
             return starCraftQuickTips(for: phase)
@@ -49,13 +49,55 @@ public enum PhaseContextCoach {
                 )
             ]
         case .shooting, .charge, .combat, .anyCombat:
-            wh40kQuickTips(for: phase)
+            wh40k10eQuickTips(for: phase)
         case .deployment, .enemyMovement, .endOfAnyTurn, .assault, .scoring, .hero:
             []
         }
     }
 
-    private static func wh40kQuickTips(for phase: BattleTurnPhase) -> [String] {
+    private static func wh40k11eQuickTips(for phase: BattleTurnPhase) -> [String] {
+        switch phase {
+        case .command:
+            [
+                String(localized: "Both players gain 1 Core Command Point at the start of the Command phase."),
+                String(
+                    localized: """
+                    The active player tests Battle-shock for units at or below Half-strength and units already Battle-shocked.
+                    """
+                )
+            ]
+        case .movement:
+            [
+                String(localized: "Move up to the unit's Move characteristic — units must end in coherency."),
+                String(localized: "Fall Back blocks shooting and charging this turn; Battle-shocked units may use Desperate Escape."),
+                String(localized: "Overwatch happens at the end of the Movement phase — not during Charges.")
+            ]
+        case .shooting:
+            [
+                String(localized: "Cover imposes -1 Ballistic Skill when every target model has cover."),
+                String(localized: "Indirect Fire needs 6+ to hit unless your unit stayed still and a friendly unit can see the target (4+).")
+            ]
+        case .charge:
+            [
+                String(localized: "Roll 2D6 first, then pick enemy unit(s) within 12 inches you can reach."),
+                String(localized: "Engagement range is 2 inches horizontally and 5 inches vertically — a failed charge leaves the unit in place.")
+            ]
+        case .combat, .anyCombat:
+            [
+                String(localized: "All pile-ins resolve before any fights — you pick the first unit to fight."),
+                String(localized: "After fights, consolidate up to 3 inches — Ongoing, Engaging, or Objective mode.")
+            ]
+        case .endOfTurn:
+            [
+                String(localized: "Remove models from out-of-coherency units until coherency is restored."),
+                String(localized: "Track secondary VP scored this turn, then pass the device.")
+            ]
+        case .deployment, .enemyMovement, .endOfAnyTurn, .assault, .scoring, .hero:
+            []
+        }
+    }
+
+    private static func wh40k10eQuickTips(for phase: BattleTurnPhase) -> [String] {
         switch phase {
         case .command:
             [

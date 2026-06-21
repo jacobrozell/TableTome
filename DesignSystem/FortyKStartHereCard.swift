@@ -28,17 +28,19 @@ struct FortyKStartHereCard: View {
             .foregroundStyle(.secondary)
             .fixedSize(horizontal: false, vertical: true)
 
-            NavigationLink(value: GettingStartedLink(gameSystemId: GameSystemId.wh40k10eCp.rawValue)) {
-                Label(
-                    String(localized: "Have a Combat Patrol box instead?"),
-                    systemImage: "shippingbox"
-                )
-                .font(.caption.weight(.medium))
-                .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+            if ReleaseSurface.isGameSystemIdVisible(GameSystemId.wh40k10eCp.rawValue) {
+                NavigationLink(value: GettingStartedLink(gameSystemId: GameSystemId.wh40k10eCp.rawValue)) {
+                    Label(
+                        String(localized: "Have a Combat Patrol box instead?"),
+                        systemImage: "shippingbox"
+                    )
+                    .font(.caption.weight(.medium))
+                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(Color.accentColor)
+                .accessibilityIdentifier("guide.wh40k.combatPatrolCrossLink")
             }
-            .buttonStyle(.plain)
-            .foregroundStyle(Color.accentColor)
-            .accessibilityIdentifier("guide.wh40k.combatPatrolCrossLink")
 
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                 newPlayerTrack
@@ -86,20 +88,27 @@ struct FortyKStartHereCard: View {
                 .font(.subheadline.weight(.semibold))
             TappableGuidePathStep(
                 number: 1,
+                title: String(localized: "Preview a 40k Turn"),
+                detail: String(localized: "Six phases — Command through Fight, with 11e charge and pile-in rules."),
+                destination: Wh40k11eSampleTurnLink(),
+                accessibilityId: "guide.wh40k.path.new.sampleTurn"
+            )
+            TappableGuidePathStep(
+                number: 2,
                 title: String(localized: "Getting Started"),
                 detail: String(localized: "What you need, army size, and how a turn works."),
                 destination: GettingStartedLink(gameSystemId: gameSystem.id),
                 accessibilityId: "guide.wh40k.path.new.gettingStarted"
             )
             TappableGuidePathStep(
-                number: 2,
+                number: 3,
                 title: GameSystemRulesLabels.rulesReferenceLinkTitle(gameSystemId: gameSystem.id),
                 detail: String(localized: "Search turn phases, combat, and glossary terms."),
                 destination: RulesReferenceBrowseLink(gameSystemId: gameSystem.id),
                 accessibilityId: "guide.wh40k.path.new.rules"
             )
             TappableGuidePathStep(
-                number: 3,
+                number: 4,
                 title: String(localized: "Guided Match"),
                 detail: String(localized: "Armageddon starter matchup with datasheets and battle tracker."),
                 destination: GuidedMatchLink(gameSystemId: .wh40k11e),

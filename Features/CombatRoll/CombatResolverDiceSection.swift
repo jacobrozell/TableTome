@@ -39,8 +39,11 @@ struct CombatResolverDiceSection: View {
                 )
             }
             if let save = viewModel.selectedDefenderUnit?.save {
+                let saveLabel = CombatRollEngineRouter.rulesEdition(for: viewModel.gameSystemId) == .wh40k11e
+                    ? String(localized: "Armour save roll (\(save)+)")
+                    : String(localized: "Save roll (\(save)+)")
                 diceField(
-                    label: String(localized: "Save roll (\(save)+)"),
+                    label: saveLabel,
                     value: $viewModel.saveRoll,
                     coachingHint: viewModel.rollCoachingInput.map {
                         DiceRollCoach.saveHint(input: $0, gameSystemId: viewModel.gameSystemId)
@@ -50,7 +53,18 @@ struct CombatResolverDiceSection: View {
                     onRoll: { viewModel.rollSave() }
                 )
             }
-            if viewModel.activeWardTarget != nil,
+            if let invuln = viewModel.activeInvulnTarget {
+                diceField(
+                    label: String(localized: "Invulnerable save roll (\(invuln)+)"),
+                    value: $viewModel.wardRoll,
+                    coachingHint: viewModel.rollCoachingInput.flatMap {
+                        DiceRollCoach.invulnHint(input: $0)
+                    },
+                    accessibilityId: "\(accessibilityPrefix).invulnRoll",
+                    rollAccessibilityId: "\(accessibilityPrefix).roll.invuln",
+                    onRoll: { viewModel.rollWard() }
+                )
+            } else if viewModel.activeWardTarget != nil,
                !CombatRollEngineRouter.usesWh40kRules(gameSystemId: viewModel.gameSystemId),
                let ward = viewModel.activeWardTarget {
                 diceField(

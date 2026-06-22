@@ -96,13 +96,7 @@ struct HomeNewPlayerChooserCard: View {
                 )
             }
 
-            Text(
-                String(
-                    localized: """
-                    Models & Lists tabs are for tracking painted armies later — skip them until after your first game.
-                    """
-                )
-            )
+            Text(newPlayerChooserFooter)
             .font(.caption)
             .foregroundStyle(.tertiary)
             .fixedSize(horizontal: false, vertical: true)
@@ -171,6 +165,21 @@ struct HomeNewPlayerChooserCard: View {
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier(identifier)
+    }
+
+    private var newPlayerChooserFooter: String {
+        if ReleaseSurface.showsMusterTab {
+            return String(
+                localized: """
+                Models & Lists tabs are for tracking painted armies later — skip them until after your first game.
+                """
+            )
+        }
+        return String(
+            localized: """
+            The Models tab is for tracking painted armies later — skip it until after your first game.
+            """
+        )
     }
 
     private func openGameGuide(gameSystemId: String) {

@@ -16,6 +16,7 @@ struct PaintListView: View {
     @Binding var showAdd: Bool
     @Binding var showFilters: Bool
     @Binding var showSettings: Bool
+    var preferSidebarSelection: Bool = false
     var onSelectPaint: (UUID) -> Void = { _ in }
 
     @State private var search = ""
@@ -29,12 +30,14 @@ struct PaintListView: View {
         showAdd: Binding<Bool>,
         showFilters: Binding<Bool>,
         showSettings: Binding<Bool>,
+        preferSidebarSelection: Bool = false,
         onSelectPaint: @escaping (UUID) -> Void = { _ in }
     ) {
         _selectedPaintId = selectedPaintId
         _showAdd = showAdd
         _showFilters = showFilters
         _showSettings = showSettings
+        self.preferSidebarSelection = preferSidebarSelection
         self.onSelectPaint = onSelectPaint
     }
 
@@ -55,7 +58,7 @@ struct PaintListView: View {
     }
 
     private var usesPadSidebarList: Bool {
-        AdaptiveLayout.usesSidebarListStyle(horizontalSizeClass)
+        AdaptiveLayout.usesSidebarListStyle(horizontalSizeClass, preferSelection: preferSidebarSelection)
     }
 
     var body: some View {

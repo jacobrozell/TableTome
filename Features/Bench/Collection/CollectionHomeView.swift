@@ -22,6 +22,7 @@ struct CollectionHomeView: View {
     @Binding var showAddArmy: Bool
     @Binding var showFilters: Bool
     @Binding var showSettings: Bool
+    var preferSidebarSelection: Bool = false
     var onSelectArmy: (UUID) -> Void = { _ in }
 
     @State private var search = ""
@@ -36,12 +37,14 @@ struct CollectionHomeView: View {
         showAddArmy: Binding<Bool>,
         showFilters: Binding<Bool>,
         showSettings: Binding<Bool>,
+        preferSidebarSelection: Bool = false,
         onSelectArmy: @escaping (UUID) -> Void = { _ in }
     ) {
         _selectedArmyId = selectedArmyId
         _showAddArmy = showAddArmy
         _showFilters = showFilters
         _showSettings = showSettings
+        self.preferSidebarSelection = preferSidebarSelection
         self.onSelectArmy = onSelectArmy
     }
 
@@ -56,7 +59,7 @@ struct CollectionHomeView: View {
     }
 
     private var usesPadSidebarList: Bool {
-        AdaptiveLayout.usesSidebarListStyle(horizontalSizeClass)
+        AdaptiveLayout.usesSidebarListStyle(horizontalSizeClass, preferSelection: preferSidebarSelection)
     }
 
     var body: some View {

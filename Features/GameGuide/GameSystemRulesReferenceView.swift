@@ -73,6 +73,7 @@ struct GameSystemRulesReferenceView: View {
                                 accessibilityId: "guide.rules.section.\(section.id)"
                             )
                         }
+                        .navigationLinkIndicatorVisibility(.hidden)
                     }
                 }
             }

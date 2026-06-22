@@ -12,6 +12,7 @@ public final class NearbyMatchSyncService: NSObject, ObservableObject, @unchecke
 
     @MainActor @Published public private(set) var role: Role = .idle
     @MainActor @Published public private(set) var statusMessage: String?
+    @MainActor @Published public private(set) var pendingJoinPeerName: String?
     @MainActor public var syncGameSystemId: String = "aos-spearhead"
 
     private static let serviceType = "tabletome-match"
@@ -81,6 +82,7 @@ public final class NearbyMatchSyncService: NSObject, ObservableObject, @unchecke
 
     @MainActor
     public func stop() {
+        declineJoinRequest()
         advertiser?.stopAdvertisingPeer()
         browser?.stopBrowsingForPeers()
         session?.disconnect()
@@ -90,6 +92,25 @@ public final class NearbyMatchSyncService: NSObject, ObservableObject, @unchecke
         hostCode = nil
         role = .idle
         statusMessage = nil
+    }
+
+    @MainActor
+    public func acceptJoinRequest() {
+        guard let pendingInvitationHandler else { return }
+        let peerName = pendingJoinPeerName
+        pendingInvitationHandler(true, session)
+        self.pendingInvitationHandler = nil
+        pendingJoinPeerName = nil
+        if let peerName {
+            statusMessage = String(localized: "Connecting to \(peerName)…")
+        }
+    }
+
+    @MainActor
+    public func declineJoinRequest() {
+        pendingInvitationHandler?(false, nil)
+        pendingInvitationHandler = nil
+        pendingJoinPeerName = nil
     }
 
     @MainActor
@@ -135,9 +156,8 @@ extension NearbyMatchSyncService: MCNearbyServiceAdvertiserDelegate {
         let name = peerID.displayName
         pendingInvitationHandler = invitationHandler
         Task { @MainActor in
-            pendingInvitationHandler?(true, session)
-            pendingInvitationHandler = nil
-            statusMessage = String(localized: "Connecting to \(name)…")
+            pendingJoinPeerName = name
+            statusMessage = String(localized: "\(name) wants to join. Approve or decline.")
         }
     }
 }

@@ -28,9 +28,11 @@ Simulator walkthrough (2026-06-20) from the perspective of an **App Store review
 
 | # | Severity | Area | Note |
 |---|----------|------|------|
-| A1 | P2 | Onboarding chooser navigation | `DesignSystem/HomeNewPlayerChooserCard.swift` and `Features/Home/BoxIdentificationSheet.swift` use the **same swallow-prone `NavigationLink` + `.simultaneousGesture` pattern** as the fixed Home cards, so their taps are likely flaky too. Not fixed here because the gesture also records `FirstSessionStore.recordOnboardingChoice` at tap-time (drives the new-player "continue → open your guide" nudge + roster prefill) — removing it would regress that funnel. Proper fix: convert to a `Button` that records the choice and pushes via a path/coordinator. Lower priority since the primary "All games" entry now works. |
+| A1 | ~~P2~~ **Fixed** | Onboarding / chooser copy | Gated Lists/Paints references in onboarding tab tour and new-player chooser footer — now respects `ReleaseSurface`. |
 | A2 | P2 | App Store Connect | Be prepared for a possible **GW-related metadata query**. Keep the App Store description's "unofficial / not affiliated" language consistent with the in-app disclaimer; avoid GW logos/box art in screenshots. |
 | A3 | P3 | SwiftLint | Build emits ~157 SwiftLint warnings (file/type/function length, line length, identifier names). Non-blocking for review, but worth a cleanup pass. |
+| A4 | ~~P1~~ **Fixed** | GitHub Pages | Privacy, support, accessibility, and index pages updated for v1.0 scope (2026-06-22). Deploy via Pages before submit. |
+| A5 | ~~P2~~ **Fixed** | Nearby sync | Host auto-accepted peer joins; now requires explicit approval in `MatchSyncSheet`. |
 
 ---
 

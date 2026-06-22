@@ -110,6 +110,56 @@ final class TabletomeLayoutTests: XCTestCase {
     }
 
     @MainActor
+    func testPhoneLandscapeRegularWidthDoesNotUsePadSplitNavigation() {
+        XCTAssertEqual(
+            TabletomeLayout.context(
+                idiom: .phone,
+                horizontalSizeClass: .regular,
+                verticalSizeClass: .compact
+            ),
+            .phoneLandscape
+        )
+        XCTAssertFalse(
+            TabletomeLayout.context(
+                idiom: .phone,
+                horizontalSizeClass: .regular,
+                verticalSizeClass: .compact
+            ).usesPadSplitNavigation
+        )
+        #if os(iOS)
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            XCTAssertFalse(AdaptiveLayout.usesSplitNavigation(.regular))
+            XCTAssertFalse(AdaptiveLayout.usesSidebarListStyle(.regular))
+        }
+        #endif
+    }
+
+    @MainActor
+    func testPadLandscapeUsesPadSplitNavigationWhenWidthIsRegular() {
+        XCTAssertEqual(
+            TabletomeLayout.context(
+                idiom: .pad,
+                horizontalSizeClass: .regular,
+                verticalSizeClass: .compact
+            ),
+            .padLandscape
+        )
+        XCTAssertTrue(
+            TabletomeLayout.context(
+                idiom: .pad,
+                horizontalSizeClass: .regular,
+                verticalSizeClass: .compact
+            ).usesPadSplitNavigation
+        )
+        #if os(iOS)
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            XCTAssertTrue(AdaptiveLayout.usesSplitNavigation(.regular))
+            XCTAssertTrue(AdaptiveLayout.usesSidebarListStyle(.regular))
+        }
+        #endif
+    }
+
+    @MainActor
     func testAdaptiveLayoutSplitRequiresPadIdiomOnPhoneSimulator() {
         #if os(iOS)
         if UIDevice.current.userInterfaceIdiom == .phone {
@@ -117,5 +167,11 @@ final class TabletomeLayoutTests: XCTestCase {
             XCTAssertFalse(AdaptiveLayout.usesSidebarListStyle(.regular))
         }
         #endif
+    }
+
+    @MainActor
+    func testSplitSidebarUsesSelectionStyleWhenPreferredEvenIfCompactWidth() {
+        XCTAssertFalse(AdaptiveLayout.usesSidebarListStyle(.compact))
+        XCTAssertTrue(AdaptiveLayout.usesSidebarListStyle(.compact, preferSelection: true))
     }
 }

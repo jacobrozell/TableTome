@@ -23,11 +23,11 @@
 
 - [ ] VoiceOver pass on Play + Rules + Models tabs
 - [ ] Dynamic Type AXXXL on step detail and Guided Match hub tabs
-- [ ] iPhone Pro Max landscape — Models uses stack navigation (no split view)
-- [ ] Return to battle (Play continue card) opens Battle hub with embedded tracker
-- [ ] Guided Match battle tab landscape — scrollable content with tab bar hidden
-- [ ] Settings legal links open (GitHub Pages)
-- [ ] Reset guide progress works
+- [ ] iPhone Pro Max landscape — Models uses stack navigation (no split view) — logic verified in `TabletomeLayoutTests`; manual spot-check recommended
+- [ ] Guided Match battle tab landscape — scrollable content with tab bar hidden — `usesPhoneLandscapeBattleImmersion` + `PhoneTabBarOnlyStyle`
+- [ ] iPad portrait/landscape — Collection split view + Guided Match `NavigationSplitView`; iPad split smoke-tested 2026-06-22
+- [ ] Settings legal links open (GitHub Pages — updated 2026-06-22 for v1.0)
+- [ ] Replay app tour and battle tracker tips from Settings
 
 ## TestFlight upload
 

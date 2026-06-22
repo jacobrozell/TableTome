@@ -10,7 +10,7 @@ struct PaintRow: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     private var usesStackedLayout: Bool {
-        dynamicTypeSize.isAccessibilitySize || horizontalSizeClass == .regular
+        dynamicTypeSize.isAccessibilitySize || AdaptiveLayout.usesSidebarListStyle(horizontalSizeClass)
     }
 
     var body: some View {

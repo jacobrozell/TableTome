@@ -112,6 +112,7 @@ struct RulesReferenceView: View {
                                         accessibilityId: "rules.section.\(section.id)"
                                     )
                                 }
+                                .navigationLinkIndicatorVisibility(.hidden)
                             }
                         }
                     }

@@ -169,26 +169,14 @@ struct GameSystemDetailView: View {
                         } else if playContext.isSpearhead {
                             Text(String(localized: "New to a term? Open AoS Glossary under Table Reference."))
                         } else if playContext.isWh40k11e {
-                            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                                if !ReleaseSurface.showsCombatResolver(for: gameSystemId) {
-                                    Text(
-                                        String(
-                                            localized: """
-                                            Dice combat resolution for full 40k battles is coming soon. Turn tracking, \
-                                            phases, and victory points work in Guided Match today.
-                                            """
-                                        )
-                                    )
-                                }
-                                Text(
-                                    String(
-                                        localized: """
-                                        Use Guided Match for the Armageddon starter matchup, or browse all factions \
-                                        in army selection.
-                                        """
-                                    )
+                            Text(
+                                String(
+                                    localized: """
+                                    Use Guided Match for the Armageddon starter matchup, or browse all factions \
+                                    in army selection.
+                                    """
                                 )
-                            }
+                            )
                         } else if playContext.isCombatPatrol {
                             Text(
                                 String(

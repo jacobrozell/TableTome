@@ -36,6 +36,7 @@ struct TappableGuidePathStep<D: Hashable>: View {
             .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
             .contentShape(Rectangle())
         }
+        .navigationLinkIndicatorVisibility(.hidden)
         .buttonStyle(.plain)
         .accessibilityIdentifier(accessibilityId)
     }

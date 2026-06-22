@@ -76,7 +76,9 @@ struct RootTabView: View {
                     title: String(localized: "Rules"),
                     systemImage: ReleaseSurface.showsRulesAssistant ? "magnifyingglass" : "doc.text.fill",
                     identifier: ReleaseSurface.showsRulesAssistant ? "tab.rulesSearch" : "tab.rules",
-                    accessibilityLabel: String(localized: "Rules Search, look up rules for your game")
+                    accessibilityLabel: ReleaseSurface.showsRulesAssistant
+                        ? String(localized: "Rules Search, look up rules for your game")
+                        : String(localized: "Rules, browse reference for your game")
                 )
             }
             .tag(AppTab.search)

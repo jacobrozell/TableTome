@@ -52,19 +52,23 @@ struct PaintsTab: View {
         }
     }
 
-    private func paintList(onSelectPaint: @escaping (UUID) -> Void) -> some View {
+    private func paintList(
+        preferSidebarSelection: Bool,
+        onSelectPaint: @escaping (UUID) -> Void
+    ) -> some View {
         PaintListView(
             selectedPaintId: $selectedPaintId,
             showAdd: $showAdd,
             showFilters: $showFilters,
             showSettings: $showHobbySettings,
+            preferSidebarSelection: preferSidebarSelection,
             onSelectPaint: onSelectPaint
         )
     }
 
     private var splitView: some View {
         NavigationSplitView {
-            paintList { _ in }
+            paintList(preferSidebarSelection: true) { _ in }
                 .navigationSplitViewColumnWidth(min: sidebarWidth.min, ideal: sidebarWidth.ideal, max: sidebarWidth.max)
         } detail: {
             if let id = selectedPaintId {
@@ -94,7 +98,7 @@ struct PaintsTab: View {
 
     private var compactView: some View {
         NavigationStack(path: $compactPath) {
-            paintList { selectedPaintId = $0 }
+            paintList(preferSidebarSelection: false) { selectedPaintId = $0 }
                 .navigationDestination(for: PaintRoute.self) { route in
                     if case .paint(let paintId) = route {
                         PaintDetailView(paintId: paintId)

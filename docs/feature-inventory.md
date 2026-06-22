@@ -13,8 +13,8 @@ What the build exposes today vs planned. Updated when release surface changes.
 | Battle phase tracker | **shipped** | 1.0.0 | Phase-filtered unit ability reminders |
 | Rules reference browser | **shipped** | 1.0.0 | Filter, search, related links |
 | Models (Collection) | **shipped** | 1.0.0 | Miniature tracking |
-| Roll evaluator | **shipped** | 1.0.0 | Spearhead (AoS engine) |
-| 40k 11e combat resolver | gated | 1.0.x | `-enable_wh40k11e_combat_resolver`; `Wh40k11eCombatRollEngine` |
+| Roll evaluator | **shipped** | 1.0.0 | Spearhead (AoS) + 40k 11e (`Wh40k11eCombatRollEngine`) |
+| 40k 11e combat resolver | **shipped** | 1.0.0 | Guided Match battle tracker + standalone resolver link |
 | Match history | **shipped** | 1.0.0 | Local match log |
 | Settings & legal links | **shipped** | 1.0.0 | GitHub Pages docs |
 | Paints inventory | gated | post-1.0 | `-enable_full_product_surface` |

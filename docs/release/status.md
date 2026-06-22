@@ -13,7 +13,7 @@ Shipped in TestFlight without launch arguments:
 
 - **Tabs:** Models (Collection only), Play, Rules, Settings
 - **Game systems:** Age of Sigmar Spearhead, Warhammer 40,000 11th Edition
-- **Play:** Guided Match, battle tracker, match history, Spearhead combat resolver (11e resolver gated)
+- **Play:** Guided Match, battle tracker, match history, combat resolver (Spearhead + 40k 11e)
 
 Gated until after 1.0.0 polish (see [ReleaseSurfaceSpec.md](../../specs/ReleaseSurfaceSpec.md)):
 

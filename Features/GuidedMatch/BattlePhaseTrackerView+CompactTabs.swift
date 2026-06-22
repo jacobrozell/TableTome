@@ -84,7 +84,6 @@ extension BattlePhaseTrackerView {
                     damageUndoSection
                     combatPhaseHelper
                     shootInCombatPhaseHelper
-                    wh40k11eResolverComingSoonSection
                     combatResolverSection()
                 }
             }
@@ -122,31 +121,6 @@ extension BattlePhaseTrackerView {
            viewModel.trackerState.currentPhase == .combat
             || viewModel.trackerState.currentPhase == .anyCombat {
             PileInGuideCard()
-        }
-    }
-
-    @ViewBuilder
-    var wh40k11eResolverComingSoonSection: some View {
-        if viewModel.gameSystemId == .wh40k11e,
-           supportsBattleTracker,
-           !ReleaseSurface.showsCombatResolver(for: viewModel.gameSystemId) {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                Text(String(localized: "Combat resolver coming soon"))
-                    .font(.headline)
-                Text(
-                    String(
-                        localized: """
-                        Dice combat resolution for full 40k battles is coming soon. Turn tracking, phases, and \
-                        victory points still work in the tabs below.
-                        """
-                    )
-                )
-                .font(.callout)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
-            }
-            .surfaceCard()
-            .accessibilityIdentifier("battleTracker.wh40k11eResolverNotice")
         }
     }
 }

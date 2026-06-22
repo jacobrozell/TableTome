@@ -94,12 +94,16 @@ struct CollectionTab: View {
         }
     }
 
-    private func collectionHome(onSelectArmy: @escaping (UUID) -> Void) -> some View {
+    private func collectionHome(
+        preferSidebarSelection: Bool,
+        onSelectArmy: @escaping (UUID) -> Void
+    ) -> some View {
         CollectionHomeView(
             selectedArmyId: $selectedArmyId,
             showAddArmy: $showAddArmy,
             showFilters: $showFilters,
             showSettings: $showHobbySettings,
+            preferSidebarSelection: preferSidebarSelection,
             onSelectArmy: onSelectArmy
         )
     }
@@ -108,7 +112,7 @@ struct CollectionTab: View {
     private var splitView: some View {
         NavigationSplitView {
             NavigationStack {
-                collectionHome { selectedArmyId = $0 }
+                collectionHome(preferSidebarSelection: true) { selectedArmyId = $0 }
                     .navigationDestination(for: CollectionRoute.self) { route in
                         if case .overview = route {
                             CollectionOverviewView()
@@ -122,6 +126,7 @@ struct CollectionTab: View {
                     if let armyId = selectedArmyId {
                         ArmyDetailView(armyId: armyId, selectedArmyId: $selectedArmyId,
                                        selectedUnitId: $selectedUnitId,
+                                       preferSidebarSelection: true,
                                        onSelectUnit: { unitId in
                                            selectedUnitId = unitId
                                            detailPath.append(CollectionRoute.unit(unitId))
@@ -163,7 +168,7 @@ struct CollectionTab: View {
 
     private var compactView: some View {
         NavigationStack(path: $compactPath) {
-            collectionHome { id in
+            collectionHome(preferSidebarSelection: false) { id in
                 selectedArmyId = id
             }
             .navigationDestination(for: CollectionRoute.self) { route in

@@ -16,9 +16,13 @@ enum AdaptiveLayout {
     }
 
     /// Sidebar-style list chrome inside a split column on iPad.
+    /// Pass `preferSelection: true` in a split sidebar — the column often reports compact width.
     @MainActor
-    static func usesSidebarListStyle(_ horizontal: UserInterfaceSizeClass?) -> Bool {
-        usesSplitNavigation(horizontal)
+    static func usesSidebarListStyle(
+        _ horizontal: UserInterfaceSizeClass?,
+        preferSelection: Bool = false
+    ) -> Bool {
+        preferSelection || usesSplitNavigation(horizontal)
     }
 
     /// Wider split column when Dynamic Type is in an accessibility bucket.

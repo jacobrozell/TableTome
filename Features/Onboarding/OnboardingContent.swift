@@ -90,51 +90,92 @@ enum OnboardingContent {
         )
     ]
 
-    static let pages: [OnboardingPage] = [
-        OnboardingPage(
-            id: 0,
-            symbol: "book.closed.fill",
-            title: String(localized: "Tabletome"),
-            subtitle: String(localized: "Learn and play at the table"),
-            body: String(
-                localized: """
-                Your offline coach for tabletop battle games. Pick your game, follow step-by-step setup, search rules, \
-                and track each turn — no account or internet required. Everything stays on this device.
-                """
+    static var pages: [OnboardingPage] {
+        [
+            OnboardingPage(
+                id: 0,
+                symbol: "book.closed.fill",
+                title: String(localized: "Tabletome"),
+                subtitle: String(localized: "Learn and play at the table"),
+                body: String(
+                    localized: """
+                    Your offline coach for tabletop battle games. Pick your game, follow step-by-step setup, look up rules, \
+                    and track each turn — no account or internet required. Everything stays on this device.
+                    """
+                )
+            ),
+            OnboardingPage(
+                id: 1,
+                symbol: "gamecontroller.fill",
+                title: String(localized: "Pick your game"),
+                subtitle: String(localized: "Match what's on your table"),
+                body: String(
+                    localized: """
+                    Each game has its own guide and rules reference. Choose the option that matches your starter box — \
+                    or tap Explore the app and use the chooser on Play.
+                    """
+                )
+            ),
+            OnboardingPage(
+                id: 2,
+                symbol: "map.fill",
+                title: String(localized: "How the app is organized"),
+                subtitle: String(localized: "Optional quick tour"),
+                body: tabOrganizationPageBody
             )
-        ),
-        OnboardingPage(
-            id: 1,
-            symbol: "gamecontroller.fill",
-            title: String(localized: "Pick your game"),
-            subtitle: String(localized: "Match what's on your table"),
-            body: String(
-                localized: """
-                Each game has its own guide and rules search. Choose the option that matches your starter box — \
-                or tap Explore the app and use the chooser on Play.
-                """
-            )
-        ),
-        OnboardingPage(
-            id: 2,
-            symbol: "map.fill",
-            title: String(localized: "How the app is organized"),
-            subtitle: String(localized: "Optional quick tour"),
-            body: String(
+        ]
+    }
+
+    static var tabOrganizationPageBody: String {
+        switch (ReleaseSurface.showsMusterTab, ReleaseSurface.showsRulesAssistant) {
+        case (true, true):
+            return String(
                 localized: """
                 Play is where you start. Models and Army lists are optional until after your first game. \
                 Rules Search looks up terms for the game you picked.
                 """
             )
+        case (true, false):
+            return String(
+                localized: """
+                Play is where you start. Models and Army lists are optional until after your first game. \
+                Rules looks up terms for the game you picked.
+                """
+            )
+        case (false, true):
+            return String(
+                localized: """
+                Play is where you start. Models is optional until after your first game. \
+                Rules Search looks up terms for the game you picked.
+                """
+            )
+        case (false, false):
+            return String(
+                localized: """
+                Play is where you start. Models is optional until after your first game. \
+                Rules looks up terms for the game you picked.
+                """
+            )
+        }
+    }
+
+    static var benchTabTourBody: String {
+        if ReleaseSurface.showsPaintsInBench {
+            return String(
+                localized: "Optional — track miniatures, painting progress, and paints (skip for your first game)"
+            )
+        }
+        return String(
+            localized: "Optional — track miniatures and painting progress (skip for your first game)"
         )
-    ]
+    }
 
     static let tabTourItems: [OnboardingTabTourItem] = [
         OnboardingTabTourItem(
             id: "bench",
             symbol: "paintbrush",
             title: String(localized: "Models"),
-            body: String(localized: "Optional — track miniatures, painting progress, and paints (skip for your first game)")
+            body: ""
         ),
         OnboardingTabTourItem(
             id: "muster",
@@ -167,12 +208,22 @@ enum OnboardingContent {
     }
 
     static var visibleTabTourItems: [OnboardingTabTourItem] {
-        tabTourItems.filter { item in
-            switch item.id {
-            case "bench": return ReleaseSurface.showsBenchTab
-            case "muster": return ReleaseSurface.showsMusterTab
-            default: return true
+        tabTourItems
+            .filter { item in
+                switch item.id {
+                case "bench": return ReleaseSurface.showsBenchTab
+                case "muster": return ReleaseSurface.showsMusterTab
+                default: return true
+                }
             }
-        }
+            .map { item in
+                guard item.id == "bench" else { return item }
+                return OnboardingTabTourItem(
+                    id: item.id,
+                    symbol: item.symbol,
+                    title: item.title,
+                    body: benchTabTourBody
+                )
+            }
     }
 }

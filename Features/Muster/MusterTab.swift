@@ -57,7 +57,11 @@ struct MusterTab: View {
     private var splitView: some View {
         NavigationSplitView {
             NavigationStack {
-                MusterHomeView(selectedRosterId: $selectedRosterId, showNewRoster: $showNewRoster) { id in
+                MusterHomeView(
+                    selectedRosterId: $selectedRosterId,
+                    showNewRoster: $showNewRoster,
+                    preferSidebarSelection: true
+                ) { id in
                     selectedRosterId = id
                     router.selectedRosterId = id
                 }
@@ -100,7 +104,11 @@ struct MusterTab: View {
 
     private var compactView: some View {
         NavigationStack(path: $compactPath) {
-            MusterHomeView(selectedRosterId: $selectedRosterId, showNewRoster: $showNewRoster) { id in
+            MusterHomeView(
+                selectedRosterId: $selectedRosterId,
+                showNewRoster: $showNewRoster,
+                preferSidebarSelection: false
+            ) { id in
                 selectedRosterId = id
                 compactPath.append(MusterRoute.roster(id))
             }

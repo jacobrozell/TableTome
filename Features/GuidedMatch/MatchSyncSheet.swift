@@ -114,5 +114,29 @@ struct MatchSyncSheet: View {
         }
         .accessibilityIdentifier("matchSync.sheet")
         .onAppear { syncService.syncGameSystemId = gameSystemId }
+        .confirmationDialog(
+            String(localized: "Allow this player to sync?"),
+            isPresented: .init(
+                get: { syncService.pendingJoinPeerName != nil },
+                set: { if !$0 { syncService.declineJoinRequest() } }
+            ),
+            titleVisibility: .visible,
+            presenting: syncService.pendingJoinPeerName
+        ) { peerName in
+            Button(String(localized: "Allow \(peerName)")) {
+                syncService.acceptJoinRequest()
+            }
+            Button(String(localized: "Decline"), role: .cancel) {
+                syncService.declineJoinRequest()
+            }
+        } message: { peerName in
+            Text(
+                String(
+                    localized: """
+                    \(peerName) is trying to join this match on the local network. Only allow players you trust at your table.
+                    """
+                )
+            )
+        }
     }
 }

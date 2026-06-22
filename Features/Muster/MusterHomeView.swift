@@ -16,6 +16,7 @@ struct MusterHomeView: View {
 
     @Binding var selectedRosterId: UUID?
     @Binding var showNewRoster: Bool
+    var preferSidebarSelection: Bool = false
     var onSelectRoster: (UUID) -> Void = { _ in }
 
     @State private var search = ""
@@ -31,7 +32,7 @@ struct MusterHomeView: View {
         }
     }
     private var usesPadSidebarList: Bool {
-        AdaptiveLayout.usesSidebarListStyle(horizontalSizeClass)
+        AdaptiveLayout.usesSidebarListStyle(horizontalSizeClass, preferSelection: preferSidebarSelection)
     }
 
     var body: some View {

@@ -31,7 +31,7 @@
 | StarCraft TMG | ✅ Strong | ❌ | ❌ | ❌ | End-to-end Play QA |
 | Rules Q&A assistant | Partial | ❌ | ❌ | ❌ | Quality + licensing review |
 | 40k 10e (coming soon) | N/A | ❌ | ❌ | ❌ | Content not ready |
-| 40k 11e combat resolver | Partial | Partial | ❌ | ❌ | 11e rules engine + invuln QA |
+| 40k 11e combat resolver | Partial | Partial | ❌ | ❌ | Ongoing QA (shipped in 1.0.0) |
 
 **Legend:** ✅ = meaningful automated coverage exists; Partial = domain only, not surface/integration; ❌ = not done for ungate sign-off.
 
@@ -225,32 +225,23 @@
 
 ## 7. 40k 11e combat resolver
 
-**Gate:** `-enable_wh40k11e_combat_resolver` · **Engine:** `Wh40k11eCombatRollEngine` (not `Wh40k10eCombatRollEngine`)
+**Status:** **Shipped in 1.0.0** · **Engine:** `Wh40k11eCombatRollEngine` (not `Wh40k10eCombatRollEngine`)
 
-Combat Patrol (10e) and 11th Edition are separate game systems with separate roll engines. Do not route 11e through the Combat Patrol engine.
+Combat Patrol (10e) and 11th Edition are separate game systems with separate roll engines. Enabled in release defaults via `ReleaseSurface.showsCombatResolver(for: "wh40k-11e")`.
 
 ### Existing automated coverage
 
 - `Wh40k11eCombatRollEngine.swift`, `Wh40k11eCombatRollResolution.swift`
 - `Wh40k11eCombatRollEngineTests.swift`, `CombatRollEngineRouter.rulesEdition`
-- `ReleaseSurfaceTests.testCombatResolverEnabledForWh40k11eWithLaunchArg`
+- `ReleaseSurfaceTests.testCombatResolverEnabledForWh40k11eInRelease`
 - `GameSystemRegistryTests.testWh40k11eUsesDedicated11eCombatRollEngine`
 
-### Still needed before ungate
-
-**Rules engine**
+### Ongoing QA (not a release gate)
 
 - [ ] Invulnerable saves — wound fails only when **both** armour and invuln fail (dual-save UI)
 - [ ] 11e-specific edge cases from [content-verification.md](../game-modes/wh40k-11e/content-verification.md)
-
-**Manual QA** (with `-enable_wh40k11e_combat_resolver`)
-
-- [ ] Resolver visible in 11e battle tracker during shooting/combat phases
-- [ ] Standalone Combat Resolver link on 40k 11e game guide
-- [ ] Roll flow uses 11e engine labels (Armour Save, AP)
-- [ ] Apply damage syncs to unit focus / wounds remaining
-
-**Promotion criteria:** Flip default in `ReleaseSurface` without launch arg; 11e rules sign-off complete.
+- [ ] Manual: resolver in 11e battle tracker during shooting/combat phases
+- [ ] Manual: standalone Combat Resolver link on 40k 11e game guide
 
 ---
 

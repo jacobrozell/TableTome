@@ -100,7 +100,6 @@ extension BattlePhaseTrackerView {
                 damageUndoSection
                 combatPhaseHelper
                 shootInCombatPhaseHelper
-                wh40k11eResolverComingSoonSection
             } secondary: {
                 combatResolverSection(usesLandscapeSplit: true)
             }

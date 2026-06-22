@@ -17,9 +17,9 @@ struct ArmyRow: View {
         army.presentation(overrides: overrides)
     }
 
-    /// Stack crest/progress above text when the sidebar is narrow or text is large.
+    /// Stack crest/progress above text in the iPad sidebar column or at large Dynamic Type.
     private var usesStackedLayout: Bool {
-        dynamicTypeSize.isAccessibilitySize || horizontalSizeClass == .regular
+        dynamicTypeSize.isAccessibilitySize || AdaptiveLayout.usesSidebarListStyle(horizontalSizeClass)
     }
 
     var body: some View {

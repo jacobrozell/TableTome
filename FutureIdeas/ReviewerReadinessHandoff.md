@@ -1,53 +1,39 @@
 # Reviewer-Readiness Handoff — Tabletome
 
-Handoff for a new agent continuing the **App Store reviewer-readiness** effort. Pairs with [AppStoreReviewAudit.md](AppStoreReviewAudit.md). Goal: reach a state where we're confident an App Store reviewer would pass, then promote 1.0.0 from TestFlight to App Review.
+Handoff for continuing **App Store reviewer-readiness** before promoting 1.0.0 from TestFlight to App Review. Pairs with [AppStoreReviewAudit.md](AppStoreReviewAudit.md).
 
-> Last updated: 2026-06-21 · Stage: TestFlight (1.0.0 build 4) · branch `release/1.0.0`
-
----
-
-## What's already done (this session)
-
-- **Strengthened IP/trademark disclaimer** — Settings → About now carries a full attribution (marks → Games Workshop Limited, unofficial/unaffiliated, rules are original explanations). `Features/Settings/SettingsView.swift`.
-- **Fixed P1 navigation dead-tap** — removed a `.simultaneousGesture(TapGesture())` that swallowed the Play-tab game-card `NavigationLink`. `Features/Home/HomeView.swift`. Verified cards now open the guide.
-- Changes compile and run; **not committed**.
+> Last updated: 2026-06-22 · Stage: TestFlight (1.0.0 build 5) · branch `release/1.0.0`
 
 ---
 
-## Environment setup (do this first)
+## Done (2026-06-22 pass)
 
-```bash
-cd ~/Desktop/personal/Tabletome
-xcodegen generate            # .xcodeproj is generated, not tracked
-```
+- **GitHub Pages** — privacy, support, accessibility, and index updated for v1.0 (Spearhead + 40k 11e, collection, match sync, no stale v0.1 copy).
+- **Gated-feature copy** — onboarding tab tour and new-player chooser no longer mention Lists/Paints when those tabs are hidden in release builds.
+- **40k “coming soon” UI removed** — combat resolver ships for 40k 11e in release; stale notice removed from guide and battle tracker.
+- **Nearby sync** — host must approve join requests (no auto-accept).
+- **Release docs** — `status.md`, `ReleaseSurfaceSpec.md`, and release checklist aligned with shipped 11e combat resolver.
 
-Then via XcodeBuildMCP (`session_set_defaults`):
-- projectPath: `Tabletome/Tabletome.xcodeproj`
-- scheme: `Tabletome`
-- bundleId: `com.jacobrozell.tabletome`
-- simulator: iPhone 17 — UDID `22114A58-1110-4FC7-8431-F7B84B6C7465` (or any booted iOS 18 sim)
-
-Useful: `build_run_sim {}` (a SwiftLint pre-build script emits ~157 warnings — non-blocking). Fresh-install test: `xcrun simctl uninstall <UDID> com.jacobrozell.tabletome`. UI taps/screenshots: use the `project-0-personal-ios-simulator` MCP (`ui_describe_all`, `ui_tap` x/y, `ui_swipe`); XcodeBuildMCP's `screenshot` returns inline images.
+Prior pass (build 5): IP disclaimer, Play-tab navigation fix, chooser uses `Button` + coordinator.
 
 ---
 
-## Remaining work (priority order)
+## Remaining before App Review
 
-1. **Fix the onboarding-chooser navigation (same bug pattern)** — `DesignSystem/HomeNewPlayerChooserCard.swift` and `Features/Home/BoxIdentificationSheet.swift` still use `NavigationLink` + `.simultaneousGesture`, so taps are likely flaky. The gesture also records `FirstSessionStore.recordOnboardingChoice` at tap-time (drives the new-player continue-card + roster prefill) and `BoxIdentificationSheet` calls `dismiss()` — so don't just delete it. **Proper fix:** convert each row to a `Button` that (a) records the choice / dismisses, then (b) navigates via a path binding / `LearnNavigationCoordinator`. Verify by resetting onboarding (fresh install → reach the chooser, which only shows when there's no continuation) and tapping each chooser row.
-2. **Run the test suite** — `TabletomeTests` (scheme `TabletomeCI` or `Tabletome`). Confirm `HomeView` change and disclaimer edit didn't break anything; check `PlayContinuationResolverTests` / `FirstSessionStoreTests` if you touch onboarding-choice recording.
-3. **App Store Connect — GW metadata-query prep** — keep the listing's "unofficial / not affiliated" language consistent with the in-app disclaimer; avoid GW logos/box art in screenshots. Be ready to respond to a 5.2 IP query.
-4. **Commit the fixes** (personal account `jacobrozell`; keep `origin` as-is for Xcode Cloud if applicable — see workspace git rules). Then bump build per `docs/release/release_checklist.md` and upload.
-5. **(Optional) SwiftLint cleanup** — file/type/function length, line length, short identifier names. Non-blocking.
+1. **Manual QA** — complete [release_checklist.md](../docs/release/release_checklist.md) (VoiceOver, Dynamic Type AXXXL, offline smoke, both game systems).
+2. **App Store Connect** — listing description matches in-app disclaimer; privacy nutrition labels include local network + on-device collection; screenshots per [screenshot-script.md](../docs/release/screenshot-script.md) (no GW box art).
+3. **Bump build + upload** — increment `CURRENT_PROJECT_VERSION` in `project.yml`, archive, submit.
+4. **Deploy GitHub Pages** — merge/push `docs/` so Settings legal links serve updated pages.
 
 ---
 
 ## Acceptance criteria
 
-- Every navigation entry point to a game guide works (Home "All games", onboarding direct buttons, **and** the new-player chooser / box-identification helper).
-- No crashes across Play guide, Rules, Collection, Guided Match setup + Battle, Combat Resolver.
-- Disclaimer + listing language consistent; legal links load.
+- Every navigation entry point to a game guide works (Home All games, onboarding, new-player chooser, box-identification helper).
+- No crashes across Play, Rules, Collection, Guided Match + Battle, combat resolver (Spearhead + 40k 11e).
+- Disclaimer + listing + GitHub Pages language consistent; legal links load.
 - `TabletomeTests` green.
 
 ## Key references
 
-- [AppStoreReviewAudit.md](AppStoreReviewAudit.md) · [README.md](README.md) · [`../docs/release/release_checklist.md`](../docs/release/release_checklist.md) · [`../docs/release/status.md`](../docs/release/status.md) · [`../specs/ReleaseSurfaceSpec.md`](../specs/ReleaseSurfaceSpec.md)
+- [AppStoreReviewAudit.md](AppStoreReviewAudit.md) · [`../docs/release/release_checklist.md`](../docs/release/release_checklist.md) · [`../docs/release/status.md`](../docs/release/status.md) · [`../specs/ReleaseSurfaceSpec.md`](../specs/ReleaseSurfaceSpec.md)

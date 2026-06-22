@@ -17,6 +17,7 @@ struct ArmyDetailView: View {
     let armyId: UUID
     @Binding var selectedArmyId: UUID?
     @Binding var selectedUnitId: UUID?
+    var preferSidebarSelection: Bool = false
     var onSelectUnit: (UUID) -> Void = { _ in }
 
     @Environment(\.dismiss) private var dismiss
@@ -59,7 +60,7 @@ struct ArmyDetailView: View {
     private var usesSpearhead: Bool { visibleUnits.contains { $0.spearhead != nil } }
     private var percent: Int { Int((Pipeline.progress(of: visibleUnits, pipeline) * 100).rounded()) }
     private var usesPadSidebarList: Bool {
-        AdaptiveLayout.usesSidebarListStyle(horizontalSizeClass)
+        AdaptiveLayout.usesSidebarListStyle(horizontalSizeClass, preferSelection: preferSidebarSelection)
     }
 
     private var selectedUnits: [ArmyUnit] {

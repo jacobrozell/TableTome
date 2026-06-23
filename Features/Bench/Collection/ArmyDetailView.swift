@@ -87,10 +87,13 @@ struct ArmyDetailView: View {
         .safeAreaInset(edge: .bottom) { batchActionBar }
         .sheet(isPresented: $showAddUnit) {
             if let army {
-                AddUnitSheet(pipeline: pipeline) { name, qty, source, state in
-                    ArmyStore.addUnit(to: army, name: name, qty: qty, source: source, state: state, in: context)
+                AddUnitSheet(pipeline: pipeline) { name, qty, source, state, trackPerModel, memberStates in
+                    ArmyStore.addUnit(
+                        to: army, name: name, qty: qty, source: source, state: state,
+                        trackPerModel: trackPerModel, memberStates: memberStates, in: context
+                    )
                 }
-                .presentationDetents([.medium])
+                .presentationDetents([.medium, .large])
             }
         }
         .sheet(isPresented: $showRename) {

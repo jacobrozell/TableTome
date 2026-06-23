@@ -54,15 +54,7 @@ struct GameSystemRulesReferenceView: View {
 
             Section(String(localized: "Sections")) {
                 if filteredSections.isEmpty {
-                    if searchText.isEmpty {
-                        Text(String(localized: "No matching sections"))
-                            .foregroundStyle(.secondary)
-                    } else {
-                        Text(String(localized: "No results for this search. Try a shorter phrase or check another category."))
-                            .font(.callout)
-                            .foregroundStyle(.secondary)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
+                    RulesBrowseEmptyState(searchText: searchText)
                 } else {
                     ForEach(filteredSections) { section in
                         NavigationLink(value: RuleSectionLink(gameSystemId: gameSystem.id, sectionId: section.id)) {
@@ -79,6 +71,7 @@ struct GameSystemRulesReferenceView: View {
             }
         }
         .listStyle(.insetGrouped)
+        .tabBarScrollInset()
         .searchable(text: $searchText, prompt: GameSystemRulesLabels.rulesSearchPrompt(gameSystemId: gameSystem.id))
         .navigationTitle(GameSystemRulesLabels.rulesReferenceTitle(gameSystemId: gameSystem.id))
         .accessibilityIdentifier("guide.rulesList.\(gameSystem.id)")

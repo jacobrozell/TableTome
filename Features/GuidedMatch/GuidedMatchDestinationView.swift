@@ -20,10 +20,13 @@ struct GuidedMatchDestinationView: View {
             } else if let errorMessage {
                 EmptyStateView(
                     title: String(localized: "Guided Match unavailable"),
-                    message: errorMessage
+                    message: errorMessage,
+                    systemImage: "exclamationmark.triangle"
                 )
+                .asyncContentShell()
             } else {
                 ProgressView(String(localized: "Loading match setup…"))
+                    .asyncContentShell()
                     .accessibilityIdentifier("guidedMatch.loading")
             }
         }

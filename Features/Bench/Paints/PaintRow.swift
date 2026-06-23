@@ -42,6 +42,10 @@ struct PaintRow: View {
         RoundedRectangle(cornerRadius: 6)
             .fill(Color(hex: paint.swatchHex))
             .frame(width: 28, height: 28)
+            .overlay {
+                RoundedRectangle(cornerRadius: 6)
+                    .strokeBorder(Color(.separator).opacity(0.55), lineWidth: 0.5)
+            }
             .fixedSize()
             .accessibilityHidden(true)
     }

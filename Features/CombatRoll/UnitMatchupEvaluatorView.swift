@@ -41,9 +41,15 @@ struct UnitMatchupEvaluatorView: View {
     var body: some View {
         Group {
             if let errorMessage = viewModel.errorMessage {
-                EmptyStateView(title: String(localized: "Unavailable"), message: errorMessage)
+                EmptyStateView(
+                    title: String(localized: "Unavailable"),
+                    message: errorMessage,
+                    systemImage: "exclamationmark.triangle"
+                )
+                .asyncContentShell()
             } else if viewModel.armies.isEmpty {
-                ProgressView()
+                ProgressView(String(localized: "Loading combat tools…"))
+                    .asyncContentShell()
             } else {
                 ScrollView {
                     CombatResolverPanel(

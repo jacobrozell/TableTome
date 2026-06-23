@@ -20,13 +20,16 @@ struct MatchHistoryListView: View {
         Group {
             if viewModel.isLoading, viewModel.records.isEmpty {
                 ProgressView(String(localized: "Loading match history…"))
+                    .asyncContentShell()
             } else if let error = viewModel.errorMessage, viewModel.records.isEmpty {
                 EmptyStateView(
                     title: String(localized: "Unable to Load"),
                     message: error,
+                    systemImage: "wifi.exclamationmark",
                     actionTitle: String(localized: "Retry"),
                     action: { Task { await viewModel.load() } }
                 )
+                .asyncContentShell()
             } else if viewModel.records.isEmpty {
                 if viewModel.filterGameSystemId != nil {
                     ContentUnavailableView {
@@ -79,6 +82,7 @@ struct MatchHistoryListView: View {
                     }
                 }
                 .listStyle(.insetGrouped)
+                .tabBarScrollInset()
             }
         }
         .navigationTitle(String(localized: "Match History"))
@@ -139,7 +143,7 @@ private struct MatchHistoryRow: View {
             HStack {
                 Text(record.gameSystemName)
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(Color.accentColor)
+                    .foregroundStyle(Color.accentOnSurface)
                 Spacer()
                 VStack(alignment: .trailing, spacing: 0) {
                     Text(MatchHistoryDisplayFormatter.relativeDateLabel(for: record.endedAt))

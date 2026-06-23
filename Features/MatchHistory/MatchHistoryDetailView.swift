@@ -32,7 +32,8 @@ struct MatchHistoryDetailView: View {
                     Text(String(localized: "This match may have been deleted."))
                 }
             } else {
-                ProgressView()
+                ProgressView(String(localized: "Loading match…"))
+                    .asyncContentShell()
             }
         }
         .navigationTitle(record.map { MatchHistoryDisplayFormatter.matchupTitle(for: $0) } ?? String(localized: "Match Detail"))

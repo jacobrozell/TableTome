@@ -312,12 +312,7 @@ struct BattlePhaseTrackerView: View {
                 Label(String(localized: "Do this now"), systemImage: "hand.point.right.fill")
                     .font(.subheadline.weight(.semibold))
             }
-            .padding(DesignTokens.Spacing.md)
-            .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
-            .overlay(
-                RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
-                    .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
-            )
+            .accentHighlightCard()
             .accessibilityIdentifier("battleGuide.section")
         }
     }

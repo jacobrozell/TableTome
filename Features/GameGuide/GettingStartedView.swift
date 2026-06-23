@@ -163,9 +163,7 @@ struct GettingStartedView: View {
                 }
             }
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .accentHighlightCard()
     }
 
     private var guidedMatchContinueDetail: String {

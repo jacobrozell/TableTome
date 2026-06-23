@@ -169,7 +169,7 @@ struct OnboardingView: View {
         HStack(alignment: .top, spacing: DesignTokens.Spacing.sm + 4) {
             Image(systemName: game.symbol)
                 .font(.title2.weight(.medium))
-                .foregroundStyle(Color.accentColor)
+                .foregroundStyle(Color.accentOnSurface)
                 .symbolRenderingMode(.hierarchical)
                 .frame(width: DesignTokens.minTouchTarget, height: DesignTokens.minTouchTarget)
                 .accessibilityHidden(true)
@@ -247,7 +247,7 @@ struct OnboardingView: View {
         HStack(alignment: .top, spacing: DesignTokens.Spacing.sm + 4) {
             Image(systemName: item.symbol)
                 .font(.title2.weight(.medium))
-                .foregroundStyle(Color.accentColor)
+                .foregroundStyle(Color.accentOnSurface)
                 .symbolRenderingMode(.hierarchical)
                 .frame(width: DesignTokens.minTouchTarget, height: DesignTokens.minTouchTarget)
                 .accessibilityHidden(true)

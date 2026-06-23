@@ -15,10 +15,13 @@ struct GettingStartedDestinationView: View {
             } else if let errorMessage {
                 EmptyStateView(
                     title: String(localized: "Getting Started unavailable"),
-                    message: errorMessage
+                    message: errorMessage,
+                    systemImage: "exclamationmark.triangle"
                 )
+                .asyncContentShell()
             } else {
                 ProgressView(String(localized: "Loading guide…"))
+                    .asyncContentShell()
                     .accessibilityIdentifier("guide.gettingStarted.loading")
             }
         }

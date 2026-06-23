@@ -14,14 +14,17 @@ struct HomeView: View {
         Group {
             if viewModel.isLoading && viewModel.gameSystems.isEmpty {
                 ProgressView(String(localized: "Loading guides…"))
+                    .asyncContentShell()
                     .accessibilityIdentifier("home.loading")
             } else if let error = viewModel.errorMessage {
                 EmptyStateView(
                     title: String(localized: "Unable to Load"),
                     message: error,
+                    systemImage: "wifi.exclamationmark",
                     actionTitle: String(localized: "Retry"),
                     action: { Task { await viewModel.load() } }
                 )
+                .asyncContentShell()
             } else {
                 List {
                     if !viewModel.gameSystems.isEmpty {
@@ -90,25 +93,34 @@ struct HomeView: View {
     }
 
     private func gameSystemRow(_ system: GameSystem) -> some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-            HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
-                Text(system.name)
-                    .font(.headline)
-                if ReleaseSurface.showsNewEditionBadge(for: system.id) {
-                    NewEditionBadge()
+        HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
+            Image(systemName: GameSystemSymbol.systemImage(for: system.id))
+                .font(.title2)
+                .foregroundStyle(Color.accentOnSurface)
+                .symbolRenderingMode(.hierarchical)
+                .frame(width: DesignTokens.minTouchTarget, height: DesignTokens.minTouchTarget)
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
+                    Text(system.name)
+                        .font(.headline)
+                    if ReleaseSurface.showsNewEditionBadge(for: system.id) {
+                        NewEditionBadge()
+                    }
                 }
-            }
-            Text(newcomerTagline(for: system))
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-            if let footnote = editionFootnote(for: system) {
-                Text(footnote)
+                Text(newcomerTagline(for: system))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                if let footnote = editionFootnote(for: system) {
+                    Text(footnote)
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                }
+                Text(system.edition)
                     .font(.caption)
                     .foregroundStyle(.tertiary)
             }
-            Text(system.edition)
-                .font(.caption)
-                .foregroundStyle(.tertiary)
         }
         .padding(.vertical, DesignTokens.Spacing.xs)
         .contentShape(Rectangle())

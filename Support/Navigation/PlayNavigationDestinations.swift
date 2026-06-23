@@ -94,10 +94,13 @@ struct GuideStepDestinationView: View {
             } else if let errorMessage {
                 EmptyStateView(
                     title: String(localized: "Guide topic unavailable"),
-                    message: errorMessage
+                    message: errorMessage,
+                    systemImage: "exclamationmark.triangle"
                 )
+                .asyncContentShell()
             } else {
                 ProgressView(String(localized: "Loading guide…"))
+                    .asyncContentShell()
             }
         }
         .task { await load() }
@@ -140,10 +143,13 @@ struct RuleSectionDestinationView: View {
             } else if let errorMessage {
                 EmptyStateView(
                     title: String(localized: "Rules section unavailable"),
-                    message: errorMessage
+                    message: errorMessage,
+                    systemImage: "exclamationmark.triangle"
                 )
+                .asyncContentShell()
             } else {
                 ProgressView(String(localized: "Loading rules…"))
+                    .asyncContentShell()
             }
         }
         .task { await load() }
@@ -179,10 +185,13 @@ struct RulesGlossaryBrowseDestinationView: View {
             } else if let errorMessage {
                 EmptyStateView(
                     title: String(localized: "Glossary unavailable"),
-                    message: errorMessage
+                    message: errorMessage,
+                    systemImage: "exclamationmark.triangle"
                 )
+                .asyncContentShell()
             } else {
                 ProgressView(String(localized: "Loading glossary…"))
+                    .asyncContentShell()
             }
         }
         .task { await load() }
@@ -217,10 +226,13 @@ struct GlossaryEntryDestinationView: View {
             } else if let errorMessage {
                 EmptyStateView(
                     title: String(localized: "Term unavailable"),
-                    message: errorMessage
+                    message: errorMessage,
+                    systemImage: "exclamationmark.triangle"
                 )
+                .asyncContentShell()
             } else {
                 ProgressView(String(localized: "Loading term…"))
+                    .asyncContentShell()
             }
         }
         .task { await load() }
@@ -257,10 +269,13 @@ struct BattleTacticsReferenceDestinationView: View {
             } else if let errorMessage {
                 EmptyStateView(
                     title: String(localized: "Reference unavailable"),
-                    message: errorMessage
+                    message: errorMessage,
+                    systemImage: "exclamationmark.triangle"
                 )
+                .asyncContentShell()
             } else {
                 ProgressView(String(localized: "Loading reference…"))
+                    .asyncContentShell()
             }
         }
         .task { await load() }
@@ -290,10 +305,13 @@ struct GameSystemRulesReferenceDestinationView: View {
             } else if let errorMessage {
                 EmptyStateView(
                     title: String(localized: "Rules unavailable"),
-                    message: errorMessage
+                    message: errorMessage,
+                    systemImage: "exclamationmark.triangle"
                 )
+                .asyncContentShell()
             } else {
                 ProgressView(String(localized: "Loading rules…"))
+                    .asyncContentShell()
             }
         }
         .task { await load() }
@@ -338,10 +356,13 @@ struct CombatResolverDestinationView: View {
             } else if let errorMessage {
                 EmptyStateView(
                     title: String(localized: "Combat tools unavailable"),
-                    message: errorMessage
+                    message: errorMessage,
+                    systemImage: "exclamationmark.triangle"
                 )
+                .asyncContentShell()
             } else {
                 ProgressView(String(localized: "Loading combat tools…"))
+                    .asyncContentShell()
             }
         }
         .task { await load() }
@@ -378,10 +399,13 @@ struct ArmyRosterDestinationView: View {
             } else if let errorMessage {
                 EmptyStateView(
                     title: String(localized: "Army roster unavailable"),
-                    message: errorMessage
+                    message: errorMessage,
+                    systemImage: "exclamationmark.triangle"
                 )
+                .asyncContentShell()
             } else {
                 ProgressView(String(localized: "Loading army…"))
+                    .asyncContentShell()
             }
         }
         .task { await load() }
@@ -426,10 +450,13 @@ struct CombatPatrolMissionsDestinationView: View {
             } else if let errorMessage {
                 EmptyStateView(
                     title: String(localized: "Missions unavailable"),
-                    message: errorMessage
+                    message: errorMessage,
+                    systemImage: "exclamationmark.triangle"
                 )
+                .asyncContentShell()
             } else {
                 ProgressView(String(localized: "Loading missions…"))
+                    .asyncContentShell()
             }
         }
         .task { await load() }
@@ -485,10 +512,13 @@ struct AppSearchResultDestinationView: View {
             } else if let errorMessage {
                 EmptyStateView(
                     title: String(localized: "Search result unavailable"),
-                    message: errorMessage
+                    message: errorMessage,
+                    systemImage: "exclamationmark.triangle"
                 )
+                .asyncContentShell()
             } else {
                 ProgressView(String(localized: "Loading…"))
+                    .asyncContentShell()
             }
         }
         .task { await load() }

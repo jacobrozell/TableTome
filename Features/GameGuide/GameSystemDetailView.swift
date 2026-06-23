@@ -262,10 +262,13 @@ struct GameSystemDetailView: View {
             } else if let errorMessage {
                 EmptyStateView(
                     title: String(localized: "Game guide unavailable"),
-                    message: errorMessage
+                    message: errorMessage,
+                    systemImage: "exclamationmark.triangle"
                 )
+                .asyncContentShell()
             } else {
                 ProgressView(String(localized: "Loading game guide…"))
+                    .asyncContentShell()
             }
         }
         .navigationTitle(navigationTitle)
@@ -340,26 +343,46 @@ struct GameSystemDetailView: View {
     }
 
     private func starterArmyRow(factionName: String, army: SpearheadArmy) -> some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-            Text(factionName)
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Color.accentColor)
-            Text(army.name)
-                .font(.headline)
-            Text(army.general)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+        HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
+            Image(systemName: "shield.lefthalf.filled")
+                .font(.title3)
+                .foregroundStyle(Color.accentOnSurface)
+                .symbolRenderingMode(.hierarchical)
+                .frame(width: DesignTokens.minTouchTarget, height: DesignTokens.minTouchTarget)
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                Text(factionName)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Color.accentOnSurface)
+                Text(army.name)
+                    .font(.headline)
+                Text(army.general)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
         .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
         .contentShape(Rectangle())
     }
 
     private func guideRow(title: String, symbol: String, detail: String) -> some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-            Label(title, systemImage: symbol)
-            Text(detail)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+        HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
+            Image(systemName: symbol)
+                .font(.title3)
+                .foregroundStyle(Color.accentOnSurface)
+                .symbolRenderingMode(.hierarchical)
+                .frame(width: DesignTokens.minTouchTarget, height: DesignTokens.minTouchTarget)
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                Text(title)
+                    .font(.headline)
+                Text(detail)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
         }
         .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
         .contentShape(Rectangle())

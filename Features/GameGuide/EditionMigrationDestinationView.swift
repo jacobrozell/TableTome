@@ -15,10 +15,13 @@ struct EditionMigrationDestinationView: View {
             } else if let errorMessage {
                 EmptyStateView(
                     title: String(localized: "Edition guide unavailable"),
-                    message: errorMessage
+                    message: errorMessage,
+                    systemImage: "exclamationmark.triangle"
                 )
+                .asyncContentShell()
             } else {
                 ProgressView(String(localized: "Loading guide…"))
+                    .asyncContentShell()
                     .accessibilityIdentifier("guide.migration.loading")
             }
         }

@@ -18,23 +18,26 @@ struct SettingsView: View {
     var body: some View {
         List {
             Section {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                    Text(
-                        ReleaseSurface.showsMusterTab
-                            ? String(localized: "Offline tabletop companion — play, rules, collection, and lists.")
-                            : String(localized: "Offline tabletop companion — play, rules, and collection.")
-                    )
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                    Text(String(localized: """
-                        Unofficial fan-made companion. Not affiliated with, endorsed, or sponsored by Games Workshop. \
-                        Warhammer, Age of Sigmar, Warhammer 40,000, Spearhead, Combat Patrol, and all associated names, \
-                        logos, and images are trademarks of Games Workshop Limited. Rules content is original explanation \
-                        written for learning and play, not reproduced from official publications.
-                        """))
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
+                HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
+                    BrandCrest(size: 56)
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                        Text(
+                            ReleaseSurface.showsMusterTab
+                                ? String(localized: "Offline tabletop companion — play, rules, collection, and lists.")
+                                : String(localized: "Offline tabletop companion — play, rules, and collection.")
+                        )
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        Text(String(localized: """
+                            Unofficial fan-made companion. Not affiliated with, endorsed, or sponsored by Games Workshop. \
+                            Warhammer, Age of Sigmar, Warhammer 40,000, Spearhead, Combat Patrol, and all associated names, \
+                            logos, and images are trademarks of Games Workshop Limited. Rules content is original explanation \
+                            written for learning and play, not reproduced from official publications.
+                            """))
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
                 }
                 .padding(.vertical, DesignTokens.Spacing.xs)
                 .accessibilityElement(children: .combine)
@@ -193,6 +196,7 @@ struct SettingsView: View {
             }
         }
         .listStyle(.insetGrouped)
+        .tabBarScrollInset()
         .navigationTitle(String(localized: "Settings"))
         .fullScreenCover(isPresented: $showsOnboarding) {
             OnboardingView(mode: .replay) { completion in

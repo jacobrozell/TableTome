@@ -120,7 +120,7 @@ struct Wh40k11eSampleTurnWalkthroughView: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
             Label(String(localized: "How an 11th Edition turn works"), systemImage: "play.circle.fill")
                 .font(.headline)
-                .foregroundStyle(Color.accentColor)
+                .foregroundStyle(Color.accentOnSurface)
             Text(
                 String(
                     localized: """
@@ -179,18 +179,12 @@ struct Wh40k11eSampleTurnWalkthroughView: View {
             } icon: {
                 Image(systemName: steps[step].systemImage)
                     .font(.title2)
-                    .foregroundStyle(Color.accentColor)
+                    .foregroundStyle(Color.accentOnSurface)
                     .symbolRenderingMode(.hierarchical)
                     .frame(width: stepIconSize, height: stepIconSize)
             }
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
-        .overlay {
-            RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
-                .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
-        }
+        .accentHighlightCard()
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("wh40k11eSampleTurn.step.\(step)")
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.2), value: step)

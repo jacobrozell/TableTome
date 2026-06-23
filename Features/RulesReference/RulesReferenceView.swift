@@ -12,6 +12,7 @@ struct RulesReferenceView: View {
         Group {
             if viewModel.isLoading && viewModel.sections.isEmpty {
                 ProgressView(String(localized: "Loading rules…"))
+                    .asyncContentShell()
                     .accessibilityIdentifier("rules.loading")
                     .accessibilityLabel(String(localized: "Loading rules"))
                     .accessibilityHint(String(localized: "Rules content is being loaded."))
@@ -19,9 +20,11 @@ struct RulesReferenceView: View {
                 EmptyStateView(
                     title: String(localized: "Unable to Load"),
                     message: error,
+                    systemImage: "wifi.exclamationmark",
                     actionTitle: String(localized: "Retry"),
                     action: { Task { await viewModel.load() } }
                 )
+                .asyncContentShell()
             } else {
                 List {
                     if viewModel.showsGameSystemPicker {
@@ -90,15 +93,7 @@ struct RulesReferenceView: View {
 
                     Section(String(localized: "Sections")) {
                         if viewModel.filteredSections.isEmpty {
-                            if viewModel.searchText.isEmpty {
-                                Text(String(localized: "No matching sections"))
-                                    .foregroundStyle(.secondary)
-                            } else {
-                                Text(String(localized: "No results for this search. Try a shorter phrase or check another category."))
-                                    .font(.callout)
-                                    .foregroundStyle(.secondary)
-                                    .fixedSize(horizontal: false, vertical: true)
-                            }
+                            RulesBrowseEmptyState(searchText: viewModel.searchText)
                         } else {
                             ForEach(viewModel.filteredSections) { section in
                                 NavigationLink(value: RuleSectionLink(
@@ -118,6 +113,7 @@ struct RulesReferenceView: View {
                     }
                 }
                 .listStyle(.insetGrouped)
+                .tabBarScrollInset()
                 .searchable(
                     text: $viewModel.searchText,
                     prompt: GameSystemRulesLabels.rulesSearchPrompt(gameSystemId: viewModel.selectedGameSystemId)

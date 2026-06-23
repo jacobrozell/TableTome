@@ -14,14 +14,17 @@ struct AppSearchView: View {
         Group {
             if viewModel.isLoading && viewModel.index.isEmpty {
                 ProgressView(String(localized: "Loading search…"))
+                    .asyncContentShell()
                     .accessibilityIdentifier("search.loading")
             } else if let error = viewModel.errorMessage {
                 EmptyStateView(
                     title: String(localized: "Unable to Load"),
                     message: error,
+                    systemImage: "wifi.exclamationmark",
                     actionTitle: String(localized: "Retry"),
                     action: { Task { await viewModel.load() } }
                 )
+                .asyncContentShell()
             } else {
                 List {
                     if viewModel.showsGameSystemPicker {
@@ -35,6 +38,7 @@ struct AppSearchView: View {
                     }
                 }
                 .listStyle(.insetGrouped)
+                .tabBarScrollInset()
                 .searchable(
                     text: $viewModel.searchText,
                     prompt: GameSystemRulesLabels.searchPrompt(gameSystemId: viewModel.scopedGameSystemId)
@@ -93,10 +97,14 @@ struct AppSearchView: View {
     private var searchResultsContent: some View {
         if viewModel.searchResults.isEmpty {
             Section {
-                Text(GameSystemRulesLabels.searchEmptyStateHint(gameSystemId: viewModel.scopedGameSystemId))
-                    .foregroundStyle(.secondary)
-                    .font(.callout)
-                    .fixedSize(horizontal: false, vertical: true)
+                ContentUnavailableView {
+                    Label(String(localized: "No results"), systemImage: "magnifyingglass")
+                } description: {
+                    Text(GameSystemRulesLabels.searchEmptyStateHint(gameSystemId: viewModel.scopedGameSystemId))
+                }
+                .listRowInsets(EdgeInsets(top: 24, leading: 0, bottom: 24, trailing: 0))
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
             }
         } else {
             ForEach(viewModel.groupedSearchResults, id: \.kind) { group in
@@ -205,8 +213,16 @@ private struct AppSearchResultRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-            Text(result.title)
-                .font(.headline)
+            HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
+                Image(systemName: resultKindSymbol)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Color.accentOnSurface)
+                    .symbolRenderingMode(.hierarchical)
+                    .frame(width: 20)
+                    .accessibilityHidden(true)
+                Text(result.title)
+                    .font(.headline)
+            }
             Text(result.subtitle)
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -223,5 +239,21 @@ private struct AppSearchResultRow: View {
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(result.title), \(result.subtitle)")
         .accessibilityHint(result.snippet)
+    }
+
+    private var resultKindSymbol: String {
+        switch result.kind {
+        case .ruleSection: "doc.text"
+        case .glossary: "character.book.closed"
+        case .gettingStarted: "map"
+        case .editionMigration: "arrow.triangle.2.circlepath"
+        case .matchSetup: "flag.checkered"
+        case .deployment: "square.grid.3x3"
+        case .battleTactics, .cardDeck: "rectangle.stack"
+        case .warscroll: "person.3.fill"
+        case .armyRule: "shield.lefthalf.filled"
+        case .phaseTip: "clock.arrow.circlepath"
+        case .appFeature: "sparkles"
+        }
     }
 }

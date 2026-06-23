@@ -101,7 +101,17 @@ struct MusterHomeView: View {
 
     private var listContent: some View {
         Group {
-            if usesPadSidebarList {
+            if filtered.isEmpty {
+                ContentUnavailableView {
+                    Label(String(localized: "No matching lists"), systemImage: "magnifyingglass")
+                } description: {
+                    Text(String(localized: "Nothing matches your search."))
+                } actions: {
+                    Button(String(localized: "Clear search")) { search = "" }
+                        .buttonStyle(.borderedProminent)
+                }
+                .adaptiveEmptyStateLayout()
+            } else if usesPadSidebarList {
                 List(filtered, selection: $selectedRosterId) { roster in
                     rosterRowContent(roster)
                 }

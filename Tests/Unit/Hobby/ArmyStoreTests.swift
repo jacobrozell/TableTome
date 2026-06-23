@@ -34,6 +34,27 @@ final class ArmyStoreTests: XCTestCase {
         XCTAssertEqual(army.units.first?.state, "Unassembled")
     }
 
+    func testAddUnitWithPerModelTracking() throws {
+        XCTAssertTrue(ArmyStore.addArmy(name: "Skaven", game: "AoS", faction: "Skaven", in: context))
+        let army = try XCTUnwrap((try? context.fetch(FetchDescriptor<Army>()))?.first)
+
+        XCTAssertTrue(
+            ArmyStore.addUnit(
+                to: army, name: "Clanrats (5)", qty: 1, source: "Box", state: "Unassembled",
+                trackPerModel: true, memberStates: ["Unassembled", "Primed", "Primed", "Primed", "Primed"],
+                in: context
+            )
+        )
+
+        let unit = try XCTUnwrap(army.units.first)
+        XCTAssertEqual(unit.modelCount, 5)
+        XCTAssertTrue(unit.hasSquadMembers)
+        XCTAssertEqual(unit.squadMembers.count, 5)
+        XCTAssertNil(unit.member(at: 0)?.state)
+        XCTAssertEqual(Members.effectiveState(of: unit, at: 0), "Unassembled")
+        XCTAssertEqual(Members.effectiveState(of: unit, at: 1), "Primed")
+    }
+
     func testRenameArmyRejectsDuplicate() throws {
         XCTAssertTrue(ArmyStore.addArmy(name: "First", game: "40k", faction: "SM", in: context))
         XCTAssertTrue(ArmyStore.addArmy(name: "Second", game: "40k", faction: "SM", in: context))

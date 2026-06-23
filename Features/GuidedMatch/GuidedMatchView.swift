@@ -76,9 +76,15 @@ struct GuidedMatchView: View {
                     compactLayout(catalog: catalog)
                 }
             } else if let errorMessage = viewModel.errorMessage {
-                EmptyStateView(title: String(localized: "Unavailable"), message: errorMessage)
+                EmptyStateView(
+                    title: String(localized: "Unavailable"),
+                    message: errorMessage,
+                    systemImage: "exclamationmark.triangle"
+                )
+                .asyncContentShell()
             } else {
                 ProgressView(String(localized: "Loading guided match…"))
+                    .asyncContentShell()
             }
         }
         .navigationTitle(

@@ -71,6 +71,7 @@ enum ArmyStore {
 
     @discardableResult
     static func addUnit(to army: Army, name: String, qty: Int, source: String, state: String,
+                        trackPerModel: Bool = false, memberStates: [String]? = nil,
                         in ctx: ModelContext) -> Bool {
         let trimmed = name.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else { return false }
@@ -81,6 +82,15 @@ enum ArmyStore {
                         order: (army.units.map(\.order).max() ?? -1) + 1)
         unit.army = army
         ctx.insert(unit)
+        if trackPerModel, unit.modelCount >= 2 {
+            for i in 0..<unit.modelCount {
+                let override = (memberStates?.indices.contains(i) == true) ? memberStates?[i] : nil
+                let memberState = (override != nil && override != state) ? override : nil
+                let m = SquadMember(index: i, state: memberState)
+                m.unit = unit
+                ctx.insert(m)
+            }
+        }
         try? ctx.save()
         return true
     }

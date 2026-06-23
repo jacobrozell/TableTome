@@ -9,7 +9,7 @@ struct BattleGuideCard: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Label(String(localized: "Do this now"), systemImage: "hand.point.right.fill")
                 .font(.caption.weight(.semibold))
-                .foregroundStyle(Color.accentColor)
+                .foregroundStyle(Color.accentOnSurface)
 
             Text(step.title)
                 .font(.title3.bold())
@@ -29,13 +29,7 @@ struct BattleGuideCard: View {
                 onAction()
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(DesignTokens.Spacing.md)
-        .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
-        .overlay(
-            RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
-                .strokeBorder(Color.accentColor.opacity(0.35), lineWidth: 1)
-        )
+        .accentHighlightCard()
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("battleGuide.card")
     }

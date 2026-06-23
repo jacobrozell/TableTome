@@ -10,6 +10,7 @@ struct GlossaryChip: View {
         NavigationLink(value: GlossaryEntryLink(gameSystemId: gameSystemId, entryId: entry.id)) {
             Text(entry.term)
                 .font(.caption2.weight(.semibold))
+                .foregroundStyle(Color.accentOnSurface)
                 .adaptiveLineLimit(2)
                 .padding(.horizontal, DesignTokens.Spacing.sm)
                 .padding(.vertical, 4)

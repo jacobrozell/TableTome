@@ -10,7 +10,7 @@ struct FortyKStartHereCard: View {
             HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
                 Label(String(localized: "Start here"), systemImage: "sparkles")
                     .font(.headline)
-                    .foregroundStyle(Color.accentColor)
+                    .foregroundStyle(Color.accentOnSurface)
                 if ReleaseSurface.showsNewEditionBadge(for: gameSystem.id) {
                     NewEditionBadge()
                 }
@@ -38,7 +38,7 @@ struct FortyKStartHereCard: View {
                     .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
                 }
                 .buttonStyle(.plain)
-                .foregroundStyle(Color.accentColor)
+                .foregroundStyle(Color.accentOnSurface)
                 .accessibilityIdentifier("guide.wh40k.combatPatrolCrossLink")
             }
 
@@ -73,13 +73,7 @@ struct FortyKStartHereCard: View {
             .buttonStyle(.bordered)
             .accessibilityIdentifier("guide.wh40k.guidedMatch")
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
-        .overlay {
-            RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
-                .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
-        }
+        .accentHighlightCard()
     }
 
     private var newPlayerTrack: some View {

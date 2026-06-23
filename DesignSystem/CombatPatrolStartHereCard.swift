@@ -8,7 +8,7 @@ struct CombatPatrolStartHereCard: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Label(String(localized: "Start here"), systemImage: "sparkles")
                 .font(.headline)
-                .foregroundStyle(Color.accentColor)
+                .foregroundStyle(Color.accentOnSurface)
 
             Text(
                 String(
@@ -55,11 +55,9 @@ struct CombatPatrolStartHereCard: View {
                         .font(.caption.weight(.semibold))
                 }
             }
-            .foregroundStyle(Color.accentColor)
+            .foregroundStyle(Color.accentOnSurface)
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.lg))
+        .accentHighlightCard()
         .accessibilityIdentifier("guide.combatPatrol.startHere")
     }
 }

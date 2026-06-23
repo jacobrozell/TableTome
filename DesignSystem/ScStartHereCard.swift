@@ -9,7 +9,7 @@ struct ScStartHereCard: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Label(String(localized: "Start here"), systemImage: "sparkles")
                 .font(.headline)
-                .foregroundStyle(Color.accentColor)
+                .foregroundStyle(Color.accentOnSurface)
 
             Text(
                 String(
@@ -54,13 +54,7 @@ struct ScStartHereCard: View {
             .buttonStyle(.bordered)
             .accessibilityIdentifier("guide.scTmg.guidedMatch")
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
-        .overlay {
-            RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
-                .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
-        }
+        .accentHighlightCard()
     }
 
     private var newToWargamesTrack: some View {

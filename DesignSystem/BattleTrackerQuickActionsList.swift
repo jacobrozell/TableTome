@@ -92,8 +92,7 @@ struct BattleTrackerTabHintBanner: View {
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .buttonStyle(.plain)
-        .padding(DesignTokens.Spacing.md)
-        .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .accentHighlightCard()
         .accessibilityLabel(suggestedTabAccessibilityLabel)
         .accessibilityHint(hintDetail)
         .accessibilityIdentifier("battleTracker.tabHint")

@@ -7,7 +7,7 @@ struct NewPlayerStartHereCard: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Label(String(localized: "First game?"), systemImage: "sparkles")
                 .font(.headline)
-                .foregroundStyle(Color.accentColor)
+                .foregroundStyle(Color.accentOnSurface)
 
             Text(
                 String(
@@ -67,13 +67,7 @@ struct NewPlayerStartHereCard: View {
             .buttonStyle(.bordered)
             .accessibilityIdentifier("guide.spearhead.guidedMatch")
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
-        .overlay {
-            RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
-                .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
-        }
+        .accentHighlightCard()
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("guide.newPlayerStartHere")
     }
@@ -131,7 +125,7 @@ struct HomeWelcomeCard: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Label(String(localized: "Welcome to Tabletome"), systemImage: "hand.wave.fill")
                 .font(.headline)
-                .foregroundStyle(Color.accentColor)
+                .foregroundStyle(Color.accentOnSurface)
 
             Text(
                 String(
@@ -153,13 +147,7 @@ struct HomeWelcomeCard: View {
             .foregroundStyle(.secondary)
             .fixedSize(horizontal: false, vertical: true)
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
-        .overlay {
-            RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
-                .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
-        }
+        .accentHighlightCard()
         .accessibilityIdentifier("home.welcome")
     }
 }

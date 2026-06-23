@@ -52,13 +52,7 @@ struct NewPlayerMilestoneBanner: View {
                 .accessibilityHint(String(localized: "Dismisses this reminder for now."))
             }
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
-        .overlay {
-            RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
-                .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
-        }
+        .accentHighlightCard()
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("newPlayer.milestone.models")
     }

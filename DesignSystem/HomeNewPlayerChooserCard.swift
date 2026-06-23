@@ -10,7 +10,7 @@ struct HomeNewPlayerChooserCard: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Label(String(localized: "New to wargaming?"), systemImage: "sparkles")
                 .font(.headline)
-                .foregroundStyle(Color.accentColor)
+                .foregroundStyle(Color.accentOnSurface)
 
             Text(
                 String(
@@ -101,13 +101,7 @@ struct HomeNewPlayerChooserCard: View {
             .foregroundStyle(.tertiary)
             .fixedSize(horizontal: false, vertical: true)
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
-        .overlay {
-            RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
-                .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
-        }
+        .accentHighlightCard()
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("home.newPlayerChooser")
         .sheet(isPresented: $showsBoxHelper) {
@@ -130,7 +124,8 @@ struct HomeNewPlayerChooserCard: View {
             HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
                 Image(systemName: systemImage)
                     .font(.title3)
-                    .foregroundStyle(Color.accentColor)
+                    .foregroundStyle(Color.accentOnSurface)
+                    .symbolRenderingMode(.hierarchical)
                     .frame(width: DesignTokens.minTouchTarget, height: DesignTokens.minTouchTarget)
                     .accessibilityHidden(true)
 
@@ -145,7 +140,7 @@ struct HomeNewPlayerChooserCard: View {
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
                                 .background(Color.accentColor.opacity(0.14), in: Capsule())
-                                .foregroundStyle(Color.accentColor)
+                                .foregroundStyle(Color.accentOnSurface)
                         }
                     }
                     Text(detail)

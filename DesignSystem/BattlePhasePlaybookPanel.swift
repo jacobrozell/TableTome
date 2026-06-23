@@ -27,13 +27,7 @@ struct BattlePhasePlaybookPanel: View {
             abilityList
             advanceButton
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
-        .overlay {
-            RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
-                .strokeBorder(Color.accentColor.opacity(0.28), lineWidth: 1)
-        }
+        .accentHighlightCard()
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("battleTracker.phasePlaybook")
         .id("battleTracker.phasePlaybook")
@@ -49,7 +43,8 @@ struct BattlePhasePlaybookPanel: View {
                     .fixedSize(horizontal: false, vertical: true)
             } icon: {
                 Image(systemName: phaseIcon)
-                    .foregroundStyle(Color.accentColor)
+                    .foregroundStyle(Color.accentOnSurface)
+                    .symbolRenderingMode(.hierarchical)
             }
 
             Text("\(activePlayerName) · \(viewModel.armyName)")

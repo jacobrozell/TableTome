@@ -25,7 +25,14 @@ public struct RuleSectionRow: View {
     }
 
     public var body: some View {
-        HStack {
+        HStack(alignment: .center, spacing: DesignTokens.Spacing.sm) {
+            Image(systemName: RuleSectionCategorySymbol.systemImage(for: category))
+                .font(.body.weight(.medium))
+                .foregroundStyle(Color.accentOnSurface)
+                .symbolRenderingMode(.hierarchical)
+                .frame(width: 28, height: 28)
+                .accessibilityHidden(true)
+
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                 Text(title)
                     .font(.headline)
@@ -35,7 +42,7 @@ public struct RuleSectionRow: View {
             }
             Spacer()
             Image(systemName: "chevron.right")
-                .font(.caption)
+                .font(.caption.weight(.semibold))
                 .foregroundStyle(.tertiary)
                 .accessibilityHidden(true)
         }

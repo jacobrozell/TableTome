@@ -130,7 +130,7 @@ struct BattleTrackerCoachCard: View {
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                         HStack(spacing: DesignTokens.Spacing.sm) {
                             Image(systemName: "sparkles")
-                                .foregroundStyle(Color.accentColor)
+                                .foregroundStyle(Color.accentOnSurface)
                             Text(String(localized: "First battle?"))
                                 .font(.headline)
                             Spacer(minLength: 0)
@@ -148,7 +148,7 @@ struct BattleTrackerCoachCard: View {
                 } else {
                     HStack(spacing: DesignTokens.Spacing.sm) {
                         Image(systemName: "sparkles")
-                            .foregroundStyle(Color.accentColor)
+                            .foregroundStyle(Color.accentOnSurface)
                         Text(String(localized: "First battle?"))
                             .font(.headline)
                         Spacer()
@@ -177,7 +177,8 @@ struct BattleTrackerCoachCard: View {
             } icon: {
                 Image(systemName: steps[step].systemImage)
                     .font(.title3)
-                    .foregroundStyle(Color.accentColor)
+                    .foregroundStyle(Color.accentOnSurface)
+                    .symbolRenderingMode(.hierarchical)
             }
 
             HStack(spacing: DesignTokens.Spacing.sm) {
@@ -200,13 +201,7 @@ struct BattleTrackerCoachCard: View {
                 .minimumTouchTarget()
             }
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
-        .overlay {
-            RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
-                .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
-        }
+        .accentHighlightCard()
         .accessibilityIdentifier("battleTracker.coachCard")
     }
 }

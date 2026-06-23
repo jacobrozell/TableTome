@@ -14,7 +14,8 @@ struct TappableGuidePathStep<D: Hashable>: View {
                 HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
                     Text("\(number).")
                         .font(.subheadline.weight(.bold))
-                        .foregroundStyle(Color.accentColor)
+                        .foregroundStyle(Color.accentOnSurface)
+                        .monospacedDigit()
                         .frame(minWidth: 20, alignment: .trailing)
                     VStack(alignment: .leading, spacing: 2) {
                         Text(title)

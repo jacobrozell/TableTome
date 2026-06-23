@@ -4,7 +4,8 @@ struct CritAutoWoundCoachingHint: View {
     var body: some View {
         HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
             Image(systemName: "info.circle.fill")
-                .foregroundStyle(Color.accentColor)
+                .foregroundStyle(Color.accentOnSurface)
+                .symbolRenderingMode(.hierarchical)
                 .accessibilityHidden(true)
             Text(
                 String(
@@ -18,9 +19,8 @@ struct CritAutoWoundCoachingHint: View {
             .foregroundStyle(.secondary)
             .fixedSize(horizontal: false, vertical: true)
         }
-        .padding(DesignTokens.Spacing.sm)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
+        .accentHighlightCard(radius: DesignTokens.Radius.sm)
         .accessibilityIdentifier("combatResolver.critAutoWoundHint")
     }
 }

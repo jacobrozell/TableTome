@@ -71,6 +71,11 @@ private struct AdaptiveEmptyStateLayout: ViewModifier {
 }
 
 extension View {
+    /// Centers loading spinners and error empty states inside navigation stacks.
+    func asyncContentShell() -> some View {
+        frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
     /// Menu-style form pickers often fail to open from sheets (especially inside `NavigationSplitView`).
     func formNavigationPickerStyle() -> some View {
         pickerStyle(.navigationLink)

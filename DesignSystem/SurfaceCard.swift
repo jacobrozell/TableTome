@@ -20,6 +20,17 @@ public extension View {
     func surfaceCard(padding: CGFloat = DesignTokens.Spacing.md) -> some View {
         modifier(SurfaceCardModifier(padding: padding))
     }
+
+    /// Soft accent-tinted card used on Play home banners and new-player guidance.
+    func accentHighlightCard(radius: CGFloat = DesignTokens.Radius.md) -> some View {
+        padding(DesignTokens.Spacing.md)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: radius))
+            .overlay {
+                RoundedRectangle(cornerRadius: radius)
+                    .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
+            }
+    }
 }
 
 struct ProgressBadge: View {
@@ -118,11 +129,18 @@ struct ReferenceLinkRow: View {
     let systemImage: String
 
     var body: some View {
-        Label(title, systemImage: systemImage)
-            .font(.subheadline.weight(.medium))
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(DesignTokens.Spacing.md)
-            .frame(minHeight: DesignTokens.minTouchTarget)
+        HStack(spacing: DesignTokens.Spacing.sm) {
+            Label(title, systemImage: systemImage)
+                .font(.subheadline.weight(.medium))
+            Spacer(minLength: 0)
+            Image(systemName: "chevron.right")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.tertiary)
+                .accessibilityHidden(true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(DesignTokens.Spacing.md)
+        .frame(minHeight: DesignTokens.minTouchTarget)
     }
 }
 

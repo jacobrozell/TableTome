@@ -3,15 +3,23 @@ import SwiftUI
 public struct EmptyStateView: View {
     let title: String
     let message: String
+    let systemImage: String?
     let actionTitle: String?
     let action: (() -> Void)?
 
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
-    public init(title: String, message: String, actionTitle: String? = nil, action: (() -> Void)? = nil) {
+    public init(
+        title: String,
+        message: String,
+        systemImage: String? = "tray",
+        actionTitle: String? = nil,
+        action: (() -> Void)? = nil
+    ) {
         self.title = title
         self.message = message
+        self.systemImage = systemImage
         self.actionTitle = actionTitle
         self.action = action
     }
@@ -34,12 +42,16 @@ public struct EmptyStateView: View {
 
     private var content: some View {
         VStack(spacing: DesignTokens.Spacing.md) {
-            Image(systemName: "tray")
-                .font(.largeTitle)
-                .foregroundStyle(.secondary)
-                .accessibilityHidden(true)
+            if let systemImage {
+                Image(systemName: systemImage)
+                    .font(.largeTitle)
+                    .foregroundStyle(.secondary)
+                    .symbolRenderingMode(.hierarchical)
+                    .accessibilityHidden(true)
+            }
             Text(title)
                 .font(.title2.bold())
+                .multilineTextAlignment(.center)
             Text(message)
                 .font(.body)
                 .foregroundStyle(.secondary)
@@ -55,7 +67,7 @@ public struct EmptyStateView: View {
             }
         }
         .padding(DesignTokens.Spacing.lg)
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: shouldScroll ? nil : .infinity)
         .accessibilityElement(children: .contain)
     }
 }

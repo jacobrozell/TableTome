@@ -5,7 +5,7 @@ struct NewEditionBadge: View {
     var body: some View {
         Text(String(localized: "NEW"))
             .font(.caption2.weight(.bold))
-            .foregroundStyle(Color.accentColor)
+            .foregroundStyle(Color.accentOnSurface)
             .padding(.horizontal, 6)
             .padding(.vertical, 2)
             .background(Color.accentColor.opacity(0.14), in: Capsule())

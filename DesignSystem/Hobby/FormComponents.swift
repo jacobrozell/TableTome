@@ -1,4 +1,5 @@
 import SwiftUI
+import TabletomeDomain
 
 /// Shared copy for form section footers.
 enum FormHints {
@@ -37,6 +38,58 @@ enum FormHints {
     }
     static var paintFilter: String {
         String(localized: "Filter your paint shelf by type, brand, or restock needs.")
+    }
+    static var modelCount: String {
+        String(
+            localized: """
+            Put the model count in parentheses — e.g. \"Clanrats (5)\" — then multiply by quantity. \
+            Without parentheses, each unit entry counts as one model.
+            """
+        )
+    }
+    static var trackPerModel: String {
+        String(
+            localized: "Track painting progress for each model separately. Handy when part of a squad is further along."
+        )
+    }
+    static var trackPerModelOff: String {
+        String(localized: "All models in this entry share the starting state above.")
+    }
+}
+
+/// Live estimate of physical models for a unit name + quantity.
+struct ModelCountSummary: View {
+    let name: String
+    let qty: Int
+
+    private var modelCount: Int { ModelCount.of(name: name, qty: qty) }
+    private var perUnit: Int { ModelCount.of(name: name, qty: 1) }
+    private var hasParenCount: Bool { ModelCount.firstParenGroup(name) != nil }
+
+    var body: some View {
+        LabeledContent {
+            Text(
+                modelCount == 1
+                    ? String(localized: "1 model")
+                    : String(localized: "\(modelCount) models")
+            )
+            .fontWeight(.semibold)
+            .accessibilityIdentifier("modelCountValue")
+        } label: {
+            Label(String(localized: "Physical models"), systemImage: "figure.2")
+        }
+
+        if hasParenCount, perUnit > 1 {
+            if qty > 1 {
+                Text(String(localized: "\(perUnit) per unit × \(qty) units"))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            } else {
+                Text(String(localized: "\(perUnit) models in this unit entry"))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
     }
 }
 

@@ -12,6 +12,11 @@ enum RosterError: Error, Equatable {
     case catalogUnitNotFound
 }
 
+struct RosterCatalogRefreshResult: Sendable {
+    let updated: Int
+    let missing: Int
+}
+
 @MainActor
 enum RosterStore {
     @discardableResult
@@ -104,6 +109,33 @@ enum RosterStore {
         entry.roster?.touch()
         ctx.delete(entry)
         try? ctx.save()
+    }
+
+    @discardableResult
+    static func refreshCatalogPoints(for roster: Roster, in ctx: ModelContext) -> RosterCatalogRefreshResult {
+        UnitCatalogLoader.loadIfNeeded()
+        var updated = 0
+        var missing = 0
+        for entry in roster.orderedEntries {
+            guard let unit = UnitCatalogLoader.unit(id: entry.catalogUnitId) else {
+                missing += 1
+                continue
+            }
+            var changed = false
+            if entry.pointsEach != unit.basePoints {
+                entry.pointsEach = unit.basePoints
+                changed = true
+            }
+            if entry.displayName != unit.name {
+                entry.displayName = unit.name
+                changed = true
+            }
+            if changed { updated += 1 }
+        }
+        roster.catalogVersion = UnitCatalogLoader.version
+        roster.touch()
+        try? ctx.save()
+        return RosterCatalogRefreshResult(updated: updated, missing: missing)
     }
 
     static func importMissingToCollection(roster: Roster,

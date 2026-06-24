@@ -24,6 +24,7 @@ public struct FactionCatalogFile: Codable, Sendable {
 public struct UnitCatalogManifest: Codable, Sendable {
     public let version: String
     public let generatedAt: String
+    public let pointsKey: String
     public let attribution: String
     public let games: [String]
 }

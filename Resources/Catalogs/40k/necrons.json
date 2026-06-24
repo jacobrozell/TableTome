@@ -25,7 +25,7 @@
       "faction": "Necrons",
       "game": "40k",
       "category": "Character",
-      "basePoints": 65,
+      "basePoints": 85,
       "modelCount": 1,
       "keywords": [
         "Character",
@@ -59,7 +59,7 @@
       "faction": "Necrons",
       "game": "40k",
       "category": "Character",
-      "basePoints": 80,
+      "basePoints": 85,
       "modelCount": 1,
       "keywords": [
         "Character",
@@ -93,7 +93,7 @@
       "faction": "Necrons",
       "game": "40k",
       "category": "Character",
-      "basePoints": 65,
+      "basePoints": 60,
       "modelCount": 1,
       "keywords": [
         "Character",
@@ -110,7 +110,7 @@
       "faction": "Necrons",
       "game": "40k",
       "category": "Character",
-      "basePoints": 90,
+      "basePoints": 80,
       "modelCount": 1,
       "keywords": [
         "Character",
@@ -213,7 +213,7 @@
       "faction": "Necrons",
       "game": "40k",
       "category": "Fast Attack",
-      "basePoints": 110,
+      "basePoints": 115,
       "modelCount": 3,
       "keywords": [
         "Infantry"
@@ -229,7 +229,7 @@
       "faction": "Necrons",
       "game": "40k",
       "category": "Fast Attack",
-      "basePoints": 55,
+      "basePoints": 90,
       "modelCount": 3,
       "keywords": [
         "Infantry"
@@ -245,7 +245,7 @@
       "faction": "Necrons",
       "game": "40k",
       "category": "Fast Attack",
-      "basePoints": 40,
+      "basePoints": 35,
       "modelCount": 1,
       "keywords": [
         "Bike"
@@ -358,7 +358,7 @@
       "faction": "Necrons",
       "game": "40k",
       "category": "Elite",
-      "basePoints": 90,
+      "basePoints": 100,
       "modelCount": 5,
       "keywords": [
         "Infantry"

@@ -11,8 +11,14 @@ struct MusterSettingsSection: View {
     var body: some View {
         Section(String(localized: "Army Lists")) {
             LabeledContent {
-                Text(UnitCatalogLoader.version)
-                    .foregroundStyle(.secondary)
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text(UnitCatalogLoader.version)
+                    if !UnitCatalogLoader.pointsKey.isEmpty {
+                        Text(String(localized: "MFM \(UnitCatalogLoader.pointsKey)"))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
             } label: {
                 Label(String(localized: "Catalog version"), systemImage: "books.vertical")
             }
@@ -44,8 +50,9 @@ struct MusterSettingsSection: View {
             Text(
                 String(
                     localized: """
-                    Unit names and points values are unofficial community data for personal list building. \
-                    Not endorsed by Games Workshop. Verify before events.
+                    Unit names and points follow the Games Workshop Munitorum Field Manual \
+                    (\(UnitCatalogLoader.pointsKey.isEmpty ? "bundled catalog" : UnitCatalogLoader.pointsKey)). \
+                    Not endorsed by Games Workshop — verify before events.
                     """
                 )
             )

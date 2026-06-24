@@ -28,7 +28,7 @@
       "faction": "Grey Knights",
       "game": "40k",
       "category": "Character",
-      "basePoints": 95,
+      "basePoints": 90,
       "modelCount": 1,
       "keywords": [
         "Character",
@@ -45,7 +45,7 @@
       "faction": "Grey Knights",
       "game": "40k",
       "category": "Character",
-      "basePoints": 70,
+      "basePoints": 80,
       "modelCount": 1,
       "keywords": [
         "Character",
@@ -62,7 +62,7 @@
       "faction": "Grey Knights",
       "game": "40k",
       "category": "Character",
-      "basePoints": 115,
+      "basePoints": 95,
       "modelCount": 1,
       "keywords": [
         "Character",
@@ -79,7 +79,7 @@
       "faction": "Grey Knights",
       "game": "40k",
       "category": "Character",
-      "basePoints": 80,
+      "basePoints": 120,
       "modelCount": 1,
       "keywords": [
         "Character",
@@ -97,7 +97,7 @@
       "faction": "Grey Knights",
       "game": "40k",
       "category": "Battleline",
-      "basePoints": 95,
+      "basePoints": 125,
       "modelCount": 5,
       "keywords": [
         "Battleline",
@@ -117,7 +117,7 @@
       "faction": "Grey Knights",
       "game": "40k",
       "category": "Battleline",
-      "basePoints": 95,
+      "basePoints": 120,
       "modelCount": 5,
       "keywords": [
         "Battleline",
@@ -136,7 +136,7 @@
       "faction": "Grey Knights",
       "game": "40k",
       "category": "Elite",
-      "basePoints": 115,
+      "basePoints": 125,
       "modelCount": 5,
       "keywords": [
         "Infantry"
@@ -152,7 +152,7 @@
       "faction": "Grey Knights",
       "game": "40k",
       "category": "Elite",
-      "basePoints": 190,
+      "basePoints": 210,
       "modelCount": 5,
       "keywords": [
         "Infantry",
@@ -191,7 +191,7 @@
       "faction": "Grey Knights",
       "game": "40k",
       "category": "Vehicle",
-      "basePoints": 140,
+      "basePoints": 155,
       "modelCount": 1,
       "keywords": [
         "Vehicle",
@@ -225,7 +225,7 @@
       "faction": "Grey Knights",
       "game": "40k",
       "category": "Transport",
-      "basePoints": 80,
+      "basePoints": 75,
       "modelCount": 1,
       "keywords": [
         "Vehicle",
@@ -242,7 +242,7 @@
       "faction": "Grey Knights",
       "game": "40k",
       "category": "Vehicle",
-      "basePoints": 95,
+      "basePoints": 85,
       "modelCount": 1,
       "keywords": [
         "Vehicle",
@@ -277,7 +277,7 @@
       "faction": "Grey Knights",
       "game": "40k",
       "category": "Heavy Support",
-      "basePoints": 115,
+      "basePoints": 120,
       "modelCount": 5,
       "keywords": [
         "Infantry"
@@ -293,7 +293,7 @@
       "faction": "Grey Knights",
       "game": "40k",
       "category": "Other",
-      "basePoints": 40,
+      "basePoints": 50,
       "modelCount": 4,
       "keywords": [
         "Infantry"
@@ -309,7 +309,7 @@
       "faction": "Grey Knights",
       "game": "40k",
       "category": "Character",
-      "basePoints": 75,
+      "basePoints": 70,
       "modelCount": 1,
       "keywords": [
         "Character",
@@ -360,7 +360,7 @@
       "faction": "Grey Knights",
       "game": "40k",
       "category": "Character",
-      "basePoints": 90,
+      "basePoints": 50,
       "modelCount": 1,
       "keywords": [
         "Character",

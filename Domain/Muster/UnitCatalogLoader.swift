@@ -21,6 +21,11 @@ public enum UnitCatalogLoader {
 
     public static var version: String { manifest?.version ?? "0" }
 
+    /// Munitorum Field Manual vintage for bundled `basePoints` (e.g. `2025-06`).
+    public static var pointsKey: String { manifest?.pointsKey ?? "" }
+
+    public static var attribution: String { manifest?.attribution ?? "" }
+
     public static func units(game: String, faction: String) -> [CatalogUnit] {
         loadIfNeeded()
         return cache[factionKey(game: game, faction: faction)] ?? []

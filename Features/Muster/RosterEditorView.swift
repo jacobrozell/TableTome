@@ -65,6 +65,13 @@ struct RosterEditorView: View {
         return (owned, partial, missing)
     }
 
+    private func catalogSyncStatus(for roster: Roster) -> RosterCatalogSync.Status {
+        let snapshots = roster.orderedEntries.map {
+            RosterCatalogSync.EntrySnapshot(catalogUnitId: $0.catalogUnitId, pointsEach: $0.pointsEach)
+        }
+        return RosterCatalogSync.status(entries: snapshots, rosterCatalogVersion: roster.catalogVersion)
+    }
+
     var body: some View {
         Group {
             if let roster { editor(roster) }
@@ -85,6 +92,7 @@ struct RosterEditorView: View {
         let pointsTotal = RosterPoints.total(roster.orderedEntries)
         let pointsLimit = RosterPoints.limit(for: roster)
         let isOverLimit = RosterPoints.isOverLimit(roster)
+        let syncStatus = catalogSyncStatus(for: roster)
         List {
             Section {
                 VStack(alignment: .leading, spacing: 10) {
@@ -141,6 +149,9 @@ struct RosterEditorView: View {
                         overLimitBanner(total: pointsTotal, limit: pointsLimit)
                     } else if pointsLimit > 0, !roster.orderedEntries.isEmpty {
                         pointsStatusLine(total: pointsTotal, limit: pointsLimit, remaining: RosterPoints.remaining(for: roster))
+                    }
+                    if syncStatus.needsRefresh {
+                        stalePointsBanner(syncStatus, roster: roster)
                     }
                     if let army = linkedArmy(for: roster) {
                         Button {
@@ -242,6 +253,11 @@ struct RosterEditorView: View {
                     Button(String(localized: "Add missing to collection"), systemImage: "tray.and.arrow.down") {
                         addMissing(roster)
                     }
+                    if catalogSyncStatus(for: roster).needsRefresh {
+                        Button(String(localized: "Update points from catalog"), systemImage: "arrow.triangle.2.circlepath") {
+                            refreshCatalogPoints(roster)
+                        }
+                    }
                     Divider()
                     Button(String(localized: "Rename"), systemImage: "pencil") { showRename = true }
                     Button(String(localized: "Delete list"), systemImage: "trash", role: .destructive) { confirmDelete = true }
@@ -322,6 +338,56 @@ struct RosterEditorView: View {
             parts.append(String(localized: "\(counts.missing) missing"))
         }
         return parts.joined(separator: " · ")
+    }
+
+    @ViewBuilder
+    private func stalePointsBanner(_ status: RosterCatalogSync.Status, roster: Roster) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: "arrow.triangle.2.circlepath")
+                .font(.title3)
+                .foregroundStyle(Color.accentOnSurface)
+                .symbolRenderingMode(.hierarchical)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(String(localized: "Points update available"))
+                    .font(.subheadline.weight(.semibold))
+                if status.driftCount > 0 {
+                    Text(
+                        String(
+                            localized: """
+                            \(status.driftCount) unit\(status.driftCount == 1 ? "" : "s") differ from catalog \
+                            (MFM \(status.catalogPointsKey)).
+                            """
+                        )
+                    )
+                } else if status.hasVersionDrift {
+                    Text(
+                        String(
+                            localized: """
+                            Catalog updated to \(status.catalogVersion) — refresh list points to match GW values.
+                            """
+                        )
+                    )
+                } else {
+                    Text(String(localized: "Some units are no longer in the catalog."))
+                }
+                Button(String(localized: "Update now"), systemImage: "arrow.triangle.2.circlepath") {
+                    refreshCatalogPoints(roster)
+                }
+                .font(.caption.weight(.semibold))
+                .buttonStyle(.bordered)
+                .padding(.top, 2)
+            }
+        }
+        .padding(10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
+        .overlay {
+            RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
+                .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(String(localized: "Points update available from catalog"))
     }
 
     @ViewBuilder
@@ -422,6 +488,19 @@ struct RosterEditorView: View {
             }
         } catch {
             banner.show(String(localized: "Could not add missing units"))
+        }
+    }
+
+    private func refreshCatalogPoints(_ roster: Roster) {
+        let result = RosterStore.refreshCatalogPoints(for: roster, in: context)
+        if result.updated > 0 {
+            banner.show(
+                String(localized: "Updated points for \(result.updated) unit\(result.updated == 1 ? "" : "s")")
+            )
+        } else if result.missing > 0 {
+            banner.show(String(localized: "Catalog is current; \(result.missing) unit\(result.missing == 1 ? "" : "s") not in catalog"))
+        } else {
+            banner.show(String(localized: "Points already match catalog"))
         }
     }
 }

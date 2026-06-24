@@ -8,7 +8,7 @@
       "faction": "Chaos Space Marines",
       "game": "40k",
       "category": "Character",
-      "basePoints": 270,
+      "basePoints": 280,
       "modelCount": 1,
       "keywords": [
         "Character",
@@ -45,7 +45,7 @@
       "faction": "Chaos Space Marines",
       "game": "40k",
       "category": "Character",
-      "basePoints": 60,
+      "basePoints": 70,
       "modelCount": 1,
       "keywords": [
         "Character",
@@ -81,7 +81,7 @@
       "faction": "Chaos Space Marines",
       "game": "40k",
       "category": "Character",
-      "basePoints": 65,
+      "basePoints": 75,
       "modelCount": 1,
       "keywords": [
         "Character",
@@ -98,7 +98,7 @@
       "faction": "Chaos Space Marines",
       "game": "40k",
       "category": "Character",
-      "basePoints": 70,
+      "basePoints": 90,
       "modelCount": 1,
       "keywords": [
         "Character",
@@ -201,7 +201,7 @@
       "faction": "Chaos Space Marines",
       "game": "40k",
       "category": "Fast Attack",
-      "basePoints": 110,
+      "basePoints": 90,
       "modelCount": 5,
       "keywords": [
         "Infantry",
@@ -235,7 +235,7 @@
       "faction": "Chaos Space Marines",
       "game": "40k",
       "category": "Heavy Support",
-      "basePoints": 165,
+      "basePoints": 160,
       "modelCount": 2,
       "keywords": [
         "Infantry"
@@ -251,7 +251,7 @@
       "faction": "Chaos Space Marines",
       "game": "40k",
       "category": "Vehicle",
-      "basePoints": 115,
+      "basePoints": 130,
       "modelCount": 1,
       "keywords": [
         "Vehicle",
@@ -268,7 +268,7 @@
       "faction": "Chaos Space Marines",
       "game": "40k",
       "category": "Vehicle",
-      "basePoints": 165,
+      "basePoints": 190,
       "modelCount": 1,
       "keywords": [
         "Vehicle",
@@ -319,7 +319,7 @@
       "faction": "Chaos Space Marines",
       "game": "40k",
       "category": "Heavy Support",
-      "basePoints": 150,
+      "basePoints": 180,
       "modelCount": 1,
       "keywords": [
         "Vehicle",
@@ -353,7 +353,7 @@
       "faction": "Chaos Space Marines",
       "game": "40k",
       "category": "Heavy Support",
-      "basePoints": 110,
+      "basePoints": 120,
       "modelCount": 1,
       "keywords": [
         "Vehicle",
@@ -386,7 +386,7 @@
       "faction": "Chaos Space Marines",
       "game": "40k",
       "category": "Elite",
-      "basePoints": 180,
+      "basePoints": 170,
       "modelCount": 5,
       "keywords": [
         "Infantry",

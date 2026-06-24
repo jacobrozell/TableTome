@@ -43,7 +43,7 @@
       "faction": "Space Marines",
       "game": "40k",
       "category": "Character",
-      "basePoints": 65,
+      "basePoints": 60,
       "modelCount": 1,
       "keywords": [
         "Character",
@@ -60,7 +60,7 @@
       "faction": "Space Marines",
       "game": "40k",
       "category": "Character",
-      "basePoints": 55,
+      "basePoints": 65,
       "modelCount": 1,
       "keywords": [
         "Character",
@@ -231,7 +231,7 @@
       "faction": "Space Marines",
       "game": "40k",
       "category": "Elite",
-      "basePoints": 95,
+      "basePoints": 100,
       "modelCount": 3,
       "keywords": [
         "Infantry"
@@ -296,7 +296,7 @@
       "faction": "Space Marines",
       "game": "40k",
       "category": "Elite",
-      "basePoints": 90,
+      "basePoints": 80,
       "modelCount": 3,
       "keywords": [
         "Infantry"
@@ -312,7 +312,7 @@
       "faction": "Space Marines",
       "game": "40k",
       "category": "Vehicle",
-      "basePoints": 195,
+      "basePoints": 210,
       "modelCount": 1,
       "keywords": [
         "Vehicle",
@@ -329,7 +329,7 @@
       "faction": "Space Marines",
       "game": "40k",
       "category": "Vehicle",
-      "basePoints": 235,
+      "basePoints": 220,
       "modelCount": 1,
       "keywords": [
         "Vehicle"

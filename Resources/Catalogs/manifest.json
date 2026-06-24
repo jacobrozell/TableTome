@@ -1,7 +1,8 @@
 {
-  "version": "2026.06.1",
-  "generatedAt": "2026-06-15",
-  "attribution": "Unofficial community points; not affiliated with Games Workshop.",
+  "version": "2026.06.2",
+  "generatedAt": "2026-06-23",
+  "pointsKey": "2025-06",
+  "attribution": "Points from Games Workshop Munitorum Field Manual (June 2025). Unofficial fan reference \u2014 verify before events.",
   "games": [
     "40k"
   ]

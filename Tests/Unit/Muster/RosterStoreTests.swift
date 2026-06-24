@@ -119,6 +119,30 @@ final class RosterStoreTests: XCTestCase {
         XCTAssertEqual(copy.orderedEntries.first?.catalogUnitId, "40k:space-marines:captain")
     }
 
+    func testRefreshCatalogPointsUpdatesStaleEntry() throws {
+        let roster = try RosterStore.addRoster(
+            name: "Points",
+            game: "40k",
+            faction: "Space Marines",
+            battleSizeKey: "incursion",
+            linkedArmyId: nil,
+            in: context
+        )
+        let entry = try RosterStore.addEntry(
+            from: "40k:space-marines:aggressor-squad",
+            to: roster,
+            in: context
+        )
+        entry.pointsEach = 95
+        roster.catalogVersion = "2020.01.1"
+
+        let result = RosterStore.refreshCatalogPoints(for: roster, in: context)
+
+        XCTAssertEqual(result.updated, 1)
+        XCTAssertEqual(entry.pointsEach, 100)
+        XCTAssertEqual(roster.catalogVersion, UnitCatalogLoader.version)
+    }
+
     func testImportMissingToCollectionAddsUnits() throws {
         let roster = try RosterStore.addRoster(
             name: "Ultramarines",

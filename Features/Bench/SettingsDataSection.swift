@@ -97,10 +97,18 @@ struct SettingsDataSection: View {
         templateSection
 
         Section {
-            Button(String(localized: "Import armies (replace)…")) { beginImport(.armies, .replace) }
-            Button(String(localized: "Import armies (append)…")) { beginImport(.armies, .append) }
-            Button(String(localized: "Import paints (replace)…")) { beginImport(.paints, .replace) }
-            Button(String(localized: "Import paints (append)…")) { beginImport(.paints, .append) }
+            Button { beginImport(.armies, .replace) } label: {
+                Label(String(localized: "Import armies (replace)…"), systemImage: "square.and.arrow.down")
+            }
+            Button { beginImport(.armies, .append) } label: {
+                Label(String(localized: "Import armies (append)…"), systemImage: "square.and.arrow.down.on.square")
+            }
+            Button { beginImport(.paints, .replace) } label: {
+                Label(String(localized: "Import paints (replace)…"), systemImage: "square.and.arrow.down")
+            }
+            Button { beginImport(.paints, .append) } label: {
+                Label(String(localized: "Import paints (append)…"), systemImage: "square.and.arrow.down.on.square")
+            }
         } header: {
             Text(String(localized: "Import"))
         } footer: {
@@ -108,9 +116,15 @@ struct SettingsDataSection: View {
         }
 
         Section {
-            Button(String(localized: "Export armies CSV")) { exportArmiesCSV() }
-            Button(String(localized: "Export paints CSV")) { exportPaintsCSV() }
-            Button(String(localized: "Full backup (JSON)")) { exportBackup() }
+            Button { exportArmiesCSV() } label: {
+                Label(String(localized: "Export armies CSV"), systemImage: "doc.text")
+            }
+            Button { exportPaintsCSV() } label: {
+                Label(String(localized: "Export paints CSV"), systemImage: "doc.text")
+            }
+            Button { exportBackup() } label: {
+                Label(String(localized: "Full backup (JSON)"), systemImage: "externaldrive")
+            }
         } header: {
             Text(String(localized: "Export"))
         } footer: {
@@ -118,11 +132,15 @@ struct SettingsDataSection: View {
         }
 
         Section {
-            Button(String(localized: "Restore backup…")) { confirmRestore = true }
-            Button(String(localized: "Load sample collection")) {
-                presentOutcome(DataActions.loadSampleOutcome(ctx: context))
+            Button { confirmRestore = true } label: {
+                Label(String(localized: "Restore backup…"), systemImage: "arrow.counterclockwise")
             }
-            Button(String(localized: "Clear all data"), role: .destructive) { confirmClear = true }
+            Button { presentOutcome(DataActions.loadSampleOutcome(ctx: context)) } label: {
+                Label(String(localized: "Load sample collection"), systemImage: "tray.and.arrow.down")
+            }
+            Button(role: .destructive) { confirmClear = true } label: {
+                Label(String(localized: "Clear all data"), systemImage: "trash")
+            }
         } header: {
             Text(String(localized: "Backup & sample"))
         } footer: {
@@ -158,8 +176,12 @@ struct SettingsDataSection: View {
 
     private var templateSection: some View {
         Section {
-            Button(String(localized: "Armies template")) { exportArmiesTemplate() }
-            Button(String(localized: "Paints template")) { exportPaintsTemplate() }
+            Button { exportArmiesTemplate() } label: {
+                Label(String(localized: "Armies template"), systemImage: "doc.badge.plus")
+            }
+            Button { exportPaintsTemplate() } label: {
+                Label(String(localized: "Paints template"), systemImage: "doc.badge.plus")
+            }
         } header: {
             Text(String(localized: "CSV templates"))
         } footer: {

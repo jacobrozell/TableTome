@@ -11,10 +11,13 @@ struct OwnershipBadge: View {
             Label(label, systemImage: symbol)
                 .font(.caption)
                 .foregroundStyle(color)
+                .symbolRenderingMode(.hierarchical)
                 .labelStyle(.titleAndIcon)
         } else {
             Image(systemName: symbol)
                 .foregroundStyle(color)
+                .symbolRenderingMode(.hierarchical)
+                .frame(minWidth: 28, minHeight: 28)
                 .accessibilityLabel(label)
         }
     }

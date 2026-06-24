@@ -13,17 +13,61 @@ struct ImportResultsSheet: View {
         NavigationStack {
             List {
                 Section {
-                    Label(message, systemImage: failed ? "xmark.circle.fill" : "checkmark.circle.fill")
-                        .foregroundStyle(failed ? .red : .primary)
+                    VStack(alignment: .leading, spacing: 12) {
+                        Image(systemName: failed ? "xmark.circle.fill" : "checkmark.circle.fill")
+                            .font(.largeTitle)
+                            .foregroundStyle(failed ? Color.red : Color.accentOnSurface)
+                            .symbolRenderingMode(.hierarchical)
+                            .accessibilityHidden(true)
+                        Text(message)
+                            .font(.body)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.vertical, 4)
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel(
+                        failed
+                            ? String(localized: "Import failed, \(message)")
+                            : String(localized: "Import complete, \(message)")
+                    )
                 }
+
                 if !warnings.isEmpty {
-                    Section(String(localized: "Warnings (\(warnings.count))")) {
-                        ForEach(warnings, id: \.self) { Text($0).font(.caption) }
+                    Section {
+                        ForEach(warnings, id: \.self) { warning in
+                            HStack(alignment: .top, spacing: 10) {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .font(.caption)
+                                    .foregroundStyle(.orange)
+                                    .symbolRenderingMode(.hierarchical)
+                                    .padding(.top, 2)
+                                    .accessibilityHidden(true)
+                                Text(warning)
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                            .accessibilityElement(children: .combine)
+                        }
+                    } header: {
+                        Text(String(localized: "Warnings (\(warnings.count))"))
+                    } footer: {
+                        Text(
+                            String(
+                                localized: "Rows with warnings were still imported when possible. Review your collection after import."
+                            )
+                        )
                     }
                 }
             }
             .navigationTitle(title)
-            .toolbar { ToolbarItem(placement: .confirmationAction) { Button(String(localized: "Done")) { dismiss() } } }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(String(localized: "Done")) { dismiss() }
+                }
+            }
         }
     }
 }

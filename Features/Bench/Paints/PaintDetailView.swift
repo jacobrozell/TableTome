@@ -24,7 +24,13 @@ struct PaintDetailView: View {
     var body: some View {
         Group {
             if let paint { form(paint) }
-            else { ContentUnavailableView(String(localized: "Paint not found"), systemImage: "paintpalette") }
+            else {
+                ContentUnavailableView {
+                    Label(String(localized: "Paint not found"), systemImage: "paintpalette")
+                } description: {
+                    Text(String(localized: "This paint may have been deleted."))
+                }
+            }
         }
         .navigationTitle(paint?.name ?? String(localized: "Paint"))
         .navigationBarTitleDisplayMode(.inline)
@@ -49,13 +55,41 @@ struct PaintDetailView: View {
         let linked = PaintStore.linkedUnitCount(source: paint.source, armies: armies)
         Form {
             Section {
-                HStack {
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(Color(hex: paint.swatchHex))
-                        .frame(width: 48, height: 48)
-                    Spacer()
+                HStack(spacing: 14) {
+                    PaintSwatch(hex: paint.swatchHex, size: 56, cornerRadius: 10)
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack(spacing: 6) {
+                            Text(paint.name)
+                                .font(.headline)
+                                .lineLimit(2)
+                                .fixedSize(horizontal: false, vertical: true)
+                            if paint.low {
+                                Text(String(localized: "LOW"))
+                                    .font(.caption2.bold())
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .background(.orange.opacity(0.2), in: Capsule())
+                                    .foregroundStyle(.orange)
+                            }
+                        }
+                        let meta = [paint.type, paint.brand].filter { !$0.isEmpty }.joined(separator: " · ")
+                        if !meta.isEmpty {
+                            Text(meta)
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+                        if paint.qty > 1 {
+                            Text(String(localized: "\(paint.qty) pots"))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .monospacedDigit()
+                        }
+                    }
+                    Spacer(minLength: 0)
                 }
+                .padding(.vertical, 4)
             }
+
             Section {
                 TextField(String(localized: "Name"), text: $paint.name)
                     .textInputAutocapitalization(.words)
@@ -81,6 +115,14 @@ struct PaintDetailView: View {
             Section {
                 TextField(String(localized: "Source"), text: $paint.source)
                     .textInputAutocapitalization(.words)
+                if !paint.source.isEmpty {
+                    LabeledContent(String(localized: "Linked units"), value: "\(linked)")
+                    Button(String(localized: "Show in Collection"), systemImage: "link") {
+                        router.showArmies(filteredBySource: paint.source)
+                        banner.show(String(localized: "Filtered by source: \(paint.source)"))
+                        filterTrigger.toggle()
+                    }
+                }
             } header: {
                 Text(String(localized: "Collection link"))
             } footer: {
@@ -92,20 +134,13 @@ struct PaintDetailView: View {
             } header: {
                 Text(String(localized: "Notes"))
             }
-            if !paint.source.isEmpty {
-                Section(String(localized: "Collection link")) {
-                    LabeledContent(String(localized: "Linked units"), value: "\(linked)")
-                    Button(String(localized: "Show in Collection"), systemImage: "link") {
-                        router.showArmies(filteredBySource: paint.source)
-                        banner.show(String(localized: "Filtered by source: \(paint.source)"))
-                        filterTrigger.toggle()
-                    }
-                }
-            }
+
             Section {
                 Button(String(localized: "Delete paint"), role: .destructive) { confirmDelete = true }
             }
         }
+        .tabBarScrollInset()
+        .readableContentWidth()
         .onDisappear { try? context.save() }
     }
 

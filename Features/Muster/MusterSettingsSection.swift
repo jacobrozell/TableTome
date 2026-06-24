@@ -3,47 +3,6 @@ import SwiftData
 import TabletomeHobbyData
 import TabletomeDomain
 
-struct MusterIntroSheet: View {
-    var onDismiss: () -> Void
-
-    var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 24) {
-                    Image(systemName: "flag.fill")
-                        .font(.system(size: 56))
-                        .foregroundStyle(Color.accentColor)
-                        .accessibilityHidden(true)
-                    Text(String(localized: "Army Lists"))
-                        .font(.title.bold())
-                        .multilineTextAlignment(.center)
-                    Text(
-                        String(
-                            localized: """
-                            Army lists help you plan which models to bring. Track what you own under Models, \
-                            then build lists here — you can skip this until after your first game.
-                            """
-                        )
-                    )
-                        .multilineTextAlignment(.center)
-                        .foregroundStyle(.secondary)
-                        .padding(.horizontal)
-                }
-                .padding(.top, 32)
-                .padding(.bottom, 16)
-            }
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(String(localized: "Got it")) { onDismiss() }
-                        .accessibilityIdentifier("musterIntroDismiss")
-                }
-            }
-        }
-        .presentationDetents([.medium, .large])
-    }
-}
-
 struct MusterSettingsSection: View {
     @Environment(\.modelContext) private var context
     @Bindable var cfg: AppConfiguration

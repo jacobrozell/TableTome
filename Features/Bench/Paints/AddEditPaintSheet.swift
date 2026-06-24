@@ -90,6 +90,7 @@ struct AddEditPaintSheet: View {
                     ? String(localized: "Add paint")
                     : String(localized: "Edit paint")
             )
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(String(localized: "Cancel")) { dismiss() }

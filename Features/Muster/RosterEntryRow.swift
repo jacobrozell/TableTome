@@ -84,12 +84,16 @@ struct RosterEntryRow: View {
     @ViewBuilder
     private var ownershipControl: some View {
         if let match {
-            Button { openCollection(for: match) } label: {
+            if match.status == .owned || match.status == .partial {
+                Button { openCollection(for: match) } label: {
+                    OwnershipBadge(status: match.status)
+                }
+                .buttonStyle(.plain)
+                .accessibilityHint(ownershipHint(for: match.status))
+            } else {
                 OwnershipBadge(status: match.status)
+                    .accessibilityHint(ownershipHint(for: match.status))
             }
-            .buttonStyle(.plain)
-            .accessibilityHint(ownershipHint(for: match.status))
-            .disabled(match.status == .missing || match.status == .unknown)
         }
     }
 

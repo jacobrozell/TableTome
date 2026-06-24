@@ -56,9 +56,11 @@ struct CollectionTab: View {
             AddArmySheet { game, faction, name in
                 ArmyStore.addArmy(name: name, game: game, faction: faction, in: context)
             }
+            .presentationDetents([.medium, .large])
         }
         .sheet(isPresented: $showHobbySettings) {
             HobbySettingsScreen()
+                .presentationDetents([.large])
         }
         .sheet(isPresented: $showFilters) {
             FilterSheet(

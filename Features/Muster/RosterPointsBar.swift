@@ -28,6 +28,13 @@ struct RosterPointsBar: View {
         .padding(.horizontal)
         .padding(.vertical, 12)
         .background(.bar)
+        .overlay(alignment: .top) {
+            if over {
+                Rectangle()
+                    .fill(Color.red.opacity(0.45))
+                    .frame(height: 2)
+            }
+        }
         .accessibilityIdentifier("rosterPointsBar")
         .accessibilityElement(children: .combine)
         .accessibilityLabel(accessibilitySummary)
@@ -38,6 +45,7 @@ struct RosterPointsBar: View {
             Text("\(total)")
                 .font(.title3.weight(.semibold))
                 .monospacedDigit()
+                .foregroundStyle(over ? Color.red : Color.accentOnSurface)
             Text(String(localized: "pts used"))
                 .font(.body)
                 .foregroundStyle(.secondary)
@@ -65,6 +73,7 @@ struct RosterPointsBar: View {
             Text("\(total)")
                 .font(.title3.weight(.semibold))
                 .monospacedDigit()
+                .foregroundStyle(over ? Color.red : Color.accentOnSurface)
             Text(String(localized: "pts used"))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)

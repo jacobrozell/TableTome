@@ -98,6 +98,39 @@ struct StatTile: View {
     }
 }
 
+/// Small paint colour swatch for list and detail rows.
+struct PaintSwatch: View {
+    let hex: String
+    var size: CGFloat = 28
+    var cornerRadius: CGFloat = 6
+
+    var body: some View {
+        RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+            .fill(Color(hex: hex))
+            .frame(width: size, height: size)
+            .overlay {
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .strokeBorder(Color(.separator).opacity(0.55), lineWidth: 0.5)
+            }
+            .accessibilityHidden(true)
+    }
+}
+
+/// Picker row label for a pipeline stage with colour dot.
+struct PipelineStagePickerRow: View {
+    let stage: PipelineStage
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Circle()
+                .fill(Color(hex: stage.hex))
+                .frame(width: 8, height: 8)
+                .accessibilityHidden(true)
+            Text(stage.key)
+        }
+    }
+}
+
 /// State picker tinted to the current stage colour. Mirrors `.state-sel`.
 struct StateMenu: View {
     let state: String

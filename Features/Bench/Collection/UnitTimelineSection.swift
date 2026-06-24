@@ -15,11 +15,36 @@ struct UnitTimelineSection: View {
     }
 
     var body: some View {
-        if !events.isEmpty {
-            Section(String(localized: "Timeline")) {
+        Section {
+            if events.isEmpty {
+                ContentUnavailableView {
+                    Label(String(localized: "No progress yet"), systemImage: "clock.arrow.circlepath")
+                } description: {
+                    Text(
+                        String(
+                            localized: """
+                            Advance painting stages or add photos to build a timeline for this unit.
+                            """
+                        )
+                    )
+                }
+                .listRowBackground(Color.clear)
+            } else {
                 ForEach(events) { event in
                     timelineRow(event)
                 }
+            }
+        } header: {
+            Text(String(localized: "Timeline"))
+        } footer: {
+            if events.isEmpty {
+                Text(
+                    String(
+                        localized: "Stage changes are recorded automatically when you advance or edit painting state."
+                    )
+                )
+            } else if !unit.photos.isEmpty {
+                Text(String(localized: "Photos from matching stages appear beside the closest event."))
             }
         }
     }

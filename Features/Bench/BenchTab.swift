@@ -45,6 +45,7 @@ struct BenchTab: View {
         .pickerStyle(.segmented)
         .padding(.horizontal, DesignTokens.Spacing.md)
         .padding(.vertical, DesignTokens.Spacing.sm)
+        .background(Color(.systemGroupedBackground))
         .accessibilityIdentifier("bench.sectionPicker")
         .accessibilityHint(String(localized: "Switch between your armies and paint inventory"))
       }

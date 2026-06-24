@@ -75,7 +75,9 @@ struct CollectionHomeView: View {
             set: { if !$0 { armyToRename = nil } }
         )) {
             if let army = armyToRename {
-                RenameArmySheet(current: army.name) { ArmyStore.rename(army, to: $0, in: context) }
+                RenameArmySheet(army: army, overrides: overrides, current: army.name) {
+                    ArmyStore.rename(army, to: $0, in: context)
+                }
                     .presentationDetents([.medium])
             }
         }

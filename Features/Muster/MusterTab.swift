@@ -90,12 +90,14 @@ struct MusterTab: View {
                             }
                             .accessibilityIdentifier("musterNewList.detail")
                         }
+                        .adaptiveEmptyStateLayout()
                     } else {
                         ContentUnavailableView {
                             Label(String(localized: "Pick a list"), systemImage: "flag")
                         } description: {
                             Text(String(localized: "Choose a list from the sidebar to add units and count points."))
                         }
+                        .adaptiveEmptyStateLayout()
                     }
                 }
             }

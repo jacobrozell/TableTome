@@ -17,6 +17,16 @@ struct UnitRow: View {
         HStack(alignment: .top, spacing: 10) {
             if let cover = unit.coverPhoto {
                 UnitPhotoThumb(photo: cover)
+            } else {
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .fill(Color(.tertiarySystemFill))
+                    .frame(width: 44, height: 44)
+                    .overlay {
+                        Image(systemName: "photo")
+                            .font(.caption)
+                            .foregroundStyle(.tertiary)
+                    }
+                    .accessibilityHidden(true)
             }
             VStack(alignment: .leading, spacing: 4) {
                 rowContent

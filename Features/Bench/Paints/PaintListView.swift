@@ -92,8 +92,41 @@ struct PaintListView: View {
 
     private var listBody: some View {
         let list = List {
+            if !filtered.isEmpty {
+                Section { paintsSummary }
+            }
             if filtersActive || !search.isEmpty {
                 Section { summaryLine }
+            }
+            if !armies.isEmpty {
+                Section {
+                    Button {
+                        router.tab = .armies
+                    } label: {
+                        HStack(spacing: 10) {
+                            Image(systemName: "shield.lefthalf.filled")
+                                .font(.title3)
+                                .foregroundStyle(Color.accentOnSurface)
+                                .symbolRenderingMode(.hierarchical)
+                                .frame(width: 28)
+                                .accessibilityHidden(true)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(String(localized: "See linked models in Collection"))
+                                    .font(.subheadline.weight(.medium))
+                                Text(
+                                    String(
+                                        localized: "Match paint source strings to units you own."
+                                    )
+                                )
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                }
             }
             Section {
                 ForEach(filtered) { paint in
@@ -122,10 +155,27 @@ struct PaintListView: View {
         return Group {
             if usesPadSidebarList {
                 list.listStyle(.sidebar)
+                    .tabBarScrollInset()
             } else {
                 list.listStyle(.insetGrouped)
+                    .tabBarScrollInset()
             }
         }
+    }
+
+    private var paintsSummary: some View {
+        let rows = filtered
+        let total = rows.reduce(0) { $0 + $1.qty }
+        let lowCount = rows.filter(\.low).count
+        let prefix = (filtersActive || !search.isEmpty) ? String(localized: "Showing ") : ""
+        var text = String(localized: "\(prefix)\(rows.count) paints · \(total) pots")
+        if lowCount > 0 {
+            text += String(localized: " · \(lowCount) low")
+        }
+        return Text(text)
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .accessibilityLabel(text)
     }
 
     @ViewBuilder
@@ -233,6 +283,11 @@ struct PaintListView: View {
                 cfg.paintLowOnly = false
                 search = ""
             }.buttonStyle(.borderedProminent)
+            if !search.isEmpty, !filtersActive {
+                Button(String(localized: "Clear search")) { search = "" }
+                    .buttonStyle(.bordered)
+            }
         }
+        .adaptiveEmptyStateLayout()
     }
 }

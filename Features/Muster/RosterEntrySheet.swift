@@ -36,6 +36,8 @@ struct RosterEntrySheet: View {
                     }
                 }
             }
+            .tabBarScrollInset()
+            .readableContentWidth()
             .navigationTitle(entry.displayName)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

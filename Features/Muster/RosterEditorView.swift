@@ -52,10 +52,29 @@ struct RosterEditorView: View {
         return armies.contains { $0.game == roster.game && FactionResolver.normalize($0.faction) == f }
     }
 
+    private var ownershipCounts: (owned: Int, partial: Int, missing: Int) {
+        var owned = 0, partial = 0, missing = 0
+        for (_, match) in matches {
+            switch match.status {
+            case .owned: owned += 1
+            case .partial: partial += 1
+            case .missing: missing += 1
+            case .unknown: break
+            }
+        }
+        return (owned, partial, missing)
+    }
+
     var body: some View {
         Group {
             if let roster { editor(roster) }
-            else { ContentUnavailableView(String(localized: "List not found"), systemImage: "flag") }
+            else {
+                ContentUnavailableView {
+                    Label(String(localized: "List not found"), systemImage: "flag")
+                } description: {
+                    Text(String(localized: "This list may have been deleted."))
+                }
+            }
         }
     }
 
@@ -63,6 +82,9 @@ struct RosterEditorView: View {
     private func editor(_ roster: Roster) -> some View {
         let pres = roster.presentation(overrides: overrides)
         let sizeLabel = BattleSizes.resolve(game: roster.game, key: roster.battleSizeKey)?.label ?? roster.battleSizeKey
+        let pointsTotal = RosterPoints.total(roster.orderedEntries)
+        let pointsLimit = RosterPoints.limit(for: roster)
+        let isOverLimit = RosterPoints.isOverLimit(roster)
         List {
             Section {
                 VStack(alignment: .leading, spacing: 10) {
@@ -72,17 +94,24 @@ struct RosterEditorView: View {
                                 CrestBadge(text: pres.crest, colorHex: pres.colorHex)
                                 Spacer(minLength: 0)
                                 if showsFieldableRing {
-                                    ProgressRing(percent: fieldablePercent, diameter: 36)
+                                    fieldableSummary
                                 }
                             }
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(roster.faction)
                                     .font(.headline)
                                     .fixedSize(horizontal: false, vertical: true)
-                                Text(sizeLabel)
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
-                                    .fixedSize(horizontal: false, vertical: true)
+                                HStack(spacing: 5) {
+                                    Image(systemName: HobbyGameSymbol.systemImage(for: roster.game))
+                                        .font(.caption2.weight(.semibold))
+                                        .foregroundStyle(Color.accentOnSurface)
+                                        .symbolRenderingMode(.hierarchical)
+                                        .accessibilityHidden(true)
+                                    Text(sizeLabel)
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .fixedSize(horizontal: false, vertical: true)
                             }
                         }
                     } else {
@@ -91,25 +120,44 @@ struct RosterEditorView: View {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(roster.faction)
                                     .font(.headline)
-                                Text(sizeLabel)
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
+                                HStack(spacing: 5) {
+                                    Image(systemName: HobbyGameSymbol.systemImage(for: roster.game))
+                                        .font(.caption2.weight(.semibold))
+                                        .foregroundStyle(Color.accentOnSurface)
+                                        .symbolRenderingMode(.hierarchical)
+                                        .accessibilityHidden(true)
+                                    Text(sizeLabel)
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                }
                             }
                             Spacer(minLength: 8)
                             if showsFieldableRing {
-                                ProgressRing(percent: fieldablePercent, diameter: 36)
+                                fieldableSummary
                             }
                         }
+                    }
+                    if isOverLimit {
+                        overLimitBanner(total: pointsTotal, limit: pointsLimit)
+                    } else if pointsLimit > 0, !roster.orderedEntries.isEmpty {
+                        pointsStatusLine(total: pointsTotal, limit: pointsLimit, remaining: RosterPoints.remaining(for: roster))
                     }
                     if let army = linkedArmy(for: roster) {
                         Button {
                             router.openCollection(armyId: army.id)
                         } label: {
-                            Label(String(localized: "Linked: \(army.name)"), systemImage: "link")
-                                .font(dynamicTypeSize.isAccessibilitySize ? .subheadline : .caption)
-                                .multilineTextAlignment(.leading)
-                                .frame(maxWidth: .infinity, alignment: .leading)
+                            HStack(spacing: 8) {
+                                Image(systemName: "link")
+                                    .foregroundStyle(Color.accentOnSurface)
+                                    .symbolRenderingMode(.hierarchical)
+                                Text(String(localized: "Linked: \(army.name)"))
+                                    .font(dynamicTypeSize.isAccessibilitySize ? .subheadline : .caption)
+                                    .multilineTextAlignment(.leading)
+                                Spacer(minLength: 0)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         }
+                        .buttonStyle(.plain)
                         .accessibilityLabel(String(localized: "Linked collection army \(army.name)"))
                         .accessibilityHint(String(localized: "Opens army in Collection tab"))
                     }
@@ -124,7 +172,10 @@ struct RosterEditorView: View {
                     ContentUnavailableView {
                         Label(String(localized: "No units"), systemImage: "figure.stand")
                     } description: {
-                        Text(String(localized: "Tap + to add units from the catalog."))
+                        Text(String(localized: "Add units from the catalog to count points and track ownership."))
+                    } actions: {
+                        Button(String(localized: "Add unit"), systemImage: "plus") { showCatalog = true }
+                            .buttonStyle(.borderedProminent)
                     }
                     .listRowBackground(Color.clear)
                 } else {
@@ -156,6 +207,8 @@ struct RosterEditorView: View {
             }
         }
         .listStyle(.insetGrouped)
+        .tabBarScrollInset()
+        .readableContentWidth()
         .navigationTitle(roster.name)
         .navigationBarTitleDisplayMode(.inline)
         .safeAreaInset(edge: .bottom) {
@@ -202,6 +255,7 @@ struct RosterEditorView: View {
             UnitCatalogBrowser(roster: roster) { unit in
                 _ = try? RosterStore.addEntry(from: unit.id, to: roster, in: context)
             }
+            .presentationDetents([.large])
         }
         .sheet(isPresented: Binding(
             get: { entrySheet != nil },
@@ -212,17 +266,21 @@ struct RosterEditorView: View {
             }
         }
         .sheet(isPresented: $showRename) {
-            RenameRosterSheet(current: roster.name) { newName in
+            RenameRosterSheet(roster: roster, overrides: overrides, current: roster.name) { newName in
                 do { return try RosterStore.rename(roster, to: newName, in: context) }
                 catch { return false }
             }
             .presentationDetents([.medium])
         }
         .sheet(isPresented: $showLinkArmy) {
-            LinkArmySheet(roster: roster, armies: matchingArmies(for: roster)) { armyId in
+            LinkArmySheet(
+                roster: roster,
+                armies: matchingArmies(for: roster),
+                overrides: overrides
+            ) { armyId in
                 RosterStore.setLinkedArmy(roster, armyId: armyId, in: context)
             }
-            .presentationDetents([.medium])
+            .presentationDetents([.medium, .large])
         }
         .confirmationDialog(
             String(localized: "Delete \"\(roster.name)\"?"),
@@ -234,6 +292,90 @@ struct RosterEditorView: View {
                 dismiss()
             }
         }
+    }
+
+    @ViewBuilder
+    private var fieldableSummary: some View {
+        let counts = ownershipCounts
+        VStack(alignment: .trailing, spacing: 4) {
+            ProgressRing(percent: fieldablePercent, diameter: 36)
+                .accessibilityLabel(String(localized: "\(fieldablePercent) percent fieldable"))
+            if counts.owned + counts.partial + counts.missing > 0 {
+                Text(ownershipSummaryLine(counts))
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.trailing)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+
+    private func ownershipSummaryLine(_ counts: (owned: Int, partial: Int, missing: Int)) -> String {
+        var parts: [String] = []
+        if counts.owned > 0 {
+            parts.append(String(localized: "\(counts.owned) owned"))
+        }
+        if counts.partial > 0 {
+            parts.append(String(localized: "\(counts.partial) partial"))
+        }
+        if counts.missing > 0 {
+            parts.append(String(localized: "\(counts.missing) missing"))
+        }
+        return parts.joined(separator: " · ")
+    }
+
+    @ViewBuilder
+    private func overLimitBanner(total: Int, limit: Int) -> some View {
+        let overBy = total - limit
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .font(.title3)
+                .foregroundStyle(.red)
+                .symbolRenderingMode(.hierarchical)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(String(localized: "Over point limit"))
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.red)
+                Text(
+                    String(
+                        localized: """
+                        \(total) / \(limit) pts (\(overBy) over) — remove units or lower quantities.
+                        """
+                    )
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.red.opacity(0.08), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
+        .overlay {
+            RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
+                .strokeBorder(Color.red.opacity(0.28), lineWidth: 1)
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(
+            String(localized: "Over point limit, \(total) of \(limit) points, \(overBy) over limit")
+        )
+    }
+
+    @ViewBuilder
+    private func pointsStatusLine(total: Int, limit: Int, remaining: Int) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: "chart.bar.fill")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(Color.accentOnSurface)
+                .symbolRenderingMode(.hierarchical)
+                .accessibilityHidden(true)
+            Text(String(localized: "\(total) / \(limit) pts · \(remaining) remaining"))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .monospacedDigit()
+        }
+        .accessibilityLabel(String(localized: "\(total) of \(limit) points, \(remaining) remaining"))
     }
 
     private func linkedArmy(for roster: Roster) -> Army? {
@@ -288,6 +430,7 @@ private struct LinkArmySheet: View {
     @Environment(\.dismiss) private var dismiss
     let roster: Roster
     let armies: [Army]
+    let overrides: [FactionPresetOverride]
     let onSelect: (UUID?) -> Void
 
     @State private var selection: UUID?
@@ -295,15 +438,39 @@ private struct LinkArmySheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Picker(String(localized: "Collection army"), selection: $selection) {
-                    Text(String(localized: "None")).tag(UUID?.none)
-                    ForEach(armies) { army in
-                        Text(army.name).tag(Optional(army.id))
+                if armies.isEmpty {
+                    Section {
+                        ContentUnavailableView {
+                            Label(String(localized: "No matching armies"), systemImage: "shield")
+                        } description: {
+                            Text(
+                                String(
+                                    localized: """
+                                    Add a \(roster.faction) army in Collection first, then link it here.
+                                    """
+                                )
+                            )
+                        }
+                        .adaptiveEmptyStateLayout()
+                    }
+                } else {
+                    Section {
+                        Picker(String(localized: "Collection army"), selection: $selection) {
+                            Text(String(localized: "None")).tag(UUID?.none)
+                            ForEach(armies) { army in
+                                armyPickerRow(army).tag(Optional(army.id))
+                            }
+                        }
+                        .formNavigationPickerStyle()
+                    } header: {
+                        Text(String(localized: "Link to Models"))
+                    } footer: {
+                        Text(FormHints.rosterLink)
                     }
                 }
-                .formNavigationPickerStyle()
             }
             .navigationTitle(String(localized: "Link army"))
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(String(localized: "Cancel")) { dismiss() }
@@ -313,9 +480,25 @@ private struct LinkArmySheet: View {
                         onSelect(selection)
                         dismiss()
                     }
+                    .disabled(armies.isEmpty)
                 }
             }
             .onAppear { selection = roster.linkedArmyId }
+        }
+    }
+
+    @ViewBuilder
+    private func armyPickerRow(_ army: Army) -> some View {
+        let pres = army.presentation(overrides: overrides)
+        HStack(spacing: 10) {
+            CrestBadge(text: pres.crest, colorHex: pres.colorHex)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(army.name)
+                    .lineLimit(1)
+                Text(army.faction)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
     }
 }

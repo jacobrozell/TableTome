@@ -67,9 +67,13 @@ struct ArmyDetailView: View {
         visibleUnits.filter { batchSelection.contains($0.id) }
     }
 
-    private var otherArmyNames: [String] {
+    private var otherArmies: [Army] {
         guard let army else { return [] }
-        return allArmies.map(\.name).filter { $0 != army.name }
+        return allArmies.filter { $0.id != army.id }
+    }
+
+    private var otherArmyNames: [String] {
+        otherArmies.map(\.name)
     }
 
     private var armyTitleDisplayMode: NavigationBarItem.TitleDisplayMode {
@@ -104,7 +108,9 @@ struct ArmyDetailView: View {
         }
         .sheet(isPresented: $showRename) {
             if let army {
-                RenameArmySheet(current: army.name) { ArmyStore.rename(army, to: $0, in: context) }
+                RenameArmySheet(army: army, overrides: overrides, current: army.name) {
+                    ArmyStore.rename(army, to: $0, in: context)
+                }
                     .presentationDetents([.medium])
             }
         }
@@ -116,11 +122,13 @@ struct ArmyDetailView: View {
         }
         .sheet(isPresented: $showMoveUnit) {
             if let unit = unitToMove {
-                MoveUnitSheet(unitName: unit.name, destinations: otherArmyNames) { dest in
-                    if let target = allArmies.first(where: { $0.name == dest }) {
-                        _ = ArmyStore.move(unit, to: target, in: context)
-                        if unit.id == selectedUnitId { selectedUnitId = nil }
-                    }
+                MoveUnitSheet(
+                    unitName: unit.name,
+                    destinationArmies: otherArmies,
+                    overrides: overrides
+                ) { target in
+                    _ = ArmyStore.move(unit, to: target, in: context)
+                    if unit.id == selectedUnitId { selectedUnitId = nil }
                 }
                 .presentationDetents([.medium])
             }

@@ -24,9 +24,15 @@ struct PaintGridView: View {
             ForEach(paints) { paint in
                 Button { onSelect(paint) } label: {
                     VStack(alignment: .leading, spacing: 6) {
-                        RoundedRectangle(cornerRadius: 8)
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
                             .fill(Color(hex: paint.swatchHex))
+                            .frame(maxWidth: .infinity)
                             .frame(height: 44)
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                    .strokeBorder(Color(.separator).opacity(0.55), lineWidth: 0.5)
+                            }
+                            .accessibilityHidden(true)
                         Text(paint.name)
                             .font(.subheadline.bold())
                             .foregroundStyle(.primary)

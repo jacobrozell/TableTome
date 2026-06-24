@@ -16,6 +16,14 @@ struct AddArmySheet: View {
 
     private var factions: [String] { FactionResolver.canonicalByGame[game]?.sorted() ?? [] }
     private var resolvedFaction: String { faction == customSentinel ? customFaction : faction }
+    private var displayFaction: String {
+        let f = resolvedFaction.trimmingCharacters(in: .whitespaces)
+        return f.isEmpty ? "Custom" : f
+    }
+    private var factionPreview: (crest: String, colorHex: String) {
+        let r = FactionResolver.resolve(faction: displayFaction, game: game, overrides: [])
+        return (r.crest, r.color)
+    }
 
     private let customSentinel = "\u{0}custom"
 
@@ -24,20 +32,53 @@ struct AddArmySheet: View {
             Form {
                 Section {
                     Picker(String(localized: "Game"), selection: $game) {
-                        ForEach(SupportedGames.all, id: \.self) { Text($0).tag($0) }
+                        ForEach(SupportedGames.all, id: \.self) { g in
+                            HStack(spacing: 8) {
+                                Image(systemName: HobbyGameSymbol.systemImage(for: g))
+                                    .foregroundStyle(Color.accentOnSurface)
+                                    .symbolRenderingMode(.hierarchical)
+                                    .frame(width: 20)
+                                    .accessibilityHidden(true)
+                                Text(g)
+                            }
+                            .tag(g)
+                        }
                     }
                     .formNavigationPickerStyle()
                     .onChange(of: game) { _, _ in faction = "" }
 
                     Picker(String(localized: "Faction"), selection: $faction) {
                         Text(String(localized: "Choose…")).tag("")
-                        ForEach(factions, id: \.self) { Text($0).tag($0) }
+                        ForEach(factions, id: \.self) { f in
+                            HStack(spacing: 8) {
+                                Circle()
+                                    .fill(Color(hex: FactionResolver.resolve(faction: f, game: game, overrides: []).color))
+                                    .frame(width: 8, height: 8)
+                                    .accessibilityHidden(true)
+                                Text(f)
+                            }
+                            .tag(f)
+                        }
                         Text(String(localized: "Custom…")).tag(customSentinel)
                     }
                     .formNavigationPickerStyle()
                     if faction == customSentinel {
                         TextField(String(localized: "Custom faction"), text: $customFaction)
                             .textInputAutocapitalization(.words)
+                    }
+                    if !faction.isEmpty {
+                        HStack(spacing: 12) {
+                            CrestBadge(text: factionPreview.crest, colorHex: factionPreview.colorHex)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(String(localized: "Preview"))
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                Text(displayFaction)
+                                    .font(.subheadline.weight(.medium))
+                            }
+                            Spacer(minLength: 0)
+                        }
+                        .padding(.vertical, 4)
                     }
                 } header: {
                     Text(String(localized: "Game & faction"))
@@ -56,6 +97,7 @@ struct AddArmySheet: View {
                 }
             }
             .navigationTitle(String(localized: "New army"))
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(String(localized: "Cancel")) { dismiss() }
@@ -65,7 +107,7 @@ struct AddArmySheet: View {
                         let f = resolvedFaction.isEmpty ? "Custom" : resolvedFaction
                         if onCreate(game, f, name) { dismiss() } else { error = true }
                     }
-                    .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
+                    .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty || faction.isEmpty)
                 }
             }
             .onAppear { nameFocused = true }
@@ -116,10 +158,20 @@ struct AddUnitSheet: View {
                 Section {
                     TextField(String(localized: "Source"), text: $source)
                         .textInputAutocapitalization(.words)
+                    LabeledContent {
+                        StateChip(state: state, pipeline: pipeline)
+                    } label: {
+                        Text(String(localized: "Starting state"))
+                    }
                     Picker(String(localized: "Starting state"), selection: $state) {
-                        ForEach(pipeline) { Text($0.key).tag($0.key) }
+                        ForEach(pipeline) { stage in
+                            PipelineStagePickerRow(stage: stage).tag(stage.key)
+                        }
                     }
                     .formNavigationPickerStyle()
+                    .labelsHidden()
+                    .accessibilityLabel(String(localized: "Starting state"))
+                    .accessibilityValue(state)
                 } header: {
                     Text(String(localized: "Details"))
                 } footer: {
@@ -152,6 +204,7 @@ struct AddUnitSheet: View {
                 }
             }
             .navigationTitle(String(localized: "Add unit"))
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(String(localized: "Cancel")) { dismiss() }
@@ -240,13 +293,22 @@ private struct AddUnitModelRow: View {
 struct RenameArmySheet: View {
     @Environment(\.dismiss) private var dismiss
     @FocusState private var nameFocused: Bool
+    let army: Army?
+    let overrides: [FactionPresetOverride]
     let current: String
     let onRename: (String) -> Bool
 
     @State private var name: String
     @State private var error = false
 
-    init(current: String, onRename: @escaping (String) -> Bool) {
+    init(
+        army: Army? = nil,
+        overrides: [FactionPresetOverride] = [],
+        current: String,
+        onRename: @escaping (String) -> Bool
+    ) {
+        self.army = army
+        self.overrides = overrides
         self.current = current
         self.onRename = onRename
         _name = State(initialValue: current)
@@ -255,8 +317,35 @@ struct RenameArmySheet: View {
     var body: some View {
         NavigationStack {
             Form {
+                if let army {
+                    Section {
+                        HStack(spacing: 12) {
+                            let pres = army.presentation(overrides: overrides)
+                            CrestBadge(text: pres.crest, colorHex: pres.colorHex)
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text(army.name)
+                                    .font(.headline)
+                                HStack(spacing: 5) {
+                                    Image(systemName: HobbyGameSymbol.systemImage(for: army.game))
+                                        .font(.caption2.weight(.semibold))
+                                        .foregroundStyle(Color.accentOnSurface)
+                                        .symbolRenderingMode(.hierarchical)
+                                        .accessibilityHidden(true)
+                                    Text("\(army.game) · \(army.faction)")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                            Spacer(minLength: 0)
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+
                 Section {
                     FormNameField(title: String(localized: "Army name"), text: $name, focus: $nameFocused)
+                } header: {
+                    Text(String(localized: "Name"))
                 } footer: {
                     if error {
                         FormValidationFooter(message: String(localized: "That name is taken."))
@@ -266,6 +355,7 @@ struct RenameArmySheet: View {
                 }
             }
             .navigationTitle(String(localized: "Rename army"))
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(String(localized: "Cancel")) { dismiss() }
@@ -306,6 +396,28 @@ struct ArmyPipelineEditorSheet: View {
                 } footer: {
                     if mode == .global {
                         Text(String(localized: "Uses the stages from Settings → Pipeline."))
+                    }
+                }
+
+                if mode == .global {
+                    Section {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 10) {
+                                ForEach(resolvedGlobal) { stage in
+                                    HStack(spacing: 4) {
+                                        RoundedRectangle(cornerRadius: 2)
+                                            .fill(Color(hex: stage.hex))
+                                            .frame(width: 8, height: 8)
+                                        Text(stage.key)
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+                            }
+                        }
+                        .padding(.vertical, 2)
+                    } header: {
+                        Text(String(localized: "Global stages"))
                     }
                 }
 
@@ -369,30 +481,69 @@ struct ArmyPipelineEditorSheet: View {
 struct MoveUnitSheet: View {
     @Environment(\.dismiss) private var dismiss
     let unitName: String
-    let destinations: [String]
-    let onMove: (String) -> Void
+    let destinationArmies: [Army]
+    let overrides: [FactionPresetOverride]
+    let onMove: (Army) -> Void
 
-    @State private var selection: String
+    @State private var selection: UUID?
 
-    init(unitName: String, destinations: [String], onMove: @escaping (String) -> Void) {
+    init(
+        unitName: String,
+        destinationArmies: [Army],
+        overrides: [FactionPresetOverride] = [],
+        onMove: @escaping (Army) -> Void
+    ) {
         self.unitName = unitName
-        self.destinations = destinations
+        self.destinationArmies = destinationArmies
+        self.overrides = overrides
         self.onMove = onMove
-        _selection = State(initialValue: destinations.first ?? "")
+        _selection = State(initialValue: destinationArmies.first?.id)
     }
 
     var body: some View {
         NavigationStack {
             Form {
                 Section {
-                    Picker(String(localized: "Destination army"), selection: $selection) {
-                        ForEach(destinations, id: \.self) { Text($0).tag($0) }
+                    HStack(spacing: 10) {
+                        Image(systemName: "figure.stand")
+                            .font(.title3)
+                            .foregroundStyle(Color.accentOnSurface)
+                            .symbolRenderingMode(.hierarchical)
+                            .accessibilityHidden(true)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(unitName)
+                                .font(.headline)
+                            Text(String(localized: "Choose a destination army"))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer(minLength: 0)
                     }
-                    .formNavigationPickerStyle()
-                } header: {
-                    Text(String(localized: "Move to"))
-                } footer: {
-                    Text(String(localized: "\"\(unitName)\" will leave its current army."))
+                    .padding(.vertical, 4)
+                }
+
+                if destinationArmies.isEmpty {
+                    Section {
+                        ContentUnavailableView {
+                            Label(String(localized: "No other armies"), systemImage: "shield")
+                        } description: {
+                            Text(String(localized: "Create another army in Collection to move this unit."))
+                        }
+                        .adaptiveEmptyStateLayout()
+                    }
+                } else {
+                    Section {
+                        Picker(String(localized: "Destination army"), selection: $selection) {
+                            ForEach(destinationArmies) { army in
+                                moveArmyRow(army).tag(Optional(army.id))
+                            }
+                        }
+                        .formNavigationPickerStyle()
+                    } header: {
+                        Text(String(localized: "Move to"))
+                    } footer: {
+                        Text(String(localized: "\"\(unitName)\" will leave its current army."))
+                    }
                 }
             }
             .navigationTitle(String(localized: "Move unit"))
@@ -402,9 +553,29 @@ struct MoveUnitSheet: View {
                     Button(String(localized: "Cancel")) { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(String(localized: "Move")) { onMove(selection); dismiss() }
-                        .disabled(selection.isEmpty)
+                    Button(String(localized: "Move")) {
+                        if let army = destinationArmies.first(where: { $0.id == selection }) {
+                            onMove(army)
+                        }
+                        dismiss()
+                    }
+                    .disabled(selection == nil || destinationArmies.isEmpty)
                 }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func moveArmyRow(_ army: Army) -> some View {
+        let pres = army.presentation(overrides: overrides)
+        HStack(spacing: 10) {
+            CrestBadge(text: pres.crest, colorHex: pres.colorHex)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(army.name)
+                    .lineLimit(1)
+                Text("\(army.game) · \(army.faction)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
         }
     }

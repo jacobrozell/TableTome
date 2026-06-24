@@ -40,9 +40,17 @@ struct UnitDetailView: View {
         return army.units.contains { $0.spearhead != nil }
     }
 
-    private var otherArmyNames: [String] {
+    private var overrides: [FactionPresetOverride] {
+        (configs.first ?? HobbyConfig.current(context)).factionOverrides
+    }
+
+    private var otherArmies: [Army] {
         guard let army else { return [] }
-        return allArmies.map(\.name).filter { $0 != army.name }
+        return allArmies.filter { $0.id != army.id }
+    }
+
+    private var otherArmyNames: [String] {
+        otherArmies.map(\.name)
     }
 
     private var canAdvance: Bool {
@@ -51,10 +59,6 @@ struct UnitDetailView: View {
     }
 
     private var trackable: Bool { (unit?.modelCount ?? 0) >= 2 }
-
-    private var overrides: [FactionPresetOverride] {
-        configs.first?.factionOverrides ?? []
-    }
 
     var body: some View {
         Group {
@@ -86,11 +90,13 @@ struct UnitDetailView: View {
         }
         .sheet(isPresented: $showMove) {
             if let unit {
-                MoveUnitSheet(unitName: unit.name, destinations: otherArmyNames) { dest in
-                    if let target = allArmies.first(where: { $0.name == dest }) {
-                        _ = ArmyStore.move(unit, to: target, in: context)
-                        dismiss()
-                    }
+                MoveUnitSheet(
+                    unitName: unit.name,
+                    destinationArmies: otherArmies,
+                    overrides: overrides
+                ) { target in
+                    _ = ArmyStore.move(unit, to: target, in: context)
+                    dismiss()
                 }
                 .presentationDetents([.medium])
             }

@@ -19,10 +19,10 @@ struct HobbySettingsScreen: View {
             Form {
                 Section {
                     NavigationLink(value: HobbySettingsRoute.pipeline) {
-                        Text(String(localized: "Pipeline stages"))
+                        Label(String(localized: "Pipeline stages"), systemImage: "arrow.right.to.line")
                     }
                     NavigationLink(value: HobbySettingsRoute.factions) {
-                        Text(String(localized: "Faction crests & colours"))
+                        Label(String(localized: "Faction crests & colours"), systemImage: "shield.lefthalf.filled")
                     }
                 } header: {
                     Text(String(localized: "Painting"))
@@ -56,6 +56,8 @@ struct HobbySettingsScreen: View {
                 }
             }
             .navigationTitle(String(localized: "Collection & Data"))
+            .navigationBarTitleDisplayMode(.inline)
+            .tabBarScrollInset()
             .navigationDestination(for: HobbySettingsRoute.self) { route in
                 switch route {
                 case .pipeline:
@@ -82,6 +84,23 @@ private struct PipelineEditor: View {
     var body: some View {
         Form {
             Section {
+                if !stages.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 10) {
+                            ForEach(stages) { stage in
+                                HStack(spacing: 4) {
+                                    RoundedRectangle(cornerRadius: 2)
+                                        .fill(Color(hex: stage.hex))
+                                        .frame(width: 8, height: 8)
+                                    Text(stage.key)
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                    }
+                    .padding(.vertical, 2)
+                }
                 ForEach(Array(stages.enumerated()), id: \.offset) { index, _ in
                     HStack {
                         TextField(String(localized: "Stage name"), text: $stages[index].key)
@@ -106,6 +125,7 @@ private struct PipelineEditor: View {
             }
         }
         .navigationTitle(String(localized: "Pipeline"))
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar { EditButton() }
         .onAppear { stages = Pipeline.resolve(cfg.globalPipeline) }
         .onDisappear {
@@ -142,17 +162,34 @@ private struct FactionOverridesEditor: View {
         Form {
             if rows.isEmpty {
                 Section {
-                    ContentUnavailableView(
-                        String(localized: "No armies yet"),
-                        systemImage: "shield",
-                        description: Text(String(localized: "Add an army in Collection to customize its crest."))
-                    )
+                    ContentUnavailableView {
+                        Label(String(localized: "No armies yet"), systemImage: "shield")
+                    } description: {
+                        Text(String(localized: "Add an army in Collection to customize its crest."))
+                    }
+                    .adaptiveEmptyStateLayout()
                 }
             } else {
                 Section {
                     ForEach(rows) { row in
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text(row.id).font(.caption).foregroundStyle(.secondary)
+                        let pres = FactionResolver.resolve(
+                            faction: row.faction, game: row.game, overrides: cfg.factionOverrides
+                        )
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack(spacing: 10) {
+                                Image(systemName: HobbyGameSymbol.systemImage(for: row.game))
+                                    .font(.caption.weight(.semibold))
+                                    .foregroundStyle(Color.accentOnSurface)
+                                    .symbolRenderingMode(.hierarchical)
+                                    .accessibilityHidden(true)
+                                Text(row.faction)
+                                    .font(.subheadline.weight(.medium))
+                                Spacer(minLength: 0)
+                                CrestBadge(
+                                    text: crest[row.id] ?? pres.crest,
+                                    colorHex: (color[row.id] ?? Color(hex: pres.color)).hexString
+                                )
+                            }
                             HStack {
                                 TextField(String(localized: "Crest"), text: Binding(
                                     get: { crest[row.id] ?? "" },

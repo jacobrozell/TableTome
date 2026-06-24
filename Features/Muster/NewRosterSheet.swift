@@ -117,14 +117,48 @@ struct NewRosterSheet: View {
                 }
 
                 Section {
-                    LabeledContent(String(localized: "Game"), value: String(localized: "Warhammer 40,000"))
+                    HStack(spacing: 10) {
+                        Image(systemName: HobbyGameSymbol.systemImage(for: game))
+                            .font(.title3)
+                            .foregroundStyle(Color.accentOnSurface)
+                            .symbolRenderingMode(.hierarchical)
+                            .frame(width: 28)
+                            .accessibilityHidden(true)
+                        Text(String(localized: "Warhammer 40,000"))
+                            .font(.body.weight(.medium))
+                    }
 
                     Picker(String(localized: "Faction"), selection: $faction) {
                         Text(String(localized: "Choose…")).tag("")
-                        ForEach(suggestedFactions + otherFactions, id: \.self) { Text($0).tag($0) }
+                        ForEach(suggestedFactions + otherFactions, id: \.self) { f in
+                            HStack(spacing: 8) {
+                                Circle()
+                                    .fill(Color(hex: FactionResolver.resolve(faction: f, game: game, overrides: []).color))
+                                    .frame(width: 8, height: 8)
+                                    .accessibilityHidden(true)
+                                Text(f)
+                            }
+                            .tag(f)
+                        }
                     }
                     .formNavigationPickerStyle()
                     .onChange(of: faction) { _, _ in updateDefaultName() }
+
+                    if !faction.isEmpty {
+                        let pres = FactionResolver.resolve(faction: resolvedFaction, game: game, overrides: [])
+                        HStack(spacing: 12) {
+                            CrestBadge(text: pres.crest, colorHex: pres.color)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(String(localized: "Preview"))
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                Text(resolvedFaction)
+                                    .font(.subheadline.weight(.medium))
+                            }
+                            Spacer(minLength: 0)
+                        }
+                        .padding(.vertical, 4)
+                    }
                 } header: {
                     Text(String(localized: "Game & faction"))
                 } footer: {
@@ -169,7 +203,7 @@ struct NewRosterSheet: View {
                             Picker(String(localized: "Collection army"), selection: $linkedArmyId) {
                                 Text(String(localized: "None")).tag(UUID?.none)
                                 ForEach(matchingArmies) { army in
-                                    Text(army.name).tag(Optional(army.id))
+                                    newRosterArmyRow(army).tag(Optional(army.id))
                                 }
                             }
                             .formNavigationPickerStyle()
@@ -193,6 +227,9 @@ struct NewRosterSheet: View {
             }
             .scrollDismissesKeyboard(.interactively)
             .navigationTitle(String(localized: "New list"))
+            .navigationBarTitleDisplayMode(.inline)
+            .tabBarScrollInset()
+            .readableContentWidth()
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(String(localized: "Cancel")) { dismiss() }
@@ -282,6 +319,21 @@ struct NewRosterSheet: View {
             return String(
                 localized: "Battle size sets the point limit for this list."
             )
+        }
+    }
+
+    @ViewBuilder
+    private func newRosterArmyRow(_ army: Army) -> some View {
+        let pres = army.presentation(overrides: configs.first?.factionOverrides ?? [])
+        HStack(spacing: 10) {
+            CrestBadge(text: pres.crest, colorHex: pres.colorHex)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(army.name)
+                    .lineLimit(1)
+                Text(army.faction)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
     }
 

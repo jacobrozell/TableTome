@@ -43,12 +43,15 @@ struct PaintsTab: View {
                 if ok { banner.show(String(localized: "Paint added")) } else { banner.show(String(localized: "That name already exists")) }
                 return ok
             }
+            .presentationDetents([.medium, .large])
         }
         .sheet(isPresented: $showHobbySettings) {
             HobbySettingsScreen()
+                .presentationDetents([.large])
         }
         .sheet(isPresented: $showFilters) {
             PaintFilterSheet(cfg: cfg, types: types, brands: brands)
+                .presentationDetents([.medium, .large])
         }
     }
 
@@ -85,13 +88,18 @@ struct PaintsTab: View {
                             """
                         )
                     )
+                } actions: {
+                    Button(String(localized: "Add paint"), systemImage: "plus") { showAdd = true }
+                        .buttonStyle(.borderedProminent)
                 }
+                .adaptiveEmptyStateLayout()
             } else {
                 ContentUnavailableView {
                     Label(String(localized: "Pick a paint"), systemImage: "paintpalette")
                 } description: {
                     Text(String(localized: "Choose a paint from the sidebar to see details and inventory."))
                 }
+                .adaptiveEmptyStateLayout()
             }
         }
     }

@@ -53,7 +53,7 @@ struct MusterHomeView: View {
             set: { if !$0 { rosterToRename = nil } }
         )) {
             if let roster = rosterToRename {
-                RenameRosterSheet(current: roster.name) { newName in
+                RenameRosterSheet(roster: roster, overrides: overrides, current: roster.name) { newName in
                     do {
                         return try RosterStore.rename(roster, to: newName, in: context)
                     } catch {
@@ -111,16 +111,64 @@ struct MusterHomeView: View {
                         .buttonStyle(.borderedProminent)
                 }
                 .adaptiveEmptyStateLayout()
-            } else if usesPadSidebarList {
-                List(filtered, selection: $selectedRosterId) { roster in
-                    rosterRowContent(roster)
-                }
-                .listStyle(.sidebar)
             } else {
-                List(filtered) { roster in
-                    rosterRowContent(roster)
+                listBody
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var listBody: some View {
+        if usesPadSidebarList {
+            List(selection: $selectedRosterId) {
+                listSections
+            }
+            .listStyle(.sidebar)
+            .tabBarScrollInset()
+        } else {
+            List {
+                listSections
+            }
+            .listStyle(.insetGrouped)
+            .tabBarScrollInset()
+        }
+    }
+
+    @ViewBuilder
+    private var listSections: some View {
+        if !armies.isEmpty {
+            Section {
+                Button {
+                    router.tab = .armies
+                } label: {
+                    HStack(spacing: 10) {
+                        Image(systemName: "shield.lefthalf.filled")
+                            .font(.title3)
+                            .foregroundStyle(Color.accentOnSurface)
+                            .symbolRenderingMode(.hierarchical)
+                            .frame(width: 28)
+                            .accessibilityHidden(true)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(String(localized: "Link a Models army"))
+                                .font(.subheadline.weight(.medium))
+                            Text(
+                                String(
+                                    localized: "Track which roster units you own and field."
+                                )
+                            )
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
                 }
-                .listStyle(.insetGrouped)
+                .buttonStyle(.plain)
+            }
+        }
+        Section {
+            ForEach(filtered) { roster in
+                rosterRowContent(roster)
             }
         }
     }
@@ -189,9 +237,17 @@ struct MusterHomeView: View {
                     .font(.headline)
                     .lineLimit(2)
                     .fixedSize(horizontal: false, vertical: true)
-                Text(String(localized: "\(roster.faction) · \(total) / \(limit) pts"))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                HStack(spacing: 5) {
+                    Image(systemName: HobbyGameSymbol.systemImage(for: roster.game))
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(Color.accentOnSurface)
+                        .symbolRenderingMode(.hierarchical)
+                        .accessibilityHidden(true)
+                    Text(String(localized: "\(roster.faction) · \(total) / \(limit) pts"))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                }
             }
             Spacer(minLength: 8)
             if !roster.entries.isEmpty, showsFieldable {
@@ -222,10 +278,17 @@ struct MusterHomeView: View {
                 .font(.headline)
                 .lineLimit(3)
                 .fixedSize(horizontal: false, vertical: true)
-            Text(String(localized: "\(roster.faction) · \(total) / \(limit) pts"))
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
+            HStack(spacing: 5) {
+                Image(systemName: HobbyGameSymbol.systemImage(for: roster.game))
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(Color.accentOnSurface)
+                    .symbolRenderingMode(.hierarchical)
+                    .accessibilityHidden(true)
+                Text(String(localized: "\(roster.faction) · \(total) / \(limit) pts"))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
         }
     }
 
@@ -250,13 +313,22 @@ struct MusterHomeView: View {
 struct RenameRosterSheet: View {
     @Environment(\.dismiss) private var dismiss
     @FocusState private var nameFocused: Bool
+    let roster: Roster?
+    let overrides: [FactionPresetOverride]
     let current: String
     let onRename: (String) -> Bool
 
     @State private var name: String
     @State private var error = false
 
-    init(current: String, onRename: @escaping (String) -> Bool) {
+    init(
+        roster: Roster? = nil,
+        overrides: [FactionPresetOverride] = [],
+        current: String,
+        onRename: @escaping (String) -> Bool
+    ) {
+        self.roster = roster
+        self.overrides = overrides
         self.current = current
         self.onRename = onRename
         _name = State(initialValue: current)
@@ -265,8 +337,37 @@ struct RenameRosterSheet: View {
     var body: some View {
         NavigationStack {
             Form {
+                if let roster {
+                    Section {
+                        let pres = roster.presentation(overrides: overrides)
+                        let sizeLabel = BattleSizes.resolve(game: roster.game, key: roster.battleSizeKey)?.label
+                            ?? roster.battleSizeKey
+                        HStack(spacing: 12) {
+                            CrestBadge(text: pres.crest, colorHex: pres.colorHex)
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text(roster.name)
+                                    .font(.headline)
+                                HStack(spacing: 5) {
+                                    Image(systemName: HobbyGameSymbol.systemImage(for: roster.game))
+                                        .font(.caption2.weight(.semibold))
+                                        .foregroundStyle(Color.accentOnSurface)
+                                        .symbolRenderingMode(.hierarchical)
+                                        .accessibilityHidden(true)
+                                    Text("\(roster.faction) · \(sizeLabel)")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                            Spacer(minLength: 0)
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+
                 Section {
                     FormNameField(title: String(localized: "List name"), text: $name, focus: $nameFocused)
+                } header: {
+                    Text(String(localized: "Name"))
                 } footer: {
                     if error {
                         FormValidationFooter(message: String(localized: "That name is taken."))
@@ -276,6 +377,7 @@ struct RenameRosterSheet: View {
                 }
             }
             .navigationTitle(String(localized: "Rename list"))
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(String(localized: "Cancel")) { dismiss() }

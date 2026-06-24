@@ -39,10 +39,11 @@ struct RosterEntryRow: View {
             nameBlock
             Spacer(minLength: 4)
             ownershipControl
-            Text("\(entry.pointsTotal)")
-                .font(.subheadline.weight(.semibold).monospacedDigit())
-                .foregroundStyle(.secondary)
-                .accessibilityLabel(String(localized: "\(entry.pointsTotal) points"))
+            pointsDisplay
+            Image(systemName: "chevron.right")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.tertiary)
+                .accessibilityHidden(true)
             qtyStepper
         }
     }
@@ -52,23 +53,52 @@ struct RosterEntryRow: View {
             nameBlock
             HStack(alignment: .center, spacing: 10) {
                 ownershipControl
-                Text(String(localized: "\(entry.pointsTotal) pts"))
-                    .font(.subheadline.weight(.semibold).monospacedDigit())
-                    .foregroundStyle(.secondary)
-                    .accessibilityLabel(String(localized: "\(entry.pointsTotal) points"))
+                pointsDisplay
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.tertiary)
+                    .accessibilityHidden(true)
                 Spacer(minLength: 0)
                 qtyStepper
             }
         }
     }
 
+    private var pointsDisplay: some View {
+        VStack(alignment: .trailing, spacing: 2) {
+            PointsSourceViews.pointsCapsule(
+                "\(entry.pointsTotal)",
+                style: entry.usesCustomPoints ? .custom : .subtle
+            )
+            if entry.usesCustomPoints, entry.qty > 1 {
+                Text(String(localized: "\(entry.pointsEach) ea"))
+                    .font(.caption2.monospacedDigit())
+                    .foregroundStyle(.orange)
+            }
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(pointsAccessibilityLabel)
+    }
+
+    private var pointsAccessibilityLabel: String {
+        if entry.usesCustomPoints {
+            return String(localized: "\(entry.pointsTotal) points, \(entry.pointsEach) each, custom value")
+        }
+        return String(localized: "\(entry.pointsTotal) points")
+    }
+
     private var nameBlock: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(entry.displayName)
-                .font(.body.weight(.medium))
-                .lineLimit(usesStackedLayout ? 4 : 2)
-                .fixedSize(horizontal: false, vertical: true)
-                .accessibilityAddTraits(.isHeader)
+            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                Text(entry.displayName)
+                    .font(.body.weight(.medium))
+                    .lineLimit(usesStackedLayout ? 4 : 2)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityAddTraits(.isHeader)
+                if entry.usesCustomPoints {
+                    PointsSourceViews.customPointsBadge(compact: true)
+                }
+            }
             if let catalog {
                 Text(modelCountLabel(catalog.modelCount, category: catalog.category))
                     .font(.caption)
@@ -121,6 +151,9 @@ struct RosterEntryRow: View {
 
     private var nameAccessibilityLabel: String {
         var parts = [entry.displayName, String(localized: "\(entry.pointsTotal) points")]
+        if entry.usesCustomPoints {
+            parts.append(String(localized: "Custom points"))
+        }
         if let catalog {
             parts.append(modelCountLabel(catalog.modelCount, category: catalog.category))
         }

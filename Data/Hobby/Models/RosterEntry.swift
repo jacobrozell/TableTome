@@ -9,6 +9,8 @@ public final class RosterEntry {
     public var displayName: String = ""
     public var qty: Int = 1
     public var pointsEach: Int = 0
+    /// When true, roster refresh and catalog sync skip this entry's points.
+    public var usesCustomPoints: Bool = false
     public var sortIndex: Int = 0
     public var wargearSelectionJSON: String? = nil
 

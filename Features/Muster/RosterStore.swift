@@ -105,6 +105,28 @@ enum RosterStore {
         try? ctx.save()
     }
 
+    static func setPointsEach(_ entry: RosterEntry, _ points: Int, in ctx: ModelContext) {
+        let clamped = max(0, min(points, 9_999))
+        entry.pointsEach = clamped
+        if let catalogPts = UnitCatalogLoader.unit(id: entry.catalogUnitId)?.basePoints {
+            entry.usesCustomPoints = clamped != catalogPts
+        } else {
+            entry.usesCustomPoints = true
+        }
+        entry.roster?.touch()
+        try? ctx.save()
+    }
+
+    @discardableResult
+    static func resetPointsToCatalog(_ entry: RosterEntry, in ctx: ModelContext) -> Bool {
+        guard let unit = UnitCatalogLoader.unit(id: entry.catalogUnitId) else { return false }
+        entry.pointsEach = unit.basePoints
+        entry.usesCustomPoints = false
+        entry.roster?.touch()
+        try? ctx.save()
+        return true
+    }
+
     static func deleteEntry(_ entry: RosterEntry, in ctx: ModelContext) {
         entry.roster?.touch()
         ctx.delete(entry)
@@ -117,6 +139,7 @@ enum RosterStore {
         var updated = 0
         var missing = 0
         for entry in roster.orderedEntries {
+            guard !entry.usesCustomPoints else { continue }
             guard let unit = UnitCatalogLoader.unit(id: entry.catalogUnitId) else {
                 missing += 1
                 continue
@@ -124,6 +147,7 @@ enum RosterStore {
             var changed = false
             if entry.pointsEach != unit.basePoints {
                 entry.pointsEach = unit.basePoints
+                entry.usesCustomPoints = false
                 changed = true
             }
             if entry.displayName != unit.name {

@@ -55,6 +55,14 @@ enum FormHints {
     static var trackPerModelOff: String {
         String(localized: "All models in this entry share the starting state above.")
     }
+    static var catalogPoints: String {
+        String(
+            localized: """
+            Default points come from the bundled Games Workshop Munitorum Field Manual. You can override any unit \
+            on a list — custom values stay put when you refresh from catalog.
+            """
+        )
+    }
 }
 
 /// Live estimate of physical models for a unit name + quantity.

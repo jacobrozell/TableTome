@@ -143,6 +143,74 @@ final class RosterStoreTests: XCTestCase {
         XCTAssertEqual(roster.catalogVersion, UnitCatalogLoader.version)
     }
 
+    func testSetPointsEachMarksCustomOverride() throws {
+        let roster = try RosterStore.addRoster(
+            name: "Custom",
+            game: "40k",
+            faction: "Space Marines",
+            battleSizeKey: "incursion",
+            linkedArmyId: nil,
+            in: context
+        )
+        let entry = try RosterStore.addEntry(
+            from: "40k:space-marines:captain",
+            to: roster,
+            in: context
+        )
+        XCTAssertFalse(entry.usesCustomPoints)
+
+        RosterStore.setPointsEach(entry, 75, in: context)
+
+        XCTAssertEqual(entry.pointsEach, 75)
+        XCTAssertTrue(entry.usesCustomPoints)
+    }
+
+    func testRefreshCatalogPointsSkipsCustomEntries() throws {
+        let roster = try RosterStore.addRoster(
+            name: "Skip custom",
+            game: "40k",
+            faction: "Space Marines",
+            battleSizeKey: "incursion",
+            linkedArmyId: nil,
+            in: context
+        )
+        let entry = try RosterStore.addEntry(
+            from: "40k:space-marines:aggressor-squad",
+            to: roster,
+            in: context
+        )
+        entry.pointsEach = 95
+        entry.usesCustomPoints = true
+
+        let result = RosterStore.refreshCatalogPoints(for: roster, in: context)
+
+        XCTAssertEqual(result.updated, 0)
+        XCTAssertEqual(entry.pointsEach, 95)
+        XCTAssertTrue(entry.usesCustomPoints)
+    }
+
+    func testResetPointsToCatalog() throws {
+        let roster = try RosterStore.addRoster(
+            name: "Reset",
+            game: "40k",
+            faction: "Space Marines",
+            battleSizeKey: "incursion",
+            linkedArmyId: nil,
+            in: context
+        )
+        let entry = try RosterStore.addEntry(
+            from: "40k:space-marines:captain",
+            to: roster,
+            in: context
+        )
+        RosterStore.setPointsEach(entry, 75, in: context)
+        XCTAssertTrue(entry.usesCustomPoints)
+
+        XCTAssertTrue(RosterStore.resetPointsToCatalog(entry, in: context))
+        XCTAssertEqual(entry.pointsEach, 80)
+        XCTAssertFalse(entry.usesCustomPoints)
+    }
+
     func testImportMissingToCollectionAddsUnits() throws {
         let roster = try RosterStore.addRoster(
             name: "Ultramarines",

@@ -42,4 +42,30 @@ final class RosterCatalogSyncTests: XCTestCase {
         )
         XCTAssertFalse(status.needsRefresh)
     }
+
+    func testCustomOverrideExcludedFromDrift() {
+        let status = RosterCatalogSync.status(
+            entries: [
+                RosterCatalogSync.EntrySnapshot(
+                    catalogUnitId: "40k:space-marines:captain",
+                    pointsEach: 70,
+                    usesCustomPoints: true
+                )
+            ],
+            rosterCatalogVersion: UnitCatalogLoader.version
+        )
+        XCTAssertFalse(status.hasPointsDrift)
+        XCTAssertEqual(status.customOverrideCount, 1)
+        XCTAssertFalse(status.needsRefresh)
+    }
+
+    func testEntryPointsInfoCustomOverride() {
+        let info = RosterCatalogSync.entryPointsInfo(for: RosterCatalogSync.EntrySnapshot(
+            catalogUnitId: "40k:space-marines:captain",
+            pointsEach: 70,
+            usesCustomPoints: true
+        ))
+        XCTAssertEqual(info.kind, .customOverride)
+        XCTAssertEqual(info.catalogPoints, 80)
+    }
 }

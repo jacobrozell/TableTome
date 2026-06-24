@@ -1,14 +1,18 @@
 import SwiftUI
+import SwiftData
 import TabletomeHobbyData
 import TabletomeDomain
 
 struct UnitCatalogBrowser: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Query private var configs: [AppConfiguration]
     let roster: Roster
     let onPick: (CatalogUnit) -> Void
 
     @State private var search = ""
+
+    private var overrides: [FactionPresetOverride] { configs.first?.factionOverrides ?? [] }
 
     private var units: [CatalogUnit] {
         UnitCatalogLoader.search(game: roster.game, faction: roster.faction, query: search)
@@ -56,8 +60,12 @@ struct UnitCatalogBrowser: View {
                 } else {
                     List {
                         Section {
-                            catalogSummary
+                            rosterContextCard
+                            catalogSummaryCard
                         }
+                        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
                         ForEach(grouped, id: \.0) { category, items in
                             Section {
                                 ForEach(items) { unit in
@@ -91,13 +99,47 @@ struct UnitCatalogBrowser: View {
     }
 
     @ViewBuilder
-    private var catalogSummary: some View {
+    private var rosterContextCard: some View {
+        let pres = roster.presentation(overrides: overrides)
+        let sizeLabel = BattleSizes.resolve(game: roster.game, key: roster.battleSizeKey)?.label
+            ?? roster.battleSizeKey
+        HStack(spacing: 12) {
+            CrestBadge(text: pres.crest, colorHex: pres.colorHex)
+            VStack(alignment: .leading, spacing: 3) {
+                Text(roster.name)
+                    .font(.headline)
+                    .fixedSize(horizontal: false, vertical: true)
+                HStack(spacing: 5) {
+                    Image(systemName: HobbyGameSymbol.systemImage(for: roster.game))
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(Color.accentOnSurface)
+                        .symbolRenderingMode(.hierarchical)
+                        .accessibilityHidden(true)
+                    Text("\(roster.faction) · \(sizeLabel)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            Spacer(minLength: 0)
+        }
+        .accentHighlightCard()
+    }
+
+    @ViewBuilder
+    private var catalogSummaryCard: some View {
+        let attribution = RosterCatalogSync.catalogAttribution
         let prefix = search.isEmpty ? "" : String(localized: "Showing ")
-        let text = String(localized: "\(prefix)\(units.count) units · \(roster.faction)")
-        Text(text)
-            .font(.caption)
-            .foregroundStyle(.secondary)
-            .accessibilityLabel(text)
+        let countLine = String(localized: "\(prefix)\(units.count) units available")
+        VStack(alignment: .leading, spacing: 8) {
+            Text(countLine)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+            PointsSourceViews.catalogAttributionFootnote(attribution)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .accentHighlightCard()
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(countLine). \(PointsSourceViews.catalogAttributionLine(attribution))")
     }
 
     @ViewBuilder
@@ -154,13 +196,12 @@ struct UnitCatalogBrowser: View {
     }
 
     private func pointsBadge(_ points: Int) -> some View {
-        Text(String(localized: "\(points) pts"))
-            .font(.caption.weight(.semibold).monospacedDigit())
-            .foregroundStyle(Color.accentOnSurface)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .background(Color.accentColor.opacity(0.12), in: Capsule())
-            .accessibilityLabel(String(localized: "\(points) points"))
+        PointsSourceViews.pointsCapsule(String(localized: "\(points) pts"))
+            .accessibilityLabel(
+                String(
+                    localized: "\(points) points from GW Munitorum \(UnitCatalogLoader.pointsKey)"
+                )
+            )
     }
 
     private func modelCountLabel(_ count: Int) -> String {
@@ -170,23 +211,3 @@ struct UnitCatalogBrowser: View {
     }
 }
 
-private enum CatalogCategorySymbol {
-    static func systemImage(for category: String) -> String {
-        switch category.lowercased() {
-        case "character", "characters":
-            "person.fill"
-        case "infantry", "battleline":
-            "figure.stand"
-        case "vehicle", "vehicles":
-            "car.fill"
-        case "monster", "monsters", "beast", "beasts":
-            "pawprint.fill"
-        case "mounted":
-            "figure.equestrian.sports"
-        case "fortification", "fortifications":
-            "building.columns.fill"
-        default:
-            "square.grid.2x2"
-        }
-    }
-}

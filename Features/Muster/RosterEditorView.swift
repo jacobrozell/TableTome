@@ -67,7 +67,11 @@ struct RosterEditorView: View {
 
     private func catalogSyncStatus(for roster: Roster) -> RosterCatalogSync.Status {
         let snapshots = roster.orderedEntries.map {
-            RosterCatalogSync.EntrySnapshot(catalogUnitId: $0.catalogUnitId, pointsEach: $0.pointsEach)
+            RosterCatalogSync.EntrySnapshot(
+                catalogUnitId: $0.catalogUnitId,
+                pointsEach: $0.pointsEach,
+                usesCustomPoints: $0.usesCustomPoints
+            )
         }
         return RosterCatalogSync.status(entries: snapshots, rosterCatalogVersion: roster.catalogVersion)
     }
@@ -177,6 +181,13 @@ struct RosterEditorView: View {
                     }
                 }
                 .padding(.vertical, 4)
+            } footer: {
+                if !roster.orderedEntries.isEmpty {
+                    PointsSourceViews.catalogAttributionFootnote(
+                        RosterCatalogSync.catalogAttribution,
+                        customOverrideCount: syncStatus.customOverrideCount
+                    )
+                }
             }
             Section {
                 if roster.orderedEntries.isEmpty {
@@ -360,6 +371,24 @@ struct RosterEditorView: View {
                             """
                         )
                     )
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    if status.customOverrideCount > 0 {
+                        HStack(spacing: 6) {
+                            PointsSourceViews.customPointsBadge(compact: true)
+                            Text(
+                                String(
+                                    localized: """
+                                    \(status.customOverrideCount) custom value\(status.customOverrideCount == 1 ? "" : "s") \
+                                    will be left unchanged.
+                                    """
+                                )
+                            )
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
                 } else if status.hasVersionDrift {
                     Text(
                         String(
@@ -368,8 +397,12 @@ struct RosterEditorView: View {
                             """
                         )
                     )
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
                 } else {
                     Text(String(localized: "Some units are no longer in the catalog."))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
                 Button(String(localized: "Update now"), systemImage: "arrow.triangle.2.circlepath") {
                     refreshCatalogPoints(roster)

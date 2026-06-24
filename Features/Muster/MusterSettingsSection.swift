@@ -9,19 +9,18 @@ struct MusterSettingsSection: View {
     @State private var showDisclaimer = false
 
     var body: some View {
-        Section(String(localized: "Army Lists")) {
+        Section {
             LabeledContent {
-                VStack(alignment: .trailing, spacing: 2) {
-                    Text(UnitCatalogLoader.version)
-                    if !UnitCatalogLoader.pointsKey.isEmpty {
-                        Text(String(localized: "MFM \(UnitCatalogLoader.pointsKey)"))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
+                Text(UnitCatalogLoader.version)
+                    .fontWeight(.medium)
             } label: {
                 Label(String(localized: "Catalog version"), systemImage: "books.vertical")
             }
+            VStack(alignment: .leading, spacing: 0) {
+                PointsSourceViews.catalogAttributionFootnote(RosterCatalogSync.catalogAttribution)
+                    .padding(.vertical, 4)
+            }
+            .listRowInsets(EdgeInsets(top: 8, leading: 20, bottom: 8, trailing: 20))
             Button(String(localized: "Disclaimer"), systemImage: "info.circle") { showDisclaimer = true }
             Picker(String(localized: "Default battle size (40k)"), selection: Binding(
                 get: { cfg.defaultBattleSizeKey40k },
@@ -43,6 +42,10 @@ struct MusterSettingsSection: View {
                 cfg.hasSeenMusterIntro = false
                 try? context.save()
             }
+        } header: {
+            Text(String(localized: "Army Lists"))
+        } footer: {
+            Text(FormHints.catalogPoints)
         }
         .alert(String(localized: "Unofficial data"), isPresented: $showDisclaimer) {
             Button(String(localized: "OK"), role: .cancel) {}

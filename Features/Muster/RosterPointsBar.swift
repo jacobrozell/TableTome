@@ -10,6 +10,7 @@ struct RosterPointsBar: View {
     private var remaining: Int { RosterPoints.remaining(for: roster) }
     private var over: Bool { RosterPoints.isOverLimit(roster) }
     private var largeText: Bool { dynamicTypeSize.isAccessibilitySize }
+    private var customPointsCount: Int { roster.orderedEntries.filter(\.usesCustomPoints).count }
 
     var body: some View {
         VStack(spacing: largeText ? 10 : 8) {
@@ -19,10 +20,14 @@ struct RosterPointsBar: View {
                 VStack(alignment: .leading, spacing: 6) {
                     pointsPrimaryLine
                     if limit > 0 { pointsSecondaryLine }
+                    if customPointsCount > 0 { customPointsFootnote }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             } else {
-                pointsSummary
+                VStack(spacing: 6) {
+                    pointsSummary
+                    if customPointsCount > 0 { customPointsFootnote }
+                }
             }
         }
         .padding(.horizontal)
@@ -94,6 +99,24 @@ struct RosterPointsBar: View {
                     }
                 }
             }
+        }
+    }
+
+    @ViewBuilder
+    private var customPointsFootnote: some View {
+        HStack(spacing: 6) {
+            PointsSourceViews.customPointsBadge(compact: true)
+            Text(
+                String(
+                    localized: """
+                    \(customPointsCount) unit\(customPointsCount == 1 ? "" : "s") use custom points
+                    """
+                )
+            )
+            .font(.caption2)
+            .foregroundStyle(.secondary)
+            .lineLimit(2)
+            .fixedSize(horizontal: false, vertical: true)
         }
     }
 

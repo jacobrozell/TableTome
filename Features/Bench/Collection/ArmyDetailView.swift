@@ -116,7 +116,7 @@ struct ArmyDetailView: View {
         }
         .sheet(isPresented: $showPipeline) {
             if let army {
-                ArmyPipelineEditorSheet(army: army, globalPipeline: globalPipeline)
+                ArmyPipelineEditorSheet(army: army, globalPipeline: globalPipeline, overrides: overrides)
                     .presentationDetents([.medium, .large])
             }
         }

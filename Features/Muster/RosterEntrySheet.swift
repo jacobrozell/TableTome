@@ -13,7 +13,32 @@ struct RosterEntrySheet: View {
         NavigationStack {
             Form {
                 Section {
-                    LabeledContent(String(localized: "Unit"), value: entry.displayName)
+                    HStack(spacing: 12) {
+                        Image(systemName: "figure.stand")
+                            .font(.title2)
+                            .foregroundStyle(Color.accentOnSurface)
+                            .symbolRenderingMode(.hierarchical)
+                            .accessibilityHidden(true)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(entry.displayName)
+                                .font(.headline)
+                                .fixedSize(horizontal: false, vertical: true)
+                            Text(String(localized: "Qty \(entry.qty)"))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer(minLength: 8)
+                        Text(String(localized: "\(entry.pointsTotal) pts"))
+                            .font(.subheadline.weight(.semibold).monospacedDigit())
+                            .foregroundStyle(Color.accentOnSurface)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 6)
+                            .background(Color.accentColor.opacity(0.12), in: Capsule())
+                    }
+                    .padding(.vertical, 4)
+                }
+
+                Section {
                     QuantityStepper(label: String(localized: "Quantity"), value: Binding(
                         get: { entry.qty },
                         set: { RosterStore.setQty(entry, $0, in: context) }
@@ -24,7 +49,7 @@ struct RosterEntrySheet: View {
 
                 Section {
                     LabeledContent(String(localized: "Points each"), value: "\(entry.pointsEach)")
-                    LabeledContent(String(localized: "Total"), value: String(localized: "\(entry.pointsTotal) pts"))
+                    LabeledContent(String(localized: "Line total"), value: String(localized: "\(entry.pointsTotal) pts"))
                 } header: {
                     Text(String(localized: "Points"))
                 }

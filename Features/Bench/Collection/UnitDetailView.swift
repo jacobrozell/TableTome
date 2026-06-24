@@ -150,10 +150,11 @@ struct UnitDetailView: View {
                     set: { ArmyStore.setState(unit, $0, in: context) }
                 )) {
                     ForEach(pipeline) { stage in
-                        Text(stage.key).tag(stage.key)
+                        PipelineStagePickerRow(stage: stage).tag(stage.key)
                     }
                 }
                 .formNavigationPickerStyle()
+                .labelsHidden()
                 .accessibilityLabel(String(localized: "Painting state"))
                 .accessibilityValue(unit.state)
                 if canAdvance {

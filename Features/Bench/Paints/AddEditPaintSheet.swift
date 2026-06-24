@@ -40,9 +40,45 @@ struct AddEditPaintSheet: View {
         return (PaintType.known + extraTypes).filter { seen.insert($0).inserted }
     }
 
+    private var previewHex: String {
+        existing?.swatchHex ?? PaintType.swatchHex(for: type)
+    }
+
     var body: some View {
         NavigationStack {
             Form {
+                if !name.trimmingCharacters(in: .whitespaces).isEmpty {
+                    Section {
+                        HStack(spacing: 14) {
+                            PaintSwatch(hex: previewHex, size: 48, cornerRadius: 10)
+                            VStack(alignment: .leading, spacing: 4) {
+                                HStack(spacing: 6) {
+                                    Text(name)
+                                        .font(.headline)
+                                        .lineLimit(2)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                    if low {
+                                        Text(String(localized: "LOW"))
+                                            .font(.caption2.bold())
+                                            .padding(.horizontal, 6)
+                                            .padding(.vertical, 2)
+                                            .background(.orange.opacity(0.2), in: Capsule())
+                                            .foregroundStyle(.orange)
+                                    }
+                                }
+                                let meta = [type, brand].filter { !$0.isEmpty }.joined(separator: " · ")
+                                if !meta.isEmpty {
+                                    Text(meta)
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                            Spacer(minLength: 0)
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+
                 Section {
                     FormNameField(title: String(localized: "Name"), text: $name, focus: $nameFocused)
                     Picker(String(localized: "Type"), selection: $type) {

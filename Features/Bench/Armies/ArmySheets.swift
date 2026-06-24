@@ -376,6 +376,7 @@ struct ArmyPipelineEditorSheet: View {
     @Environment(\.modelContext) private var context
     @Bindable var army: Army
     let globalPipeline: [PipelineStage]?
+    var overrides: [FactionPresetOverride] = []
 
     enum Mode: String, CaseIterable { case global, custom }
 
@@ -387,6 +388,29 @@ struct ArmyPipelineEditorSheet: View {
     var body: some View {
         NavigationStack {
             Form {
+                Section {
+                    let pres = army.presentation(overrides: overrides)
+                    HStack(spacing: 12) {
+                        CrestBadge(text: pres.crest, colorHex: pres.colorHex)
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(army.name)
+                                .font(.headline)
+                            HStack(spacing: 5) {
+                                Image(systemName: HobbyGameSymbol.systemImage(for: army.game))
+                                    .font(.caption2.weight(.semibold))
+                                    .foregroundStyle(Color.accentOnSurface)
+                                    .symbolRenderingMode(.hierarchical)
+                                    .accessibilityHidden(true)
+                                Text(army.faction)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        Spacer(minLength: 0)
+                    }
+                    .padding(.vertical, 4)
+                }
+
                 Section {
                     Picker(String(localized: "Pipeline"), selection: $mode) {
                         Text(String(localized: "Use global pipeline")).tag(Mode.global)
@@ -404,14 +428,18 @@ struct ArmyPipelineEditorSheet: View {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 10) {
                                 ForEach(resolvedGlobal) { stage in
-                                    HStack(spacing: 4) {
-                                        RoundedRectangle(cornerRadius: 2)
+                                    HStack(spacing: 6) {
+                                        Circle()
                                             .fill(Color(hex: stage.hex))
                                             .frame(width: 8, height: 8)
+                                            .accessibilityHidden(true)
                                         Text(stage.key)
-                                            .font(.caption2)
+                                            .font(.caption)
                                             .foregroundStyle(.secondary)
                                     }
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 6)
+                                    .background(.quaternary.opacity(0.5), in: Capsule())
                                 }
                             }
                         }
@@ -446,7 +474,10 @@ struct ArmyPipelineEditorSheet: View {
                     }
                 }
             }
+            .tabBarScrollInset()
+            .readableContentWidth()
             .navigationTitle(String(localized: "Army pipeline"))
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(String(localized: "Cancel")) { dismiss() }

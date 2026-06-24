@@ -29,7 +29,9 @@ struct UnitPhotoSection: View {
     var body: some View {
         let pickerLabel = addPhotoLabel
         Section {
-            if let cover = unit.coverPhoto {
+            if unit.photos.isEmpty {
+                photoEmptyPlaceholder
+            } else if let cover = unit.coverPhoto {
                 coverImage(cover)
             }
 
@@ -89,6 +91,30 @@ struct UnitPhotoSection: View {
     }
 
 #if canImport(UIKit)
+    @ViewBuilder
+    private var photoEmptyPlaceholder: some View {
+        VStack(spacing: 8) {
+            Image(systemName: "photo.on.rectangle.angled")
+                .font(.title2)
+                .foregroundStyle(Color.accentOnSurface)
+                .symbolRenderingMode(.hierarchical)
+                .accessibilityHidden(true)
+            Text(String(localized: "No photos yet"))
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+        .frame(minHeight: 100)
+        .padding(.vertical, 8)
+        .background(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [6, 4]))
+                .foregroundStyle(Color(.separator).opacity(0.6))
+        )
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(String(localized: "No photos yet"))
+    }
+
     @ViewBuilder
     private func coverImage(_ photo: ModelPhoto) -> some View {
         if let image = PhotoStore.loadImage(photo) {

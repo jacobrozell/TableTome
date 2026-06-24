@@ -62,7 +62,8 @@ struct UnitRow: View {
                     Text("·")
                     Image(systemName: "star.fill")
                         .font(.caption2)
-                        .foregroundStyle(Color.accentColor)
+                        .foregroundStyle(Color.accentOnSurface)
+                        .symbolRenderingMode(.hierarchical)
                         .accessibilityLabel(String(localized: "Spearhead"))
                 }
             }

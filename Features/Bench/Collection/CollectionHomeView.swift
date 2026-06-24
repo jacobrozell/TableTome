@@ -124,6 +124,10 @@ struct CollectionHomeView: View {
                 Text(String(localized: "Nothing matches your current search or filters."))
             } actions: {
                 Button(String(localized: "Clear filters")) { clearFilters() }.buttonStyle(.borderedProminent)
+                if !search.isEmpty, filterCount == 0 {
+                    Button(String(localized: "Clear search")) { search = ""; router.collectionSearch = "" }
+                        .buttonStyle(.bordered)
+                }
             }
             .adaptiveEmptyStateLayout()
         } else {
@@ -136,9 +140,11 @@ struct CollectionHomeView: View {
         if usesPadSidebarList {
             List { armyListSections(vis: vis, padSidebar: true) }
                 .listStyle(.sidebar)
+                .tabBarScrollInset()
         } else {
             List { armyListSections(vis: vis, padSidebar: false) }
                 .listStyle(.insetGrouped)
+                .tabBarScrollInset()
         }
     }
 
@@ -149,23 +155,37 @@ struct CollectionHomeView: View {
                 Button {
                     router.tab = .muster
                 } label: {
-                    Label(
-                        String(localized: "Build an army list on Lists"),
-                        systemImage: "flag"
-                    )
-                    .font(.subheadline)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    HStack(spacing: 10) {
+                        Image(systemName: "flag.fill")
+                            .font(.title3)
+                            .foregroundStyle(Color.accentOnSurface)
+                            .symbolRenderingMode(.hierarchical)
+                            .frame(width: 28)
+                            .accessibilityHidden(true)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(String(localized: "Build an army list on Lists"))
+                                .font(.subheadline.weight(.medium))
+                            Text(
+                                String(
+                                    localized: "Link a list to track which roster units you own."
+                                )
+                            )
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
                 }
                 .buttonStyle(.plain)
                 .accessibilityHint(
                     String(localized: "Opens the Lists tab to count points and link this collection.")
                 )
-            } footer: {
-                Text(
-                    String(
-                        localized: "Link a list to a Models army to track which roster units you own."
-                    )
-                )
+            }
+        }
+        if !vis.isEmpty {
+            Section {
+                collectionSummary(vis: vis)
             }
         }
         if scoped {
@@ -222,6 +242,17 @@ struct CollectionHomeView: View {
                 }
             }
         }
+    }
+
+    @ViewBuilder
+    private func collectionSummary(vis: [VisibleArmy]) -> some View {
+        let unitCount = vis.reduce(0) { $0 + $1.units.count }
+        let prefix = scoped ? String(localized: "Showing ") : ""
+        let text = String(localized: "\(prefix)\(vis.count) armies · \(unitCount) units")
+        Text(text)
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .accessibilityLabel(text)
     }
 
     private var filterBannerText: String {

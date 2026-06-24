@@ -138,18 +138,23 @@ struct CollectionTab: View {
                             Text(
                                 String(
                                     localized: """
-                                    Optional — track painting after your first game. Add an army or tap \
-                                    Load sample data in the sidebar.
+                                    Optional — track painting after your first game. Add an army or load \
+                                    sample data from the sidebar.
                                     """
                                 )
                             )
+                        } actions: {
+                            Button(String(localized: "New army")) { showAddArmy = true }
+                                .buttonStyle(.borderedProminent)
                         }
+                        .adaptiveEmptyStateLayout()
                     } else {
                         ContentUnavailableView {
                             Label(String(localized: "Pick an army"), systemImage: "shield")
                         } description: {
                             Text(String(localized: "Choose an army from the sidebar to see units and photos."))
                         }
+                        .adaptiveEmptyStateLayout()
                     }
                 }
                 .navigationDestination(for: CollectionRoute.self) { route in

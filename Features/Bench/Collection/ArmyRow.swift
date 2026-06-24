@@ -80,7 +80,7 @@ struct ArmyRow: View {
     private var metadataBlock: some View {
         if dynamicTypeSize.isAccessibilitySize {
             VStack(alignment: .leading, spacing: 2) {
-                Text("\(army.game) · \(army.faction)")
+                gameFactionLine
                 Text(countLabel)
                 if army.customPipeline?.isEmpty == false {
                     Text(String(localized: "custom pipeline"))
@@ -90,11 +90,30 @@ struct ArmyRow: View {
             .foregroundStyle(.secondary)
             .fixedSize(horizontal: false, vertical: true)
         } else {
-            Text(subtitle)
+            gameFactionLine
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
-                .lineLimit(3)
+                .lineLimit(2)
                 .truncationMode(.tail)
+                .fixedSize(horizontal: false, vertical: true)
+            Text(subtitleTail)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .lineLimit(2)
+                .truncationMode(.tail)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    private var gameFactionLine: some View {
+        HStack(spacing: 5) {
+            Image(systemName: HobbyGameSymbol.systemImage(for: army.game))
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(Color.accentOnSurface)
+                .symbolRenderingMode(.hierarchical)
+                .accessibilityHidden(true)
+            Text("\(army.game) · \(army.faction)")
+                .lineLimit(2)
                 .fixedSize(horizontal: false, vertical: true)
         }
     }
@@ -105,8 +124,8 @@ struct ArmyRow: View {
             : String(localized: "\(visibleUnitCount) units")
     }
 
-    private var subtitle: String {
-        var parts = [army.game, army.faction, countLabel]
+    private var subtitleTail: String {
+        var parts = [countLabel]
         if army.customPipeline?.isEmpty == false {
             parts.append(String(localized: "custom pipeline"))
         }

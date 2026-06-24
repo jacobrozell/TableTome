@@ -56,7 +56,11 @@ struct UnitDetailView: View {
             if let unit {
                 unitForm(unit)
             } else {
-                ContentUnavailableView(String(localized: "Unit not found"), systemImage: "figure.stand")
+                ContentUnavailableView {
+                    Label(String(localized: "Unit not found"), systemImage: "figure.stand")
+                } description: {
+                    Text(String(localized: "This unit may have been deleted."))
+                }
             }
         }
         .navigationTitle(unit?.name.isEmpty == false ? unit!.name : String(localized: "Unit"))

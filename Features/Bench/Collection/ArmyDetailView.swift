@@ -79,7 +79,13 @@ struct ArmyDetailView: View {
     var body: some View {
         Group {
             if let army { unitList(army: army) }
-            else { ContentUnavailableView(String(localized: "Army not found"), systemImage: "shield") }
+            else {
+                ContentUnavailableView {
+                    Label(String(localized: "Army not found"), systemImage: "shield")
+                } description: {
+                    Text(String(localized: "This army may have been deleted."))
+                }
+            }
         }
         .navigationTitle(army?.name ?? String(localized: "Army"))
         .navigationBarTitleDisplayMode(armyTitleDisplayMode)
@@ -191,6 +197,7 @@ struct ArmyDetailView: View {
             unitsSection(army: army, padSidebar: usesPadSidebarList)
         }
         .listStyle(.insetGrouped)
+        .tabBarScrollInset()
     }
 
     @ViewBuilder
@@ -214,18 +221,30 @@ struct ArmyDetailView: View {
             }
         }
         .listStyle(.insetGrouped)
+        .tabBarScrollInset()
     }
 
     @ViewBuilder
     private func armyHeaderSection(army: Army, pres: (crest: String, colorHex: String)) -> some View {
         Section {
             VStack(alignment: .leading, spacing: 10) {
-                Text("\(army.game) · \(army.faction)\(army.customPipeline?.isEmpty == false ? String(localized: " · custom pipeline") : "")")
-                    .font(.subheadline).foregroundStyle(.secondary)
+                HStack(spacing: 6) {
+                    Image(systemName: HobbyGameSymbol.systemImage(for: army.game))
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Color.accentOnSurface)
+                        .symbolRenderingMode(.hierarchical)
+                        .accessibilityHidden(true)
+                    Text("\(army.game) · \(army.faction)\(army.customPipeline?.isEmpty == false ? String(localized: " · custom pipeline") : "")")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
                 HStack {
                     CrestBadge(text: pres.crest, colorHex: pres.colorHex)
                     Spacer()
-                    Text(String(localized: "\(percent)% complete")).font(.subheadline.monospacedDigit()).foregroundStyle(.secondary)
+                    Text(String(localized: "\(percent)% complete"))
+                        .font(.subheadline.monospacedDigit())
+                        .foregroundStyle(.secondary)
                 }
                 ProgressMeter(segments: Pipeline.segments(of: visibleUnits, pipeline), height: 8)
             }
@@ -242,6 +261,9 @@ struct ArmyDetailView: View {
                     Label(String(localized: "No units"), systemImage: "figure.stand")
                 } description: {
                     Text(String(localized: "Add a unit or adjust filters."))
+                } actions: {
+                    Button(String(localized: "Add unit"), systemImage: "plus") { showAddUnit = true }
+                        .buttonStyle(.borderedProminent)
                 }
                 .listRowBackground(Color.clear)
             } else {

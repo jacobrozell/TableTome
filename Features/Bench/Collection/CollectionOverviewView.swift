@@ -65,6 +65,7 @@ struct CollectionOverviewView: View {
                 ArmyStatsHeader(units: scopedUnits,
                                 armyCount: scoped ? visible.count : armies.count,
                                 pipeline: resolvedGlobal, scoped: scoped)
+                    .surfaceCard()
 
                 if scoped {
                     Button(String(localized: "Advance visible units"), systemImage: "arrow.right.to.line") {
@@ -85,7 +86,9 @@ struct CollectionOverviewView: View {
                 }
             }
             .padding()
+            .readableContentWidth()
         }
+        .tabBarScrollInset()
         .navigationTitle(String(localized: "Overview"))
         .navigationBarTitleDisplayMode(.inline)
     }

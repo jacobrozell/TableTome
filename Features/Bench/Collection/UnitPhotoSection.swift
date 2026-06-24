@@ -48,7 +48,16 @@ struct UnitPhotoSection: View {
         } header: {
             Text(String(localized: "Photos"))
         } footer: {
-            if !unit.photos.isEmpty {
+            if unit.photos.isEmpty {
+                Text(
+                    String(
+                        localized: """
+                        Snap progress shots as you paint — they're stored on this device and tagged to your \
+                        current stage.
+                        """
+                    )
+                )
+            } else {
                 Text(
                     String(
                         localized: """

@@ -13,11 +13,36 @@ struct FilterSheet: View {
     let sources: [String]
     let states: [String]
     let tags: [String]
+    let pipeline: [PipelineStage]
     let overrides: [FactionPresetOverride]
+
+    private var filterCount: Int { ArmyFilter.activeFilterCount(cfg) }
+    private var filtersActive: Bool { filterCount > 0 }
 
     var body: some View {
         NavigationStack {
             Form {
+                Section {
+                    if filtersActive {
+                        Label(
+                            filterCount == 1
+                                ? String(localized: "1 filter active")
+                                : String(localized: "\(filterCount) filters active"),
+                            systemImage: "line.3.horizontal.decrease.circle.fill"
+                        )
+                        .font(.subheadline)
+                        .foregroundStyle(Color.accentOnSurface)
+                        .symbolRenderingMode(.hierarchical)
+                    } else {
+                        Label(
+                            String(localized: "No filters active"),
+                            systemImage: "line.3.horizontal.decrease.circle"
+                        )
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    }
+                }
+
                 Section {
                     Picker(String(localized: "View"), selection: $cfg.quickViewRaw) {
                         Text(String(localized: "All")).tag("all")
@@ -34,32 +59,33 @@ struct FilterSheet: View {
 
                 Section {
                     Picker(String(localized: "Game"), selection: $cfg.gameFilter) {
-                        ForEach(["All"] + games, id: \.self) { Text($0).tag($0) }
+                        ForEach(["All"] + games, id: \.self) { game in
+                            gamePickerRow(game).tag(game)
+                        }
                     }
                     .formNavigationPickerStyle()
                     Picker(String(localized: "Faction"), selection: $cfg.factionFilter) {
-                        ForEach(["All"] + factions, id: \.self) { f in
-                            HStack {
-                                if f != "All" {
-                                    Circle().fill(Color(hex: factionColor(f))).frame(width: 8, height: 8)
-                                }
-                                Text(f)
-                            }.tag(f)
+                        ForEach(["All"] + factions, id: \.self) { faction in
+                            factionPickerRow(faction).tag(faction)
                         }
                     }
                     .formNavigationPickerStyle()
                     Picker(String(localized: "State"), selection: $cfg.stateFilter) {
-                        ForEach(states, id: \.self) { Text($0).tag($0) }
+                        ForEach(states, id: \.self) { state in
+                            statePickerRow(state).tag(state)
+                        }
                     }
                     .formNavigationPickerStyle()
                     Picker(String(localized: "Source"), selection: $cfg.sourceFilter) {
-                        ForEach(["All"] + sources, id: \.self) { Text($0).tag($0) }
+                        ForEach(["All"] + sources, id: \.self) { source in
+                            sourcePickerRow(source).tag(source)
+                        }
                     }
                     .formNavigationPickerStyle()
                     if !tags.isEmpty {
                         Picker(String(localized: "Tag"), selection: $cfg.tagFilter) {
-                            ForEach(["All"] + tags, id: \.self) { t in
-                                Text(t == "All" ? String(localized: "All") : "#\(t)").tag(t)
+                            ForEach(["All"] + tags, id: \.self) { tag in
+                                tagPickerRow(tag).tag(tag)
                             }
                         }
                         .formNavigationPickerStyle()
@@ -95,9 +121,11 @@ struct FilterSheet: View {
                         try? context.save()
                         dismiss()
                     }
+                    .disabled(!filtersActive)
                 }
             }
             .navigationTitle(String(localized: "Filters"))
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(String(localized: "Done")) { try? context.save(); dismiss() }
@@ -106,9 +134,80 @@ struct FilterSheet: View {
         }
     }
 
+    @ViewBuilder
+    private func gamePickerRow(_ game: String) -> some View {
+        HStack(spacing: 8) {
+            if game != "All" {
+                Image(systemName: HobbyGameSymbol.systemImage(for: game))
+                    .foregroundStyle(Color.accentOnSurface)
+                    .symbolRenderingMode(.hierarchical)
+                    .frame(width: 20)
+                    .accessibilityHidden(true)
+            }
+            Text(game)
+        }
+    }
+
+    @ViewBuilder
+    private func factionPickerRow(_ faction: String) -> some View {
+        HStack(spacing: 8) {
+            if faction != "All" {
+                Circle()
+                    .fill(Color(hex: factionColor(faction)))
+                    .frame(width: 8, height: 8)
+                    .accessibilityHidden(true)
+            }
+            Text(faction)
+        }
+    }
+
+    @ViewBuilder
+    private func statePickerRow(_ state: String) -> some View {
+        HStack(spacing: 8) {
+            if state != "All", let stage = pipeline.first(where: { $0.key == state }) {
+                Circle()
+                    .fill(Color(hex: stage.hex))
+                    .frame(width: 8, height: 8)
+                    .accessibilityHidden(true)
+            }
+            Text(state)
+        }
+    }
+
+    @ViewBuilder
+    private func sourcePickerRow(_ source: String) -> some View {
+        HStack(spacing: 8) {
+            if source != "All" {
+                Image(systemName: "shippingbox")
+                    .font(.caption)
+                    .foregroundStyle(Color.accentOnSurface)
+                    .symbolRenderingMode(.hierarchical)
+                    .frame(width: 20)
+                    .accessibilityHidden(true)
+            }
+            Text(source)
+        }
+    }
+
+    @ViewBuilder
+    private func tagPickerRow(_ tag: String) -> some View {
+        HStack(spacing: 8) {
+            if tag != "All" {
+                Image(systemName: "number")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Color.accentOnSurface)
+                    .frame(width: 20)
+                    .accessibilityHidden(true)
+            }
+            Text(tag == "All" ? String(localized: "All") : "#\(tag)")
+        }
+    }
+
     private func factionColor(_ faction: String) -> String {
-        FactionResolver.resolve(faction: faction,
-                                game: cfg.gameFilter == "All" ? "" : cfg.gameFilter,
-                                overrides: overrides).color
+        FactionResolver.resolve(
+            faction: faction,
+            game: cfg.gameFilter == "All" ? "" : cfg.gameFilter,
+            overrides: overrides
+        ).color
     }
 }

@@ -30,7 +30,11 @@ struct SquadMemberRow: View {
                 if canAdvance {
                     Button {
                         SquadStore.advanceMember(unit, index: member.index, pipeline: pipeline, in: ctx)
-                    } label: { Image(systemName: "arrow.right.circle") }
+                    } label: {
+                        Image(systemName: "arrow.right.circle")
+                            .foregroundStyle(Color.accentOnSurface)
+                            .symbolRenderingMode(.hierarchical)
+                    }
                     .buttonStyle(.borderless)
                     .accessibilityLabel(String(localized: "Advance model \(member.index + 1)"))
                 }

@@ -10,6 +10,7 @@ struct UnitDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(BannerCenter.self) private var banner
     @Query private var allArmies: [Army]
+    @Query private var configs: [AppConfiguration]
 
     let unitId: UUID
 
@@ -50,6 +51,10 @@ struct UnitDetailView: View {
     }
 
     private var trackable: Bool { (unit?.modelCount ?? 0) >= 2 }
+
+    private var overrides: [FactionPresetOverride] {
+        configs.first?.factionOverrides ?? []
+    }
 
     var body: some View {
         Group {
@@ -99,6 +104,8 @@ struct UnitDetailView: View {
     private func unitForm(_ unit: ArmyUnit) -> some View {
         @Bindable var unit = unit
         Form {
+            unitSummarySection(unit)
+
             Section {
                 TextField(String(localized: "Name"), text: $unit.name)
                     .textInputAutocapitalization(.words)
@@ -106,10 +113,8 @@ struct UnitDetailView: View {
                     get: { unit.qty },
                     set: { ArmyStore.setQty(unit, $0, in: context) }
                 ))
-                if unit.hasSquadMembers {
-                    Text(String(localized: "Squad tracks \(unit.modelCount) models."))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                if !unit.name.trimmingCharacters(in: .whitespaces).isEmpty {
+                    ModelCountSummary(name: unit.name, qty: unit.qty)
                 }
                 TextField(String(localized: "Source"), text: $unit.source)
                     .textInputAutocapitalization(.words)
@@ -122,10 +127,18 @@ struct UnitDetailView: View {
             } header: {
                 Text(String(localized: "Unit"))
             } footer: {
-                Text(FormHints.source)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(FormHints.modelCount)
+                    Text(FormHints.source)
+                }
             }
 
             Section {
+                LabeledContent {
+                    StateChip(state: unit.state, pipeline: pipeline)
+                } label: {
+                    Text(String(localized: "Current state"))
+                }
                 Picker(String(localized: "State"), selection: Binding(
                     get: { unit.state },
                     set: { ArmyStore.setState(unit, $0, in: context) }
@@ -156,7 +169,7 @@ struct UnitDetailView: View {
             UnitTimelineSection(unit: unit, pipeline: pipeline)
 
             if trackable {
-                Section(String(localized: "Squad")) {
+                Section {
                     Toggle(String(localized: "Track per model"), isOn: Binding(
                         get: { unit.hasSquadMembers },
                         set: { enabled in
@@ -172,6 +185,14 @@ struct UnitDetailView: View {
                             SquadMemberRow(unit: unit, member: member, pipeline: pipeline)
                         }
                     }
+                } header: {
+                    Text(String(localized: "Squad"))
+                } footer: {
+                    Text(
+                        unit.hasSquadMembers
+                            ? FormHints.trackPerModel
+                            : FormHints.trackPerModelOff
+                    )
                 }
             }
 
@@ -179,9 +200,59 @@ struct UnitDetailView: View {
                 Button(String(localized: "Delete unit"), role: .destructive) { confirmDelete = true }
             }
         }
+        .tabBarScrollInset()
+        .readableContentWidth()
+    }
+
+    @ViewBuilder
+    private func unitSummarySection(_ unit: ArmyUnit) -> some View {
+        if let army {
+            let pres = army.presentation(overrides: overrides)
+            Section {
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack(alignment: .center, spacing: 12) {
+                        CrestBadge(text: pres.crest, colorHex: pres.colorHex)
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(army.name)
+                                .font(.subheadline.weight(.semibold))
+                            HStack(spacing: 5) {
+                                Image(systemName: HobbyGameSymbol.systemImage(for: army.game))
+                                    .font(.caption2.weight(.semibold))
+                                    .foregroundStyle(Color.accentOnSurface)
+                                    .symbolRenderingMode(.hierarchical)
+                                    .accessibilityHidden(true)
+                                Text("\(army.game) · \(army.faction)")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(2)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                        }
+                        Spacer(minLength: 0)
+                        StateChip(state: unit.state, pipeline: pipeline)
+                    }
+                    if unit.modelCount > 1 || unit.hasSquadMembers {
+                        ProgressMeter(
+                            segments: Pipeline.segments(of: [unit], pipeline),
+                            height: 6
+                        )
+                    }
+                }
+                .padding(.vertical, 4)
+            }
+        }
     }
 
     @ToolbarContentBuilder private var unitToolbar: some ToolbarContent {
+        ToolbarItem(placement: .topBarTrailing) {
+            if let unit, canAdvance {
+                Button(String(localized: "Advance"), systemImage: "arrow.right.circle") {
+                    ArmyStore.advance(unit, pipeline: pipeline, in: context)
+                    advanceTrigger.toggle()
+                }
+                .accessibilityLabel(String(localized: "Advance painting state"))
+            }
+        }
         ToolbarItem(placement: .topBarTrailing) {
             Menu {
                 Button(String(localized: "Duplicate"), systemImage: "plus.square.on.square") {

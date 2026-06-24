@@ -68,8 +68,10 @@ struct CollectionTab: View {
                 sources: ArmyFilter.allSources(armies),
                 states: ["All"] + Pipeline.resolve(globalPipeline).map(\.key),
                 tags: ArmyFilter.allNoteTags(armies),
+                pipeline: Pipeline.resolve(globalPipeline),
                 overrides: overrides
             )
+            .presentationDetents([.large])
         }
     }
 

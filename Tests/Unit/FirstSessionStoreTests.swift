@@ -71,4 +71,53 @@ final class FirstSessionStoreTests: XCTestCase {
         FirstSessionStore.recordGameGuideOpened()
         XCTAssertFalse(FirstSessionStore.shouldEmphasizePlayTab())
     }
+
+    func testEmphasizePlayTabClearsAfterSetupComplete() {
+        XCTAssertTrue(FirstSessionStore.shouldEmphasizePlayTab())
+        FirstSessionStore.recordSetupComplete()
+        XCTAssertFalse(FirstSessionStore.shouldEmphasizePlayTab())
+    }
+
+    func testHideAllGamesListUntilEngaged() {
+        XCTAssertTrue(FirstSessionStore.shouldHideAllGamesList())
+
+        FirstSessionStore.recordOnboardingChoice(gameSystemId: "aos-spearhead")
+        XCTAssertFalse(FirstSessionStore.shouldHideAllGamesList())
+
+        FirstSessionStore.clearPersistedState()
+        FirstSessionStore.recordGameGuideOpened()
+        XCTAssertFalse(FirstSessionStore.shouldHideAllGamesList())
+    }
+
+    func testDeferHobbyTabsUntilPlayEngaged() {
+        XCTAssertTrue(FirstSessionStore.shouldDeferHobbyTabs())
+        XCTAssertTrue(FirstSessionStore.shouldHideHobbyTabs())
+
+        FirstSessionStore.recordGameGuideOpened()
+        XCTAssertFalse(FirstSessionStore.shouldDeferHobbyTabs())
+        XCTAssertFalse(FirstSessionStore.shouldHideHobbyTabs())
+
+        FirstSessionStore.clearPersistedState()
+        FirstSessionStore.recordSetupComplete()
+        XCTAssertFalse(FirstSessionStore.shouldHideHobbyTabs())
+    }
+
+    func testRecordsWh40kVariant() {
+        FirstSessionStore.recordOnboardingChoice(
+            gameSystemId: GameSystemId.wh40k11e.rawValue,
+            wh40kVariant: Wh40kChooserVariant.armageddon.rawValue
+        )
+        XCTAssertEqual(FirstSessionStore.onboardingWh40kVariant, Wh40kChooserVariant.armageddon.rawValue)
+    }
+
+    func testRoundOneMilestoneShowsInGuidedMatchAfterFirstRound() {
+        XCTAssertFalse(FirstSessionStore.shouldShowRoundOneMilestone(isEmbeddedInGuidedMatch: true))
+
+        FirstSessionStore.recordFirstBattleRound()
+        XCTAssertTrue(FirstSessionStore.shouldShowRoundOneMilestone(isEmbeddedInGuidedMatch: true))
+        XCTAssertFalse(FirstSessionStore.shouldShowRoundOneMilestone(isEmbeddedInGuidedMatch: false))
+
+        FirstSessionStore.markRoundOneMilestoneSeen()
+        XCTAssertFalse(FirstSessionStore.shouldShowRoundOneMilestone(isEmbeddedInGuidedMatch: true))
+    }
 }

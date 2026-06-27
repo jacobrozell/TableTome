@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "armyId": "chaos-daemons-combat-patrol",
+  "units": [
+    {
+      "id": "khharret",
+      "name": "Kh'har'ret the Butcher",
+      "keywords": [
+        "Character",
+        "Monster",
+        "Daemon",
+        "Khorne"
+      ],
+      "modelCount": 1,
+      "move": "8\"",
+      "save": 3,
+      "health": 8,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "hellblade",
+          "name": "Hellblade",
+          "attacks": "6",
+          "hit": 2,
+          "wound": 3,
+          "rend": 2,
+          "damage": "2"
+        },
+        {
+          "id": "blood-gaze",
+          "name": "Blood Gaze",
+          "attacks": "D3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 18
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "bloodletters",
+      "name": "2× Bloodletters",
+      "keywords": [
+        "Battleline",
+        "Infantry",
+        "Daemon",
+        "Khorne"
+      ],
+      "modelCount": 20,
+      "move": "8\"",
+      "save": 7,
+      "health": 1,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "hellblade",
+          "name": "Hellblade",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "flesh-hounds",
+      "name": "2× Flesh Hounds",
+      "keywords": [
+        "Beast",
+        "Daemon",
+        "Khorne"
+      ],
+      "modelCount": 10,
+      "move": "12\"",
+      "save": 7,
+      "health": 2,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "gore-drenched-fangs",
+          "name": "Gore-drenched Fangs",
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "bloodcrushers",
+      "name": "Bloodcrushers",
+      "keywords": [
+        "Mounted",
+        "Daemon",
+        "Khorne"
+      ],
+      "modelCount": 3,
+      "move": "10\"",
+      "save": 3,
+      "health": 4,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "hellblade",
+          "name": "Hellblade",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": []
+    }
+  ]
+}

@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 1,
+  "armyId": "chaos-space-marines-combat-patrol",
+  "units": [
+    {
+      "id": "dark-apostle-ghallaron",
+      "name": "Dark Apostle Ghallaron + Dark Disciples",
+      "keywords": [
+        "Character",
+        "Infantry",
+        "Chaos Space Marines"
+      ],
+      "modelCount": 4,
+      "move": "6\"",
+      "save": 3,
+      "health": 4,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "accursed-crozius",
+          "name": "Accursed Crozius",
+          "attacks": "4",
+          "hit": 2,
+          "wound": 3,
+          "rend": 2,
+          "damage": "2"
+        },
+        {
+          "id": "bolt-pistol",
+          "name": "Bolt Pistol",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 12
+        }
+      ],
+      "abilities": [
+        {
+          "id": "dark-zealotry",
+          "name": "Dark Zealotry",
+          "source": "Ghallaron's Host",
+          "effect": "Legionaries gain re-rolls when the Apostle leads them.",
+          "phases": [
+            "fight"
+          ],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ],
+      "invulnerableSave": 4
+    },
+    {
+      "id": "chaos-legionaries",
+      "name": "Chaos Legionaries (Patrol Squads)",
+      "keywords": [
+        "Battleline",
+        "Infantry",
+        "Chaos Space Marines"
+      ],
+      "modelCount": 10,
+      "move": "6\"",
+      "save": 3,
+      "health": 2,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "boltgun",
+          "name": "Boltgun",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 24
+        },
+        {
+          "id": "chainsword",
+          "name": "Astartes Chainsword",
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "havocs",
+      "name": "Havocs",
+      "keywords": [
+        "Infantry",
+        "Chaos Space Marines"
+      ],
+      "modelCount": 5,
+      "move": "6\"",
+      "save": 3,
+      "health": 2,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "lascannon",
+          "name": "Lascannon",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 3,
+          "damage": "D6+1",
+          "rangeInches": 48
+        },
+        {
+          "id": "autocannon",
+          "name": "Autocannon",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2",
+          "rangeInches": 48
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "helbrute",
+      "name": "Helbrute",
+      "keywords": [
+        "Vehicle",
+        "Walker",
+        "Chaos Space Marines"
+      ],
+      "modelCount": 1,
+      "move": "8\"",
+      "save": 2,
+      "health": 12,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "multi-melta",
+          "name": "Multi-melta",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 8,
+          "rend": 4,
+          "damage": "D6",
+          "rangeInches": 18
+        },
+        {
+          "id": "power-fist",
+          "name": "Power Fist",
+          "attacks": "5",
+          "hit": 3,
+          "wound": 3,
+          "rend": 2,
+          "damage": "2"
+        }
+      ],
+      "abilities": []
+    }
+  ]
+}

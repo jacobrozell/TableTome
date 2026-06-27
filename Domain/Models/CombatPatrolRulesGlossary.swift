@@ -52,4 +52,9 @@ public enum CombatPatrolRulesGlossary {
             """
         ),
     ]
+
+    public static func aliasPhrases(for entryId: String) -> [String] {
+        _ = entryId
+        return []
+    }
 }

@@ -1,13 +1,15 @@
 # Warhammer 40,000 — Combat Patrol (10th Edition)
 
 **Game system id:** `wh40k-10e-cp`  
-**Status:** Gated — `-enable_combat_patrol` (not `-enable_full_product_surface`)
+**Status:** **Shipped** in release defaults (1.0.0+)
 
-Separate from full 10e matched play ([../wh40k-10e/](../wh40k-10e/)) and from 11e ([../wh40k-11e/](../wh40k-11e/)).
+Combat Patrol is a **10th Edition format** — fixed patrol-box rosters, CP missions, and 10e combat math. It is **not** 11th Edition and **not** full 10th Edition matched play.
+
+See [PRODUCT_SCOPE.md](../PRODUCT_SCOPE.md) for how CP relates to `wh40k-11e` and why we do not ship full `wh40k-10e`.
 
 ## Authoritative spec
 
-- [specs/40k10eCombatPatrolSpec.md](../../../specs/40k10eCombatPatrolSpec.md) — CP box sets, grouped units, guided play
+- [specs/40k10eCombatPatrolSpec.md](../../../specs/40k10eCombatPatrolSpec.md) — CP box sets, guided play, rules bundle
 
 ## Mode docs
 
@@ -21,9 +23,9 @@ Combat Patrol catalog and army JSON under `Resources/Rules/` (see spec Verificat
 
 ## Testing
 
-- [docs/release/gated-features-testing.md](../../release/gated-features-testing.md) — ungate checklist
+- [docs/release/gated-features-testing.md](../../release/gated-features-testing.md) — CP QA checklist (ship sign-off)
 
 ## Related
 
-- [../wh40k-10e/](../wh40k-10e/) — full 10e (not supported)
-- [../wh40k-11e/launch-plan.md](../wh40k-11e/launch-plan.md) — parallel 11e rollout pattern
+- [../wh40k-11e/](../wh40k-11e/) — **11th Edition** full game (different rules)
+- [../wh40k-10e/](../wh40k-10e/) — full 10e matched play (**not planned**)

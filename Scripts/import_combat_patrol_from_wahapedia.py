@@ -12,10 +12,16 @@ ROOT = Path(__file__).resolve().parents[1]
 CATALOG_PATH = ROOT / "Resources/Rules/combat-patrol-catalog-v1.json"
 ARMIES_DIR = ROOT / "Resources/Rules/CombatPatrol/armies"
 
-LEVIATHAN_ARMY_IDS = {
-    "space-marines-combat-patrol",
-    "tyranids-combat-patrol",
-}
+DETAIL_ARMY_IDS: set[str] | None = None  # None = all armies in catalog
+
+
+def all_army_ids(catalog: dict) -> set[str]:
+    return {
+        army["id"]
+        for faction in catalog.get("factions", [])
+        for army in faction.get("armies", [])
+        if army.get("id")
+    }
 
 REQUIRED_MATCH_STEP_IDS = {
     "choose-armies",
@@ -64,13 +70,15 @@ def validate_catalog(catalog: dict) -> list[str]:
     if not any(m.get("id") == "clash-of-patrols" for m in missions):
         errors.append("missing clash-of-patrols mission")
 
-    for army_id in LEVIATHAN_ARMY_IDS:
+    detail_army_ids = DETAIL_ARMY_IDS if DETAIL_ARMY_IDS is not None else all_army_ids(catalog)
+
+    for army_id in sorted(detail_army_ids):
         army = next(
             (a for f in factions for a in f.get("armies", []) if a.get("id") == army_id),
             None,
         )
         if army is None:
-            errors.append(f"missing Leviathan army {army_id}")
+            errors.append(f"missing army {army_id}")
             continue
         if len(army.get("enhancements", [])) < 2:
             errors.append(f"{army_id}: expected 2 enhancements")
@@ -119,7 +127,8 @@ def main() -> int:
     print(f"Validated {CATALOG_PATH.relative_to(ROOT)}")
     print(f"  factions: {len(catalog['factions'])}")
     print(f"  missions: {len(catalog.get('missions', []))}")
-    print(f"  Leviathan detail files: {len(LEVIATHAN_ARMY_IDS)}")
+    detail_army_ids = DETAIL_ARMY_IDS if DETAIL_ARMY_IDS is not None else all_army_ids(catalog)
+    print(f"  detail JSON files: {len(detail_army_ids)}")
 
     if "--check-wahapedia" in sys.argv:
         warnings = verify_wahapedia_links()

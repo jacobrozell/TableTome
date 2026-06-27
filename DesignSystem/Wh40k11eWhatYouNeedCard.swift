@@ -42,9 +42,7 @@ struct Wh40k11eWhatYouNeedCard: View {
             .foregroundStyle(.tertiary)
             .fixedSize(horizontal: false, vertical: true)
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .surfaceCard()
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("guide.wh40k11e.whatYouNeed")
     }

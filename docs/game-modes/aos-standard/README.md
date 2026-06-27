@@ -1,9 +1,9 @@
 # Age of Sigmar — standard play
 
 **Game system id:** None — not registered in `GameSystemId`  
-**Status:** Not supported
+**Status:** **Planned** (not supported today)
 
-Tabletome ships **Spearhead only** for AoS. See [../aos-spearhead/](../aos-spearhead/) for the supported mode.
+Tabletome ships **Spearhead** for AoS today. **Full AoS** (battletomes, matched play) is on the [product roadmap](../PRODUCT_SCOPE.md). See [../aos-spearhead/](../aos-spearhead/) for the supported mode.
 
 ## Mode docs
 

@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "armyId": "imperial-agents-combat-patrol",
+  "units": [
+    {
+      "id": "inquisitor-retinue",
+      "name": "Inquisitor in Terminator Armour + retinue",
+      "keywords": [
+        "Character",
+        "Infantry",
+        "Terminator",
+        "Agents of the Imperium"
+      ],
+      "modelCount": 6,
+      "move": "5\"",
+      "save": 2,
+      "health": 4,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "psychic-storm",
+          "name": "Psychic Storm",
+          "attacks": "D6",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 18
+        },
+        {
+          "id": "force-sword",
+          "name": "Force Sword",
+          "attacks": "4",
+          "hit": 2,
+          "wound": 3,
+          "rend": 2,
+          "damage": "D3"
+        }
+      ],
+      "abilities": [],
+      "invulnerableSave": 4,
+      "notes": "PDF placeholder rules — roster structure from Agents CP box."
+    },
+    {
+      "id": "voidsmen-at-arms",
+      "name": "Imperial Navy Voidsmen-at-Arms",
+      "keywords": [
+        "Infantry",
+        "Agents of the Imperium"
+      ],
+      "modelCount": 10,
+      "move": "6\"",
+      "save": 4,
+      "health": 1,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "autogun",
+          "name": "Autogun",
+          "attacks": "1",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 24
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "sanctifiers",
+      "name": "Sanctifiers",
+      "keywords": [
+        "Infantry",
+        "Agents of the Imperium"
+      ],
+      "modelCount": 9,
+      "move": "7\"",
+      "save": 6,
+      "health": 1,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "sanctifier-melee",
+          "name": "Sanctifier Melee Weapons",
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "subductor-squad",
+      "name": "Subductor Squad",
+      "keywords": [
+        "Infantry",
+        "Agents of the Imperium"
+      ],
+      "modelCount": 4,
+      "move": "6\"",
+      "save": 3,
+      "health": 2,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "arrestor-maul",
+          "name": "Arrestor Maul",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "pistol",
+          "name": "Pistol",
+          "attacks": "1",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 12
+        }
+      ],
+      "abilities": []
+    }
+  ]
+}

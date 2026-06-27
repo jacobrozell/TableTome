@@ -43,24 +43,12 @@ struct GuideStepDetailView: View {
                 }
 
                 if !step.tips.isEmpty {
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                        Text(String(localized: "Tips"))
-                            .font(.headline)
-                        ForEach(step.tips, id: \.self) { tip in
-                            Label(tip, systemImage: "lightbulb")
-                                .font(.callout)
-                                .foregroundStyle(.secondary)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                        GlossaryChipsRow(
-                            text: step.tips.joined(separator: " "),
-                            gameSystemId: gameSystemId,
-                            ruleSections: ruleSections
-                        )
-                    }
-                    .padding(DesignTokens.Spacing.md)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+                    TipsCard(tips: step.tips)
+                    GlossaryChipsRow(
+                        text: step.tips.joined(separator: " "),
+                        gameSystemId: gameSystemId,
+                        ruleSections: ruleSections
+                    )
                 }
             }
             .readableContentWidth()

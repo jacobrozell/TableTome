@@ -1,0 +1,258 @@
+{
+  "schemaVersion": 1,
+  "armyId": "adepta-sororitas-combat-patrol",
+  "units": [
+    {
+      "id": "canoness-ellyrine",
+      "name": "Canoness Ellyrine",
+      "keywords": [
+        "Character",
+        "Infantry",
+        "Adepta Sororitas"
+      ],
+      "modelCount": 1,
+      "move": "6\"",
+      "save": 2,
+      "health": 4,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "power-weapon",
+          "name": "Power Weapon",
+          "attacks": "4",
+          "hit": 2,
+          "wound": 3,
+          "rend": 2,
+          "damage": "1"
+        },
+        {
+          "id": "inferno-pistol",
+          "name": "Inferno Pistol",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "D3",
+          "rangeInches": 6
+        }
+      ],
+      "abilities": [
+        {
+          "id": "act-of-faith",
+          "name": "Act of Faith",
+          "source": "The Penitent Host",
+          "effect": "Gain Miracle dice at turn start; spend instead of rolling key tests.",
+          "phases": [
+            "command"
+          ],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ],
+      "invulnerableSave": 4,
+      "notes": "Warlord — Act of Faith miracle dice each turn."
+    },
+    {
+      "id": "battle-sisters",
+      "name": "Battle Sisters (Patrol Squads)",
+      "keywords": [
+        "Battleline",
+        "Infantry",
+        "Adepta Sororitas"
+      ],
+      "modelCount": 10,
+      "move": "6\"",
+      "save": 3,
+      "health": 1,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "boltgun",
+          "name": "Boltgun",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 24
+        }
+      ],
+      "abilities": [
+        {
+          "id": "miracle-dice",
+          "name": "Miracle Dice",
+          "source": "Battle Sisters",
+          "effect": "Spend Miracle dice on Hit, Wound, or Save rolls in your turn.",
+          "phases": [
+            "shooting",
+            "combat"
+          ],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "seraphim",
+      "name": "Seraphim Squad",
+      "keywords": [
+        "Infantry",
+        "Jump Pack",
+        "Adepta Sororitas"
+      ],
+      "modelCount": 5,
+      "move": "12\"",
+      "save": 3,
+      "health": 1,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "bolt-pistol",
+          "name": "Bolt Pistol",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 12
+        },
+        {
+          "id": "plasma-pistol",
+          "name": "Plasma Pistol",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1",
+          "rangeInches": 12
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "repentia",
+      "name": "Repentia Squad + Repentia Superior",
+      "keywords": [
+        "Infantry",
+        "Adepta Sororitas"
+      ],
+      "modelCount": 10,
+      "move": "7\"",
+      "save": 6,
+      "health": 1,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "penitent-eviscerator",
+          "name": "Penitent Eviscerator",
+          "attacks": "2",
+          "hit": 4,
+          "wound": 3,
+          "rend": 2,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "righteous-fury",
+          "name": "Righteous Fury",
+          "source": "Repentia",
+          "effect": "Charge bonus — pair with Rhino delivery for Divine Judgement marks.",
+          "phases": [
+            "charge"
+          ],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "arco-flagellants",
+      "name": "Arco-flagellants",
+      "keywords": [
+        "Infantry",
+        "Adepta Sororitas"
+      ],
+      "modelCount": 3,
+      "move": "7\"",
+      "save": 6,
+      "health": 2,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "arc-flails",
+          "name": "Arco-flails",
+          "attacks": "6",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "penitent-engine",
+      "name": "Penitent Engine",
+      "keywords": [
+        "Vehicle",
+        "Walker",
+        "Adepta Sororitas"
+      ],
+      "modelCount": 1,
+      "move": "8\"",
+      "save": 3,
+      "health": 8,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "penitent-flamers",
+          "name": "Penitent Flamers",
+          "attacks": "D6",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 12
+        },
+        {
+          "id": "penitent-buzz-blades",
+          "name": "Penitent Buzz-blades",
+          "attacks": "6",
+          "hit": 4,
+          "wound": 3,
+          "rend": 2,
+          "damage": "1"
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "sororitas-rhino",
+      "name": "Sororitas Rhino",
+      "keywords": [
+        "Vehicle",
+        "Transport",
+        "Adepta Sororitas"
+      ],
+      "modelCount": 1,
+      "move": "9\"",
+      "save": 3,
+      "health": 10,
+      "control": 0,
+      "weapons": [
+        {
+          "id": "storm-bolter",
+          "name": "Storm Bolter",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 24
+        }
+      ],
+      "abilities": []
+    }
+  ]
+}

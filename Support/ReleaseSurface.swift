@@ -7,15 +7,17 @@ public enum ReleaseSurface {
         ProcessInfo.processInfo.arguments.contains("-enable_full_product_surface")
     }
 
-    /// Combat Patrol — separate from full surface until all armies ship and polish is done.
+    /// Combat Patrol (10th Edition rules) — ships in release defaults.
     public static var showsCombatPatrol: Bool {
-        ProcessInfo.processInfo.arguments.contains("-enable_combat_patrol")
+        releaseGameSystemIds.contains(GameSystemId.wh40k10eCp.rawValue)
+            || ProcessInfo.processInfo.arguments.contains("-enable_combat_patrol")
     }
 
     /// Game systems shipped in App Store 1.0.0.
     private static let releaseGameSystemIds: Set<String> = [
         GameSystemId.aosSpearhead.rawValue,
         GameSystemId.wh40k11e.rawValue,
+        GameSystemId.wh40k10eCp.rawValue,
     ]
 
     // MARK: Tabs (1.0.0: Models, Play, Rules, Settings)

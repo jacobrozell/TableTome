@@ -31,7 +31,6 @@ struct GuidedMatchDestinationView: View {
             }
         }
         .navigationTitle(String(localized: "Guided Match"))
-        .playNavigationDestinations()
         .task { await load() }
     }
 

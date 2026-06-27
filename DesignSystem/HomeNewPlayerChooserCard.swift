@@ -5,21 +5,35 @@ import TabletomeDomain
 struct HomeNewPlayerChooserCard: View {
     @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
     @State private var showsBoxHelper = false
+    @State private var showsWh40kPicker = false
+
+    private var showsAnyWh40kChooser: Bool {
+        ReleaseSurface.isGameSystemIdVisible(GameSystemId.wh40k11e.rawValue)
+            || ReleaseSurface.isGameSystemIdVisible(GameSystemId.wh40k10eCp.rawValue)
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Label(String(localized: "New to wargaming?"), systemImage: "sparkles")
+            Label(String(localized: "What did you buy?"), systemImage: "shippingbox.fill")
                 .font(.headline)
                 .foregroundStyle(Color.accentOnSurface)
 
             Text(
                 String(
                     localized: """
-                    Pick the option that matches what you own or want to try. You can change this anytime from Play.
+                    Pick what matches your box. You can change this anytime from Play.
                     """
                 )
             )
             .font(.callout)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+
+            Label(
+                String(localized: "You roll physical dice — Tabletome tracks phases, score, and rules."),
+                systemImage: "dice.fill"
+            )
+            .font(.caption)
             .foregroundStyle(.secondary)
             .fixedSize(horizontal: false, vertical: true)
 
@@ -33,64 +47,23 @@ struct HomeNewPlayerChooserCard: View {
             .buttonStyle(.bordered)
             .accessibilityIdentifier("home.chooser.boxHelper")
 
-            if ReleaseSurface.isGameSystemIdVisible(GameSystemId.wh40k10eCp.rawValue) {
-                chooserRow(
-                    title: String(localized: "I bought a Warhammer 40,000 starter box"),
-                    detail: String(localized: "Small box-set battles — best if your box says Combat Patrol"),
-                    systemImage: "shippingbox.fill",
-                    gameSystemId: GameSystemId.wh40k10eCp.rawValue,
-                    identifier: "home.chooser.combatPatrol",
-                    showsRecommendedBadge: true,
-                    recommendedBadgeLabel: String(localized: "If box says Combat Patrol")
-                )
+            if showsAnyWh40kChooser {
+                wh40kChooserRow
             }
 
             if ReleaseSurface.isGameSystemIdVisible(GameSystemId.aosSpearhead.rawValue) {
                 chooserRow(
                     title: String(localized: "I bought an Age of Sigmar starter box"),
-                    detail: String(localized: "Fast intro battles — look for Spearhead on the box"),
-                    systemImage: "shield.lefthalf.filled",
+                    detail: String(localized: "Box says Spearhead? Start here."),
                     gameSystemId: GameSystemId.aosSpearhead.rawValue,
-                    identifier: "home.chooser.spearhead",
-                    showsRecommendedBadge: true
-                )
-            }
-
-            if ReleaseSurface.isGameSystemIdVisible(GameSystemId.wh40k11e.rawValue) {
-                chooserRow(
-                    title: String(localized: "I bought a Warhammer 40,000 Battleforce"),
-                    detail: String(
-                        localized: "11th Edition single-faction box — Astra Militarum, Tyranids, Chaos, or Necrons"
-                    ),
-                    systemImage: "shippingbox",
-                    gameSystemId: GameSystemId.wh40k11e.rawValue,
-                    identifier: "home.chooser.wh40k11eBattleforce"
-                )
-
-                chooserRow(
-                    title: String(localized: "I have Warhammer 40,000: Armageddon"),
-                    detail: String(localized: "11th Edition launch box — Space Marines vs Orks with mission cards"),
-                    systemImage: "shippingbox.fill",
-                    gameSystemId: GameSystemId.wh40k11e.rawValue,
-                    identifier: "home.chooser.wh40k11eArmageddon",
-                    showsRecommendedBadge: true,
-                    recommendedBadgeLabel: String(localized: "Launch box")
-                )
-
-                chooserRow(
-                    title: String(localized: "I play full Warhammer 40,000"),
-                    detail: String(localized: "Larger armies at 1,000+ points — any faction, 11th Edition rules"),
-                    systemImage: "scope",
-                    gameSystemId: GameSystemId.wh40k11e.rawValue,
-                    identifier: "home.chooser.wh40k11e"
+                    identifier: "home.chooser.spearhead"
                 )
             }
 
             if ReleaseSurface.isGameSystemIdVisible(GameSystemId.scTmg.rawValue) {
                 chooserRow(
                     title: String(localized: "I'm trying StarCraft: The Miniatures Game"),
-                    detail: String(localized: "Terran vs Zerg starter — no prior wargame needed"),
-                    systemImage: "gamecontroller.fill",
+                    detail: String(localized: "Terran vs Zerg — no prior wargame needed"),
                     gameSystemId: GameSystemId.scTmg.rawValue,
                     identifier: "home.chooser.scTmg"
                 )
@@ -107,42 +80,73 @@ struct HomeNewPlayerChooserCard: View {
         .sheet(isPresented: $showsBoxHelper) {
             BoxIdentificationSheet()
         }
+        .sheet(isPresented: $showsWh40kPicker) {
+            Wh40kBoxPickerSheet()
+        }
+    }
+
+    private var wh40kChooserRow: some View {
+        Button {
+            showsWh40kPicker = true
+        } label: {
+            HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
+                BoxProductThumbnail(
+                    style: BoxProductThumbnailStyle(
+                        gameSystemId: GameSystemId.wh40k11e.rawValue,
+                        chooserIdentifier: "home.chooser.wh40k"
+                    )
+                )
+
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                    Text(String(localized: "I bought a Warhammer 40,000 box"))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.primary)
+                    Text(
+                        String(
+                            localized: """
+                            Combat Patrol (10e rules), Battleforce, Armageddon, or full 11e army — tap to pick your box type.
+                            """
+                        )
+                    )
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.tertiary)
+                    .accessibilityHidden(true)
+            }
+            .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("home.chooser.wh40k")
     }
 
     private func chooserRow(
         title: String,
         detail: String,
-        systemImage: String,
         gameSystemId: String,
-        identifier: String,
-        showsRecommendedBadge: Bool = false,
-        recommendedBadgeLabel: String = String(localized: "Good first game")
+        identifier: String
     ) -> some View {
         Button {
             openGameGuide(gameSystemId: gameSystemId)
         } label: {
             HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
-                Image(systemName: systemImage)
-                    .font(.title3)
-                    .foregroundStyle(Color.accentOnSurface)
-                    .symbolRenderingMode(.hierarchical)
-                    .frame(width: DesignTokens.minTouchTarget, height: DesignTokens.minTouchTarget)
-                    .accessibilityHidden(true)
+                BoxProductThumbnail(
+                    style: BoxProductThumbnailStyle(
+                        gameSystemId: gameSystemId,
+                        chooserIdentifier: identifier
+                    )
+                )
 
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                    HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
-                        Text(title)
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(.primary)
-                        if showsRecommendedBadge {
-                            Text(recommendedBadgeLabel)
-                                .font(.caption2.weight(.bold))
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, 2)
-                                .background(Color.accentColor.opacity(0.14), in: Capsule())
-                                .foregroundStyle(Color.accentOnSurface)
-                        }
-                    }
+                    Text(title)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.primary)
                     Text(detail)
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -163,6 +167,20 @@ struct HomeNewPlayerChooserCard: View {
     }
 
     private var newPlayerChooserFooter: String {
+        if FirstSessionStore.shouldHideHobbyTabs() {
+            if ReleaseSurface.showsMusterTab {
+                return String(
+                    localized: """
+                    Collection and army lists unlock after your first game — focus on Play for now.
+                    """
+                )
+            }
+            return String(
+                localized: """
+                Miniature collection tracking unlocks after your first game — focus on Play for now.
+                """
+            )
+        }
         if ReleaseSurface.showsMusterTab {
             return String(
                 localized: """

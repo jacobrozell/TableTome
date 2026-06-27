@@ -8,10 +8,6 @@ struct Wh40kDeploymentChecklistCard: View {
     var gameSystemId: String = GameSystemId.wh40k11e.rawValue
     var ruleSections: [RuleSection] = []
 
-    private var glossaryText: String {
-        Wh40kDeploymentChecklistStep.allCases.map(\.detail).joined(separator: " ")
-    }
-
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             SectionHeader(title: String(localized: "Deployment Checklist"), systemImage: "map")
@@ -28,10 +24,14 @@ struct Wh40kDeploymentChecklistCard: View {
                             Text(step.title)
                                 .font(.subheadline.weight(isFocused ? .semibold : .regular))
                                 .foregroundStyle(.primary)
-                            Text(step.detail)
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                                .multilineTextAlignment(.leading)
+                            InlineGlossaryText(
+                                text: step.detail,
+                                gameSystemId: gameSystemId,
+                                ruleSections: ruleSections,
+                                font: .caption,
+                                foregroundStyle: .secondary
+                            )
+                            .multilineTextAlignment(.leading)
                         }
                         Spacer(minLength: 0)
                     }
@@ -41,11 +41,28 @@ struct Wh40kDeploymentChecklistCard: View {
                 .accessibilityIdentifier("guidedMatch.wh40kDeployment.\(step.rawValue)")
             }
 
-            GlossaryChipsRow(
-                text: glossaryText,
-                gameSystemId: gameSystemId,
-                ruleSections: ruleSections
-            )
+            if focusedStep == .confirmReserves {
+                Label {
+                    Text(
+                        String(
+                            localized: """
+                            Units still off the board after battle round 3 are destroyed — including Strategic Reserves \
+                            and Deep Strike.
+                            """
+                        )
+                    )
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
+                } icon: {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.orange)
+                }
+                .padding(DesignTokens.Spacing.sm)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
+                .accessibilityIdentifier("guidedMatch.wh40kDeployment.reservesReminder")
+            }
 
             if let reservesSection = ruleSections.first(where: { $0.id == "11e-reserves" }) {
                 ReferenceLinksGroup {

@@ -253,9 +253,9 @@ After battle tracker round 1 or setup complete:
 - [x] Defer `MusterIntroSheet` and soften Collection sample-data prompt
 
 ### P2
-- [ ] Inline glossary tap → bottom sheet
+- [x] Inline glossary tap → bottom sheet (`GlossaryEntrySheetView` + `glossaryEntryNavigation()`)
 - [x] Guided Match first-screen hierarchy (Starter Matchup primary)
-- [ ] First-session Play tab emphasis
+- [x] First-session Play tab emphasis (`Start` badge until guide or setup)
 - [x] Conditional Match History toolbar
 - [x] Post-round-1 milestone + Models cross-link
 

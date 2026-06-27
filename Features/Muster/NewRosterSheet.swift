@@ -111,9 +111,8 @@ struct NewRosterSheet: View {
                 if let starterBoxGuidance {
                     Section {
                         starterBoxBanner(starterBoxGuidance)
+                            .listHeroCardRow()
                     }
-                    .listRowInsets(EdgeInsets())
-                    .listRowBackground(Color.clear)
                 }
 
                 Section {
@@ -340,7 +339,7 @@ struct NewRosterSheet: View {
     @ViewBuilder
     private func starterBoxBanner(_ guidance: NewRosterPrefillResolver.StarterBoxGuidance) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            Label(String(localized: "Starter box player?"), systemImage: "sparkles")
+            Label(String(localized: "Starter box player?"), systemImage: "flag.checkered")
                 .font(.headline)
                 .foregroundStyle(Color.accentOnSurface)
 

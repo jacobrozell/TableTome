@@ -77,6 +77,12 @@ struct BattleTrackerCombatResolverSection: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+            if !NewPlayerTipsStore.hasSeenPhysicalDiceResolverHint {
+                PhysicalDiceResolverHint {
+                    NewPlayerTipsStore.markPhysicalDiceResolverHintSeen()
+                }
+            }
+
             HStack(spacing: DesignTokens.Spacing.sm) {
                 Label(String(localized: "Resolve Combat"), systemImage: "dice.fill")
                     .font(.headline)

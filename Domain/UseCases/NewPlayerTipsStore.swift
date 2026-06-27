@@ -6,6 +6,18 @@ public enum NewPlayerTipsStore: Sendable {
     private static let combatSequencePrimerKey = "\(prefix)_combat_sequence_primer"
     private static let pileInGuideKey = "\(prefix)_pile_in_guide"
     private static let guidedMatchSetupExpandedKey = "\(prefix)_guided_match_setup_expanded"
+    private static let physicalDiceResolverHintKey = "\(prefix)_physical_dice_resolver_hint"
+    private static let heroRoundOneNudgeKey = "\(prefix)_hero_round_one_nudge"
+
+    private static let wargamePrimerKey = "\(prefix)_wargame_primer"
+
+    public static var hasDismissedWargamePrimer: Bool {
+        UserDefaults.standard.bool(forKey: wargamePrimerKey)
+    }
+
+    public static func dismissWargamePrimer() {
+        UserDefaults.standard.set(true, forKey: wargamePrimerKey)
+    }
 
     public static var hasSeenBattleTrackerCoach: Bool {
         UserDefaults.standard.bool(forKey: battleTrackerCoachKey)
@@ -39,10 +51,29 @@ public enum NewPlayerTipsStore: Sendable {
         UserDefaults.standard.set(true, forKey: guidedMatchSetupExpandedKey)
     }
 
+    public static var hasSeenPhysicalDiceResolverHint: Bool {
+        UserDefaults.standard.bool(forKey: physicalDiceResolverHintKey)
+    }
+
+    public static func markPhysicalDiceResolverHintSeen() {
+        UserDefaults.standard.set(true, forKey: physicalDiceResolverHintKey)
+    }
+
+    public static var hasDismissedHeroRoundOneNudge: Bool {
+        UserDefaults.standard.bool(forKey: heroRoundOneNudgeKey)
+    }
+
+    public static func dismissHeroRoundOneNudge() {
+        UserDefaults.standard.set(true, forKey: heroRoundOneNudgeKey)
+    }
+
     public static func resetAll() {
         UserDefaults.standard.removeObject(forKey: battleTrackerCoachKey)
         UserDefaults.standard.removeObject(forKey: combatSequencePrimerKey)
         UserDefaults.standard.removeObject(forKey: pileInGuideKey)
         UserDefaults.standard.removeObject(forKey: guidedMatchSetupExpandedKey)
+        UserDefaults.standard.removeObject(forKey: physicalDiceResolverHintKey)
+        UserDefaults.standard.removeObject(forKey: heroRoundOneNudgeKey)
+        UserDefaults.standard.removeObject(forKey: wargamePrimerKey)
     }
 }

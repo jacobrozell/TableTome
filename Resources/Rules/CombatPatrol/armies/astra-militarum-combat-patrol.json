@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "armyId": "astra-militarum-combat-patrol",
+  "units": [
+    {
+      "id": "command-squad-karsk",
+      "name": "Command Squad Karsk",
+      "keywords": ["Character", "Infantry", "Officer", "Astra Militarum"],
+      "modelCount": 5,
+      "move": "6\"",
+      "save": 5,
+      "health": 1,
+      "control": 2,
+      "notes": "Major Karsk issues Voice of Command orders in Command phase (Move / Aim / Cover within 6\").",
+      "weapons": [
+        {
+          "id": "lasgun-cmd",
+          "name": "Lasgun",
+          "rangeInches": 24,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "power-fist-karsk",
+          "name": "Power Fist",
+          "attacks": "3",
+          "hit": 4,
+          "wound": 3,
+          "rend": 2,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "voice-of-command",
+          "name": "Voice of Command",
+          "source": "Karsk's Gunners",
+          "effect": "In Command phase issue Move! Move! Move!, Take Aim!, or Take Cover! to units within 6\".",
+          "phases": ["command"],
+          "usageLimit": "eachTurn",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "field-ordnance-battery",
+      "name": "Field Ordnance Battery",
+      "keywords": ["Artillery", "Vehicle", "Astra Militarum"],
+      "modelCount": 2,
+      "move": "4\"",
+      "save": 4,
+      "health": 4,
+      "control": 1,
+      "notes": "Heavy — Remain Stationary for +1 to Hit. Gunnery Officer Enhancement buffs artillery near Karsk.",
+      "weapons": [
+        {
+          "id": "bombast-field-gun",
+          "name": "Bombast Field Gun",
+          "rangeInches": 48,
+          "attacks": "D6+3",
+          "hit": 5,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1",
+          "ability": "Indirect Fire, Blast, Heavy"
+        },
+        {
+          "id": "malleus-rocket-launcher",
+          "name": "Malleus Rocket Launcher",
+          "rangeInches": 48,
+          "attacks": "D6+3",
+          "hit": 5,
+          "wound": 8,
+          "rend": 2,
+          "damage": "D6",
+          "ability": "Blast, Heavy"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "artillery-strike-reminder",
+          "name": "Artillery Strike",
+          "source": "Field Ordnance Battery",
+          "effect": "Once per battle at start of opponent's Command: halve Move, no charges, -1 Hit on ranged.",
+          "phases": ["command"],
+          "usageLimit": "oncePerBattle",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "cadian-shock-troops",
+      "name": "Cadian Shock Troops (2× squads)",
+      "keywords": ["Battleline", "Infantry", "Astra Militarum"],
+      "modelCount": 20,
+      "move": "6\"",
+      "save": 5,
+      "health": 1,
+      "control": 2,
+      "notes": "Two 10-model squads — Send in the Next Wave can replace a destroyed squad at 9\" from your board edge.",
+      "weapons": [
+        {
+          "id": "lasgun",
+          "name": "Lasgun",
+          "rangeInches": 24,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "special-weapons",
+          "name": "Special Weapons",
+          "rangeInches": 24,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 6,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "send-in-the-next-wave",
+          "name": "Send in the Next Wave",
+          "source": "Karsk's Gunners",
+          "effect": "1CP in Movement Reinforcements: replace a destroyed Shock Troops unit at full strength within 9\" of your edge.",
+          "phases": ["movement"],
+          "usageLimit": "eachTurn",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "armoured-sentinel",
+      "name": "Armoured Sentinel",
+      "keywords": ["Vehicle", "Walker", "Astra Militarum"],
+      "modelCount": 1,
+      "move": "8\"",
+      "save": 3,
+      "health": 11,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "plasma-cannon",
+          "name": "Plasma Cannon",
+          "rangeInches": 36,
+          "attacks": "D3",
+          "hit": 4,
+          "wound": 7,
+          "rend": 2,
+          "damage": "1"
+        },
+        {
+          "id": "hunter-killer-missile",
+          "name": "Hunter-killer Missile",
+          "rangeInches": 48,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 14,
+          "rend": 3,
+          "damage": "D6"
+        },
+        {
+          "id": "close-combat-weapon",
+          "name": "Close Combat Weapon",
+          "attacks": "3",
+          "hit": 4,
+          "wound": 6,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "mobile-hunter-killer",
+          "name": "Mobile Hunter-killer",
+          "source": "Armoured Sentinel",
+          "effect": "Re-roll Wounds vs Monsters/Vehicles — skirmish flanks with Bring It Down.",
+          "phases": ["shooting"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    }
+  ]
+}

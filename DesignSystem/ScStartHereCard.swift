@@ -7,15 +7,15 @@ struct ScStartHereCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Label(String(localized: "Start here"), systemImage: "sparkles")
+            Label(String(localized: "Start here"), systemImage: "flag.checkered")
                 .font(.headline)
                 .foregroundStyle(Color.accentOnSurface)
 
             Text(
                 String(
                     localized: """
-                    New to tabletop wargames or coming from StarCraft II? Pick a path — then run a full guided match \
-                    with supply-aware battle tracking. Roll physical dice at the table.
+                    Pick a path below, then run a guided match at the table. Roll physical dice — \
+                    the app tracks supply and scoring.
                     """
                 )
             )
@@ -28,30 +28,15 @@ struct ScStartHereCard: View {
                 starCraftPlayerTrack
             }
 
-            NavigationLink(value: GettingStartedLink(gameSystemId: gameSystem.id)) {
-                Label(String(localized: "Getting Started"), systemImage: "map")
-                    .font(.subheadline.weight(.semibold))
-                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-            }
-            .buttonStyle(.borderedProminent)
-            .accessibilityIdentifier("guide.scTmg.gettingStarted")
-
-            if !gameSystem.editionMigrationSteps.isEmpty {
-                NavigationLink(value: EditionMigrationLink(gameSystemId: gameSystem.id)) {
-                    Label(String(localized: "RTS → Tabletop"), systemImage: "gamecontroller")
-                        .font(.subheadline.weight(.semibold))
-                        .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-                }
-                .buttonStyle(.bordered)
-                .accessibilityIdentifier("guide.scTmg.rtsBridge")
-            }
+            ScWhatYouNeedCard()
 
             NavigationLink(value: GuidedMatchLink(gameSystemId: .scTmg)) {
-                Label(String(localized: "Guided Match"), systemImage: "flag.checkered")
+                Label(String(localized: "Start Guided Match"), systemImage: "flag.checkered")
                     .font(.subheadline.weight(.semibold))
                     .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+                    .contentShape(Rectangle())
             }
-            .buttonStyle(.bordered)
+            .buttonStyle(.borderedProminent)
             .accessibilityIdentifier("guide.scTmg.guidedMatch")
         }
         .accentHighlightCard()
@@ -68,13 +53,12 @@ struct ScStartHereCard: View {
                 destination: GettingStartedLink(gameSystemId: gameSystem.id),
                 accessibilityId: "guide.scTmg.path.new.gettingStarted"
             )
-            TappableGuidePathStep(
+            GuidePathInfoStep(
                 number: 2,
                 title: String(localized: "Guided Match"),
                 detail: String(
-                    localized: "Founders Edition — Raynor vs Kerrigan starter matchup with battle tracker coaching."
+                    localized: "Tap Start Guided Match below for the Raynor vs Kerrigan Founders Edition matchup."
                 ),
-                destination: GuidedMatchLink(gameSystemId: .scTmg),
                 accessibilityId: "guide.scTmg.path.new.guidedMatch"
             )
         }
@@ -91,11 +75,12 @@ struct ScStartHereCard: View {
                 destination: EditionMigrationLink(gameSystemId: gameSystem.id),
                 accessibilityId: "guide.scTmg.path.rts.bridge"
             )
-            TappableGuidePathStep(
+            GuidePathInfoStep(
                 number: 2,
                 title: String(localized: "Guided Match"),
-                detail: String(localized: "Step-by-step setup and battle tracking for SC TMG."),
-                destination: GuidedMatchLink(gameSystemId: .scTmg),
+                detail: String(
+                    localized: "Tap Start Guided Match below for step-by-step setup and battle tracking."
+                ),
                 accessibilityId: "guide.scTmg.path.rts.guidedMatch"
             )
             TappableGuidePathStep(

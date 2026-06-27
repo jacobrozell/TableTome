@@ -207,6 +207,7 @@ struct BattleTrackerBothLoadoutsSection: View {
                         regimentAbility: playerOneRegimentAbility,
                         enhancement: playerOneEnhancement,
                         secondaryObjective: playerOneSecondary,
+                        battleTacticDeckName: playContext.capabilities.showsBattleTacticDecks ? army.name : nil,
                         isAttacker: playerIsAttacker(true)
                     )
                     warscrollLink(for: army)
@@ -218,6 +219,7 @@ struct BattleTrackerBothLoadoutsSection: View {
                         regimentAbility: playerTwoRegimentAbility,
                         enhancement: playerTwoEnhancement,
                         secondaryObjective: playerTwoSecondary,
+                        battleTacticDeckName: playContext.capabilities.showsBattleTacticDecks ? army.name : nil,
                         isAttacker: playerIsAttacker(false)
                     )
                     warscrollLink(for: army)

@@ -55,15 +55,13 @@ struct RealmSideCoinFlipCard: View {
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            Text(battlefield.flipCaption)
-                .font(.caption)
-                .foregroundStyle(.tertiary)
-                .fixedSize(horizontal: false, vertical: true)
-
-            GlossaryChipsRow(
-                text: "\(battlefield.newPlayerSummary) \(battlefield.flipCaption)",
-                gameSystemId: GameSystemId.aosSpearhead.rawValue
+            InlineGlossaryText(
+                text: battlefield.flipCaption,
+                gameSystemId: GameSystemId.aosSpearhead.rawValue,
+                font: .caption,
+                foregroundStyle: Color(.tertiaryLabel)
             )
+            .fixedSize(horizontal: false, vertical: true)
 
             HStack(spacing: DesignTokens.Spacing.md) {
                 ForEach(sides) { side in

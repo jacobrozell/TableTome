@@ -206,7 +206,32 @@ final class CombatPatrolGotchaCatalogTests: XCTestCase {
     func testLeviathanArmiesHaveGotchas() {
         XCTAssertEqual(CombatPatrolGotchaCatalog.gotchas(for: "space-marines-combat-patrol").count, 3)
         XCTAssertEqual(CombatPatrolGotchaCatalog.gotchas(for: "tyranids-combat-patrol").count, 3)
+        XCTAssertEqual(CombatPatrolGotchaCatalog.gotchas(for: "orks-combat-patrol").count, 3)
+        XCTAssertEqual(CombatPatrolGotchaCatalog.gotchas(for: "necrons-combat-patrol").count, 3)
+        XCTAssertEqual(CombatPatrolGotchaCatalog.gotchas(for: "adeptus-custodes-combat-patrol").count, 3)
+        XCTAssertEqual(CombatPatrolGotchaCatalog.gotchas(for: "astra-militarum-combat-patrol").count, 3)
         XCTAssertTrue(CombatPatrolGotchaCatalog.gotchas(for: "unknown").isEmpty)
+    }
+
+    func testCatalogDerivedGotchasWhenNoCuratedEntry() {
+        let army = SpearheadArmy(
+            id: "adepta-sororitas-combat-patrol",
+            name: "The Penitent Host",
+            general: "Canoness Ellyrine",
+            tagline: "Test",
+            playstyle: "Test",
+            unitCount: 7,
+            battleTraits: [
+                ArmyRuleOption(id: "act-of-faith", name: "Act of Faith", summary: "Miracle dice each turn.")
+            ],
+            enhancements: [
+                ArmyRuleOption(id: "armour-of-faith", name: "Armour of Faith", summary: "Feel No Pain on Ellyrine.")
+            ],
+            stratagems: [
+                CombatPatrolStratagem(id: "divine-protection", name: "Divine Protection", summary: "5+ invulnerable.", cpCost: 1, phase: "Fight", isReactive: true)
+            ]
+        )
+        XCTAssertEqual(CombatPatrolGotchaCatalog.gotchas(for: army.id, army: army).count, 3)
     }
 }
 

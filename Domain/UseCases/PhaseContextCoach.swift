@@ -2,6 +2,24 @@ import Foundation
 
 /// Short, phase-specific reminders shown under the phase picker for new players.
 public enum PhaseContextCoach {
+    /// One-line “do this now” prompt shown when the battle tracker advances to a new phase.
+    public static func phaseActionNudge(
+        for phase: BattleTurnPhase,
+        gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId
+    ) -> String? {
+        let context = GameSystemPlayContext.context(for: gameSystemId)
+        if context.isWh40k11e {
+            return wh40k11ePhaseActionNudge(for: phase)
+        }
+        if context.isCombatPatrol {
+            return combatPatrolPhaseActionNudge(for: phase)
+        }
+        if context.isStarCraft {
+            return starCraftPhaseActionNudge(for: phase)
+        }
+        return spearheadPhaseActionNudge(for: phase)
+    }
+
     public static func quickTips(
         for phase: BattleTurnPhase,
         gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId
@@ -182,10 +200,176 @@ public enum PhaseContextCoach {
 
     private static func starCraftQuickTips(for phase: BattleTurnPhase) -> [String] {
         switch phase {
-        case .movement, .assault, .combat, .scoring:
-            []
+        case .movement:
+            [
+                String(localized: "Activate one unit at a time — move up to its Move value, then tap Done."),
+                String(localized: "Watch supply — you cannot deploy units that exceed your cap.")
+            ]
+        case .assault:
+            [
+                String(localized: "Fire ranged attacks with the active unit, then tap Done or Pass."),
+                String(localized: "Units that moved usually cannot shoot unless a rule says otherwise.")
+            ]
+        case .combat:
+            [
+                String(localized: "Resolve melee attacks for the active unit — pick targets in range."),
+                String(localized: "After combat, check if the unit can consolidate toward objectives.")
+            ]
+        case .scoring:
+            [
+                String(localized: "Add VP for Supply tokens near objective markers."),
+                String(localized: "When scoring finishes, the next round begins with a new initiative roll.")
+            ]
+        case .deployment:
+            [
+                String(localized: "Place all three Supply objectives before deploying units."),
+                String(localized: "Reserves arrive from the board edge — track which units started off the table.")
+            ]
         default:
             []
+        }
+    }
+
+    private static func spearheadPhaseActionNudge(for phase: BattleTurnPhase) -> String? {
+        switch phase {
+        case .hero:
+            String(localized: "Hero phase — use abilities and spells, then tap Next when ready.")
+        case .movement:
+            String(localized: "Movement phase — move models up to their Move value. No dice yet.")
+        case .shooting:
+            String(localized: "Shooting phase — pick a target in range, then roll hit rolls at the table.")
+        case .charge:
+            String(localized: "Charge phase — pick a target within 12\", then roll 2D6 for charge distance.")
+        case .combat, .anyCombat:
+            String(localized: "Fight phase — roll hit rolls for attacking units, then wounds and saves.")
+        case .endOfTurn:
+            String(localized: "End phase — score objectives and battle tactics, then pass the phone.")
+        case .deployment:
+            String(localized: "Deployment — place terrain and objectives before any models.")
+        default:
+            nil
+        }
+    }
+
+    private static func wh40k11ePhaseActionNudge(for phase: BattleTurnPhase) -> String? {
+        switch phase {
+        case .command:
+            String(localized: "Command phase — gain CP, test Battle-shock, then use stratagems. No movement yet.")
+        case .movement:
+            String(localized: "Movement phase — move models. Roll nothing until Shooting unless you Advance.")
+        case .shooting:
+            String(localized: "Shooting phase — roll hit rolls for each shooting unit at the table.")
+        case .charge:
+            String(localized: "Charge phase — roll 2D6 first, then pick an enemy unit within 12\" you can reach.")
+        case .combat, .anyCombat:
+            String(localized: "Fight phase — resolve all pile-ins, then roll hit rolls for fighting units.")
+        case .endOfTurn:
+            String(localized: "End phase — score victory points, then pass the phone.")
+        case .deployment:
+            String(localized: "Deployment — set up terrain and objectives before placing models.")
+        default:
+            nil
+        }
+    }
+
+    private static func combatPatrolPhaseActionNudge(for phase: BattleTurnPhase) -> String? {
+        switch phase {
+        case .command:
+            String(localized: "Command phase — score objectives with troops on the board, then use abilities.")
+        case .movement:
+            String(localized: "Movement phase — move models up to their Move value. No dice yet.")
+        case .shooting:
+            String(localized: "Shooting phase — roll hit rolls at the table for each shooting unit.")
+        case .charge:
+            String(localized: "Charge phase — declare targets, then roll 2D6 for charge distance.")
+        case .combat, .anyCombat:
+            String(localized: "Fight phase — roll hit rolls for units in engagement range.")
+        case .endOfTurn:
+            String(localized: "End phase — score mission points, then pass the phone.")
+        case .deployment:
+            String(localized: "Deployment — place mission terrain and objectives first.")
+        default:
+            nil
+        }
+    }
+
+    private static func starCraftPhaseActionNudge(for phase: BattleTurnPhase) -> String? {
+        switch phase {
+        case .movement:
+            String(localized: "Movement phase — activate one unit, move it, then tap Done.")
+        case .assault:
+            String(localized: "Assault phase — fire ranged attacks, then tap Done or Pass.")
+        case .combat:
+            String(localized: "Combat phase — resolve melee attacks for the active unit.")
+        case .scoring:
+            String(localized: "Scoring phase — add VP for Supply near objectives, then start the next round.")
+        case .deployment:
+            String(localized: "Deployment — place objectives before deploying units.")
+        default:
+            nil
+        }
+    }
+
+    /// Bundled rules section id for deep-linking from the battle tracker phase picker.
+    public static func ruleSectionId(
+        for phase: BattleTurnPhase,
+        gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId
+    ) -> String? {
+        let context = GameSystemPlayContext.context(for: gameSystemId)
+        if context.isWh40k11e {
+            return wh40k11eRuleSectionId(for: phase)
+        }
+        if context.isCombatPatrol {
+            return combatPatrolRuleSectionId(for: phase)
+        }
+        if context.isStarCraft {
+            return starCraftRuleSectionId(for: phase)
+        }
+        return spearheadRuleSectionId(for: phase)
+    }
+
+    private static func spearheadRuleSectionId(for phase: BattleTurnPhase) -> String? {
+        switch phase {
+        case .hero: "spearhead-battle-round"
+        case .movement: "movement-phase"
+        case .shooting: "combat-sequence"
+        case .charge: "charge-phase"
+        case .combat, .anyCombat: "combat-phase-fight"
+        case .endOfTurn: "spearhead-scoring"
+        case .deployment: "spearhead-deployment"
+        default: nil
+        }
+    }
+
+    private static func wh40k11eRuleSectionId(for phase: BattleTurnPhase) -> String? {
+        switch phase {
+        case .command: "11e-command-phase"
+        case .movement: "11e-movement"
+        case .shooting: "11e-shooting"
+        case .charge, .combat, .anyCombat: "11e-charge-fight"
+        case .endOfTurn: "11e-scoring-overview"
+        case .deployment: "11e-terrain-objectives"
+        default: nil
+        }
+    }
+
+    private static func combatPatrolRuleSectionId(for phase: BattleTurnPhase) -> String? {
+        switch phase {
+        case .command: "10e-turn-overview"
+        case .movement: "cp-reserves"
+        case .shooting, .charge, .combat, .anyCombat: "combat-sequence"
+        case .endOfTurn: "cp-scoring"
+        case .deployment: "cp-pre-battle"
+        default: nil
+        }
+    }
+
+    private static func starCraftRuleSectionId(for phase: BattleTurnPhase) -> String? {
+        switch phase {
+        case .movement, .assault, .combat: "sc-combat"
+        case .scoring: "sc-scoring"
+        case .deployment: "sc-reserves"
+        default: "sc-turn-overview"
         }
     }
 }

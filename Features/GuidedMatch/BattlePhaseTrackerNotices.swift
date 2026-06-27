@@ -21,7 +21,29 @@ struct ScoringReminderNotice: Equatable {
     let playerName: String
 }
 
+struct PhaseActionNudgeNotice: Equatable {
+    let phase: BattleTurnPhase
+    let title: String
+    let message: String
+}
+
 extension BattlePhaseTrackerView {
+    @ViewBuilder
+    var phaseActionNudgeSection: some View {
+        if let notice = phaseActionNudge {
+            BattleTrackerPhaseActionBanner(
+                phaseTitle: notice.title,
+                message: notice.message,
+                onDismiss: {
+                    withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) {
+                        phaseActionNudge = nil
+                    }
+                }
+            )
+            .transition(.opacity.combined(with: .move(edge: .top)))
+        }
+    }
+
     @ViewBuilder
     var turnHandoffSection: some View {
         if let notice = turnHandoffNotice {
@@ -77,6 +99,19 @@ extension BattlePhaseTrackerView {
     }
 
     @ViewBuilder
+    var heroRoundOneSection: some View {
+        if showsHeroRoundOneNotice {
+            HeroPhaseRoundOneBanner {
+                NewPlayerTipsStore.dismissHeroRoundOneNudge()
+                withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) {
+                    showsHeroRoundOneNotice = false
+                }
+            }
+            .transition(.opacity.combined(with: .move(edge: .top)))
+        }
+    }
+
+    @ViewBuilder
     var scoringReminderSection: some View {
         if let notice = scoringReminderNotice {
             BattleTrackerScoringReminderBanner(
@@ -96,6 +131,28 @@ extension BattlePhaseTrackerView {
         }
     }
 
+    func presentPhaseActionNudgeIfNeeded(from oldPhase: BattleTurnPhase, to phase: BattleTurnPhase) {
+        guard oldPhase != phase else { return }
+        guard !FirstSessionStore.hasCompletedFirstBattleRound else { return }
+        guard supportsBattleTracker else { return }
+        if phase == .hero || phase == .command, oldPhase == .endOfTurn {
+            return
+        }
+        guard let message = PhaseContextCoach.phaseActionNudge(
+            for: phase,
+            gameSystemId: viewModel.gameSystemId.rawValue
+        ) else {
+            return
+        }
+        withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) {
+            phaseActionNudge = PhaseActionNudgeNotice(
+                phase: phase,
+                title: phase.title,
+                message: message
+            )
+        }
+    }
+
     func presentRoundOpenerNudgeIfNeeded() {
         guard showsSpearheadBattleChrome, let step = viewModel.focusedRoundOpenerStep else { return }
         let round = viewModel.trackerState.battleRound
@@ -104,6 +161,16 @@ extension BattlePhaseTrackerView {
                 round: round,
                 nextStepTitle: step.title(round: round)
             )
+        }
+    }
+
+    func presentHeroRoundOneNudgeIfNeeded() {
+        guard viewModel.gameSystemId == .aosSpearhead else { return }
+        guard viewModel.trackerState.battleRound == 1 else { return }
+        guard viewModel.trackerState.currentPhase == .hero else { return }
+        guard !NewPlayerTipsStore.hasDismissedHeroRoundOneNudge else { return }
+        withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) {
+            showsHeroRoundOneNotice = true
         }
     }
 
@@ -137,7 +204,7 @@ extension BattlePhaseTrackerView {
                 )
             } else if playerChanged {
                 notice = TurnHandoffNotice(
-                    title: String(localized: "Pass to \(activeName)"),
+                    title: String(localized: "Hand the phone to \(activeName)"),
                     detail: String(localized: "\(phase.title) — activate one unit, then Done or Pass.")
                 )
             } else {
@@ -162,18 +229,18 @@ extension BattlePhaseTrackerView {
             )
         } else if phase == .hero, playerChanged || previousPhase == .endOfTurn {
             notice = TurnHandoffNotice(
-                title: String(localized: "Pass to \(activeName)"),
+                title: String(localized: "Hand the phone to \(activeName)"),
                 detail: String(localized: "Hero phase — start of their turn.")
             )
         } else if phase == .command, viewModel.playContext.isWh40k11e,
                   playerChanged || previousPhase == .endOfTurn {
             notice = TurnHandoffNotice(
-                title: String(localized: "Pass to \(activeName)"),
+                title: String(localized: "Hand the phone to \(activeName)"),
                 detail: String(localized: "Command phase — start of their turn.")
             )
         } else if playerChanged {
             notice = TurnHandoffNotice(
-                title: String(localized: "Pass to \(activeName)"),
+                title: String(localized: "Hand the phone to \(activeName)"),
                 detail: String(localized: "\(phase.title) phase.")
             )
         } else {

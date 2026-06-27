@@ -34,6 +34,47 @@ final class MatchSetupCompletionEvaluatorTests: XCTestCase {
         XCTAssertTrue(completed.contains("roll-attacker"))
     }
 
+    func testDoesNotAutoCompleteRegimentBeforeRollOff() async throws {
+        let catalog = try await loadCatalog()
+        var state = GuidedMatchState()
+        state.playerOne.factionId = "stormcast-eternals"
+        state.playerOne.armyId = "vigilant-brotherhood"
+        state.playerOne.regimentAbilityId = "strike-where-needed"
+        state.playerTwo.factionId = "skaven"
+        state.playerTwo.armyId = "gnawfeast-clawpack"
+        state.playerTwo.regimentAbilityId = "too-quick-to-hit"
+
+        let completed = MatchSetupCompletionEvaluator.autoCompletedStepIds(
+            state: state,
+            catalog: catalog,
+            deploymentSteps: []
+        )
+
+        XCTAssertFalse(completed.contains("regiment-abilities"))
+        XCTAssertFalse(completed.contains("roll-attacker"))
+    }
+
+    func testAutoCompletesRegimentAfterRollOff() async throws {
+        let catalog = try await loadCatalog()
+        var state = GuidedMatchState()
+        state.attackerIsPlayerOne = true
+        state.playerOne.factionId = "stormcast-eternals"
+        state.playerOne.armyId = "vigilant-brotherhood"
+        state.playerOne.regimentAbilityId = "strike-where-needed"
+        state.playerTwo.factionId = "skaven"
+        state.playerTwo.armyId = "gnawfeast-clawpack"
+        state.playerTwo.regimentAbilityId = "too-quick-to-hit"
+
+        let completed = MatchSetupCompletionEvaluator.autoCompletedStepIds(
+            state: state,
+            catalog: catalog,
+            deploymentSteps: []
+        )
+
+        XCTAssertTrue(completed.contains("roll-attacker"))
+        XCTAssertTrue(completed.contains("regiment-abilities"))
+    }
+
     func testAutoCompletesRealmWhenDeploymentFinished() async throws {
         let catalog = try await loadCatalog()
         let deploymentSteps = Set(DeploymentChecklistStep.allCases.map(\.rawValue))

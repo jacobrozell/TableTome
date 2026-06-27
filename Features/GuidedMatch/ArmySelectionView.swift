@@ -196,7 +196,6 @@ struct ArmySelectionView: View {
         .readableContentWidth()
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
-        .playNavigationDestinations()
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Button(String(localized: "Save")) {

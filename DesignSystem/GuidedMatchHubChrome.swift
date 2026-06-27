@@ -144,10 +144,7 @@ struct GuidedMatchStatusBar: View {
                 fullBody
             }
         }
-        .padding(.horizontal, DesignTokens.Spacing.md)
-        .padding(.vertical, DesignTokens.Spacing.sm)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.bar)
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("guidedMatch.statusBar")
     }

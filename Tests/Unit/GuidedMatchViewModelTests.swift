@@ -54,6 +54,26 @@ final class GuidedMatchViewModelTests: XCTestCase {
         XCTAssertEqual(loaded.battleRound, 1)
         XCTAssertEqual(loaded.playerOneVictoryPoints, 0)
         XCTAssertTrue(viewModel.matchState.hasBothArmies)
+        XCTAssertEqual(viewModel.matchState.attackerIsPlayerOne, true)
+        XCTAssertTrue(viewModel.matchState.completedStepIds.contains("roll-attacker"))
+    }
+
+    func testApplyStarterMatchupDefaultsFirstTurnForWh40k11e() async throws {
+        let catalog = try await BundledPlayCatalogRepository(
+            bundle: Bundle(for: GuidedMatchViewModelTests.self)
+        ).loadCatalog(for: "wh40k-11e")
+        defer { MatchSetupStore.reset(gameSystemId: .wh40k11e) }
+
+        let viewModel = GuidedMatchViewModel(
+            gameSystemId: .wh40k11e,
+            catalogRepository: StubSpearheadCatalogRepository(catalog: catalog),
+            initialState: GuidedMatchState()
+        )
+        await viewModel.load()
+        viewModel.applyStarterMatchup()
+
+        XCTAssertEqual(viewModel.matchState.attackerIsPlayerOne, true)
+        XCTAssertEqual(viewModel.matchState.firstTurnIsPlayerOne, true)
     }
 
     func testApplyRecommendedLoadoutsSelectsDefaultsForCombatPatrol() async throws {
@@ -76,6 +96,24 @@ final class GuidedMatchViewModelTests: XCTestCase {
         XCTAssertNotNil(viewModel.matchState.playerOne.secondaryObjectiveId)
         XCTAssertNotNil(viewModel.matchState.playerTwo.enhancementId)
         XCTAssertNotNil(viewModel.matchState.playerTwo.secondaryObjectiveId)
+    }
+
+    func testSetAttackerMirrorsFirstTurnForWh40k11e() async throws {
+        let catalog = try await BundledPlayCatalogRepository(
+            bundle: Bundle(for: GuidedMatchViewModelTests.self)
+        ).loadCatalog(for: "wh40k-11e")
+        defer { MatchSetupStore.reset(gameSystemId: .wh40k11e) }
+
+        let viewModel = GuidedMatchViewModel(
+            gameSystemId: .wh40k11e,
+            catalogRepository: StubSpearheadCatalogRepository(catalog: catalog),
+            initialState: GuidedMatchState()
+        )
+        await viewModel.load()
+        viewModel.setAttacker(isPlayerOne: false)
+
+        XCTAssertEqual(viewModel.matchState.attackerIsPlayerOne, false)
+        XCTAssertEqual(viewModel.matchState.firstTurnIsPlayerOne, false)
     }
 
     func testCompleteSetupForAutomationFinishesSpearheadSetup() async throws {

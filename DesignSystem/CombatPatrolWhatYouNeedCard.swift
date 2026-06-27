@@ -11,10 +11,6 @@ struct CombatPatrolWhatYouNeedCard: View {
         String(localized: "This app on one device — pass it when turns change")
     ]
 
-    private var glossarySourceText: String {
-        items.joined(separator: " ")
-    }
-
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
             Label(String(localized: "What you need"), systemImage: "checklist")
@@ -23,8 +19,8 @@ struct CombatPatrolWhatYouNeedCard: View {
             Text(
                 String(
                     localized: """
-                    Any Combat Patrol box works. Guided Match includes a Space Marines vs Tyranids starter \
-                    matchup, or pick the patrols you own.
+                    Any Combat Patrol box works — this mode uses 10th Edition patrol rules, not 11th Edition. \
+                    Guided Match lists all 23 faction patrol rosters with full battle tracker datasheets for every box.
                     """
                 )
             )
@@ -38,21 +34,17 @@ struct CombatPatrolWhatYouNeedCard: View {
                         .font(.caption)
                         .foregroundStyle(Color.accentColor)
                         .accessibilityHidden(true)
-                    Text(item)
-                        .font(.callout)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
+                    InlineGlossaryText(
+                        text: item,
+                        gameSystemId: GameSystemId.wh40k10eCp.rawValue,
+                        font: .callout,
+                        foregroundStyle: .secondary
+                    )
+                    .fixedSize(horizontal: false, vertical: true)
                 }
             }
-
-            GlossaryChipsRow(
-                text: glossarySourceText,
-                gameSystemId: GameSystemId.wh40k10eCp.rawValue
-            )
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .surfaceCard()
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("guide.combatPatrol.whatYouNeed")
     }

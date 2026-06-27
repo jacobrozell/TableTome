@@ -31,6 +31,15 @@ struct GameSystemRulesReferenceView: View {
                 .font(.callout)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
+
+                if gameSystem.id == GameSystemId.wh40k10eCp.rawValue
+                    || gameSystem.id == GameSystemId.wh40k11e.rawValue {
+                    CombatPatrolRulesComparisonCard()
+                        .padding(.top, DesignTokens.Spacing.sm)
+                } else if gameSystem.id == GameSystemId.aosSpearhead.rawValue {
+                    SpearheadRulesComparisonCard()
+                        .padding(.top, DesignTokens.Spacing.sm)
+                }
             }
 
             Section {
@@ -54,7 +63,7 @@ struct GameSystemRulesReferenceView: View {
 
             Section(String(localized: "Sections")) {
                 if filteredSections.isEmpty {
-                    RulesBrowseEmptyState(searchText: searchText)
+                    RulesBrowseEmptyState(searchText: searchText, gameSystemId: gameSystem.id)
                 } else {
                     ForEach(filteredSections) { section in
                         NavigationLink(value: RuleSectionLink(gameSystemId: gameSystem.id, sectionId: section.id)) {

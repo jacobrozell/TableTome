@@ -4,16 +4,6 @@ import TabletomeData
 extension GuidedMatchView {
     @ToolbarContentBuilder
     var matchSyncToolbar: some ToolbarContent {
-        if showsHubChromeCollapseToggle {
-            ToolbarItem(placement: .topBarLeading) {
-                ChromeCollapseToolbarButton(
-                    isCollapsed: $isHubChromeCollapsed,
-                    expandedAccessibilityLabel: String(localized: "Hide match summary"),
-                    collapsedAccessibilityLabel: String(localized: "Show match summary"),
-                    accessibilityIdentifier: "guidedMatch.hubChromeCollapse"
-                )
-            }
-        }
         matchHistoryToolbarItems
         if viewModel.matchState.hasBothArmies {
             ToolbarItem(placement: .topBarTrailing) {

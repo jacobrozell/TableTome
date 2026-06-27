@@ -224,7 +224,7 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
         contentCoverage = army.contentCoverage
         activeRegimentAbility = army.regimentAbilities.first { $0.id == player.regimentAbilityId }
         activeEnhancement = army.enhancements.first { $0.id == player.enhancementId }
-        activeGotchas = Self.gotchas(for: army.id, gameSystemId: gameSystemId)
+        activeGotchas = Self.gotchas(for: army.id, gameSystemId: gameSystemId, army: army)
         if playContext.usesGuidedBattleTracker {
             contentCoverage = .battleTracker
         }

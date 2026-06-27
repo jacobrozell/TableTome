@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "armyId": "adeptus-custodes-combat-patrol",
+  "units": [
+    {
+      "id": "shield-captain-tyvan",
+      "name": "Shield-Captain Tyvan",
+      "keywords": ["Character", "Infantry", "Custodes"],
+      "modelCount": 1,
+      "move": "6\"",
+      "save": 2,
+      "invulnerableSave": 4,
+      "health": 6,
+      "control": 2,
+      "notes": "Warlord — Martial Ka'tah stance each Fight phase (Sustained Hits 1 or Lethal Hits).",
+      "weapons": [
+        {
+          "id": "sentinel-blade",
+          "name": "Sentinel Blade",
+          "attacks": "7",
+          "hit": 2,
+          "wound": 3,
+          "rend": 2,
+          "damage": "1"
+        },
+        {
+          "id": "pistol",
+          "name": "Balistus Grenade Launcher",
+          "rangeInches": 18,
+          "attacks": "D3",
+          "hit": 2,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "martial-kath",
+          "name": "Martial Ka'tah",
+          "source": "Guardians of the Throne",
+          "effect": "Start of Fight phase pick Dacatarai (Sustained Hits 1) or Rendnax (Lethal Hits) for your army.",
+          "phases": ["combat"],
+          "usageLimit": "eachTurn",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "custodes-elite",
+      "name": "Custodian Guard or Vertus Praetors",
+      "keywords": ["Infantry", "Custodes"],
+      "modelCount": 5,
+      "move": "6\"",
+      "save": 2,
+      "invulnerableSave": 4,
+      "health": 3,
+      "control": 2,
+      "notes": "Before battle, choose 5 Custodian Guard or 3 Vertus Praetors — update modelCount to 3 if taking bikes.",
+      "weapons": [
+        {
+          "id": "guardian-spear",
+          "name": "Guardian Spear",
+          "rangeInches": 24,
+          "attacks": "2",
+          "hit": 2,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "sentinel-blade-squad",
+          "name": "Sentinel Blade",
+          "attacks": "4",
+          "hit": 2,
+          "wound": 3,
+          "rend": 2,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "stand-vigil",
+          "name": "Stand Vigil",
+          "source": "Custodian Guard",
+          "effect": "Re-roll Wound rolls of 1 in Fight; re-roll any Wounds when on an objective.",
+          "phases": ["combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "prosecutors",
+      "name": "Prosecutors",
+      "keywords": ["Infantry", "Anathema Psykana"],
+      "modelCount": 5,
+      "move": "6\"",
+      "save": 3,
+      "health": 2,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "boltgun-prosecutor",
+          "name": "Boltgun",
+          "rangeInches": 24,
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "purity-of-execution",
+          "name": "Purity of Execution",
+          "source": "Prosecutors",
+          "effect": "Anti-Psyker — hold a safe home objective with ranged support.",
+          "phases": ["shooting"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "vigilators",
+      "name": "Vigilators",
+      "keywords": ["Infantry", "Anathema Psykana"],
+      "modelCount": 5,
+      "move": "6\"",
+      "save": 3,
+      "health": 2,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "executioner-greatblade",
+          "name": "Executioner Greatblade",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 2,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "vigilator-charge",
+          "name": "Witch Hunters",
+          "source": "Vigilators",
+          "effect": "Melee escort — advance with Tyvan or hold a second objective.",
+          "phases": ["combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    }
+  ]
+}

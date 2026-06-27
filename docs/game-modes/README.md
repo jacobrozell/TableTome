@@ -2,20 +2,24 @@
 
 Authoritative specs stay in [`specs/`](../../specs/). This folder collects **mode-specific** research, verification audits, launch plans, and scope notes — one directory per play mode.
 
-| Mode | `GameSystemId` | Status | Folder |
-|------|----------------|--------|--------|
-| Age of Sigmar — Spearhead | `aos-spearhead` | **Shipped** (default) | [aos-spearhead/](aos-spearhead/) |
-| Age of Sigmar — standard | — | Not supported | [aos-standard/](aos-standard/) |
-| Warhammer 40,000 — 11th Edition | `wh40k-11e` | **Shipped** | [wh40k-11e/](wh40k-11e/) |
-| Warhammer 40,000 — 10th Edition | — | Not supported (legacy id only) | [wh40k-10e/](wh40k-10e/) |
-| Warhammer 40,000 — Combat Patrol | `wh40k-10e-cp` | Gated | [combat-patrol/](combat-patrol/) |
+**Product scope (what we build):** [PRODUCT_SCOPE.md](PRODUCT_SCOPE.md)
+
+| Mode | `GameSystemId` | Rules / format | Status | Folder |
+|------|----------------|----------------|--------|--------|
+| Age of Sigmar — Spearhead | `aos-spearhead` | AoS 4e Spearhead | **Shipped** | [aos-spearhead/](aos-spearhead/) |
+| Age of Sigmar — full / standard | — | Battletomes, matched play | **Planned** | [aos-standard/](aos-standard/) |
+| Warhammer 40,000 — 11th Edition | `wh40k-11e` | 11e full game | **Shipped** | [wh40k-11e/](wh40k-11e/) |
+| Warhammer 40,000 — Combat Patrol | `wh40k-10e-cp` | **10th Edition** patrol format | **Shipped** | [combat-patrol/](combat-patrol/) |
+| Warhammer 40,000 — 10th Edition (full) | — | Matched play, points lists | **Not planned** | [wh40k-10e/](wh40k-10e/) |
+| StarCraft: The Miniatures Game | `sc-tmg` | SC TMG | Gated | (spec in `FutureIdeas/`) |
 
 ## Cross-mode
 
 | Doc | Topic |
 |-----|-------|
-| [FutureIdeas/CombatPatrolVsSpearheadFAQ.md](../../FutureIdeas/CombatPatrolVsSpearheadFAQ.md) | CP vs Spearhead expectations for players switching modes |
-| [specs/PlayEngineArchitectureSpec.md](../../specs/PlayEngineArchitectureSpec.md) | Shared play-engine registry and capabilities |
+| [PRODUCT_SCOPE.md](PRODUCT_SCOPE.md) | Supported vs deferred modes; CP = 10e rules |
+| [FutureIdeas/CombatPatrolVsSpearheadFAQ.md](../../FutureIdeas/CombatPatrolVsSpearheadFAQ.md) | CP vs Spearhead expectations |
+| [specs/PlayEngineArchitectureSpec.md](../../specs/PlayEngineArchitectureSpec.md) | Shared play-engine registry |
 
 ## Local GW reference PDFs (not bundled)
 

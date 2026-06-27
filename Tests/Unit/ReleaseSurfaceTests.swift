@@ -1,5 +1,6 @@
 import XCTest
 @testable import Tabletome
+@testable import TabletomeData
 @testable import TabletomeDomain
 
 final class ReleaseSurfaceTests: XCTestCase {
@@ -16,7 +17,7 @@ final class ReleaseSurfaceTests: XCTestCase {
         XCTAssertTrue(ReleaseSurface.isGameSystemVisible(system))
     }
 
-    func testWh40k10eCpHiddenInRelease() {
+    func testWh40k10eCpVisibleInRelease() {
         let system = GameSystem(
             id: "wh40k-10e-cp",
             name: "Combat Patrol",
@@ -26,7 +27,7 @@ final class ReleaseSurfaceTests: XCTestCase {
             gettingStartedSteps: [],
             ruleSections: []
         )
-        XCTAssertFalse(ReleaseSurface.isGameSystemVisible(system))
+        XCTAssertTrue(ReleaseSurface.isGameSystemVisible(system))
     }
 
     func test40k10eHiddenWithoutLaunchArg() {
@@ -60,10 +61,10 @@ final class ReleaseSurfaceTests: XCTestCase {
         XCTAssertFalse(ReleaseSurface.showsNewEditionBadge(for: "aos-spearhead"))
     }
 
-    func testGuidedMatchForSpearheadAnd40k11eOnlyInRelease() {
+    func testGuidedMatchForSpearhead40k11eAndCombatPatrolInRelease() {
         XCTAssertTrue(ReleaseSurface.showsGuidedMatch(for: "aos-spearhead"))
         XCTAssertTrue(ReleaseSurface.showsGuidedMatch(for: "wh40k-11e"))
-        XCTAssertFalse(ReleaseSurface.showsGuidedMatch(for: "wh40k-10e-cp"))
+        XCTAssertTrue(ReleaseSurface.showsGuidedMatch(for: "wh40k-10e-cp"))
         XCTAssertFalse(ReleaseSurface.showsGuidedMatch(for: "sc-tmg"))
         XCTAssertFalse(ReleaseSurface.showsGuidedMatch(for: "wh40k-10e"))
     }
@@ -91,16 +92,16 @@ final class ReleaseSurfaceTests: XCTestCase {
         XCTAssertTrue(ReleaseSurface.showsCombatResolver(for: "aos-spearhead"))
     }
 
-    func testCombatResolverHiddenForCombatPatrolInRelease() {
-        XCTAssertFalse(ReleaseSurface.showsCombatResolver(for: "wh40k-10e-cp"))
+    func testCombatResolverEnabledForCombatPatrolInRelease() {
+        XCTAssertTrue(ReleaseSurface.showsCombatResolver(for: "wh40k-10e-cp"))
     }
 
     func testCombatResolverEnabledForWh40k11eInRelease() {
         XCTAssertTrue(ReleaseSurface.showsCombatResolver(for: "wh40k-11e"))
     }
 
-    func testCombatPatrolHiddenWithoutLaunchArg() {
-        XCTAssertFalse(ReleaseSurface.showsCombatPatrol)
+    func testCombatPatrolVisibleInRelease() {
+        XCTAssertTrue(ReleaseSurface.showsCombatPatrol)
     }
 
     func testReleaseTabs() {
@@ -109,5 +110,33 @@ final class ReleaseSurfaceTests: XCTestCase {
         XCTAssertFalse(ReleaseSurface.showsPaintsInBench)
         XCTAssertTrue(ReleaseSurface.showsPlayTab)
         XCTAssertTrue(ReleaseSurface.showsRulesTab)
+    }
+
+    func testReleaseDefaultVisibleGameSystems() async throws {
+        let repo = BundledRulesRepository(bundle: Bundle(for: ReleaseSurfaceTests.self))
+        let bundle = try await repo.loadBundle()
+        let visibleIds = Set(
+            bundle.gameSystems
+                .filter { ReleaseSurface.isGameSystemVisible($0) }
+                .map(\.id)
+        )
+        XCTAssertEqual(
+            visibleIds,
+            Set([
+                GameSystemId.aosSpearhead.rawValue,
+                GameSystemId.wh40k11e.rawValue,
+                GameSystemId.wh40k10eCp.rawValue
+            ])
+        )
+    }
+
+    func testCombatPatrolVisibleWithoutLaunchArguments() {
+        let args = ProcessInfo.processInfo.arguments
+        XCTAssertFalse(args.contains("-enable_combat_patrol"))
+        XCTAssertFalse(args.contains("-enable_full_product_surface"))
+        XCTAssertTrue(ReleaseSurface.showsCombatPatrol)
+        XCTAssertTrue(ReleaseSurface.isGameSystemIdVisible(GameSystemId.wh40k10eCp.rawValue))
+        XCTAssertTrue(ReleaseSurface.showsGuidedMatch(for: GameSystemId.wh40k10eCp.rawValue))
+        XCTAssertTrue(ReleaseSurface.showsCombatResolver(for: GameSystemId.wh40k10eCp.rawValue))
     }
 }

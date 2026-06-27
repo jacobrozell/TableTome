@@ -103,13 +103,6 @@ struct BoxIdentificationSheet: View {
         }
     }
 
-    private var combatPatrolFallbackActive: Bool {
-        genre == .sciFi
-            && sciFiBoxKind == .starter
-            && isCombatPatrolBox == true
-            && !ReleaseSurface.showsCombatPatrol
-    }
-
     private var visibleGenres: [Genre] {
         Genre.allCases.filter { genre in
             switch genre {
@@ -266,7 +259,7 @@ struct BoxIdentificationSheet: View {
         } header: {
             Text(String(localized: "Does the box say Combat Patrol?"))
         } footer: {
-            Text(String(localized: "Combat Patrol is a small two-player box with missions inside."))
+            Text(String(localized: "Combat Patrol is a 10th Edition starter format — small two-player box with missions inside."))
         }
     }
 
@@ -284,27 +277,34 @@ struct BoxIdentificationSheet: View {
             } header: {
                 Text(String(localized: "We suggest"))
             } footer: {
-                if combatPatrolFallbackActive {
-                    Text(
-                        String(
-                            localized: """
-                            Combat Patrol mode is not available in this build yet — we suggest full 40k 11th Edition \
-                            Guided Match for starter-box play.
-                            """
-                        )
-                    )
-                } else {
-                    Text(String(localized: "You can change this anytime from the chooser on Play."))
-                }
+                Text(String(localized: "You can change this anytime from the chooser on Play."))
             }
         }
     }
 
     private func openRecommendedGuide(_ gameSystemId: String) {
         ActiveGameContextStore.setActiveGameSystem(gameSystemId)
-        FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
+        FirstSessionStore.recordOnboardingChoice(
+            gameSystemId: gameSystemId,
+            wh40kVariant: recommendedWh40kVariant(for: gameSystemId)?.rawValue
+        )
         learnNavigationCoordinator.openGameGuide(gameSystemId: gameSystemId)
         dismiss()
+    }
+
+    private func recommendedWh40kVariant(for gameSystemId: String) -> Wh40kChooserVariant? {
+        guard gameSystemId == GameSystemId.wh40k11e.rawValue
+            || gameSystemId == GameSystemId.wh40k10eCp.rawValue else {
+            return nil
+        }
+        if gameSystemId == GameSystemId.wh40k10eCp.rawValue {
+            return .combatPatrol
+        }
+        switch sciFiStarterFormat {
+        case .armageddon: return .armageddon
+        case .battleforce: return .battleforce
+        case nil: return sciFiBoxKind == .full ? .full : nil
+        }
     }
 
     private func goBack() {
@@ -361,7 +361,7 @@ struct BoxIdentificationSheet: View {
         case GameSystemId.wh40k10eCp.rawValue:
             return (
                 String(localized: "Warhammer 40,000: Combat Patrol"),
-                String(localized: "Small sci-fi starter box with missions and a battle tracker.")
+                String(localized: "10th Edition patrol rules — look for Combat Patrol on the box.")
             )
         case GameSystemId.wh40k11e.rawValue:
             if sciFiStarterFormat == .armageddon {

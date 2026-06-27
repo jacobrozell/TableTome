@@ -64,10 +64,6 @@ extension GuidedMatchView {
         usesPhoneLandscapeBattleImmersion
     }
 
-    var showsHubChromeCollapseToggle: Bool {
-        !usesPhoneLandscapeBattleImmersion && !showsEmbeddedBattleTracker
-    }
-
     func hubChromeSummaryLine(catalog: SpearheadCatalog) -> String {
         if showsEmbeddedBattleTracker, let battleSummary = battleTrackerSummaryLine() {
             return battleSummary
@@ -86,5 +82,57 @@ extension GuidedMatchView {
             return "\(playerOne) \(String(localized: "vs")) \(playerTwo)"
         }
         return String(localized: "Choose both armies to unlock setup")
+    }
+
+    private var playContext: GameSystemPlayContext {
+        GameSystemPlayContext.context(for: gameSystemId)
+    }
+
+    private var playerOneRollLabel: String {
+        let name = viewModel.matchState.playerOne.playerName
+        return name.isEmpty ? String(localized: "Player 1") : name
+    }
+
+    private var playerTwoRollLabel: String {
+        let name = viewModel.matchState.playerTwo.playerName
+        return name.isEmpty ? String(localized: "Player 2") : name
+    }
+
+    var inlineRollPickerTitle: String {
+        if playContext.isWh40k11e {
+            return String(localized: "Who takes the first turn?")
+        }
+        return String(localized: "Who is the attacker?")
+    }
+
+    @ViewBuilder
+    var inlineRollPickerCard: some View {
+        AttackerDefenderPickerCard(
+            playerOneName: playerOneRollLabel,
+            playerTwoName: playerTwoRollLabel,
+            attackerIsPlayerOne: viewModel.matchState.attackerIsPlayerOne,
+            onSelect: viewModel.setAttacker,
+            title: inlineRollPickerTitle,
+            decidedCaption: inlineRollDecidedCaption(isPlayerOne:),
+            accessibilityPrefix: "guidedMatch.inlineRoll"
+        )
+    }
+
+    private func inlineRollDecidedCaption(isPlayerOne: Bool) -> String {
+        let roller = isPlayerOne ? playerOneRollLabel : playerTwoRollLabel
+        if playContext.isWh40k11e {
+            return String(
+                localized: "Defaulted to \(roller) for first turn — change if your roll went differently."
+            )
+        }
+        if playContext.isSpearhead {
+            let defender = isPlayerOne ? playerTwoRollLabel : playerOneRollLabel
+            return String(
+                localized: "Defaulted to \(roller) as attacker and \(defender) as defender — change if your roll went differently."
+            )
+        }
+        return String(
+            localized: "Defaulted to \(roller) — change if your roll went differently."
+        )
     }
 }

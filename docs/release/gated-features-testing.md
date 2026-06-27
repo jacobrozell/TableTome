@@ -112,7 +112,7 @@
 
 ## 3. Combat Patrol (40k 10e CP)
 
-**Gate:** `ReleaseSurface.showsCombatPatrol` (`-enable_combat_patrol`) — **not** unlocked by `-enable_full_product_surface`
+**Gate:** **Shipped** in release defaults (`ReleaseSurface.showsCombatPatrol` = true). `-enable_combat_patrol` is optional for legacy test schemes.
 
 ### Existing automated coverage
 
@@ -120,16 +120,12 @@
 - `Tests/Unit/CombatPatrolStratagemPhaseTests.swift`
 - `Tests/Unit/Wh40k10eCombatRollEngineTests.swift`
 - `Tests/Unit/AppSearchEngineTests.swift` — CP search index
+- `Tests/Unit/BundledRulesRepositoryTests.swift` — CP guide + rule sections
+- `Tests/Unit/ReleaseSurfaceTests.swift` — CP visible without launch args; three-system release set
 
-### Still needed
+### Still needed (manual QA sign-off)
 
-**Unit / integration**
-
-- [ ] `ReleaseSurfaceTests` — `showsCombatPatrol` false by default; CP visible only with launch arg
-- [ ] Guided Match CP mission selection and stratagem phase flow
-- [ ] Match history record/reopen for CP game system id
-
-**Manual QA** (with `-enable_combat_patrol`)
+**Manual QA** (release defaults — no launch args)
 - [ ] Getting Started + Guided Match (SM vs Tyranids starter)
 - [ ] Combat resolver in battle tracker (10e engine)
 - [ ] Rules reference CP categories and missions

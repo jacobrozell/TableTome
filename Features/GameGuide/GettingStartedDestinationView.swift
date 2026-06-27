@@ -26,7 +26,6 @@ struct GettingStartedDestinationView: View {
             }
         }
         .navigationTitle(String(localized: "Getting Started"))
-        .playNavigationDestinations()
         .task { await load() }
     }
 

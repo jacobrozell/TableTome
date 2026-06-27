@@ -5,9 +5,11 @@ struct GameSystemDetailView: View {
     let gameSystemId: String
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @EnvironmentObject private var dependencies: AppDependencies
+    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
     @State private var gameSystem: GameSystem?
     @State private var featuredArmyRows: [FeaturedArmyRow] = []
     @State private var errorMessage: String?
+    @State private var dismissedWrongGuideAlert = false
 
     private struct FeaturedArmyRow: Identifiable {
         let factionName: String
@@ -26,40 +28,72 @@ struct GameSystemDetailView: View {
             || playContext.isStarCraft
     }
 
+    private var wrongGuideAlert: WrongGuideAlert? {
+        guard !dismissedWrongGuideAlert else { return nil }
+        return WrongGuideResolver.alert(
+            currentGameSystemId: gameSystemId,
+            onboardingChoice: FirstSessionStore.onboardingChoice,
+            wh40kVariant: FirstSessionStore.onboardingWh40kVariant
+        )
+    }
+
     var body: some View {
         Group {
             if let gameSystem {
                 List {
+                    if let wrongGuideAlert {
+                        Section {
+                            WrongGuideBanner(
+                                alert: wrongGuideAlert,
+                                onOpenSuggestedGuide: {
+                                    learnNavigationCoordinator.openGameGuide(
+                                        gameSystemId: wrongGuideAlert.suggestedGameSystemId
+                                    )
+                                },
+                                onDismiss: {
+                                    dismissedWrongGuideAlert = true
+                                }
+                            )
+                            .listHeroCardRow()
+                        }
+                    }
+
                     if playContext.isSpearhead {
                         Section {
                             NewPlayerStartHereCard()
+                                .listHeroCardRow()
                         }
-                        .listRowInsets(EdgeInsets())
-                        .listRowBackground(Color.clear)
+
+                        Section {
+                            WhatYouNeedCard()
+                                .listHeroCardRow()
+                        }
                     }
 
                     if playContext.isWh40k11e {
                         Section {
                             FortyKStartHereCard(gameSystem: gameSystem)
+                                .listHeroCardRow()
                         }
-                        .listRowInsets(EdgeInsets())
-                        .listRowBackground(Color.clear)
+
+                        Section {
+                            Wh40k11eWhatYouNeedCard()
+                                .listHeroCardRow()
+                        }
                     }
 
                     if playContext.isCombatPatrol {
                         Section {
                             CombatPatrolStartHereCard(gameSystem: gameSystem)
+                                .listHeroCardRow()
                         }
-                        .listRowInsets(EdgeInsets())
-                        .listRowBackground(Color.clear)
                     }
 
                     if playContext.isStarCraft {
                         Section {
                             ScStartHereCard(gameSystem: gameSystem)
+                                .listHeroCardRow()
                         }
-                        .listRowInsets(EdgeInsets())
-                        .listRowBackground(Color.clear)
                     }
 
                     if playContext.isWh40k11e, !featuredArmyRows.isEmpty {
@@ -126,7 +160,7 @@ struct GameSystemDetailView: View {
                                 .accessibilityIdentifier("guide.whatsNew.\(gameSystemId)")
                             }
 
-                            if ReleaseSurface.showsGuidedMatch(for: gameSystemId) {
+                            if ReleaseSurface.showsGuidedMatch(for: gameSystemId), !showsStartHereCard {
                                 NavigationLink(value: GuidedMatchLink(gameSystemId: GameSystemId(resolving: gameSystemId))) {
                                     guideRow(
                                         title: String(localized: "Guided Match"),
@@ -257,7 +291,7 @@ struct GameSystemDetailView: View {
                         }
                     }
                 }
-                .listStyle(.insetGrouped)
+                .floatingCardListStyle()
                 .tabBarScrollInset()
             } else if let errorMessage {
                 EmptyStateView(
@@ -273,7 +307,8 @@ struct GameSystemDetailView: View {
         }
         .navigationTitle(navigationTitle)
         .navigationBarTitleDisplayMode(verticalSizeClass == .compact ? .inline : .large)
-        .task {
+        .task(id: gameSystemId) {
+            dismissedWrongGuideAlert = false
             ActiveGameContextStore.setActiveGameSystem(gameSystemId)
             FirstSessionStore.recordGameGuideOpened()
             await load()
@@ -282,11 +317,14 @@ struct GameSystemDetailView: View {
 
     private var navigationTitle: String {
         guard gameSystem != nil else { return String(localized: "Game Guide") }
+        if playContext.isSpearhead {
+            return String(localized: "Spearhead")
+        }
         if playContext.isWh40k11e {
             return String(localized: "Warhammer 40,000")
         }
         if playContext.isCombatPatrol {
-            return String(localized: "Combat Patrol")
+            return String(localized: "Combat Patrol (10th Edition)")
         }
         if playContext.isStarCraft {
             return String(localized: "StarCraft")

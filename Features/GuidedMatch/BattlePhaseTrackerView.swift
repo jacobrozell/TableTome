@@ -28,6 +28,8 @@ struct BattlePhaseTrackerView: View {
     @State var damageUndoNotice: DamageUndoNotice?
     @State var roundOpenerNotice: RoundOpenerNotice?
     @State var scoringReminderNotice: ScoringReminderNotice?
+    @State var phaseActionNudge: PhaseActionNudgeNotice?
+    @State var showsHeroRoundOneNotice = false
     @State var scrollToVictoryPoints = false
     @State var scrollToRoundChecklist = false
     @State var handoffBaselineEstablished = false
@@ -134,6 +136,7 @@ struct BattlePhaseTrackerView: View {
                 try? await Task.sleep(for: .milliseconds(400))
                 handoffBaselineEstablished = true
                 presentRoundOpenerNudgeIfNeeded()
+                presentHeroRoundOneNudgeIfNeeded()
             }
         }
         .onChange(of: layoutContext) { _, _ in
@@ -201,10 +204,10 @@ struct BattlePhaseTrackerView: View {
                     onCollapse: collapseTopChrome
                 )
             }
-            .padding(.horizontal, DesignTokens.Spacing.md)
-            .padding(.vertical, layoutContext.prefersCollapsedBattleChrome ? 2 : DesignTokens.Spacing.xs)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(.bar)
+            .barChromeBackground(
+                horizontalPadding: DesignTokens.Spacing.md,
+                verticalPadding: layoutContext.prefersCollapsedBattleChrome ? 2 : DesignTokens.Spacing.xs
+            )
         }
     }
 

@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "armyId": "necrons-combat-patrol",
+  "units": [
+    {
+      "id": "overlord-amonhotekh",
+      "name": "Overlord Amonhotekh",
+      "keywords": ["Character", "Infantry", "Necrons"],
+      "modelCount": 1,
+      "move": "5\"",
+      "save": 2,
+      "invulnerableSave": 4,
+      "health": 6,
+      "control": 2,
+      "notes": "Warlord — Reanimation Protocols heal D3 wounds or return models each Command phase.",
+      "weapons": [
+        {
+          "id": "staff-of-light",
+          "name": "Staff of Light",
+          "rangeInches": 18,
+          "attacks": "3",
+          "hit": 2,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        },
+        {
+          "id": "hyperphase-sword",
+          "name": "Hyperphase Sword",
+          "attacks": "4",
+          "hit": 2,
+          "wound": 3,
+          "rend": 2,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "reanimation-protocols",
+          "name": "Reanimation Protocols",
+          "source": "Amonhotekh's Guard",
+          "effect": "End of your Command phase, each unit regains D3 wounds or returns models to Starting Strength.",
+          "phases": ["command"],
+          "usageLimit": "eachTurn",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "immortals",
+      "name": "Immortals",
+      "keywords": ["Battleline", "Infantry", "Necrons"],
+      "modelCount": 5,
+      "move": "5\"",
+      "save": 3,
+      "health": 1,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "gauss-blaster",
+          "name": "Gauss Blaster",
+          "rangeInches": 24,
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "hardy-warriors",
+          "name": "Hardy Warriors",
+          "source": "Immortals",
+          "effect": "Hold the mid-board — pair with Warriors for overlapping Reanimation.",
+          "phases": ["command"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "necron-warriors",
+      "name": "Necron Warriors",
+      "keywords": ["Battleline", "Infantry", "Necrons"],
+      "modelCount": 10,
+      "move": "5\"",
+      "save": 4,
+      "health": 1,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "gauss-flayer",
+          "name": "Gauss Flayer",
+          "rangeInches": 24,
+          "attacks": "1",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "warrior-wall",
+          "name": "Warrior Wall",
+          "source": "Necron Warriors",
+          "effect": "Battleline blob for securing objectives under Reanimation.",
+          "phases": ["command"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "canoptek-scarabs",
+      "name": "Canoptek Scarab Swarms",
+      "keywords": ["Swarm", "Canoptek", "Necrons"],
+      "modelCount": 3,
+      "move": "10\"",
+      "save": 6,
+      "health": 4,
+      "control": 1,
+      "notes": "Fast objective harassers — not Battleline for securing.",
+      "weapons": [
+        {
+          "id": "feeder-mandibles",
+          "name": "Feeder Mandibles",
+          "attacks": "6",
+          "hit": 4,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "swarm",
+          "name": "Canoptek Swarm",
+          "source": "Scarab Swarms",
+          "effect": "Skirmish and tie up shooting units away from your Warrior line.",
+          "phases": ["movement", "combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    }
+  ]
+}

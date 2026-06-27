@@ -8,7 +8,7 @@ struct FortyKStartHereCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
-                Label(String(localized: "Start here"), systemImage: "sparkles")
+                Label(String(localized: "Start here"), systemImage: "flag.checkered")
                     .font(.headline)
                     .foregroundStyle(Color.accentOnSurface)
                 if ReleaseSurface.showsNewEditionBadge(for: gameSystem.id) {
@@ -19,8 +19,7 @@ struct FortyKStartHereCard: View {
             Text(
                 String(
                     localized: """
-                    New to the hobby or upgrading from 10th Edition? Pick a path — about 10 minutes of reading, \
-                    then play at the table with physical dice.
+                    Pick a path below, then play at the table with physical dice.
                     """
                 )
             )
@@ -31,11 +30,12 @@ struct FortyKStartHereCard: View {
             if ReleaseSurface.isGameSystemIdVisible(GameSystemId.wh40k10eCp.rawValue) {
                 NavigationLink(value: GettingStartedLink(gameSystemId: GameSystemId.wh40k10eCp.rawValue)) {
                     Label(
-                        String(localized: "Have a Combat Patrol box instead?"),
+                        String(localized: "Have a Combat Patrol box? (10th Edition rules)"),
                         systemImage: "shippingbox"
                     )
                     .font(.caption.weight(.medium))
                     .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                    .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(Color.accentOnSurface)
@@ -47,30 +47,13 @@ struct FortyKStartHereCard: View {
                 returningPlayerTrack
             }
 
-            NavigationLink(value: GettingStartedLink(gameSystemId: gameSystem.id)) {
-                Label(String(localized: "Getting Started"), systemImage: "map")
+            NavigationLink(value: GuidedMatchLink(gameSystemId: .wh40k11e)) {
+                Label(String(localized: "Start Guided Match"), systemImage: "flag.checkered")
                     .font(.subheadline.weight(.semibold))
                     .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+                    .contentShape(Rectangle())
             }
             .buttonStyle(.borderedProminent)
-            .accessibilityIdentifier("guide.wh40k.gettingStarted")
-
-            if !gameSystem.editionMigrationSteps.isEmpty {
-                NavigationLink(value: EditionMigrationLink(gameSystemId: gameSystem.id)) {
-                    Label(String(localized: "What's New in 11th Edition"), systemImage: "arrow.triangle.2.circlepath")
-                        .font(.subheadline.weight(.semibold))
-                        .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-                }
-                .buttonStyle(.bordered)
-                .accessibilityIdentifier("guide.wh40k.whatsNew")
-            }
-
-            NavigationLink(value: GuidedMatchLink(gameSystemId: .wh40k11e)) {
-                Label(String(localized: "Guided Match"), systemImage: "flag.checkered")
-                    .font(.subheadline.weight(.semibold))
-                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-            }
-            .buttonStyle(.bordered)
             .accessibilityIdentifier("guide.wh40k.guidedMatch")
         }
         .accentHighlightCard()
@@ -83,7 +66,7 @@ struct FortyKStartHereCard: View {
             TappableGuidePathStep(
                 number: 1,
                 title: String(localized: "Preview a 40k Turn"),
-                detail: String(localized: "Six phases — Command through Fight, with 11e charge and pile-in rules."),
+                detail: String(localized: "Six phases — Command through Fight."),
                 destination: Wh40k11eSampleTurnLink(),
                 accessibilityId: "guide.wh40k.path.new.sampleTurn"
             )
@@ -101,11 +84,12 @@ struct FortyKStartHereCard: View {
                 destination: RulesReferenceBrowseLink(gameSystemId: gameSystem.id),
                 accessibilityId: "guide.wh40k.path.new.rules"
             )
-            TappableGuidePathStep(
+            GuidePathInfoStep(
                 number: 4,
                 title: String(localized: "Guided Match"),
-                detail: String(localized: "Armageddon starter matchup with datasheets and battle tracker."),
-                destination: GuidedMatchLink(gameSystemId: .wh40k11e),
+                detail: String(
+                    localized: "Tap Start Guided Match below for the Armageddon starter matchup."
+                ),
                 accessibilityId: "guide.wh40k.path.new.guidedMatch"
             )
         }
@@ -129,11 +113,12 @@ struct FortyKStartHereCard: View {
                 destination: RulesReferenceBrowseLink(gameSystemId: gameSystem.id),
                 accessibilityId: "guide.wh40k.path.return.rules"
             )
-            TappableGuidePathStep(
+            GuidePathInfoStep(
                 number: 3,
                 title: String(localized: "Guided Match"),
-                detail: String(localized: "Operation Imperator vs Waaagh! Armageddon — tap Use Starter Matchup."),
-                destination: GuidedMatchLink(gameSystemId: .wh40k11e),
+                detail: String(
+                    localized: "Tap Start Guided Match below — Operation Imperator vs Waaagh! Armageddon."
+                ),
                 accessibilityId: "guide.wh40k.path.return.guidedMatch"
             )
         }

@@ -1,6 +1,6 @@
 # App Store Screenshot Script — 1.0.0
 
-Shot list and capture workflow for **TestFlight / App Store** marketing. Scope matches [status.md](status.md): Spearhead + 40k 11e, Models / Play / Rules / Settings.
+Shot list and capture workflow for **TestFlight / App Store** marketing. Scope matches [status.md](status.md): Spearhead + 40k 11e + Combat Patrol (10e rules), Models / Play / Rules / Settings.
 
 **Deliverable matrix:** 8 frames × 4 variants = **32 captures**
 
@@ -17,7 +17,7 @@ Apple accepts 6.7″ iPhone and 12.9″/13″ iPad sizes; the simulators above m
 
 ## Pre-flight
 
-1. **Release build** (or Run scheme with **no** `-enable_full_product_surface`). Confirm Play shows only Spearhead + 40k 11e.
+1. **Release build** (or Run scheme with **no** `-enable_full_product_surface`). Confirm Play shows Spearhead, 40k 11e, and Combat Patrol (via 40k sub-picker or All games).
 2. **Fresh-ish state:** delete app from simulator, or Settings → Reset guide progress + clear match history if re-shooting battle frames.
 3. **Dynamic Type:** Settings → **Default** (not AXXXL). Screenshots should look like a typical user.
 4. **Locale:** English (U.S.) unless localizing separately.
@@ -213,7 +213,7 @@ Each frame includes a **caption** (App Store overlay text), **setup**, and **idi
 
 1. Play → **Warhammer 40,000** row → **Start here** card.
 2. Frame **New to Warhammer 40,000** track (steps 1–3) and **What's New in 11e** link if badge shows.
-3. Avoid Combat Patrol cross-link as the focal point (CP is gated in 1.0.0).
+3. Avoid Combat Patrol as the focal point for this frame — use the 11e guide path. CP has its own guide row via the 40k sub-picker.
 
 **Identifier:** `guide.wh40k.gettingStarted`, `home.gameSystem.wh40k-11e`
 
@@ -307,7 +307,8 @@ Store outputs under `fastlane/screenshots/` (gitignored) or `Marketing/Screensho
 ## QA before upload
 
 - [ ] No gated tabs (Lists, Paints) visible in tab bar
-- [ ] No Combat Patrol / StarCraft rows in All games (1.0.0 release surface)
+- [ ] No StarCraft row in All games (1.0.0 release surface)
+- [ ] Combat Patrol visible only when framing CP assets — not accidental in 11e-only shots
 - [ ] No “coming soon” or empty resolver states in Frame 4
 - [ ] Dark mode: semantic colors readable (cards, secondary text)
 - [ ] iPad Frame 8: split view populated, not empty sidebar

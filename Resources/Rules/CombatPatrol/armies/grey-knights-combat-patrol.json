@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "armyId": "grey-knights-combat-patrol",
+  "units": [
+    {
+      "id": "librarian-aurellios",
+      "name": "Librarian Aurellios",
+      "keywords": [
+        "Character",
+        "Infantry",
+        "Psyker",
+        "Grey Knights"
+      ],
+      "modelCount": 1,
+      "move": "6\"",
+      "save": 2,
+      "health": 5,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "nemesis-force-weapon",
+          "name": "Nemesis Force Weapon",
+          "attacks": "4",
+          "hit": 2,
+          "wound": 3,
+          "rend": 2,
+          "damage": "D3"
+        },
+        {
+          "id": "storm-bolter",
+          "name": "Storm Bolter",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 24
+        }
+      ],
+      "abilities": [
+        {
+          "id": "brotherhood-teleport",
+          "name": "Brotherhood Teleport",
+          "source": "Aurellios's Host",
+          "effect": "Strike Squad arrives from Teleport Assault reserves.",
+          "phases": [
+            "movement"
+          ],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ],
+      "invulnerableSave": 4
+    },
+    {
+      "id": "strike-squad",
+      "name": "Strike Squad",
+      "keywords": [
+        "Battleline",
+        "Infantry",
+        "Grey Knights"
+      ],
+      "modelCount": 5,
+      "move": "6\"",
+      "save": 2,
+      "health": 2,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "storm-bolter",
+          "name": "Storm Bolter",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 24
+        },
+        {
+          "id": "nemesis-force-weapon",
+          "name": "Nemesis Force Weapon",
+          "attacks": "3",
+          "hit": 2,
+          "wound": 3,
+          "rend": 2,
+          "damage": "1"
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "brotherhood-terminators",
+      "name": "Brotherhood Terminators or Nemesis Dreadknight",
+      "keywords": [
+        "Infantry",
+        "Terminator",
+        "Grey Knights"
+      ],
+      "modelCount": 5,
+      "move": "5\"",
+      "save": 2,
+      "health": 3,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "storm-bolter",
+          "name": "Storm Bolter",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 24
+        },
+        {
+          "id": "nemesis-force-weapon",
+          "name": "Nemesis Force Weapon",
+          "attacks": "3",
+          "hit": 2,
+          "wound": 3,
+          "rend": 2,
+          "damage": "2"
+        }
+      ],
+      "abilities": [],
+      "invulnerableSave": 4,
+      "notes": "Box includes Terminators or Dreadknight — stats shown for Terminators."
+    }
+  ]
+}

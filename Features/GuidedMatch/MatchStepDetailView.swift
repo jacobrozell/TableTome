@@ -11,7 +11,6 @@ struct MatchStepDetailView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
-    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
 
     private var usesSideBySideColumns: Bool {
         TabletomeLayout.usesSideBySideLayout(
@@ -34,9 +33,11 @@ struct MatchStepDetailView: View {
 
                 GlossaryChipsRow(text: step.body, gameSystemId: viewModel.gameSystemId.rawValue, ruleSections: ruleSections)
 
-                if ReleaseSurface.showsRulesAssistant {
-                    rulesSearchButton
-                }
+                SetupStepRulesLink(
+                    gameSystemId: viewModel.gameSystemId.rawValue,
+                    stepTitle: step.title,
+                    relatedRuleSectionId: step.relatedRuleSectionId
+                )
 
                 stepSpecificContent
 
@@ -68,20 +69,6 @@ struct MatchStepDetailView: View {
         .onAppear {
             viewModel.syncAutoCompletions()
         }
-    }
-
-    private var rulesSearchButton: some View {
-        Button {
-            learnNavigationCoordinator.openRulesSearch(
-                gameSystemId: viewModel.gameSystemId.rawValue,
-                query: step.title
-            )
-        } label: {
-            Label(String(localized: "Look this up in Rules Search"), systemImage: "magnifyingglass")
-                .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-        }
-        .buttonStyle(.bordered)
-        .accessibilityIdentifier("guidedMatch.rulesSearch.\(step.id)")
     }
 
     @ViewBuilder
@@ -161,7 +148,26 @@ struct MatchStepDetailView: View {
                     options: { army in army.enhancements },
                     onSelect: viewModel.setEnhancement
                 )
-                loadoutSummarySection(showRegiment: true, showEnhancement: true)
+
+                if viewModel.gameSystemId == .aosSpearhead {
+                    spearheadBattleTacticsSection
+                }
+
+                if viewModel.eitherArmyHasSecondaryObjectives {
+                    armyOptionsSection(
+                        title: String(localized: "Secondary Objectives"),
+                        playerOneKeyPath: \.secondaryObjectiveId,
+                        playerTwoKeyPath: \.secondaryObjectiveId,
+                        options: { army in army.secondaryObjectives },
+                        onSelect: viewModel.setSecondaryObjective
+                    )
+                }
+
+                loadoutSummarySection(
+                    showRegiment: true,
+                    showEnhancement: true,
+                    showSecondary: viewModel.eitherArmyHasSecondaryObjectives
+                )
             }
         case "pick-enhancement":
             combatPatrolLoadoutSection
@@ -194,8 +200,35 @@ struct MatchStepDetailView: View {
         }
     }
 
+    private var spearheadBattleTacticsSection: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            Text(
+                String(
+                    localized: """
+                    Each player shuffles the battle tactic deck from their own army box — not the shared twist deck from the battlefield pack.
+                    """
+                )
+            )
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+
+            ReferenceLinksGroup {
+                NavigationLink(value: BattleTacticsReferenceLink(gameSystemId: viewModel.gameSystemId.rawValue)) {
+                    ReferenceLinkRow(
+                        title: String(localized: "Battle Tactics & Twists"),
+                        systemImage: "rectangle.stack"
+                    )
+                }
+                .accessibilityIdentifier("guidedMatch.enhancements.battleTactics")
+            }
+        }
+    }
+
     private var wh40kDeploymentSetupSection: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            Wh40kDeploymentNowCard()
+
             Wh40kDeploymentChecklistCard(
                 completedSteps: viewModel.deploymentCompletedSteps,
                 focusedStep: Wh40kDeploymentChecklistStep.allCases.first {
@@ -485,6 +518,7 @@ struct MatchStepDetailView: View {
             regimentAbility: showRegiment ? viewModel.regimentAbility(for: player) : nil,
             enhancement: showEnhancement ? viewModel.enhancement(for: player) : nil,
             secondaryObjective: showSecondary ? viewModel.secondaryObjective(for: player) : nil,
+            battleTacticDeckName: viewModel.battleTacticDeckName(for: player),
             isAttacker: isAttacker
         )
     }

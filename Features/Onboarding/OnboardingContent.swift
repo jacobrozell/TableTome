@@ -22,7 +22,6 @@ struct OnboardingGameHighlight: Identifiable {
     let edition: String
     let blurb: String
     let showsNewBadge: Bool
-    let recommendedForNewcomers: Bool
     /// When true, the final onboarding CTA opens Guided Match; otherwise the game guide.
     let startsGuidedMatch: Bool
 }
@@ -36,27 +35,24 @@ enum OnboardingContent {
             edition: String(localized: "Fantasy starter-box battles"),
             blurb: String(
                 localized: """
-                Best first wargame if you own an Age of Sigmar Spearhead box — short rules, small armies, \
-                guided setup in about 90 minutes.
+                If you own an Age of Sigmar Spearhead box — short rules, small armies, guided setup in about 90 minutes.
                 """
             ),
             showsNewBadge: false,
-            recommendedForNewcomers: true,
             startsGuidedMatch: false
         ),
         OnboardingGameHighlight(
             id: OnboardingCompletion.combatPatrolGameSystemId,
             symbol: "shield.checkered",
             name: String(localized: "Warhammer 40,000: Combat Patrol"),
-            edition: String(localized: "Sci-fi starter-box battles"),
+            edition: String(localized: "10th Edition patrol rules"),
             blurb: String(
                 localized: """
-                Pick this if your box says Combat Patrol — smaller 40k games with missions and a battle tracker \
-                for your first few matches.
+                Pick this if your box says Combat Patrol — a 10th Edition starter format with missions and a battle tracker. \
+                Not the same as 11th Edition full 40k.
                 """
             ),
             showsNewBadge: false,
-            recommendedForNewcomers: true,
             startsGuidedMatch: false
         ),
         OnboardingGameHighlight(
@@ -71,7 +67,6 @@ enum OnboardingContent {
                 """
             ),
             showsNewBadge: true,
-            recommendedForNewcomers: true,
             startsGuidedMatch: false
         ),
         OnboardingGameHighlight(
@@ -85,7 +80,6 @@ enum OnboardingContent {
                 """
             ),
             showsNewBadge: false,
-            recommendedForNewcomers: false,
             startsGuidedMatch: false
         )
     ]

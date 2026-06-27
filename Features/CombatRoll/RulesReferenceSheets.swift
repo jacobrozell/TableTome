@@ -6,6 +6,8 @@ struct RulesGlossaryView: View {
     let gameSystemId: String
     var ruleSections: [RuleSection] = []
 
+    @EnvironmentObject private var glossaryNavigation: GlossaryNavigationState
+
     init(
         highlightedEntryId: String? = nil,
         gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId,
@@ -42,7 +44,14 @@ struct RulesGlossaryView: View {
             }
 
             ForEach(glossaryEntries) { entry in
-                NavigationLink(value: GlossaryEntryLink(gameSystemId: gameSystemId, entryId: entry.id)) {
+                Button {
+                    glossaryNavigation.open(
+                        GlossaryEntryLink(
+                            gameSystemId: gameSystemId,
+                            entryId: entry.id
+                        )
+                    )
+                } label: {
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                         Text(entry.term)
                             .font(.headline)
@@ -53,8 +62,10 @@ struct RulesGlossaryView: View {
                             .fixedSize(horizontal: false, vertical: true)
                     }
                     .padding(.vertical, DesignTokens.Spacing.sm)
+                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
                     .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
                 .id(entry.id)
                 .listRowBackground(entry.id == highlightedEntryId ? Color.accentColor.opacity(0.08) : nil)
                 .accessibilityIdentifier("glossary.entry.\(entry.id)")

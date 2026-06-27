@@ -322,6 +322,10 @@ public enum SpearheadRulesGlossary {
         }
         return patterns.contains { lower.contains($0) }
     }
+
+    public static func aliasPhrases(for entryId: String) -> [String] {
+        aliasPatterns[entryId] ?? []
+    }
 }
 
 public struct SpearheadCardDeckGuide: Identifiable, Sendable, Equatable {

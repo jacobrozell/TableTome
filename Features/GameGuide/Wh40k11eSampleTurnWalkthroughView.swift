@@ -7,6 +7,7 @@ struct Wh40k11eSampleTurnWalkthroughView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
     @State private var step = 0
+    @State private var showsWargamePrimer = !NewPlayerTipsStore.hasDismissedWargamePrimer
 
     private struct WalkthroughStep {
         let title: String
@@ -88,6 +89,12 @@ struct Wh40k11eSampleTurnWalkthroughView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                if showsWargamePrimer {
+                    WargamePrimerCard {
+                        NewPlayerTipsStore.dismissWargamePrimer()
+                        showsWargamePrimer = false
+                    }
+                }
                 header
                 phaseStrip
                 stepCard
@@ -223,7 +230,9 @@ struct Wh40k11eSampleTurnWalkthroughView: View {
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
 
-                    NavigationLink(value: GuidedMatchLink(gameSystemId: .wh40k11e)) {
+                    Button {
+                        learnNavigationCoordinator.openGuidedMatch(gameSystemId: GameSystemId.wh40k11e.rawValue)
+                    } label: {
                         Label(String(localized: "Open Guided Match"), systemImage: "flag.checkered")
                             .font(.headline)
                             .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)

@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "armyId": "thousand-sons-combat-patrol",
+  "units": [
+    {
+      "id": "ahrak",
+      "name": "Ahrak the Time Weaver",
+      "keywords": [
+        "Character",
+        "Infantry",
+        "Psyker",
+        "Thousand Sons"
+      ],
+      "modelCount": 1,
+      "move": "6\"",
+      "save": 3,
+      "health": 5,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "force-stave",
+          "name": "Force Stave",
+          "attacks": "4",
+          "hit": 3,
+          "wound": 3,
+          "rend": 2,
+          "damage": "D3"
+        },
+        {
+          "id": "inferno-bolt-pistol",
+          "name": "Inferno Bolt Pistol",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1",
+          "rangeInches": 12
+        }
+      ],
+      "abilities": [
+        {
+          "id": "cabbalistic-rituals",
+          "name": "Cabbalistic Rituals",
+          "source": "Ahrak's Warband",
+          "effect": "Ritual points fuel psychic buffs and secondary scoring.",
+          "phases": [
+            "command"
+          ],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ],
+      "invulnerableSave": 4
+    },
+    {
+      "id": "scarab-occult-terminators",
+      "name": "Scarab Occult Terminators",
+      "keywords": [
+        "Infantry",
+        "Terminator",
+        "Thousand Sons"
+      ],
+      "modelCount": 5,
+      "move": "5\"",
+      "save": 2,
+      "health": 3,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "inferno-combi-bolter",
+          "name": "Inferno Combi-bolter",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1",
+          "rangeInches": 24
+        },
+        {
+          "id": "force-weapon",
+          "name": "Force Weapon",
+          "attacks": "3",
+          "hit": 3,
+          "wound": 3,
+          "rend": 2,
+          "damage": "2"
+        }
+      ],
+      "abilities": [],
+      "invulnerableSave": 4
+    },
+    {
+      "id": "tzaangors",
+      "name": "Tzaangors",
+      "keywords": [
+        "Infantry",
+        "Thousand Sons"
+      ],
+      "modelCount": 10,
+      "move": "7\"",
+      "save": 6,
+      "health": 1,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "autopistol",
+          "name": "Autopistol",
+          "attacks": "1",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 12
+        },
+        {
+          "id": "chainsword",
+          "name": "Chainsword",
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": []
+    }
+  ]
+}

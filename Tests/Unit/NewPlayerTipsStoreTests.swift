@@ -35,6 +35,9 @@ final class NewPlayerTipsStoreTests: XCTestCase {
         NewPlayerTipsStore.dismissCombatSequencePrimer()
         NewPlayerTipsStore.dismissPileInGuide()
         NewPlayerTipsStore.markGuidedMatchSetupExpanded()
+        NewPlayerTipsStore.markPhysicalDiceResolverHintSeen()
+        NewPlayerTipsStore.dismissHeroRoundOneNudge()
+        NewPlayerTipsStore.dismissWargamePrimer()
 
         NewPlayerTipsStore.resetAll()
 
@@ -42,6 +45,9 @@ final class NewPlayerTipsStoreTests: XCTestCase {
         XCTAssertFalse(NewPlayerTipsStore.hasDismissedCombatSequencePrimer)
         XCTAssertFalse(NewPlayerTipsStore.hasDismissedPileInGuide)
         XCTAssertFalse(NewPlayerTipsStore.hasExpandedGuidedMatchSetup)
+        XCTAssertFalse(NewPlayerTipsStore.hasSeenPhysicalDiceResolverHint)
+        XCTAssertFalse(NewPlayerTipsStore.hasDismissedHeroRoundOneNudge)
+        XCTAssertFalse(NewPlayerTipsStore.hasDismissedWargamePrimer)
     }
 
     func testGuidedMatchSetupExpandedDefaultsToCollapsed() {
@@ -51,5 +57,26 @@ final class NewPlayerTipsStoreTests: XCTestCase {
     func testMarksGuidedMatchSetupExpanded() {
         NewPlayerTipsStore.markGuidedMatchSetupExpanded()
         XCTAssertTrue(NewPlayerTipsStore.hasExpandedGuidedMatchSetup)
+    }
+
+    func testPhysicalDiceResolverHintDefaultsToUnseen() {
+        XCTAssertFalse(NewPlayerTipsStore.hasSeenPhysicalDiceResolverHint)
+    }
+
+    func testMarksPhysicalDiceResolverHintSeen() {
+        NewPlayerTipsStore.markPhysicalDiceResolverHintSeen()
+        XCTAssertTrue(NewPlayerTipsStore.hasSeenPhysicalDiceResolverHint)
+    }
+
+    func testDismissesHeroRoundOneNudge() {
+        XCTAssertFalse(NewPlayerTipsStore.hasDismissedHeroRoundOneNudge)
+        NewPlayerTipsStore.dismissHeroRoundOneNudge()
+        XCTAssertTrue(NewPlayerTipsStore.hasDismissedHeroRoundOneNudge)
+    }
+
+    func testDismissesWargamePrimer() {
+        XCTAssertFalse(NewPlayerTipsStore.hasDismissedWargamePrimer)
+        NewPlayerTipsStore.dismissWargamePrimer()
+        XCTAssertTrue(NewPlayerTipsStore.hasDismissedWargamePrimer)
     }
 }

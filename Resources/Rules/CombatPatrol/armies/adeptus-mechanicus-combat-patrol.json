@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "armyId": "adeptus-mechanicus-combat-patrol",
+  "units": [
+    {
+      "id": "engineer-verask",
+      "name": "Engineer Verask",
+      "keywords": [
+        "Character",
+        "Infantry",
+        "Adeptus Mechanicus"
+      ],
+      "modelCount": 1,
+      "move": "6\"",
+      "save": 2,
+      "health": 4,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "omnispex",
+          "name": "Omnispex",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 18
+        },
+        {
+          "id": "mechanicus-axe",
+          "name": "Mechanicus Axe",
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "canticles",
+          "name": "Canticles of the Omnissiah",
+          "source": "Verask's Cohort",
+          "effect": "Canticle buffs Skitarii and Kataphron shooting each Command phase.",
+          "phases": [
+            "command"
+          ],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "skitarii-rangers",
+      "name": "Skitarii Rangers",
+      "keywords": [
+        "Battleline",
+        "Infantry",
+        "Skitarii"
+      ],
+      "modelCount": 10,
+      "move": "6\"",
+      "save": 4,
+      "health": 1,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "galvanic-rifle",
+          "name": "Galvanic Rifle",
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 30
+        },
+        {
+          "id": "transuranic-arquebus",
+          "name": "Transuranic Arquebus",
+          "attacks": "1",
+          "hit": 4,
+          "wound": 3,
+          "rend": 2,
+          "damage": "2",
+          "rangeInches": 36
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "kataphron-destroyers",
+      "name": "Kataphron Destroyers",
+      "keywords": [
+        "Infantry",
+        "Adeptus Mechanicus"
+      ],
+      "modelCount": 3,
+      "move": "5\"",
+      "save": 2,
+      "health": 4,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "heavy-grav-cannon",
+          "name": "Heavy Grav-cannon",
+          "attacks": "4",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2",
+          "rangeInches": 24
+        },
+        {
+          "id": "phosphor-blaster",
+          "name": "Phosphor Blaster",
+          "attacks": "3",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 18
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "onager-dunecrawler",
+      "name": "Onager Dunecrawler",
+      "keywords": [
+        "Vehicle",
+        "Walker",
+        "Adeptus Mechanicus"
+      ],
+      "modelCount": 1,
+      "move": "10\"",
+      "save": 2,
+      "health": 12,
+      "control": 3,
+      "weapons": [
+        {
+          "id": "eradication-beamer",
+          "name": "Eradication Beamer",
+          "attacks": "D6+3",
+          "hit": 4,
+          "wound": 7,
+          "rend": 2,
+          "damage": "2",
+          "rangeInches": 36
+        },
+        {
+          "id": "dunecrawler-ironstrider",
+          "name": "Icarus Array",
+          "attacks": "6",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 48
+        }
+      ],
+      "abilities": [],
+      "invulnerableSave": 5
+    }
+  ]
+}

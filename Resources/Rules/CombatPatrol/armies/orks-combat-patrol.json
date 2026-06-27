@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "armyId": "orks-combat-patrol",
+  "units": [
+    {
+      "id": "warboss-gordrang",
+      "name": "Warboss Gordrang",
+      "keywords": ["Character", "Infantry", "Orks"],
+      "modelCount": 1,
+      "move": "6\"",
+      "save": 4,
+      "health": 6,
+      "control": 3,
+      "notes": "Warlord — call the Waaagh! once per battle at start of a battle round.",
+      "weapons": [
+        {
+          "id": "kombi-weapon",
+          "name": "Kombi-weapon",
+          "rangeInches": 24,
+          "attacks": "4",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "big-choppa",
+          "name": "Big Choppa",
+          "attacks": "5",
+          "hit": 3,
+          "wound": 2,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "waagh",
+          "name": "Waaagh!",
+          "source": "Gordrang's Gitstompas",
+          "effect": "Once per battle at start of a round: advance+charge, +1 A and S in melee, 5+ invulnerable until end of round.",
+          "phases": ["command"],
+          "usageLimit": "oncePerBattle",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "boyz-mobs",
+      "name": "Boyz (2× mobs)",
+      "keywords": ["Battleline", "Infantry", "Orks"],
+      "modelCount": 20,
+      "move": "6\"",
+      "save": 5,
+      "health": 1,
+      "control": 2,
+      "notes": "Two 10-model mobs — Tellyporta Enhancement can Deep Strike one mob with Gordrang.",
+      "weapons": [
+        {
+          "id": "slugga-choppa",
+          "name": "Slugga and Choppa",
+          "attacks": "3",
+          "hit": 3,
+          "wound": 3,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "mob-rule",
+          "name": "Mob Rule",
+          "source": "Boyz",
+          "effect": "Battleline — secure objectives in your Command phase when in range and not Battle-shocked.",
+          "phases": ["command"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "deffkoptas",
+      "name": "Deffkoptas",
+      "keywords": ["Mounted", "Fly", "Orks"],
+      "modelCount": 3,
+      "move": "12\"",
+      "save": 6,
+      "health": 4,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "kopta-rokkits",
+          "name": "Kopta Rokkits",
+          "rangeInches": 24,
+          "attacks": "2",
+          "hit": 4,
+          "wound": 7,
+          "rend": 2,
+          "damage": "D6"
+        },
+        {
+          "id": "spinnin-blades",
+          "name": "Spinnin' Blades",
+          "attacks": "4",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "flyby",
+          "name": "Deff from Above",
+          "source": "Deffkoptas",
+          "effect": "Fast flanking unit — contest side objectives and chase soft targets.",
+          "phases": ["movement", "shooting"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    },
+    {
+      "id": "deff-dread",
+      "name": "Deff Dread",
+      "keywords": ["Vehicle", "Walker", "Orks"],
+      "modelCount": 1,
+      "move": "8\"",
+      "save": 3,
+      "health": 12,
+      "control": 4,
+      "weapons": [
+        {
+          "id": "dread-klaw",
+          "name": "Dread Klaws",
+          "attacks": "5",
+          "hit": 3,
+          "wound": 2,
+          "rend": 2,
+          "damage": "3"
+        },
+        {
+          "id": "dread-rokkits",
+          "name": "Rokkit Launcha",
+          "rangeInches": 24,
+          "attacks": "3",
+          "hit": 4,
+          "wound": 7,
+          "rend": 2,
+          "damage": "D6"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "stomp",
+          "name": "Smasha Walka",
+          "source": "Deff Dread",
+          "effect": "Mid-board brawler — advance with Boyz after Waaagh! for objective pressure.",
+          "phases": ["combat"],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ]
+    }
+  ]
+}

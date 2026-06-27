@@ -1,35 +1,84 @@
 import SwiftUI
 
+/// Shared continuous corner shape for `surfaceCard` and `accentHighlightCard`.
+enum CardSurface {
+    static func shape(radius: CGFloat) -> RoundedRectangle {
+        RoundedRectangle(cornerRadius: radius, style: .continuous)
+    }
+}
+
 private struct SurfaceCardModifier: ViewModifier {
     var padding: CGFloat
+    var radius: CGFloat
 
     func body(content: Content) -> some View {
         content
             .padding(padding)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
-            .overlay(
-                RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
-                    .strokeBorder(Color(.separator).opacity(0.4), lineWidth: 0.5)
-            )
+            .background {
+                CardSurface.shape(radius: radius)
+                    .fill(Color(.secondarySystemBackground))
+                CardSurface.shape(radius: radius)
+                    .strokeBorder(Color(.separator).opacity(0.5), lineWidth: 0.5)
+            }
+            .clipShape(CardSurface.shape(radius: radius))
     }
 }
 
 public extension View {
     /// Groups content in the standard raised surface used across tracker and setup cards.
-    func surfaceCard(padding: CGFloat = DesignTokens.Spacing.md) -> some View {
-        modifier(SurfaceCardModifier(padding: padding))
+    func surfaceCard(
+        padding: CGFloat = DesignTokens.Spacing.md,
+        radius: CGFloat = DesignTokens.Radius.lg
+    ) -> some View {
+        modifier(SurfaceCardModifier(padding: padding, radius: radius))
     }
 
     /// Soft accent-tinted card used on Play home banners and new-player guidance.
-    func accentHighlightCard(radius: CGFloat = DesignTokens.Radius.md) -> some View {
+    func accentHighlightCard(radius: CGFloat = DesignTokens.Radius.lg) -> some View {
         padding(DesignTokens.Spacing.md)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: radius))
-            .overlay {
-                RoundedRectangle(cornerRadius: radius)
-                    .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
+            .background {
+                CardSurface.shape(radius: radius)
+                    .fill(Color.accentColor.opacity(0.10))
+                CardSurface.shape(radius: radius)
+                    .strokeBorder(Color.accentColor.opacity(0.35), lineWidth: 1)
             }
+            .clipShape(CardSurface.shape(radius: radius))
+    }
+
+    /// Neutral onboarding / picker row — same corners as cards, without accent tint.
+    func onboardingPickerRow() -> some View {
+        padding(DesignTokens.Spacing.md)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background {
+                CardSurface.shape(radius: DesignTokens.Radius.lg)
+                    .fill(Color(.secondarySystemBackground))
+                CardSurface.shape(radius: DesignTokens.Radius.lg)
+                    .strokeBorder(Color(.separator).opacity(0.35), lineWidth: 0.5)
+            }
+            .clipShape(CardSurface.shape(radius: DesignTokens.Radius.lg))
+    }
+
+    /// Embeds a self-drawn card in a `List` row without grouped-list corner clipping.
+    func listHeroCardRow() -> some View {
+        listRowInsets(
+            EdgeInsets(
+                top: DesignTokens.Spacing.sm,
+                leading: 0,
+                bottom: DesignTokens.Spacing.sm,
+                trailing: 0
+            )
+        )
+        .listRowBackground(Color.clear)
+        .listRowSeparator(.hidden)
+    }
+
+    /// Plain list with side margins so floating cards keep visible corners on every edge.
+    func floatingCardListStyle() -> some View {
+        listStyle(.plain)
+            .contentMargins(.horizontal, DesignTokens.Spacing.md, for: .scrollContent)
+            .contentMargins(.top, DesignTokens.Spacing.xs, for: .scrollContent)
     }
 }
 
@@ -183,10 +232,12 @@ struct TipsCard: View {
         }
         .padding(DesignTokens.Spacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.yellow.opacity(0.07), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
-        .overlay(
-            RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
-                .strokeBorder(Color.yellow.opacity(0.25), lineWidth: 0.5)
-        )
+        .background {
+            CardSurface.shape(radius: DesignTokens.Radius.lg)
+                .fill(Color.yellow.opacity(0.07))
+            CardSurface.shape(radius: DesignTokens.Radius.lg)
+                .strokeBorder(Color.yellow.opacity(0.30), lineWidth: 0.5)
+        }
+        .clipShape(CardSurface.shape(radius: DesignTokens.Radius.lg))
     }
 }

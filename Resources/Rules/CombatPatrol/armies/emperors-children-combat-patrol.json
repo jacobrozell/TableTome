@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "armyId": "emperors-children-combat-patrol",
+  "units": [
+    {
+      "id": "lord-kaphrael",
+      "name": "Lord Kaphrael (Lord Exultant)",
+      "keywords": [
+        "Character",
+        "Infantry",
+        "Emperor's Children"
+      ],
+      "modelCount": 1,
+      "move": "6\"",
+      "save": 2,
+      "health": 5,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "power-sword",
+          "name": "Power Sword",
+          "attacks": "5",
+          "hit": 2,
+          "wound": 3,
+          "rend": 2,
+          "damage": "1"
+        },
+        {
+          "id": "sonic-blaster",
+          "name": "Sonic Blaster",
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1",
+          "rangeInches": 24
+        }
+      ],
+      "abilities": [],
+      "invulnerableSave": 4,
+      "notes": "Callous Blades — see box PDF for full rules text."
+    },
+    {
+      "id": "flawless-blades",
+      "name": "6 Flawless Blades",
+      "keywords": [
+        "Infantry",
+        "Emperor's Children"
+      ],
+      "modelCount": 6,
+      "move": "7\"",
+      "save": 3,
+      "health": 3,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "melee-weapons",
+          "name": "Melee Weapons",
+          "attacks": "4",
+          "hit": 2,
+          "wound": 3,
+          "rend": 2,
+          "damage": "2"
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "infractors",
+      "name": "10 Infractors or Tormentors",
+      "keywords": [
+        "Battleline",
+        "Infantry",
+        "Emperor's Children"
+      ],
+      "modelCount": 10,
+      "move": "6\"",
+      "save": 3,
+      "health": 1,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "boltgun",
+          "name": "Boltgun",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 24
+        },
+        {
+          "id": "chainsword",
+          "name": "Astartes Chainsword",
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": []
+    }
+  ]
+}

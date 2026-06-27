@@ -91,10 +91,7 @@ struct BattleTrackerCollapsedTopChrome: View {
                 .adaptiveLineLimit(1)
                 .accessibilityLabel(phaseSummaryAccessibilityLabel)
         }
-        .padding(.horizontal, DesignTokens.Spacing.sm)
-        .padding(.vertical, DesignTokens.Spacing.xs)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.bar)
+        .barChromeBackground(horizontalPadding: DesignTokens.Spacing.sm, verticalPadding: DesignTokens.Spacing.xs)
         .accessibilityIdentifier("battleTracker.collapsedTopChrome")
     }
 
@@ -132,10 +129,7 @@ struct GuidedMatchCollapsedHubChrome: View {
                 .adaptiveLineLimit(1)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding(.horizontal, DesignTokens.Spacing.md)
-        .padding(.vertical, DesignTokens.Spacing.xs)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.bar)
+        .barChromeBackground()
         .accessibilityIdentifier("guidedMatch.collapsedHubChrome")
     }
 }

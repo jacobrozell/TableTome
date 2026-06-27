@@ -1,15 +1,21 @@
 import Foundation
 import TabletomeDomain
 
+extension Notification.Name {
+    static let firstSessionStoreDidChange = Notification.Name("firstSessionStoreDidChange")
+}
+
 /// Tracks first-session milestones so Play can show a continuation card and hobby tabs defer intros.
 enum FirstSessionStore: Sendable {
     private static let choiceKey = "first_session_onboarding_choice"
+    private static let wh40kVariantKey = "first_session_wh40k_variant"
     private static let hasOpenedGuideKey = "first_session_has_opened_game_guide"
     private static let collectionVisitsKey = "first_session_collection_visits"
     private static let listsVisitsKey = "first_session_lists_visits"
     private static let setupCompleteKey = "first_session_setup_complete"
     private static let firstBattleRoundKey = "first_session_first_battle_round"
     private static let modelsNudgeSeenKey = "first_session_models_nudge_seen"
+    private static let roundOneMilestoneSeenKey = "first_session_round_one_milestone_seen"
 
     static var onboardingChoice: String? {
         get { UserDefaults.standard.string(forKey: choiceKey) }
@@ -22,17 +28,35 @@ enum FirstSessionStore: Sendable {
         }
     }
 
+    static var onboardingWh40kVariant: String? {
+        get { UserDefaults.standard.string(forKey: wh40kVariantKey) }
+        set {
+            if let newValue {
+                UserDefaults.standard.set(newValue, forKey: wh40kVariantKey)
+            } else {
+                UserDefaults.standard.removeObject(forKey: wh40kVariantKey)
+            }
+        }
+    }
+
     static var hasOpenedGameGuide: Bool {
         get { UserDefaults.standard.bool(forKey: hasOpenedGuideKey) }
         set { UserDefaults.standard.set(newValue, forKey: hasOpenedGuideKey) }
     }
 
-    static func recordOnboardingChoice(gameSystemId: String) {
+    static func recordOnboardingChoice(gameSystemId: String, wh40kVariant: String? = nil) {
         onboardingChoice = gameSystemId
+        if let wh40kVariant {
+            onboardingWh40kVariant = wh40kVariant
+        } else if gameSystemId != GameSystemId.wh40k11e.rawValue {
+            onboardingWh40kVariant = nil
+        }
+        notifyChange()
     }
 
     static func recordGameGuideOpened() {
         hasOpenedGameGuide = true
+        notifyChange()
     }
 
     @discardableResult
@@ -72,10 +96,12 @@ enum FirstSessionStore: Sendable {
 
     static func recordSetupComplete() {
         UserDefaults.standard.set(true, forKey: setupCompleteKey)
+        notifyChange()
     }
 
     static func recordFirstBattleRound() {
         UserDefaults.standard.set(true, forKey: firstBattleRoundKey)
+        notifyChange()
     }
 
     static var hasSeenModelsNudge: Bool {
@@ -92,17 +118,53 @@ enum FirstSessionStore: Sendable {
         return hasCompletedSetup || hasCompletedFirstBattleRound
     }
 
+    static var hasSeenRoundOneMilestone: Bool {
+        UserDefaults.standard.bool(forKey: roundOneMilestoneSeenKey)
+    }
+
+    static func markRoundOneMilestoneSeen() {
+        UserDefaults.standard.set(true, forKey: roundOneMilestoneSeenKey)
+    }
+
+    static func shouldShowRoundOneMilestone(isEmbeddedInGuidedMatch: Bool) -> Bool {
+        guard isEmbeddedInGuidedMatch else { return false }
+        guard hasCompletedFirstBattleRound else { return false }
+        return !hasSeenRoundOneMilestone
+    }
+
     static func shouldEmphasizePlayTab() -> Bool {
-        !hasOpenedGameGuide
+        !hasOpenedGameGuide && !hasCompletedSetup
+    }
+
+    /// Hides the full game list on Play home until the user picks from the chooser or opens a guide.
+    static func shouldHideAllGamesList() -> Bool {
+        onboardingChoice == nil && !hasOpenedGameGuide
+    }
+
+    /// Shows a "Later" badge on hobby tabs until the player has engaged with Play.
+    static func shouldDeferHobbyTabs() -> Bool {
+        !hasOpenedGameGuide && !hasCompletedSetup && !hasCompletedFirstBattleRound
+    }
+
+    /// Hides hobby tabs until the player has engaged with Play.
+    static func shouldHideHobbyTabs() -> Bool {
+        shouldDeferHobbyTabs()
     }
 
     static func clearPersistedState() {
         UserDefaults.standard.removeObject(forKey: choiceKey)
+        UserDefaults.standard.removeObject(forKey: wh40kVariantKey)
         UserDefaults.standard.removeObject(forKey: hasOpenedGuideKey)
         UserDefaults.standard.removeObject(forKey: collectionVisitsKey)
         UserDefaults.standard.removeObject(forKey: listsVisitsKey)
         UserDefaults.standard.removeObject(forKey: setupCompleteKey)
         UserDefaults.standard.removeObject(forKey: firstBattleRoundKey)
         UserDefaults.standard.removeObject(forKey: modelsNudgeSeenKey)
+        UserDefaults.standard.removeObject(forKey: roundOneMilestoneSeenKey)
+        notifyChange()
+    }
+
+    private static func notifyChange() {
+        NotificationCenter.default.post(name: .firstSessionStoreDidChange, object: nil)
     }
 }

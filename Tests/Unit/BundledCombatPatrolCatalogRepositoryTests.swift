@@ -37,6 +37,39 @@ final class BundledCombatPatrolCatalogRepositoryTests: XCTestCase {
         XCTAssertTrue(vardenghast.supportsBattleTracker)
     }
 
+    func testAllPatrolsExistWithRosterMetadata() async throws {
+        let catalog = try await repository.loadCatalog(for: "wh40k-10e-cp")
+        let armies = catalog.factions.flatMap(\.armies)
+        XCTAssertEqual(armies.count, 23)
+
+        for army in armies {
+            XCTAssertEqual(army.enhancements.count, 2, army.id)
+            XCTAssertEqual(army.secondaryObjectives.count, 2, army.id)
+            XCTAssertEqual(army.stratagems.count, 3, army.id)
+            XCTAssertFalse(army.roster.isEmpty, army.id)
+        }
+
+        let leviathanIds = ["space-marines-combat-patrol", "tyranids-combat-patrol"]
+        let p1Ids = [
+            "orks-combat-patrol",
+            "necrons-combat-patrol",
+            "adeptus-custodes-combat-patrol",
+            "astra-militarum-combat-patrol"
+        ]
+        let fullTrackerIds = leviathanIds + p1Ids + armies.map(\.id).filter { id in
+            !(leviathanIds + p1Ids).contains(id)
+        }
+
+        for armyId in fullTrackerIds {
+            let army = try XCTUnwrap(armies.first { $0.id == armyId })
+            XCTAssertTrue(army.supportsBattleTracker, armyId)
+            XCTAssertTrue(army.units.contains { $0.hasWarscroll }, armyId)
+        }
+
+        let rosterOnlyCount = armies.filter { !$0.supportsBattleTracker }.count
+        XCTAssertEqual(rosterOnlyCount, 0)
+    }
+
     func testMissionsIncludeClashOfPatrols() async throws {
         let catalog = try await repository.loadCatalog(for: "wh40k-10e-cp")
         let clash = try XCTUnwrap(catalog.missions.first { $0.id == "clash-of-patrols" })

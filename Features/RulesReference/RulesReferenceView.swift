@@ -3,6 +3,12 @@ import TabletomeDomain
 
 struct RulesReferenceView: View {
     @StateObject private var viewModel: RulesReferenceViewModel
+    @State private var firstSessionRevision = 0
+
+    private var showsPlayTabHint: Bool {
+        _ = firstSessionRevision
+        return FirstSessionStore.shouldEmphasizePlayTab()
+    }
 
     init(viewModel: RulesReferenceViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -66,6 +72,23 @@ struct RulesReferenceView: View {
                         .font(.callout)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
+
+                        if showsEditionComparison(for: viewModel.selectedGameSystemId) {
+                            rulesEditionComparisonCard(
+                                gameSystemId: viewModel.selectedGameSystemId
+                            )
+                            .padding(.top, DesignTokens.Spacing.sm)
+                        }
+                    } footer: {
+                        if showsPlayTabHint {
+                            Text(
+                                String(
+                                    localized: """
+                                    New here? Most players start on the Play tab — pick your box, then open Getting Started.
+                                    """
+                                )
+                            )
+                        }
                     }
 
                     Section {
@@ -93,7 +116,10 @@ struct RulesReferenceView: View {
 
                     Section(String(localized: "Sections")) {
                         if viewModel.filteredSections.isEmpty {
-                            RulesBrowseEmptyState(searchText: viewModel.searchText)
+                            RulesBrowseEmptyState(
+                                searchText: viewModel.searchText,
+                                gameSystemId: viewModel.selectedGameSystemId
+                            )
                         } else {
                             ForEach(viewModel.filteredSections) { section in
                                 NavigationLink(value: RuleSectionLink(
@@ -113,11 +139,11 @@ struct RulesReferenceView: View {
                     }
                 }
                 .listStyle(.insetGrouped)
-                .tabBarScrollInset()
                 .searchable(
                     text: $viewModel.searchText,
                     prompt: GameSystemRulesLabels.rulesSearchPrompt(gameSystemId: viewModel.selectedGameSystemId)
                 )
+                .tabBarScrollInset()
                 .accessibilityIdentifier("rules.sectionList")
             }
         }
@@ -130,10 +156,31 @@ struct RulesReferenceView: View {
         }
         .task { await viewModel.load() }
         .refreshable { await viewModel.load() }
+        .onReceive(NotificationCenter.default.publisher(for: .firstSessionStoreDidChange)) { _ in
+            firstSessionRevision += 1
+        }
     }
 
     private func gameSystemPickerLabel(_ system: GameSystem) -> String {
         GameSystemRulesLabels.searchGameSystemPickerLabel(system)
+    }
+
+    private func showsEditionComparison(for gameSystemId: String) -> Bool {
+        gameSystemId == GameSystemId.wh40k10eCp.rawValue
+            || gameSystemId == GameSystemId.wh40k11e.rawValue
+            || gameSystemId == GameSystemId.aosSpearhead.rawValue
+    }
+
+    @ViewBuilder
+    private func rulesEditionComparisonCard(gameSystemId: String) -> some View {
+        switch gameSystemId {
+        case GameSystemId.wh40k10eCp.rawValue, GameSystemId.wh40k11e.rawValue:
+            CombatPatrolRulesComparisonCard()
+        case GameSystemId.aosSpearhead.rawValue:
+            SpearheadRulesComparisonCard()
+        default:
+            EmptyView()
+        }
     }
 }
 

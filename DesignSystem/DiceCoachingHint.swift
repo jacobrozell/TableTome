@@ -79,6 +79,22 @@ struct UnitQuickStatsRow: View {
     }
 }
 
+struct BattleTrackerPhaseActionBanner: View {
+    let phaseTitle: String
+    let message: String
+    let onDismiss: () -> Void
+
+    var body: some View {
+        BattleTrackerNoticeBanner(
+            systemImage: "hand.point.up.left.fill",
+            title: phaseTitle,
+            detail: message,
+            onDismiss: onDismiss,
+            accessibilityIdentifier: "battleTracker.phaseActionNudge"
+        )
+    }
+}
+
 struct BattleTrackerTurnHandoffBanner: View {
     let title: String
     let detail: String
@@ -138,13 +154,7 @@ struct BattleTrackerRoundOpenerBanner: View {
                 .minimumTouchTarget()
                 .accessibilityIdentifier("battleTracker.roundOpener.jump")
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.accentColor.opacity(0.1), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
-        .overlay {
-            RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
-                .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
-        }
+        .accentHighlightCard()
         .accessibilityIdentifier("battleTracker.roundOpener")
     }
 }
@@ -189,13 +199,7 @@ struct BattleTrackerScoringReminderBanner: View {
                 .minimumTouchTarget()
                 .accessibilityIdentifier("battleTracker.scoringReminder.jump")
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.accentColor.opacity(0.1), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
-        .overlay {
-            RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
-                .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
-        }
+        .accentHighlightCard()
         .accessibilityIdentifier("battleTracker.scoringReminder")
     }
 
@@ -244,13 +248,7 @@ private struct BattleTrackerNoticeBanner: View {
             .buttonStyle(.plain)
             .accessibilityLabel(String(localized: "Dismiss"))
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.accentColor.opacity(0.1), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
-        .overlay {
-            RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
-                .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
-        }
+        .accentHighlightCard()
         .accessibilityIdentifier(accessibilityIdentifier)
     }
 }

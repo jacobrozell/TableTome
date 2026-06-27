@@ -47,6 +47,9 @@ struct GuidedMatchView: View {
     @State private var showsOwnListsSection = false
     @State var showsMatchHistoryToolbar = false
     @State private var hasAppliedInitialHubTab = false
+    @State private var dismissedSetupCompleteHandoff = false
+    @State private var showsStarterMatchupHandoff = false
+    @State private var dismissedStarterMatchupHandoff = false
     @AppStorage(BattleTrackerChromeStorage.guidedMatchHubCollapsedKey) var isHubChromeCollapsed = false
 
     private let initialHubTab: GuidedMatchHubTab?
@@ -95,10 +98,6 @@ struct GuidedMatchView: View {
         .navigationBarTitleDisplayMode(guidedMatchNavigationTitleDisplayMode)
         .toolbar { matchSyncToolbar }
         .sheet(isPresented: $showsMatchSync) { matchSyncSheet }
-        .navigationDestination(for: MatchHistoryLink.self) { _ in
-            MatchHistoryListView(viewModel: dependencies.makeMatchHistoryViewModel())
-        }
-        .playNavigationDestinations()
         .confirmationDialog(
             String(localized: "Reset Match"),
             isPresented: $showsResetConfirmation,
@@ -210,7 +209,7 @@ struct GuidedMatchView: View {
                 if !viewModel.matchState.hasBothArmies {
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                         Button(String(localized: "Use Starter Matchup")) {
-                            viewModel.applyStarterMatchup()
+                            useStarterMatchup(navigateToSetup: false)
                             selectedDestination = .battleTracker
                         }
                         .buttonStyle(.borderedProminent)
@@ -340,10 +339,13 @@ struct GuidedMatchView: View {
     @ViewBuilder
     private func compactGuidedMatchSections(catalog: SpearheadCatalog, useSplitSelection: Bool) -> some View {
         matchupSection
+        starterMatchupHandoffSection
         sampleTurnSection
         playersSection(catalog: catalog, useSplitSelection: useSplitSelection)
         setupProgressSection
+        rollPromptSection
         continueSetupSection(catalog: catalog, useSplitSelection: useSplitSelection)
+        setupCompleteHandoffSection
         battleTrackerSection(catalog: catalog, useSplitSelection: useSplitSelection)
         collapsedMatchSetupSection(catalog: catalog, useSplitSelection: useSplitSelection)
         resetSection
@@ -352,8 +354,11 @@ struct GuidedMatchView: View {
     @ViewBuilder
     private func expandedGuidedMatchSections(catalog: SpearheadCatalog, useSplitSelection: Bool) -> some View {
         matchupSection
+        starterMatchupHandoffSection
         setupProgressSection
+        rollPromptSection
         continueSetupSection(catalog: catalog, useSplitSelection: useSplitSelection)
+        setupCompleteHandoffSection
         playersSection(catalog: catalog, useSplitSelection: useSplitSelection)
         battleTrackerSection(catalog: catalog, useSplitSelection: useSplitSelection)
         matchSetupSection(catalog: catalog, useSplitSelection: useSplitSelection)
@@ -460,7 +465,10 @@ struct GuidedMatchView: View {
                         showsDisclosureIndicator: false,
                         accessibilityId: "guidedMatch.step.\(step.id)"
                     )
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
                 .disabled(!viewModel.matchState.hasBothArmies && step.id != "choose-armies")
                 .listRowInsets(GuideStepCard.listRowInsets)
                 .listRowBackground(Color.clear)
@@ -473,12 +481,7 @@ struct GuidedMatchView: View {
     private var matchupSection: some View {
         Section {
             Button {
-                viewModel.applyStarterMatchup()
-                if usesPadSplitNavigation {
-                    selectedDestination = .battleTracker
-                } else {
-                    hubTab = .setup
-                }
+                useStarterMatchup()
             } label: {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                     Label {
@@ -511,7 +514,7 @@ struct GuidedMatchView: View {
             )
             .accessibilityHint(
                 String(
-                    localized: "Fills both armies and recommended enhancement and objective picks."
+                    localized: "Fills both armies, recommended picks, and defaults attacker to Player 1 — change on Setup if your roll differed."
                 )
             )
         } header: {
@@ -566,12 +569,43 @@ struct GuidedMatchView: View {
     }
 
     @ViewBuilder
+    private var rollPromptSection: some View {
+        if viewModel.matchState.hasBothArmies,
+           viewModel.matchState.attackerIsPlayerOne != nil,
+           viewModel.nextIncompleteStep?.id != "roll-attacker" {
+            Section {
+                inlineRollPickerCard
+                    .listRowInsets(
+                        EdgeInsets(
+                            top: DesignTokens.Spacing.sm,
+                            leading: 0,
+                            bottom: DesignTokens.Spacing.sm,
+                            trailing: 0
+                        )
+                    )
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+            } header: {
+                Text(String(localized: "At the table"))
+            } footer: {
+                Text(
+                    String(
+                        localized: "Confirm who won the roll-off — change the picker if your table decided differently."
+                    )
+                )
+            }
+        }
+    }
+
+    @ViewBuilder
     private func continueSetupSection(catalog: SpearheadCatalog, useSplitSelection: Bool) -> some View {
         if viewModel.matchState.hasBothArmies,
            let next = viewModel.nextIncompleteStep,
            let index = viewModel.sortedMatchSteps.firstIndex(where: { $0.id == next.id }) {
             Section {
-                if useSplitSelection {
+                if next.id == "roll-attacker" {
+                    rollAttackerInlineSection(step: next, stepNumber: index + 1, useSplitSelection: useSplitSelection)
+                } else if useSplitSelection {
                     GuideStepCard(
                         stepNumber: index + 1,
                         title: next.title,
@@ -598,13 +632,142 @@ struct GuidedMatchView: View {
                                 accessibilityId: "guidedMatch.continue.\(next.id)"
                             )
                         }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .contentShape(Rectangle())
                     }
+                    .buttonStyle(.plain)
                     .listRowInsets(GuideStepCard.listRowInsets)
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
                 }
             } header: {
                 Text(String(localized: "Up Next"))
+            } footer: {
+                if let next = viewModel.nextIncompleteStep, next.id != "roll-attacker" {
+                    SetupStepRulesLink(
+                        gameSystemId: gameSystemId.rawValue,
+                        stepTitle: next.title,
+                        relatedRuleSectionId: next.relatedRuleSectionId
+                    )
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func rollAttackerInlineSection(
+        step: MatchSetupStep,
+        stepNumber: Int,
+        useSplitSelection: Bool
+    ) -> some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            GuideStepCard(
+                stepNumber: stepNumber,
+                title: step.title,
+                summary: step.summary,
+                isComplete: false,
+                showsDisclosureIndicator: false,
+                accessibilityId: "guidedMatch.continue.\(step.id)"
+            )
+
+            inlineRollPickerCard
+
+            SetupStepRulesLink(
+                gameSystemId: gameSystemId.rawValue,
+                stepTitle: step.title,
+                relatedRuleSectionId: step.relatedRuleSectionId
+            )
+
+            if useSplitSelection {
+                Button(String(localized: "Open step details")) {
+                    selectedDestination = .step(step.id)
+                }
+                .buttonStyle(.bordered)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .accessibilityIdentifier("guidedMatch.rollAttacker.details")
+            } else {
+                NavigationLink(value: GuidedMatchDestination.step(step.id)) {
+                    Label(String(localized: "Open step details"), systemImage: "doc.text")
+                        .font(.subheadline.weight(.medium))
+                        .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("guidedMatch.rollAttacker.details")
+            }
+        }
+        .listRowInsets(GuideStepCard.listRowInsets)
+        .listRowBackground(Color.clear)
+        .listRowSeparator(.hidden)
+        .accessibilityIdentifier("guidedMatch.rollAttacker.inline")
+    }
+
+    @ViewBuilder
+    private var starterMatchupHandoffSection: some View {
+        if showsStarterMatchupHandoff,
+           !dismissedStarterMatchupHandoff,
+           let summary = viewModel.matchupSummary {
+            Section {
+                StarterMatchupHandoffBanner(
+                    matchupSummary: summary,
+                    nextStepTitle: viewModel.nextIncompleteStep?.title
+                ) {
+                    dismissedStarterMatchupHandoff = true
+                    showsStarterMatchupHandoff = false
+                }
+                .listHeroCardRow()
+            }
+        }
+    }
+
+    private func useStarterMatchup(navigateToSetup: Bool = true) {
+        viewModel.applyStarterMatchup()
+        showsStarterMatchupHandoff = true
+        dismissedStarterMatchupHandoff = false
+        if usesPadSplitNavigation {
+            selectedDestination = .battleTracker
+        } else if navigateToSetup {
+            hubTab = .setup
+        }
+    }
+
+    @ViewBuilder
+    private var setupCompleteHandoffSection: some View {
+        if setupIsComplete, !dismissedSetupCompleteHandoff {
+            Section {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    Label(String(localized: "Setup complete"), systemImage: "checkmark.circle.fill")
+                        .font(.headline)
+                        .foregroundStyle(Color.accentOnSurface)
+
+                    Text(
+                        String(
+                            localized: """
+                            Open the Battle tab when you're at the table. Roll physical dice — Tabletome tracks phases and score.
+                            """
+                        )
+                    )
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                    Button(String(localized: "Open Battle")) {
+                        hubTab = .battle
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .accessibilityIdentifier("guidedMatch.setupComplete.openBattle")
+
+                    Button(String(localized: "Dismiss")) {
+                        dismissedSetupCompleteHandoff = true
+                    }
+                    .buttonStyle(.plain)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .accessibilityIdentifier("guidedMatch.setupComplete.dismiss")
+                }
+                .accentHighlightCard()
+                .listHeroCardRow()
             }
         }
     }
@@ -638,7 +801,10 @@ struct GuidedMatchView: View {
                             selection: viewModel.matchState.playerOne,
                             catalog: catalog
                         )
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .contentShape(Rectangle())
                     }
+                    .buttonStyle(.plain)
                     .accessibilityIdentifier("guidedMatch.playerOne")
 
                     NavigationLink(value: GuidedMatchDestination.playerTwo) {
@@ -647,7 +813,10 @@ struct GuidedMatchView: View {
                             selection: viewModel.matchState.playerTwo,
                             catalog: catalog
                         )
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .contentShape(Rectangle())
                     }
+                    .buttonStyle(.plain)
                     .accessibilityIdentifier("guidedMatch.playerTwo")
                 }
             } label: {
@@ -700,9 +869,11 @@ struct GuidedMatchView: View {
                         .contentShape(Rectangle())
                     } else {
                         Label(String(localized: "Battle Phase Tracker"), systemImage: "list.bullet.rectangle")
-                            .frame(minHeight: DesignTokens.minTouchTarget)
+                            .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                            .contentShape(Rectangle())
                     }
                 }
+                .buttonStyle(.plain)
                 .disabled(!viewModel.matchState.hasBothArmies)
                 .accessibilityIdentifier("guidedMatch.battleTracker")
                 .accessibilityLabel(
@@ -884,8 +1055,8 @@ extension GuidedMatchView {
                     }
                 }
             } else {
-                HStack(alignment: .top, spacing: 0) {
-                    VStack(spacing: DesignTokens.Spacing.sm) {
+                VStack(spacing: DesignTokens.Spacing.sm) {
+                    HStack(alignment: .center, spacing: DesignTokens.Spacing.xs) {
                         GuidedMatchStatusBar(
                             playerOneSummary: playerSummary(
                                 selection: viewModel.matchState.playerOne,
@@ -906,30 +1077,28 @@ extension GuidedMatchView {
                             compactMode: usesCompactLandscapeStatusBar
                         )
                         .id(hubTrackerTick)
-                        if !showsEmbeddedBattleTracker {
-                            GuidedMatchHubTabBar(
-                                selection: $hubTab,
-                                hasBothArmies: viewModel.matchState.hasBothArmies,
-                                setupComplete: setupIsComplete,
-                                locksArmiesTab: hasResumableBattleSession
-                            )
-                            .padding(.horizontal, DesignTokens.Spacing.md)
-                        }
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
 
-                    ChromeCollapseInlineButton(
-                        accessibilityLabel: String(localized: "Hide match summary"),
-                        accessibilityIdentifier: "guidedMatch.hubChromeCollapseInline",
-                        onCollapse: {
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                isHubChromeCollapsed = true
+                        ChromeCollapseInlineButton(
+                            accessibilityLabel: String(localized: "Hide match summary"),
+                            accessibilityIdentifier: "guidedMatch.hubChromeCollapseInline",
+                            onCollapse: {
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    isHubChromeCollapsed = true
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
+
+                    if !showsEmbeddedBattleTracker {
+                        GuidedMatchHubTabBar(
+                            selection: $hubTab,
+                            hasBothArmies: viewModel.matchState.hasBothArmies,
+                            setupComplete: setupIsComplete,
+                            locksArmiesTab: hasResumableBattleSession
+                        )
+                    }
                 }
-                .padding(.bottom, DesignTokens.Spacing.xs)
-                .background(.bar)
+                .barChromeBackground()
                 .overlay(alignment: .bottom) {
                     if showsEmbeddedBattleTracker {
                         Divider()
@@ -951,7 +1120,9 @@ extension GuidedMatchView {
                     sampleTurnSection
                 }
                 setupProgressSection
+                rollPromptSection
                 continueSetupSection(catalog: catalog, useSplitSelection: false)
+                setupCompleteHandoffSection
                 if usesCompactSetupLayout {
                     collapsedMatchSetupSection(catalog: catalog, useSplitSelection: false)
                 } else {
@@ -1021,7 +1192,10 @@ extension GuidedMatchView {
                             showsDisclosureIndicator: false,
                             accessibilityId: "guidedMatch.battleGate.\(next.id)"
                         )
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .contentShape(Rectangle())
                     }
+                    .buttonStyle(.plain)
                     .listRowInsets(GuideStepCard.listRowInsets)
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)

@@ -19,14 +19,7 @@ struct NewPlayerMilestoneBanner: View {
                 .font(.headline)
                 .foregroundStyle(Color.accentOnSurface)
 
-            Text(
-                String(
-                    localized: """
-                    When you're ready to track painted miniatures, open Models. Army lists on the Lists tab can \
-                    show which units you own.
-                    """
-                )
-            )
+            Text(milestoneMessage)
             .font(.callout)
             .foregroundStyle(.secondary)
             .fixedSize(horizontal: false, vertical: true)
@@ -60,5 +53,21 @@ struct NewPlayerMilestoneBanner: View {
     private func dismiss() {
         onDismiss()
         isVisible = false
+    }
+
+    private var milestoneMessage: String {
+        if ReleaseSurface.showsMusterTab, !FirstSessionStore.shouldHideHobbyTabs() {
+            return String(
+                localized: """
+                When you're ready to track painted miniatures, open Models. Army lists on the Lists tab can \
+                show which units you own.
+                """
+            )
+        }
+        return String(
+            localized: """
+            When you're ready to track painted miniatures, open the Models tab from the tab bar.
+            """
+        )
     }
 }

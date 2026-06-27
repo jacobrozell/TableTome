@@ -5,14 +5,14 @@ import TabletomeDomain
 struct NewPlayerStartHereCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Label(String(localized: "First game?"), systemImage: "sparkles")
+            Label(String(localized: "First game?"), systemImage: "flag.checkered")
                 .font(.headline)
                 .foregroundStyle(Color.accentOnSurface)
 
             Text(
                 String(
                     localized: """
-                    New to wargaming? Follow this path — about 10 minutes of reading, then play at the table.
+                    Grab your box, follow the steps below, then play at the table.
                     """
                 )
             )
@@ -20,52 +20,54 @@ struct NewPlayerStartHereCard: View {
             .foregroundStyle(.secondary)
             .fixedSize(horizontal: false, vertical: true)
 
-            WhatYouNeedCard()
-
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 TappableGuidePathStep(
                     number: 1,
                     title: String(localized: "Preview a Spearhead Turn"),
-                    detail: String(localized: "Optional two-minute tour — movement, shooting, dice, and scoring."),
+                    detail: String(localized: "Never played before? Two-minute walkthrough of each phase."),
                     destination: SampleTurnLink(),
                     accessibilityId: "guide.path.previewTurn"
                 )
-                TappableGuidePathStep(
+                GuidePathInfoStep(
                     number: 2,
                     title: String(localized: "Guided Match"),
                     detail: String(
                         localized: """
-                        Tap Use Starter Matchup to fill both armies, walk through setup, then open the battle tracker.
+                        Tap Start Guided Match below — then Use Starter Matchup to fill both armies.
                         """
                     ),
-                    destination: GuidedMatchLink(gameSystemId: .aosSpearhead),
                     accessibilityId: "guide.path.guidedMatch"
                 )
             }
 
-            NavigationLink(value: GettingStartedLink(gameSystemId: GameSystemId.aosSpearhead.rawValue)) {
-                Label(String(localized: "Getting Started"), systemImage: "map")
+            NavigationLink(value: GuidedMatchLink(gameSystemId: .aosSpearhead)) {
+                Label(String(localized: "Start Guided Match"), systemImage: "flag.checkered")
                     .font(.subheadline.weight(.semibold))
                     .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+                    .contentShape(Rectangle())
             }
             .buttonStyle(.borderedProminent)
-            .accessibilityIdentifier("guide.spearhead.gettingStarted")
-
-            NavigationLink(value: SampleTurnLink()) {
-                Label(String(localized: "Preview a Spearhead Turn (~2 min)"), systemImage: "play.circle.fill")
-                    .font(.subheadline.weight(.semibold))
-                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-            }
-            .buttonStyle(.bordered)
-            .accessibilityIdentifier("guide.spearheadSampleTurn")
-
-            NavigationLink(value: GuidedMatchLink(gameSystemId: .aosSpearhead)) {
-                Label(String(localized: "Guided Match"), systemImage: "flag.checkered")
-                    .font(.subheadline.weight(.semibold))
-                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-            }
-            .buttonStyle(.bordered)
             .accessibilityIdentifier("guide.spearhead.guidedMatch")
+
+            LearnFirstDisclosure {
+                NavigationLink(value: GettingStartedLink(gameSystemId: GameSystemId.aosSpearhead.rawValue)) {
+                    Label(String(localized: "Getting Started"), systemImage: "map")
+                        .font(.subheadline.weight(.medium))
+                        .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("guide.spearhead.gettingStarted")
+
+                NavigationLink(value: SampleTurnLink()) {
+                    Label(String(localized: "Preview a Spearhead Turn (~2 min)"), systemImage: "play.circle.fill")
+                        .font(.subheadline.weight(.medium))
+                        .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("guide.spearheadSampleTurn")
+            }
         }
         .accentHighlightCard()
         .accessibilityElement(children: .contain)
@@ -84,10 +86,6 @@ struct WhatYouNeedCard: View {
         String(localized: "This app on one device — pass it when turns change")
     ]
 
-    private var glossarySourceText: String {
-        items.joined(separator: " ")
-    }
-
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
             Label(String(localized: "What you need"), systemImage: "checklist")
@@ -99,21 +97,17 @@ struct WhatYouNeedCard: View {
                         .font(.caption)
                         .foregroundStyle(Color.accentColor)
                         .accessibilityHidden(true)
-                    Text(item)
-                        .font(.callout)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
+                    InlineGlossaryText(
+                        text: item,
+                        gameSystemId: GameSystemId.aosSpearhead.rawValue,
+                        font: .callout,
+                        foregroundStyle: .secondary
+                    )
+                    .fixedSize(horizontal: false, vertical: true)
                 }
             }
-
-            GlossaryChipsRow(
-                text: glossarySourceText,
-                gameSystemId: GameSystemId.aosSpearhead.rawValue
-            )
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .surfaceCard()
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("guide.whatYouNeed")
     }

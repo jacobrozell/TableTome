@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "armyId": "tau-empire-combat-patrol",
+  "units": [
+    {
+      "id": "ethereal-aunshar",
+      "name": "Ethereal Aun'Shar",
+      "keywords": [
+        "Character",
+        "Infantry",
+        "Ethereal",
+        "T'au Empire"
+      ],
+      "modelCount": 1,
+      "move": "6\"",
+      "save": 5,
+      "health": 4,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "honour-stave",
+          "name": "Honour Stave",
+          "attacks": "2",
+          "hit": 5,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "id": "for-the-greater-good",
+          "name": "For the Greater Good",
+          "source": "Aun'Shar's Cadre",
+          "effect": "Markerlight and Kauyon buff allied Strike Team shooting.",
+          "phases": [
+            "shooting"
+          ],
+          "usageLimit": "passive",
+          "kind": "ability"
+        }
+      ],
+      "invulnerableSave": 5
+    },
+    {
+      "id": "strike-team",
+      "name": "Shas'nel D'Tano + Strike Team",
+      "keywords": [
+        "Battleline",
+        "Infantry",
+        "T'au Empire"
+      ],
+      "modelCount": 11,
+      "move": "6\"",
+      "save": 4,
+      "health": 1,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "pulse-rifle",
+          "name": "Pulse Rifle",
+          "attacks": "1",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 24
+        },
+        {
+          "id": "pulse-carbine",
+          "name": "Pulse Carbine",
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 18
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "stealth-battlesuits",
+      "name": "Stealth Battlesuits",
+      "keywords": [
+        "Infantry",
+        "Battlesuit",
+        "T'au Empire"
+      ],
+      "modelCount": 3,
+      "move": "8\"",
+      "save": 3,
+      "health": 4,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "burst-cannon",
+          "name": "Burst Cannon",
+          "attacks": "4",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 18
+        },
+        {
+          "id": "fusion-blaster",
+          "name": "Fusion Blaster",
+          "attacks": "1",
+          "hit": 4,
+          "wound": 4,
+          "rend": 2,
+          "damage": "D6",
+          "rangeInches": 12
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "ghostkeel",
+      "name": "Ghostkeel Battlesuit",
+      "keywords": [
+        "Vehicle",
+        "Walker",
+        "Battlesuit",
+        "T'au Empire"
+      ],
+      "modelCount": 1,
+      "move": "10\"",
+      "save": 2,
+      "health": 14,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "cyclic-ion-raker",
+          "name": "Cyclic Ion Raker",
+          "attacks": "6",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1",
+          "rangeInches": 24
+        },
+        {
+          "id": "fusion-collider",
+          "name": "Fusion Collider",
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 2,
+          "damage": "D6",
+          "rangeInches": 18
+        }
+      ],
+      "abilities": [],
+      "invulnerableSave": 4
+    }
+  ]
+}

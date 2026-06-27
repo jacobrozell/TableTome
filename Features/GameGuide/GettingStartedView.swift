@@ -13,9 +13,8 @@ struct GettingStartedView: View {
             if gameSystem.id == "wh40k-10e-cp" {
                 Section {
                     combatPatrolFirstGameSection
+                        .listHeroCardRow()
                 }
-                .listRowInsets(EdgeInsets())
-                .listRowBackground(Color.clear)
 
                 Section {
                     NavigationLink(value: CombatPatrolSampleTurnLink()) {
@@ -36,9 +35,8 @@ struct GettingStartedView: View {
             if gameSystem.id == "wh40k-11e" {
                 Section {
                     Wh40k11eWhatYouNeedCard()
+                        .listHeroCardRow()
                 }
-                .listRowInsets(EdgeInsets())
-                .listRowBackground(Color.clear)
 
                 Section {
                     NavigationLink(value: Wh40k11eSampleTurnLink()) {
@@ -59,9 +57,8 @@ struct GettingStartedView: View {
             if gameSystem.id == "aos-spearhead" {
                 Section {
                     WhatYouNeedCard()
+                        .listHeroCardRow()
                 }
-                .listRowInsets(EdgeInsets())
-                .listRowBackground(Color.clear)
 
                 Section {
                     NavigationLink(value: SampleTurnLink()) {
@@ -79,6 +76,13 @@ struct GettingStartedView: View {
                 }
             }
 
+            if gameSystem.id == GameSystemId.scTmg.rawValue {
+                Section {
+                    ScWhatYouNeedCard()
+                        .listHeroCardRow()
+                }
+            }
+
             Section {
                 ForEach(Array(sortedSteps.enumerated()), id: \.element.id) { index, step in
                     NavigationLink(value: GuideStepLink(gameSystemId: gameSystem.id, stepId: step.id)) {
@@ -90,7 +94,10 @@ struct GettingStartedView: View {
                             showsDisclosureIndicator: false,
                             accessibilityId: "guide.step.\(step.id)"
                         )
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .contentShape(Rectangle())
                     }
+                    .buttonStyle(.plain)
                     .listRowInsets(GuideStepCard.listRowInsets)
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
@@ -114,19 +121,19 @@ struct GettingStartedView: View {
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
-                        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                        .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
                         .contentShape(Rectangle())
                     }
+                    .buttonStyle(.plain)
                     .accessibilityIdentifier("guide.gettingStarted.continueGuidedMatch")
                 } footer: {
                     Text(String(localized: "When you're ready to pick armies and walk through setup at the table."))
                 }
             }
         }
-        .listStyle(.plain)
+        .floatingCardListStyle()
         .readableContentWidth()
         .navigationTitle(String(localized: "Getting Started"))
-        .playNavigationDestinations()
         .accessibilityIdentifier("guide.stepList")
     }
 
@@ -153,11 +160,12 @@ struct GettingStartedView: View {
                         destination: CombatPatrolMissionsLink(gameSystemId: gameSystem.id),
                         accessibilityId: "guide.combatPatrol.path.missions"
                     )
-                    TappableGuidePathStep(
+                    GuidePathInfoStep(
                         number: 3,
                         title: String(localized: "Guided Match"),
-                        detail: String(localized: "Tap Use Starter Matchup for built-in armies, or pick your patrol boxes."),
-                        destination: GuidedMatchLink(gameSystemId: .wh40k10eCp),
+                        detail: String(
+                            localized: "Use Continue to Guided Match below — then Use Starter Matchup."
+                        ),
                         accessibilityId: "guide.combatPatrol.path.guidedMatch"
                     )
                 }

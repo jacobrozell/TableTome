@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "armyId": "chaos-knights-combat-patrol",
+  "units": [
+    {
+      "id": "war-dog-karthon",
+      "name": "War Dog Karthon & Firegheist (Brigand)",
+      "keywords": [
+        "Vehicle",
+        "Walker",
+        "Chaos Knights"
+      ],
+      "modelCount": 1,
+      "move": "12\"",
+      "save": 3,
+      "health": 16,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "brigand-autocannon",
+          "name": "Brigand Autocannon",
+          "attacks": "4",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2",
+          "rangeInches": 48
+        },
+        {
+          "id": "brigand-melee",
+          "name": "Brigand Melee Weapon",
+          "attacks": "4",
+          "hit": 3,
+          "wound": 4,
+          "rend": 2,
+          "damage": "2"
+        }
+      ],
+      "abilities": [],
+      "notes": "Slaughter Talon — Ravening Onslaught custom mission."
+    },
+    {
+      "id": "war-dog-zarkys",
+      "name": "War Dog Zarkys & Helskarr (Stalker)",
+      "keywords": [
+        "Vehicle",
+        "Walker",
+        "Chaos Knights"
+      ],
+      "modelCount": 1,
+      "move": "12\"",
+      "save": 3,
+      "health": 16,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "daemonbreath-spear",
+          "name": "Daemonbreath Spear",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 7,
+          "rend": 3,
+          "damage": "D6",
+          "rangeInches": 36
+        },
+        {
+          "id": "reaper-chaintalon",
+          "name": "Reaper Chaintalon",
+          "attacks": "6",
+          "hit": 3,
+          "wound": 4,
+          "rend": 2,
+          "damage": "2"
+        }
+      ],
+      "abilities": []
+    }
+  ]
+}

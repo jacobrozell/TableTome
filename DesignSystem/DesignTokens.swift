@@ -12,6 +12,7 @@ public enum DesignTokens {
     public enum Radius {
         public static let sm: CGFloat = 8
         public static let md: CGFloat = 12
+        /// Default corner radius for `surfaceCard` and `accentHighlightCard`.
         public static let lg: CGFloat = 16
     }
 
@@ -30,7 +31,7 @@ public enum DesignTokens {
     public static let battleTrackerLandscapeSectionSpacing: CGFloat = 16
 
     /// Scroll content inset so the last rows clear the floating tab bar on iPhone.
-    public static let tabBarScrollBottomInset: CGFloat = 64
+    public static let tabBarScrollBottomInset: CGFloat = 104
 
     /// Extra scroll inset when the phase dock sits below the battle tracker scroll view.
     public static let battleTrackerPhaseDockScrollBottomInset: CGFloat = 8

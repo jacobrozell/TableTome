@@ -54,15 +54,18 @@ struct MatchHistoryListView: View {
                             )
                         )
                     } actions: {
-                        Button(activeGameGuidedMatchLabel) {
-                            learnNavigationCoordinator.openGuidedMatch(
-                                gameSystemId: activeGameGuidedMatchGameSystemId,
-                                opensBattleTab: PlayContinuationResolver.shouldOpenBattleTab(
-                                    gameSystemId: activeGameGuidedMatchGameSystemId
+                        MatchHistoryEmptyLaunchActions(
+                            options: shippedGuidedMatchOptions,
+                            activeGameSystemId: activeGameGuidedMatchGameSystemId,
+                            onLaunch: { gameSystemId in
+                                learnNavigationCoordinator.openGuidedMatch(
+                                    gameSystemId: gameSystemId,
+                                    opensBattleTab: PlayContinuationResolver.shouldOpenBattleTab(
+                                        gameSystemId: gameSystemId
+                                    )
                                 )
-                            )
-                        }
-                        .accessibilityIdentifier("matchHistory.openGuidedMatch")
+                            }
+                        )
                     }
                 }
             } else {
@@ -121,6 +124,18 @@ struct MatchHistoryListView: View {
         .refreshable { await viewModel.load() }
     }
 
+    private var shippedGuidedMatchOptions: [GuidedMatchLaunchOption] {
+        let candidates: [(GameSystemId, String)] = [
+            (.aosSpearhead, String(localized: "Open Spearhead Guided Match")),
+            (.wh40k11e, String(localized: "Open Warhammer 40,000 Guided Match")),
+            (.wh40k10eCp, String(localized: "Open Combat Patrol Guided Match"))
+        ]
+        return candidates.compactMap { id, label in
+            guard ReleaseSurface.showsGuidedMatch(for: id.rawValue) else { return nil }
+            return GuidedMatchLaunchOption(gameSystemId: id.rawValue, label: label)
+        }
+    }
+
     private var activeGameGuidedMatchGameSystemId: String {
         let activeId = ActiveGameContextStore.gameSystemId
         if ReleaseSurface.showsGuidedMatch(for: activeId) {
@@ -128,10 +143,56 @@ struct MatchHistoryListView: View {
         }
         return OnboardingCompletion.spearheadGameSystemId
     }
+}
 
-    private var activeGameGuidedMatchLabel: String {
-        let gameLabel = GameSystemRulesLabels.displayName(gameSystemId: activeGameGuidedMatchGameSystemId)
-        return String(localized: "Open \(gameLabel) Guided Match")
+private struct MatchHistoryEmptyLaunchActions: View {
+    let options: [MatchHistoryListView.GuidedMatchLaunchOption]
+    let activeGameSystemId: String
+    let onLaunch: (String) -> Void
+
+    var body: some View {
+        VStack(spacing: DesignTokens.Spacing.sm) {
+            ForEach(options) { option in
+                MatchHistoryLaunchButton(
+                    label: option.label,
+                    gameSystemId: option.gameSystemId,
+                    isPrimary: option.gameSystemId == activeGameSystemId,
+                    onLaunch: onLaunch
+                )
+            }
+        }
+    }
+}
+
+private struct MatchHistoryLaunchButton: View {
+    let label: String
+    let gameSystemId: String
+    let isPrimary: Bool
+    let onLaunch: (String) -> Void
+
+    var body: some View {
+        Group {
+            if isPrimary {
+                Button(label) {
+                    onLaunch(gameSystemId)
+                }
+                .buttonStyle(.borderedProminent)
+            } else {
+                Button(label) {
+                    onLaunch(gameSystemId)
+                }
+                .buttonStyle(.bordered)
+            }
+        }
+        .accessibilityIdentifier("matchHistory.openGuidedMatch.\(gameSystemId)")
+    }
+}
+
+extension MatchHistoryListView {
+    struct GuidedMatchLaunchOption: Identifiable {
+        let gameSystemId: String
+        let label: String
+        var id: String { gameSystemId }
     }
 }
 

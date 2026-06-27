@@ -32,6 +32,15 @@ extension BattlePhaseTrackerView {
     }
 
     @ViewBuilder
+    var roundOneMilestoneSection: some View {
+        if FirstSessionStore.shouldShowRoundOneMilestone(isEmbeddedInGuidedMatch: isEmbeddedInGuidedMatch) {
+            RoundOneMilestoneBanner {
+                FirstSessionStore.markRoundOneMilestoneSeen()
+            }
+        }
+    }
+
+    @ViewBuilder
     var modelsMilestoneSection: some View {
         if !isEmbeddedInGuidedMatch, FirstSessionStore.shouldShowModelsNudge() {
             NewPlayerMilestoneBanner {
@@ -42,6 +51,7 @@ extension BattlePhaseTrackerView {
 
     @ViewBuilder
     var tabHintSection: some View {
+        roundOneMilestoneSection
         modelsMilestoneSection
         if showsTabHint {
             BattleTrackerTabHintBanner(suggestedTab: suggestedSectionTab, gameSystemId: viewModel.gameSystemId) {

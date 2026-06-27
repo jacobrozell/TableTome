@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "armyId": "leagues-of-votann-combat-patrol",
+  "units": [
+    {
+      "id": "kahl-warspeke",
+      "name": "Kâhl Warspeke",
+      "keywords": [
+        "Character",
+        "Infantry",
+        "Leagues of Votann"
+      ],
+      "modelCount": 1,
+      "move": "6\"",
+      "save": 2,
+      "health": 5,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "autocannon",
+          "name": "Autocannon",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2",
+          "rangeInches": 48
+        },
+        {
+          "id": "mass-hammer",
+          "name": "Mass Hammer",
+          "attacks": "3",
+          "hit": 2,
+          "wound": 3,
+          "rend": 2,
+          "damage": "2"
+        }
+      ],
+      "abilities": [],
+      "invulnerableSave": 4
+    },
+    {
+      "id": "hearthkyn-warriors",
+      "name": "Hearthkyn Warriors (Patrol Squads)",
+      "keywords": [
+        "Battleline",
+        "Infantry",
+        "Leagues of Votann"
+      ],
+      "modelCount": 10,
+      "move": "6\"",
+      "save": 4,
+      "health": 1,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "autoch-pattern-boltgun",
+          "name": "Autoch-pattern Boltgun",
+          "attacks": "1",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 24
+        },
+        {
+          "id": "pan-spectral-scanner",
+          "name": "Pan-spectral Scanner",
+          "attacks": "1",
+          "hit": 4,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1",
+          "rangeInches": 18
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "hernkyn-pioneers",
+      "name": "Hernkyn Pioneers",
+      "keywords": [
+        "Mounted",
+        "Leagues of Votann"
+      ],
+      "modelCount": 3,
+      "move": "12\"",
+      "save": 4,
+      "health": 3,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "bolt-shotgun",
+          "name": "Bolt Shotgun",
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 12
+        },
+        {
+          "id": "hylas-rotary-cannon",
+          "name": "Hylas Rotary Cannon",
+          "attacks": "6",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 24
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "cthonian-beserks",
+      "name": "Cthonian Beserks",
+      "keywords": [
+        "Infantry",
+        "Leagues of Votann"
+      ],
+      "modelCount": 5,
+      "move": "6\"",
+      "save": 4,
+      "health": 2,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "heavy-plasma-axe",
+          "name": "Heavy Plasma Axe",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 2,
+          "damage": "2"
+        }
+      ],
+      "abilities": []
+    }
+  ]
+}

@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "armyId": "genestealer-cults-combat-patrol",
+  "units": [
+    {
+      "id": "magus-veridielle",
+      "name": "Magus Veridielle",
+      "keywords": [
+        "Character",
+        "Infantry",
+        "Psyker",
+        "Genestealer Cults"
+      ],
+      "modelCount": 1,
+      "move": "6\"",
+      "save": 5,
+      "health": 4,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "force-stave",
+          "name": "Force Stave",
+          "attacks": "3",
+          "hit": 3,
+          "wound": 3,
+          "rend": 2,
+          "damage": "D3"
+        },
+        {
+          "id": "autopistol",
+          "name": "Autopistol",
+          "attacks": "1",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 12
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "neophyte-hybrids",
+      "name": "Neophyte Hybrids",
+      "keywords": [
+        "Battleline",
+        "Infantry",
+        "Genestealer Cults"
+      ],
+      "modelCount": 10,
+      "move": "6\"",
+      "save": 5,
+      "health": 1,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "autogun",
+          "name": "Autogun",
+          "attacks": "1",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 24
+        },
+        {
+          "id": "mining-laser",
+          "name": "Mining Laser",
+          "attacks": "1",
+          "hit": 4,
+          "wound": 4,
+          "rend": 2,
+          "damage": "D6",
+          "rangeInches": 24
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "acolyte-hybrids",
+      "name": "Acolyte Hybrids",
+      "keywords": [
+        "Infantry",
+        "Genestealer Cults"
+      ],
+      "modelCount": 5,
+      "move": "7\"",
+      "save": 5,
+      "health": 1,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "autopistol-knife",
+          "name": "Autopistol and Cult Knife",
+          "attacks": "3",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "aberrants",
+      "name": "Aberrants",
+      "keywords": [
+        "Infantry",
+        "Genestealer Cults"
+      ],
+      "modelCount": 4,
+      "move": "6\"",
+      "save": 4,
+      "health": 4,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "heavy-improvised-weapon",
+          "name": "Heavy Improvised Weapon",
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "2"
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "goliath-rockgrinder",
+      "name": "Goliath Rockgrinder",
+      "keywords": [
+        "Vehicle",
+        "Genestealer Cults"
+      ],
+      "modelCount": 1,
+      "move": "12\"",
+      "save": 3,
+      "health": 12,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "heavy-seismic-cannon",
+          "name": "Heavy Seismic Cannon",
+          "attacks": "D3",
+          "hit": 4,
+          "wound": 7,
+          "rend": 2,
+          "damage": "D6",
+          "rangeInches": 24
+        },
+        {
+          "id": "drill",
+          "name": "Drill",
+          "attacks": "4",
+          "hit": 3,
+          "wound": 4,
+          "rend": 2,
+          "damage": "2"
+        }
+      ],
+      "abilities": []
+    }
+  ]
+}

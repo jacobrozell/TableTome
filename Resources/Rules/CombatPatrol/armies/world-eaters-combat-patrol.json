@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "armyId": "world-eaters-combat-patrol",
+  "units": [
+    {
+      "id": "karagar",
+      "name": "Karagar the Blooded",
+      "keywords": [
+        "Character",
+        "Infantry",
+        "World Eaters"
+      ],
+      "modelCount": 1,
+      "move": "6\"",
+      "save": 3,
+      "health": 6,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "chainaxes",
+          "name": "Chainaxes",
+          "attacks": "6",
+          "hit": 2,
+          "wound": 3,
+          "rend": 1,
+          "damage": "1"
+        },
+        {
+          "id": "bolt-pistol",
+          "name": "Bolt Pistol",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 12
+        }
+      ],
+      "abilities": [],
+      "invulnerableSave": 4
+    },
+    {
+      "id": "khorne-berzerkers",
+      "name": "2× Khorne Berzerkers (10 each)",
+      "keywords": [
+        "Battleline",
+        "Infantry",
+        "World Eaters"
+      ],
+      "modelCount": 20,
+      "move": "7\"",
+      "save": 3,
+      "health": 2,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "chainaxe",
+          "name": "Chainaxe",
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        },
+        {
+          "id": "bolt-pistol",
+          "name": "Bolt Pistol",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 12
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "jakhals",
+      "name": "Jakhals",
+      "keywords": [
+        "Infantry",
+        "World Eaters"
+      ],
+      "modelCount": 10,
+      "move": "7\"",
+      "save": 6,
+      "health": 1,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "chainblades",
+          "name": "Chainblades",
+          "attacks": "2",
+          "hit": 4,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": []
+    }
+  ]
+}

@@ -55,17 +55,17 @@ extension BattlePhaseTrackerViewModel {
         persist()
     }
 
-    static func gotchas(for armyId: String, gameSystemId: GameSystemId) -> [SpearheadGotcha] {
-        gotchas(for: armyId, gameSystemId: gameSystemId.rawValue)
+    static func gotchas(for armyId: String, gameSystemId: GameSystemId, army: SpearheadArmy? = nil) -> [SpearheadGotcha] {
+        gotchas(for: armyId, gameSystemId: gameSystemId.rawValue, army: army)
     }
 
-    static func gotchas(for armyId: String, gameSystemId: String) -> [SpearheadGotcha] {
+    static func gotchas(for armyId: String, gameSystemId: String, army: SpearheadArmy? = nil) -> [SpearheadGotcha] {
         let context = GameSystemPlayContext.context(for: gameSystemId)
         if context.isSpearhead {
             return SpearheadGotchaCatalog.gotchas(for: armyId)
         }
         if context.isCombatPatrol {
-            return CombatPatrolGotchaCatalog.gotchas(for: armyId)
+            return CombatPatrolGotchaCatalog.gotchas(for: armyId, army: army)
         }
         return []
     }

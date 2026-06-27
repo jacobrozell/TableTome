@@ -10,9 +10,11 @@ struct RulesGlossaryBrowseLink: Hashable {
     var highlightedEntryId: String?
 }
 
-struct GlossaryEntryLink: Hashable {
+struct GlossaryEntryLink: Hashable, Identifiable {
     let gameSystemId: String
     let entryId: String
+
+    var id: String { "\(gameSystemId)-\(entryId)" }
 }
 
 struct BattleTacticsReferenceLink: Hashable {

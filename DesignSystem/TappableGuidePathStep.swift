@@ -39,6 +39,8 @@ struct TappableGuidePathStep<D: Hashable>: View {
         }
         .navigationLinkIndicatorVisibility(.hidden)
         .buttonStyle(.plain)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
         .accessibilityIdentifier(accessibilityId)
     }
 }

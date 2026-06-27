@@ -39,6 +39,28 @@ public enum RulesGlossaryCatalog {
         return matched.sorted { $0.term.localizedCaseInsensitiveCompare($1.term) == .orderedAscending }
     }
 
+    public static func linkablePhrases(for entry: RulesGlossaryEntry, gameSystemId: String) -> [String] {
+        var phrases = [entry.term]
+        let context = GameSystemPlayContext.context(for: gameSystemId)
+        if context.isSpearhead {
+            phrases.append(contentsOf: SpearheadRulesGlossary.aliasPhrases(for: entry.id))
+        }
+        if context.isCombatPatrol {
+            phrases.append(contentsOf: CombatPatrolRulesGlossary.aliasPhrases(for: entry.id))
+        }
+        var seen = Set<String>()
+        return phrases
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+            .sorted { $0.count > $1.count }
+            .filter { phrase in
+                let key = phrase.lowercased()
+                guard !seen.contains(key) else { return false }
+                seen.insert(key)
+                return true
+            }
+    }
+
     private static let wh40k11eAliasPatterns: [String: String] = [
         "strategic reserves": "glossary-strategic-reserves-11e",
         "deep strike": "glossary-deep-strike-11e",

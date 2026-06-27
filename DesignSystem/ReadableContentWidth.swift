@@ -45,6 +45,17 @@ public extension View {
         }
     }
 
+    /// Bar material behind status / hub chrome rows, bleeding to the horizontal screen edges.
+    func barChromeBackground(
+        horizontalPadding: CGFloat = DesignTokens.Spacing.md,
+        verticalPadding: CGFloat = DesignTokens.Spacing.sm
+    ) -> some View {
+        padding(.horizontal, horizontalPadding)
+            .padding(.vertical, verticalPadding)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(.bar, ignoresSafeAreaEdges: .horizontal)
+    }
+
     /// Breathing room above the phase dock when it is pinned below scroll content.
     func battleTrackerPhaseDockScrollInset() -> some View {
         contentMargins(.bottom, DesignTokens.battleTrackerPhaseDockScrollBottomInset, for: .scrollContent)

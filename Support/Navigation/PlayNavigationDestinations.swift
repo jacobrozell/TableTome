@@ -2,6 +2,8 @@ import SwiftUI
 import TabletomeDomain
 
 extension View {
+    /// Register Play-tab deep links once on the `NavigationStack` root (`HomeView`, Rules tab).
+    /// Pair with `glossaryEntryNavigation()` for glossary bottom sheets. Do not apply again on pushed screens.
     func playNavigationDestinations() -> some View {
         modifier(PlayNavigationDestinationsModifier())
     }
@@ -44,9 +46,6 @@ private struct PlayNavigationDestinationsModifier: ViewModifier {
             }
             .navigationDestination(for: RulesGlossaryBrowseLink.self) { link in
                 RulesGlossaryBrowseDestinationView(link: link)
-            }
-            .navigationDestination(for: GlossaryEntryLink.self) { link in
-                GlossaryEntryDestinationView(link: link)
             }
             .navigationDestination(for: BattleTacticsReferenceLink.self) { link in
                 BattleTacticsReferenceDestinationView(gameSystemId: link.gameSystemId)

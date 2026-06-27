@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "armyId": "imperial-knights-combat-patrol",
+  "units": [
+    {
+      "id": "armiger-dantos",
+      "name": "Armiger Dantos (Warglaive or Helverin)",
+      "keywords": [
+        "Vehicle",
+        "Walker",
+        "Imperial Knights"
+      ],
+      "modelCount": 1,
+      "move": "12\"",
+      "save": 3,
+      "health": 14,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "reaper-chain-cleaver",
+          "name": "Reaper Chain-cleaver",
+          "attacks": "8",
+          "hit": 3,
+          "wound": 4,
+          "rend": 2,
+          "damage": "2"
+        },
+        {
+          "id": "thermal-spear",
+          "name": "Thermal Spear",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 8,
+          "rend": 4,
+          "damage": "D6",
+          "rangeInches": 36
+        }
+      ],
+      "abilities": [],
+      "notes": "Armiger Trailblazers — custom mission Gouge a Foothold."
+    },
+    {
+      "id": "armiger-thauvir",
+      "name": "Armiger Thauvir (Warglaive or Helverin)",
+      "keywords": [
+        "Vehicle",
+        "Walker",
+        "Imperial Knights"
+      ],
+      "modelCount": 1,
+      "move": "12\"",
+      "save": 3,
+      "health": 14,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "armiger-autocannon",
+          "name": "Armiger Autocannon",
+          "attacks": "4",
+          "hit": 3,
+          "wound": 3,
+          "rend": 1,
+          "damage": "2",
+          "rangeInches": 48
+        },
+        {
+          "id": "meltagun",
+          "name": "Meltagun",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 8,
+          "rend": 4,
+          "damage": "D6",
+          "rangeInches": 12
+        }
+      ],
+      "abilities": []
+    }
+  ]
+}

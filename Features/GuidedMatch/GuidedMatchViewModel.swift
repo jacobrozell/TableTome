@@ -119,31 +119,47 @@ final class GuidedMatchViewModel: ObservableObject {
     }
 
     func setSelectedMission(_ missionId: String) {
-        matchState.selectedMissionId = missionId
-        persist()
-        syncAutoCompletions()
+        mutateMatchState {
+            $0.selectedMissionId = missionId
+        }
         recordMissionSelected(missionId)
     }
 
     func setFirstTurn(isPlayerOne: Bool?) {
-        matchState.firstTurnIsPlayerOne = isPlayerOne
-        persist()
-        syncAutoCompletions()
+        mutateMatchState {
+            $0.firstTurnIsPlayerOne = isPlayerOne
+        }
     }
 
     func setSecondaryObjective(playerIsOne: Bool, objectiveId: String) {
-        if playerIsOne {
-            matchState.playerOne.secondaryObjectiveId = objectiveId
-        } else {
-            matchState.playerTwo.secondaryObjectiveId = objectiveId
+        mutateMatchState {
+            if playerIsOne {
+                $0.playerOne.secondaryObjectiveId = objectiveId
+            } else {
+                $0.playerTwo.secondaryObjectiveId = objectiveId
+            }
         }
-        persist()
-        syncAutoCompletions()
     }
 
     func secondaryObjective(for player: PlayerArmySelection) -> ArmyRuleOption? {
         guard let army = army(factionId: player.factionId, armyId: player.armyId) else { return nil }
         return army.secondaryObjectives.first { $0.id == player.secondaryObjectiveId }
+    }
+
+    func battleTacticDeckName(for player: PlayerArmySelection) -> String? {
+        guard gameSystemId == .aosSpearhead,
+              let army = army(factionId: player.factionId, armyId: player.armyId) else { return nil }
+        return army.name
+    }
+
+    var eitherArmyHasSecondaryObjectives: Bool {
+        playerHasSecondaryObjectives(matchState.playerOne)
+            || playerHasSecondaryObjectives(matchState.playerTwo)
+    }
+
+    private func playerHasSecondaryObjectives(_ player: PlayerArmySelection) -> Bool {
+        guard let army = army(factionId: player.factionId, armyId: player.armyId) else { return false }
+        return !army.secondaryObjectives.isEmpty
     }
 
     func selectedMission(in catalog: SpearheadCatalog) -> CombatPatrolMission? {
@@ -161,8 +177,9 @@ final class GuidedMatchViewModel: ObservableObject {
         )
         let merged = matchState.completedStepIds.union(auto)
         guard merged != matchState.completedStepIds else { return }
-        matchState.completedStepIds = merged
-        persist()
+        mutateMatchState(persist: true, syncCompletions: false) {
+            $0.completedStepIds = merged
+        }
     }
 
     func updatePlayerOne(_ selection: PlayerArmySelection) {
@@ -172,9 +189,9 @@ final class GuidedMatchViewModel: ObservableObject {
             updated.enhancementId = nil
             updated.secondaryObjectiveId = nil
         }
-        matchState.playerOne = updated
-        persist()
-        syncAutoCompletions()
+        mutateMatchState {
+            $0.playerOne = updated
+        }
     }
 
     func updatePlayerTwo(_ selection: PlayerArmySelection) {
@@ -184,9 +201,9 @@ final class GuidedMatchViewModel: ObservableObject {
             updated.enhancementId = nil
             updated.secondaryObjectiveId = nil
         }
-        matchState.playerTwo = updated
-        persist()
-        syncAutoCompletions()
+        mutateMatchState {
+            $0.playerTwo = updated
+        }
     }
 
     func reloadFromStore() {
@@ -195,40 +212,46 @@ final class GuidedMatchViewModel: ObservableObject {
     }
 
     func setAttacker(isPlayerOne: Bool?) {
-        matchState.attackerIsPlayerOne = isPlayerOne
-        persist()
-        syncAutoCompletions()
+        let context = GameSystemPlayContext.context(for: gameSystemId)
+        mutateMatchState {
+            $0.attackerIsPlayerOne = isPlayerOne
+            if context.isWh40k11e {
+                $0.firstTurnIsPlayerOne = isPlayerOne
+            }
+        }
     }
 
     func setRegimentAbility(playerIsOne: Bool, abilityId: String) {
-        if playerIsOne {
-            matchState.playerOne.regimentAbilityId = abilityId
-        } else {
-            matchState.playerTwo.regimentAbilityId = abilityId
+        mutateMatchState {
+            if playerIsOne {
+                $0.playerOne.regimentAbilityId = abilityId
+            } else {
+                $0.playerTwo.regimentAbilityId = abilityId
+            }
         }
-        persist()
-        syncAutoCompletions()
     }
 
     func setEnhancement(playerIsOne: Bool, enhancementId: String) {
-        if playerIsOne {
-            matchState.playerOne.enhancementId = enhancementId
-        } else {
-            matchState.playerTwo.enhancementId = enhancementId
+        mutateMatchState {
+            if playerIsOne {
+                $0.playerOne.enhancementId = enhancementId
+            } else {
+                $0.playerTwo.enhancementId = enhancementId
+            }
         }
-        persist()
-        syncAutoCompletions()
     }
 
     func setStepComplete(_ stepId: String, complete: Bool) {
-        if complete {
-            matchState.completedStepIds.insert(stepId)
-            recordSetupStepComplete(stepId)
-        } else {
-            matchState.completedStepIds.remove(stepId)
+        mutateMatchState {
+            if complete {
+                $0.completedStepIds.insert(stepId)
+            } else {
+                $0.completedStepIds.remove(stepId)
+            }
         }
-        persist()
-        syncAutoCompletions()
+        if complete {
+            recordSetupStepComplete(stepId)
+        }
     }
 
     func resetMatch() {
@@ -306,19 +329,25 @@ final class GuidedMatchViewModel: ObservableObject {
     }
 
     func applyStarterMatchup() {
-        featuredArmies.applyStarterMatchup(to: &matchState)
         BattleTrackerStore.reset(gameSystemId: gameSystemId)
+        let context = GameSystemPlayContext.context(for: gameSystemId)
+        mutateMatchState(persist: true, syncCompletions: false) {
+            featuredArmies.applyStarterMatchup(to: &$0)
+            $0.attackerIsPlayerOne = true
+            if context.isWh40k11e || context.isCombatPatrol {
+                $0.firstTurnIsPlayerOne = true
+            }
+        }
         applyRecommendedLoadouts()
-        persist()
         syncAutoCompletions()
     }
 
     func applyRecommendedLoadouts() {
         guard let catalog else { return }
-        applyRecommendedLoadout(for: &matchState.playerOne, catalog: catalog)
-        applyRecommendedLoadout(for: &matchState.playerTwo, catalog: catalog)
-        persist()
-        syncAutoCompletions()
+        mutateMatchState {
+            applyRecommendedLoadout(for: &$0.playerOne, catalog: catalog)
+            applyRecommendedLoadout(for: &$0.playerTwo, catalog: catalog)
+        }
     }
 
     /// Skips manual setup for simulator automation (`-open_battle_tracker`).
@@ -389,5 +418,22 @@ final class GuidedMatchViewModel: ObservableObject {
 
     private func persist() {
         MatchSetupStore.save(matchState, gameSystemId: gameSystemId)
+    }
+
+    /// Reassigns `matchState` so `@Published` emits and setup UI refreshes after in-place edits.
+    private func mutateMatchState(
+        persist shouldPersist: Bool = true,
+        syncCompletions shouldSyncCompletions: Bool = true,
+        _ body: (inout GuidedMatchState) -> Void
+    ) {
+        var state = matchState
+        body(&state)
+        matchState = state
+        if shouldPersist {
+            persist()
+        }
+        if shouldSyncCompletions {
+            syncAutoCompletions()
+        }
     }
 }

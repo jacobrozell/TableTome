@@ -5,6 +5,12 @@ struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel
     @EnvironmentObject private var dependencies: AppDependencies
     @State private var showsMatchHistoryToolbar = false
+    @State private var firstSessionRevision = 0
+
+    private var showsAllGamesList: Bool {
+        _ = firstSessionRevision
+        return !FirstSessionStore.shouldHideAllGamesList()
+    }
 
     init(viewModel: HomeViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -31,38 +37,32 @@ struct HomeView: View {
                         if let continuation = PlayContinuationResolver.current() {
                             Section {
                                 HomeContinueCard(continuation: continuation)
+                                    .listHeroCardRow()
                             }
-                            .listRowInsets(EdgeInsets())
-                            .listRowBackground(Color.clear)
                         } else {
                             Section {
-                                HomeWelcomeCard()
-                            }
-                            .listRowInsets(EdgeInsets())
-                            .listRowBackground(Color.clear)
-
-                            Section {
                                 HomeNewPlayerChooserCard()
+                                    .listHeroCardRow()
                             }
-                            .listRowInsets(EdgeInsets())
-                            .listRowBackground(Color.clear)
                         }
                     }
 
-                    Section {
-                        ForEach(viewModel.gameSystems) { system in
-                            NavigationLink(value: system.id) {
-                                gameSystemRow(system)
+                    if showsAllGamesList {
+                        Section {
+                            ForEach(viewModel.gameSystems) { system in
+                                NavigationLink(value: system.id) {
+                                    gameSystemRow(system)
+                                }
+                                .accessibilityIdentifier("home.gameSystem.\(system.id)")
                             }
-                            .accessibilityIdentifier("home.gameSystem.\(system.id)")
+                        } header: {
+                            Text(String(localized: "All games"))
+                        } footer: {
+                            Text(String(localized: "Not sure which to pick? Start with the chooser above."))
                         }
-                    } header: {
-                        Text(String(localized: "All games"))
-                    } footer: {
-                        Text(String(localized: "Not sure which to pick? Start with the chooser above."))
                     }
                 }
-                .listStyle(.insetGrouped)
+                .floatingCardListStyle()
                 .tabBarScrollInset()
                 .accessibilityIdentifier("home.gameSystemList")
             }
@@ -72,6 +72,7 @@ struct HomeView: View {
             GameSystemDetailView(gameSystemId: systemId)
         }
         .playNavigationDestinations()
+        .glossaryEntryNavigation()
         .toolbar {
             if ReleaseSurface.showsMatchHistory, showsMatchHistoryToolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -89,6 +90,9 @@ struct HomeView: View {
                 repository: dependencies.matchHistoryRepository
             )
         }
+        .onReceive(NotificationCenter.default.publisher(for: .firstSessionStoreDidChange)) { _ in
+            firstSessionRevision += 1
+        }
         .refreshable { await viewModel.load() }
     }
 
@@ -105,7 +109,9 @@ struct HomeView: View {
                 HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
                     Text(system.name)
                         .font(.headline)
-                    if ReleaseSurface.showsNewEditionBadge(for: system.id) {
+                    if system.id == GameSystemId.wh40k10eCp.rawValue {
+                        GuideBadge(style: .custom(String(localized: "10th Edition")))
+                    } else if ReleaseSurface.showsNewEditionBadge(for: system.id) {
                         NewEditionBadge()
                     }
                 }
@@ -130,7 +136,9 @@ struct HomeView: View {
 
     private func homeRowAccessibilityLabel(for system: GameSystem) -> String {
         var parts = [system.name]
-        if ReleaseSurface.showsNewEditionBadge(for: system.id) {
+        if system.id == GameSystemId.wh40k10eCp.rawValue {
+            parts.append(String(localized: "10th Edition"))
+        } else if ReleaseSurface.showsNewEditionBadge(for: system.id) {
             parts.append(String(localized: "New edition"))
         }
         parts.append(contentsOf: [newcomerTagline(for: system), system.edition])
@@ -139,13 +147,13 @@ struct HomeView: View {
 
     private func newcomerTagline(for system: GameSystem) -> String {
         if system.id == "aos-spearhead" {
-            return String(localized: "Fantasy starter box — best first wargame")
+            return String(localized: "Fantasy starter box — box says Spearhead")
         }
         if system.id == "wh40k-11e" {
             return String(localized: "11th Edition — Armageddon box or your own lists")
         }
         if system.id == "wh40k-10e-cp" {
-            return String(localized: "40k starter box — guided first battles")
+            return String(localized: "10th Edition patrol — box says Combat Patrol")
         }
         if system.id == "sc-tmg" {
             return String(localized: "StarCraft on the tabletop — Founders Edition")
@@ -154,11 +162,17 @@ struct HomeView: View {
     }
 
     private func editionFootnote(for system: GameSystem) -> String? {
+        if system.id == "aos-spearhead" {
+            return String(localized: "Starter-box format — realm boards and battle tactics from your set")
+        }
         if system.id == "wh40k-10e-cp" {
             return String(localized: "Uses 10th Edition Combat Patrol rules")
         }
         if system.id == "wh40k-11e" {
             return String(localized: "Free core rules + Chapter Approved missions")
+        }
+        if system.id == "sc-tmg" {
+            return String(localized: "Alternating activations — supply and objective scoring")
         }
         return nil
     }

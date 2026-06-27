@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "armyId": "death-guard-combat-patrol",
+  "units": [
+    {
+      "id": "typhus",
+      "name": "Typhus",
+      "keywords": [
+        "Character",
+        "Infantry",
+        "Psyker",
+        "Death Guard"
+      ],
+      "modelCount": 1,
+      "move": "5\"",
+      "save": 2,
+      "health": 8,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "manreaper",
+          "name": "Manreaper",
+          "attacks": "6",
+          "hit": 2,
+          "wound": 3,
+          "rend": 2,
+          "damage": "2"
+        },
+        {
+          "id": "plague-winds",
+          "name": "Plague Wind",
+          "attacks": "D6",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 18
+        }
+      ],
+      "abilities": [],
+      "invulnerableSave": 4
+    },
+    {
+      "id": "foul-blightspawn",
+      "name": "Foul Blightspawn Folgoth Grelch",
+      "keywords": [
+        "Character",
+        "Infantry",
+        "Death Guard"
+      ],
+      "modelCount": 1,
+      "move": "5\"",
+      "save": 3,
+      "health": 5,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "plague-sprayer",
+          "name": "Plague Sprayer",
+          "attacks": "D6",
+          "hit": 3,
+          "wound": 5,
+          "rend": 1,
+          "damage": "1",
+          "rangeInches": 12
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "plague-marines",
+      "name": "Plague Marines",
+      "keywords": [
+        "Battleline",
+        "Infantry",
+        "Death Guard"
+      ],
+      "modelCount": 7,
+      "move": "5\"",
+      "save": 3,
+      "health": 2,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "boltgun",
+          "name": "Boltgun",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 24
+        },
+        {
+          "id": "plague-knife",
+          "name": "Plague Knife",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "poxwalkers",
+      "name": "3× Poxwalkers (10 models each)",
+      "keywords": [
+        "Infantry",
+        "Death Guard"
+      ],
+      "modelCount": 30,
+      "move": "5\"",
+      "save": 7,
+      "health": 1,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "improvised-weapon",
+          "name": "Improvised Weapon",
+          "attacks": "2",
+          "hit": 5,
+          "wound": 5,
+          "rend": 0,
+          "damage": "1"
+        }
+      ],
+      "abilities": []
+    }
+  ]
+}

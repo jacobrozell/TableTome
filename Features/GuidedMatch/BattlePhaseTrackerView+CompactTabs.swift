@@ -54,8 +54,10 @@ extension BattlePhaseTrackerView {
             if !showsDedicatedCombatTab {
                 shootingPhaseHelper
             }
+            phaseActionNudgeSection
             turnHandoffSection
             scoringReminderSection
+            heroRoundOneSection
             victoryPointsSection
             roundOpenerSection
             if !showsSlimTurnTab {

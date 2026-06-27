@@ -8,6 +8,7 @@ struct SampleTurnWalkthroughView: View {
     @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
     @State private var step = 0
     @State private var showsCombatPrimer = true
+    @State private var showsWargamePrimer = !NewPlayerTipsStore.hasDismissedWargamePrimer
 
     private struct WalkthroughStep {
         let title: String
@@ -71,6 +72,12 @@ struct SampleTurnWalkthroughView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                if showsWargamePrimer {
+                    WargamePrimerCard {
+                        NewPlayerTipsStore.dismissWargamePrimer()
+                        showsWargamePrimer = false
+                    }
+                }
                 header
                 phaseStrip
                 stepCard
@@ -216,7 +223,9 @@ struct SampleTurnWalkthroughView: View {
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
 
-                    NavigationLink(value: GuidedMatchLink(gameSystemId: .aosSpearhead)) {
+                    Button {
+                        learnNavigationCoordinator.openGuidedMatch(gameSystemId: GameSystemId.aosSpearhead.rawValue)
+                    } label: {
                         Label(String(localized: "Open Guided Match"), systemImage: "flag.checkered")
                             .font(.headline)
                             .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)

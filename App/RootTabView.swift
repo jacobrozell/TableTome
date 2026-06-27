@@ -20,10 +20,21 @@ struct RootTabView: View {
     @State private var showsOnboarding = false
     @State private var selectedTab: AppTab = .learn
     @State private var learnPath = NavigationPath()
+    @State private var firstSessionRevision = 0
+
+    private var emphasizePlayTab: Bool {
+        _ = firstSessionRevision
+        return FirstSessionStore.shouldEmphasizePlayTab()
+    }
+
+    private var showsHobbyTabs: Bool {
+        _ = firstSessionRevision
+        return !FirstSessionStore.shouldHideHobbyTabs()
+    }
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            if ReleaseSurface.showsBenchTab {
+            if ReleaseSurface.showsBenchTab, showsHobbyTabs {
                 BenchTab()
                     .tabItem {
                         TabBarItemLabel(
@@ -36,7 +47,7 @@ struct RootTabView: View {
                     .tag(AppTab.bench)
             }
 
-            if ReleaseSurface.showsMusterTab {
+            if ReleaseSurface.showsMusterTab, showsHobbyTabs {
                 MusterTab()
                     .tabItem {
                         TabBarItemLabel(
@@ -49,39 +60,9 @@ struct RootTabView: View {
                     .tag(AppTab.muster)
             }
 
-            NavigationStack(path: $learnPath) {
-                HomeView(viewModel: dependencies.makeHomeViewModel())
-            }
-            .tabItem {
-                TabBarItemLabel(
-                    title: String(localized: "Play"),
-                    systemImage: "play.circle.fill",
-                    identifier: "tab.play"
-                )
-            }
-            .tag(AppTab.learn)
+            playTab
 
-            NavigationStack {
-                Group {
-                    if ReleaseSurface.showsRulesAssistant {
-                        AppSearchView(viewModel: dependencies.makeAppSearchViewModel())
-                    } else {
-                        RulesReferenceView(viewModel: dependencies.makeRulesReferenceViewModel())
-                    }
-                }
-                .playNavigationDestinations()
-            }
-            .tabItem {
-                TabBarItemLabel(
-                    title: String(localized: "Rules"),
-                    systemImage: ReleaseSurface.showsRulesAssistant ? "magnifyingglass" : "doc.text.fill",
-                    identifier: ReleaseSurface.showsRulesAssistant ? "tab.rulesSearch" : "tab.rules",
-                    accessibilityLabel: ReleaseSurface.showsRulesAssistant
-                        ? String(localized: "Rules Search, look up rules for your game")
-                        : String(localized: "Rules, browse reference for your game")
-                )
-            }
-            .tag(AppTab.search)
+            rulesTab
 
             NavigationStack {
                 SettingsView()
@@ -139,13 +120,72 @@ struct RootTabView: View {
                 tabBarChrome.isHidden = false
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: .firstSessionStoreDidChange)) { _ in
+            firstSessionRevision += 1
+            if !showsHobbyTabs, selectedTab == .bench || selectedTab == .muster {
+                selectedTab = .learn
+            }
+        }
         .bannerInset()
+    }
+
+    private var playTabAccessibilityLabel: String {
+        emphasizePlayTab
+            ? String(localized: "Play, Start here — pick your game")
+            : String(localized: "Play")
+    }
+
+    @ViewBuilder
+    private var playTab: some View {
+        let stack = NavigationStack(path: $learnPath) {
+            HomeView(viewModel: dependencies.makeHomeViewModel())
+        }
+        .tabItem {
+            TabBarItemLabel(
+                title: String(localized: "Play"),
+                systemImage: "play.circle.fill",
+                identifier: "tab.play",
+                accessibilityLabel: playTabAccessibilityLabel
+            )
+        }
+        .tag(AppTab.learn)
+
+        if emphasizePlayTab {
+            stack.badge(String(localized: "Start"))
+        } else {
+            stack
+        }
+    }
+
+    private var rulesTab: some View {
+        NavigationStack {
+            Group {
+                if ReleaseSurface.showsRulesAssistant {
+                    AppSearchView(viewModel: dependencies.makeAppSearchViewModel())
+                } else {
+                    RulesReferenceView(viewModel: dependencies.makeRulesReferenceViewModel())
+                }
+            }
+            .playNavigationDestinations()
+            .glossaryEntryNavigation()
+        }
+        .tabItem {
+            TabBarItemLabel(
+                title: String(localized: "Rules"),
+                systemImage: ReleaseSurface.showsRulesAssistant ? "magnifyingglass" : "doc.text.fill",
+                identifier: ReleaseSurface.showsRulesAssistant ? "tab.rulesSearch" : "tab.rules",
+                accessibilityLabel: ReleaseSurface.showsRulesAssistant
+                    ? String(localized: "Rules Search, look up rules for your game")
+                    : String(localized: "Rules, browse reference for your game")
+            )
+        }
+        .tag(AppTab.search)
     }
 
     private var tabBarItemIdentifiers: [String] {
         var identifiers: [String] = []
-        if ReleaseSurface.showsBenchTab { identifiers.append("tab.bench") }
-        if ReleaseSurface.showsMusterTab { identifiers.append("tab.muster") }
+        if ReleaseSurface.showsBenchTab, showsHobbyTabs { identifiers.append("tab.bench") }
+        if ReleaseSurface.showsMusterTab, showsHobbyTabs { identifiers.append("tab.muster") }
         identifiers.append("tab.play")
         identifiers.append(ReleaseSurface.showsRulesAssistant ? "tab.rulesSearch" : "tab.rules")
         identifiers.append("tab.settings")

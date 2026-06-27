@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 1,
+  "armyId": "drukhari-combat-patrol",
+  "units": [
+    {
+      "id": "archon-malivex",
+      "name": "Archon Malivex",
+      "keywords": [
+        "Character",
+        "Infantry",
+        "Drukhari"
+      ],
+      "modelCount": 1,
+      "move": "6\"",
+      "save": 3,
+      "health": 4,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "splinter-pistol",
+          "name": "Splinter Pistol",
+          "attacks": "1",
+          "hit": 2,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 12
+        },
+        {
+          "id": "huskblade",
+          "name": "Huskblade",
+          "attacks": "4",
+          "hit": 2,
+          "wound": 3,
+          "rend": 2,
+          "damage": "2"
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "incubi",
+      "name": "Incubi",
+      "keywords": [
+        "Infantry",
+        "Drukhari"
+      ],
+      "modelCount": 5,
+      "move": "7\"",
+      "save": 3,
+      "health": 1,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "klaive",
+          "name": "Klaive",
+          "attacks": "3",
+          "hit": 2,
+          "wound": 3,
+          "rend": 2,
+          "damage": "2"
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "kabalite-warriors",
+      "name": "Kabalite Warriors",
+      "keywords": [
+        "Battleline",
+        "Infantry",
+        "Drukhari"
+      ],
+      "modelCount": 10,
+      "move": "6\"",
+      "save": 3,
+      "health": 1,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "splinter-rifle",
+          "name": "Splinter Rifle",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 24
+        },
+        {
+          "id": "dark-lance",
+          "name": "Dark Lance",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 3,
+          "damage": "D6+1",
+          "rangeInches": 48
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "raider",
+      "name": "Raider",
+      "keywords": [
+        "Vehicle",
+        "Transport",
+        "Drukhari"
+      ],
+      "modelCount": 1,
+      "move": "14\"",
+      "save": 3,
+      "health": 10,
+      "control": 0,
+      "weapons": [
+        {
+          "id": "dark-lance",
+          "name": "Dark Lance",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 3,
+          "damage": "D6+1",
+          "rangeInches": 48
+        },
+        {
+          "id": "disintegrator-cannon",
+          "name": "Disintegrator Cannon",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 2,
+          "damage": "2",
+          "rangeInches": 24
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "ravager",
+      "name": "Ravager",
+      "keywords": [
+        "Vehicle",
+        "Drukhari"
+      ],
+      "modelCount": 1,
+      "move": "10\"",
+      "save": 3,
+      "health": 11,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "dark-lance",
+          "name": "Dark Lance",
+          "attacks": "1",
+          "hit": 3,
+          "wound": 4,
+          "rend": 3,
+          "damage": "D6+1",
+          "rangeInches": 48
+        },
+        {
+          "id": "disintegrator-cannon",
+          "name": "Disintegrator Cannon",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 2,
+          "damage": "2",
+          "rangeInches": 24
+        }
+      ],
+      "abilities": []
+    }
+  ]
+}

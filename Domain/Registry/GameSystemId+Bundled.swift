@@ -164,15 +164,15 @@ extension GameSystemId {
                     rulesSearchPrompt: String(localized: "Search Combat Patrol rules"),
                     browseIntro: String(
                         localized: """
-                        Search Warhammer 40,000 Combat Patrol rules, missions, glossary terms, and guide topics.
+                        Search Combat Patrol rules and missions. This mode uses 10th Edition patrol rules — not 11th Edition.
                         """
                     ),
                     gameGuideBrowseTitle: String(localized: "Combat Patrol Guide"),
                     searchEmptyStateHint: String(
                         localized: "No matches — try fewer words or a term like “secure” or “reserves”."
                     ),
-                    displayName: String(localized: "Warhammer 40,000 Combat Patrol"),
-                    searchPickerLabel: String(localized: "Warhammer 40,000: Combat Patrol"),
+                    displayName: String(localized: "Warhammer 40,000: Combat Patrol"),
+                    searchPickerLabel: String(localized: "Combat Patrol (10th Edition rules)"),
                     catalogLoadFailureMessage: String(localized: "Combat Patrol armies could not be loaded.")
                 ),
                 victoryPointsScoring: .combatPatrol,

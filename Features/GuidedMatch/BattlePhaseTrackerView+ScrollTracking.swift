@@ -68,8 +68,12 @@ extension BattlePhaseTrackerView {
                 }
                 if phase == .hero {
                     presentRoundOpenerNudgeIfNeeded()
+                    presentHeroRoundOneNudgeIfNeeded()
+                } else {
+                    showsHeroRoundOneNotice = false
                 }
                 if handoffBaselineEstablished {
+                    presentPhaseActionNudgeIfNeeded(from: oldPhase, to: phase)
                     presentTurnHandoff(from: oldPhase, to: phase, playerChanged: false)
                 }
             }
@@ -120,6 +124,11 @@ extension BattlePhaseTrackerView {
                         if view.turnHandoffNotice == notice { view.turnHandoffNotice = nil }
                     }
                 }
+                .onChange(of: view.phaseActionNudge) { _, notice in
+                    scheduleDismiss(notice, seconds: 8) {
+                        if view.phaseActionNudge == notice { view.phaseActionNudge = nil }
+                    }
+                }
                 .onChange(of: view.scoringReminderNotice) { _, notice in
                     scheduleDismiss(notice, seconds: 8) {
                         if view.scoringReminderNotice == notice { view.scoringReminderNotice = nil }
@@ -128,6 +137,17 @@ extension BattlePhaseTrackerView {
                 .onChange(of: view.roundOpenerNotice) { _, notice in
                     scheduleDismiss(notice, seconds: 8) {
                         if view.roundOpenerNotice == notice { view.roundOpenerNotice = nil }
+                    }
+                }
+                .onChange(of: view.showsHeroRoundOneNotice) { _, isVisible in
+                    guard isVisible else { return }
+                    Task {
+                        try? await Task.sleep(for: .seconds(10))
+                        withAnimation(view.reduceMotion ? nil : .easeInOut(duration: 0.25)) {
+                            if view.showsHeroRoundOneNotice {
+                                view.showsHeroRoundOneNotice = false
+                            }
+                        }
                     }
                 }
         }

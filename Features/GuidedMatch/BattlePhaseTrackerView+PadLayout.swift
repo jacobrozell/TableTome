@@ -66,8 +66,10 @@ extension BattlePhaseTrackerView {
         BattleTrackerPadTwoColumnRow(controlColumnMaxWidth: padControlColumnMaxWidth) {
             phasePlaybookSection
             victoryPointsSection
+            phaseActionNudgeSection
             turnHandoffSection
             scoringReminderSection
+            heroRoundOneSection
             roundOpenerSection
             if !showsSlimTurnTab {
                 quickActionsSection

@@ -21,6 +21,7 @@ struct BattleTrackerCoachCard: View {
     }
 
     @State private var step = 0
+    @State private var showsAllSteps = false
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     private var playContext: GameSystemPlayContext {
@@ -129,7 +130,7 @@ struct BattleTrackerCoachCard: View {
                 if dynamicTypeSize.needsLayoutAdaptation {
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                         HStack(spacing: DesignTokens.Spacing.sm) {
-                            Image(systemName: "sparkles")
+                            Image(systemName: "figure.walk")
                                 .foregroundStyle(Color.accentOnSurface)
                             Text(String(localized: "First battle?"))
                                 .font(.headline)
@@ -143,16 +144,20 @@ struct BattleTrackerCoachCard: View {
                             .buttonStyle(.plain)
                             .accessibilityLabel(String(localized: "Dismiss tips"))
                         }
-                        WalkthroughProgressDots(current: step, total: steps.count)
+                        if showsAllSteps {
+                            WalkthroughProgressDots(current: step, total: steps.count)
+                        }
                     }
                 } else {
                     HStack(spacing: DesignTokens.Spacing.sm) {
-                        Image(systemName: "sparkles")
+                        Image(systemName: "figure.walk")
                             .foregroundStyle(Color.accentOnSurface)
                         Text(String(localized: "First battle?"))
                             .font(.headline)
                         Spacer()
-                        WalkthroughProgressDots(current: step, total: steps.count)
+                        if showsAllSteps {
+                            WalkthroughProgressDots(current: step, total: steps.count)
+                        }
                         Button {
                             onDismiss()
                         } label: {
@@ -165,40 +170,61 @@ struct BattleTrackerCoachCard: View {
                 }
             }
 
+            let displayStep = showsAllSteps ? step : 0
+
             Label {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                    Text(steps[step].title)
+                    Text(steps[displayStep].title)
                         .font(.subheadline.weight(.semibold))
-                    Text(steps[step].detail)
+                    Text(steps[displayStep].detail)
                         .font(.callout)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
             } icon: {
-                Image(systemName: steps[step].systemImage)
+                Image(systemName: steps[displayStep].systemImage)
                     .font(.title3)
                     .foregroundStyle(Color.accentOnSurface)
                     .symbolRenderingMode(.hierarchical)
             }
 
-            HStack(spacing: DesignTokens.Spacing.sm) {
-                if step > 0 {
-                    Button(String(localized: "Back")) {
-                        withAnimation(.easeInOut(duration: 0.2)) { step -= 1 }
+            if showsAllSteps {
+                HStack(spacing: DesignTokens.Spacing.sm) {
+                    if step > 0 {
+                        Button(String(localized: "Back")) {
+                            withAnimation(.easeInOut(duration: 0.2)) { step -= 1 }
+                        }
+                        .buttonStyle(.bordered)
+                        .minimumTouchTarget()
+                    }
+                    Spacer()
+                    Button(step < steps.count - 1 ? String(localized: "Next") : String(localized: "Got it")) {
+                        if step < steps.count - 1 {
+                            withAnimation(.easeInOut(duration: 0.2)) { step += 1 }
+                        } else {
+                            onDismiss()
+                        }
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .minimumTouchTarget()
+                }
+            } else {
+                HStack(spacing: DesignTokens.Spacing.sm) {
+                    Button(String(localized: "See all tips")) {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            showsAllSteps = true
+                            step = 0
+                        }
                     }
                     .buttonStyle(.bordered)
                     .minimumTouchTarget()
-                }
-                Spacer()
-                Button(step < steps.count - 1 ? String(localized: "Next") : String(localized: "Got it")) {
-                    if step < steps.count - 1 {
-                        withAnimation(.easeInOut(duration: 0.2)) { step += 1 }
-                    } else {
+                    Spacer()
+                    Button(String(localized: "Got it")) {
                         onDismiss()
                     }
+                    .buttonStyle(.borderedProminent)
+                    .minimumTouchTarget()
                 }
-                .buttonStyle(.borderedProminent)
-                .minimumTouchTarget()
             }
         }
         .accentHighlightCard()
@@ -254,6 +280,28 @@ struct PhaseGuidanceBar: View {
                         }
                     }
                 }
+            }
+
+            if let ruleSectionId = PhaseContextCoach.ruleSectionId(
+                for: phase,
+                gameSystemId: gameSystemId.rawValue
+            ) {
+                NavigationLink(
+                    value: RuleSectionLink(
+                        gameSystemId: gameSystemId.rawValue,
+                        sectionId: ruleSectionId
+                    )
+                ) {
+                    Label(
+                        String(localized: "Look up \(phase.title) in Rules"),
+                        systemImage: "doc.text"
+                    )
+                    .font(.caption.weight(.medium))
+                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("battleTracker.phaseRulesLink.\(phase.id)")
             }
         }
         .padding(DesignTokens.Spacing.sm)

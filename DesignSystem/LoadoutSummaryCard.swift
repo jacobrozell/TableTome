@@ -7,6 +7,7 @@ struct LoadoutSummaryCard: View {
     let regimentAbility: ArmyRuleOption?
     let enhancement: ArmyRuleOption?
     var secondaryObjective: ArmyRuleOption? = nil
+    var battleTacticDeckName: String? = nil
     var isAttacker: Bool = false
 
     var body: some View {
@@ -26,7 +27,7 @@ struct LoadoutSummaryCard: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
 
-            if regimentAbility != nil || enhancement != nil || secondaryObjective != nil {
+            if regimentAbility != nil || enhancement != nil || secondaryObjective != nil || battleTacticDeckName != nil {
                 Divider()
                 if let regimentAbility {
                     loadoutRow(
@@ -45,6 +46,9 @@ struct LoadoutSummaryCard: View {
                         title: String(localized: "Secondary Objective"),
                         option: secondaryObjective
                     )
+                }
+                if let battleTacticDeckName {
+                    battleTacticDeckRow(deckName: battleTacticDeckName)
                 }
             } else {
                 Text(String(localized: "Complete loadout choices in match setup."))
@@ -66,6 +70,24 @@ struct LoadoutSummaryCard: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    private func battleTacticDeckRow(deckName: String) -> some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+            Text(String(localized: "Battle Tactic Deck"))
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+            Text(deckName)
+                .font(.subheadline.bold())
+            Text(
+                String(
+                    localized: "Shuffle this 12-card deck from your starter box before the battle. Round 1: draw 3 from the top."
+                )
+            )
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
         }
     }
 }

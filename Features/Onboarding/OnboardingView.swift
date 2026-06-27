@@ -1,504 +1,208 @@
 import SwiftUI
 
-/// First-launch welcome flow — explains what Tabletome is and how the tabs work.
+/// First-launch welcome — single screen: pick your box, optional tab tour, or explore.
 struct OnboardingView: View {
     let mode: OnboardingPresentationMode
     let onFinished: (OnboardingCompletion) -> Void
 
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.verticalSizeClass) private var verticalSizeClass
-    @State private var page = 0
-
-    @ScaledMetric(relativeTo: .title2) private var heroDiameter: CGFloat = 112
-    @ScaledMetric(relativeTo: .title) private var heroIconSize: CGFloat = 48
-
-    private let pages = OnboardingContent.pages
+    @ScaledMetric(relativeTo: .title2) private var heroDiameter: CGFloat = 96
 
     private var largeText: Bool { dynamicTypeSize.isAccessibilitySize }
     private var compactHeight: Bool { verticalSizeClass == .compact }
-    private var widePageLayout: Bool { compactHeight && !largeText }
-
-    private var contentMaxWidth: CGFloat { widePageLayout ? 760 : .infinity }
-
-    private var horizontalPadding: CGFloat {
-        if widePageLayout { return 32 }
-        return largeText ? 20 : 28
-    }
-
-    private var effectiveHeroDiameter: CGFloat {
-        if widePageLayout { return min(heroDiameter, 72) }
-        if largeText { return min(heroDiameter, 80) }
-        return min(heroDiameter, 128)
-    }
-
-    private var effectiveHeroIconSize: CGFloat {
-        if widePageLayout { return min(heroIconSize, 32) }
-        if largeText { return min(heroIconSize, 36) }
-        return min(heroIconSize, 52)
-    }
+    private var wideLayout: Bool { compactHeight && !largeText }
+    private var contentMaxWidth: CGFloat { wideLayout ? 760 : .infinity }
+    private var horizontalPadding: CGFloat { wideLayout ? 32 : (largeText ? 20 : 24) }
 
     var body: some View {
         NavigationStack {
-            TabView(selection: $page) {
-                ForEach(pages) { item in
-                    pageContent(item)
-                        .tag(item.id)
+            ScrollView {
+                VStack(alignment: wideLayout ? .leading : .center, spacing: DesignTokens.Spacing.lg) {
+                    header
+                    gamePickSection
+                    tabTourSection
                 }
+                .frame(maxWidth: contentMaxWidth)
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal, horizontalPadding)
+                .padding(.top, wideLayout ? 12 : 20)
+                .padding(.bottom, 120)
             }
-            .tabViewStyle(.page(indexDisplayMode: .never))
-            .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: page)
+            .scrollBounceBehavior(.basedOnSize)
+            .background { onboardingBackground.ignoresSafeArea() }
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 footer
-                    .padding(.horizontal, widePageLayout ? 32 : 24)
-                    .padding(.top, compactHeight ? 8 : 12)
-                    .padding(.bottom, compactHeight ? 10 : 16)
+                    .padding(.horizontal, horizontalPadding)
+                    .padding(.vertical, 12)
                     .background {
                         onboardingBackground
                             .ignoresSafeArea(edges: .bottom)
                     }
             }
-            .background { onboardingBackground.ignoresSafeArea() }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    if page < 2 {
-                        Button(String(localized: "Skip")) {
-                            complete(.exploreApp)
-                        }
-                        .accessibilityIdentifier("onboarding.skip")
-                        .accessibilityLabel(String(localized: "Skip onboarding"))
-                        .accessibilityHint(String(localized: "Finish setup and explore the app on your own."))
+                    Button(String(localized: "Skip")) {
+                        complete(.exploreApp)
                     }
+                    .accessibilityIdentifier("onboarding.skip")
+                    .accessibilityLabel(String(localized: "Skip onboarding"))
                 }
             }
         }
         .interactiveDismissDisabled(mode == .firstLaunch)
     }
 
-    @ViewBuilder
-    private func pageContent(_ item: OnboardingPage) -> some View {
-        ScrollView {
-            Group {
-                if widePageLayout {
-                    HStack(alignment: .center, spacing: 28) {
-                        heroMark(for: item)
-                        textBlock(item, alignment: .leading)
-                    }
-                } else {
-                    VStack(spacing: largeText ? 20 : 28) {
-                        heroMark(for: item)
-                            .padding(.top, largeText ? 4 : 16)
-                        textBlock(item, alignment: .center)
-                    }
+    private var header: some View {
+        Group {
+            if wideLayout {
+                HStack(alignment: .center, spacing: 24) {
+                    brandMark
+                    headerText(alignment: .leading)
+                }
+            } else {
+                VStack(spacing: DesignTokens.Spacing.md) {
+                    brandMark
+                    headerText(alignment: .center)
                 }
             }
-            .frame(maxWidth: contentMaxWidth)
-            .frame(maxWidth: .infinity)
-            .padding(.horizontal, horizontalPadding)
-            .padding(.vertical, widePageLayout ? 8 : 0)
-            .padding(.bottom, 8)
-
-            if item.id == 1 {
-                gameHighlightCards(twoColumn: widePageLayout)
-                    .frame(maxWidth: contentMaxWidth)
-                    .frame(maxWidth: .infinity)
-                    .padding(.horizontal, horizontalPadding)
-                    .padding(.bottom, 8)
-            }
-
-            if item.id == 2 {
-                tabTourSection(twoColumn: widePageLayout)
-                    .frame(maxWidth: contentMaxWidth)
-                    .frame(maxWidth: .infinity)
-                    .padding(.horizontal, horizontalPadding)
-                    .padding(.bottom, 8)
-            }
         }
-        .scrollBounceBehavior(.basedOnSize)
     }
 
-    private func textBlock(_ item: OnboardingPage, alignment: TextAlignment) -> some View {
-        VStack(spacing: 10) {
-            Text(item.title)
-                .font(.system(widePageLayout ? .title : .largeTitle, design: .serif).weight(.bold))
+    private var brandMark: some View {
+        ZStack {
+            Circle()
+                .fill(Color.accentColor.opacity(0.14))
+                .frame(width: heroDiameter, height: heroDiameter)
+            BrandCrest(size: heroDiameter * 0.72)
+        }
+        .accessibilityLabel(String(localized: "Tabletome"))
+    }
+
+    private func headerText(alignment: TextAlignment) -> some View {
+        VStack(spacing: 8) {
+            Text(String(localized: "What box do you have?"))
+                .font(.system(wideLayout ? .title : .largeTitle, design: .serif).weight(.bold))
                 .multilineTextAlignment(alignment)
-                .fixedSize(horizontal: false, vertical: true)
                 .accessibilityAddTraits(.isHeader)
 
-            Text(item.subtitle)
-                .font(widePageLayout ? .headline.weight(.medium) : .title3.weight(.medium))
-                .foregroundStyle(Color.accentColor)
-                .multilineTextAlignment(alignment)
-                .fixedSize(horizontal: false, vertical: true)
-
-            Text(item.body)
+            Text(String(localized: "Pick your starter box to open the right guide. Everything works offline."))
                 .font(.body)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(alignment)
                 .fixedSize(horizontal: false, vertical: true)
+
+            Label(
+                String(localized: "You roll physical dice — Tabletome tracks phases, score, and rules."),
+                systemImage: "dice.fill"
+            )
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .multilineTextAlignment(alignment)
+            .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity, alignment: alignment == .leading ? .leading : .center)
     }
 
-    private func gameHighlightCards(twoColumn: Bool) -> some View {
-        Group {
-            if twoColumn {
-                LazyVGrid(
-                    columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)],
-                    alignment: .leading,
-                    spacing: 12
-                ) {
-                    ForEach(OnboardingContent.visibleGameHighlights) { game in
-                        gameHighlightCard(game)
-                    }
-                }
-            } else {
-                VStack(alignment: .leading, spacing: 12) {
-                    ForEach(OnboardingContent.visibleGameHighlights) { game in
-                        gameHighlightCard(game)
-                    }
-                }
+    private var gamePickSection: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            ForEach(OnboardingContent.visibleGameHighlights) { game in
+                gamePickRow(game)
             }
         }
-        .padding(DesignTokens.Spacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
     }
 
-    private func gameHighlightCard(_ game: OnboardingGameHighlight) -> some View {
-        HStack(alignment: .top, spacing: DesignTokens.Spacing.sm + 4) {
-            Image(systemName: game.symbol)
-                .font(.title2.weight(.medium))
-                .foregroundStyle(Color.accentOnSurface)
-                .symbolRenderingMode(.hierarchical)
-                .frame(width: DesignTokens.minTouchTarget, height: DesignTokens.minTouchTarget)
-                .accessibilityHidden(true)
+    private func gamePickRow(_ game: OnboardingGameHighlight) -> some View {
+        Button {
+            if game.startsGuidedMatch {
+                complete(.openGuidedMatch(gameSystemId: game.id))
+            } else {
+                complete(.openGameGuide(gameSystemId: game.id))
+            }
+        } label: {
+            HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
+                BoxProductThumbnail(style: BoxProductThumbnailStyle(gameSystemId: game.id))
 
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
-                    Text(game.name)
-                        .font(.headline)
-                    if game.recommendedForNewcomers {
-                        Text(String(localized: "Good first game"))
-                            .font(.caption2.weight(.bold))
-                            .foregroundStyle(Color.accentColor)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(Color.accentColor.opacity(0.14), in: Capsule())
-                    } else if game.showsNewBadge {
-                        Text(String(localized: "NEW"))
-                            .font(.caption2.weight(.bold))
-                            .foregroundStyle(Color.accentColor)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(Color.accentColor.opacity(0.14), in: Capsule())
-                            .accessibilityLabel(String(localized: "New edition"))
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                    HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
+                        Text(game.name)
+                            .font(.headline)
+                            .foregroundStyle(.primary)
+                        if game.showsNewBadge {
+                            GuideBadge(style: .newEdition)
+                        }
                     }
+                    Text(game.edition)
+                        .font(.subheadline.weight(.medium))
+                        .foregroundStyle(.secondary)
+                    Text(game.blurb)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
-                Text(game.edition)
-                    .font(.subheadline.weight(.medium))
-                    .foregroundStyle(.secondary)
-                Text(game.blurb)
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.tertiary)
+                    .accessibilityHidden(true)
+            }
+            .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .onboardingPickerRow()
+        .accessibilityIdentifier("onboarding.start.\(game.id)")
+    }
+
+    private var tabTourSection: some View {
+        DisclosureGroup(String(localized: "About the tabs")) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                Text(OnboardingContent.tabOrganizationPageBody)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .accessibilityElement(children: .combine)
-        .accessibilityIdentifier("onboarding.game.\(game.id)")
-    }
 
-    private func tabTourSection(twoColumn: Bool) -> some View {
-        DisclosureGroup(String(localized: "About the tabs")) {
-            tabTourCards(twoColumn: twoColumn)
-                .padding(.top, DesignTokens.Spacing.sm)
+                ForEach(OnboardingContent.visibleTabTourItems) { item in
+                    HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
+                        Image(systemName: item.symbol)
+                            .font(.title3)
+                            .foregroundStyle(Color.accentOnSurface)
+                            .frame(width: DesignTokens.minTouchTarget, height: DesignTokens.minTouchTarget)
+                            .accessibilityHidden(true)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(item.title)
+                                .font(.subheadline.weight(.semibold))
+                            Text(item.body)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                    .accessibilityElement(children: .combine)
+                    .accessibilityIdentifier("onboarding.tour.\(item.id)")
+                }
+            }
+            .padding(.top, DesignTokens.Spacing.sm)
         }
         .font(.headline)
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .onboardingPickerRow()
+        .accessibilityIdentifier("onboarding.aboutTabs")
     }
 
-    private func tabTourCards(twoColumn: Bool) -> some View {
-        Group {
-            if twoColumn {
-                LazyVGrid(
-                    columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)],
-                    alignment: .leading,
-                    spacing: 12
-                ) {
-                    ForEach(OnboardingContent.visibleTabTourItems) { item in
-                        tourCard(item)
-                    }
-                }
-            } else {
-                VStack(alignment: .leading, spacing: 12) {
-                    ForEach(OnboardingContent.visibleTabTourItems) { item in
-                        tourCard(item)
-                    }
-                }
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    private func tourCard(_ item: OnboardingTabTourItem) -> some View {
-        HStack(alignment: .top, spacing: DesignTokens.Spacing.sm + 4) {
-            Image(systemName: item.symbol)
-                .font(.title2.weight(.medium))
-                .foregroundStyle(Color.accentOnSurface)
-                .symbolRenderingMode(.hierarchical)
-                .frame(width: DesignTokens.minTouchTarget, height: DesignTokens.minTouchTarget)
-                .accessibilityHidden(true)
-
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                Text(item.title)
-                    .font(.headline)
-                Text(item.body)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .accessibilityElement(children: .combine)
-        .accessibilityIdentifier("onboarding.tour.\(item.id)")
-    }
-
-    @ViewBuilder
-    private func heroMark(for item: OnboardingPage) -> some View {
-        if item.id == 0 {
-            ZStack {
-                Circle()
-                    .fill(Color.accentColor.opacity(0.14))
-                    .frame(width: effectiveHeroDiameter, height: effectiveHeroDiameter)
-                Circle()
-                    .strokeBorder(Color.accentColor.opacity(0.28), lineWidth: 1)
-                    .frame(width: effectiveHeroDiameter, height: effectiveHeroDiameter)
-                BrandCrest(size: effectiveHeroDiameter * 0.72)
-            }
-            .accessibilityLabel(String(localized: "Tabletome"))
-        } else {
-            heroSymbol(item.symbol)
-        }
-    }
-
-    private func heroSymbol(_ name: String) -> some View {
-        ZStack {
-            Circle()
-                .fill(Color.accentColor.opacity(0.14))
-                .frame(width: effectiveHeroDiameter, height: effectiveHeroDiameter)
-            Circle()
-                .strokeBorder(Color.accentColor.opacity(0.28), lineWidth: 1)
-                .frame(width: effectiveHeroDiameter, height: effectiveHeroDiameter)
-            Image(systemName: name)
-                .font(.system(size: effectiveHeroIconSize, weight: .medium))
-                .foregroundStyle(Color.accentColor)
-                .symbolRenderingMode(.hierarchical)
-                .accessibilityHidden(true)
-        }
-        .accessibilityHidden(true)
-    }
-
-    @ViewBuilder
     private var footer: some View {
-        if widePageLayout {
-            wideFooter
-        } else {
-            stackedFooter
+        Button(String(localized: "Explore the app")) {
+            complete(.exploreApp)
         }
-    }
-
-    private var stackedFooter: some View {
-        VStack(spacing: largeText ? 12 : 16) {
-            pageIndicator
-            footerActions
-        }
-    }
-
-    private var wideFooter: some View {
-        VStack(spacing: 10) {
-            onboardingFooterContent(controlSize: .regular)
-        }
-        .frame(maxWidth: contentMaxWidth)
-        .frame(maxWidth: .infinity)
-    }
-
-    @ViewBuilder
-    private var footerActions: some View {
-        onboardingFooterContent(controlSize: largeText ? .regular : .large)
-    }
-
-    @ViewBuilder
-    private func onboardingFooterContent(controlSize: ControlSize) -> some View {
-        switch page {
-        case 0:
-            VStack(spacing: 10) {
-                if widePageLayout {
-                    HStack(spacing: 16) {
-                        pageIndicator
-                        Spacer(minLength: 0)
-                        Button(String(localized: "Continue")) { page += 1 }
-                            .buttonStyle(.borderedProminent)
-                            .controlSize(controlSize)
-                            .accessibilityIdentifier("onboarding.continue")
-                    }
-                } else {
-                    Button(String(localized: "Continue")) { page += 1 }
-                        .buttonStyle(.borderedProminent)
-                        .controlSize(controlSize)
-                        .frame(maxWidth: .infinity)
-                        .accessibilityIdentifier("onboarding.continue")
-                }
-
-                Button(String(localized: "Pick my game now")) {
-                    page = 1
-                }
-                .buttonStyle(.bordered)
-                .controlSize(controlSize)
-                .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-                .accessibilityIdentifier("onboarding.pickGameNow")
-
-                if !widePageLayout {
-                    pageIndicator
-                }
-            }
-        case 1:
-            VStack(spacing: 10) {
-                if widePageLayout {
-                    HStack(spacing: 12) {
-                        pageIndicator
-                        Spacer(minLength: 0)
-                    }
-                }
-
-                gameStartButtons(controlSize: controlSize)
-
-                Button(String(localized: "About the tabs")) {
-                    page = 2
-                }
-                .buttonStyle(.bordered)
-                .controlSize(controlSize)
-                .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-                .accessibilityIdentifier("onboarding.aboutTabs")
-
-                Button(String(localized: "Explore the app")) {
-                    complete(.exploreApp)
-                }
-                .buttonStyle(.bordered)
-                .controlSize(controlSize)
-                .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-                .accessibilityIdentifier("onboarding.exploreApp")
-
-                if !widePageLayout {
-                    pageIndicator
-                }
-            }
-        default:
-            VStack(spacing: 10) {
-                if widePageLayout {
-                    HStack(spacing: 12) {
-                        pageIndicator
-                        Spacer(minLength: 0)
-                    }
-                }
-
-                Button(String(localized: "Explore the app")) {
-                    complete(.exploreApp)
-                }
-                .buttonStyle(.borderedProminent)
-                .controlSize(controlSize)
-                .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-                .accessibilityIdentifier("onboarding.exploreApp")
-
-                if !widePageLayout {
-                    pageIndicator
-                }
-            }
-        }
-    }
-
-    private func gameStartButtons(controlSize: ControlSize) -> some View {
-        VStack(spacing: 10) {
-            ForEach(OnboardingContent.visibleGameHighlights) { game in
-                gameStartButton(for: game, controlSize: controlSize)
-            }
-        }
-    }
-
-    @ViewBuilder
-    private func gameStartButton(for game: OnboardingGameHighlight, controlSize: ControlSize) -> some View {
-        let label = HStack(spacing: DesignTokens.Spacing.sm) {
-            Label(game.name, systemImage: game.symbol)
-            if game.recommendedForNewcomers {
-                Text(String(localized: "Good first game"))
-                    .font(.caption2.weight(.bold))
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 2)
-                    .background(Color.white.opacity(0.2), in: Capsule())
-            } else if game.showsNewBadge {
-                Text(String(localized: "NEW"))
-                    .font(.caption2.weight(.bold))
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 2)
-                    .background(Color.white.opacity(0.2), in: Capsule())
-            }
-        }
+        .buttonStyle(.bordered)
+        .controlSize(largeText ? .regular : .large)
         .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-
-        if game.startsGuidedMatch {
-            Button {
-                complete(.openGuidedMatch(gameSystemId: game.id))
-            } label: { label }
-            .buttonStyle(.borderedProminent)
-            .controlSize(controlSize)
-            .accessibilityIdentifier("onboarding.start.\(game.id)")
-        } else if game.recommendedForNewcomers || game.showsNewBadge {
-            Button {
-                complete(.openGameGuide(gameSystemId: game.id))
-            } label: { label }
-            .buttonStyle(.borderedProminent)
-            .controlSize(controlSize)
-            .accessibilityIdentifier("onboarding.start.\(game.id)")
-        } else {
-            Button {
-                complete(.openGameGuide(gameSystemId: game.id))
-            } label: { label }
-            .buttonStyle(.bordered)
-            .controlSize(controlSize)
-            .accessibilityIdentifier("onboarding.start.\(game.id)")
-        }
-    }
-
-    private var pageIndicator: some View {
-        HStack(spacing: 8) {
-            ForEach(pages) { item in
-                Capsule()
-                    .fill(item.id == page ? Color.accentColor : Color.secondary.opacity(0.25))
-                    .frame(width: item.id == page ? 22 : 8, height: 8)
-                    .animation(reduceMotion ? nil : .easeInOut(duration: 0.2), value: page)
-            }
-        }
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(
-            String(localized: "Page \(page + 1) of \(pages.count)")
-        )
+        .accessibilityIdentifier("onboarding.exploreApp")
     }
 
     private var onboardingBackground: some View {
-        ZStack {
-            Color(.systemBackground)
-            RadialGradient(
-                colors: [
-                    Color.accentColor.opacity(0.12),
-                    Color(.systemBackground).opacity(0)
-                ],
-                center: compactHeight ? .leading : .top,
-                startRadius: 40,
-                endRadius: 420
-            )
-        }
+        Color(.systemBackground)
     }
 
     private func complete(_ completion: OnboardingCompletion) {

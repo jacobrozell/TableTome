@@ -64,11 +64,13 @@ struct SettingsView: View {
                             gameSystemId: OnboardingCompletion.combatPatrolGameSystemId
                         )
                     } label: {
-                        Label(String(localized: "Open Combat Patrol guide"), systemImage: "play.circle")
+                        Label(String(localized: "Open Combat Patrol guide (10th Edition)"), systemImage: "play.circle")
                             .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
                     }
                     .accessibilityIdentifier("settings.openCombatPatrolGuide")
-                    .accessibilityHint(String(localized: "Opens the Combat Patrol game guide on the Play tab."))
+                    .accessibilityHint(
+                        String(localized: "Opens the Combat Patrol game guide — 10th Edition patrol rules, not 11th Edition.")
+                    )
                 }
 
                 Button {
@@ -81,6 +83,36 @@ struct SettingsView: View {
                 }
                 .accessibilityIdentifier("settings.openSpearheadGuide")
                 .accessibilityHint(String(localized: "Opens the Spearhead game guide on the Play tab."))
+
+                if ReleaseSurface.isGameSystemIdVisible(OnboardingCompletion.wh40k11eGameSystemId) {
+                    Button {
+                        learnNavigationCoordinator.openGameGuide(
+                            gameSystemId: OnboardingCompletion.wh40k11eGameSystemId
+                        )
+                    } label: {
+                        Label(String(localized: "Open Warhammer 40,000 guide (11th Edition)"), systemImage: "scope")
+                            .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                    }
+                    .accessibilityIdentifier("settings.openWh40k11eGuide")
+                    .accessibilityHint(
+                        String(localized: "Opens the 11th Edition guide — Battleforce, Armageddon, and matched play.")
+                    )
+                }
+
+                if ReleaseSurface.isGameSystemIdVisible(OnboardingCompletion.scTmgGameSystemId) {
+                    Button {
+                        learnNavigationCoordinator.openGameGuide(
+                            gameSystemId: OnboardingCompletion.scTmgGameSystemId
+                        )
+                    } label: {
+                        Label(String(localized: "Open StarCraft guide"), systemImage: "gamecontroller.fill")
+                            .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                    }
+                    .accessibilityIdentifier("settings.openStarCraftGuide")
+                    .accessibilityHint(
+                        String(localized: "Opens the StarCraft: The Miniatures Game guide on the Play tab.")
+                    )
+                }
             } header: {
                 Text(String(localized: "New here?"))
             } footer: {

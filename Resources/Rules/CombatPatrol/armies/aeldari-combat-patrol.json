@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "armyId": "aeldari-combat-patrol",
+  "units": [
+    {
+      "id": "farseer-iraneth",
+      "name": "Farseer Iraneth",
+      "keywords": [
+        "Character",
+        "Infantry",
+        "Psyker",
+        "Aeldari"
+      ],
+      "modelCount": 1,
+      "move": "6\"",
+      "save": 3,
+      "health": 4,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "shuriken-pistol",
+          "name": "Shuriken Pistol",
+          "attacks": "1",
+          "hit": 2,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1",
+          "rangeInches": 12
+        },
+        {
+          "id": "witchblade",
+          "name": "Witchblade",
+          "attacks": "2",
+          "hit": 2,
+          "wound": 3,
+          "rend": 2,
+          "damage": "D3"
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "guardian-defenders",
+      "name": "Guardian Defenders + Heavy Weapon Platform",
+      "keywords": [
+        "Battleline",
+        "Infantry",
+        "Aeldari"
+      ],
+      "modelCount": 11,
+      "move": "6\"",
+      "save": 3,
+      "health": 1,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "shuriken-catapult",
+          "name": "Shuriken Catapult",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1",
+          "rangeInches": 18
+        },
+        {
+          "id": "starcannon",
+          "name": "Starcannon",
+          "attacks": "3",
+          "hit": 3,
+          "wound": 4,
+          "rend": 3,
+          "damage": "2",
+          "rangeInches": 48
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "wraithlord",
+      "name": "Wraithlord",
+      "keywords": [
+        "Vehicle",
+        "Walker",
+        "Aeldari"
+      ],
+      "modelCount": 1,
+      "move": "8\"",
+      "save": 2,
+      "health": 12,
+      "control": 2,
+      "weapons": [
+        {
+          "id": "ghostglaive",
+          "name": "Ghostglaive",
+          "attacks": "5",
+          "hit": 3,
+          "wound": 3,
+          "rend": 2,
+          "damage": "2"
+        },
+        {
+          "id": "scatter-laser",
+          "name": "Scatter Laser",
+          "attacks": "6",
+          "hit": 3,
+          "wound": 4,
+          "rend": 0,
+          "damage": "1",
+          "rangeInches": 36
+        }
+      ],
+      "abilities": []
+    },
+    {
+      "id": "windriders",
+      "name": "Windriders (2×3)",
+      "keywords": [
+        "Mounted",
+        "Aeldari"
+      ],
+      "modelCount": 6,
+      "move": "14\"",
+      "save": 3,
+      "health": 2,
+      "control": 1,
+      "weapons": [
+        {
+          "id": "shuriken-catapult",
+          "name": "Shuriken Catapult",
+          "attacks": "2",
+          "hit": 3,
+          "wound": 4,
+          "rend": 1,
+          "damage": "1",
+          "rangeInches": 18
+        }
+      ],
+      "abilities": []
+    }
+  ]
+}

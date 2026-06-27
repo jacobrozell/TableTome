@@ -7,6 +7,7 @@ struct CombatPatrolSampleTurnWalkthroughView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
     @State private var step = 0
+    @State private var showsWargamePrimer = !NewPlayerTipsStore.hasDismissedWargamePrimer
 
     private struct WalkthroughStep {
         let title: String
@@ -77,6 +78,12 @@ struct CombatPatrolSampleTurnWalkthroughView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                if showsWargamePrimer {
+                    WargamePrimerCard {
+                        NewPlayerTipsStore.dismissWargamePrimer()
+                        showsWargamePrimer = false
+                    }
+                }
                 header
                 phaseStrip
                 stepCard
@@ -113,8 +120,8 @@ struct CombatPatrolSampleTurnWalkthroughView: View {
             Text(
                 String(
                     localized: """
-                    A battle lasts five rounds. Each round, players alternate turns — Command, Move, Shoot, then Charge and Fight. \
-                    Tabletome tracks phases and score; you roll dice and move models at the table. Tap Key terms below any step for definitions.
+                    Combat Patrol uses 10th Edition rules — not 11th Edition. A battle lasts five rounds; players alternate \
+                    Command, Move, Shoot, Charge, and Fight. You roll dice at the table; Tabletome tracks phases and score.
                     """
                 )
             )
@@ -212,7 +219,9 @@ struct CombatPatrolSampleTurnWalkthroughView: View {
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
 
-                    NavigationLink(value: GuidedMatchLink(gameSystemId: .wh40k10eCp)) {
+                    Button {
+                        learnNavigationCoordinator.openGuidedMatch(gameSystemId: GameSystemId.wh40k10eCp.rawValue)
+                    } label: {
                         Label(String(localized: "Open Guided Match"), systemImage: "flag.checkered")
                             .font(.headline)
                             .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)

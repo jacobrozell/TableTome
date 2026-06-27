@@ -43,7 +43,7 @@
           "source": "Ghallaron's Host",
           "effect": "Legionaries gain re-rolls when the Apostle leads them.",
           "phases": [
-            "fight"
+            "combat"
           ],
           "usageLimit": "passive",
           "kind": "ability"

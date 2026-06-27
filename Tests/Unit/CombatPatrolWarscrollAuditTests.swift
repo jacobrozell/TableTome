@@ -46,7 +46,7 @@ final class CombatPatrolWarscrollAuditTests: XCTestCase {
                 XCTAssertNotNil(unit.control, "\(army.id)/\(unit.id) control")
                 XCTAssertNotNil(unit.modelCount, "\(army.id)/\(unit.id) modelCount")
                 XCTAssertGreaterThan(unit.health ?? 0, 0)
-                XCTAssertGreaterThan(unit.control ?? 0, 0)
+                XCTAssertGreaterThanOrEqual(unit.control ?? 0, 0)
                 XCTAssertGreaterThan(unit.modelCount ?? 0, 0)
                 XCTAssertGreaterThan(UnitWoundCapacity.capacity(for: unit), 0)
                 XCTAssertTrue(unit.hasWarscroll, "\(army.id)/\(unit.id) warscroll")

@@ -23,6 +23,22 @@ def all_army_ids(catalog: dict) -> set[str]:
         if army.get("id")
     }
 
+VALID_BATTLE_PHASES = {
+    "deployment",
+    "command",
+    "hero",
+    "movement",
+    "assault",
+    "shooting",
+    "charge",
+    "combat",
+    "scoring",
+    "endOfTurn",
+    "enemyMovement",
+    "endOfAnyTurn",
+    "anyCombat",
+}
+
 REQUIRED_MATCH_STEP_IDS = {
     "choose-armies",
     "pick-enhancement",
@@ -98,6 +114,14 @@ def validate_catalog(catalog: dict) -> list[str]:
             errors.append(f"{army_id}: detail JSON has no units")
         elif not any(u.get("weapons") or u.get("save") is not None for u in units):
             errors.append(f"{army_id}: detail units lack warscroll stats")
+        else:
+            for unit in units:
+                for ability in unit.get("abilities", []):
+                    for phase in ability.get("phases", []):
+                        if phase not in VALID_BATTLE_PHASES:
+                            errors.append(
+                                f"{army_id}/{unit.get('id')}: invalid ability phase {phase!r}"
+                            )
 
     return errors
 

@@ -1,5 +1,6 @@
 # Xcode
 DerivedData/
+.derivedData/
 *.xcuserstate
 *.xcscmblueprint
 *.xccheckout
@@ -36,6 +37,11 @@ agent-tools/
 tmp/
 build/
 .xcodebuildmcp/
+
+# Marketing screenshot captures (scripts and framed output are tracked separately)
+marketing-screenshots/raw/
+marketing-screenshots/ipad/raw/
+marketing-screenshots/framed/
 
 # Local GW reference PDFs (not bundled in app)
 FutureIdeas/aos-downloads/

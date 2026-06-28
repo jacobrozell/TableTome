@@ -18,6 +18,32 @@ enum UITestLaunchConfiguration {
             OnboardingStore.clearPersistedState()
             ActiveGameContextPersistence.resetForTests()
             CollectionStore.clearAll(in: modelContext)
+            for gameSystemId in GameSystemId.allCases {
+                MatchSetupStore.reset(gameSystemId: gameSystemId)
+                BattleTrackerStore.reset(gameSystemId: gameSystemId)
+            }
+        }
+
+        if args.contains(MarketingSnapshotBootstrap.snapshotPlayHome) {
+            MarketingSnapshotBootstrap.preparePlayHomeSnapshot()
+        }
+
+        if args.contains(MarketingSnapshotBootstrap.snapshotModelsCollection)
+            || args.contains(MarketingSnapshotBootstrap.loadSampleCollection) {
+            OnboardingStore.markCompleted()
+            FirstSessionStore.recordGameGuideOpened()
+            if let choice = value(following: onboardingChoice, in: args) {
+                FirstSessionStore.recordOnboardingChoice(gameSystemId: choice)
+            } else {
+                FirstSessionStore.recordOnboardingChoice(
+                    gameSystemId: OnboardingCompletion.spearheadGameSystemId
+                )
+            }
+            let cfg = HobbyConfig.current(modelContext)
+            cfg.hasSeenOnboarding = true
+            cfg.hasSeenCollectionIntro = true
+            cfg.hasDismissedCollectionFirstStepsCoach = true
+            try? modelContext.save()
         }
 
         if let choice = value(following: onboardingChoice, in: args) {

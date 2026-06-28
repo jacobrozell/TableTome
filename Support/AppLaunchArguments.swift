@@ -23,4 +23,16 @@ enum AppLaunchArguments: Sendable {
     static var shouldOpenBattleTracker: Bool {
         ProcessInfo.processInfo.arguments.contains(openBattleTracker)
     }
+
+    static var shouldSnapshotGuidedMatchArmies: Bool {
+        MarketingSnapshotBootstrap.shouldSnapshotGuidedMatchArmies
+    }
+
+    static var shouldSnapshotBattleCombat: Bool {
+        MarketingSnapshotBootstrap.shouldSnapshotBattleCombat
+    }
+
+    static var shouldOpenUnitFocus: Bool {
+        MarketingSnapshotBootstrap.shouldOpenUnitFocus
+    }
 }

@@ -253,7 +253,25 @@ Only add if App Store slot count or marketing story needs them.
 
 ---
 
-## Capture workflow (efficient order)
+## Capture workflow (automated)
+
+Preferred: simulator capture scripts (same pattern as Dart Buddy):
+
+```bash
+# iPhone — 8 frames, dark mode, marketing-screenshots/raw/
+./Scripts/capture-marketing-screenshots.sh
+
+# Light mode
+APPEARANCE=light ./Scripts/capture-marketing-screenshots.sh
+
+# iPad 13"
+./Scripts/capture-ipad-marketing-screenshots.sh
+APPEARANCE=light ./Scripts/capture-ipad-marketing-screenshots.sh
+```
+
+See [`marketing-screenshots/README.md`](../../marketing-screenshots/README.md) for dimensions, launch args, and optional framing.
+
+### Manual batching (legacy)
 
 Work **one frame at a time across all four variants** (setup once, swap simulator appearance, re-shoot):
 
@@ -276,7 +294,7 @@ For each frame 1…8:
 | Battle | 4, 5 | `-skip_onboarding -open_guided_match -open_battle_tracker` + theme |
 | Rules & Models | 6, 8 | `-skip_onboarding` + theme; Models: load sample on first capture |
 
-Store outputs under `fastlane/screenshots/` (gitignored) or `Marketing/Screenshots/1.0.0/` if added to repo as manifest-only.
+Store outputs under `marketing-screenshots/raw/` and `marketing-screenshots/ipad/raw/` (committed PNGs optional; scripts regenerate locally).
 
 ---
 

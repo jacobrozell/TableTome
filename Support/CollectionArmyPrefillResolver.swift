@@ -9,6 +9,23 @@ enum CollectionArmyPrefillResolver {
         let suggestedArmyName: String?
     }
 
+    /// Faction and army name applied after the game picker’s async faction reset (Add army sheet).
+    struct NewArmyDeferredDefaults: Equatable, Sendable {
+        let faction: String?
+        let armyName: String?
+    }
+
+    static func newArmyDeferredDefaults(from prefill: Prefill, existingName: String) -> NewArmyDeferredDefaults {
+        let faction = prefill.suggestedFactions.first
+        let armyName: String?
+        if existingName.trimmingCharacters(in: .whitespaces).isEmpty {
+            armyName = prefill.suggestedArmyName ?? faction.map { String(localized: "My \($0)") }
+        } else {
+            armyName = nil
+        }
+        return NewArmyDeferredDefaults(faction: faction, armyName: armyName)
+    }
+
     static func prefill(onboardingChoice: String?, activeGameSystemId: String) -> Prefill? {
         guard let gameSystemId = resolveGameSystemId(
             onboardingChoice: onboardingChoice,

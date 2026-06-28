@@ -72,13 +72,20 @@ enum ArmyStore {
     @discardableResult
     static func addUnit(to army: Army, name: String, qty: Int, source: String, state: String,
                         trackPerModel: Bool = false, memberStates: [String]? = nil,
+                        spearhead: Bool? = nil,
                         in ctx: ModelContext) -> Bool {
         let trimmed = name.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else { return false }
         let usesSpearhead = army.units.contains { $0.spearhead != nil }
+        let resolvedSpearhead: Bool?
+        if let spearhead {
+            resolvedSpearhead = spearhead
+        } else {
+            resolvedSpearhead = usesSpearhead ? false : nil
+        }
         let unit = ArmyUnit(name: trimmed.hobbyCapped(HobbyLimits.maxStringLen),
                         qty: max(1, qty), source: source.hobbyCapped(HobbyLimits.maxStringLen),
-                        state: state, spearhead: usesSpearhead ? false : nil,
+                        state: state, spearhead: resolvedSpearhead,
                         order: (army.units.map(\.order).max() ?? -1) + 1)
         unit.army = army
         ctx.insert(unit)
@@ -255,5 +262,31 @@ enum ArmyStore {
                 ctx.insert(m)
             }
         }
+    }
+
+    /// Adds starter-box catalog units after a new army is created.
+    @discardableResult
+    static func seedStarterUnits(
+        _ seeds: [StarterBoxCollectionPrefillResolver.UnitSeed],
+        to army: Army,
+        in ctx: ModelContext
+    ) -> Int {
+        let cfg = HobbyConfig.current(ctx)
+        let state = Pipeline.resolve(cfg.globalPipeline).first?.key ?? "Unassembled"
+        var added = 0
+        for seed in seeds {
+            if addUnit(
+                to: army,
+                name: seed.name,
+                qty: seed.qty,
+                source: seed.source,
+                state: state,
+                spearhead: seed.spearhead,
+                in: ctx
+            ) {
+                added += 1
+            }
+        }
+        return added
     }
 }

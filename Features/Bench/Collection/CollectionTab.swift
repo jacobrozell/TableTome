@@ -64,10 +64,18 @@ struct CollectionTab: View {
             }
         }
         .sheet(isPresented: $showAddArmy) {
-            AddArmySheet { game, faction, name in
-                ArmyStore.addArmy(name: name, game: game, faction: faction, in: context)
+            AddArmySheet { game, faction, name, starterSeeds in
+                guard ArmyStore.addArmy(name: name, game: game, faction: faction, in: context) else {
+                    return false
+                }
+                let trimmed = name.trimmingCharacters(in: .whitespaces)
+                if let army = (try? context.fetch(FetchDescriptor<Army>()))?.first(where: { $0.name == trimmed }),
+                   let starterSeeds, !starterSeeds.isEmpty {
+                    ArmyStore.seedStarterUnits(starterSeeds, to: army, in: context)
+                }
+                return true
             }
-            .presentationDetents([.medium, .large])
+            .presentationDetents(AppInfo.isUITesting ? [.large] : [.medium, .large])
         }
         .sheet(isPresented: $showHobbySettings) {
             NavigationStack {

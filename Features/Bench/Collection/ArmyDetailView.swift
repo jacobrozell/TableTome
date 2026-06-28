@@ -103,7 +103,7 @@ struct ArmyDetailView: View {
                         trackPerModel: trackPerModel, memberStates: memberStates, in: context
                     )
                 }
-                .presentationDetents([.medium, .large])
+                .presentationDetents(AppInfo.isUITesting ? [.large] : [.medium, .large])
             }
         }
         .sheet(isPresented: $showRename) {
@@ -272,6 +272,7 @@ struct ArmyDetailView: View {
                 } actions: {
                     Button(String(localized: "Add unit"), systemImage: "plus") { showAddUnit = true }
                         .buttonStyle(.borderedProminent)
+                        .accessibilityIdentifier("addUnit")
                 }
                 .listRowBackground(Color.clear)
                 PipelineBeginnerLegend(pipeline: pipeline)
@@ -385,6 +386,7 @@ struct ArmyDetailView: View {
         }
         ToolbarItem(placement: .topBarTrailing) {
             Button(String(localized: "Add unit"), systemImage: "plus") { showAddUnit = true }
+                .accessibilityIdentifier("addUnit")
                 .disabled(isEditing)
         }
         ToolbarItem(placement: .topBarTrailing) {

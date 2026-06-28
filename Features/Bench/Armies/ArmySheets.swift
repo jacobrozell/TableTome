@@ -7,7 +7,8 @@ struct AddArmySheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(AppRouter.self) private var router
     @FocusState private var nameFocused: Bool
-    let onCreate: (_ game: String, _ faction: String, _ name: String) -> Bool
+    let onCreate: (_ game: String, _ faction: String, _ name: String,
+                   _ starterSeeds: [StarterBoxCollectionPrefillResolver.UnitSeed]?) -> Bool
 
     @State private var game = "40k"
     @State private var faction = ""
@@ -15,6 +16,9 @@ struct AddArmySheet: View {
     @State private var name = ""
     @State private var error = false
     @State private var didApplyPrefill = false
+    @State private var suppressGameChangeFactionReset = false
+    @State private var starterUnitSeeds: [StarterBoxCollectionPrefillResolver.UnitSeed] = []
+    @State private var addStarterBoxUnits = true
 
     private var sessionPrefill: CollectionArmyPrefillResolver.Prefill? {
         CollectionArmyPrefillResolver.prefill(
@@ -43,6 +47,10 @@ struct AddArmySheet: View {
 
     private let customSentinel = "\u{0}custom"
 
+    private var starterSeedKey: String {
+        "\(game)|\(resolvedFaction)"
+    }
+
     var body: some View {
         NavigationStack {
             Form {
@@ -61,7 +69,10 @@ struct AddArmySheet: View {
                         }
                     }
                     .formNavigationPickerStyle()
-                    .onChange(of: game) { _, _ in faction = "" }
+                    .onChange(of: game) { _, _ in
+                        guard !suppressGameChangeFactionReset else { return }
+                        faction = ""
+                    }
 
                     Picker(String(localized: "Faction"), selection: $faction) {
                         Text(String(localized: "Choose…")).tag("")
@@ -109,8 +120,24 @@ struct AddArmySheet: View {
                     }
                 }
 
+                if !starterUnitSeeds.isEmpty {
+                    Section {
+                        Toggle(String(localized: "Add models from your starter box"), isOn: $addStarterBoxUnits)
+                            .accessibilityIdentifier("addStarterBoxUnits")
+                    } footer: {
+                        Text(
+                            String(
+                                localized: """
+                                Adds \(starterUnitSeeds.count) units from your box. You can rename or remove them anytime.
+                                """
+                            )
+                        )
+                    }
+                }
+
                 Section {
                     FormNameField(title: String(localized: "Army name"), text: $name, focus: $nameFocused)
+                        .accessibilityIdentifier("armyName")
                 } header: {
                     Text(String(localized: "Name"))
                 } footer: {
@@ -130,10 +157,19 @@ struct AddArmySheet: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(String(localized: "Add")) {
                         let f = resolvedFaction.isEmpty ? "Custom" : resolvedFaction
-                        if onCreate(game, f, name) { dismiss() } else { error = true }
+                        let seeds = addStarterBoxUnits ? starterUnitSeeds : nil
+                        if onCreate(game, f, name, seeds?.isEmpty == false ? seeds : nil) {
+                            dismiss()
+                        } else {
+                            error = true
+                        }
                     }
+                    .accessibilityIdentifier("addArmyConfirm")
                     .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty || faction.isEmpty)
                 }
+            }
+            .task(id: starterSeedKey) {
+                await loadStarterUnitSeeds()
             }
             .onAppear {
                 applySessionPrefillIfNeeded()
@@ -145,13 +181,23 @@ struct AddArmySheet: View {
     private func applySessionPrefillIfNeeded() {
         guard !didApplyPrefill, let prefill = sessionPrefill else { return }
         didApplyPrefill = true
-        game = prefill.game
-        if let first = prefill.suggestedFactions.first {
-            faction = first
+        let targetGame = prefill.game
+
+        suppressGameChangeFactionReset = true
+        if game != targetGame {
+            game = targetGame
         }
-        if name.trimmingCharacters(in: .whitespaces).isEmpty,
-           let suggested = prefill.suggestedArmyName {
-            name = suggested
+        suppressGameChangeFactionReset = false
+
+        // `onChange(of: game)` clears faction on the next run loop — re-apply after that.
+        Task { @MainActor in
+            let deferred = CollectionArmyPrefillResolver.newArmyDeferredDefaults(from: prefill, existingName: name)
+            if let targetFaction = deferred.faction {
+                faction = targetFaction
+            }
+            if let targetName = deferred.armyName {
+                name = targetName
+            }
         }
     }
 
@@ -162,6 +208,24 @@ struct AddArmySheet: View {
         let f = resolvedFaction.trimmingCharacters(in: .whitespaces)
         guard !f.isEmpty else { return }
         name = String(localized: "My \(f)")
+    }
+
+    private func loadStarterUnitSeeds() async {
+        let label = resolvedFaction.trimmingCharacters(in: .whitespaces)
+        guard !label.isEmpty, faction != customSentinel else {
+            starterUnitSeeds = []
+            return
+        }
+        let seeds = await StarterBoxCollectionPrefillResolver.unitSeeds(
+            onboardingChoice: FirstSessionStore.onboardingChoice,
+            activeGameSystemId: router.activeGameSystemId,
+            game: game,
+            factionLabel: label
+        ) ?? []
+        starterUnitSeeds = seeds
+        if !seeds.isEmpty {
+            addStarterBoxUnits = true
+        }
     }
 }
 
@@ -200,6 +264,7 @@ struct AddUnitSheet: View {
                         prompt: String(localized: "Intercessors (5)"),
                         focus: $nameFocused
                     )
+                    .accessibilityIdentifier("unitName")
                     QuantityStepper(label: String(localized: "Quantity"), value: $qty)
                     if !name.trimmingCharacters(in: .whitespaces).isEmpty {
                         ModelCountSummary(name: name, qty: qty)
@@ -265,10 +330,8 @@ struct AddUnitSheet: View {
                     Button(String(localized: "Cancel")) { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(String(localized: "Add")) {
-                        onAdd(name, qty, source, state, trackPerModel, memberStates)
-                        dismiss()
-                    }
+                    Button(String(localized: "Add")) { onAdd(name, qty, source, state, trackPerModel, memberStates); dismiss() }
+                    .accessibilityIdentifier("addUnitConfirm")
                     .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
             }

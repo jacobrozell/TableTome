@@ -293,6 +293,7 @@ struct CollectionHomeView: View {
     @ToolbarContentBuilder private var toolbarContent: some ToolbarContent {
         ToolbarItemGroup(placement: .topBarLeading) {
             Button(String(localized: "New army"), systemImage: "plus") { showAddArmy = true }
+                .accessibilityIdentifier("newArmy")
             Button(String(localized: "Undo"), systemImage: "arrow.uturn.backward") {
                 if let msg = undo.undo(in: context) { banner.show(msg) }
             }
@@ -364,6 +365,7 @@ struct CollectionHomeView: View {
                             .accessibilityIdentifier("loadSampleData")
                     }
                     Button(String(localized: "New army")) { showAddArmy = true }
+                        .accessibilityIdentifier("newArmyEmpty")
                 }
                 .adaptiveEmptyStateLayout()
             }

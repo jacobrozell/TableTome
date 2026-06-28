@@ -59,4 +59,31 @@ final class CollectionArmyPrefillResolverTests: XCTestCase {
         )
         XCTAssertNil(CollectionArmyPrefillResolver.factionLabel(forSlug: "unknown-faction", game: "40k"))
     }
+
+    func testNewArmyDeferredDefaultsAfterGamePickerReset() {
+        let prefill = CollectionArmyPrefillResolver.prefill(
+            onboardingChoice: GameSystemId.aosSpearhead.rawValue,
+            activeGameSystemId: GameSystemId.default.rawValue
+        )!
+        let deferred = CollectionArmyPrefillResolver.newArmyDeferredDefaults(from: prefill, existingName: "")
+
+        XCTAssertEqual(deferred.faction, prefill.suggestedFactions.first)
+        XCTAssertEqual(deferred.armyName, prefill.suggestedArmyName)
+        XCTAssertFalse(deferred.faction?.isEmpty ?? true)
+        XCTAssertFalse(deferred.armyName?.isEmpty ?? true)
+    }
+
+    func testNewArmyDeferredDefaultsPreservesExistingName() {
+        let prefill = CollectionArmyPrefillResolver.prefill(
+            onboardingChoice: GameSystemId.aosSpearhead.rawValue,
+            activeGameSystemId: GameSystemId.default.rawValue
+        )!
+        let deferred = CollectionArmyPrefillResolver.newArmyDeferredDefaults(
+            from: prefill,
+            existingName: "Custom Chapter"
+        )
+
+        XCTAssertEqual(deferred.faction, prefill.suggestedFactions.first)
+        XCTAssertNil(deferred.armyName)
+    }
 }

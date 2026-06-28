@@ -179,7 +179,7 @@ public enum BackupSanitizer {
             if ["import", "name", "progress"].contains(mapped) { out.armySort = mapped }
         }
         if let v = dto.unitSort, ["name", "state"].contains(v) { out.unitSort = v }
-        if let v = dto.lastBackupAt { out.lastBackupAt = ISO8601DateFormatter().date(from: v) }
+        if let v = dto.lastBackupAt { out.lastBackupAt = BackupISO8601.date(from: v) }
         return out
     }
 }

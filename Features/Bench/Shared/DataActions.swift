@@ -236,9 +236,10 @@ enum DataActions {
     }
 
     static func backupJSON(ctx: ModelContext) -> (text: String, filename: String) {
-        let json = BackupCodec.export(ctx)
-        HobbyConfig.current(ctx).lastBackupAt = Date()
+        let cfg = HobbyConfig.current(ctx)
+        cfg.lastBackupAt = Date()
         try? ctx.save()
+        let json = BackupCodec.export(ctx)
         return (json, "minimuster-backup-\(Date().fileStamp).json")
     }
 

@@ -189,6 +189,12 @@ final class DataActionsImportExportTests: XCTestCase {
         XCTAssertNotNil(restoredCfg.lastBackupAt)
     }
 
+    func testBackupISO8601RoundTripsFractionalSeconds() {
+        let date = Date(timeIntervalSince1970: 1_718_000_000.456)
+        let encoded = BackupISO8601.string(from: date)
+        XCTAssertEqual(BackupISO8601.date(from: encoded), date)
+    }
+
     func testBackupRestoreReplacesExistingCollection() throws {
         XCTAssertTrue(ArmyStore.addArmy(name: "Old Army", game: "40k", faction: "SM", in: context))
 
@@ -247,15 +253,17 @@ final class DataActionsImportExportTests: XCTestCase {
                 army: draft.name,
                 game: draft.game,
                 faction: draft.faction,
-                units: draft.units.map { u in
+                units: draft.units.map { unit in
                     UnitDTO(
-                        unit: u.name,
-                        qty: u.qty,
-                        source: u.source,
-                        state: u.state,
-                        spearhead: u.spearhead,
-                        notes: u.notes,
-                        members: u.members.isEmpty ? nil : u.members.map { MemberDTO(state: $0.state, notes: $0.notes) }
+                        unit: unit.name,
+                        qty: unit.qty,
+                        source: unit.source,
+                        state: unit.state,
+                        spearhead: unit.spearhead,
+                        notes: unit.notes,
+                        members: unit.members.isEmpty
+                            ? nil
+                            : unit.members.map { MemberDTO(state: $0.state, notes: $0.notes) }
                     )
                 }
             )

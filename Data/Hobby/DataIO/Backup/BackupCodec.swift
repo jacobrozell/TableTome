@@ -51,11 +51,11 @@ public enum BackupCodec {
             spearheadOnly: cfg.spearheadOnly,
             armySort: cfg.armySortRaw == "import" ? "csv" : cfg.armySortRaw,  // web uses "csv"
             unitSort: cfg.unitSortRaw, quickView: cfg.quickViewRaw, tagFilter: cfg.tagFilter,
-            lastBackupAt: cfg.lastBackupAt.map { ISO8601DateFormatter().string(from: $0) })
+            lastBackupAt: cfg.lastBackupAt.map { BackupISO8601.string(from: $0) })
 
         let snapshot = Snapshot(version: Snapshot.backupVersion, collection: collection,
                                 paints: paintDTOs, settings: settings,
-                                exportedAt: ISO8601DateFormatter().string(from: Date()))
+                                exportedAt: BackupISO8601.string(from: Date()))
 
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]

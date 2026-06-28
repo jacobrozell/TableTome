@@ -405,6 +405,8 @@ be compiled on a Mac before the next phase builds on it.
 | `GameSystemManifestEntry` optional fields | 4/1 | `Data/Registry/GameSystemsManifestLoader.swift` | additive optionals | medium (needs build) |
 | Grouped capability enums (`CombatRollEngineKind`, `DeploymentChecklistStyle`) | 2 | `Domain/Registry/PlayCapabilities+Grouped.swift` | read-review; computed from existing flags | medium (needs build) |
 | Tests for box sets + grouped caps | 2/4 | `Tests/Unit/BoxSetCatalogTests.swift`, `Tests/Unit/PlayCapabilitiesGroupedTests.swift` | read-review | medium (needs build) |
+| Box-set-backed registry wired into the app | 4 | `Data/Registry/GameSystemRegistry+BoxSets.swift`, `Domain/Registry/BoxSet.swift` (`replacingFeaturedArmies`), `App/AppDependencies.swift` | read-review; literal-fallback keeps it safe; parity test guards | medium (needs build) |
+| DesignSystem grouped by engine | 6 | `DesignSystem/AltActivation/` (4 SC cards), `DesignSystem/PhasedRound/` (10 Spearhead/40k/CP cards) | **pure `git mv`, 0 line changes** — within-target, symbols unchanged | high |
 
 All Swift above is **additive** — no existing type/API was removed or changed
 in a breaking way — so it should not break the current build. After it compiles
@@ -415,8 +417,9 @@ green, the next steps wire it in and remove the old paths.
 - **Phase 1:** make the manifest the source of truth for capabilities/copy/engine-config (not just wiring); reduce `GameSystemId+Bundled.swift` to a test seed; remove `GameSystemRegistry.bundled` static refs inside `BattleRules`/`GameSystemRulesLabels`/the per-system `*FeaturedArmies` types; `ReleaseSurface` reads manifest `availability`. **Ratchet:** drop `raw_id_literals` budget as these land.
 - **Phase 2 (finish):** migrate the ~26 readers of the system-named flags to `combatRollEngineKind`/`deploymentChecklistStyle`; route `CombatRollEngineRouter` off `CombatRollEngineKind`; then delete the stored booleans and the shim's flag reads. **Ratchet:** drop `system_named_caps` budget to 0.
 - **Phase 3:** delete `BattleRules`, `SpearheadBattleRules`, `CombatPatrolBattleRules`, `ScTmgBattleRules`; callers use `registry.engine(for:)`; replace `isSpearhead`/`isStarCraft` with engine/capability reads. **Ratchet:** drop `battlerules_or_probes` budget toward 0.
-- **Phase 4 (finish):** point descriptor construction at `BoxSetCatalog` (delete hardcoded `FeaturedArmiesConfig` literals); the parity test `testLoadsBundledBoxSetsForEverySystem` guards the swap.
-- **Phases 5–9:** Play UI split by engine, DesignSystem regrouping, navigation consolidation, persistence/concurrency hardening, naming normalization — as specced above. Each needs compile + parity tests before deleting the old path.
+- **Phase 4 (✅ wired):** the app now sources featured armies from box-set JSON via `bundled(withBoxSetsFrom:)` with a literal fallback. Remaining: once green, delete the hardcoded `FeaturedArmiesConfig` literals from `GameSystemId+Bundled.swift` (the parity test `testLoadsBundledBoxSetsForEverySystem` guards the deletion) and remove the fallback.
+- **Phase 6 (partial):** engine folders created and system-named cards moved (compilation-safe). Remaining (needs build): collapse the `*StartHereCard` / `*DeploymentChecklistCard` / `*WhatYouNeedCard` / `*RulesComparisonCard` families into parameterized cards; add a `Shared/` folder for the generic components.
+- **Phases 5, 7, 8, 9:** Play UI split by engine, navigation consolidation, persistence/concurrency hardening, naming normalization — high blast radius (50–225 call sites or compiler-verified parity each). **Not safe to do blind** — these are the build-loop phases: implement, compile, run parity tests, then delete the old path and drop the ratchet budget.
 
 ### Ratchet drawdown schedule
 

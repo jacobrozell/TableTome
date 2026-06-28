@@ -30,7 +30,6 @@ targets:
       - path: Resources/Rules
         buildPhase: resources
         type: folder
-        type: folder
       - path: Resources/Assets.xcassets
         buildPhase: resources
       - path: Resources/Catalogs
@@ -112,7 +111,6 @@ targets:
         buildPhase: resources
       - path: Resources/Rules
         buildPhase: resources
-        type: folder
         type: folder
     dependencies:
       - target: Tabletome

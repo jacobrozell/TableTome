@@ -27,7 +27,7 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
     let catalog: SpearheadCatalog
     let gameSystemId: GameSystemId
     let playContext: GameSystemPlayContext
-    private let trackerEngine: any BattleTrackerEngine
+    let trackerEngine: any BattleTrackerEngine
 
     private let onMatchStateChange: (() -> Void)?
 
@@ -80,26 +80,12 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
         return BattleFlowGuide.nextIncompleteWh40kSetupStep(in: trackerState.completedDeploymentSteps)
     }
 
-    var focusedScTmgDeploymentStep: ScTmgDeploymentChecklistStep? {
-        guard playContext.capabilities.showsActivationBar, trackerState.battleRound == 1 else { return nil }
-        return BattleFlowGuide.nextIncompleteScTmgSetupStep(in: trackerState.completedDeploymentSteps)
-    }
-
-    var usesAlternatingActivationTracker: Bool {
-        playContext.capabilities.showsActivationBar
-    }
-
     var focusedRoundOpenerStep: BattleRoundChecklistStep? {
         guard playContext.capabilities.showsBattleTacticDecks else { return nil }
         return BattleFlowGuide.nextIncompleteRoundOpenerStep(
             round: trackerState.battleRound,
             completedSteps: trackerState.completedRoundChecklistSteps
         )
-    }
-
-    var scFirstPlayerMarkerHolderName: String? {
-        guard let markerIsOne = trackerState.scFirstPlayerMarkerIsPlayerOne else { return nil }
-        return markerIsOne ? playerOneName : playerTwoName
     }
 
     var shootingEligibleUnits: [SpearheadUnit] {
@@ -287,13 +273,6 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
 
     func completeActivation() {
         trackerState.activePlayerIsOne.toggle()
-        persist()
-        refreshAbilities()
-        recordActivePlayerChanged()
-    }
-
-    func passActivation() {
-        trackerEngine.passActivation(trackerState: &trackerState)
         persist()
         refreshAbilities()
         recordActivePlayerChanged()

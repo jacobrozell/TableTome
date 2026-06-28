@@ -51,16 +51,6 @@ extension BattlePhaseTrackerViewModel {
         persist()
     }
 
-    func setScTmgDeploymentStep(_ step: ScTmgDeploymentChecklistStep, complete: Bool) {
-        if complete {
-            trackerState.completedDeploymentSteps.insert(step.rawValue)
-            recordDeploymentStep(step.rawValue)
-        } else {
-            trackerState.completedDeploymentSteps.remove(step.rawValue)
-        }
-        persist()
-    }
-
     func setWh40kDeploymentStep(_ step: Wh40kDeploymentChecklistStep, complete: Bool) {
         if complete {
             trackerState.completedDeploymentSteps.insert(step.rawValue)

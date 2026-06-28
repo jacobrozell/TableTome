@@ -11,7 +11,6 @@ struct RosterEditorView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(AppRouter.self) private var router
     @Environment(BannerCenter.self) private var banner
-    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
     @Query private var rosters: [Roster]
     @Query(sort: \Army.sortIndex) private var armies: [Army]
     @Query private var configs: [AppConfiguration]
@@ -490,7 +489,7 @@ struct RosterEditorView: View {
 
     private func playWithList(_ roster: Roster) {
         let gameSystemId = guidedMatchGameSystemId(for: roster)
-        learnNavigationCoordinator.openGuidedMatch(gameSystemId: gameSystemId)
+        router.openGuidedMatch(gameSystemId: gameSystemId)
     }
 
     private func guidedMatchGameSystemId(for roster: Roster) -> String {

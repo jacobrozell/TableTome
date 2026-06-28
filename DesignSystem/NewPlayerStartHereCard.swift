@@ -4,22 +4,14 @@ import TabletomeDomain
 /// Recommended first-game path shown on the Spearhead game guide screen.
 struct NewPlayerStartHereCard: View {
     var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Label(String(localized: "First game?"), systemImage: "flag.checkered")
-                .font(.headline)
-                .foregroundStyle(Color.accentOnSurface)
-
-            Text(
-                String(
-                    localized: """
-                    Grab your box, follow the steps below, then play at the table.
-                    """
-                )
+        GameGuideStartHereShell(
+            title: String(localized: "First game?"),
+            intro: String(
+                localized: """
+                Grab your box, follow the steps below, then play at the table.
+                """
             )
-            .font(.callout)
-            .foregroundStyle(.secondary)
-            .fixedSize(horizontal: false, vertical: true)
-
+        ) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 TappableGuidePathStep(
                     number: 1,
@@ -39,37 +31,34 @@ struct NewPlayerStartHereCard: View {
                     accessibilityId: "guide.path.guidedMatch"
                 )
             }
+        } footer: {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                GuidedMatchStartButton(
+                    gameSystemId: .aosSpearhead,
+                    accessibilityId: "guide.spearhead.guidedMatch"
+                )
 
-            NavigationLink(value: GuidedMatchLink(gameSystemId: .aosSpearhead)) {
-                Label(String(localized: "Start Guided Match"), systemImage: "flag.checkered")
-                    .font(.subheadline.weight(.semibold))
-                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-                    .contentShape(Rectangle())
-            }
-            .buttonStyle(.borderedProminent)
-            .accessibilityIdentifier("guide.spearhead.guidedMatch")
+                LearnFirstDisclosure {
+                    NavigationLink(value: GettingStartedLink(gameSystemId: GameSystemId.aosSpearhead.rawValue)) {
+                        Label(String(localized: "Getting Started"), systemImage: "map")
+                            .font(.subheadline.weight(.medium))
+                            .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("guide.spearhead.gettingStarted")
 
-            LearnFirstDisclosure {
-                NavigationLink(value: GettingStartedLink(gameSystemId: GameSystemId.aosSpearhead.rawValue)) {
-                    Label(String(localized: "Getting Started"), systemImage: "map")
-                        .font(.subheadline.weight(.medium))
-                        .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                        .contentShape(Rectangle())
+                    NavigationLink(value: SampleTurnLink()) {
+                        Label(String(localized: "Preview a Spearhead Turn (~2 min)"), systemImage: "play.circle.fill")
+                            .font(.subheadline.weight(.medium))
+                            .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("guide.spearheadSampleTurn")
                 }
-                .buttonStyle(.plain)
-                .accessibilityIdentifier("guide.spearhead.gettingStarted")
-
-                NavigationLink(value: SampleTurnLink()) {
-                    Label(String(localized: "Preview a Spearhead Turn (~2 min)"), systemImage: "play.circle.fill")
-                        .font(.subheadline.weight(.medium))
-                        .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-                .accessibilityIdentifier("guide.spearheadSampleTurn")
             }
         }
-        .accentHighlightCard()
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("guide.newPlayerStartHere")
     }

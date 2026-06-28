@@ -5,8 +5,7 @@ import TabletomeHobbyData
 @main
 struct TabletomeApp: App {
     @StateObject private var dependencies = AppDependencies()
-    @StateObject private var learnNavigationCoordinator = LearnNavigationCoordinator()
-    @State private var hobbyRouter = AppRouter()
+    @State private var router = AppRouter()
     @State private var hobbyBanner = BannerCenter()
     @State private var hobbyUndo = UndoService.shared
     @State private var tabBarChrome = TabBarChrome()
@@ -15,8 +14,7 @@ struct TabletomeApp: App {
         WindowGroup {
             RootTabView()
                 .environmentObject(dependencies)
-                .environmentObject(learnNavigationCoordinator)
-                .environment(hobbyRouter)
+                .environment(router)
                 .environment(hobbyBanner)
                 .environment(hobbyUndo)
                 .environment(tabBarChrome)
@@ -24,7 +22,7 @@ struct TabletomeApp: App {
                 .preferredColorScheme(AppearanceStore.colorScheme(for: appearanceRaw))
                 .onOpenURL { url in
                     guard let destination = AppDeepLink.destination(from: url) else { return }
-                    hobbyRouter.open(destination)
+                    router.open(destination)
                 }
                 .onAppear {
                     UnitCatalogLoader.loadIfNeeded()

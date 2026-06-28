@@ -4,7 +4,7 @@ import TabletomeDomain
 struct AppSearchView: View {
     @StateObject private var viewModel: AppSearchViewModel
     @EnvironmentObject private var dependencies: AppDependencies
-    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
+    @Environment(AppRouter.self) private var router
 
     init(viewModel: AppSearchViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -52,7 +52,7 @@ struct AppSearchView: View {
             syncActiveGameSystem()
             applyPendingRulesSearchQuery()
         }
-        .onChange(of: learnNavigationCoordinator.pendingRulesSearchQuery) { _, _ in
+        .onChange(of: router.pendingRulesSearchQuery) { _, _ in
             applyPendingRulesSearchQuery()
         }
         .refreshable { await viewModel.load() }
@@ -66,7 +66,7 @@ struct AppSearchView: View {
     }
 
     private func applyPendingRulesSearchQuery() {
-        guard let query = learnNavigationCoordinator.consumePendingRulesSearchQuery() else { return }
+        guard let query = router.consumePendingRulesSearchQuery() else { return }
         syncActiveGameSystem()
         viewModel.searchText = query
     }

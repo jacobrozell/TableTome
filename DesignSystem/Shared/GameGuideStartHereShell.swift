@@ -3,18 +3,33 @@ import TabletomeDomain
 
 /// Shared chrome for game-guide "Start here" cards — engine-specific paths plug in below the intro.
 struct GameGuideStartHereShell<Tracks: View, Footer: View>: View {
-    let gameSystemId: GameSystemId
+    let title: String
+    let gameSystemId: GameSystemId?
     let intro: String
     @ViewBuilder var tracks: () -> Tracks
     @ViewBuilder var footer: () -> Footer
 
+    init(
+        title: String = String(localized: "Start here"),
+        gameSystemId: GameSystemId? = nil,
+        intro: String,
+        @ViewBuilder tracks: @escaping () -> Tracks,
+        @ViewBuilder footer: @escaping () -> Footer
+    ) {
+        self.title = title
+        self.gameSystemId = gameSystemId
+        self.intro = intro
+        self.tracks = tracks
+        self.footer = footer
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
-                Label(String(localized: "Start here"), systemImage: "flag.checkered")
+                Label(title, systemImage: "flag.checkered")
                     .font(.headline)
                     .foregroundStyle(Color.accentOnSurface)
-                if ReleaseSurface.showsNewEditionBadge(for: gameSystemId) {
+                if let gameSystemId, ReleaseSurface.showsNewEditionBadge(for: gameSystemId) {
                     NewEditionBadge()
                 }
             }
@@ -34,11 +49,13 @@ struct GameGuideStartHereShell<Tracks: View, Footer: View>: View {
 
 extension GameGuideStartHereShell where Footer == GuidedMatchStartButton {
     init(
+        title: String = String(localized: "Start here"),
         gameSystemId: GameSystemId,
         intro: String,
         guidedMatchAccessibilityId: String,
         @ViewBuilder tracks: @escaping () -> Tracks
     ) {
+        self.title = title
         self.gameSystemId = gameSystemId
         self.intro = intro
         self.tracks = tracks

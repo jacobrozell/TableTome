@@ -3,7 +3,7 @@ import TabletomeDomain
 
 /// Helps complete beginners pick the right game mode from the Play tab.
 struct HomeNewPlayerChooserCard: View {
-    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
+    @Environment(AppRouter.self) private var router
     @State private var showsBoxHelper = false
     @State private var showsWh40kPicker = false
 
@@ -198,6 +198,6 @@ struct HomeNewPlayerChooserCard: View {
     private func openGameGuide(gameSystemId: String) {
         ActiveGameContextStore.setActiveGameSystem(gameSystemId)
         FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
-        learnNavigationCoordinator.openGameGuide(gameSystemId: gameSystemId)
+        router.openGameGuide(gameSystemId: gameSystemId)
     }
 }

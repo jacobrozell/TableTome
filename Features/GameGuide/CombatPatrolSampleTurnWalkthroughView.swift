@@ -5,7 +5,7 @@ import TabletomeDomain
 struct CombatPatrolSampleTurnWalkthroughView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
-    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
+    @Environment(AppRouter.self) private var router
     @State private var step = 0
     @State private var showsWargamePrimer = !NewPlayerTipsStore.hasDismissedWargamePrimer
 
@@ -90,7 +90,7 @@ struct CombatPatrolSampleTurnWalkthroughView: View {
                 GlossaryChipsRow(text: steps[step].detail, gameSystemId: GameSystemId.wh40k10eCp.rawValue)
                 if ReleaseSurface.showsRulesAssistant {
                     Button {
-                        learnNavigationCoordinator.openRulesSearch(
+                        router.openRulesSearch(
                             gameSystemId: GameSystemId.wh40k10eCp.rawValue,
                             query: steps[step].title
                         )
@@ -220,7 +220,7 @@ struct CombatPatrolSampleTurnWalkthroughView: View {
                     .fixedSize(horizontal: false, vertical: true)
 
                     Button {
-                        learnNavigationCoordinator.openGuidedMatch(gameSystemId: GameSystemId.wh40k10eCp.rawValue)
+                        router.openGuidedMatch(gameSystemId: GameSystemId.wh40k10eCp.rawValue)
                     } label: {
                         Label(String(localized: "Open Guided Match"), systemImage: "flag.checkered")
                             .font(.headline)

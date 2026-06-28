@@ -5,7 +5,7 @@ struct GameSystemDetailView: View {
     let gameSystemId: String
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @EnvironmentObject private var dependencies: AppDependencies
-    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
+    @Environment(AppRouter.self) private var router
     @State private var gameSystem: GameSystem?
     @State private var featuredArmyRows: [FeaturedArmyRow] = []
     @State private var errorMessage: String?
@@ -46,7 +46,7 @@ struct GameSystemDetailView: View {
                             WrongGuideBanner(
                                 alert: wrongGuideAlert,
                                 onOpenSuggestedGuide: {
-                                    learnNavigationCoordinator.openGameGuide(
+                                    router.openGameGuide(
                                         gameSystemId: wrongGuideAlert.suggestedGameSystemId
                                     )
                                 },

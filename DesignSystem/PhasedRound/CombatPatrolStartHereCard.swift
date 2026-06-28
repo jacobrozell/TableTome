@@ -5,22 +5,7 @@ struct CombatPatrolStartHereCard: View {
     let gameSystem: GameSystem
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Label(String(localized: "Start here"), systemImage: "flag.checkered")
-                .font(.headline)
-                .foregroundStyle(Color.accentOnSurface)
-
-            Text(
-                String(
-                    localized: """
-                    Box says Combat Patrol? This guide uses 10th Edition patrol rules — follow the steps, then play at the table.
-                    """
-                )
-            )
-            .font(.callout)
-            .foregroundStyle(.secondary)
-            .fixedSize(horizontal: false, vertical: true)
-
+        GameGuideStartHereShell(intro: intro) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 TappableGuidePathStep(
                     number: 1,
@@ -40,52 +25,57 @@ struct CombatPatrolStartHereCard: View {
                     accessibilityId: "guide.combatPatrol.path.guidedMatch"
                 )
             }
+        } footer: {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                GuidedMatchStartButton(
+                    gameSystemId: .wh40k10eCp,
+                    accessibilityId: "guide.combatPatrol.guidedMatch"
+                )
 
-            NavigationLink(value: GuidedMatchLink(gameSystemId: .wh40k10eCp)) {
-                Label(String(localized: "Start Guided Match"), systemImage: "flag.checkered")
-                    .font(.subheadline.weight(.semibold))
-                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-                    .contentShape(Rectangle())
-            }
-            .buttonStyle(.borderedProminent)
-            .accessibilityIdentifier("guide.combatPatrol.guidedMatch")
+                CombatPatrolWhatYouNeedCard()
 
-            CombatPatrolWhatYouNeedCard()
-
-            if ReleaseSurface.isGameSystemIdVisible(GameSystemId.wh40k11e.rawValue) {
-                NavigationLink(value: GettingStartedLink(gameSystemId: GameSystemId.wh40k11e.rawValue)) {
-                    Label(
-                        String(localized: "Have Battleforce or Armageddon? (11th Edition)"),
-                        systemImage: "scope"
-                    )
-                    .font(.caption.weight(.medium))
-                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                    .contentShape(Rectangle())
+                if ReleaseSurface.isGameSystemIdVisible(GameSystemId.wh40k11e.rawValue) {
+                    NavigationLink(value: GettingStartedLink(gameSystemId: GameSystemId.wh40k11e.rawValue)) {
+                        Label(
+                            String(localized: "Have Battleforce or Armageddon? (11th Edition)"),
+                            systemImage: "scope"
+                        )
+                        .font(.caption.weight(.medium))
+                        .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(Color.accentOnSurface)
+                    .accessibilityIdentifier("guide.combatPatrol.wh40k11eCrossLink")
                 }
-                .buttonStyle(.plain)
+
+                HStack(spacing: DesignTokens.Spacing.md) {
+                    NavigationLink(value: GettingStartedLink(gameSystemId: gameSystem.id)) {
+                        Text(String(localized: "Getting Started"))
+                            .font(.caption.weight(.semibold))
+                            .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    NavigationLink(value: CombatPatrolMissionsLink(gameSystemId: gameSystem.id)) {
+                        Text(String(localized: "Missions Reference"))
+                            .font(.caption.weight(.semibold))
+                            .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                }
                 .foregroundStyle(Color.accentOnSurface)
-                .accessibilityIdentifier("guide.combatPatrol.wh40k11eCrossLink")
             }
-
-            HStack(spacing: DesignTokens.Spacing.md) {
-                NavigationLink(value: GettingStartedLink(gameSystemId: gameSystem.id)) {
-                    Text(String(localized: "Getting Started"))
-                        .font(.caption.weight(.semibold))
-                        .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-                NavigationLink(value: CombatPatrolMissionsLink(gameSystemId: gameSystem.id)) {
-                    Text(String(localized: "Missions Reference"))
-                        .font(.caption.weight(.semibold))
-                        .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-            }
-            .foregroundStyle(Color.accentOnSurface)
         }
-        .accentHighlightCard()
         .accessibilityIdentifier("guide.combatPatrol.startHere")
+    }
+
+    private var intro: String {
+        String(
+            localized: """
+            Box says Combat Patrol? This guide uses 10th Edition patrol rules — follow the steps, then play at the table.
+            """
+        )
     }
 }

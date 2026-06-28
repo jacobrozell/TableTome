@@ -7,7 +7,6 @@ struct NewRosterSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
     @Environment(AppRouter.self) private var router
-    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
     @Query(sort: \Army.sortIndex) private var armies: [Army]
     @Query private var configs: [AppConfiguration]
 
@@ -407,7 +406,7 @@ struct NewRosterSheet: View {
 
     private func openGuidedMatch(gameSystemId: String) {
         dismiss()
-        learnNavigationCoordinator.openGuidedMatch(
+        router.openGuidedMatch(
             gameSystemId: gameSystemId,
             opensBattleTab: PlayContinuationResolver.shouldOpenBattleTab(gameSystemId: gameSystemId)
         )
@@ -417,12 +416,12 @@ struct NewRosterSheet: View {
         let gameSystemId = resolvedPlayGameSystemId
         dismiss()
         if NewRosterPrefillResolver.isFixedRosterGameSystem(gameSystemId) {
-            learnNavigationCoordinator.openGuidedMatch(
+            router.openGuidedMatch(
                 gameSystemId: gameSystemId,
                 opensBattleTab: PlayContinuationResolver.shouldOpenBattleTab(gameSystemId: gameSystemId)
             )
         } else {
-            learnNavigationCoordinator.openGameGuide(gameSystemId: gameSystemId)
+            router.openGameGuide(gameSystemId: gameSystemId)
         }
     }
 

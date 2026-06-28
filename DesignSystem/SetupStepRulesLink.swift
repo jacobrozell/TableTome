@@ -7,12 +7,12 @@ struct SetupStepRulesLink: View {
     let stepTitle: String
     var relatedRuleSectionId: String?
 
-    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
+    @Environment(AppRouter.self) private var router
 
     var body: some View {
         if ReleaseSurface.showsRulesAssistant {
             Button {
-                learnNavigationCoordinator.openRulesSearch(
+                router.openRulesSearch(
                     gameSystemId: gameSystemId,
                     query: stepTitle
                 )

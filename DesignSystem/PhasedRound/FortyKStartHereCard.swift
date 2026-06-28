@@ -6,57 +6,40 @@ struct FortyKStartHereCard: View {
     let gameSystem: GameSystem
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
-                Label(String(localized: "Start here"), systemImage: "flag.checkered")
-                    .font(.headline)
-                    .foregroundStyle(Color.accentOnSurface)
-                if ReleaseSurface.showsNewEditionBadge(for: gameSystem.id) {
-                    NewEditionBadge()
-                }
-            }
-
-            Text(
-                String(
-                    localized: """
-                    Pick a path below, then play at the table with physical dice.
-                    """
-                )
-            )
-            .font(.callout)
-            .foregroundStyle(.secondary)
-            .fixedSize(horizontal: false, vertical: true)
-
-            if ReleaseSurface.isGameSystemIdVisible(GameSystemId.wh40k10eCp.rawValue) {
-                NavigationLink(value: GettingStartedLink(gameSystemId: GameSystemId.wh40k10eCp.rawValue)) {
-                    Label(
-                        String(localized: "Have a Combat Patrol box? (10th Edition rules)"),
-                        systemImage: "shippingbox"
-                    )
-                    .font(.caption.weight(.medium))
-                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                    .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-                .foregroundStyle(Color.accentOnSurface)
-                .accessibilityIdentifier("guide.wh40k.combatPatrolCrossLink")
-            }
-
+        GameGuideStartHereShell(gameSystemId: .wh40k11e, intro: intro) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                if ReleaseSurface.isGameSystemIdVisible(GameSystemId.wh40k10eCp.rawValue) {
+                    NavigationLink(value: GettingStartedLink(gameSystemId: GameSystemId.wh40k10eCp.rawValue)) {
+                        Label(
+                            String(localized: "Have a Combat Patrol box? (10th Edition rules)"),
+                            systemImage: "shippingbox"
+                        )
+                        .font(.caption.weight(.medium))
+                        .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(Color.accentOnSurface)
+                    .accessibilityIdentifier("guide.wh40k.combatPatrolCrossLink")
+                }
+
                 newPlayerTrack
                 returningPlayerTrack
             }
-
-            NavigationLink(value: GuidedMatchLink(gameSystemId: .wh40k11e)) {
-                Label(String(localized: "Start Guided Match"), systemImage: "flag.checkered")
-                    .font(.subheadline.weight(.semibold))
-                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-                    .contentShape(Rectangle())
-            }
-            .buttonStyle(.borderedProminent)
-            .accessibilityIdentifier("guide.wh40k.guidedMatch")
+        } footer: {
+            GuidedMatchStartButton(
+                gameSystemId: .wh40k11e,
+                accessibilityId: "guide.wh40k.guidedMatch"
+            )
         }
-        .accentHighlightCard()
+    }
+
+    private var intro: String {
+        String(
+            localized: """
+            Pick a path below, then play at the table with physical dice.
+            """
+        )
     }
 
     private var newPlayerTrack: some View {

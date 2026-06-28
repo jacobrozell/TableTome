@@ -3,7 +3,7 @@ import TabletomeDomain
 import TabletomeHobbyData
 
 struct SettingsView: View {
-    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
+    @Environment(AppRouter.self) private var router
     @Environment(\.modelContext) private var modelContext
     @AppStorage(AppearanceStore.storageKey) private var appearanceRaw = ThemePreference.system.rawValue
     @State private var showsOnboarding = false
@@ -60,7 +60,7 @@ struct SettingsView: View {
 
                 if ReleaseSurface.isGameSystemIdVisible(OnboardingCompletion.combatPatrolGameSystemId) {
                     Button {
-                        learnNavigationCoordinator.openGameGuide(
+                        router.openGameGuide(
                             gameSystemId: OnboardingCompletion.combatPatrolGameSystemId
                         )
                     } label: {
@@ -74,7 +74,7 @@ struct SettingsView: View {
                 }
 
                 Button {
-                    learnNavigationCoordinator.openGameGuide(
+                    router.openGameGuide(
                         gameSystemId: OnboardingCompletion.spearheadGameSystemId
                     )
                 } label: {
@@ -86,7 +86,7 @@ struct SettingsView: View {
 
                 if ReleaseSurface.isGameSystemIdVisible(OnboardingCompletion.wh40k11eGameSystemId) {
                     Button {
-                        learnNavigationCoordinator.openGameGuide(
+                        router.openGameGuide(
                             gameSystemId: OnboardingCompletion.wh40k11eGameSystemId
                         )
                     } label: {
@@ -101,7 +101,7 @@ struct SettingsView: View {
 
                 if ReleaseSurface.isGameSystemIdVisible(OnboardingCompletion.scTmgGameSystemId) {
                     Button {
-                        learnNavigationCoordinator.openGameGuide(
+                        router.openGameGuide(
                             gameSystemId: OnboardingCompletion.scTmgGameSystemId
                         )
                     } label: {
@@ -237,10 +237,10 @@ struct SettingsView: View {
                 switch completion {
                 case .openGuidedMatch(let gameSystemId):
                     ActiveGameContextStore.setActiveGameSystem(gameSystemId)
-                    learnNavigationCoordinator.openGuidedMatch(gameSystemId: gameSystemId)
+                    router.openGuidedMatch(gameSystemId: gameSystemId)
                 case .openGameGuide(let gameSystemId):
                     ActiveGameContextStore.setActiveGameSystem(gameSystemId)
-                    learnNavigationCoordinator.openGameGuide(gameSystemId: gameSystemId)
+                    router.openGameGuide(gameSystemId: gameSystemId)
                 case .exploreApp:
                     break
                 }

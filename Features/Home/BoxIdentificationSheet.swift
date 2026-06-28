@@ -4,7 +4,7 @@ import TabletomeDomain
 /// Helps beginners who do not know which game mode matches their box.
 struct BoxIdentificationSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
+    @Environment(AppRouter.self) private var router
 
     @State private var step = 0
     @State private var genre: Genre?
@@ -288,7 +288,7 @@ struct BoxIdentificationSheet: View {
             gameSystemId: gameSystemId,
             wh40kVariant: recommendedWh40kVariant(for: gameSystemId)?.rawValue
         )
-        learnNavigationCoordinator.openGameGuide(gameSystemId: gameSystemId)
+        router.openGameGuide(gameSystemId: gameSystemId)
         dismiss()
     }
 

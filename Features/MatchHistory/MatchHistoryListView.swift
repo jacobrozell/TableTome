@@ -9,7 +9,7 @@ struct MatchHistoryDetailLink: Hashable {
 
 struct MatchHistoryListView: View {
     @StateObject private var viewModel: MatchHistoryViewModel
-    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
+    @Environment(AppRouter.self) private var router
     @State private var filters: [(id: String?, label: String)] = []
 
     init(viewModel: MatchHistoryViewModel) {
@@ -58,7 +58,7 @@ struct MatchHistoryListView: View {
                             options: shippedGuidedMatchOptions,
                             activeGameSystemId: activeGameGuidedMatchGameSystemId,
                             onLaunch: { gameSystemId in
-                                learnNavigationCoordinator.openGuidedMatch(
+                                router.openGuidedMatch(
                                     gameSystemId: gameSystemId,
                                     opensBattleTab: PlayContinuationResolver.shouldOpenBattleTab(
                                         gameSystemId: gameSystemId

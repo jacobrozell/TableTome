@@ -3,23 +3,12 @@ import SwiftUI
 import TabletomeDomain
 import TabletomeHobbyData
 
-enum AppTab: Hashable {
-    case bench
-    case muster
-    case learn
-    case search
-    case settings
-}
-
 struct RootTabView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(AppRouter.self) private var router
     @EnvironmentObject private var dependencies: AppDependencies
-    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
     @Environment(TabBarChrome.self) private var tabBarChrome
     @State private var showsOnboarding = false
-    @State private var selectedTab: AppTab = .learn
-    @State private var learnPath = NavigationPath()
     @State private var firstSessionRevision = 0
 
     private var emphasizePlayTab: Bool {
@@ -33,7 +22,9 @@ struct RootTabView: View {
     }
 
     var body: some View {
-        TabView(selection: $selectedTab) {
+        @Bindable var router = router
+
+        TabView(selection: $router.selectedTab) {
             if ReleaseSurface.showsBenchTab, showsHobbyTabs {
                 BenchTab()
                     .tabItem {
@@ -91,39 +82,26 @@ struct RootTabView: View {
             if OnboardingStore.shouldPresentOnLaunch, !showsOnboarding {
                 showsOnboarding = true
             } else if AppLaunchArguments.shouldOpenGuidedMatch {
-                openGuidedMatch(gameSystemId: OnboardingCompletion.defaultGameSystemId)
+                router.openGuidedMatch(gameSystemId: OnboardingCompletion.defaultGameSystemId)
             }
             AppearancePreferenceStorage.migrateFromHobbyConfigurationIfNeeded(modelContext)
         }
-        .onChange(of: learnNavigationCoordinator.pendingAction) { _, _ in
-            applyPendingLearnNavigation()
-        }
-        .onChange(of: router.tab) { _, tab in
-            switch tab {
-            case .armies, .paints:
-                if selectedTab != .bench { selectedTab = .bench }
-            case .muster:
-                if selectedTab != .muster { selectedTab = .muster }
-            }
-        }
-        .onChange(of: selectedTab) { oldTab, newTab in
+        .onChange(of: router.selectedTab) { oldTab, newTab in
             guard oldTab != newTab else { return }
             tabBarChrome.isHidden = false
-        }
-        .onChange(of: selectedTab) { _, tab in
-            if tab == .muster, router.tab != .muster {
-                router.tab = .muster
+            if newTab == .muster, router.hobbyTab != .muster {
+                router.hobbyTab = .muster
             }
         }
-        .onChange(of: learnPath.count) { _, count in
+        .onChange(of: router.learnPath.count) { _, count in
             if count == 0 {
                 tabBarChrome.isHidden = false
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: .firstSessionStoreDidChange)) { _ in
             firstSessionRevision += 1
-            if !showsHobbyTabs, selectedTab == .bench || selectedTab == .muster {
-                selectedTab = .learn
+            if !showsHobbyTabs, router.selectedTab == .bench || router.selectedTab == .muster {
+                router.selectedTab = .learn
             }
         }
         .bannerInset()
@@ -137,7 +115,9 @@ struct RootTabView: View {
 
     @ViewBuilder
     private var playTab: some View {
-        let stack = NavigationStack(path: $learnPath) {
+        @Bindable var router = router
+
+        let stack = NavigationStack(path: $router.learnPath) {
             HomeView(viewModel: dependencies.makeHomeViewModel())
         }
         .tabItem {
@@ -200,44 +180,10 @@ struct RootTabView: View {
             break
         case .openGuidedMatch(let gameSystemId):
             FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
-            openGuidedMatch(gameSystemId: gameSystemId)
+            router.openGuidedMatch(gameSystemId: gameSystemId)
         case .openGameGuide(let gameSystemId):
             FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
-            openGameGuide(gameSystemId: gameSystemId)
+            router.openGameGuide(gameSystemId: gameSystemId)
         }
-    }
-
-    private func applyPendingLearnNavigation() {
-        guard let action = learnNavigationCoordinator.consumePendingAction() else { return }
-        switch action {
-        case .openGuidedMatch(let gameSystemId, let opensBattleTab):
-            openGuidedMatch(gameSystemId: gameSystemId, opensBattleTab: opensBattleTab)
-        case .openGameGuide(let gameSystemId):
-            openGameGuide(gameSystemId: gameSystemId)
-        case .openRulesSearch(let gameSystemId, _):
-            openRulesSearch(gameSystemId: gameSystemId)
-        }
-    }
-
-    private func openGuidedMatch(gameSystemId: String, opensBattleTab: Bool = false) {
-        ActiveGameContextStore.setActiveGameSystem(gameSystemId)
-        selectedTab = .learn
-        learnPath = NavigationPath([
-            GuidedMatchLink(
-                gameSystemId: GameSystemId(resolving: gameSystemId),
-                opensBattleTab: opensBattleTab
-            )
-        ])
-    }
-
-    private func openGameGuide(gameSystemId: String) {
-        ActiveGameContextStore.setActiveGameSystem(gameSystemId)
-        selectedTab = .learn
-        learnPath = NavigationPath([gameSystemId])
-    }
-
-    private func openRulesSearch(gameSystemId: String) {
-        ActiveGameContextStore.setActiveGameSystem(gameSystemId)
-        selectedTab = .search
     }
 }

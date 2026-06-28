@@ -3,7 +3,7 @@ import TabletomeDomain
 
 /// Shown on Play when the user should continue onboarding or resume an in-progress Guided Match.
 struct HomeContinueCard: View {
-    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
+    @Environment(AppRouter.self) private var router
 
     let continuation: PlayContinuation
 
@@ -51,9 +51,9 @@ struct HomeContinueCard: View {
         ActiveGameContextStore.setActiveGameSystem(continuation.gameSystemId)
         switch continuation.destination {
         case .gameGuide:
-            learnNavigationCoordinator.openGameGuide(gameSystemId: continuation.gameSystemId)
+            router.openGameGuide(gameSystemId: continuation.gameSystemId)
         case .guidedMatch:
-            learnNavigationCoordinator.openGuidedMatch(
+            router.openGuidedMatch(
                 gameSystemId: continuation.gameSystemId,
                 opensBattleTab: continuation.opensBattleTab
             )

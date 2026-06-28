@@ -4,7 +4,7 @@ import TabletomeDomain
 /// Sub-picker for the collapsed “I bought a Warhammer 40,000 box” chooser row.
 struct Wh40kBoxPickerSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var learnNavigationCoordinator: LearnNavigationCoordinator
+    @Environment(AppRouter.self) private var router
 
     var body: some View {
         NavigationStack {
@@ -120,7 +120,7 @@ struct Wh40kBoxPickerSheet: View {
             gameSystemId: gameSystemId,
             wh40kVariant: variant.rawValue
         )
-        learnNavigationCoordinator.openGameGuide(gameSystemId: gameSystemId)
+        router.openGameGuide(gameSystemId: gameSystemId)
         dismiss()
     }
 }

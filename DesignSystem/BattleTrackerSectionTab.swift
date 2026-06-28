@@ -256,12 +256,16 @@ struct StickyPhaseHeader: View {
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
+    private var playEngine: PlayEngineConfig {
+        GameSystemPlayContext.context(for: gameSystemId).playEngine
+    }
+
     var body: some View {
         Group {
             if dynamicTypeSize.needsLayoutAdaptation {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                     HStack(spacing: DesignTokens.Spacing.sm) {
-                        Text(BattleRules.roundLabel(round: round, gameSystemId: gameSystemId))
+                        Text(playEngine.roundLabel(round: round))
                             .font(.subheadline.weight(.semibold))
                         Text("·")
                             .foregroundStyle(.tertiary)
@@ -277,7 +281,7 @@ struct StickyPhaseHeader: View {
                 }
             } else {
                 HStack(spacing: DesignTokens.Spacing.sm) {
-                    Text(BattleRules.roundLabel(round: round, gameSystemId: gameSystemId))
+                    Text(playEngine.roundLabel(round: round))
                         .font(.subheadline.weight(.semibold))
                     Text("·")
                         .foregroundStyle(.tertiary)
@@ -308,7 +312,7 @@ struct StickyPhaseHeader: View {
 
     private var stickyPhaseAccessibilityLabel: String {
         [
-            BattleRules.roundLabel(round: round, gameSystemId: gameSystemId),
+            playEngine.roundLabel(round: round),
             playerName,
             phaseTitle
         ].joined(separator: ", ")

@@ -132,7 +132,7 @@ struct CombatPatrolTableStateCard: View {
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
             HStack(spacing: DesignTokens.Spacing.sm) {
-                ForEach(CombatPatrolBattleRules.objectiveMarkerIds, id: \.self) { marker in
+                ForEach(CombatPatrolRules.objectiveMarkerIds, id: \.self) { marker in
                     Button {
                         toggleSecured(marker)
                     } label: {
@@ -159,7 +159,7 @@ struct CombatPatrolTableStateCard: View {
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(.secondary)
             HStack(spacing: DesignTokens.Spacing.sm) {
-                ForEach(CombatPatrolBattleRules.objectiveMarkerIds, id: \.self) { marker in
+                ForEach(CombatPatrolRules.objectiveMarkerIds, id: \.self) { marker in
                     Button {
                         toggleIntel(marker)
                     } label: {

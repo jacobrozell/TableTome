@@ -140,10 +140,11 @@ final class BattleFlowGuideTests: XCTestCase {
     }
 
     func testCombatPatrolMainPhasesExcludeDeployment() {
-        let phases = BattleRules.mainPhases(gameSystemId: "wh40k-10e-cp")
+        let engine = GameSystemPlayContext.context(for: "wh40k-10e-cp").playEngine
+        let phases = engine.mainPhases()
         XCTAssertEqual(phases.first, .command)
         XCTAssertFalse(phases.contains(.deployment))
-        XCTAssertEqual(BattleRules.battleRoundCount(gameSystemId: "wh40k-10e-cp"), 5)
+        XCTAssertEqual(engine.battleRoundCount(), 5)
     }
 
     func testMovesToRoundOpenerAfterDeployment() {

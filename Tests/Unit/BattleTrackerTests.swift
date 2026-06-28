@@ -81,9 +81,10 @@ final class BattleTrackerTests: XCTestCase {
     }
 
     func testSpearheadBattleRoundCountIsFour() {
-        XCTAssertEqual(SpearheadBattleRules.battleRoundCount, 4)
-        XCTAssertEqual(SpearheadBattleRules.clampBattleRound(0), 1)
-        XCTAssertEqual(SpearheadBattleRules.clampBattleRound(5), 4)
+        let engine = GameSystemPlayContext.context(for: .aosSpearhead).playEngine
+        XCTAssertEqual(engine.battleRoundCount(), 4)
+        XCTAssertEqual(engine.clampBattleRound(0), 1)
+        XCTAssertEqual(engine.clampBattleRound(5), 4)
     }
 
     func testBattleTrackerStoreRoundTrip() {

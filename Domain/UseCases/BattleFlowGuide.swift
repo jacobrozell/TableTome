@@ -65,7 +65,7 @@ public enum BattleFlowGuide {
             return roundOpenerGuide(for: openerStep, round: round, matchState: matchState)
         }
 
-        let roundCount = BattleRules.battleRoundCount(gameSystemId: gameSystemId)
+        let roundCount = GameSystemPlayContext.context(for: gameSystemId).playEngine.battleRoundCount()
         if trackerState.currentPhase == .endOfTurn {
             if round >= roundCount {
                 return battleCompleteStep(roundCount: roundCount)
@@ -93,7 +93,7 @@ public enum BattleFlowGuide {
         }
 
         let round = trackerState.battleRound
-        let roundCount = BattleRules.battleRoundCount(gameSystemId: gameSystemId)
+        let roundCount = GameSystemPlayContext.context(for: gameSystemId).playEngine.battleRoundCount()
         if trackerState.currentPhase == .endOfTurn {
             if round >= roundCount {
                 return battleCompleteStep(roundCount: roundCount)
@@ -133,7 +133,8 @@ public enum BattleFlowGuide {
         round: Int
     ) -> BattleFlowGuideStep {
         let activeIsFirstTurn = matchState.firstTurnIsPlayerOne == trackerState.activePlayerIsOne
-        let roundFiveNote = round == CombatPatrolBattleRules.battleRoundCount && !activeIsFirstTurn
+        let roundCount = GameSystemPlayContext.context(for: .wh40k10eCp).playEngine.battleRoundCount()
+        let roundFiveNote = round == roundCount && !activeIsFirstTurn
             ? String(localized: " Round 5: score primary VP now (second-turn player scores at end of turn).")
             : ""
         return BattleFlowGuideStep(
@@ -160,7 +161,7 @@ public enum BattleFlowGuide {
         }
 
         let round = trackerState.battleRound
-        let roundCount = BattleRules.battleRoundCount(gameSystemId: gameSystemId)
+        let roundCount = GameSystemPlayContext.context(for: gameSystemId).playEngine.battleRoundCount()
         if trackerState.currentPhase == .endOfTurn {
             if round >= roundCount {
                 return battleCompleteStep(roundCount: roundCount)
@@ -225,9 +226,10 @@ public enum BattleFlowGuide {
         }
 
         let round = trackerState.battleRound
+        let scEngine = GameSystemPlayContext.context(for: .scTmg).playEngine
         if trackerState.currentPhase == .scoring {
-            if round >= ScTmgBattleRules.battleRoundCount {
-                return battleCompleteStep(roundCount: ScTmgBattleRules.battleRoundCount)
+            if round >= scEngine.battleRoundCount() {
+                return battleCompleteStep(roundCount: scEngine.battleRoundCount())
             }
             return BattleFlowGuideStep(
                 kind: .turnPhase(.scoring),
@@ -583,11 +585,11 @@ private extension BattleTurnPhase {
         let reservesNote = round == 3
             ? String(localized: " Reserves must arrive by end of this battle round or are destroyed.")
             : ""
-        let scoringNote = CombatPatrolBattleRules.primaryScoringActive(round: round)
+        let scoringNote = CombatPatrolRules.primaryScoringActive(round: round)
             ? String(localized: " Secure objectives with Battleline units, then score primary VP at end of Command phase.")
             : ""
         let activeIsFirstTurn = matchState.firstTurnIsPlayerOne == activePlayerIsOne
-        let roundFiveNote = CombatPatrolBattleRules.scoresPrimaryAtEndOfTurn(
+        let roundFiveNote = CombatPatrolRules.scoresPrimaryAtEndOfTurn(
             round: round,
             activePlayerIsFirstTurnPlayer: activeIsFirstTurn
         )

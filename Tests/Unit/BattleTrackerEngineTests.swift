@@ -3,7 +3,9 @@ import XCTest
 
 final class BattleTrackerEngineTests: XCTestCase {
     func testPhasedRoundEngineSyncsCombatPatrolFirstTurn() {
-        var tracker = BattleTrackerState(currentPhase: CombatPatrolBattleRules.initialPhase)
+        var tracker = BattleTrackerState(
+            currentPhase: GameSystemPlayContext.context(for: .wh40k10eCp).playEngine.initialPhase()
+        )
         var match = GuidedMatchState()
         match.firstTurnIsPlayerOne = false
         let context = GameSystemPlayContext.context(for: .wh40k10eCp)

@@ -4,11 +4,10 @@ import TabletomeDomain
 extension BattlePhaseTrackerView {
     var phaseDock: some View {
         BattleTrackerPhaseDock(
-            mainPhases: BattleRules.mainPhases(gameSystemId: viewModel.gameSystemId),
+            mainPhases: viewModel.playContext.playEngine.mainPhases(),
             currentPhase: viewModel.trackerState.currentPhase,
-            nextPhase: BattleRules.nextMainPhase(
-                after: viewModel.trackerState.currentPhase,
-                gameSystemId: viewModel.gameSystemId
+            nextPhase: viewModel.playContext.playEngine.nextMainPhase(
+                after: viewModel.trackerState.currentPhase
             ),
             myUnitLabel: focusedUnitDisplayName,
             myUnitEnabled: focusedUnitSelection != nil,

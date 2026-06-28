@@ -97,15 +97,3 @@ public enum BattleRoundChecklist {
         return (done, steps.count)
     }
 }
-
-public enum SpearheadBattleRules {
-    public static let battleRoundCount = 4
-
-    public static func roundLabel(round: Int) -> String {
-        String(localized: "Round \(round) of \(battleRoundCount)")
-    }
-
-    public static func clampBattleRound(_ round: Int) -> Int {
-        min(battleRoundCount, max(1, round))
-    }
-}

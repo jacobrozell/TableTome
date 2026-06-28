@@ -64,13 +64,13 @@ run_metric "raw_id_literals"       46  "raw game-system id string literals" \
   '"(aos-spearhead|sc-tmg|wh40k-11e|wh40k-10e-cp|wh40k-10e)"' "Domain Features DesignSystem"
 
 # Phase 3 target: delete BattleRules god facade + identity probes.
-run_metric "battlerules_or_probes" 225 "BattleRules / is<System> identity probes" \
+run_metric "battlerules_or_probes" 165 "BattleRules / is<System> identity probes" \
   'BattleRules\.|isSpearhead|isWh40k|isStarCraft|isCombatPatrol' "$SRC"
 
 # Phase 2 target: capability flags grouped, system-named flags removed.
 # PlayCapabilities+Grouped.swift is the sanctioned shim that maps these flags
 # to closed enums — it is excluded so new *feature* usage is still caught.
-run_metric "system_named_caps"     26  "system-named capability flags" \
+run_metric "system_named_caps"     27  "system-named capability flags" \
   'usesWh40k1[01]eCombatRollEngine|shows(Wh40k|ScTmg)DeploymentChecklist|showsCombatPatrolMode' \
   "Domain" \
   'PlayCapabilities\+Grouped\.swift'

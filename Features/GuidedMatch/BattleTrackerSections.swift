@@ -285,12 +285,12 @@ struct BattleTrackerControlPanel: View {
             }
 
             Stepper(
-                BattleRules.roundLabel(round: viewModel.trackerState.battleRound, gameSystemId: viewModel.gameSystemId),
+                viewModel.playContext.playEngine.roundLabel(round: viewModel.trackerState.battleRound),
                 value: Binding(
                     get: { viewModel.trackerState.battleRound },
                     set: { viewModel.setBattleRound($0) }
                 ),
-                in: 1...BattleRules.battleRoundCount(gameSystemId: viewModel.gameSystemId)
+                in: 1...viewModel.playContext.playEngine.battleRoundCount()
             )
             .accessibilityIdentifier("battleTracker.round")
 
@@ -337,7 +337,7 @@ private struct BattleTrackerPhaseControls: View {
                 .font(.headline)
 
             PhaseChipRow(
-                phases: BattleRules.mainPhases(gameSystemId: viewModel.gameSystemId),
+                phases: viewModel.playContext.playEngine.mainPhases(),
                 selectedPhase: viewModel.trackerState.currentPhase,
                 showAllAbilities: viewModel.trackerState.showAllAbilities,
                 showsPhaseGuidance: showsPhaseGuidance,

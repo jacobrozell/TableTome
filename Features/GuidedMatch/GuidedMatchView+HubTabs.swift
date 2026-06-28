@@ -43,7 +43,7 @@ extension GuidedMatchView {
             : (viewModel.matchState.playerTwo.playerName.isEmpty
                 ? String(localized: "Player 2")
                 : viewModel.matchState.playerTwo.playerName)
-        return "\(BattleRules.roundLabel(round: state.battleRound, gameSystemId: gameSystemId)) · \(state.currentPhase.title) · \(playerName)"
+        return "\(GameSystemPlayContext.context(for: gameSystemId).playEngine.roundLabel(round: state.battleRound)) · \(state.currentPhase.title) · \(playerName)"
     }
 
     var showsEmbeddedBattleTracker: Bool {

@@ -156,7 +156,7 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
     }
 
     var nextPhaseTitle: String? {
-        let phases = BattleRules.mainPhases(gameSystemId: gameSystemId)
+        let phases = playContext.playEngine.mainPhases()
         guard let index = phases.firstIndex(of: trackerState.currentPhase),
               index < phases.count - 1 else { return nil }
         return phases[index + 1].title
@@ -275,7 +275,7 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
 
     func setBattleRound(_ round: Int) {
         let previousRound = trackerState.battleRound
-        trackerState.battleRound = BattleRules.clampBattleRound(round, gameSystemId: gameSystemId)
+        trackerState.battleRound = playContext.playEngine.clampBattleRound(round)
         trackerEngine.afterBattleRoundChange(trackerState: &trackerState)
         persist()
         recordRoundAdvanced(previousRound: previousRound)
@@ -314,7 +314,7 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
     }
 
     func advancePhase() {
-        let phases = BattleRules.mainPhases(gameSystemId: gameSystemId)
+        let phases = playContext.playEngine.mainPhases()
         guard let index = phases.firstIndex(of: trackerState.currentPhase), index < phases.count - 1 else { return }
         setPhase(phases[index + 1])
     }
@@ -456,7 +456,7 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
     func resetTracker() {
         trackerState = BattleTrackerState(
             activePlayerIsOne: trackerState.activePlayerIsOne,
-            currentPhase: BattleRules.initialPhase(gameSystemId: gameSystemId)
+            currentPhase: playContext.playEngine.initialPhase()
         )
         BattleTrackerStore.save(trackerState, gameSystemId: gameSystemId)
         refreshAbilities()

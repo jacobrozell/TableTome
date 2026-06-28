@@ -142,9 +142,11 @@ extension GameSystemId {
                 playEngine: .phasedRound(
                     PhasedRoundEngineConfig(
                         battleRoundCount: 5,
-                        mainPhases: CombatPatrolBattleRules.mainPhases,
-                        initialPhase: CombatPatrolBattleRules.initialPhase,
-                        turnStartPhase: CombatPatrolBattleRules.initialPhase
+                        mainPhases: [
+                            .command, .movement, .shooting, .charge, .combat, .endOfTurn
+                        ],
+                        initialPhase: .command,
+                        turnStartPhase: .command
                     )
                 ),
                 capabilities: PlayCapabilities(
@@ -205,9 +207,9 @@ extension GameSystemId {
                 publisher: "amg",
                 playEngine: .alternatingActivation(
                     AlternatingActivationEngineConfig(
-                        battleRoundCount: ScTmgBattleRules.battleRoundCount,
-                        mainPhases: ScTmgBattleRules.mainPhases,
-                        initialPhase: ScTmgBattleRules.initialPhase
+                        battleRoundCount: 5,
+                        mainPhases: [.movement, .assault, .combat, .scoring],
+                        initialPhase: .movement
                     )
                 ),
                 capabilities: PlayCapabilities(

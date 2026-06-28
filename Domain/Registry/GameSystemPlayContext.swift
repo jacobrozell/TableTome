@@ -130,7 +130,7 @@ public struct GameSystemPlayContext: Sendable, Equatable {
             publisher: "unknown",
             playEngine: .phasedRound(
                 PhasedRoundEngineConfig(
-                    battleRoundCount: SpearheadBattleRules.battleRoundCount,
+                    battleRoundCount: 4,
                     mainPhases: BattleTurnPhase.mainTurnPhases,
                     initialPhase: .deployment,
                     turnStartPhase: .hero,

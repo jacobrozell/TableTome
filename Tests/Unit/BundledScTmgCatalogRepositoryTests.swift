@@ -28,19 +28,20 @@ final class BundledScTmgCatalogRepositoryTests: XCTestCase {
     }
 }
 
-final class ScTmgBattleRulesTests: XCTestCase {
+final class ScTmgPlayEngineTests: XCTestCase {
     func testMainPhasesExcludeSpearheadPhases() {
+        let engine = GameSystemPlayContext.context(for: "sc-tmg").playEngine
         XCTAssertEqual(
-            BattleRules.mainPhases(gameSystemId: "sc-tmg"),
+            engine.mainPhases(),
             [BattleTurnPhase.movement, .assault, .combat, .scoring]
         )
     }
 
     func testFiveRoundBattle() {
-        XCTAssertEqual(BattleRules.battleRoundCount(gameSystemId: "sc-tmg"), 5)
+        XCTAssertEqual(GameSystemPlayContext.context(for: "sc-tmg").playEngine.battleRoundCount(), 5)
     }
 
     func testInitialPhaseIsMovement() {
-        XCTAssertEqual(BattleRules.initialPhase(gameSystemId: "sc-tmg"), .movement)
+        XCTAssertEqual(GameSystemPlayContext.context(for: "sc-tmg").playEngine.initialPhase(), .movement)
     }
 }

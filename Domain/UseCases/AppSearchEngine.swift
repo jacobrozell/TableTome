@@ -392,7 +392,7 @@ public enum AppSearchIndexBuilder {
     }
 
     private static func phaseTipItems(gameSystemId: String) -> [AppSearchIndexItem] {
-        BattleRules.mainPhases(gameSystemId: gameSystemId).compactMap { phase in
+        GameSystemPlayContext.context(for: gameSystemId).playEngine.mainPhases().compactMap { phase in
             let tips = PhaseContextCoach.quickTips(for: phase, gameSystemId: gameSystemId)
             guard !tips.isEmpty else { return nil }
             return AppSearchIndexItem(

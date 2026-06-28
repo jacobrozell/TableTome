@@ -407,6 +407,9 @@ be compiled on a Mac before the next phase builds on it.
 | Tests for box sets + grouped caps | 2/4 | `Tests/Unit/BoxSetCatalogTests.swift`, `Tests/Unit/PlayCapabilitiesGroupedTests.swift` | read-review | medium (needs build) |
 | Box-set-backed registry wired into the app | 4 | `Data/Registry/GameSystemRegistry+BoxSets.swift`, `Domain/Registry/BoxSet.swift` (`replacingFeaturedArmies`), `App/AppDependencies.swift` | read-review; literal-fallback keeps it safe; parity test guards | medium (needs build) |
 | DesignSystem grouped by engine | 6 | `DesignSystem/AltActivation/` (4 SC cards), `DesignSystem/PhasedRound/` (10 Spearhead/40k/CP cards) | **pure `git mv`, 0 line changes** — within-target, symbols unchanged | high |
+| **Phase 3: delete `BattleRules` god facade** | 3 | deleted `BattleRules.swift`, `ScTmgBattleRules.swift`, `CombatPatrolBattleRules.swift`, `SpearheadBattleRules`; callers → `playContext.playEngine` / `GameSystemPlayContext` | **501 tests green** on `claude/affectionate-lamport-v3w5h1` | high |
+| `CombatPatrolRules` (scoring/table-state only) | 3 | `Domain/Models/CombatPatrolRules.swift` | build + tests | high |
+| Ratchet: `battlerules_or_probes` 225 → 165 | 3 | `Scripts/check_architecture_debt.sh` | **ran**: enforce passes (except pre-existing `system_named_caps` 27/26) | high |
 
 All Swift above is **additive** — no existing type/API was removed or changed
 in a breaking way — so it should not break the current build. After it compiles
@@ -416,7 +419,7 @@ green, the next steps wire it in and remove the old paths.
 
 - **Phase 1:** make the manifest the source of truth for capabilities/copy/engine-config (not just wiring); reduce `GameSystemId+Bundled.swift` to a test seed; remove `GameSystemRegistry.bundled` static refs inside `BattleRules`/`GameSystemRulesLabels`/the per-system `*FeaturedArmies` types; `ReleaseSurface` reads manifest `availability`. **Ratchet:** drop `raw_id_literals` budget as these land.
 - **Phase 2 (finish):** migrate the ~26 readers of the system-named flags to `combatRollEngineKind`/`deploymentChecklistStyle`; route `CombatRollEngineRouter` off `CombatRollEngineKind`; then delete the stored booleans and the shim's flag reads. **Ratchet:** drop `system_named_caps` budget to 0.
-- **Phase 3:** delete `BattleRules`, `SpearheadBattleRules`, `CombatPatrolBattleRules`, `ScTmgBattleRules`; callers use `registry.engine(for:)`; replace `isSpearhead`/`isStarCraft` with engine/capability reads. **Ratchet:** drop `battlerules_or_probes` budget toward 0.
+- **Phase 3 (✅ engine path):** `BattleRules` and per-system `*BattleRules` engine types deleted; all round/phase callers use `GameSystemPlayContext.playEngine`. Remaining: replace `isSpearhead`/`isStarCraft`/etc. probes with capability reads to drive `battlerules_or_probes` toward 0.
 - **Phase 4 (✅ wired):** the app now sources featured armies from box-set JSON via `bundled(withBoxSetsFrom:)` with a literal fallback. Remaining: once green, delete the hardcoded `FeaturedArmiesConfig` literals from `GameSystemId+Bundled.swift` (the parity test `testLoadsBundledBoxSetsForEverySystem` guards the deletion) and remove the fallback.
 - **Phase 6 (partial):** engine folders created and system-named cards moved (compilation-safe). Remaining (needs build): collapse the `*StartHereCard` / `*DeploymentChecklistCard` / `*WhatYouNeedCard` / `*RulesComparisonCard` families into parameterized cards; add a `Shared/` folder for the generic components.
 - **Phases 5, 7, 8, 9:** Play UI split by engine, navigation consolidation, persistence/concurrency hardening, naming normalization — high blast radius (50–225 call sites or compiler-verified parity each). **Not safe to do blind** — these are the build-loop phases: implement, compile, run parity tests, then delete the old path and drop the ratchet budget.
@@ -427,7 +430,7 @@ green, the next steps wire it in and remove the old paths.
 |--------|----------------|----------|----------|----------|
 | `switch_gameSystemId` | 20 | ↓ | ↓ | **0** |
 | `raw_id_literals` | 46 | **0** | — | — |
-| `battlerules_or_probes` | 225 | ↓ | ↓ | **0** |
+| `battlerules_or_probes` | 225 | ↓ | ↓ | **165** (Phase 3 landed) → 0 |
 | `system_named_caps` | 26 | — | **0** | — |
 
 Lower the budget in `Scripts/check_architecture_debt.sh` in the same PR that

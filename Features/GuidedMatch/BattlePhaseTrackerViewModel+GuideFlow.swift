@@ -17,17 +17,17 @@ extension BattlePhaseTrackerViewModel {
             setRoundChecklistStep(openerStep, complete: true)
         case .turnPhase(let phase):
             if playContext.capabilities.showsActivationBar, phase == .scoring {
-                if trackerState.battleRound >= BattleRules.battleRoundCount(gameSystemId: gameSystemId) {
+                if trackerState.battleRound >= playContext.playEngine.battleRoundCount() {
                     return
                 }
                 setBattleRound(trackerState.battleRound + 1)
-                setPhase(ScTmgBattleRules.initialPhase)
+                setPhase(playContext.playEngine.initialPhase())
             } else if phase == .endOfTurn {
-                if trackerState.battleRound >= BattleRules.battleRoundCount(gameSystemId: gameSystemId) {
+                if trackerState.battleRound >= playContext.playEngine.battleRoundCount() {
                     return
                 }
                 trackerState.activePlayerIsOne.toggle()
-                trackerState.currentPhase = BattleRules.turnStartPhase(gameSystemId: gameSystemId)
+                trackerState.currentPhase = playContext.playEngine.turnStartPhase()
                 persist()
                 refreshAbilities()
             } else {
@@ -35,7 +35,7 @@ extension BattlePhaseTrackerViewModel {
             }
         case .startNextRound(let round):
             setBattleRound(round + 1)
-            setPhase(BattleRules.turnStartPhase(gameSystemId: gameSystemId))
+            setPhase(playContext.playEngine.turnStartPhase())
         case .battleComplete:
             break
         }

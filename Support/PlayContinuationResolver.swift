@@ -148,7 +148,7 @@ enum PlayContinuationResolver {
         let activeName = tracker.activePlayerIsOne
             ? displayName(for: matchState.playerOne, fallback: String(localized: "Player 1"))
             : displayName(for: matchState.playerTwo, fallback: String(localized: "Player 2"))
-        let round = BattleRules.roundLabel(round: tracker.battleRound, gameSystemId: resolvedId)
+        let round = GameSystemPlayContext.context(for: resolvedId).playEngine.roundLabel(round: tracker.battleRound)
         let phase = tracker.currentPhase.title
         let gameName = GameSystemRulesLabels.displayName(gameSystemId: resolvedId)
 

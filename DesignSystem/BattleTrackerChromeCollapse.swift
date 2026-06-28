@@ -95,13 +95,17 @@ struct BattleTrackerCollapsedTopChrome: View {
         .accessibilityIdentifier("battleTracker.collapsedTopChrome")
     }
 
+    private var playEngine: PlayEngineConfig {
+        GameSystemPlayContext.context(for: gameSystemId).playEngine
+    }
+
     private var phaseSummary: String {
-        "\(BattleRules.roundLabel(round: round, gameSystemId: gameSystemId)) · \(phaseTitle)"
+        "\(playEngine.roundLabel(round: round)) · \(phaseTitle)"
     }
 
     private var phaseSummaryAccessibilityLabel: String {
         [
-            BattleRules.roundLabel(round: round, gameSystemId: gameSystemId),
+            playEngine.roundLabel(round: round),
             phaseTitle,
             playerName
         ].joined(separator: ", ")

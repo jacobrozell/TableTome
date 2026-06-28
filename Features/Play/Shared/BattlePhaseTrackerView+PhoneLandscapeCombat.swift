@@ -3,7 +3,7 @@ import TabletomeDomain
 
 extension BattlePhaseTrackerView {
     var usesPhoneLandscapeCombatSplit: Bool {
-        !viewModel.capabilities.showsActivationBar
+        !viewModel.playContext.capabilities.showsActivationBar
             && layoutContext == .phoneLandscape
             && !dynamicTypeSize.needsLayoutAdaptation
     }

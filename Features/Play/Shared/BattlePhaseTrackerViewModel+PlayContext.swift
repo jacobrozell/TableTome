@@ -2,10 +2,6 @@ import Foundation
 import TabletomeDomain
 
 extension BattlePhaseTrackerViewModel {
-    var capabilities: PlayCapabilities {
-        playContext.capabilities
-    }
-
     var usesAlternatingActivation: Bool {
         playContext.usesAlternatingActivation
     }

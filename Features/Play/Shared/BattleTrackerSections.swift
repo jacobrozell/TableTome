@@ -516,7 +516,7 @@ struct BattleTrackerVictoryPointsSection: View {
                 playerTwoName: viewModel.playerTwoName,
                 playerOneVP: viewModel.trackerState.playerOneVictoryPoints,
                 playerTwoVP: viewModel.trackerState.playerTwoVictoryPoints,
-                highlightsScoring: viewModel.trackerState.currentPhase == (viewModel.capabilities.showsActivationBar ? .scoring : .endOfTurn),
+                highlightsScoring: viewModel.trackerState.currentPhase == (viewModel.playContext.capabilities.showsActivationBar ? .scoring : .endOfTurn),
                 gameSystemId: viewModel.gameSystemId,
                 onAdjust: { viewModel.adjustVictoryPoints(playerIsOne: $0, delta: $1, reason: $2) },
                 onQuickAdd: { viewModel.adjustVictoryPoints(playerIsOne: $0, delta: $1, reason: $2) }

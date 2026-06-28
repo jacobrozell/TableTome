@@ -92,7 +92,7 @@ extension BattlePhaseTrackerView {
 
     @ViewBuilder
     var padCombatColumns: some View {
-        if viewModel.capabilities.showsActivationBar {
+        if viewModel.playContext.capabilities.showsActivationBar {
             scCombatTabContent
         } else {
             BattleTrackerPadTwoColumnRow(controlColumnMaxWidth: padControlColumnMaxWidth) {

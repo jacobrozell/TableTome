@@ -105,4 +105,4 @@ Published at `https://jacobrozell.github.io/TableTome/`
 
 ## Support
 
-If Tabletome helps at your table, optional tips are appreciated: [Buy Me a Coffee](https://buymeacoffee.com/jacobrozelq).
+Bug reports and feature requests: [GitHub Issues](https://github.com/jacobrozell/TableTome/issues). In-app tips are not linked from the App Store build (Apple requires StoreKit IAP for optional tips on digital apps).

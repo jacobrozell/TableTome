@@ -1,14 +1,14 @@
 import XCTest
 @testable import Tabletome
 
-final class ActiveGameContextStoreTests: XCTestCase {
+final class ActiveGameContextPersistenceTests: XCTestCase {
     override func tearDown() {
-        ActiveGameContextStore.clearPersistedState()
+        ActiveGameContextPersistence.resetForTests()
         super.tearDown()
     }
 
-    func testPersistsSelectedGameSystem() {
-        ActiveGameContextStore.setActiveGameSystem("wh40k-10e-cp")
-        XCTAssertEqual(ActiveGameContextStore.gameSystemId, "wh40k-10e-cp")
+    func testPersistsActiveGameSystemId() {
+        ActiveGameContextPersistence.gameSystemId = "wh40k-10e-cp"
+        XCTAssertEqual(ActiveGameContextPersistence.gameSystemId, "wh40k-10e-cp")
     }
 }

@@ -1,8 +1,8 @@
 import Foundation
 import TabletomeDomain
 
-/// Persists the active game mode. Use `AppRouter.activeGameSystemId` from features — not this type directly.
-enum ActiveGameContextStore: Sendable {
+/// UserDefaults backing for the active game system — shared by `AppRouter` and DI defaults.
+enum ActiveGameContextPersistence: Sendable {
     static let storageKey = "active_game_system_id"
 
     static var gameSystemId: String {
@@ -15,11 +15,7 @@ enum ActiveGameContextStore: Sendable {
         }
     }
 
-    static func setActiveGameSystem(_ id: String) {
-        gameSystemId = id
-    }
-
-    static func clearPersistedState() {
+    static func resetForTests() {
         UserDefaults.standard.removeObject(forKey: storageKey)
     }
 }

@@ -4,7 +4,7 @@ import XCTest
 @MainActor
 final class AppRouterNavigationTests: XCTestCase {
     override func tearDown() {
-        ActiveGameContextStore.clearPersistedState()
+        ActiveGameContextPersistence.resetForTests()
         super.tearDown()
     }
 

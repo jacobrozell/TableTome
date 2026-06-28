@@ -29,7 +29,7 @@ final class AppDependencies: ObservableObject {
 
     func makeRulesReferenceViewModel(
         gameSystemId: GameSystemId? = nil,
-        activeGameSystemId: String = ActiveGameContextStore.gameSystemId
+        activeGameSystemId: String = ActiveGameContextPersistence.gameSystemId
     ) -> RulesReferenceViewModel {
         let resolvedId = gameSystemId?.rawValue ?? activeGameSystemId
         return RulesReferenceViewModel(rulesRepository: rulesRepository, gameSystemId: resolvedId)
@@ -44,7 +44,7 @@ final class AppDependencies: ObservableObject {
 
     func makeAppSearchViewModel(
         gameSystemId: String? = nil,
-        activeGameSystemId: String = ActiveGameContextStore.gameSystemId
+        activeGameSystemId: String = ActiveGameContextPersistence.gameSystemId
     ) -> AppSearchViewModel {
         AppSearchViewModel(
             rulesRepository: rulesRepository,

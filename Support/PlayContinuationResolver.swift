@@ -22,7 +22,7 @@ enum PlayContinuationResolver {
         hasBattleProgress(gameSystemId: gameSystemId)
     }
 
-    static func current(activeGameSystemId: String = ActiveGameContextStore.gameSystemId) -> PlayContinuation? {
+    static func current(activeGameSystemId: String = ActiveGameContextPersistence.gameSystemId) -> PlayContinuation? {
         if let resume = resumableMatch(activeGameSystemId: activeGameSystemId) {
             return resume
         }

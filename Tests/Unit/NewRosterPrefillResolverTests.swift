@@ -6,7 +6,7 @@ final class NewRosterPrefillResolverTests: XCTestCase {
     override func tearDown() {
         super.tearDown()
         FirstSessionStore.clearPersistedState()
-        ActiveGameContextStore.clearPersistedState()
+        ActiveGameContextPersistence.resetForTests()
     }
 
     func testCombatPatrolPrefillIncludesFactionBattleSizeAndGuidance() {

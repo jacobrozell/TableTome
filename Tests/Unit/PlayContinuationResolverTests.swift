@@ -20,7 +20,7 @@ final class PlayContinuationResolverTests: XCTestCase {
 
     private func clearPersistedMatchState() {
         FirstSessionStore.clearPersistedState()
-        ActiveGameContextStore.clearPersistedState()
+        ActiveGameContextPersistence.resetForTests()
         MatchSessionStore.clear(gameSystemId: gameSystemId)
         UserDefaults.standard.removeObject(forKey: matchKey)
         UserDefaults.standard.removeObject(forKey: trackerKey)
@@ -133,7 +133,7 @@ final class PlayContinuationResolverTests: XCTestCase {
         let otherSystemId = GameSystemId.wh40k10eCp.rawValue
         FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
         FirstSessionStore.recordGameGuideOpened()
-        ActiveGameContextStore.setActiveGameSystem(otherSystemId)
+        ActiveGameContextPersistence.gameSystemId = otherSystemId
 
         var cpState = GuidedMatchState()
         cpState.playerOne.armyId = "space-marines"
@@ -177,7 +177,7 @@ final class PlayContinuationResolverTests: XCTestCase {
         FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
         FirstSessionStore.recordGameGuideOpened()
         MatchSetupStore.save(GuidedMatchState(), gameSystemId: gameSystemId)
-        ActiveGameContextStore.setActiveGameSystem(gameSystemId)
+        ActiveGameContextPersistence.gameSystemId = gameSystemId
         XCTAssertNil(PlayContinuationResolver.current())
     }
 }

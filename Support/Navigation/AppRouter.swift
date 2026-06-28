@@ -1,6 +1,5 @@
 import SwiftUI
 import TabletomeDomain
-import TabletomeHobbyData
 
 /// Root navigation and cross-tab coordination for Tabletome.
 @Observable
@@ -12,6 +11,12 @@ final class AppRouter {
         case openGuidedMatch(gameSystemId: String, opensBattleTab: Bool = false)
         case openGameGuide(gameSystemId: String)
         case openRulesSearch(gameSystemId: String, query: String)
+    }
+
+    /// Persisted active game mode — use from DI defaults when no router is in scope.
+    static var persistedActiveGameSystemId: String {
+        get { ActiveGameContextPersistence.gameSystemId }
+        set { ActiveGameContextPersistence.gameSystemId = newValue }
     }
 
     var selectedTab: AppTab = .learn
@@ -39,8 +44,8 @@ final class AppRouter {
 
     /// Active game mode for rules search, guided match, and references.
     var activeGameSystemId: String {
-        get { ActiveGameContextStore.gameSystemId }
-        set { ActiveGameContextStore.setActiveGameSystem(newValue) }
+        get { Self.persistedActiveGameSystemId }
+        set { Self.persistedActiveGameSystemId = newValue }
     }
 
     func setActiveGameSystem(_ id: String) {
@@ -49,7 +54,7 @@ final class AppRouter {
 
     /// Clears persisted active-game selection — tests only.
     static func resetPersistedStateForTests() {
-        ActiveGameContextStore.clearPersistedState()
+        ActiveGameContextPersistence.resetForTests()
     }
 
     func openGuidedMatch(

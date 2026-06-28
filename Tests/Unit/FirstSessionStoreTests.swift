@@ -6,14 +6,14 @@ final class FirstSessionStoreTests: XCTestCase {
     override func setUp() {
         super.setUp()
         FirstSessionStore.clearPersistedState()
-        ActiveGameContextStore.clearPersistedState()
+        ActiveGameContextPersistence.resetForTests()
         clearMatchPersistence()
     }
 
     override func tearDown() {
         super.tearDown()
         FirstSessionStore.clearPersistedState()
-        ActiveGameContextStore.clearPersistedState()
+        ActiveGameContextPersistence.resetForTests()
         clearMatchPersistence()
     }
 

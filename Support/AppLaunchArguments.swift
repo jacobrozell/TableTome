@@ -8,6 +8,9 @@ enum AppLaunchArguments: Sendable {
     /// Applies starter armies, completes setup, and opens the Battle tab tracker (simulator / UI tests).
     static let openBattleTracker = "-open_battle_tracker"
     static let enableFullProductSurface = "-enable_full_product_surface"
+    static let resetUserDefaults = UITestLaunchConfiguration.resetUserDefaults
+    static let uiTestingModelsFlow = UITestLaunchConfiguration.modelsFlow
+    static let onboardingChoice = UITestLaunchConfiguration.onboardingChoice
 
     static var shouldOpenGuidedMatch: Bool {
         ProcessInfo.processInfo.arguments.contains(openGuidedMatch)

@@ -104,6 +104,9 @@ struct RootTabView: View {
                 router.selectedTab = .learn
             }
         }
+        .onAppear {
+            UITestLaunchConfiguration.applyIfNeeded(modelContext: modelContext)
+        }
         .bannerInset()
     }
 

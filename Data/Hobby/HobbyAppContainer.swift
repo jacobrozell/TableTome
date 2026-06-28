@@ -26,6 +26,13 @@ public enum HobbyAppContainer {
 
     @MainActor
     public static func makeForLaunch() -> ModelContainer {
+        let args = ProcessInfo.processInfo.arguments
+        if args.contains("UI-Testing-Persistent") {
+            if args.contains("-reset_user_defaults") {
+                resetUITestPersistentStore()
+            }
+            return uiTestPersistentContainer()
+        }
         if isRunningUnitTests {
             if let sharedUnitTestContainer { return sharedUnitTestContainer }
             let container = previewContainer()

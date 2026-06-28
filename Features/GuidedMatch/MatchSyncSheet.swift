@@ -10,19 +10,30 @@ struct MatchSyncSheet: View {
     @State private var joinCode = ""
     @State private var pasteCode = ""
     @State private var copiedExport = false
-    @State private var importMessage: String?
 
     let onApplied: () -> Void
 
     var body: some View {
         NavigationStack {
             Form {
+                if syncService.isLiveSyncActive {
+                    Section {
+                        Label(
+                            String(localized: "Live sync active"),
+                            systemImage: "checkmark.circle.fill"
+                        )
+                        .foregroundStyle(.green)
+                        .accessibilityIdentifier("matchSync.liveActive")
+                    }
+                }
+
                 Section(String(localized: "Nearby sync")) {
                     Text(
                         String(
                             localized: """
                             Both players need Tabletome on the same Wi-Fi or Bluetooth range. \
-                            One hosts, the other enters the 4-character code.
+                            One hosts, the other enters the 4-character code. Match setup and battle \
+                            tracker sync automatically; match history stays on each device.
                             """
                         )
                     )
@@ -37,11 +48,18 @@ struct MatchSyncSheet: View {
                     TextField(String(localized: "Join code"), text: $joinCode)
                         .textInputAutocapitalization(.characters)
                         .autocorrectionDisabled()
+                        .onChange(of: joinCode) { _, newValue in
+                            let filtered = newValue
+                                .uppercased()
+                                .filter { $0.isLetter || $0.isNumber }
+                            joinCode = String(filtered.prefix(4))
+                        }
                         .accessibilityIdentifier("matchSync.joinCodeField")
 
                     Button(String(localized: "Join match")) {
                         syncService.startJoining(code: joinCode)
                     }
+                    .disabled(joinCode.count != 4)
                     .accessibilityIdentifier("matchSync.join")
 
                     if case .hosting(let code) = syncService.role {
@@ -52,7 +70,8 @@ struct MatchSyncSheet: View {
                     if let status = syncService.statusMessage {
                         Text(status)
                             .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(statusIsError ? .red : .secondary)
+                            .accessibilityIdentifier("matchSync.status")
                     }
 
                     if syncService.role != .idle {
@@ -66,7 +85,10 @@ struct MatchSyncSheet: View {
                 Section(String(localized: "Paste code")) {
                     Text(
                         String(
-                            localized: "Copy a match code from the other player and paste it here if nearby sync is unavailable."
+                            localized: """
+                            Copy a match code from the other player and paste it here if nearby sync \
+                            is unavailable. Both devices must be in the same Guided Match game mode.
+                            """
                         )
                     )
                     .font(.caption)
@@ -80,10 +102,7 @@ struct MatchSyncSheet: View {
 
                     Button(String(localized: "Import pasted code")) {
                         if syncService.applyPasteCode(pasteCode) {
-                            importMessage = String(localized: "Match imported.")
                             onApplied()
-                        } else {
-                            importMessage = String(localized: "Could not read that code.")
                         }
                     }
                     .accessibilityIdentifier("matchSync.importPaste")
@@ -94,12 +113,6 @@ struct MatchSyncSheet: View {
                             copiedExport = true
                         }
                         .accessibilityIdentifier("matchSync.copyExport")
-                    }
-
-                    if let importMessage {
-                        Text(importMessage)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
                     }
                 }
             }
@@ -113,7 +126,12 @@ struct MatchSyncSheet: View {
             }
         }
         .accessibilityIdentifier("matchSync.sheet")
-        .onAppear { syncService.syncGameSystemId = gameSystemId }
+        .onAppear {
+            syncService.syncGameSystemId = gameSystemId
+        }
+        .onDisappear {
+            copiedExport = false
+        }
         .confirmationDialog(
             String(localized: "Allow this player to sync?"),
             isPresented: .init(
@@ -138,5 +156,16 @@ struct MatchSyncSheet: View {
                 )
             )
         }
+    }
+
+    private var statusIsError: Bool {
+        guard let status = syncService.statusMessage else { return false }
+        let lowered = status.lowercased()
+        return lowered.contains("could not")
+            || lowered.contains("failed")
+            || lowered.contains("unreadable")
+            || lowered.contains("different")
+            || lowered.contains("needs a different version")
+            || lowered.contains("check local network")
     }
 }

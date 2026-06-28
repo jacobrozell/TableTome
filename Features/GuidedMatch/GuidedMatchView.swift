@@ -113,6 +113,10 @@ struct GuidedMatchView: View {
             )
         }
         .accessibilityIdentifier("guidedMatch.screen")
+        .onReceive(NotificationCenter.default.publisher(for: .matchSyncStateDidChange)) { _ in
+            viewModel.reloadFromStore()
+            hubTrackerTick += 1
+        }
     }
 
     var layoutContext: TabletomeLayoutContext {

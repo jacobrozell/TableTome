@@ -8,7 +8,8 @@ import TabletomeDomain
 public enum DemoLoader {
     enum LoadError: Error { case missingResource }
 
-    /// Replace the current collection + paints with the shipped samples.
+    /// Append bundled sample armies and paints tagged `isSample`. User data is left intact.
+    /// Returns the number of rows actually inserted (may be less than the CSV when names collide).
     @discardableResult
     public static func load(into ctx: ModelContext) throws -> (armies: Int, paints: Int) {
         guard
@@ -21,12 +22,18 @@ public enum DemoLoader {
 
         let armyResult = ArmyCSV.import(CSV.parse(armiesText), pipeline: pipeline,
                                         overrides: cfg.factionOverrides)
-        if let armies = armyResult.armies { CollectionStore.replaceArmies(armies, in: ctx) }
+        var armyCount = 0
+        if let armies = armyResult.armies {
+            armyCount = CollectionStore.insertSampleArmies(armies, in: ctx)
+        }
 
         let paintResult = PaintCSV.import(CSV.parse(paintsText))
-        if let paints = paintResult.paints { CollectionStore.replacePaints(paints, in: ctx) }
+        var paintCount = 0
+        if let paints = paintResult.paints {
+            paintCount = CollectionStore.insertSamplePaints(paints, in: ctx)
+        }
 
-        return (armyResult.stats["armies"] ?? 0, paintResult.stats["paints"] ?? 0)
+        return (armyCount, paintCount)
     }
 
     public static func bundledCSV(_ name: String) -> String? {

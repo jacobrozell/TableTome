@@ -99,4 +99,51 @@ final class BackupCodecTests: XCTestCase {
         XCTAssertEqual(restored.quickViewRaw, "backlog")
         XCTAssertTrue(restored.spearheadOnly)
     }
+
+    func testExportRestorePreservesSampleFlagsAndCollapsedArmies() throws {
+        CollectionStore.insertSampleArmies([
+            ArmyDraft(name: "Sample Army", game: "40k", faction: "SM", units: [])
+        ], in: context)
+        XCTAssertTrue(ArmyStore.addArmy(name: "My Chapter", game: "40k", faction: "SM", in: context))
+        let chapter = try XCTUnwrap((try? context.fetch(FetchDescriptor<Army>()))?.first(where: { $0.name == "My Chapter" }))
+        chapter.isCollapsed = true
+        try context.save()
+
+        let exported = BackupCodec.export(context)
+        XCTAssertTrue(exported.contains("\"isSample\""))
+        guard case .success(let backup) = BackupSanitizer.parse(exported) else {
+            return XCTFail("Exported backup should parse")
+        }
+        XCTAssertTrue(backup.armies.contains { $0.name == "Sample Army" && $0.isSample })
+        XCTAssertEqual(backup.settings.collapsedArmyNames, ["My Chapter"])
+
+        HobbyAppContainer.resetUnitTestStore()
+        BackupCodec.restore(backup, into: context)
+
+        let armies = try context.fetch(FetchDescriptor<Army>())
+        XCTAssertEqual(armies.count, 2)
+        XCTAssertTrue(armies.contains { $0.name == "Sample Army" && $0.isSample })
+        XCTAssertTrue(armies.first(where: { $0.name == "My Chapter" })?.isCollapsed == true)
+    }
+
+    func testExportRestorePreservesFactionCrestImageFileName() throws {
+        let cfg = HobbyConfig.current(context)
+        cfg.factionOverrides = [
+            FactionPresetOverride(key: "40k\u{0}Space Marines", crest: "SM", hex: "#0072CE", imageFileName: "crest-sm.jpg")
+        ]
+        try context.save()
+
+        let exported = BackupCodec.export(context)
+        XCTAssertTrue(exported.contains("crest-sm.jpg"))
+        guard case .success(let backup) = BackupSanitizer.parse(exported) else {
+            return XCTFail("Exported backup should parse")
+        }
+        XCTAssertEqual(backup.settings.factionOverrides.first?.imageFileName, "crest-sm.jpg")
+
+        HobbyAppContainer.resetUnitTestStore()
+        BackupCodec.restore(backup, into: context)
+
+        let restored = HobbyConfig.current(context)
+        XCTAssertEqual(restored.factionOverrides.first?.imageFileName, "crest-sm.jpg")
+    }
 }

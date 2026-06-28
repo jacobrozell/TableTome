@@ -47,13 +47,20 @@ final class FirstSessionStoreTests: XCTestCase {
     }
 
     func testSampleDataPromotedAfterGuideOrSecondVisit() {
-        XCTAssertFalse(FirstSessionStore.shouldPromoteSampleData())
+        XCTAssertFalse(FirstSessionStore.shouldPromoteSampleData(hasSeenCollectionIntro: false))
 
         _ = FirstSessionStore.incrementCollectionVisits()
-        XCTAssertFalse(FirstSessionStore.shouldPromoteSampleData())
+        XCTAssertFalse(FirstSessionStore.shouldPromoteSampleData(hasSeenCollectionIntro: false))
 
         _ = FirstSessionStore.incrementCollectionVisits()
-        XCTAssertTrue(FirstSessionStore.shouldPromoteSampleData())
+        XCTAssertFalse(FirstSessionStore.shouldPromoteSampleData(hasSeenCollectionIntro: false))
+        XCTAssertTrue(FirstSessionStore.shouldPromoteSampleData(hasSeenCollectionIntro: true))
+    }
+
+    func testSampleDataPromotedAfterGuideWithoutSecondVisit() {
+        FirstSessionStore.recordGameGuideOpened()
+        XCTAssertTrue(FirstSessionStore.shouldPromoteSampleData(hasSeenCollectionIntro: true))
+        XCTAssertFalse(FirstSessionStore.shouldPromoteSampleData(hasSeenCollectionIntro: false))
     }
 
     func testModelsNudgeAfterSetup() {
@@ -96,19 +103,6 @@ final class FirstSessionStoreTests: XCTestCase {
         FirstSessionStore.clearPersistedState()
         FirstSessionStore.recordGameGuideOpened()
         XCTAssertFalse(FirstSessionStore.shouldHideAllGamesList())
-    }
-
-    func testDeferHobbyTabsUntilPlayEngaged() {
-        XCTAssertTrue(FirstSessionStore.shouldDeferHobbyTabs())
-        XCTAssertTrue(FirstSessionStore.shouldHideHobbyTabs())
-
-        FirstSessionStore.recordGameGuideOpened()
-        XCTAssertFalse(FirstSessionStore.shouldDeferHobbyTabs())
-        XCTAssertFalse(FirstSessionStore.shouldHideHobbyTabs())
-
-        FirstSessionStore.clearPersistedState()
-        FirstSessionStore.recordSetupComplete()
-        XCTAssertFalse(FirstSessionStore.shouldHideHobbyTabs())
     }
 
     func testRecordsWh40kVariant() {

@@ -24,6 +24,7 @@ public struct SanitizedSettings: Sendable {
     var armySort = "import"   // mapped from web "csv"
     var unitSort = "name"
     var lastBackupAt: Date?
+    var collapsedArmyNames: [String] = []
 }
 
 public enum BackupError: Error, Equatable {
@@ -107,6 +108,7 @@ public enum BackupSanitizer {
             if let c = dto.crestOverride, !c.isEmpty { draft.crestOverride = String(c.prefix(8)) }
             if let c = dto.colorOverride, !c.isEmpty { draft.colorOverrideHex = safeColor(c) }
             if let pipe = sanitizePipeline(dto.pipeline) { draft.customPipeline = pipe }
+            draft.isSample = dto.isSample == true
             draft.units = (dto.units ?? []).prefix(HobbyLimits.maxUnitsPerArmy).map { u in
                 var ud = UnitDraft(name: (u.unit ?? "").hobbyCapped(HobbyLimits.maxStringLen),
                                    qty: max(1, min(9999, u.qty ?? 1)),
@@ -136,7 +138,8 @@ public enum BackupSanitizer {
                               brand: (dto.brand ?? "").hobbyCapped(HobbyLimits.maxStringLen),
                               source: (dto.source ?? "").hobbyCapped(HobbyLimits.maxStringLen),
                               notes: (dto.notes ?? "").hobbyCapped(HobbyLimits.maxNotesLen),
-                              low: dto.low == true)
+                              low: dto.low == true,
+                              isSample: dto.isSample == true)
         }
 
         let settings = sanitizeSettings(s.settings)
@@ -161,9 +164,13 @@ public enum BackupSanitizer {
         if let fp = dto.factionPresets {
             out.factionOverrides = fp.compactMap { key, value in
                 guard value.count >= 2 else { return nil }
-                return FactionPresetOverride(key: key.hobbyCapped(HobbyLimits.maxStringLen),
-                                             crest: String(value[0].prefix(8)),
-                                             hex: safeColor(value[1]))
+                let imageFileName = value.count >= 3 ? value[2] : nil
+                return FactionPresetOverride(
+                    key: key.hobbyCapped(HobbyLimits.maxStringLen),
+                    crest: String(value[0].prefix(8)),
+                    hex: safeColor(value[1]),
+                    imageFileName: imageFileName.flatMap { $0.isEmpty ? nil : $0 }
+                )
             }
         }
         if let v = dto.gameFilter { out.gameFilter = v.hobbyCapped(HobbyLimits.maxStringLen) }
@@ -180,6 +187,9 @@ public enum BackupSanitizer {
         }
         if let v = dto.unitSort, ["name", "state"].contains(v) { out.unitSort = v }
         if let v = dto.lastBackupAt { out.lastBackupAt = BackupISO8601.date(from: v) }
+        if let names = dto.collapsedArmies {
+            out.collapsedArmyNames = names.map { $0.hobbyCapped(HobbyLimits.maxStringLen) }.filter { !$0.isEmpty }
+        }
         return out
     }
 }

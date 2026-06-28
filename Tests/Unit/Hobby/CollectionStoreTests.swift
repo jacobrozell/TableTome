@@ -84,6 +84,64 @@ final class CollectionStoreTests: XCTestCase {
         XCTAssertEqual(paints.first?.name, "New")
     }
 
+    func testRemoveSampleDataPreservesUserCollection() throws {
+        XCTAssertTrue(ArmyStore.addArmy(name: "My Chapter", game: "40k", faction: "SM", in: context))
+
+        let sampleArmy = ArmyDraft(name: "Hallowed Knights", game: "AoS", faction: "Stormcast Eternals", units: [
+            UnitDraft(name: "Liberators (5)", qty: 1, source: "Demo", state: "Based")
+        ])
+        CollectionStore.insertSampleArmies([sampleArmy], in: context)
+        context.insert(HobbyPaint(name: "User Blue", type: "Base", swatchHex: "#0000ff", qty: 1))
+        context.insert(HobbyPaint(name: "Sample Red", type: "Base", swatchHex: "#ff0000", qty: 1, brand: ""))
+        try context.save()
+        (try context.fetch(FetchDescriptor<HobbyPaint>()).first { $0.name == "Sample Red" })?.isSample = true
+        try context.save()
+
+        let removed = CollectionStore.removeSampleData(in: context)
+
+        XCTAssertEqual(removed.armies, 1)
+        XCTAssertEqual(removed.paints, 1)
+        let armies = try context.fetch(FetchDescriptor<Army>())
+        XCTAssertEqual(armies.count, 1)
+        XCTAssertEqual(armies.first?.name, "My Chapter")
+        XCTAssertFalse(armies.first?.isSample ?? true)
+        let paints = try context.fetch(FetchDescriptor<HobbyPaint>())
+        XCTAssertEqual(paints.count, 1)
+        XCTAssertEqual(paints.first?.name, "User Blue")
+    }
+
+    func testHasSampleDataReflectsTaggedRows() throws {
+        XCTAssertFalse(CollectionStore.hasSampleData(in: context))
+        CollectionStore.insertSampleArmies([
+            ArmyDraft(name: "Demo Army", game: "40k", faction: "SM", units: [])
+        ], in: context)
+        XCTAssertTrue(CollectionStore.hasSampleData(in: context))
+    }
+
+    func testInsertSampleArmiesSkipsUserNameCollisions() throws {
+        XCTAssertTrue(ArmyStore.addArmy(name: "Hallowed Knights", game: "40k", faction: "SM", in: context))
+        let inserted = CollectionStore.insertSampleArmies([
+            ArmyDraft(name: "Hallowed Knights", game: "AoS", faction: "Stormcast Eternals", units: []),
+            ArmyDraft(name: "Demo Only", game: "40k", faction: "SM", units: [])
+        ], in: context)
+        XCTAssertEqual(inserted, 1)
+        let armies = try context.fetch(FetchDescriptor<Army>())
+        XCTAssertEqual(armies.count, 2)
+        XCTAssertTrue(armies.contains { $0.name == "Hallowed Knights" && !$0.isSample })
+        XCTAssertTrue(armies.contains { $0.name == "Demo Only" && $0.isSample })
+    }
+
+    func testAddArmyReplacesSampleWithSameName() throws {
+        CollectionStore.insertSampleArmies([
+            ArmyDraft(name: "Hallowed Knights", game: "AoS", faction: "Stormcast Eternals", units: [])
+        ], in: context)
+        XCTAssertTrue(ArmyStore.addArmy(name: "Hallowed Knights", game: "40k", faction: "SM", in: context))
+        let armies = try context.fetch(FetchDescriptor<Army>())
+        XCTAssertEqual(armies.count, 1)
+        XCTAssertEqual(armies.first?.game, "40k")
+        XCTAssertFalse(armies.first?.isSample ?? true)
+    }
+
     func testClearAllResetsConfiguration() throws {
         XCTAssertTrue(ArmyStore.addArmy(name: "Chapter", game: "40k", faction: "SM", in: context))
         let cfg = HobbyConfig.current(context)

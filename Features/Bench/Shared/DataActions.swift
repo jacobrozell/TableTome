@@ -130,40 +130,98 @@ enum DataActions {
     }
 
     static func restoreBackupOutcome(from url: URL, ctx: ModelContext) -> ImportOutcome {
+        let preview = previewBackup(from: url)
+        if let error = preview.error {
+            return error
+        }
+        guard let backup = preview.backup else {
+            return .failure(title: String(localized: "Restore failed"), message: String(localized: "Unknown error"))
+        }
+        return restoreBackup(backup, into: ctx)
+    }
+
+    static func previewBackup(from url: URL) -> (backup: SanitizedBackup?, error: ImportOutcome?) {
         do {
             let text = try readText(at: url)
             switch BackupSanitizer.parse(text, byteLength: text.utf8.count) {
             case .failure(let err):
-                return .failure(title: String(localized: "Restore failed"), message: err.message)
+                return (nil, .failure(title: String(localized: "Restore failed"), message: err.message))
             case .success(let backup):
-                BackupCodec.restore(backup, into: ctx)
-                WidgetUpdater.refresh(context: ctx)
-                return ImportOutcome(
-                    id: UUID(),
-                    success: true,
-                    title: String(localized: "Restore complete"),
-                    message: String(localized: "Backup restored: \(backup.preview)."),
-                    warnings: []
-                )
+                return (backup, nil)
             }
         } catch {
-            return .failure(title: String(localized: "Restore failed"), message: error.localizedDescription)
+            return (nil, .failure(title: String(localized: "Restore failed"), message: error.localizedDescription))
         }
+    }
+
+    private static func restoreBackup(_ backup: SanitizedBackup, into ctx: ModelContext) -> ImportOutcome {
+        BackupCodec.restore(backup, into: ctx)
+        WidgetUpdater.refresh(context: ctx)
+        return ImportOutcome(
+            id: UUID(),
+            success: true,
+            title: String(localized: "Restore complete"),
+            message: String(localized: "Backup restored: \(backup.preview)."),
+            warnings: []
+        )
     }
 
     static func loadSampleOutcome(ctx: ModelContext) -> ImportOutcome {
         do {
             let counts = try DemoLoader.load(into: ctx)
             WidgetUpdater.refresh(context: ctx)
-            return ImportOutcome(id: UUID(), success: true, title: String(localized: "Sample loaded"),
-                                 message: String(
-                                    localized: "Sample loaded: \(counts.armies) armies, \(counts.paints) paints."
-                                 ),
-                                 warnings: [])
+            guard counts.armies > 0 || counts.paints > 0 else {
+                return ImportOutcome(
+                    id: UUID(),
+                    success: true,
+                    title: String(localized: "Sample unchanged"),
+                    message: String(
+                        localized: """
+                        Sample data is already loaded or every sample name matches one of your armies or paints.
+                        """
+                    ),
+                    warnings: []
+                )
+            }
+            return ImportOutcome(
+                id: UUID(),
+                success: true,
+                title: String(localized: "Sample loaded"),
+                message: String(
+                    localized: """
+                    Added \(counts.armies) sample \(counts.armies == 1 ? "army" : "armies") and \
+                    \(counts.paints) sample \(counts.paints == 1 ? "paint" : "paints").
+                    """
+                ),
+                warnings: []
+            )
         } catch {
             return .failure(title: String(localized: "Sample failed"),
                             message: String(localized: "Could not load sample data (resources missing)."))
         }
+    }
+
+    static func removeSampleOutcome(ctx: ModelContext) -> ImportOutcome {
+        let counts = CollectionStore.removeSampleData(in: ctx)
+        guard counts.armies > 0 || counts.paints > 0 else {
+            return .failure(
+                title: String(localized: "Nothing to remove"),
+                message: String(localized: "No sample data is in your collection.")
+            )
+        }
+        WidgetUpdater.refresh(context: ctx)
+        return ImportOutcome(
+            id: UUID(),
+            success: true,
+            title: String(localized: "Sample removed"),
+            message: String(
+                localized: """
+                Removed \(counts.armies) sample \(counts.armies == 1 ? "army" : "armies") and \
+                \(counts.paints) sample \(counts.paints == 1 ? "paint" : "paints"). Your own data was not changed.
+                """
+            ),
+            warnings: []
+        )
     }
 
     static func importPaintsOutcome(from url: URL, mode: Mode, ctx: ModelContext) -> ImportOutcome {
@@ -213,12 +271,8 @@ enum DataActions {
     // MARK: Sample data
 
     static func loadSample(ctx: ModelContext) -> String {
-        do {
-            let counts = try DemoLoader.load(into: ctx)
-            return String(
-                localized: "Sample loaded: \(counts.armies) armies, \(counts.paints) paints."
-            )
-        } catch { return String(localized: "Could not load sample data (resources missing).") }
+        let outcome = loadSampleOutcome(ctx: ctx)
+        return outcome.message
     }
 
     // MARK: Export builders

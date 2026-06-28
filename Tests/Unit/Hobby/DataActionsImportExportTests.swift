@@ -71,6 +71,26 @@ final class DataActionsImportExportTests: XCTestCase {
         XCTAssertTrue(outcome.message.contains("Excel"))
     }
 
+    func testLoadSampleOutcomeReportsInsertedCounts() {
+        let outcome = DataActions.loadSampleOutcome(ctx: context)
+        XCTAssertTrue(outcome.success, outcome.message)
+        XCTAssertTrue(outcome.message.contains("Added"))
+        XCTAssertTrue(CollectionStore.hasSampleData(in: context))
+    }
+
+    func testRemoveSampleOutcomeFailsWhenEmpty() {
+        let outcome = DataActions.removeSampleOutcome(ctx: context)
+        XCTAssertFalse(outcome.success)
+        XCTAssertEqual(outcome.title, String(localized: "Nothing to remove"))
+    }
+
+    func testRemoveSampleOutcomeAfterLoad() {
+        _ = DataActions.loadSampleOutcome(ctx: context)
+        let outcome = DataActions.removeSampleOutcome(ctx: context)
+        XCTAssertTrue(outcome.success, outcome.message)
+        XCTAssertFalse(CollectionStore.hasSampleData(in: context))
+    }
+
     func testArmiesTemplateImportsSuccessfully() throws {
         let template = DataActions.armiesTemplateCSV()
         XCTAssertEqual(template.filename, "warhammer_armies.csv")

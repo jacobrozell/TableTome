@@ -16,6 +16,8 @@ public final class HobbyPaint {
     public var source: String = ""
     public var notes: String = ""
     public var low: Bool = false            // "running low / need more"
+    /// Bundled demo collection loaded via Load sample data.
+    public var isSample: Bool = false
 
     public init(name: String,
          type: String = "",

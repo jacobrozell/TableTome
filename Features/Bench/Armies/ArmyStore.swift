@@ -22,7 +22,13 @@ enum ArmyStore {
         let trimmed = name.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else { return false }
         let all = (try? ctx.fetch(FetchDescriptor<Army>())) ?? []
-        guard !all.contains(where: { $0.name == trimmed }) else { return false }
+        if let existing = all.first(where: { $0.name == trimmed }) {
+            if existing.isSample {
+                ctx.delete(existing)
+            } else {
+                return false
+            }
+        }
         let army = Army(name: trimmed.hobbyCapped(HobbyLimits.maxStringLen),
                         game: game, faction: faction,
                         sortIndex: (all.map(\.sortIndex).max() ?? -1) + 1)

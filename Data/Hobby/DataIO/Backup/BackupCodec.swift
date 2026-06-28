@@ -28,17 +28,28 @@ public enum BackupCodec {
                             members: u.hasSquadMembers
                                 ? u.sortedSquadMembers.map { MemberDTO(state: $0.state, notes: $0.notes) }
                                 : nil)
-                })
+                },
+                isSample: a.isSample ? true : nil)
         }
 
         let paintDTOs: [PaintDTO] = paints.map {
             PaintDTO(name: $0.name, type: $0.type, swatch: $0.swatchHex, qty: $0.qty,
-                     brand: $0.brand, source: $0.source, notes: $0.notes, low: $0.low ? true : nil)
+                     brand: $0.brand, source: $0.source, notes: $0.notes,
+                     low: $0.low ? true : nil, isSample: $0.isSample ? true : nil)
         }
 
         var presets: [String: [String]]? = nil
         if !overrides.isEmpty {
-            presets = Dictionary(overrides.map { ($0.key, [$0.crest, $0.hex]) }, uniquingKeysWith: { _, b in b })
+            presets = Dictionary(
+                overrides.map { override in
+                    var values = [override.crest, override.hex]
+                    if let imageFileName = override.imageFileName, !imageFileName.isEmpty {
+                        values.append(imageFileName)
+                    }
+                    return (override.key, values)
+                },
+                uniquingKeysWith: { _, b in b }
+            )
         }
 
         let settings = SettingsDTO(
@@ -74,6 +85,11 @@ public enum BackupCodec {
 
         CollectionStore.replaceArmies(backup.armies, in: ctx)
         CollectionStore.replacePaints(backup.paints, in: ctx)
+
+        let restoredArmies = (try? ctx.fetch(FetchDescriptor<Army>())) ?? []
+        for name in backup.settings.collapsedArmyNames {
+            restoredArmies.first(where: { $0.name == name })?.isCollapsed = true
+        }
 
         let cfg = AppConfiguration()
         let s = backup.settings

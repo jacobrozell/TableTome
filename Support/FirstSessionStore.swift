@@ -77,8 +77,9 @@ enum FirstSessionStore: Sendable {
         PlayContinuationResolver.current() != nil
     }
 
-    static func shouldPromoteSampleData() -> Bool {
-        hasOpenedGameGuide || UserDefaults.standard.integer(forKey: collectionVisitsKey) >= 2
+    static func shouldPromoteSampleData(hasSeenCollectionIntro: Bool = true) -> Bool {
+        guard hasSeenCollectionIntro else { return false }
+        return hasOpenedGameGuide || UserDefaults.standard.integer(forKey: collectionVisitsKey) >= 2
     }
 
     static func shouldOfferMusterIntro(hasSeenMusterIntro: Bool, onboardingComplete: Bool) -> Bool {
@@ -155,16 +156,6 @@ enum FirstSessionStore: Sendable {
     /// Hides the full game list on Play home until the user picks from the chooser or opens a guide.
     static func shouldHideAllGamesList() -> Bool {
         onboardingChoice == nil && !hasOpenedGameGuide
-    }
-
-    /// Shows a "Later" badge on hobby tabs until the player has engaged with Play.
-    static func shouldDeferHobbyTabs() -> Bool {
-        !hasOpenedGameGuide && !hasCompletedSetup && !hasCompletedFirstBattleRound
-    }
-
-    /// Hides hobby tabs until the player has engaged with Play.
-    static func shouldHideHobbyTabs() -> Bool {
-        shouldDeferHobbyTabs()
     }
 
     static func clearPersistedState() {

@@ -26,6 +26,8 @@ public final class Army {
 
     public var sortIndex: Int = 0           // import / first-seen order
     public var isCollapsed: Bool = false
+    /// Bundled demo collection loaded via Load sample data.
+    public var isSample: Bool = false
 
     @Relationship(deleteRule: .cascade, inverse: \ArmyUnit.army)
     public var units: [ArmyUnit] = []

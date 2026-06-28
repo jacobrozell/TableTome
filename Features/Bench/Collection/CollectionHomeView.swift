@@ -107,6 +107,7 @@ struct CollectionHomeView: View {
             applyPendingSource()
             applyPendingDeepLink()
             router.collectionSearch = search
+            loadSampleForMarketingScreenshotIfNeeded()
         }
         .onChange(of: search) { router.collectionSearch = search }
         .onChange(of: router.pendingSourceFilter) { applyPendingSource() }
@@ -350,7 +351,7 @@ struct CollectionHomeView: View {
                                 """
                             )
                         )
-                        if FirstSessionStore.shouldPromoteSampleData() {
+                        if FirstSessionStore.shouldPromoteSampleData(hasSeenCollectionIntro: cfg.hasSeenCollectionIntro) {
                             Text(String(localized: "Load sample data to explore, or add your own army."))
                                 .font(.callout)
                         } else {
@@ -359,7 +360,7 @@ struct CollectionHomeView: View {
                         }
                     }
                 } actions: {
-                    if FirstSessionStore.shouldPromoteSampleData() {
+                    if FirstSessionStore.shouldPromoteSampleData(hasSeenCollectionIntro: cfg.hasSeenCollectionIntro) {
                         Button(String(localized: "Load sample data")) { loadSample() }
                             .buttonStyle(.borderedProminent)
                             .accessibilityIdentifier("loadSampleData")
@@ -414,6 +415,11 @@ struct CollectionHomeView: View {
         } else {
             loadSampleError = (outcome.title, outcome.message)
         }
+    }
+
+    private func loadSampleForMarketingScreenshotIfNeeded() {
+        guard MarketingSnapshotBootstrap.shouldLoadSampleCollection, armies.isEmpty else { return }
+        loadSample()
     }
 
     /// iPad split-view screenshots need an army selected; XCUITest sidebar taps are unreliable.

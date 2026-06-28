@@ -48,6 +48,7 @@ public struct ArmyDraft: Sendable, Equatable {
     public var colorOverrideHex: String?
     public var customPipeline: [PipelineStage]?
     public var units: [UnitDraft]
+    public var isSample: Bool
 
     public init(
         name: String,
@@ -56,7 +57,8 @@ public struct ArmyDraft: Sendable, Equatable {
         crestOverride: String? = nil,
         colorOverrideHex: String? = nil,
         customPipeline: [PipelineStage]? = nil,
-        units: [UnitDraft] = []
+        units: [UnitDraft] = [],
+        isSample: Bool = false
     ) {
         self.name = name
         self.game = game
@@ -65,6 +67,7 @@ public struct ArmyDraft: Sendable, Equatable {
         self.colorOverrideHex = colorOverrideHex
         self.customPipeline = customPipeline
         self.units = units
+        self.isSample = isSample
     }
 }
 
@@ -77,6 +80,7 @@ public struct PaintDraft: Sendable, Equatable {
     public var source: String
     public var notes: String
     public var low: Bool
+    public var isSample: Bool
 
     public init(
         name: String,
@@ -86,7 +90,8 @@ public struct PaintDraft: Sendable, Equatable {
         brand: String = "",
         source: String = "",
         notes: String = "",
-        low: Bool = false
+        low: Bool = false,
+        isSample: Bool = false
     ) {
         self.name = name
         self.type = type
@@ -96,6 +101,7 @@ public struct PaintDraft: Sendable, Equatable {
         self.source = source
         self.notes = notes
         self.low = low
+        self.isSample = isSample
     }
 }
 

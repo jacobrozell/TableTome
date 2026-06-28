@@ -30,6 +30,8 @@ public struct ArmyDTO: Codable, Equatable {
     var colorOverride: String?
     var pipeline: [PipelineStage]?
     var units: [UnitDTO]?
+    /// iOS-only: marks bundled sample rows so Remove sample data works after restore.
+    var isSample: Bool?
 }
 
 public struct PaintDTO: Codable, Equatable {
@@ -41,6 +43,7 @@ public struct PaintDTO: Codable, Equatable {
     var source: String?
     var notes: String?
     var low: Bool?
+    var isSample: Bool?
 }
 
 public struct SettingsDTO: Codable, Equatable {

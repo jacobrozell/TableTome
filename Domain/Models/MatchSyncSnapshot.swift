@@ -2,17 +2,20 @@ import Foundation
 
 /// Combined match + tracker payload for sharing between two devices.
 public struct MatchSyncSnapshot: Codable, Sendable, Equatable {
+    public var schemaVersion: Int
     public var gameSystemId: String
     public var matchState: GuidedMatchState
     public var trackerState: BattleTrackerState
     public var updatedAt: Date
 
     public init(
+        schemaVersion: Int = MatchSyncSchemaPolicy.version,
         gameSystemId: String = "aos-spearhead",
         matchState: GuidedMatchState,
         trackerState: BattleTrackerState,
         updatedAt: Date = Date()
     ) {
+        self.schemaVersion = schemaVersion
         self.gameSystemId = gameSystemId
         self.matchState = matchState
         self.trackerState = trackerState
@@ -21,11 +24,17 @@ public struct MatchSyncSnapshot: Codable, Sendable, Equatable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        schemaVersion = try container.decodeIfPresent(Int.self, forKey: .schemaVersion) ?? 1
         gameSystemId = try container.decodeIfPresent(String.self, forKey: .gameSystemId) ?? "aos-spearhead"
         matchState = try container.decode(GuidedMatchState.self, forKey: .matchState)
         trackerState = try container.decode(BattleTrackerState.self, forKey: .trackerState)
         updatedAt = try container.decodeIfPresent(Date.self, forKey: .updatedAt) ?? Date()
     }
+}
+
+/// Version for nearby match sync payloads — bump when tracker or match state shapes change.
+public enum MatchSyncSchemaPolicy {
+    public static let version = 1
 }
 
 public enum MatchSyncCodec {

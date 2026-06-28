@@ -52,6 +52,7 @@ final class MatchSyncCodecTests: XCTestCase {
         )
         let code = try XCTUnwrap(MatchSyncCodec.encode(snapshot))
         let decoded = try XCTUnwrap(MatchSyncCodec.decode(code))
+        XCTAssertEqual(decoded.schemaVersion, MatchSyncSchemaPolicy.version)
         XCTAssertEqual(decoded.matchState.playerOne.playerName, "Alice")
         XCTAssertEqual(decoded.trackerState.battleRound, 2)
     }
@@ -84,6 +85,31 @@ final class MatchSyncCodecTests: XCTestCase {
         let loaded = BattleTrackerStore.load(gameSystemId: "wh40k-10e-cp")
         XCTAssertEqual(loaded.securedObjectiveIds, ["A", "B"])
         XCTAssertTrue(loaded.usedStratagemIds.contains("space-marines-combat-patrol:duty-and-honour"))
+    }
+
+    func testStarCraftSyncRoundTripPreservesMarkerFields() throws {
+        var tracker = BattleTrackerState(
+            currentPhase: .movement,
+            scFirstPlayerMarkerIsPlayerOne: true,
+            scPhasePassClaimedByPlayerOne: false
+        )
+        tracker.activePlayerIsOne = false
+        let snapshot = MatchSyncSnapshot(
+            gameSystemId: "sc-tmg",
+            matchState: GuidedMatchState(
+                playerOne: PlayerArmySelection(playerName: "Raynor", factionId: "terran", armyId: "raynors-raiders"),
+                playerTwo: PlayerArmySelection(playerName: "Kerrigan", factionId: "zerg", armyId: "kerrigans-swarm")
+            ),
+            trackerState: tracker
+        )
+
+        let code = try XCTUnwrap(MatchSyncCodec.encode(snapshot))
+        let decoded = try XCTUnwrap(MatchSyncCodec.decode(code))
+        XCTAssertEqual(decoded.gameSystemId, "sc-tmg")
+        XCTAssertEqual(decoded.matchState.playerOne.playerName, "Raynor")
+        XCTAssertEqual(decoded.trackerState.scFirstPlayerMarkerIsPlayerOne, true)
+        XCTAssertEqual(decoded.trackerState.scPhasePassClaimedByPlayerOne, false)
+        XCTAssertFalse(decoded.trackerState.activePlayerIsOne)
     }
 }
 

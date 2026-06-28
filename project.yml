@@ -71,6 +71,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.tabletome.domain
         GENERATE_INFOPLIST_FILE: YES
+        SWIFT_STRICT_CONCURRENCY: complete
 
   TabletomeData:
     type: framework
@@ -85,7 +86,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.jacobrozell.tabletome.data
         GENERATE_INFOPLIST_FILE: YES
-        SWIFT_STRICT_CONCURRENCY: minimal
+        SWIFT_STRICT_CONCURRENCY: complete
 
   TabletomeHobbyData:
     type: framework

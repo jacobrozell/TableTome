@@ -39,7 +39,7 @@ enum OnboardingContent {
                 """
             ),
             showsNewBadge: false,
-            startsGuidedMatch: false
+            startsGuidedMatch: true
         ),
         OnboardingGameHighlight(
             id: OnboardingCompletion.combatPatrolGameSystemId,
@@ -53,7 +53,7 @@ enum OnboardingContent {
                 """
             ),
             showsNewBadge: false,
-            startsGuidedMatch: false
+            startsGuidedMatch: true
         ),
         OnboardingGameHighlight(
             id: OnboardingCompletion.wh40k11eGameSystemId,
@@ -67,7 +67,7 @@ enum OnboardingContent {
                 """
             ),
             showsNewBadge: true,
-            startsGuidedMatch: false
+            startsGuidedMatch: true
         ),
         OnboardingGameHighlight(
             id: OnboardingCompletion.scTmgGameSystemId,
@@ -80,7 +80,7 @@ enum OnboardingContent {
                 """
             ),
             showsNewBadge: false,
-            startsGuidedMatch: false
+            startsGuidedMatch: true
         )
     ]
 

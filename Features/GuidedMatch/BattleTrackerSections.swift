@@ -505,7 +505,7 @@ struct BattleTrackerRoundOpenerSection: View {
     }
 }
 
-/// Ongoing match score — belongs on the Turn tab (and phase dock Score shortcut).
+/// Ongoing match score — Turn tab after deployment; phase dock Score shortcut when enabled.
 struct BattleTrackerVictoryPointsSection: View {
     @ObservedObject var viewModel: BattlePhaseTrackerViewModel
 

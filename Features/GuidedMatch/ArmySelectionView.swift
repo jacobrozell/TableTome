@@ -198,7 +198,7 @@ struct ArmySelectionView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
-                Button(String(localized: "Save")) {
+                Button(dismissesOnSave ? String(localized: "Done") : String(localized: "Save")) {
                     var updated = selection
                     updated.playerName = playerName.trimmingCharacters(in: .whitespacesAndNewlines)
                     if updated.playerName.isEmpty {

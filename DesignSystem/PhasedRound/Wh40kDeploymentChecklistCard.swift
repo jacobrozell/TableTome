@@ -5,13 +5,29 @@ struct Wh40kDeploymentChecklistCard: View {
     let completedSteps: Set<String>
     let focusedStep: Wh40kDeploymentChecklistStep?
     let onToggle: (Wh40kDeploymentChecklistStep, Bool) -> Void
+    var compactMode: Bool = false
     var gameSystemId: String = GameSystemId.wh40k11e.rawValue
     var ruleSections: [RuleSection] = []
+
+    private var visibleSteps: [Wh40kDeploymentChecklistStep] {
+        if !compactMode {
+            return Wh40kDeploymentChecklistStep.allCases
+        }
+        if let focusedStep {
+            return [focusedStep]
+        }
+        if let next = Wh40kDeploymentChecklistStep.allCases.first(where: {
+            !Wh40kDeploymentChecklist.isComplete(step: $0, completedSteps: completedSteps)
+        }) {
+            return [next]
+        }
+        return []
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             SectionHeader(title: String(localized: "Deployment Checklist"), systemImage: "map")
-            ForEach(Wh40kDeploymentChecklistStep.allCases) { step in
+            ForEach(visibleSteps) { step in
                 let isComplete = Wh40kDeploymentChecklist.isComplete(step: step, completedSteps: completedSteps)
                 let isFocused = focusedStep == step
                 Button {

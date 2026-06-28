@@ -19,7 +19,6 @@ struct BattlePhaseTrackerView: View {
     @State var showsDeploymentSetup = true
     @State var scrollToCombatResolver = false
     @State var showsBattleTrackerCoach = false
-    @State var showsBattleGuideExpanded = true
     @State var dismissedBattleCompleteGuide = false
     @State var showsVictoryScreen = false
     @State var victoryPlayerOneVP = 0
@@ -179,7 +178,7 @@ struct BattlePhaseTrackerView: View {
                 onExpand: { expandTopChrome() }
             )
         } else {
-            HStack(alignment: .top, spacing: 0) {
+            HStack(alignment: .center, spacing: DesignTokens.Spacing.xs) {
                 VStack(spacing: layoutContext.prefersCollapsedBattleChrome ? DesignTokens.Spacing.xs : DesignTokens.Spacing.sm) {
                     BattleTrackerSectionTabBar(
                         gameSystemId: viewModel.gameSystemId,
@@ -298,24 +297,17 @@ struct BattlePhaseTrackerView: View {
 
     @ViewBuilder
     var guideSection: some View {
-        if !dismissedBattleCompleteGuide, let step = viewModel.currentGuideStep {
-            DisclosureGroup(isExpanded: $showsBattleGuideExpanded) {
-                BattleGuideCard(step: step) {
-                    if step.kind == .battleComplete {
-                        if ReleaseSurface.showsMatchHistory {
-                            presentVictoryScreen()
-                        }
-                        dismissedBattleCompleteGuide = true
-                    } else {
-                        viewModel.completeCurrentGuideStep()
+        if showsGuideOnTurnTab, let step = viewModel.currentGuideStep {
+            BattleGuideCard(step: step) {
+                if step.kind == .battleComplete {
+                    if ReleaseSurface.showsMatchHistory {
+                        presentVictoryScreen()
                     }
+                    dismissedBattleCompleteGuide = true
+                } else {
+                    viewModel.completeCurrentGuideStep()
                 }
-                .padding(.top, DesignTokens.Spacing.sm)
-            } label: {
-                Label(String(localized: "Do this now"), systemImage: "hand.point.right.fill")
-                    .font(.subheadline.weight(.semibold))
             }
-            .accentHighlightCard()
             .accessibilityIdentifier("battleGuide.section")
         }
     }
@@ -421,8 +413,11 @@ struct BattlePhaseTrackerView: View {
         BattleTrackerRoundOpenerSection(viewModel: viewModel)
     }
 
+    @ViewBuilder
     var victoryPointsSection: some View {
-        BattleTrackerVictoryPointsSection(viewModel: viewModel)
+        if showsVictoryPointsOnTurnTab {
+            BattleTrackerVictoryPointsSection(viewModel: viewModel)
+        }
     }
 
     @ViewBuilder

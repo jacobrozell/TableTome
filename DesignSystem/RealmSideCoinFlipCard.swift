@@ -2,6 +2,7 @@ import SwiftUI
 import TabletomeDomain
 
 struct RealmSideCoinFlipCard: View {
+    var compactMode: Bool = false
     @State private var battlefield: SpearheadBattlefield = .fireAndJade
     @State private var result: BattlefieldSide?
     @State private var isFlipping = false
@@ -16,17 +17,19 @@ struct RealmSideCoinFlipCard: View {
             Text(String(localized: "Board Side"))
                 .font(.headline)
 
-            Text(
-                String(
-                    localized: """
-                    The defender chooses which battlefield and side to use. Pick the board you own, \
-                    tap a side to choose it, or flip a coin if you need a fair tie-break.
-                    """
+            if !compactMode {
+                Text(
+                    String(
+                        localized: """
+                        The defender chooses which battlefield and side to use. Pick the board you own, \
+                        tap a side to choose it, or flip a coin if you need a fair tie-break.
+                        """
+                    )
                 )
-            )
-            .font(.subheadline)
-            .foregroundStyle(.secondary)
-            .fixedSize(horizontal: false, vertical: true)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            }
 
             Menu {
                 ForEach(SpearheadBattlefield.allCases) { board in
@@ -50,18 +53,20 @@ struct RealmSideCoinFlipCard: View {
             }
             .accessibilityIdentifier("coinFlip.battlefieldPicker")
 
-            Text(battlefield.newPlayerSummary)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
+            if !compactMode {
+                Text(battlefield.newPlayerSummary)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
 
-            InlineGlossaryText(
-                text: battlefield.flipCaption,
-                gameSystemId: GameSystemId.aosSpearhead.rawValue,
-                font: .caption,
-                foregroundStyle: Color(.tertiaryLabel)
-            )
-            .fixedSize(horizontal: false, vertical: true)
+                InlineGlossaryText(
+                    text: battlefield.flipCaption,
+                    gameSystemId: GameSystemId.aosSpearhead.rawValue,
+                    font: .caption,
+                    foregroundStyle: Color(.tertiaryLabel)
+                )
+                .fixedSize(horizontal: false, vertical: true)
+            }
 
             HStack(spacing: DesignTokens.Spacing.md) {
                 ForEach(sides) { side in

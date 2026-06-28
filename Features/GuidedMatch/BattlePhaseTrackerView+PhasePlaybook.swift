@@ -16,6 +16,30 @@ extension BattlePhaseTrackerView {
             && viewModel.contentCoverage >= .battleTracker
     }
 
+    /// VP scoring belongs after deployment — not while armies are still going down.
+    var showsVictoryPointsOnTurnTab: Bool {
+        deploymentIsComplete && viewModel.trackerState.currentPhase != .deployment
+    }
+
+    var showsGuideOnTurnTab: Bool {
+        guard !dismissedBattleCompleteGuide, viewModel.currentGuideStep != nil else { return false }
+        guard showsPhasePlaybook else { return true }
+        if !deploymentIsComplete { return false }
+        if viewModel.trackerState.currentPhase == .deployment { return false }
+        if isDeploymentGuideStep { return false }
+        return true
+    }
+
+    private var isDeploymentGuideStep: Bool {
+        guard let step = viewModel.currentGuideStep else { return false }
+        switch step.kind {
+        case .deployment, .scSetup, .wh40kSetup, .cpSetup:
+            return true
+        default:
+            return false
+        }
+    }
+
     @ViewBuilder
     var phasePlaybookSection: some View {
         if showsPhasePlaybook {

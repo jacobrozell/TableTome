@@ -55,7 +55,7 @@ struct GuidedMatchView: View {
     private let initialHubTab: GuidedMatchHubTab?
 
     private var usesCompactSetupLayout: Bool {
-        !NewPlayerTipsStore.hasExpandedGuidedMatchSetup
+        setupIsComplete && !NewPlayerTipsStore.hasExpandedGuidedMatchSetup
     }
     init(
         viewModel: GuidedMatchViewModel,
@@ -572,7 +572,7 @@ struct GuidedMatchView: View {
     private var rollPromptSection: some View {
         if viewModel.matchState.hasBothArmies,
            viewModel.matchState.attackerIsPlayerOne != nil,
-           viewModel.nextIncompleteStep?.id != "roll-attacker" {
+           viewModel.nextIncompleteStep?.id == "roll-attacker" {
             Section {
                 inlineRollPickerCard
                     .listRowInsets(
@@ -603,8 +603,12 @@ struct GuidedMatchView: View {
            let next = viewModel.nextIncompleteStep,
            let index = viewModel.sortedMatchSteps.firstIndex(where: { $0.id == next.id }) {
             Section {
-                if next.id == "roll-attacker" {
-                    rollAttackerInlineSection(step: next, stepNumber: index + 1, useSplitSelection: useSplitSelection)
+                if next.supportsInlineHubSetup {
+                    inlineSetupSection(
+                        step: next,
+                        stepNumber: index + 1,
+                        useSplitSelection: useSplitSelection
+                    )
                 } else if useSplitSelection {
                     GuideStepCard(
                         stepNumber: index + 1,
@@ -643,7 +647,7 @@ struct GuidedMatchView: View {
             } header: {
                 Text(String(localized: "Up Next"))
             } footer: {
-                if let next = viewModel.nextIncompleteStep, next.id != "roll-attacker" {
+                if let next = viewModel.nextIncompleteStep, !next.supportsInlineHubSetup {
                     SetupStepRulesLink(
                         gameSystemId: gameSystemId.rawValue,
                         stepTitle: next.title,
@@ -655,7 +659,7 @@ struct GuidedMatchView: View {
     }
 
     @ViewBuilder
-    private func rollAttackerInlineSection(
+    private func inlineSetupSection(
         step: MatchSetupStep,
         stepNumber: Int,
         useSplitSelection: Bool
@@ -667,10 +671,21 @@ struct GuidedMatchView: View {
                 summary: step.summary,
                 isComplete: false,
                 showsDisclosureIndicator: false,
+                accessibilityHint: String(localized: "Current setup step"),
                 accessibilityId: "guidedMatch.continue.\(step.id)"
             )
 
-            inlineRollPickerCard
+            if step.id == "roll-attacker" {
+                inlineRollPickerCard
+            } else {
+                MatchStepDetailView(
+                    step: step,
+                    stepNumber: stepNumber,
+                    viewModel: viewModel,
+                    ruleSections: ruleSections,
+                    presentation: .inlineHub
+                )
+            }
 
             SetupStepRulesLink(
                 gameSystemId: gameSystemId.rawValue,
@@ -679,27 +694,27 @@ struct GuidedMatchView: View {
             )
 
             if useSplitSelection {
-                Button(String(localized: "Open step details")) {
+                Button(String(localized: "Read full step guide")) {
                     selectedDestination = .step(step.id)
                 }
                 .buttonStyle(.bordered)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .accessibilityIdentifier("guidedMatch.rollAttacker.details")
+                .accessibilityIdentifier("guidedMatch.stepGuide.\(step.id)")
             } else {
                 NavigationLink(value: GuidedMatchDestination.step(step.id)) {
-                    Label(String(localized: "Open step details"), systemImage: "doc.text")
+                    Label(String(localized: "Read full step guide"), systemImage: "doc.text")
                         .font(.subheadline.weight(.medium))
                         .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .accessibilityIdentifier("guidedMatch.rollAttacker.details")
+                .accessibilityIdentifier("guidedMatch.stepGuide.\(step.id)")
             }
         }
         .listRowInsets(GuideStepCard.listRowInsets)
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
-        .accessibilityIdentifier("guidedMatch.rollAttacker.inline")
+        .accessibilityIdentifier("guidedMatch.inlineSetup.\(step.id)")
     }
 
     @ViewBuilder
@@ -831,7 +846,11 @@ struct GuidedMatchView: View {
                     )
                 )
             } else {
-                Text(String(localized: "Choose both armies before the setup steps unlock."))
+                Text(
+                    String(
+                        localized: "Armies are set. Open the Setup tab for mission, deployment, and battlefield steps."
+                    )
+                )
             }
         }
     }
@@ -1073,6 +1092,7 @@ extension GuidedMatchView {
                             setupTotal: viewModel.setupProgress.total,
                             nextStepTitle: viewModel.nextIncompleteStep?.title,
                             setupComplete: setupIsComplete,
+                            activeHubTab: hubTab,
                             battleTrackerSummary: battleTrackerSummaryLine(),
                             compactMode: usesCompactLandscapeStatusBar
                         )
@@ -1183,31 +1203,28 @@ extension GuidedMatchView {
 
                 if let next = viewModel.nextIncompleteStep,
                    let index = viewModel.sortedMatchSteps.firstIndex(where: { $0.id == next.id }) {
-                    NavigationLink(value: GuidedMatchDestination.step(next.id)) {
-                        GuideStepCard(
-                            stepNumber: index + 1,
-                            title: next.title,
-                            summary: next.summary,
-                            isComplete: false,
-                            showsDisclosureIndicator: false,
-                            accessibilityId: "guidedMatch.battleGate.\(next.id)"
-                        )
+                    Button {
+                        hubTab = .setup
+                    } label: {
+                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                            Text(String(localized: "Continue on Setup"))
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(Color.accentOnSurface)
+                            GuideStepCard(
+                                stepNumber: index + 1,
+                                title: next.title,
+                                summary: next.summary,
+                                isComplete: false,
+                                showsDisclosureIndicator: false,
+                                accessibilityId: "guidedMatch.battleGate.\(next.id)"
+                            )
+                        }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
-                    .listRowInsets(GuideStepCard.listRowInsets)
-                    .listRowBackground(Color.clear)
-                    .listRowSeparator(.hidden)
+                    .accessibilityIdentifier("guidedMatch.battleGate.continue")
                 }
-
-                Button {
-                    hubTab = .setup
-                } label: {
-                    Label(String(localized: "Go to Setup"), systemImage: "arrow.left.circle")
-                        .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                }
-                .accessibilityIdentifier("guidedMatch.battleGate.setup")
             }
             .padding(.vertical, DesignTokens.Spacing.xs)
         } footer: {

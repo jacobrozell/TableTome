@@ -8,6 +8,7 @@ struct BattleTrackerPhaseDock: View {
     let myUnitLabel: String?
     let myUnitEnabled: Bool
     var victoryPointsSubtitle: String = String(localized: "VP")
+    var scoreVictoryPointsEnabled: Bool = true
     var compactLandscape: Bool = false
     let onSelectPhase: (BattleTurnPhase) -> Void
     let onAdvancePhase: () -> Void
@@ -50,15 +51,15 @@ struct BattleTrackerPhaseDock: View {
                         title: String(localized: "Score"),
                         subtitle: victoryPointsSubtitle,
                         systemImage: "star.fill",
-                        isEnabled: true,
+                        isEnabled: scoreVictoryPointsEnabled,
                         accessibilityId: "battleTracker.phaseDock.score",
                         action: onScoreVictoryPoints
                     )
                 }
             } else {
-                HStack(spacing: DesignTokens.Spacing.xs) {
+                HStack(alignment: .center, spacing: DesignTokens.Spacing.xs) {
                     phaseButton
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .frame(maxWidth: .infinity)
                     dockButton(
                         title: String(localized: "My Unit"),
                         subtitle: compactLandscape ? nil : myUnitLabel,
@@ -80,7 +81,7 @@ struct BattleTrackerPhaseDock: View {
                         title: String(localized: "Score"),
                         subtitle: compactLandscape ? nil : victoryPointsSubtitle,
                         systemImage: "star.fill",
-                        isEnabled: true,
+                        isEnabled: scoreVictoryPointsEnabled,
                         accessibilityId: "battleTracker.phaseDock.score",
                         action: onScoreVictoryPoints
                     )
@@ -88,6 +89,7 @@ struct BattleTrackerPhaseDock: View {
             }
         }
         .frame(maxWidth: .infinity)
+        .fixedSize(horizontal: false, vertical: true)
         .padding(.horizontal, DesignTokens.Spacing.sm)
         .padding(.vertical, compactLandscape ? DesignTokens.Spacing.xs : DesignTokens.Spacing.sm)
         .background(.bar)
@@ -153,7 +155,7 @@ struct BattleTrackerPhaseDock: View {
         }
         .buttonStyle(.plain)
         .disabled(!isEnabled)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .frame(maxWidth: .infinity)
         .accessibilityLabel(title)
         .accessibilityIdentifier(accessibilityId)
     }
@@ -184,9 +186,10 @@ struct BattleTrackerPhaseDock: View {
                 }
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .frame(maxWidth: .infinity)
         .minimumTouchTarget()
         .foregroundStyle(isEnabled ? Color.primary : Color.secondary.opacity(0.5))
+        .padding(.horizontal, DesignTokens.Spacing.xs)
         .padding(.vertical, compactLandscape ? 2 : DesignTokens.Spacing.xs)
         .background(Color(.tertiarySystemFill).opacity(isEnabled ? 0.6 : 0.25), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
     }

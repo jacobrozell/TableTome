@@ -13,6 +13,7 @@ public struct GuideStepCard: View {
     let summary: String
     let isComplete: Bool
     let showsDisclosureIndicator: Bool
+    let accessibilityHint: String?
     let accessibilityId: String
 
     @ScaledMetric(relativeTo: .subheadline) private var stepCircleSize: CGFloat = 36
@@ -23,6 +24,7 @@ public struct GuideStepCard: View {
         summary: String,
         isComplete: Bool,
         showsDisclosureIndicator: Bool = true,
+        accessibilityHint: String? = nil,
         accessibilityId: String
     ) {
         self.stepNumber = stepNumber
@@ -30,6 +32,7 @@ public struct GuideStepCard: View {
         self.summary = summary
         self.isComplete = isComplete
         self.showsDisclosureIndicator = showsDisclosureIndicator
+        self.accessibilityHint = accessibilityHint
         self.accessibilityId = accessibilityId
     }
 
@@ -73,7 +76,10 @@ public struct GuideStepCard: View {
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(title). \(summary)")
-        .accessibilityHint(isComplete ? "Completed step" : "Opens step details")
+        .accessibilityHint(
+            accessibilityHint
+                ?? (isComplete ? String(localized: "Completed step") : String(localized: "Opens step details"))
+        )
         .accessibilityIdentifier(accessibilityId)
     }
 }

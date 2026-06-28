@@ -17,6 +17,18 @@ struct StarterMatchupHandoffBanner: View {
                 .font(.subheadline.weight(.medium))
                 .fixedSize(horizontal: false, vertical: true)
 
+            Text(
+                String(
+                    localized: """
+                    We filled both armies, regiment abilities, enhancements, and defaulted the attacker. \
+                    Change anything on the Setup tab — your next step is below.
+                    """
+                )
+            )
+            .font(.callout)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+
             if let nextStepTitle {
                 Text(String(localized: "Next: \(nextStepTitle)"))
                     .font(.callout)

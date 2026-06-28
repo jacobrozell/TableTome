@@ -8,20 +8,54 @@ enum BattleTrackerChromeStorage {
     static let topChromeExpandedInLandscapeKey = "battleTracker.topChromeExpandedInLandscape"
 }
 
+struct ChromeCollapseChevronButton: View {
+    enum Direction {
+        case up
+        case down
+
+        var systemImage: String {
+            switch self {
+            case .up: "chevron.up"
+            case .down: "chevron.down"
+            }
+        }
+    }
+
+    let direction: Direction
+    var compact: Bool = false
+    let accessibilityLabel: String
+    let accessibilityIdentifier: String
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: direction.systemImage)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+                .frame(
+                    width: DesignTokens.minTouchTarget,
+                    height: compact ? 28 : DesignTokens.minTouchTarget
+                )
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(accessibilityLabel)
+        .accessibilityIdentifier(accessibilityIdentifier)
+    }
+}
+
 struct ChromeCollapseInlineButton: View {
     let accessibilityLabel: String
     let accessibilityIdentifier: String
     let onCollapse: () -> Void
 
     var body: some View {
-        Button(action: onCollapse) {
-            Image(systemName: "chevron.up")
-                .font(.caption.weight(.semibold))
-                .frame(width: DesignTokens.minTouchTarget, height: DesignTokens.minTouchTarget)
-        }
-        .buttonStyle(.plain)
-        .accessibilityLabel(accessibilityLabel)
-        .accessibilityIdentifier(accessibilityIdentifier)
+        ChromeCollapseChevronButton(
+            direction: .up,
+            accessibilityLabel: accessibilityLabel,
+            accessibilityIdentifier: accessibilityIdentifier,
+            action: onCollapse
+        )
     }
 }
 
@@ -54,16 +88,7 @@ struct BattleTrackerCollapsedTopChrome: View {
     let onExpand: () -> Void
 
     var body: some View {
-        HStack(spacing: DesignTokens.Spacing.sm) {
-            Button(action: onExpand) {
-                Image(systemName: "chevron.down")
-                    .font(.caption.weight(.semibold))
-                    .frame(width: DesignTokens.minTouchTarget, height: DesignTokens.minTouchTarget)
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(String(localized: "Show battle header"))
-            .accessibilityIdentifier("battleTracker.chromeExpand")
-
+        HStack(spacing: DesignTokens.Spacing.xs) {
             Menu {
                 ForEach(tabs) { tab in
                     Button {
@@ -83,15 +108,23 @@ struct BattleTrackerCollapsedTopChrome: View {
             }
             .accessibilityHint(String(localized: "Switch battle tracker section"))
 
-            Spacer(minLength: 0)
-
             Text(phaseSummary)
                 .font(.caption2)
                 .foregroundStyle(.secondary)
                 .adaptiveLineLimit(1)
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .accessibilityLabel(phaseSummaryAccessibilityLabel)
+
+            ChromeCollapseChevronButton(
+                direction: .down,
+                compact: true,
+                accessibilityLabel: String(localized: "Show battle header"),
+                accessibilityIdentifier: "battleTracker.chromeExpand",
+                action: onExpand
+            )
         }
-        .barChromeBackground(horizontalPadding: DesignTokens.Spacing.sm, verticalPadding: DesignTokens.Spacing.xs)
+        .frame(minHeight: 32)
+        .barChromeBackground(horizontalPadding: DesignTokens.Spacing.sm, verticalPadding: 2)
         .accessibilityIdentifier("battleTracker.collapsedTopChrome")
     }
 
@@ -117,23 +150,23 @@ struct GuidedMatchCollapsedHubChrome: View {
     let onExpand: () -> Void
 
     var body: some View {
-        HStack(spacing: DesignTokens.Spacing.sm) {
-            Button(action: onExpand) {
-                Image(systemName: "chevron.down")
-                    .font(.caption.weight(.semibold))
-                    .frame(width: DesignTokens.minTouchTarget, height: DesignTokens.minTouchTarget)
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(String(localized: "Show match summary"))
-            .accessibilityIdentifier("guidedMatch.hubChromeExpand")
-
+        HStack(spacing: DesignTokens.Spacing.xs) {
             Text(summary)
                 .font(.caption.weight(.medium))
                 .foregroundStyle(.secondary)
                 .adaptiveLineLimit(1)
                 .frame(maxWidth: .infinity, alignment: .leading)
+
+            ChromeCollapseChevronButton(
+                direction: .down,
+                compact: true,
+                accessibilityLabel: String(localized: "Show match summary"),
+                accessibilityIdentifier: "guidedMatch.hubChromeExpand",
+                action: onExpand
+            )
         }
-        .barChromeBackground()
+        .frame(minHeight: 32)
+        .barChromeBackground(horizontalPadding: DesignTokens.Spacing.md, verticalPadding: 2)
         .accessibilityIdentifier("guidedMatch.collapsedHubChrome")
     }
 }

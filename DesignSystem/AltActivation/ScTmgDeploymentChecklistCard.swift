@@ -4,10 +4,26 @@ import TabletomeDomain
 struct ScTmgDeploymentChecklistCard: View {
     let completedSteps: Set<String>
     var focusedStep: ScTmgDeploymentChecklistStep?
+    var compactMode: Bool = false
     let onToggle: (ScTmgDeploymentChecklistStep, Bool) -> Void
 
     private var progress: (done: Int, total: Int) {
         ScTmgDeploymentChecklist.completionCount(completedSteps: completedSteps)
+    }
+
+    private var visibleSteps: [ScTmgDeploymentChecklistStep] {
+        if !compactMode {
+            return Array(ScTmgDeploymentChecklistStep.allCases)
+        }
+        if let focusedStep {
+            return [focusedStep]
+        }
+        if let next = ScTmgDeploymentChecklistStep.allCases.first(where: {
+            !ScTmgDeploymentChecklist.isComplete(step: $0, completedSteps: completedSteps)
+        }) {
+            return [next]
+        }
+        return []
     }
 
     var body: some View {
@@ -19,7 +35,7 @@ struct ScTmgDeploymentChecklistCard: View {
                 ProgressBadge(done: progress.done, total: progress.total)
             }
 
-            if progress.done < progress.total {
+            if !compactMode, progress.done < progress.total {
                 Text(ScTmgDeploymentChecklist.overview)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -27,7 +43,7 @@ struct ScTmgDeploymentChecklistCard: View {
             }
 
             VStack(spacing: 0) {
-                ForEach(Array(ScTmgDeploymentChecklistStep.allCases.enumerated()), id: \.element.id) { index, step in
+                ForEach(Array(visibleSteps.enumerated()), id: \.element.id) { index, step in
                     if index > 0 {
                         Divider()
                     }

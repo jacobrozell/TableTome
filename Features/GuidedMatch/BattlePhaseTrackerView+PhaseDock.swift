@@ -12,6 +12,7 @@ extension BattlePhaseTrackerView {
             myUnitLabel: focusedUnitDisplayName,
             myUnitEnabled: focusedUnitSelection != nil,
             victoryPointsSubtitle: victoryPointsDockSubtitle,
+            scoreVictoryPointsEnabled: showsVictoryPointsOnTurnTab,
             compactLandscape: layoutContext.prefersCollapsedBattleChrome,
             onSelectPhase: { phase in
                 viewModel.setPhase(phase)

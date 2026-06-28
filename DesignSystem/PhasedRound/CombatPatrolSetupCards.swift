@@ -5,11 +5,27 @@ struct CombatPatrolDeploymentChecklistCard: View {
     let completedSteps: Set<String>
     let focusedSteps: Set<CombatPatrolDeploymentChecklistStep>
     let onToggle: (CombatPatrolDeploymentChecklistStep, Bool) -> Void
+    var compactMode: Bool = false
+
+    private var visibleSteps: [CombatPatrolDeploymentChecklistStep] {
+        if !compactMode {
+            return CombatPatrolDeploymentChecklistStep.allCases
+        }
+        if let focused = focusedSteps.first {
+            return [focused]
+        }
+        if let next = CombatPatrolDeploymentChecklistStep.allCases.first(where: {
+            !CombatPatrolDeploymentChecklist.isComplete(step: $0, completedSteps: completedSteps)
+        }) {
+            return [next]
+        }
+        return []
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             SectionHeader(title: String(localized: "Battlefield Checklist"), systemImage: "map")
-            ForEach(CombatPatrolDeploymentChecklistStep.allCases) { step in
+            ForEach(visibleSteps) { step in
                 let isComplete = CombatPatrolDeploymentChecklist.isComplete(
                     step: step,
                     completedSteps: completedSteps

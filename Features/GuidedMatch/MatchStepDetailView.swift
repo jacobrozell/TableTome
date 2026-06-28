@@ -1,13 +1,20 @@
 import SwiftUI
 import TabletomeDomain
 
+enum MatchStepPresentation {
+    case detail
+    case inlineHub
+}
+
 // swiftlint:disable:next type_body_length
 struct MatchStepDetailView: View {
     let step: MatchSetupStep
     let stepNumber: Int
     @ObservedObject var viewModel: GuidedMatchViewModel
     let ruleSections: [RuleSection]
+    var presentation: MatchStepPresentation = .detail
 
+    @Environment(\.dismiss) private var dismiss
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -20,11 +27,25 @@ struct MatchStepDetailView: View {
         )
     }
 
-    private var isComplete: Bool {
+    var isComplete: Bool {
         viewModel.matchState.completedStepIds.contains(step.id)
     }
 
     var body: some View {
+        Group {
+            switch presentation {
+            case .detail:
+                detailBody
+            case .inlineHub:
+                inlineHubBody
+            }
+        }
+        .onAppear {
+            viewModel.syncAutoCompletions()
+        }
+    }
+
+    private var detailBody: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                 Text(step.body)
@@ -66,9 +87,27 @@ struct MatchStepDetailView: View {
         .tabBarScrollInset()
         .navigationTitle(step.title)
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear {
-            viewModel.syncAutoCompletions()
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+                Button(String(localized: "Done")) {
+                    dismiss()
+                }
+                .accessibilityIdentifier("guidedMatch.stepDone.\(step.id)")
+            }
         }
+    }
+
+    private var inlineHubBody: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            if step.usesCompactInlineHubContent {
+                compactInlineBattlefieldContent
+                inlineStepCompletionHint
+            } else {
+                stepSpecificContent
+                stepCompletionStatus
+            }
+        }
+        .accessibilityIdentifier("guidedMatch.stepInline.\(step.id)")
     }
 
     @ViewBuilder
@@ -97,7 +136,7 @@ struct MatchStepDetailView: View {
         .accessibilityIdentifier("guidedMatch.stepComplete.\(step.id)")
     }
 
-    private var completionHint: String {
+    var completionHint: String {
         if isComplete {
             return String(localized: "Step complete")
         }
@@ -118,7 +157,7 @@ struct MatchStepDetailView: View {
     }
 
     @ViewBuilder
-    private var stepSpecificContent: some View {
+    var stepSpecificContent: some View {
         switch step.id {
         case "choose-armies":
             matchupCard

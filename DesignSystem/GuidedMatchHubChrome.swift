@@ -131,6 +131,7 @@ struct GuidedMatchStatusBar: View {
     let setupTotal: Int
     let nextStepTitle: String?
     let setupComplete: Bool
+    var activeHubTab: GuidedMatchHubTab = .armies
     var battleTrackerSummary: String?
     var compactMode: Bool = false
 
@@ -180,17 +181,25 @@ struct GuidedMatchStatusBar: View {
                     .accessibilityLabel(matchupAccessibilityLabel)
 
                 if setupTotal > 0, !setupComplete {
-                    HStack(spacing: DesignTokens.Spacing.sm) {
-                        ProgressView(
-                            value: Double(setupCompleted),
-                            total: Double(setupTotal)
-                        )
-                        .frame(maxWidth: 120)
-                        Text(self.setupProgressLabel)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(3)
-                        .fixedSize(horizontal: false, vertical: true)
+                    if activeHubTab == .setup {
+                        HStack(spacing: DesignTokens.Spacing.sm) {
+                            ProgressView(
+                                value: Double(setupCompleted),
+                                total: Double(setupTotal)
+                            )
+                            .frame(maxWidth: 120)
+                            Text(setupProgressLabel)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(3)
+                            .fixedSize(horizontal: false, vertical: true)
+                        }
+                    } else {
+                        Text(setupProgressLabel)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(2)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 } else if setupComplete {
                     if let battleTrackerSummary {
@@ -213,11 +222,27 @@ struct GuidedMatchStatusBar: View {
     }
 
     private var setupProgressLabel: String {
-        var label = "\(String(localized: "Setup")) \(setupCompleted)/\(setupTotal)"
-        if let nextStepTitle {
-            label += " · \(nextStepTitle)"
+        switch activeHubTab {
+        case .armies:
+            if hasBothArmies {
+                return String(localized: "Armies ready — open Setup for pre-battle steps")
+            }
+            return String(localized: "Choose both armies to unlock setup")
+        case .setup:
+            var label = "\(String(localized: "Setup")) \(setupCompleted)/\(setupTotal)"
+            if let nextStepTitle {
+                label += " · \(nextStepTitle)"
+            }
+            return label
+        case .battle:
+            if setupComplete {
+                return String(localized: "Setup complete")
+            }
+            if let nextStepTitle {
+                return String(localized: "Finish setup — \(nextStepTitle)")
+            }
+            return String(localized: "Finish setup on the Setup tab")
         }
-        return label
     }
 
     private var matchupLine: String {

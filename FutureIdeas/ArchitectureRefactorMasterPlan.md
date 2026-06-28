@@ -382,6 +382,54 @@ The whole plan exists to make these three flows cheap. After the refactor:
 
 ---
 
+## Implementation log
+
+Tracks what has actually been committed vs. what remains. Honesty about
+compile-confidence matters because the refactor was bootstrapped in an
+environment without an Xcode/Swift toolchain — data and scripts were executed
+and verified there; Swift was written to be additive (strangler-fig) and must
+be compiled on a Mac before the next phase builds on it.
+
+### Landed
+
+| Item | Phase | Files | Verified how | Confidence |
+|------|-------|-------|--------------|------------|
+| Content schemas (manifest/catalog/boxset) | 0 | `Resources/Schemas/*.schema.json` | n/a (data) | high |
+| Content linter (schema + cross-ref) | 0 | `Scripts/validate_content.py` | **ran**: passes clean; proven to catch dangling refs | high |
+| Architecture-debt ratchet | 0 | `Scripts/check_architecture_debt.sh` | **ran**: budgets = baseline, enforce passes | high |
+| pre-commit + CI wiring | 0 | `Scripts/pre-commit`, `.github/workflows/ci.yml` | `bash -n` + manual run | high |
+| Box-set data extracted to JSON | 4 | `Resources/Rules/*-boxsets-v1.json` (4) | **ran**: content-lint cross-ref OK against catalogs | high |
+| Manifest `boxSetBundleName` + `availability` | 4/1 | `game-systems-manifest-v1.json` | content-lint | high |
+| `BoxSetCatalog` model + `→ FeaturedArmiesConfig` bridge | 4 | `Domain/Registry/BoxSet.swift` | read-review; mirrors existing types | medium (needs build) |
+| `BoxSetCatalogLoader` | 4 | `Data/Registry/BoxSetCatalogLoader.swift` | read-review; mirrors `GameSystemsManifestLoader` | medium (needs build) |
+| `GameSystemManifestEntry` optional fields | 4/1 | `Data/Registry/GameSystemsManifestLoader.swift` | additive optionals | medium (needs build) |
+| Grouped capability enums (`CombatRollEngineKind`, `DeploymentChecklistStyle`) | 2 | `Domain/Registry/PlayCapabilities+Grouped.swift` | read-review; computed from existing flags | medium (needs build) |
+| Tests for box sets + grouped caps | 2/4 | `Tests/Unit/BoxSetCatalogTests.swift`, `Tests/Unit/PlayCapabilitiesGroupedTests.swift` | read-review | medium (needs build) |
+
+All Swift above is **additive** — no existing type/API was removed or changed
+in a breaking way — so it should not break the current build. After it compiles
+green, the next steps wire it in and remove the old paths.
+
+### Next steps to *complete* each phase (require the build loop)
+
+- **Phase 1:** make the manifest the source of truth for capabilities/copy/engine-config (not just wiring); reduce `GameSystemId+Bundled.swift` to a test seed; remove `GameSystemRegistry.bundled` static refs inside `BattleRules`/`GameSystemRulesLabels`/the per-system `*FeaturedArmies` types; `ReleaseSurface` reads manifest `availability`. **Ratchet:** drop `raw_id_literals` budget as these land.
+- **Phase 2 (finish):** migrate the ~26 readers of the system-named flags to `combatRollEngineKind`/`deploymentChecklistStyle`; route `CombatRollEngineRouter` off `CombatRollEngineKind`; then delete the stored booleans and the shim's flag reads. **Ratchet:** drop `system_named_caps` budget to 0.
+- **Phase 3:** delete `BattleRules`, `SpearheadBattleRules`, `CombatPatrolBattleRules`, `ScTmgBattleRules`; callers use `registry.engine(for:)`; replace `isSpearhead`/`isStarCraft` with engine/capability reads. **Ratchet:** drop `battlerules_or_probes` budget toward 0.
+- **Phase 4 (finish):** point descriptor construction at `BoxSetCatalog` (delete hardcoded `FeaturedArmiesConfig` literals); the parity test `testLoadsBundledBoxSetsForEverySystem` guards the swap.
+- **Phases 5–9:** Play UI split by engine, DesignSystem regrouping, navigation consolidation, persistence/concurrency hardening, naming normalization — as specced above. Each needs compile + parity tests before deleting the old path.
+
+### Ratchet drawdown schedule
+
+| Metric | Phase 0 budget | After P1 | After P2 | After P3 |
+|--------|----------------|----------|----------|----------|
+| `switch_gameSystemId` | 20 | ↓ | ↓ | **0** |
+| `raw_id_literals` | 46 | **0** | — | — |
+| `battlerules_or_probes` | 225 | ↓ | ↓ | **0** |
+| `system_named_caps` | 26 | — | **0** | — |
+
+Lower the budget in `Scripts/check_architecture_debt.sh` in the same PR that
+removes the usages, so the gate locks each gain in place.
+
 ## Verification
 
 | Field | Value |

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "gameSystemId": "sc-tmg",
+  "boxSets": [
+    {
+      "id": "raynors-raiders-vs-kerrigans-swarm",
+      "starterMatchupTitle": "Raynor's Raiders vs Kerrigan's Swarm",
+      "starterSetDescription": "Quick-start the 2-Player Founders Edition with guided setup and a supply-aware battle tracker.",
+      "starterSetBadge": "2-Player Founders Edition",
+      "armyIds": ["raynors-raiders", "kerrigans-swarm"],
+      "playerOne": { "playerName": "Player 1", "factionId": "terran", "armyId": "raynors-raiders" },
+      "playerTwo": { "playerName": "Player 2", "factionId": "zerg", "armyId": "kerrigans-swarm" }
+    }
+  ]
+}

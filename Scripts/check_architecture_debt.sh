@@ -30,10 +30,17 @@ SRC="Domain Features DesignSystem Support App"
 
 # metric_name | budget | description | pattern | paths
 # Budgets are the Phase 0 baseline. RATCHET THESE DOWN as phases complete.
+# Args: name budget desc pattern paths [exclude_path_regex]
+# exclude_path_regex drops matching lines (e.g. the sanctioned migration shim
+# that legitimately reads the flags it is replacing).
 run_metric() {
-  local name="$1" budget="$2" desc="$3" pattern="$4" paths="$5"
+  local name="$1" budget="$2" desc="$3" pattern="$4" paths="$5" exclude="${6:-}"
   local count
-  count=$(search "$pattern" "$paths" | wc -l | tr -d ' ')
+  if [[ -n "$exclude" ]]; then
+    count=$(search "$pattern" "$paths" | grep -vE "$exclude" | wc -l | tr -d ' ')
+  else
+    count=$(search "$pattern" "$paths" | wc -l | tr -d ' ')
+  fi
   printf '%-28s %4s / %-4s  %s\n' "$name" "$count" "$budget" "$desc"
   if [[ "$MODE" != "report" && "$count" -gt "$budget" ]]; then
     echo "  ✗ BUDGET EXCEEDED: $name is $count (budget $budget). Do not add new $desc." >&2
@@ -61,9 +68,12 @@ run_metric "battlerules_or_probes" 225 "BattleRules / is<System> identity probes
   'BattleRules\.|isSpearhead|isWh40k|isStarCraft|isCombatPatrol' "$SRC"
 
 # Phase 2 target: capability flags grouped, system-named flags removed.
+# PlayCapabilities+Grouped.swift is the sanctioned shim that maps these flags
+# to closed enums — it is excluded so new *feature* usage is still caught.
 run_metric "system_named_caps"     26  "system-named capability flags" \
   'usesWh40k1[01]eCombatRollEngine|shows(Wh40k|ScTmg)DeploymentChecklist|showsCombatPatrolMode' \
-  "Domain"
+  "Domain" \
+  'PlayCapabilities\+Grouped\.swift'
 
 echo "-------------------------------------------"
 if [[ "$FAILED" -eq 1 ]]; then

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "gameSystemId": "wh40k-11e",
+  "boxSets": [
+    {
+      "id": "operation-imperator-vs-waaagh-armageddon",
+      "starterMatchupTitle": "Operation Imperator vs Waaagh! Armageddon",
+      "starterSetDescription": "Quick-start the Armageddon launch box with fixed rosters, datasheets, setup, and battle tools.",
+      "starterSetBadge": "Warhammer 40,000: Armageddon",
+      "armyIds": ["operation-imperator", "waaagh-armageddon"],
+      "playerOne": { "playerName": "Player 1", "factionId": "space-marines", "armyId": "operation-imperator" },
+      "playerTwo": { "playerName": "Player 2", "factionId": "orks", "armyId": "waaagh-armageddon" }
+    }
+  ]
+}

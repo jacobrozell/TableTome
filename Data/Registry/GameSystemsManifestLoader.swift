@@ -12,6 +12,28 @@ public struct GameSystemManifestEntry: Codable, Sendable, Equatable {
     public let publisher: String
     public let catalogBundleName: String
     public let armyDetailsSubdirectories: [String]
+    /// Optional basename of the box-set JSON (Phase 4). nil = none declared.
+    public let boxSetBundleName: String?
+    /// Release-readiness gate as data. nil decodes as "available".
+    public let availability: String?
+
+    public init(
+        id: String,
+        playEngine: PlayEngineId,
+        publisher: String,
+        catalogBundleName: String,
+        armyDetailsSubdirectories: [String],
+        boxSetBundleName: String? = nil,
+        availability: String? = nil
+    ) {
+        self.id = id
+        self.playEngine = playEngine
+        self.publisher = publisher
+        self.catalogBundleName = catalogBundleName
+        self.armyDetailsSubdirectories = armyDetailsSubdirectories
+        self.boxSetBundleName = boxSetBundleName
+        self.availability = availability
+    }
 }
 
 public enum GameSystemsManifestLoader {

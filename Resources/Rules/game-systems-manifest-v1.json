@@ -6,6 +6,8 @@
       "playEngine": "phasedRound",
       "publisher": "gw",
       "catalogBundleName": "spearhead-catalog-v1",
+      "boxSetBundleName": "aos-spearhead-boxsets-v1",
+      "availability": "available",
       "armyDetailsSubdirectories": ["Spearhead/armies", "Rules/Spearhead/armies"]
     },
     {
@@ -13,6 +15,8 @@
       "playEngine": "phasedRound",
       "publisher": "gw",
       "catalogBundleName": "wh40k-catalog-v1",
+      "boxSetBundleName": "wh40k-11e-boxsets-v1",
+      "availability": "available",
       "armyDetailsSubdirectories": ["Wh40k/armies", "Rules/Wh40k/armies"]
     },
     {
@@ -20,6 +24,8 @@
       "playEngine": "phasedRound",
       "publisher": "gw",
       "catalogBundleName": "combat-patrol-catalog-v1",
+      "boxSetBundleName": "wh40k-10e-cp-boxsets-v1",
+      "availability": "available",
       "armyDetailsSubdirectories": ["CombatPatrol/armies", "Rules/CombatPatrol/armies"]
     },
     {
@@ -27,6 +33,8 @@
       "playEngine": "alternatingActivation",
       "publisher": "amg",
       "catalogBundleName": "sc-tmg-catalog-v1",
+      "boxSetBundleName": "sc-tmg-boxsets-v1",
+      "availability": "available",
       "armyDetailsSubdirectories": ["ScTmg/armies", "Rules/ScTmg/armies"]
     }
   ]

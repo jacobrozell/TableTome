@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "gameSystemId": "wh40k-10e-cp",
+  "boxSets": [
+    {
+      "id": "space-marines-vs-tyranids",
+      "starterMatchupTitle": "Space Marines vs Tyranids",
+      "starterSetDescription": "Quick-start the Space Marines vs Tyranids starter matchup — works with any Combat Patrol box.",
+      "starterSetBadge": "Combat Patrol starter box",
+      "defaultMissionId": "clash-of-patrols",
+      "armyIds": ["space-marines-combat-patrol", "tyranids-combat-patrol"],
+      "playerOne": { "playerName": "Player 1", "factionId": "space-marines", "armyId": "space-marines-combat-patrol" },
+      "playerTwo": { "playerName": "Player 2", "factionId": "tyranids", "armyId": "tyranids-combat-patrol" }
+    }
+  ]
+}

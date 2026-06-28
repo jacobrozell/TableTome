@@ -1,9 +1,8 @@
 import SwiftUI
 import TabletomeDomain
-import TabletomeData
 
-/// Entry point for the battle tracker — routes by `PlayEngineId` while sharing chrome and combat tools.
-struct BattlePhaseTrackerShell: View {
+/// Spearhead, 40k, and Combat Patrol — shared phased-round battle tracker (Phase 5).
+struct PhasedRoundTrackerView: View {
     let gameSystemId: GameSystemId
     let matchState: GuidedMatchState
     let catalog: SpearheadCatalog
@@ -27,10 +26,6 @@ struct BattlePhaseTrackerShell: View {
         self.onVictoryComplete = onVictoryComplete
     }
 
-    private var playEngineId: PlayEngineId {
-        GameSystemPlayContext.context(for: gameSystemId).playEngine.playEngineId
-    }
-
     var body: some View {
         BattlePhaseTrackerView(
             gameSystemId: gameSystemId,
@@ -40,27 +35,6 @@ struct BattlePhaseTrackerShell: View {
             onMatchStateChange: onMatchStateChange,
             onVictoryComplete: onVictoryComplete
         )
-        .environment(\.battleTrackerPlayEngineId, playEngineId)
-    }
-}
-
-private struct BattleTrackerPlayEngineIdKey: EnvironmentKey {
-    static let defaultValue: PlayEngineId = .phasedRound
-}
-
-private struct BattleTrackerEmbeddedInGuidedMatchKey: EnvironmentKey {
-    static let defaultValue = false
-}
-
-extension EnvironmentValues {
-    var battleTrackerPlayEngineId: PlayEngineId {
-        get { self[BattleTrackerPlayEngineIdKey.self] }
-        set { self[BattleTrackerPlayEngineIdKey.self] = newValue }
-    }
-
-    /// True when the tracker is embedded under Guided Match hub chrome (phone compact layout).
-    var battleTrackerIsEmbeddedInGuidedMatch: Bool {
-        get { self[BattleTrackerEmbeddedInGuidedMatchKey.self] }
-        set { self[BattleTrackerEmbeddedInGuidedMatchKey.self] = newValue }
+        .environment(\.battleTrackerPlayEngineId, .phasedRound)
     }
 }

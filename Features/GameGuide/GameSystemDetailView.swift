@@ -28,6 +28,11 @@ struct GameSystemDetailView: View {
             || playContext.capabilities.showsActivationBar
     }
 
+    private var showsWhatYouNeedCard: Bool {
+        playContext.capabilities.showsBattleTacticDecks
+            || playContext.capabilities.deploymentChecklistStyle == .wh40k
+    }
+
     private var wrongGuideAlert: WrongGuideAlert? {
         guard !dismissedWrongGuideAlert else { return nil }
         return WrongGuideResolver.alert(
@@ -58,40 +63,16 @@ struct GameSystemDetailView: View {
                         }
                     }
 
-                    if playContext.capabilities.showsBattleTacticDecks {
+                    if showsStartHereCard {
                         Section {
-                            NewPlayerStartHereCard()
-                                .listHeroCardRow()
-                        }
-
-                        Section {
-                            WhatYouNeedCard()
+                            GameGuideStartHereCard(gameSystem: gameSystem)
                                 .listHeroCardRow()
                         }
                     }
 
-                    if playContext.capabilities.deploymentChecklistStyle == .wh40k {
+                    if showsWhatYouNeedCard {
                         Section {
-                            FortyKStartHereCard(gameSystem: gameSystem)
-                                .listHeroCardRow()
-                        }
-
-                        Section {
-                            Wh40k11eWhatYouNeedCard()
-                                .listHeroCardRow()
-                        }
-                    }
-
-                    if playContext.capabilities.usesPatrolFormatRules {
-                        Section {
-                            CombatPatrolStartHereCard(gameSystem: gameSystem)
-                                .listHeroCardRow()
-                        }
-                    }
-
-                    if playContext.capabilities.showsActivationBar {
-                        Section {
-                            ScStartHereCard(gameSystem: gameSystem)
+                            GameGuideWhatYouNeedCard(gameSystemId: gameSystemId)
                                 .listHeroCardRow()
                         }
                     }

@@ -68,7 +68,7 @@ enum WrongGuideResolver {
         }
 
         if onboardingChoice == GameSystemId.aosSpearhead.rawValue,
-           isWh40kGuide(currentGameSystemId) {
+           usesFortyKGuideSurface(currentGameSystemId) {
             return WrongGuideAlert(
                 title: String(localized: "Wrong game guide?"),
                 message: String(
@@ -81,7 +81,7 @@ enum WrongGuideResolver {
             )
         }
 
-        if isWh40kGuide(onboardingChoice),
+        if usesFortyKGuideSurface(onboardingChoice),
            currentGameSystemId == GameSystemId.aosSpearhead.rawValue {
             return WrongGuideAlert(
                 title: String(localized: "Wrong game guide?"),
@@ -122,10 +122,10 @@ enum WrongGuideResolver {
         return nil
     }
 
-    private static func isWh40kGuide(_ gameSystemId: String) -> Bool {
-        gameSystemId == GameSystemId.wh40k11e.rawValue
-            || gameSystemId == GameSystemId.wh40k10eCp.rawValue
-            || gameSystemId == "wh40k-10e"
+    private static func usesFortyKGuideSurface(_ gameSystemId: String) -> Bool {
+        let capabilities = GameSystemPlayContext.context(for: gameSystemId).capabilities
+        return capabilities.deploymentChecklistStyle == .wh40k
+            || capabilities.usesPatrolFormatRules
     }
 
     private static func suggestedGuideButtonTitle(for gameSystemId: String) -> String {

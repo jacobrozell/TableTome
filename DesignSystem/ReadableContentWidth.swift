@@ -31,6 +31,8 @@ private struct ReadableContentWidthModifier: ViewModifier {
 
 public extension View {
     /// Centers content in a readable column on iPad and iPhone landscape.
+    /// Apply to inner scroll content (e.g. a `VStack` inside `ScrollView`), not to `Form` or `List` —
+    /// constraining those containers narrows the scroll hit area to the centered column.
     func readableContentWidth() -> some View {
         modifier(ReadableContentWidthModifier())
     }

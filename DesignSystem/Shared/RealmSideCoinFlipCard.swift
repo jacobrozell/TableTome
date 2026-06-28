@@ -68,12 +68,12 @@ struct RealmSideCoinFlipCard: View {
                 .fixedSize(horizontal: false, vertical: true)
             }
 
-            HStack(spacing: DesignTokens.Spacing.md) {
+            HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
                 ForEach(sides) { side in
                     sideChip(side)
+                        .frame(maxWidth: .infinity)
                 }
             }
-            .frame(maxWidth: .infinity)
 
             if let result {
                 Label(result.resultDescription, systemImage: "checkmark.circle.fill")
@@ -89,6 +89,7 @@ struct RealmSideCoinFlipCard: View {
                 performFlip()
             }
             .disabled(isFlipping)
+            .padding(.top, DesignTokens.Spacing.sm)
         }
         .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
         .surfaceCard()
@@ -107,11 +108,14 @@ struct RealmSideCoinFlipCard: View {
                     .foregroundStyle(isSelected ? Color.accentColor : .secondary)
                 Text(side.name)
                     .font(.subheadline.weight(.semibold))
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.85)
                 Text(side.paletteLabel)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, minHeight: Self.sideChipMinHeight, alignment: .center)
             .padding(DesignTokens.Spacing.sm)
             .background(
                 isSelected ? Color.accentColor.opacity(0.15) : Color(.tertiarySystemFill),
@@ -119,11 +123,14 @@ struct RealmSideCoinFlipCard: View {
             )
             .overlay {
                 RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
-                    .strokeBorder(isSelected ? Color.accentColor : .clear, lineWidth: 2)
+                    .strokeBorder(
+                        isSelected ? Color.accentColor : Color(.separator).opacity(0.35),
+                        lineWidth: 2
+                    )
             }
         }
         .buttonStyle(.plain)
-        .frame(minHeight: DesignTokens.minTouchTarget)
+        .disabled(isFlipping)
         .accessibilityLabel(
             isSelected
                 ? String(localized: "\(side.name), \(side.paletteLabel), selected")
@@ -133,6 +140,8 @@ struct RealmSideCoinFlipCard: View {
         .accessibilityAddTraits(isSelected ? .isSelected : [])
         .accessibilityIdentifier("coinFlip.side.\(side.id)")
     }
+
+    private static let sideChipMinHeight: CGFloat = 76
 
     private func selectSide(_ side: BattlefieldSide) {
         battlefield = side.battlefield

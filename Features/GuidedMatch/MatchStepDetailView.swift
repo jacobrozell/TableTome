@@ -107,6 +107,7 @@ struct MatchStepDetailView: View {
                 stepCompletionStatus
             }
         }
+        .fixedSize(horizontal: false, vertical: true)
         .accessibilityIdentifier("guidedMatch.stepInline.\(step.id)")
     }
 

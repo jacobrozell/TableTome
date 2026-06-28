@@ -25,7 +25,7 @@ enum FormHints {
         String(localized: "Stages run left to right. Drag to reorder, swipe to delete.")
     }
     static var factionCrest: String {
-        String(localized: "Short abbreviation shown on army rows. Up to 8 characters.")
+        String(localized: "Tap a faction to edit its abbreviation, colour, or upload a custom crest image.")
     }
     static var filterQuickView: String {
         String(localized: "Preset views for common painting progress slices.")

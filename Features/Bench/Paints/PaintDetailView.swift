@@ -140,7 +140,6 @@ struct PaintDetailView: View {
             }
         }
         .tabBarScrollInset()
-        .readableContentWidth()
         .onDisappear { try? context.save() }
     }
 

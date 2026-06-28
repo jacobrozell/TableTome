@@ -57,7 +57,7 @@ struct BattlePhaseTrackerView: View {
         self.onMatchStateChange = onMatchStateChange
         self.onVictoryComplete = onVictoryComplete
         _viewModel = StateObject(
-            wrappedValue: BattlePhaseTrackerViewModel(
+            wrappedValue: BattleTrackerViewModelFactory.make(
                 gameSystemId: gameSystemId,
                 matchState: matchState,
                 catalog: catalog,

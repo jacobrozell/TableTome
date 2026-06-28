@@ -17,7 +17,7 @@ final class ScTmgActivationTests: XCTestCase {
         matchState.playerTwo.factionId = "zerg"
         matchState.playerTwo.armyId = "kerrigans-swarm"
 
-        let viewModel = BattlePhaseTrackerViewModel(
+        let viewModel = AlternatingActivationBattleTrackerViewModel(
             gameSystemId: .scTmg,
             matchState: matchState,
             catalog: catalog,
@@ -42,7 +42,7 @@ final class ScTmgActivationTests: XCTestCase {
         matchState.playerOne.playerName = "Raynor"
         matchState.playerTwo.playerName = "Kerrigan"
 
-        let viewModel = BattlePhaseTrackerViewModel(
+        let viewModel = AlternatingActivationBattleTrackerViewModel(
             gameSystemId: .scTmg,
             matchState: matchState,
             catalog: catalog,
@@ -63,7 +63,7 @@ final class ScTmgActivationTests: XCTestCase {
         let catalog = try await BundledPlayCatalogRepository(
             bundle: Bundle(for: ScTmgActivationTests.self)
         ).loadCatalog(for: "sc-tmg")
-        let viewModel = BattlePhaseTrackerViewModel(
+        let viewModel = AlternatingActivationBattleTrackerViewModel(
             gameSystemId: .scTmg,
             matchState: GuidedMatchState(),
             catalog: catalog,

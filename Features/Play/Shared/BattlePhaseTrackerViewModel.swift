@@ -2,7 +2,7 @@ import Foundation
 import TabletomeDomain
 
 @MainActor
-final class BattlePhaseTrackerViewModel: ObservableObject {
+class BattlePhaseTrackerViewModel: ObservableObject {
     @Published var trackerState: BattleTrackerState
     @Published var activeAbilities: [TriggeredAbility] = []
     @Published var passiveAbilities: [TriggeredAbility] = []

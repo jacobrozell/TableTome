@@ -10,7 +10,26 @@ struct HomeView: View {
 
     private var showsAllGamesList: Bool {
         _ = firstSessionRevision
+        if PlayContinuationResolver.current(activeGameSystemId: router.activeGameSystemId) != nil {
+            return true
+        }
         return !FirstSessionStore.shouldHideAllGamesList()
+    }
+
+    private var allGamesSectionHeader: String {
+        if PlayContinuationResolver.current(activeGameSystemId: router.activeGameSystemId) != nil {
+            String(localized: "Or pick a different game")
+        } else {
+            String(localized: "All games")
+        }
+    }
+
+    private var allGamesSectionFooter: String? {
+        if PlayContinuationResolver.current(activeGameSystemId: router.activeGameSystemId) != nil {
+            String(localized: "Your in-progress match stays saved — you can resume anytime from Play.")
+        } else {
+            String(localized: "Not sure which to pick? Start with the chooser above.")
+        }
     }
 
     init(viewModel: HomeViewModel) {
@@ -59,9 +78,11 @@ struct HomeView: View {
                                 .accessibilityIdentifier("home.gameSystem.\(system.id)")
                             }
                         } header: {
-                            Text(String(localized: "All games"))
+                            Text(allGamesSectionHeader)
                         } footer: {
-                            Text(String(localized: "Not sure which to pick? Start with the chooser above."))
+                            if let allGamesSectionFooter {
+                                Text(allGamesSectionFooter)
+                            }
                         }
                     }
                 }

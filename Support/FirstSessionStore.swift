@@ -133,7 +133,8 @@ enum FirstSessionStore: Sendable {
     }
 
     static func shouldEmphasizePlayTab() -> Bool {
-        !hasOpenedGameGuide && !hasCompletedSetup
+        guard PlayContinuationResolver.current() == nil else { return false }
+        return !hasOpenedGameGuide && !hasCompletedSetup
     }
 
     /// Hides the full game list on Play home until the user picks from the chooser or opens a guide.

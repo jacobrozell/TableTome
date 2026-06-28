@@ -78,6 +78,15 @@ final class FirstSessionStoreTests: XCTestCase {
         XCTAssertFalse(FirstSessionStore.shouldEmphasizePlayTab())
     }
 
+    func testEmphasizePlayTabClearsWhenMatchInProgress() {
+        let gameSystemId = GameSystemId.aosSpearhead.rawValue
+        var state = GuidedMatchState()
+        state.completedStepIds = ["choose-armies"]
+        MatchSetupStore.save(state, gameSystemId: gameSystemId)
+
+        XCTAssertFalse(FirstSessionStore.shouldEmphasizePlayTab())
+    }
+
     func testHideAllGamesListUntilEngaged() {
         XCTAssertTrue(FirstSessionStore.shouldHideAllGamesList())
 

@@ -14,6 +14,8 @@ struct OnboardingView: View {
     private var wideLayout: Bool { compactHeight && !largeText }
     private var contentMaxWidth: CGFloat { wideLayout ? 760 : .infinity }
     private var horizontalPadding: CGFloat { wideLayout ? 32 : (largeText ? 20 : 24) }
+    private var visibleGames: [OnboardingGameHighlight] { OnboardingContent.visibleGameHighlights }
+    private var showsMoreGamesCue: Bool { visibleGames.count > 2 }
 
     var body: some View {
         NavigationStack {
@@ -27,7 +29,7 @@ struct OnboardingView: View {
                 .frame(maxWidth: .infinity)
                 .padding(.horizontal, horizontalPadding)
                 .padding(.top, wideLayout ? 12 : 20)
-                .padding(.bottom, 120)
+                .padding(.bottom, 168)
             }
             .scrollBounceBehavior(.basedOnSize)
             .background { onboardingBackground.ignoresSafeArea() }
@@ -36,18 +38,17 @@ struct OnboardingView: View {
                     .padding(.horizontal, horizontalPadding)
                     .padding(.vertical, 12)
                     .background {
-                        onboardingBackground
-                            .ignoresSafeArea(edges: .bottom)
+                        LinearGradient(
+                            colors: [
+                                Color(.systemBackground).opacity(0),
+                                Color(.systemBackground),
+                                Color(.systemBackground)
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                        .ignoresSafeArea(edges: .bottom)
                     }
-            }
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(String(localized: "Skip")) {
-                        complete(.exploreApp)
-                    }
-                    .accessibilityIdentifier("onboarding.skip")
-                    .accessibilityLabel(String(localized: "Skip onboarding"))
-                }
             }
         }
         .interactiveDismissDisabled(mode == .firstLaunch)
@@ -91,23 +92,21 @@ struct OnboardingView: View {
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(alignment)
                 .fixedSize(horizontal: false, vertical: true)
-
-            Label(
-                String(localized: "You roll physical dice — Tabletome tracks phases, score, and rules."),
-                systemImage: "dice.fill"
-            )
-            .font(.caption)
-            .foregroundStyle(.secondary)
-            .multilineTextAlignment(alignment)
-            .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity, alignment: alignment == .leading ? .leading : .center)
     }
 
     private var gamePickSection: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            ForEach(OnboardingContent.visibleGameHighlights) { game in
+            ForEach(Array(visibleGames.enumerated()), id: \.element.id) { index, game in
                 gamePickRow(game)
+                if showsMoreGamesCue, index == 1 {
+                    Text(String(localized: "More games below"))
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.top, DesignTokens.Spacing.xs)
+                }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -153,6 +152,8 @@ struct OnboardingView: View {
         }
         .buttonStyle(.plain)
         .onboardingPickerRow()
+        .accessibilityLabel(game.name)
+        .accessibilityHint([game.edition, game.blurb].joined(separator: ". "))
         .accessibilityIdentifier("onboarding.start.\(game.id)")
     }
 
@@ -192,13 +193,15 @@ struct OnboardingView: View {
     }
 
     private var footer: some View {
-        Button(String(localized: "Explore the app")) {
+        Button(String(localized: "I'll pick later")) {
             complete(.exploreApp)
         }
         .buttonStyle(.bordered)
         .controlSize(largeText ? .regular : .large)
         .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
         .accessibilityIdentifier("onboarding.exploreApp")
+        .accessibilityLabel(String(localized: "I'll pick later"))
+        .accessibilityHint(String(localized: "Opens Play so you can choose your box from the chooser."))
     }
 
     private var onboardingBackground: some View {

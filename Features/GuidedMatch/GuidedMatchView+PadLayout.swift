@@ -12,7 +12,7 @@ extension GuidedMatchView {
                 guidedMatchSections(catalog: catalog, useSplitSelection: true)
             }
             .listStyle(.sidebar)
-            .navigationTitle(String(localized: "Guided Match"))
+            .navigationTitle(GameSystemRulesLabels.guidedMatchTitle(gameSystemId: gameSystemId))
             .navigationSplitViewColumnWidth(
                 min: isPadLandscape ? 220 : 260,
                 ideal: isPadLandscape ? 260 : 300,

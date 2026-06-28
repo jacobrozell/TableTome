@@ -112,6 +112,8 @@ struct Wh40kBoxPickerSheet: View {
             .contentShape(Rectangle())
         }
         .accessibilityIdentifier(identifier)
+        .accessibilityLabel(title)
+        .accessibilityHint(detail)
     }
 
     private func openGuide(gameSystemId: String, variant: Wh40kChooserVariant) {

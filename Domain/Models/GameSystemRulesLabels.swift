@@ -117,4 +117,17 @@ public enum GameSystemRulesLabels {
     public static func displayName(gameSystemId: String) -> String {
         copy(for: gameSystemId).displayName
     }
+
+    public static func guidedMatchTitle(gameSystemId: GameSystemId) -> String {
+        switch gameSystemId {
+        case .aosSpearhead:
+            String(localized: "Spearhead match")
+        case .wh40k10eCp:
+            String(localized: "Combat Patrol match")
+        case .wh40k11e:
+            String(localized: "Warhammer 40,000 match")
+        case .scTmg:
+            String(localized: "StarCraft match")
+        }
+    }
 }

@@ -40,13 +40,13 @@ extension GuidedMatchView {
     func compactGuidedMatchSections(catalog: SpearheadCatalog, useSplitSelection: Bool) -> some View {
         matchupSection
         starterMatchupHandoffSection
-        sampleTurnSection
         playersSection(catalog: catalog, useSplitSelection: useSplitSelection)
         setupProgressSection
         rollPromptSection
         continueSetupSection(catalog: catalog, useSplitSelection: useSplitSelection)
         setupCompleteHandoffSection
         battleTrackerSection(catalog: catalog, useSplitSelection: useSplitSelection)
+        sampleTurnSection
         collapsedMatchSetupSection(catalog: catalog, useSplitSelection: useSplitSelection)
         resetSection
     }
@@ -238,7 +238,9 @@ extension GuidedMatchView {
 
     @ViewBuilder
     var setupProgressSection: some View {
-        if viewModel.matchState.hasBothArmies, viewModel.setupProgress.total > 0 {
+        if viewModel.matchState.hasBothArmies,
+           viewModel.setupProgress.total > 0,
+           showsSetupProgressChecklist {
             Section(String(localized: "Setup Progress")) {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                     HStack {
@@ -266,6 +268,11 @@ extension GuidedMatchView {
                 .accessibilityIdentifier("guidedMatch.setupProgress")
             }
         }
+    }
+
+    /// On phone Setup tab, hub status + Up Next are enough — hide the duplicate checklist.
+    private var showsSetupProgressChecklist: Bool {
+        usesPadSplitNavigation || hubTab != .setup
     }
 
     @ViewBuilder
@@ -345,7 +352,11 @@ extension GuidedMatchView {
                     .listRowSeparator(.hidden)
                 }
             } header: {
-                Text(String(localized: "Up Next"))
+                if let next = viewModel.nextIncompleteStep {
+                    Text("\(String(localized: "Up Next")) — \(next.title)")
+                } else {
+                    Text(String(localized: "Up Next"))
+                }
             } footer: {
                 if let next = viewModel.nextIncompleteStep, !next.supportsInlineHubSetup {
                     SetupStepRulesLink(
@@ -365,19 +376,18 @@ extension GuidedMatchView {
         useSplitSelection: Bool
     ) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            GuideStepCard(
-                stepNumber: stepNumber,
-                title: step.title,
-                summary: step.summary,
-                isComplete: false,
-                showsDisclosureIndicator: false,
-                accessibilityHint: String(localized: "Current setup step"),
-                accessibilityId: "guidedMatch.continue.\(step.id)"
-            )
-
             if step.id == "roll-attacker" {
+                Text(step.summary)
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
                 inlineRollPickerCard
             } else {
+                Text(step.summary)
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+
                 MatchStepDetailView(
                     step: step,
                     stepNumber: stepNumber,
@@ -415,6 +425,8 @@ extension GuidedMatchView {
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
         .accessibilityIdentifier("guidedMatch.inlineSetup.\(step.id)")
+        .accessibilityLabel(step.title)
+        .accessibilityHint(step.summary)
     }
 
     @ViewBuilder

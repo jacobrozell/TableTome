@@ -5,7 +5,7 @@ extension GuidedMatchView {
     @ToolbarContentBuilder
     var matchSyncToolbar: some ToolbarContent {
         matchHistoryToolbarItems
-        if viewModel.matchState.hasBothArmies {
+        if shouldShowMatchSyncToolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     showsMatchSync = true
@@ -20,6 +20,12 @@ extension GuidedMatchView {
                 )
             }
         }
+    }
+
+    /// Defer nearby sync until the player has finished first setup or opened a game guide.
+    private var shouldShowMatchSyncToolbar: Bool {
+        viewModel.matchState.hasBothArmies
+            && (FirstSessionStore.hasCompletedSetup || FirstSessionStore.hasOpenedGameGuide)
     }
 
     var matchSyncSheet: some View {

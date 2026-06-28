@@ -4,8 +4,11 @@ import TabletomeDomain
 /// Shown on Play when the user should continue onboarding or resume an in-progress Guided Match.
 struct HomeContinueCard: View {
     @Environment(AppRouter.self) private var router
+    @EnvironmentObject private var dependencies: AppDependencies
 
     let continuation: PlayContinuation
+
+    @State private var setupProgressCaption: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -18,10 +21,19 @@ struct HomeContinueCard: View {
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
 
+            if let setupProgressCaption {
+                Text(setupProgressCaption)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Color.accentOnSurface)
+            }
+
             continuationButton
         }
         .accentHighlightCard()
         .accessibilityIdentifier("home.continueCard")
+        .task(id: continuation.gameSystemId) {
+            await loadSetupProgressCaption()
+        }
     }
 
     private var continuationButton: some View {
@@ -56,6 +68,30 @@ struct HomeContinueCard: View {
                 gameSystemId: continuation.gameSystemId,
                 opensBattleTab: continuation.opensBattleTab
             )
+        }
+    }
+
+    private func loadSetupProgressCaption() async {
+        guard continuation.destination == .guidedMatch, !continuation.opensBattleTab else {
+            setupProgressCaption = nil
+            return
+        }
+
+        let gameSystemId = GameSystemId(resolving: continuation.gameSystemId)
+        let matchState = MatchSetupStore.load(gameSystemId: gameSystemId)
+        do {
+            let catalog = try await dependencies.catalogRepository(for: gameSystemId).loadCatalog()
+            let steps = catalog.matchSteps.sorted { $0.order < $1.order }
+            let completed = steps.filter { matchState.completedStepIds.contains($0.id) }.count
+            guard !steps.isEmpty, completed < steps.count else {
+                setupProgressCaption = nil
+                return
+            }
+            setupProgressCaption = String(
+                localized: "Setup: \(completed) of \(steps.count) complete"
+            )
+        } catch {
+            setupProgressCaption = nil
         }
     }
 

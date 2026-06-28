@@ -12,14 +12,17 @@ enum BoxProductThumbnailStyle: Equatable {
 
     init(gameSystemId: String, chooserIdentifier: String = "") {
         switch chooserIdentifier {
-        case "home.chooser.wh40k11eArmageddon":
+        case "home.chooser.wh40k11eArmageddon", "home.chooser.wh40k.armageddon", "wh40kPicker.armageddon":
             self = .wh40kArmageddon
             return
-        case "home.chooser.wh40k11eBattleforce":
+        case "home.chooser.wh40k11eBattleforce", "home.chooser.wh40k.battleforce", "wh40kPicker.battleforce":
             self = .wh40kBattleforce
             return
-        case "home.chooser.wh40k11e":
+        case "home.chooser.wh40k11e", "home.chooser.wh40k.full", "wh40kPicker.full":
             self = .wh40kFull
+            return
+        case "home.chooser.wh40k.combatPatrol", "wh40kPicker.combatPatrol":
+            self = .combatPatrol
             return
         default:
             break

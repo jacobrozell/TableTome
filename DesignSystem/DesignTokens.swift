@@ -33,6 +33,9 @@ public enum DesignTokens {
     /// Scroll content inset so the last rows clear the floating tab bar on iPhone.
     public static let tabBarScrollBottomInset: CGFloat = 104
 
+    /// Extra scroll inset on Guided Match Setup when inline step controls sit above the tab bar.
+    public static let guidedMatchSetupScrollExtraInset: CGFloat = 48
+
     /// Extra scroll inset when the phase dock sits below the battle tracker scroll view.
     public static let battleTrackerPhaseDockScrollBottomInset: CGFloat = 8
 

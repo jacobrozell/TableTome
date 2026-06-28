@@ -42,6 +42,11 @@ extension GuidedMatchView {
             guard hasAppliedInitialHubTab, !hasResumableBattleSession else { return }
             hubTab = suggestedHubTab
         }
+        .onChange(of: hubTab) { _, newTab in
+            if newTab == .setup, !setupIsComplete {
+                isHubChromeCollapsed = true
+            }
+        }
         .onChange(of: viewModel.matchState.completedStepIds) { _, _ in
             if setupIsComplete, hubTab == .setup {
                 hubTab = .battle
@@ -152,7 +157,9 @@ extension GuidedMatchView {
             resetSection
         }
         .listStyle(.insetGrouped)
-        .tabBarScrollInset()
+        .tabBarScrollInset(
+            additionalBottom: hubTab == .setup ? DesignTokens.guidedMatchSetupScrollExtraInset : 0
+        )
         .readableContentWidth()
     }
 

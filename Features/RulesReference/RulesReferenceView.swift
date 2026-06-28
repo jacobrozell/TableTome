@@ -47,13 +47,6 @@ struct RulesReferenceView: View {
                             }
                             .accessibilityIdentifier("rules.gameSystemPicker")
                             .accessibilityLabel(String(localized: "Which game are you playing?"))
-                            .accessibilityHint(
-                                String(
-                                    localized: """
-                                    Matches the game you picked on the Play tab. Change it here to browse a different rules set.
-                                    """
-                                )
-                            )
                         } footer: {
                             Text(
                                 String(

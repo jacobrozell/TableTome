@@ -72,7 +72,7 @@ struct GuidedMatchView: View {
         .navigationTitle(
             usesPhoneLandscapeBattleImmersion
                 ? ""
-                : String(localized: "Guided Match")
+                : GameSystemRulesLabels.guidedMatchTitle(gameSystemId: gameSystemId)
         )
         .navigationBarTitleDisplayMode(guidedMatchNavigationTitleDisplayMode)
         .toolbar { matchSyncToolbar }

@@ -37,9 +37,13 @@ public extension View {
 
     /// Extra bottom margin on scrollable content so it is not hidden behind the tab bar.
     @ViewBuilder
-    func tabBarScrollInset(enabled: Bool = true) -> some View {
+    func tabBarScrollInset(enabled: Bool = true, additionalBottom: CGFloat = 0) -> some View {
         if enabled {
-            contentMargins(.bottom, DesignTokens.tabBarScrollBottomInset, for: .scrollContent)
+            contentMargins(
+                .bottom,
+                DesignTokens.tabBarScrollBottomInset + additionalBottom,
+                for: .scrollContent
+            )
         } else {
             self
         }

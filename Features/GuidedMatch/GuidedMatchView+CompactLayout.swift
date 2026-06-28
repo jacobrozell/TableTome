@@ -48,6 +48,7 @@ extension GuidedMatchView {
             }
         }
         .onChange(of: viewModel.matchState.completedStepIds) { _, _ in
+            guard !AppLaunchArguments.shouldSnapshotGuidedMatchArmies else { return }
             if setupIsComplete, hubTab == .setup {
                 hubTab = .battle
             }

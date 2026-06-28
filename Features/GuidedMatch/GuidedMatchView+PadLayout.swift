@@ -24,6 +24,7 @@ extension GuidedMatchView {
         }
         .onChange(of: viewModel.matchState.hasBothArmies) { _, hasBoth in
             guard hasBoth, usesPadSplitNavigation, selectedDestination == nil else { return }
+            guard !AppLaunchArguments.shouldSnapshotGuidedMatchArmies else { return }
             selectedDestination = .battleTracker
         }
     }

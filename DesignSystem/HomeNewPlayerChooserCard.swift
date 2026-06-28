@@ -209,30 +209,16 @@ struct HomeNewPlayerChooserCard: View {
     }
 
     private var newPlayerChooserFooter: String {
-        if FirstSessionStore.shouldHideHobbyTabs() {
-            if ReleaseSurface.showsMusterTab {
-                return String(
-                    localized: """
-                    Collection and army lists unlock after your first game — focus on Play for now.
-                    """
-                )
-            }
-            return String(
-                localized: """
-                Miniature collection tracking unlocks after your first game — focus on Play for now.
-                """
-            )
-        }
         if ReleaseSurface.showsMusterTab {
             return String(
                 localized: """
-                Models & Lists tabs are for tracking painted armies later — skip them until after your first game.
+                Models and Lists are optional — track painted armies whenever you're ready.
                 """
             )
         }
         return String(
             localized: """
-            The Models tab is for tracking painted armies later — skip it until after your first game.
+            The Models tab is optional — track painted armies whenever you're ready.
             """
         )
     }

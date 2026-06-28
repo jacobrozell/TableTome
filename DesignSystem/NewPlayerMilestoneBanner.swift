@@ -56,7 +56,7 @@ struct NewPlayerMilestoneBanner: View {
     }
 
     private var milestoneMessage: String {
-        if ReleaseSurface.showsMusterTab, !FirstSessionStore.shouldHideHobbyTabs() {
+        if ReleaseSurface.showsMusterTab {
             return String(
                 localized: """
                 When you're ready to track painted miniatures, open Models. Army lists on the Lists tab can \

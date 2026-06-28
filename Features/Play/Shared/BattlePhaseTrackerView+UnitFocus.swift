@@ -86,4 +86,23 @@ extension BattlePhaseTrackerView {
         unitFocusSelection = nil
         focusCombatResolverSection()
     }
+
+    func presentMarketingUnitFocusIfNeeded() {
+        let preferredNames = ["Rat Ogors", "Clanrats"]
+        let armies = [viewModel.playerOneArmy, viewModel.playerTwoArmy].compactMap { $0 }
+        for name in preferredNames {
+            for army in armies {
+                if let unit = army.units.first(where: { $0.name == name && $0.hasWarscroll }) {
+                    presentUnitFocus(armyId: army.id, unitId: unit.id)
+                    return
+                }
+            }
+        }
+        for army in armies {
+            if let unit = army.units.first(where: { $0.hasWarscroll && !$0.weapons.isEmpty }) {
+                presentUnitFocus(armyId: army.id, unitId: unit.id)
+                return
+            }
+        }
+    }
 }

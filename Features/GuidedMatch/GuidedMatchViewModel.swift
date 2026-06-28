@@ -349,6 +349,31 @@ final class GuidedMatchViewModel: ObservableObject {
         }
     }
 
+    /// Mid-game battle tracker state for App Store screenshots (`-snapshot_battle_combat`).
+    func seedMarketingBattleSnapshot() {
+        completeSetupForAutomation()
+        guard let catalog else { return }
+
+        var tracker = BattleTrackerStore.load(gameSystemId: gameSystemId)
+        tracker.battleRound = 2
+        tracker.activePlayerIsOne = true
+        tracker.currentPhase = .shooting
+        tracker.playerOneVictoryPoints = 8
+        tracker.playerTwoVictoryPoints = 5
+
+        if let army = army(
+            factionId: matchState.playerOne.factionId,
+            armyId: matchState.playerOne.armyId
+        ), let unit = army.units.first(where: { $0.hasWarscroll }) {
+            let key = UnitWoundTracker.unitKey(armyId: army.id, unitId: unit.id)
+            let capacity = UnitWoundCapacity.capacity(for: unit)
+            tracker.unitWoundsRemaining[key] = max(1, capacity - 3)
+        }
+
+        BattleTrackerStore.save(tracker, gameSystemId: gameSystemId)
+        _ = catalog
+    }
+
     /// Skips manual setup for simulator automation (`-open_battle_tracker`).
     func completeSetupForAutomation() {
         if matchState.attackerIsPlayerOne == nil {

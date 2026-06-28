@@ -128,9 +128,19 @@ struct BattlePhaseTrackerView: View {
             FirstSessionStore.recordSetupComplete()
             if !hasAppliedInitialSectionTab {
                 hasAppliedInitialSectionTab = true
-                selectedSectionTab = suggestedSectionTab
+                if AppLaunchArguments.shouldSnapshotBattleCombat {
+                    selectedSectionTab = .combat
+                } else {
+                    selectedSectionTab = suggestedSectionTab
+                }
             }
             applyPhoneLandscapeTopChromeDefault()
+            if AppLaunchArguments.shouldOpenUnitFocus {
+                Task {
+                    try? await Task.sleep(for: .milliseconds(900))
+                    presentMarketingUnitFocusIfNeeded()
+                }
+            }
             Task {
                 try? await Task.sleep(for: .milliseconds(400))
                 handoffBaselineEstablished = true

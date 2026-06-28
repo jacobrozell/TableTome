@@ -94,17 +94,31 @@ struct GuidedMatchView: View {
         }
         .task {
             await viewModel.load()
-            let wantsStarterArmies = AppLaunchArguments.shouldApplyStarterMatchup
-                || AppLaunchArguments.shouldOpenBattleTracker
-            if wantsStarterArmies, !viewModel.matchState.hasBothArmies {
-                viewModel.applyStarterMatchup()
-            }
-            if AppLaunchArguments.shouldOpenBattleTracker {
-                viewModel.completeSetupForAutomation()
+            if AppLaunchArguments.shouldSnapshotGuidedMatchArmies {
+                if !viewModel.matchState.hasBothArmies {
+                    viewModel.applyStarterMatchup()
+                }
+                hubTab = .setup
+            } else if AppLaunchArguments.shouldOpenBattleTracker
+                || AppLaunchArguments.shouldSnapshotBattleCombat {
+                if !viewModel.matchState.hasBothArmies {
+                    viewModel.applyStarterMatchup()
+                }
+                if AppLaunchArguments.shouldSnapshotBattleCombat {
+                    viewModel.seedMarketingBattleSnapshot()
+                } else {
+                    viewModel.completeSetupForAutomation()
+                }
                 selectedDestination = .battleTracker
                 hubTab = .battle
-            } else if AppLaunchArguments.shouldApplyStarterMatchup, usesPadSplitNavigation {
-                selectedDestination = .battleTracker
+            } else {
+                let wantsStarterArmies = AppLaunchArguments.shouldApplyStarterMatchup
+                if wantsStarterArmies, !viewModel.matchState.hasBothArmies {
+                    viewModel.applyStarterMatchup()
+                }
+                if AppLaunchArguments.shouldApplyStarterMatchup, usesPadSplitNavigation {
+                    selectedDestination = .battleTracker
+                }
             }
         }
         .task {

@@ -16,16 +16,11 @@ struct RootTabView: View {
         return FirstSessionStore.shouldEmphasizePlayTab()
     }
 
-    private var showsHobbyTabs: Bool {
-        _ = firstSessionRevision
-        return !FirstSessionStore.shouldHideHobbyTabs()
-    }
-
     var body: some View {
         @Bindable var router = router
 
         TabView(selection: $router.selectedTab) {
-            if ReleaseSurface.showsBenchTab, showsHobbyTabs {
+            if ReleaseSurface.showsBenchTab {
                 BenchTab()
                     .tabItem {
                         TabBarItemLabel(
@@ -38,7 +33,7 @@ struct RootTabView: View {
                     .tag(AppTab.bench)
             }
 
-            if ReleaseSurface.showsMusterTab, showsHobbyTabs {
+            if ReleaseSurface.showsMusterTab {
                 MusterTab()
                     .tabItem {
                         TabBarItemLabel(
@@ -81,8 +76,8 @@ struct RootTabView: View {
         .task {
             if OnboardingStore.shouldPresentOnLaunch, !showsOnboarding {
                 showsOnboarding = true
-            } else if AppLaunchArguments.shouldOpenGuidedMatch {
-                router.openGuidedMatch(gameSystemId: OnboardingCompletion.defaultGameSystemId)
+            } else {
+                MarketingSnapshotBootstrap.applyNavigationIfNeeded(router: router)
             }
             AppearancePreferenceStorage.migrateFromHobbyConfigurationIfNeeded(modelContext)
         }
@@ -100,9 +95,6 @@ struct RootTabView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: .firstSessionStoreDidChange)) { _ in
             firstSessionRevision += 1
-            if !showsHobbyTabs, router.selectedTab == .bench || router.selectedTab == .muster {
-                router.selectedTab = .learn
-            }
         }
         .onAppear {
             UITestLaunchConfiguration.applyIfNeeded(modelContext: modelContext)
@@ -175,8 +167,8 @@ struct RootTabView: View {
 
     private var tabBarItemIdentifiers: [String] {
         var identifiers: [String] = []
-        if ReleaseSurface.showsBenchTab, showsHobbyTabs { identifiers.append("tab.bench") }
-        if ReleaseSurface.showsMusterTab, showsHobbyTabs { identifiers.append("tab.muster") }
+        if ReleaseSurface.showsBenchTab { identifiers.append("tab.bench") }
+        if ReleaseSurface.showsMusterTab { identifiers.append("tab.muster") }
         identifiers.append("tab.play")
         identifiers.append(ReleaseSurface.showsRulesAssistant ? "tab.rulesSearch" : "tab.rules")
         identifiers.append("tab.settings")

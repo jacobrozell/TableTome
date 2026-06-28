@@ -59,7 +59,7 @@ final class BundledWh40kCatalogRepositoryTests: XCTestCase {
 
     func testFeaturedArmiesApplyStarterMatchup() {
         var state = GuidedMatchState()
-        FortyKFeaturedArmies.applyStarterMatchup(to: &state)
+        GuidedMatchFeaturedArmies.resolved(for: .wh40k11e).applyStarterMatchup(to: &state)
         XCTAssertEqual(state.playerOne.factionId, "space-marines")
         XCTAssertEqual(state.playerOne.armyId, "operation-imperator")
         XCTAssertEqual(state.playerTwo.factionId, "orks")

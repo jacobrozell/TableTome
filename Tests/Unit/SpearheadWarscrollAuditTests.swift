@@ -59,7 +59,8 @@ final class SpearheadWarscrollAuditTests: XCTestCase {
             ]
         ]
 
-        for army in catalog.factions.flatMap(\.armies) where SpearheadFeaturedArmies.isFeatured(army.id) {
+        let featured = GuidedMatchFeaturedArmies.resolved(for: .aosSpearhead)
+        for army in catalog.factions.flatMap(\.armies) where featured.isFeatured(army.id) {
             guard let expectedUnits = expectedProfiles[army.id] else {
                 XCTFail("Missing profile audit fixture for featured army \(army.id)")
                 continue

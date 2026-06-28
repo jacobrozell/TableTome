@@ -82,7 +82,7 @@ final class GuidedMatchViewModelTests: XCTestCase {
         ).loadCatalog(for: "wh40k-10e-cp")
 
         var state = GuidedMatchState()
-        CombatPatrolFeaturedArmies.applyStarterMatchup(to: &state)
+        GuidedMatchFeaturedArmies.resolved(for: .wh40k10eCp).applyStarterMatchup(to: &state)
 
         let viewModel = GuidedMatchViewModel(
             gameSystemId: .wh40k10eCp,

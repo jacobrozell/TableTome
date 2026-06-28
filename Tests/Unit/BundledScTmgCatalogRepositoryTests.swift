@@ -22,9 +22,10 @@ final class BundledScTmgCatalogRepositoryTests: XCTestCase {
     }
 
     func testStarterMatchupFeaturedArmies() {
-        XCTAssertTrue(ScTmgFeaturedArmies.isFeatured("raynors-raiders"))
-        XCTAssertTrue(ScTmgFeaturedArmies.isFeatured("kerrigans-swarm"))
-        XCTAssertFalse(ScTmgFeaturedArmies.isFeatured("artanis-host"))
+        let featured = GuidedMatchFeaturedArmies.resolved(for: .scTmg)
+        XCTAssertTrue(featured.isFeatured("raynors-raiders"))
+        XCTAssertTrue(featured.isFeatured("kerrigans-swarm"))
+        XCTAssertFalse(featured.isFeatured("artanis-host"))
     }
 }
 

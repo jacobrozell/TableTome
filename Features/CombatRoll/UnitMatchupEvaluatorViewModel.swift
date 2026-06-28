@@ -112,12 +112,10 @@ final class UnitMatchupEvaluatorViewModel: ObservableObject {
     func load() async {
         do {
             let catalog = try await catalogRepository.loadCatalog()
-            let featured = GuidedMatchFeaturedArmies.forGameSystem(gameSystemId)
+            let featured = GuidedMatchFeaturedArmies.resolved(for: gameSystemId)
             armies = catalog.factions
                 .flatMap(\.armies)
-                .filter { army in
-                    featured?.isFeatured(army.id) ?? SpearheadFeaturedArmies.isFeatured(army.id)
-                }
+                .filter { featured.isFeatured($0.id) }
                 .sorted { $0.name < $1.name }
             applyInitialSelection()
             errorMessage = nil

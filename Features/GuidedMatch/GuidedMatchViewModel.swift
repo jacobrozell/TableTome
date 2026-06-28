@@ -19,8 +19,7 @@ final class GuidedMatchViewModel: ObservableObject {
         initialState: GuidedMatchState? = nil
     ) {
         self.gameSystemId = gameSystemId
-        self.featuredArmies = featuredArmies ?? GuidedMatchFeaturedArmies.forGameSystem(gameSystemId)
-            ?? SpearheadFeaturedArmies.configuration
+        self.featuredArmies = featuredArmies ?? GuidedMatchFeaturedArmies.resolved(for: gameSystemId)
         self.catalogRepository = catalogRepository
         self.matchState = initialState ?? MatchSetupStore.load(gameSystemId: gameSystemId)
     }

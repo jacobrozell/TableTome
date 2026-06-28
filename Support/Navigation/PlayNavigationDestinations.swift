@@ -411,11 +411,7 @@ struct ArmyRosterDestinationView: View {
     }
 
     private var featuredArmies: GuidedMatchFeaturedArmies {
-        if gameSystemId == "wh40k-11e" {
-            return FortyKFeaturedArmies.configuration
-        }
-        return GuidedMatchFeaturedArmies.forGameSystem(gameSystemId)
-            ?? SpearheadFeaturedArmies.configuration
+        GuidedMatchFeaturedArmies.resolved(for: gameSystemId)
     }
 
     private func load() async {

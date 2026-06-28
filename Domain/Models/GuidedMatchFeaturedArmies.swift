@@ -33,4 +33,13 @@ public struct GuidedMatchFeaturedArmies: Sendable {
     public static func forGameSystem(_ gameSystemId: String) -> GuidedMatchFeaturedArmies? {
         forGameSystem(GameSystemId(resolving: gameSystemId))
     }
+
+    /// Featured armies for a system, falling back to the default game system when unset.
+    public static func resolved(for gameSystemId: GameSystemId) -> GuidedMatchFeaturedArmies {
+        forGameSystem(gameSystemId) ?? forGameSystem(.default)!
+    }
+
+    public static func resolved(for gameSystemId: String) -> GuidedMatchFeaturedArmies {
+        resolved(for: GameSystemId(resolving: gameSystemId))
+    }
 }

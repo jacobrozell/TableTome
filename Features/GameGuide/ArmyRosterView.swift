@@ -5,13 +5,13 @@ struct ArmyRosterView: View {
     let army: SpearheadArmy
     let ruleSections: [RuleSection]
     var gameSystemId: GameSystemId = .default
-    var featuredArmies: GuidedMatchFeaturedArmies = SpearheadFeaturedArmies.configuration
+    var featuredArmies: GuidedMatchFeaturedArmies = GuidedMatchFeaturedArmies.resolved(for: .default)
 
     init(
         army: SpearheadArmy,
         ruleSections: [RuleSection],
         gameSystemId: GameSystemId = .default,
-        featuredArmies: GuidedMatchFeaturedArmies = SpearheadFeaturedArmies.configuration
+        featuredArmies: GuidedMatchFeaturedArmies = GuidedMatchFeaturedArmies.resolved(for: .default)
     ) {
         self.army = army
         self.ruleSections = ruleSections
@@ -23,7 +23,7 @@ struct ArmyRosterView: View {
         army: SpearheadArmy,
         ruleSections: [RuleSection],
         gameSystemId: String,
-        featuredArmies: GuidedMatchFeaturedArmies = SpearheadFeaturedArmies.configuration
+        featuredArmies: GuidedMatchFeaturedArmies = GuidedMatchFeaturedArmies.resolved(for: .default)
     ) {
         self.init(
             army: army,

@@ -79,7 +79,7 @@ final class BundledCombatPatrolCatalogRepositoryTests: XCTestCase {
 
     func testFeaturedArmiesApplyStarterMatchup() {
         var state = GuidedMatchState()
-        CombatPatrolFeaturedArmies.applyStarterMatchup(to: &state)
+        GuidedMatchFeaturedArmies.resolved(for: .wh40k10eCp).applyStarterMatchup(to: &state)
         XCTAssertEqual(state.playerOne.factionId, "space-marines")
         XCTAssertEqual(state.playerOne.armyId, "space-marines-combat-patrol")
         XCTAssertEqual(state.playerTwo.factionId, "tyranids")

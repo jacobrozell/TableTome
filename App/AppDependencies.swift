@@ -11,7 +11,7 @@ final class AppDependencies: ObservableObject {
 
     init(
         rulesRepository: any RulesRepository = BundledRulesRepository(),
-        gameSystemRegistry: GameSystemRegistry = .bundled,
+        gameSystemRegistry: GameSystemRegistry = .bundled(withBoxSetsFrom: .main),
         playCatalogRepository: (any PlayCatalogRepository)? = nil,
         matchHistoryRepository: any MatchHistoryRepository = JSONMatchHistoryRepository()
     ) {

@@ -69,6 +69,24 @@ public struct BoxSet: Codable, Sendable, Equatable, Identifiable {
     }
 }
 
+extension GameSystemDescriptor {
+    /// A copy of this descriptor with `featuredArmies` replaced — used to source
+    /// featured armies from box-set JSON while every other field stays put.
+    public func replacingFeaturedArmies(_ featuredArmies: FeaturedArmiesConfig?) -> GameSystemDescriptor {
+        GameSystemDescriptor(
+            id: id,
+            publisher: publisher,
+            playEngine: playEngine,
+            capabilities: capabilities,
+            copy: copy,
+            victoryPointsScoring: victoryPointsScoring,
+            featuredArmies: featuredArmies,
+            catalogBundleName: catalogBundleName,
+            armyDetailsSubdirectories: armyDetailsSubdirectories
+        )
+    }
+}
+
 public struct BoxSetArmySelection: Codable, Sendable, Equatable {
     public let playerName: String?
     public let factionId: String

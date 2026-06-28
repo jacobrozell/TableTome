@@ -309,7 +309,7 @@ struct GameSystemDetailView: View {
         .navigationBarTitleDisplayMode(verticalSizeClass == .compact ? .inline : .large)
         .task(id: gameSystemId) {
             dismissedWrongGuideAlert = false
-            ActiveGameContextStore.setActiveGameSystem(gameSystemId)
+            router.setActiveGameSystem(gameSystemId)
             FirstSessionStore.recordGameGuideOpened()
             await load()
         }

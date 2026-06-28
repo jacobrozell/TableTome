@@ -3,6 +3,7 @@ import TabletomeDomain
 
 struct RulesReferenceView: View {
     @StateObject private var viewModel: RulesReferenceViewModel
+    @Environment(AppRouter.self) private var router
     @State private var firstSessionRevision = 0
 
     private var showsPlayTabHint: Bool {
@@ -41,6 +42,7 @@ struct RulesReferenceView: View {
                                 }
                             }
                             .onChange(of: viewModel.selectedGameSystemId) { _, newValue in
+                                router.setActiveGameSystem(newValue)
                                 viewModel.selectGameSystem(newValue)
                             }
                             .accessibilityIdentifier("rules.gameSystemPicker")
@@ -149,7 +151,7 @@ struct RulesReferenceView: View {
         }
         .navigationTitle(GameSystemRulesLabels.rulesReferenceTitle(gameSystemId: viewModel.selectedGameSystemId))
         .onAppear {
-            let activeId = ActiveGameContextStore.gameSystemId
+            let activeId = router.activeGameSystemId
             if viewModel.selectedGameSystemId != activeId {
                 viewModel.selectGameSystem(activeId)
             }

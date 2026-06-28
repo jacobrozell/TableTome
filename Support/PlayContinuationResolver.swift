@@ -22,8 +22,8 @@ enum PlayContinuationResolver {
         hasBattleProgress(gameSystemId: gameSystemId)
     }
 
-    static func current() -> PlayContinuation? {
-        if let resume = resumableMatch() {
+    static func current(activeGameSystemId: String = ActiveGameContextStore.gameSystemId) -> PlayContinuation? {
+        if let resume = resumableMatch(activeGameSystemId: activeGameSystemId) {
             return resume
         }
         if let choice = FirstSessionStore.onboardingChoice,
@@ -33,20 +33,19 @@ enum PlayContinuationResolver {
         return nil
     }
 
-    private static func resumableMatch() -> PlayContinuation? {
+    private static func resumableMatch(activeGameSystemId: String) -> PlayContinuation? {
         let onboarding = FirstSessionStore.onboardingChoice
-        let active = ActiveGameContextStore.gameSystemId
 
         var best: PlayContinuation?
         var bestScore = Int.min
 
-        for gameSystemId in candidateGameSystemIds() {
+        for gameSystemId in candidateGameSystemIds(activeGameSystemId: activeGameSystemId) {
             guard let continuation = resumeContinuation(for: gameSystemId) else { continue }
             let score = resumeScore(
                 for: gameSystemId,
                 continuation: continuation,
                 onboardingChoice: onboarding,
-                activeGameSystemId: active
+                activeGameSystemId: activeGameSystemId
             )
             if score > bestScore {
                 bestScore = score
@@ -56,9 +55,9 @@ enum PlayContinuationResolver {
         return best
     }
 
-    private static func candidateGameSystemIds() -> [String] {
+    private static func candidateGameSystemIds(activeGameSystemId: String) -> [String] {
         var ids = Set(GameSystemId.allCases.map(\.rawValue))
-        ids.insert(ActiveGameContextStore.gameSystemId)
+        ids.insert(activeGameSystemId)
         if let choice = FirstSessionStore.onboardingChoice {
             ids.insert(choice)
         }

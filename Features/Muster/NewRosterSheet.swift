@@ -36,7 +36,7 @@ struct NewRosterSheet: View {
     private var sessionPrefill: NewRosterPrefillResolver.Prefill? {
         NewRosterPrefillResolver.prefill(
             onboardingChoice: FirstSessionStore.onboardingChoice,
-            activeGameSystemId: ActiveGameContextStore.gameSystemId,
+            activeGameSystemId: router.activeGameSystemId,
             hasExplicitPrefill: hasExplicitPrefill
         )
     }
@@ -76,7 +76,7 @@ struct NewRosterSheet: View {
     }
     private var playGameSystemId: String {
         FirstSessionStore.onboardingChoice
-            ?? ActiveGameContextStore.gameSystemId
+            ?? router.activeGameSystemId
     }
 
     private var resolvedPlayGameSystemId: String {

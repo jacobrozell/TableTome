@@ -196,7 +196,6 @@ struct HomeNewPlayerChooserCard: View {
     }
 
     private func openGameGuide(gameSystemId: String) {
-        ActiveGameContextStore.setActiveGameSystem(gameSystemId)
         FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
         router.openGameGuide(gameSystemId: gameSystemId)
     }

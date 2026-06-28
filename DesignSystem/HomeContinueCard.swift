@@ -48,7 +48,6 @@ struct HomeContinueCard: View {
     }
 
     private func openContinuation() {
-        ActiveGameContextStore.setActiveGameSystem(continuation.gameSystemId)
         switch continuation.destination {
         case .gameGuide:
             router.openGameGuide(gameSystemId: continuation.gameSystemId)

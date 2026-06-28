@@ -213,7 +213,6 @@ struct OnboardingView: View {
         case .exploreApp:
             break
         case .openGuidedMatch(let gameSystemId), .openGameGuide(let gameSystemId):
-            ActiveGameContextStore.setActiveGameSystem(gameSystemId)
             FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
         }
         onFinished(completion)

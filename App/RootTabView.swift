@@ -141,9 +141,17 @@ struct RootTabView: View {
         NavigationStack {
             Group {
                 if ReleaseSurface.showsRulesAssistant {
-                    AppSearchView(viewModel: dependencies.makeAppSearchViewModel())
+                    AppSearchView(
+                        viewModel: dependencies.makeAppSearchViewModel(
+                            activeGameSystemId: router.activeGameSystemId
+                        )
+                    )
                 } else {
-                    RulesReferenceView(viewModel: dependencies.makeRulesReferenceViewModel())
+                    RulesReferenceView(
+                        viewModel: dependencies.makeRulesReferenceViewModel(
+                            activeGameSystemId: router.activeGameSystemId
+                        )
+                    )
                 }
             }
             .playNavigationDestinations()

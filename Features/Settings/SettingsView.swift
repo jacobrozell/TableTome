@@ -236,10 +236,8 @@ struct SettingsView: View {
                 HobbyConfig.markAppTourCompleted(modelContext)
                 switch completion {
                 case .openGuidedMatch(let gameSystemId):
-                    ActiveGameContextStore.setActiveGameSystem(gameSystemId)
                     router.openGuidedMatch(gameSystemId: gameSystemId)
                 case .openGameGuide(let gameSystemId):
-                    ActiveGameContextStore.setActiveGameSystem(gameSystemId)
                     router.openGameGuide(gameSystemId: gameSystemId)
                 case .exploreApp:
                     break

@@ -59,7 +59,7 @@ struct AppSearchView: View {
     }
 
     private func syncActiveGameSystem() {
-        let activeId = ActiveGameContextStore.gameSystemId
+        let activeId = router.activeGameSystemId
         if viewModel.selectedGameSystemId != activeId {
             viewModel.selectGameSystem(activeId)
         }
@@ -79,6 +79,7 @@ struct AppSearchView: View {
                 }
             }
             .onChange(of: viewModel.selectedGameSystemId) { _, newValue in
+                router.setActiveGameSystem(newValue)
                 viewModel.selectGameSystem(newValue)
             }
             .accessibilityIdentifier("search.gameSystemPicker")

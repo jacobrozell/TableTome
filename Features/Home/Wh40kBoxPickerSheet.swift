@@ -115,7 +115,6 @@ struct Wh40kBoxPickerSheet: View {
     }
 
     private func openGuide(gameSystemId: String, variant: Wh40kChooserVariant) {
-        ActiveGameContextStore.setActiveGameSystem(gameSystemId)
         FirstSessionStore.recordOnboardingChoice(
             gameSystemId: gameSystemId,
             wh40kVariant: variant.rawValue

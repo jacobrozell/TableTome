@@ -1,7 +1,7 @@
 import Foundation
 import TabletomeDomain
 
-/// Persists the game mode the user is actively playing so Rules Search and references stay in sync.
+/// Persists the active game mode. Use `AppRouter.activeGameSystemId` from features — not this type directly.
 enum ActiveGameContextStore: Sendable {
     static let storageKey = "active_game_system_id"
 

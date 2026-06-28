@@ -4,6 +4,7 @@ import TabletomeDomain
 struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel
     @EnvironmentObject private var dependencies: AppDependencies
+    @Environment(AppRouter.self) private var router
     @State private var showsMatchHistoryToolbar = false
     @State private var firstSessionRevision = 0
 
@@ -34,7 +35,9 @@ struct HomeView: View {
             } else {
                 List {
                     if !viewModel.gameSystems.isEmpty {
-                        if let continuation = PlayContinuationResolver.current() {
+                        if let continuation = PlayContinuationResolver.current(
+                            activeGameSystemId: router.activeGameSystemId
+                        ) {
                             Section {
                                 HomeContinueCard(continuation: continuation)
                                     .listHeroCardRow()

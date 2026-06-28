@@ -69,7 +69,6 @@ final class RulesReferenceViewModel: ObservableObject {
     func selectGameSystem(_ id: String) {
         guard id != selectedGameSystemId else { return }
         selectedGameSystemId = id
-        ActiveGameContextStore.setActiveGameSystem(id)
         if let system = gameSystems.first(where: { $0.id == id }) {
             applySections(from: system, resetFilters: true)
         }

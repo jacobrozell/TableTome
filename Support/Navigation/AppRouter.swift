@@ -47,6 +47,11 @@ final class AppRouter {
         activeGameSystemId = id
     }
 
+    /// Clears persisted active-game selection — tests only.
+    static func resetPersistedStateForTests() {
+        ActiveGameContextStore.clearPersistedState()
+    }
+
     func openGuidedMatch(
         gameSystemId: String = OnboardingCompletion.defaultGameSystemId,
         opensBattleTab: Bool = false

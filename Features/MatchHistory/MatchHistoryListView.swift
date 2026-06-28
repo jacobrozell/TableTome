@@ -137,7 +137,7 @@ struct MatchHistoryListView: View {
     }
 
     private var activeGameGuidedMatchGameSystemId: String {
-        let activeId = ActiveGameContextStore.gameSystemId
+        let activeId = router.activeGameSystemId
         if ReleaseSurface.showsGuidedMatch(for: activeId) {
             return activeId
         }

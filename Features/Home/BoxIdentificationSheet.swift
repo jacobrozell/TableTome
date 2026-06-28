@@ -283,7 +283,6 @@ struct BoxIdentificationSheet: View {
     }
 
     private func openRecommendedGuide(_ gameSystemId: String) {
-        ActiveGameContextStore.setActiveGameSystem(gameSystemId)
         FirstSessionStore.recordOnboardingChoice(
             gameSystemId: gameSystemId,
             wh40kVariant: recommendedWh40kVariant(for: gameSystemId)?.rawValue

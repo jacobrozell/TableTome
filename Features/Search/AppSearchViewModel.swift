@@ -56,7 +56,6 @@ final class AppSearchViewModel: ObservableObject {
     func selectGameSystem(_ id: String) {
         guard id != selectedGameSystemId else { return }
         selectedGameSystemId = id
-        ActiveGameContextStore.setActiveGameSystem(id)
         searchText = ""
         Task { await load() }
     }

@@ -49,4 +49,10 @@ final class AppRouterNavigationTests: XCTestCase {
         XCTAssertEqual(router.pendingRosterId, rosterId)
         XCTAssertEqual(router.selectedRosterId, rosterId)
     }
+
+    func testSetActiveGameSystemPersistsAcrossRouterInstances() {
+        let router = AppRouter()
+        router.setActiveGameSystem("wh40k-10e-cp")
+        XCTAssertEqual(AppRouter().activeGameSystemId, "wh40k-10e-cp")
+    }
 }

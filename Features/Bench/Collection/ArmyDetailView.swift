@@ -266,14 +266,16 @@ struct ArmyDetailView: View {
         Section {
             if visibleUnits.isEmpty {
                 ContentUnavailableView {
-                    Label(String(localized: "No units"), systemImage: "figure.stand")
+                    Label(String(localized: "No units yet"), systemImage: "figure.stand")
                 } description: {
-                    Text(String(localized: "Add a unit or adjust filters."))
+                    Text(String(localized: "Add what's on your sprue — name the unit and pick a starting state."))
                 } actions: {
                     Button(String(localized: "Add unit"), systemImage: "plus") { showAddUnit = true }
                         .buttonStyle(.borderedProminent)
                 }
                 .listRowBackground(Color.clear)
+                PipelineBeginnerLegend(pipeline: pipeline)
+                    .listRowBackground(Color.clear)
             } else {
                 ForEach(visibleUnits) { unit in
                     let row = unitRow(unit)

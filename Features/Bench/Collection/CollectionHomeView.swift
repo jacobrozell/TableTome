@@ -58,6 +58,18 @@ struct CollectionHomeView: View {
         ArmyFilter.build(armies: armies, cfg: cfg, search: search, global: globalPipeline)
     }
 
+    private var totalUnitCount: Int {
+        armies.reduce(0) { $0 + $1.units.count }
+    }
+
+    private var showsFirstStepsCoach: Bool {
+        FirstSessionStore.shouldShowCollectionFirstStepsCoach(
+            hasSeenCollectionIntro: cfg.hasSeenCollectionIntro,
+            hasDismissedCoach: cfg.hasDismissedCollectionFirstStepsCoach,
+            totalUnitCount: totalUnitCount
+        )
+    }
+
     private var usesPadSidebarList: Bool {
         AdaptiveLayout.usesSidebarListStyle(horizontalSizeClass, preferSelection: preferSidebarSelection)
     }
@@ -121,7 +133,7 @@ struct CollectionHomeView: View {
         let vis = visible
         if vis.isEmpty {
             ContentUnavailableView {
-                Label(String(localized: "No matching units"), systemImage: "line.3.horizontal.decrease.circle")
+                Label(String(localized: "No matching armies"), systemImage: "line.3.horizontal.decrease.circle")
             } description: {
                 Text(String(localized: "Nothing matches your current search or filters."))
             } actions: {
@@ -188,6 +200,16 @@ struct CollectionHomeView: View {
         if !vis.isEmpty {
             Section {
                 collectionSummary(vis: vis)
+            }
+        }
+        if showsFirstStepsCoach {
+            Section {
+                CollectionFirstStepsCoach(hasArmies: !armies.isEmpty) {
+                    cfg.hasDismissedCollectionFirstStepsCoach = true
+                    try? context.save()
+                }
+                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                .listRowBackground(Color.clear)
             }
         }
         if scoped {
@@ -306,48 +328,48 @@ struct CollectionHomeView: View {
     }
 
     private var emptyState: some View {
-        ContentUnavailableView {
-            Label(String(localized: "No armies yet"), systemImage: "shield")
-        } description: {
-            if FirstSessionStore.shouldPromoteSampleData() {
-                if dynamicTypeSize.isAccessibilitySize {
-                    Text(
-                        String(
-                            localized: """
-                            Optional until after your first game. An army is a group of miniatures you paint and play — \
-                            add one here, or load sample data to explore.
-                            """
-                        )
-                    )
-                } else {
-                    Text(
-                        String(
-                            localized: """
-                            Optional until after your first game. An army is a group of miniatures you paint and play — \
-                            add one here, or load sample data below.
-                            """
-                        )
-                    )
+        ScrollView {
+            VStack(spacing: 20) {
+                if showsFirstStepsCoach {
+                    CollectionFirstStepsCoach(hasArmies: false) {
+                        cfg.hasDismissedCollectionFirstStepsCoach = true
+                        try? context.save()
+                    }
+                    .padding(.horizontal)
                 }
-            } else {
-                Text(
-                    String(
-                        localized: """
-                        Optional until after your first game. An army is a group of miniatures you paint and play — \
-                        tap New army when you're ready to track models.
-                        """
-                    )
-                )
+                ContentUnavailableView {
+                    Label(String(localized: "No armies yet"), systemImage: "shield")
+                } description: {
+                    VStack(spacing: 8) {
+                        Text(
+                            String(
+                                localized: """
+                                Optional until after your first game. An army is the faction you're building — \
+                                Space Marines, Stormcast, and so on.
+                                """
+                            )
+                        )
+                        if FirstSessionStore.shouldPromoteSampleData() {
+                            Text(String(localized: "Load sample data to explore, or add your own army."))
+                                .font(.callout)
+                        } else {
+                            Text(String(localized: "Tap New army when you're ready to track models."))
+                                .font(.callout)
+                        }
+                    }
+                } actions: {
+                    if FirstSessionStore.shouldPromoteSampleData() {
+                        Button(String(localized: "Load sample data")) { loadSample() }
+                            .buttonStyle(.borderedProminent)
+                            .accessibilityIdentifier("loadSampleData")
+                    }
+                    Button(String(localized: "New army")) { showAddArmy = true }
+                }
+                .adaptiveEmptyStateLayout()
             }
-        } actions: {
-            if FirstSessionStore.shouldPromoteSampleData() {
-                Button(String(localized: "Load sample data")) { loadSample() }
-                    .buttonStyle(.borderedProminent)
-                    .accessibilityIdentifier("loadSampleData")
-            }
-            Button(String(localized: "New army")) { showAddArmy = true }
+            .padding(.vertical)
         }
-        .adaptiveEmptyStateLayout()
+        .tabBarScrollInset()
     }
 
     private func clearFilters() {

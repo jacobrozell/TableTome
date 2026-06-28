@@ -86,6 +86,21 @@ enum FirstSessionStore: Sendable {
         return hasOpenedGameGuide || UserDefaults.standard.integer(forKey: listsVisitsKey) >= 2
     }
 
+    static func shouldOfferCollectionIntro(hasSeenCollectionIntro: Bool, onboardingComplete: Bool) -> Bool {
+        guard !hasSeenCollectionIntro, onboardingComplete else { return false }
+        return hasOpenedGameGuide || UserDefaults.standard.integer(forKey: collectionVisitsKey) >= 2
+    }
+
+    /// True when the user has no tracked units yet — coach card stays relevant.
+    static func shouldShowCollectionFirstStepsCoach(
+        hasSeenCollectionIntro: Bool,
+        hasDismissedCoach: Bool,
+        totalUnitCount: Int
+    ) -> Bool {
+        guard hasSeenCollectionIntro, !hasDismissedCoach, totalUnitCount == 0 else { return false }
+        return true
+    }
+
     static var hasCompletedSetup: Bool {
         UserDefaults.standard.bool(forKey: setupCompleteKey)
     }

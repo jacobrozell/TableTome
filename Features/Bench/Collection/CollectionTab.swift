@@ -19,6 +19,7 @@ struct CollectionTab: View {
     @State private var showAddArmy = false
     @State private var showFilters = false
     @State private var showHobbySettings = false
+    @State private var showCollectionIntro = false
 
     private var cfg: AppConfiguration { configs.first ?? HobbyConfig.current(context) }
     private var overrides: [FactionPresetOverride] { cfg.factionOverrides }
@@ -50,8 +51,18 @@ struct CollectionTab: View {
         .onAppear {
             _ = FirstSessionStore.incrementCollectionVisits()
             consumePendingCollection()
+            checkCollectionIntro()
         }
         .onChange(of: router.pendingCollectionArmyId) { _, _ in consumePendingCollection() }
+        .sheet(isPresented: $showCollectionIntro) {
+            CollectionIntroSheet {
+                if let cfg = configs.first {
+                    cfg.hasSeenCollectionIntro = true
+                    try? context.save()
+                }
+                showCollectionIntro = false
+            }
+        }
         .sheet(isPresented: $showAddArmy) {
             AddArmySheet { game, faction, name in
                 ArmyStore.addArmy(name: name, game: game, faction: faction, in: context)
@@ -67,6 +78,7 @@ struct CollectionTab: View {
         .sheet(isPresented: $showFilters) {
             FilterSheet(
                 cfg: cfg,
+                armies: armies,
                 games: Array(Set(armies.map(\.game))).sorted(),
                 factions: Array(Set(armies.map(\.faction))).sorted(),
                 sources: ArmyFilter.allSources(armies),
@@ -77,6 +89,17 @@ struct CollectionTab: View {
             )
             .presentationDetents([.large])
         }
+    }
+
+    private func checkCollectionIntro() {
+        guard !AppInfo.isUITesting else { return }
+        guard let cfg = configs.first else { return }
+        let onboardingComplete = OnboardingStore.hasCompletedAppTour || cfg.hasSeenOnboarding
+        guard FirstSessionStore.shouldOfferCollectionIntro(
+            hasSeenCollectionIntro: cfg.hasSeenCollectionIntro,
+            onboardingComplete: onboardingComplete
+        ) else { return }
+        showCollectionIntro = true
     }
 
     private func consumePendingCollection() {

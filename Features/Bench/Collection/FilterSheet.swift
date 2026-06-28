@@ -8,6 +8,7 @@ struct FilterSheet: View {
     @Environment(\.modelContext) private var context
     @Bindable var cfg: AppConfiguration
 
+    let armies: [Army]
     let games: [String]
     let factions: [String]
     let sources: [String]
@@ -18,6 +19,9 @@ struct FilterSheet: View {
 
     private var filterCount: Int { ArmyFilter.activeFilterCount(cfg) }
     private var filtersActive: Bool { filterCount > 0 }
+    private var usesBeginnerLayout: Bool {
+        ArmyFilter.usesBeginnerFilterLayout(armies: armies)
+    }
 
     var body: some View {
         NavigationStack {
@@ -54,9 +58,10 @@ struct FilterSheet: View {
                 } header: {
                     Text(String(localized: "Quick view"))
                 } footer: {
-                    Text(FormHints.filterQuickView)
+                    Text(usesBeginnerLayout ? FormHints.filterQuickViewBeginner : FormHints.filterQuickView)
                 }
 
+                if !usesBeginnerLayout {
                 Section {
                     Picker(String(localized: "Game"), selection: $cfg.gameFilter) {
                         ForEach(["All"] + games, id: \.self) { game in
@@ -113,6 +118,7 @@ struct FilterSheet: View {
                     Text(String(localized: "Sort"))
                 } footer: {
                     Text(FormHints.filterSort)
+                }
                 }
 
                 Section {

@@ -199,7 +199,7 @@ struct ArmyDetailView: View {
     }
 
     @ViewBuilder
-    private func browseModeList(army: Army, pres: (crest: String, colorHex: String)) -> some View {
+    private func browseModeList(army: Army, pres: FactionPresentation) -> some View {
         List {
             armyHeaderSection(army: army, pres: pres)
             unitsSection(army: army, padSidebar: usesPadSidebarList)
@@ -209,7 +209,7 @@ struct ArmyDetailView: View {
     }
 
     @ViewBuilder
-    private func editModeList(army: Army, pres: (crest: String, colorHex: String)) -> some View {
+    private func editModeList(army: Army, pres: FactionPresentation) -> some View {
         List(selection: $batchSelection) {
             armyHeaderSection(army: army, pres: pres)
             Section(String(localized: "Units")) {
@@ -233,7 +233,7 @@ struct ArmyDetailView: View {
     }
 
     @ViewBuilder
-    private func armyHeaderSection(army: Army, pres: (crest: String, colorHex: String)) -> some View {
+    private func armyHeaderSection(army: Army, pres: FactionPresentation) -> some View {
         Section {
             VStack(alignment: .leading, spacing: 10) {
                 HStack(spacing: 6) {
@@ -242,13 +242,13 @@ struct ArmyDetailView: View {
                         .foregroundStyle(Color.accentOnSurface)
                         .symbolRenderingMode(.hierarchical)
                         .accessibilityHidden(true)
-                    Text("\(army.game) · \(army.faction)\(army.customPipeline?.isEmpty == false ? String(localized: " · custom pipeline") : "")")
+                    Text("\(SupportedGames.displayName(for: army.game)) · \(army.faction)\(army.customPipeline?.isEmpty == false ? String(localized: " · custom pipeline") : "")")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 HStack {
-                    CrestBadge(text: pres.crest, colorHex: pres.colorHex)
+                    CrestBadge(text: pres.crest, colorHex: pres.colorHex, imageFileName: pres.imageFileName)
                     Spacer()
                     Text(String(localized: "\(percent)% complete"))
                         .font(.subheadline.monospacedDigit())

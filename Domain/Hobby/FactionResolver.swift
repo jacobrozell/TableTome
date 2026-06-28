@@ -59,26 +59,30 @@ public enum FactionResolver {
 
     public static func resolve(faction: String,
                                game: String,
-                               overrides: [FactionPresetOverride]) -> (crest: String, color: String) {
+                               overrides: [FactionPresetOverride]) -> FactionPresentation {
         let label = normalize(faction)
         let g = game.trimmingCharacters(in: .whitespaces)
 
-        let overrideMap = Dictionary(overrides.map { ($0.key, ($0.crest, $0.hex)) },
+        let overrideMap = Dictionary(overrides.map { ($0.key, $0) },
                                      uniquingKeysWith: { _, new in new })
-        if let o = overrideMap[compositeKey(game: g, faction: label)] {
-            return (o.0, o.1)
+        if let override = overrideMap[compositeKey(game: g, faction: label)] {
+            return FactionPresentation(
+                crest: override.crest,
+                colorHex: override.hex,
+                imageFileName: override.imageFileName
+            )
         }
 
         if !g.isEmpty {
             if let hit = compositeDefaults[compositeKey(game: g, faction: label)] {
-                return (hit.0, hit.1)
+                return FactionPresentation(crest: hit.0, colorHex: hit.1)
             }
         } else if let hit = flatDefaults[label] {
-            return (hit.0, hit.1)
+            return FactionPresentation(crest: hit.0, colorHex: hit.1)
         }
 
         let abbr = label.isEmpty ? "??" : String(label.prefix(2)).uppercased()
-        return (abbr, fallbackColor)
+        return FactionPresentation(crest: abbr, colorHex: fallbackColor)
     }
 
     public static func isFallback(_ color: String) -> Bool { color == fallbackColor }

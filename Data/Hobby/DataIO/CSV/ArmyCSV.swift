@@ -130,7 +130,7 @@ public enum ArmyCSV {
             var a = map[name]!
             let resolved = FactionResolver.resolve(faction: a.faction, game: a.game, overrides: overrides)
             let key = "\(a.game)\u{0}\(a.faction)"
-            if !a.faction.isEmpty, FactionResolver.isFallback(resolved.color), !warnedFactions.contains(key) {
+            if !a.faction.isEmpty, FactionResolver.isFallback(resolved.colorHex), !warnedFactions.contains(key) {
                 warnedFactions.insert(key)
                 let scope = a.game.isEmpty ? "" : " for game \"\(a.game)\""
                 warnings.append("Unknown faction \"\(a.faction)\"\(scope) — using default grey crest")

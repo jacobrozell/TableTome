@@ -33,18 +33,34 @@ public protocol ArmyLike: AnyObject {
     var customPipeline: [PipelineStage]? { get }
 }
 
+/// Resolved crest text, colour, and optional custom image for UI badges.
+public struct FactionPresentation: Equatable, Sendable {
+    public let crest: String
+    public let colorHex: String
+    public let imageFileName: String?
+
+    public init(crest: String, colorHex: String, imageFileName: String? = nil) {
+        self.crest = crest
+        self.colorHex = colorHex
+        self.imageFileName = imageFileName
+    }
+}
+
 /// User-supplied override of a faction's crest/color. Ports `FactionPresetOverride`
 /// from MiniMuster (`js/data/factions/types.ts`).
 public struct FactionPresetOverride: Hashable, Sendable, Codable, Identifiable {
     public let key: String   // composite "Game:Faction"
     public let crest: String
     public let hex: String
+    /// On-device JPEG file name under Application Support. Not included in web JSON backups.
+    public let imageFileName: String?
     public var id: String { key }
 
-    public init(key: String, crest: String, hex: String) {
+    public init(key: String, crest: String, hex: String, imageFileName: String? = nil) {
         self.key = key
         self.crest = crest
         self.hex = hex
+        self.imageFileName = imageFileName
     }
 }
 

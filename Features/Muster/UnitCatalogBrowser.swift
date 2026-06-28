@@ -104,7 +104,7 @@ struct UnitCatalogBrowser: View {
         let sizeLabel = BattleSizes.resolve(game: roster.game, key: roster.battleSizeKey)?.label
             ?? roster.battleSizeKey
         HStack(spacing: 12) {
-            CrestBadge(text: pres.crest, colorHex: pres.colorHex)
+            CrestBadge(text: pres.crest, colorHex: pres.colorHex, imageFileName: pres.imageFileName)
             VStack(alignment: .leading, spacing: 3) {
                 Text(roster.name)
                     .font(.headline)

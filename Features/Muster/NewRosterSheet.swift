@@ -131,7 +131,7 @@ struct NewRosterSheet: View {
                         ForEach(suggestedFactions + otherFactions, id: \.self) { f in
                             HStack(spacing: 8) {
                                 Circle()
-                                    .fill(Color(hex: FactionResolver.resolve(faction: f, game: game, overrides: []).color))
+                                    .fill(Color(hex: FactionResolver.resolve(faction: f, game: game, overrides: []).colorHex))
                                     .frame(width: 8, height: 8)
                                     .accessibilityHidden(true)
                                 Text(f)
@@ -145,7 +145,11 @@ struct NewRosterSheet: View {
                     if !faction.isEmpty {
                         let pres = FactionResolver.resolve(faction: resolvedFaction, game: game, overrides: [])
                         HStack(spacing: 12) {
-                            CrestBadge(text: pres.crest, colorHex: pres.color)
+                            CrestBadge(
+                                text: pres.crest,
+                                colorHex: pres.colorHex,
+                                imageFileName: pres.imageFileName
+                            )
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(String(localized: "Preview"))
                                     .font(.caption)
@@ -324,7 +328,7 @@ struct NewRosterSheet: View {
     private func newRosterArmyRow(_ army: Army) -> some View {
         let pres = army.presentation(overrides: configs.first?.factionOverrides ?? [])
         HStack(spacing: 10) {
-            CrestBadge(text: pres.crest, colorHex: pres.colorHex)
+            CrestBadge(text: pres.crest, colorHex: pres.colorHex, imageFileName: pres.imageFileName)
             VStack(alignment: .leading, spacing: 2) {
                 Text(army.name)
                     .lineLimit(1)

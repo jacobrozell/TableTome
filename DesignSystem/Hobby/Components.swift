@@ -2,6 +2,9 @@ import SwiftUI
 import Foundation
 import TabletomeHobbyData
 import TabletomeDomain
+#if canImport(UIKit)
+import UIKit
+#endif
 
 /// Stacked progress meter. Renders `Pipeline.segments` as width-proportional colour bars.
 /// Mirrors the web `.meter` / `.army-bar` (`docs/ios-spec/10 §4`).
@@ -33,24 +36,37 @@ struct ProgressMeter: View {
     }
 }
 
-/// Faction crest badge: abbreviation on the accent colour. Mirrors `.crest`.
+/// Faction crest badge: abbreviation on the accent colour, or a custom uploaded image.
 struct CrestBadge: View {
     let text: String
     let colorHex: String
+    var imageFileName: String? = nil
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
-        Text(text)
-            .font(.system(.caption, design: .serif).weight(.bold))
-            .lineLimit(dynamicTypeSize.isAccessibilitySize ? 2 : 1)
-            .minimumScaleFactor(dynamicTypeSize.needsLayoutAdaptation ? 1 : 0.85)
-            .padding(.horizontal, 6)
-            .padding(.vertical, 6)
-            .frame(minWidth: 44, minHeight: 30)
-            .background(Color(hex: colorHex), in: RoundedRectangle(cornerRadius: 8))
-            .foregroundStyle(Color(hex: colorHex).legibleForeground)
-            .accessibilityLabel("Faction crest \(text)")
+        Group {
+            if let imageFileName, let image = CrestImageStore.loadImage(fileName: imageFileName) {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+            } else {
+                Text(text)
+                    .font(.system(.caption, design: .serif).weight(.bold))
+                    .lineLimit(dynamicTypeSize.isAccessibilitySize ? 2 : 1)
+                    .minimumScaleFactor(dynamicTypeSize.needsLayoutAdaptation ? 1 : 0.85)
+                    .foregroundStyle(Color(hex: colorHex).legibleForeground)
+            }
+        }
+        .padding(imageFileName == nil ? EdgeInsets(top: 6, leading: 6, bottom: 6, trailing: 6) : EdgeInsets())
+        .frame(minWidth: 44, minHeight: 30)
+        .background(Color(hex: colorHex), in: RoundedRectangle(cornerRadius: 8))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .accessibilityLabel(
+            imageFileName == nil
+                ? String(localized: "Faction crest \(text)")
+                : String(localized: "Faction crest image for \(text)")
+        )
     }
 }
 

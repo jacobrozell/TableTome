@@ -158,9 +158,12 @@ struct UnitDetailView: View {
                 .accessibilityLabel(String(localized: "Painting state"))
                 .accessibilityValue(unit.state)
                 if canAdvance {
-                    Button(String(localized: "Advance one stage"), systemImage: "arrow.right.circle.fill") {
+                    Button {
                         ArmyStore.advance(unit, pipeline: pipeline, in: context)
                         advanceTrigger.toggle()
+                    } label: {
+                        Label(String(localized: "Advance one stage"), systemImage: "arrow.right.circle.fill")
+                            .prominentButtonLabelStyle()
                     }
                     .buttonStyle(.borderedProminent)
                 }
@@ -208,7 +211,6 @@ struct UnitDetailView: View {
             }
         }
         .tabBarScrollInset()
-        .readableContentWidth()
     }
 
     @ViewBuilder
@@ -218,7 +220,7 @@ struct UnitDetailView: View {
             Section {
                 VStack(alignment: .leading, spacing: 10) {
                     HStack(alignment: .center, spacing: 12) {
-                        CrestBadge(text: pres.crest, colorHex: pres.colorHex)
+                        CrestBadge(text: pres.crest, colorHex: pres.colorHex, imageFileName: pres.imageFileName)
                         VStack(alignment: .leading, spacing: 3) {
                             Text(army.name)
                                 .font(.subheadline.weight(.semibold))
@@ -228,7 +230,7 @@ struct UnitDetailView: View {
                                     .foregroundStyle(Color.accentOnSurface)
                                     .symbolRenderingMode(.hierarchical)
                                     .accessibilityHidden(true)
-                                Text("\(army.game) · \(army.faction)")
+                                Text("\(SupportedGames.displayName(for: army.game)) · \(army.faction)")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                                     .lineLimit(2)

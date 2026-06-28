@@ -102,7 +102,7 @@ struct RosterEditorView: View {
                     if dynamicTypeSize.isAccessibilitySize {
                         VStack(alignment: .leading, spacing: 10) {
                             HStack(spacing: 12) {
-                                CrestBadge(text: pres.crest, colorHex: pres.colorHex)
+                                CrestBadge(text: pres.crest, colorHex: pres.colorHex, imageFileName: pres.imageFileName)
                                 Spacer(minLength: 0)
                                 if showsFieldableRing {
                                     fieldableSummary
@@ -127,7 +127,7 @@ struct RosterEditorView: View {
                         }
                     } else {
                         HStack(spacing: 12) {
-                            CrestBadge(text: pres.crest, colorHex: pres.colorHex)
+                            CrestBadge(text: pres.crest, colorHex: pres.colorHex, imageFileName: pres.imageFileName)
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(roster.faction)
                                     .font(.headline)
@@ -602,7 +602,7 @@ private struct LinkArmySheet: View {
     private func armyPickerRow(_ army: Army) -> some View {
         let pres = army.presentation(overrides: overrides)
         HStack(spacing: 10) {
-            CrestBadge(text: pres.crest, colorHex: pres.colorHex)
+            CrestBadge(text: pres.crest, colorHex: pres.colorHex, imageFileName: pres.imageFileName)
             VStack(alignment: .leading, spacing: 2) {
                 Text(army.name)
                     .lineLimit(1)

@@ -13,7 +13,7 @@ struct ArmyRow: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
-    private var presentation: (crest: String, colorHex: String) {
+    private var presentation: FactionPresentation {
         army.presentation(overrides: overrides)
     }
 
@@ -61,7 +61,7 @@ struct ArmyRow: View {
     }
 
     private var crest: some View {
-        CrestBadge(text: presentation.crest, colorHex: presentation.colorHex)
+        CrestBadge(text: presentation.crest, colorHex: presentation.colorHex, imageFileName: presentation.imageFileName)
             .fixedSize()
     }
 
@@ -112,7 +112,7 @@ struct ArmyRow: View {
                 .foregroundStyle(Color.accentOnSurface)
                 .symbolRenderingMode(.hierarchical)
                 .accessibilityHidden(true)
-            Text("\(army.game) · \(army.faction)")
+            Text("\(SupportedGames.displayName(for: army.game)) · \(army.faction)")
                 .lineLimit(2)
                 .fixedSize(horizontal: false, vertical: true)
         }

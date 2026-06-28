@@ -1,7 +1,11 @@
 import SwiftUI
 import SwiftData
+import PhotosUI
 import TabletomeHobbyData
 import TabletomeDomain
+#if canImport(UIKit)
+import UIKit
+#endif
 
 @MainActor
 struct HobbySettingsScreen: View {
@@ -147,6 +151,7 @@ private struct FactionOverridesEditor: View {
 
     @State private var crest: [String: String] = [:]
     @State private var color: [String: Color] = [:]
+    @State private var imageFileNames: [String: String?] = [:]
 
     private var rows: [Row] {
         var seen = Set<String>()
@@ -172,36 +177,20 @@ private struct FactionOverridesEditor: View {
             } else {
                 Section {
                     ForEach(rows) { row in
-                        let pres = FactionResolver.resolve(
-                            faction: row.faction, game: row.game, overrides: cfg.factionOverrides
-                        )
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack(spacing: 10) {
-                                Image(systemName: HobbyGameSymbol.systemImage(for: row.game))
-                                    .font(.caption.weight(.semibold))
-                                    .foregroundStyle(Color.accentOnSurface)
-                                    .symbolRenderingMode(.hierarchical)
-                                    .accessibilityHidden(true)
-                                Text(row.faction)
-                                    .font(.subheadline.weight(.medium))
-                                Spacer(minLength: 0)
-                                CrestBadge(
-                                    text: crest[row.id] ?? pres.crest,
-                                    colorHex: (color[row.id] ?? Color(hex: pres.color)).hexString
-                                )
-                            }
-                            HStack {
-                                TextField(String(localized: "Crest"), text: Binding(
-                                    get: { crest[row.id] ?? "" },
-                                    set: { crest[row.id] = String($0.prefix(8)) }))
-                                .textInputAutocapitalization(.characters)
-                                .autocorrectionDisabled()
-                                ColorPicker("", selection: Binding(
-                                    get: { color[row.id] ?? .gray },
-                                    set: { color[row.id] = $0 }))
-                                .labelsHidden()
-                                .accessibilityLabel(String(localized: "Faction color"))
-                            }
+                        NavigationLink {
+                            FactionCrestDetailView(
+                                row: row,
+                                crest: crestBinding(for: row.id),
+                                color: colorBinding(for: row.id),
+                                imageFileName: imageBinding(for: row.id)
+                            )
+                        } label: {
+                            FactionCrestSummaryRow(
+                                row: row,
+                                crest: crest[row.id] ?? "",
+                                colorHex: (color[row.id] ?? .gray).hexString,
+                                imageFileName: imageFileNames[row.id] ?? nil
+                            )
                         }
                     }
                 } header: {
@@ -216,20 +205,165 @@ private struct FactionOverridesEditor: View {
         .onDisappear(perform: save)
     }
 
+    private func crestBinding(for rowId: String) -> Binding<String> {
+        Binding(
+            get: { crest[rowId] ?? "" },
+            set: { crest[rowId] = String($0.prefix(8)) }
+        )
+    }
+
+    private func colorBinding(for rowId: String) -> Binding<Color> {
+        Binding(
+            get: { color[rowId] ?? .gray },
+            set: { color[rowId] = $0 }
+        )
+    }
+
+    private func imageBinding(for rowId: String) -> Binding<String?> {
+        Binding(
+            get: { imageFileNames[rowId] ?? nil },
+            set: { imageFileNames[rowId] = $0 }
+        )
+    }
+
     private func seed() {
         for row in rows {
-            let r = FactionResolver.resolve(faction: row.faction, game: row.game, overrides: cfg.factionOverrides)
-            crest[row.id] = r.crest
-            color[row.id] = Color(hex: r.color)
+            let override = cfg.factionOverrides.first { $0.key == row.id }
+            let resolved = FactionResolver.resolve(
+                faction: row.faction, game: row.game, overrides: cfg.factionOverrides
+            )
+            crest[row.id] = override?.crest ?? resolved.crest
+            color[row.id] = Color(hex: override?.hex ?? resolved.colorHex)
+            imageFileNames[row.id] = override?.imageFileName
         }
     }
 
     private func save() {
+        let previousFiles = Set(cfg.factionOverrides.compactMap(\.imageFileName))
         cfg.factionOverrides = rows.map { row in
-            FactionPresetOverride(key: row.id,
-                                  crest: String((crest[row.id] ?? "").prefix(8)),
-                                  hex: (color[row.id] ?? .gray).hexString)
+            FactionPresetOverride(
+                key: row.id,
+                crest: String((crest[row.id] ?? "").prefix(8)),
+                hex: (color[row.id] ?? .gray).hexString,
+                imageFileName: imageFileNames[row.id] ?? nil
+            )
+        }
+        let keptFiles = Set(cfg.factionOverrides.compactMap(\.imageFileName))
+        for orphaned in previousFiles.subtracting(keptFiles) {
+            CrestImageStore.delete(fileName: orphaned)
         }
         try? context.save()
+    }
+}
+
+private struct FactionCrestSummaryRow: View {
+    let row: FactionOverridesEditor.Row
+    let crest: String
+    let colorHex: String
+    let imageFileName: String?
+
+    var body: some View {
+        HStack(spacing: 10) {
+            CrestBadge(text: crest, colorHex: colorHex, imageFileName: imageFileName)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(row.faction)
+                    .font(.subheadline.weight(.medium))
+                Text(SupportedGames.displayName(for: row.game))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(.vertical, 2)
+    }
+}
+
+private struct FactionCrestDetailView: View {
+    let row: FactionOverridesEditor.Row
+    @Binding var crest: String
+    @Binding var color: Color
+    @Binding var imageFileName: String?
+
+    @State private var pickerItem: PhotosPickerItem?
+    @State private var importError: String?
+
+    var body: some View {
+        Form {
+            Section {
+                HStack(spacing: 12) {
+                    CrestBadge(
+                        text: crest,
+                        colorHex: color.hexString,
+                        imageFileName: imageFileName
+                    )
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(row.faction)
+                            .font(.headline)
+                        Text(SupportedGames.displayName(for: row.game))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer(minLength: 0)
+                }
+                .padding(.vertical, 4)
+            }
+
+            Section {
+                TextField(String(localized: "Abbreviation"), text: $crest)
+                    .textInputAutocapitalization(.characters)
+                    .autocorrectionDisabled()
+                ColorPicker(String(localized: "Badge colour"), selection: $color, supportsOpacity: false)
+            } header: {
+                Text(String(localized: "Text crest"))
+            }
+
+            Section {
+                PhotosPicker(selection: $pickerItem, matching: .images) {
+                    Label(
+                        imageFileName == nil
+                            ? String(localized: "Choose image…")
+                            : String(localized: "Replace image…"),
+                        systemImage: "photo"
+                    )
+                }
+                if imageFileName != nil {
+                    Button(String(localized: "Remove image"), role: .destructive) {
+                        CrestImageStore.delete(fileName: imageFileName)
+                        imageFileName = nil
+                    }
+                }
+                if let importError {
+                    Text(importError)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+            } header: {
+                Text(String(localized: "Custom image"))
+            } footer: {
+                Text(String(localized: "Square logos work best. Stored on this device only."))
+            }
+        }
+        .navigationTitle(row.faction)
+        .navigationBarTitleDisplayMode(.inline)
+        .tabBarScrollInset()
+        .onChange(of: pickerItem) { _, item in
+            guard let item else { return }
+            Task { await importImage(from: item) }
+        }
+    }
+
+    private func importImage(from item: PhotosPickerItem) async {
+        do {
+            guard let data = try await item.loadTransferable(type: Data.self) else {
+                importError = String(localized: "Could not read the selected image.")
+                return
+            }
+            let fileName = try CrestImageStore.write(from: data, replacing: imageFileName)
+            imageFileName = fileName
+            importError = nil
+        } catch {
+            importError = error.localizedDescription
+        }
+        pickerItem = nil
     }
 }

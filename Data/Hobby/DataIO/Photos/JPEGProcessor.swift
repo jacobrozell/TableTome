@@ -22,11 +22,14 @@ public enum PhotoError: LocalizedError {
 
 /// Resize and compress incoming image data to a storage-friendly JPEG.
 public enum JPEGProcessor {
-    public static func normalize(_ data: Data) throws -> Data {
+    public static func normalize(
+        _ data: Data,
+        maxDimension: CGFloat = CGFloat(HobbyLimits.maxPhotoDimension)
+    ) throws -> Data {
         guard data.count <= HobbyLimits.maxPhotoBytes else { throw PhotoError.tooLarge }
 #if canImport(UIKit)
         guard let image = UIImage(data: data) else { throw PhotoError.unreadableImage }
-        let resized = resize(image, maxDimension: CGFloat(HobbyLimits.maxPhotoDimension))
+        let resized = resize(image, maxDimension: maxDimension)
         guard let jpeg = resized.jpegData(compressionQuality: HobbyLimits.jpegQuality) else {
             throw PhotoError.encodingFailed
         }

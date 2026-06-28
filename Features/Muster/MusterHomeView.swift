@@ -224,14 +224,14 @@ struct MusterHomeView: View {
 
     private func compactRosterRow(
         roster: Roster,
-        pres: (crest: String, colorHex: String),
+        pres: FactionPresentation,
         total: Int,
         limit: Int,
         fieldable: Int,
         showsFieldable: Bool
     ) -> some View {
         HStack(spacing: 12) {
-            CrestBadge(text: pres.crest, colorHex: pres.colorHex)
+            CrestBadge(text: pres.crest, colorHex: pres.colorHex, imageFileName: pres.imageFileName)
             VStack(alignment: .leading, spacing: 2) {
                 Text(roster.name)
                     .font(.headline)
@@ -259,7 +259,7 @@ struct MusterHomeView: View {
 
     private func stackedRosterRow(
         roster: Roster,
-        pres: (crest: String, colorHex: String),
+        pres: FactionPresentation,
         total: Int,
         limit: Int,
         fieldable: Int,
@@ -267,7 +267,7 @@ struct MusterHomeView: View {
     ) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .center, spacing: 12) {
-                CrestBadge(text: pres.crest, colorHex: pres.colorHex)
+                CrestBadge(text: pres.crest, colorHex: pres.colorHex, imageFileName: pres.imageFileName)
                 Spacer(minLength: 0)
                 if !roster.entries.isEmpty, showsFieldable {
                     ProgressRing(percent: fieldable, diameter: 32)
@@ -343,7 +343,7 @@ struct RenameRosterSheet: View {
                         let sizeLabel = BattleSizes.resolve(game: roster.game, key: roster.battleSizeKey)?.label
                             ?? roster.battleSizeKey
                         HStack(spacing: 12) {
-                            CrestBadge(text: pres.crest, colorHex: pres.colorHex)
+                            CrestBadge(text: pres.crest, colorHex: pres.colorHex, imageFileName: pres.imageFileName)
                             VStack(alignment: .leading, spacing: 3) {
                                 Text(roster.name)
                                     .font(.headline)

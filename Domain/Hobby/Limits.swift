@@ -16,6 +16,7 @@ public enum HobbyLimits {
     public static let maxPipelineStages = 30
     public static let maxPhotoBytes     = 2 * 1024 * 1024
     public static let maxPhotoDimension = 2_048
+    public static let maxCrestDimension = 512
     public static let jpegQuality: CGFloat = 0.82
     public static let maxPhotosPerUnit  = 24
     public static let maxRosters          = 64

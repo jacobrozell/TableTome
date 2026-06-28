@@ -270,7 +270,7 @@ struct BattleTrackerControlPanel: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            if viewModel.usesAlternatingActivation {
+            if viewModel.playContext.usesAlternatingActivation {
                 ScActivationBar(
                     activePlayerName: viewModel.trackerState.activePlayerIsOne
                         ? viewModel.playerOneName
@@ -348,7 +348,7 @@ private struct BattleTrackerPhaseControls: View {
             }
             .accessibilityIdentifier("battleTracker.phasePicker")
 
-            if !viewModel.usesAlternatingActivation {
+            if !viewModel.playContext.usesAlternatingActivation {
                 if !viewModel.specialPhases.isEmpty {
                     PhaseChipRow(
                         phases: viewModel.specialPhases,

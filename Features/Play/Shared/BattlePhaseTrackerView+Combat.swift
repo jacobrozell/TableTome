@@ -115,7 +115,7 @@ extension BattlePhaseTrackerView {
     }
 
     var deploymentIsComplete: Bool {
-        if viewModel.usesAlternatingActivation {
+        if viewModel.playContext.usesAlternatingActivation {
             return ScTmgDeploymentChecklist.completionCount(
                 completedSteps: viewModel.trackerState.completedDeploymentSteps
             ).done == ScTmgDeploymentChecklistStep.allCases.count

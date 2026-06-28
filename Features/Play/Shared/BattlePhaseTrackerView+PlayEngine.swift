@@ -4,7 +4,7 @@ import TabletomeDomain
 extension BattlePhaseTrackerView {
     @ViewBuilder
     var engineDeploymentSection: some View {
-        if viewModel.usesAlternatingActivation {
+        if viewModel.playContext.usesAlternatingActivation {
             alternatingActivationDeploymentSection
         } else {
             phasedRoundDeploymentSection
@@ -13,7 +13,7 @@ extension BattlePhaseTrackerView {
 
     @ViewBuilder
     var engineSecondarySections: some View {
-        if viewModel.usesAlternatingActivation {
+        if viewModel.playContext.usesAlternatingActivation {
             alternatingActivationSecondarySections
         } else {
             phasedRoundSecondarySections

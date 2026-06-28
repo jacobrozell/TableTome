@@ -175,7 +175,7 @@ extension BattlePhaseTrackerView {
     }
 
     func presentScoringReminderIfNeeded() {
-        let scoringPhase: BattleTurnPhase = viewModel.usesAlternatingActivation ? .scoring : .endOfTurn
+        let scoringPhase: BattleTurnPhase = viewModel.playContext.usesAlternatingActivation ? .scoring : .endOfTurn
         guard viewModel.trackerState.currentPhase == scoringPhase else { return }
         let playerName = viewModel.trackerState.activePlayerIsOne
             ? viewModel.playerOneName
@@ -194,7 +194,7 @@ extension BattlePhaseTrackerView {
             ? viewModel.playerOneName
             : viewModel.playerTwoName
         let notice: TurnHandoffNotice?
-        if viewModel.usesAlternatingActivation {
+        if viewModel.playContext.usesAlternatingActivation {
             if phase == .scoring {
                 notice = TurnHandoffNotice(
                     title: String(localized: "Scoring phase"),

@@ -7,12 +7,6 @@ import TabletomeDomain
 final class AppRouter {
     enum HobbyTab: String { case armies, muster, paints }
 
-    enum LearnNavigationAction: Equatable {
-        case openGuidedMatch(gameSystemId: String, opensBattleTab: Bool = false)
-        case openGameGuide(gameSystemId: String)
-        case openRulesSearch(gameSystemId: String, query: String)
-    }
-
     /// Persisted active game mode — use from DI defaults when no router is in scope.
     static var persistedActiveGameSystemId: String {
         get { ActiveGameContextPersistence.gameSystemId }

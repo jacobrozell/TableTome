@@ -24,6 +24,7 @@ xcodebuild test -scheme TabletomeCI -destination 'platform=iOS Simulator,name=Ta
 | Adaptive layout | `TabletomeLayoutTests` — pad idiom split nav, collapsed battle chrome |
 | Play continuation | `PlayContinuationResolverTests` — resume vs fresh-install paths |
 | Muster / hobby (gated UI) | `RosterStoreTests`, `BackupCodecTests`, etc. — run in CI regardless of release gate |
+| Nearby match sync | `MatchSyncCodecTests` — paste/wire codec, store round-trip, validation, broadcast flags; runtime logs in Console (`subsystem: com.jacobrozell.tabletome`, categories `MatchSync.Codec`, `MatchSync.Session`) |
 
 ## UI Tests (future)
 

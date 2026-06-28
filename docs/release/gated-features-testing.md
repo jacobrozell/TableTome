@@ -32,6 +32,7 @@
 | Rules Q&A assistant | Partial | ❌ | ❌ | ❌ | Quality + licensing review |
 | 40k 10e (coming soon) | N/A | ❌ | ❌ | ❌ | Content not ready |
 | 40k 11e combat resolver | Partial | Partial | ❌ | ❌ | Ongoing QA (shipped in 1.0.0) |
+| Nearby match sync | ✅ Strong | N/A | ❌ | ❌ | Manual two-device QA before App Store |
 
 **Legend:** ✅ = meaningful automated coverage exists; Partial = domain only, not surface/integration; ❌ = not done for ungate sign-off.
 
@@ -241,7 +242,57 @@ Combat Patrol (10e) and 11th Edition are separate game systems with separate rol
 
 ---
 
-## 8. Release surface test harness (meta)
+## 8. Nearby match sync (shipped)
+
+**Status:** Shipped in 1.0.0 · **Entry:** Guided Match toolbar → sync icon (both armies set + setup or game guide completed)
+
+Sync shares live match + battle tracker state between two devices on the same local network, or via paste code when nearby discovery fails. MultipeerConnectivity session wiring is **not** unit-tested; codec + store fidelity is.
+
+### Existing automated coverage
+
+- `Tests/Unit/MatchSyncCodecTests.swift` — paste/wire codec, store round-trip, validation, broadcast flags; runtime logs via `MatchSyncLogger` (`MatchSync.Codec`, `MatchSync.Session` in Console)
+
+Run:
+
+```bash
+xcodebuild test -scheme TabletomeCI \
+  -destination 'platform=iOS Simulator,name=iPhone 17' \
+  -only-testing:TabletomeTests/MatchSyncCodecTests
+```
+
+### Still needed (manual QA — App Store sign-off)
+
+Use two physical devices on the same Wi‑Fi, or two simulators on one Mac.
+
+**Paste code (single device smoke first)**
+
+- [ ] Guided Match with both armies → sync icon visible
+- [ ] Copy match code → reset match on same device → import pasted code → armies, mission, VP, phase restored
+- [ ] Invalid paste shows “Could not read that code.”
+
+**Nearby host / join**
+
+- [ ] Host shows 4-character code; joiner enters code and connects
+- [ ] Host sees “Allow this player to sync?” — **Decline** blocks join; **Allow** connects
+- [ ] After connect: change VP or advance phase on one device → other updates within a few seconds
+- [ ] Stop syncing disconnects without corrupting local state
+- [ ] Local network permission prompt on first host/join (physical device)
+
+**Regression spot-checks**
+
+- [ ] Spearhead match sync
+- [ ] 40k 11e match sync (release default)
+- [ ] Sync icon hidden until both armies chosen
+
+**UI automation (future)**
+
+- [ ] `-skip_onboarding` + `-open_guided_match` + `-apply_starter_matchup` → open sync sheet → paste import smoke
+
+**Promotion criteria:** Manual checklist complete on at least one Spearhead and one 40k 11e session; no P0/P1 sync bugs.
+
+---
+
+## 9. Release surface test harness (meta)
 
 Today `ReleaseSurfaceTests` and `PillarSurfaceTests` assert **1.0.0 defaults only**. Before ungating any feature:
 

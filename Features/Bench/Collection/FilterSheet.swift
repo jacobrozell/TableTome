@@ -150,7 +150,7 @@ struct FilterSheet: View {
                     .frame(width: 20)
                     .accessibilityHidden(true)
             }
-            Text(game)
+            Text(game == "All" ? game : SupportedGames.displayName(for: game))
         }
     }
 
@@ -214,6 +214,6 @@ struct FilterSheet: View {
             faction: faction,
             game: cfg.gameFilter == "All" ? "" : cfg.gameFilter,
             overrides: overrides
-        ).color
+        ).colorHex
     }
 }

@@ -11,6 +11,7 @@ struct AddArmySheet: View {
                    _ starterSeeds: [StarterBoxCollectionPrefillResolver.UnitSeed]?) -> Bool
 
     @State private var game = "40k"
+    @State private var customGame = ""
     @State private var faction = ""
     @State private var customFaction = ""
     @State private var name = ""
@@ -19,6 +20,7 @@ struct AddArmySheet: View {
     @State private var suppressGameChangeFactionReset = false
     @State private var starterUnitSeeds: [StarterBoxCollectionPrefillResolver.UnitSeed] = []
     @State private var addStarterBoxUnits = true
+    @State private var starterToggleOverriddenKeys: Set<String> = []
 
     private var sessionPrefill: CollectionArmyPrefillResolver.Prefill? {
         CollectionArmyPrefillResolver.prefill(
@@ -27,7 +29,13 @@ struct AddArmySheet: View {
         )
     }
 
-    private var factions: [String] { FactionResolver.canonicalByGame[game]?.sorted() ?? [] }
+    private var resolvedGame: String {
+        if game == customGameSentinel {
+            return customGame.trimmingCharacters(in: .whitespaces)
+        }
+        return game
+    }
+    private var factions: [String] { FactionResolver.canonicalByGame[resolvedGame]?.sorted() ?? [] }
     private var suggestedFactions: [String] {
         let suggested = sessionPrefill?.suggestedFactions ?? []
         return suggested.filter { factions.contains($0) }
@@ -40,15 +48,15 @@ struct AddArmySheet: View {
         let f = resolvedFaction.trimmingCharacters(in: .whitespaces)
         return f.isEmpty ? "Custom" : f
     }
-    private var factionPreview: (crest: String, colorHex: String) {
-        let r = FactionResolver.resolve(faction: displayFaction, game: game, overrides: [])
-        return (r.crest, r.color)
+    private var factionPreview: FactionPresentation {
+        FactionResolver.resolve(faction: displayFaction, game: resolvedGame, overrides: [])
     }
 
     private let customSentinel = "\u{0}custom"
+    private let customGameSentinel = "\u{0}customGame"
 
     private var starterSeedKey: String {
-        "\(game)|\(resolvedFaction)"
+        "\(resolvedGame)|\(resolvedFaction)"
     }
 
     var body: some View {
@@ -63,15 +71,20 @@ struct AddArmySheet: View {
                                     .symbolRenderingMode(.hierarchical)
                                     .frame(width: 20)
                                     .accessibilityHidden(true)
-                                Text(g)
+                                Text(SupportedGames.displayName(for: g))
                             }
                             .tag(g)
                         }
+                        Text(String(localized: "Custom…")).tag(customGameSentinel)
                     }
                     .formNavigationPickerStyle()
                     .onChange(of: game) { _, _ in
                         guard !suppressGameChangeFactionReset else { return }
                         faction = ""
+                    }
+                    if game == customGameSentinel {
+                        TextField(String(localized: "Custom game"), text: $customGame)
+                            .textInputAutocapitalization(.words)
                     }
 
                     Picker(String(localized: "Faction"), selection: $faction) {
@@ -79,7 +92,7 @@ struct AddArmySheet: View {
                         ForEach(suggestedFactions + otherFactions, id: \.self) { f in
                             HStack(spacing: 8) {
                                 Circle()
-                                    .fill(Color(hex: FactionResolver.resolve(faction: f, game: game, overrides: []).color))
+                                    .fill(Color(hex: FactionResolver.resolve(faction: f, game: game, overrides: []).colorHex))
                                     .frame(width: 8, height: 8)
                                     .accessibilityHidden(true)
                                 Text(f)
@@ -96,7 +109,11 @@ struct AddArmySheet: View {
                     }
                     if !faction.isEmpty {
                         HStack(spacing: 12) {
-                            CrestBadge(text: factionPreview.crest, colorHex: factionPreview.colorHex)
+                            CrestBadge(
+                                text: factionPreview.crest,
+                                colorHex: factionPreview.colorHex,
+                                imageFileName: factionPreview.imageFileName
+                            )
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(String(localized: "Preview"))
                                     .font(.caption)
@@ -124,6 +141,9 @@ struct AddArmySheet: View {
                     Section {
                         Toggle(String(localized: "Add models from your starter box"), isOn: $addStarterBoxUnits)
                             .accessibilityIdentifier("addStarterBoxUnits")
+                            .onChange(of: addStarterBoxUnits) { _, _ in
+                                starterToggleOverriddenKeys.insert(starterSeedKey)
+                            }
                     } footer: {
                         Text(
                             String(
@@ -156,16 +176,21 @@ struct AddArmySheet: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(String(localized: "Add")) {
+                        let g = resolvedGame.isEmpty ? "Custom" : resolvedGame
                         let f = resolvedFaction.isEmpty ? "Custom" : resolvedFaction
                         let seeds = addStarterBoxUnits ? starterUnitSeeds : nil
-                        if onCreate(game, f, name, seeds?.isEmpty == false ? seeds : nil) {
+                        if onCreate(g, f, name, seeds?.isEmpty == false ? seeds : nil) {
                             dismiss()
                         } else {
                             error = true
                         }
                     }
                     .accessibilityIdentifier("addArmyConfirm")
-                    .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty || faction.isEmpty)
+                    .disabled(
+                        name.trimmingCharacters(in: .whitespaces).isEmpty
+                            || faction.isEmpty
+                            || resolvedGame.isEmpty
+                    )
                 }
             }
             .task(id: starterSeedKey) {
@@ -219,11 +244,13 @@ struct AddArmySheet: View {
         let seeds = await StarterBoxCollectionPrefillResolver.unitSeeds(
             onboardingChoice: FirstSessionStore.onboardingChoice,
             activeGameSystemId: router.activeGameSystemId,
-            game: game,
+            game: resolvedGame,
             factionLabel: label
         ) ?? []
         starterUnitSeeds = seeds
-        if !seeds.isEmpty {
+        if seeds.isEmpty {
+            addStarterBoxUnits = false
+        } else if !starterToggleOverriddenKeys.contains(starterSeedKey) {
             addStarterBoxUnits = true
         }
     }
@@ -439,7 +466,7 @@ struct RenameArmySheet: View {
                     Section {
                         HStack(spacing: 12) {
                             let pres = army.presentation(overrides: overrides)
-                            CrestBadge(text: pres.crest, colorHex: pres.colorHex)
+                            CrestBadge(text: pres.crest, colorHex: pres.colorHex, imageFileName: pres.imageFileName)
                             VStack(alignment: .leading, spacing: 3) {
                                 Text(army.name)
                                     .font(.headline)
@@ -449,7 +476,7 @@ struct RenameArmySheet: View {
                                         .foregroundStyle(Color.accentOnSurface)
                                         .symbolRenderingMode(.hierarchical)
                                         .accessibilityHidden(true)
-                                    Text("\(army.game) · \(army.faction)")
+                                    Text("\(SupportedGames.displayName(for: army.game)) · \(army.faction)")
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
                                 }
@@ -509,7 +536,7 @@ struct ArmyPipelineEditorSheet: View {
                 Section {
                     let pres = army.presentation(overrides: overrides)
                     HStack(spacing: 12) {
-                        CrestBadge(text: pres.crest, colorHex: pres.colorHex)
+                        CrestBadge(text: pres.crest, colorHex: pres.colorHex, imageFileName: pres.imageFileName)
                         VStack(alignment: .leading, spacing: 3) {
                             Text(army.name)
                                 .font(.headline)
@@ -718,11 +745,11 @@ struct MoveUnitSheet: View {
     private func moveArmyRow(_ army: Army) -> some View {
         let pres = army.presentation(overrides: overrides)
         HStack(spacing: 10) {
-            CrestBadge(text: pres.crest, colorHex: pres.colorHex)
+            CrestBadge(text: pres.crest, colorHex: pres.colorHex, imageFileName: pres.imageFileName)
             VStack(alignment: .leading, spacing: 2) {
                 Text(army.name)
                     .lineLimit(1)
-                Text("\(army.game) · \(army.faction)")
+                Text("\(SupportedGames.displayName(for: army.game)) · \(army.faction)")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

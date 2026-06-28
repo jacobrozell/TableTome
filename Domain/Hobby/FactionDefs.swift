@@ -5,6 +5,30 @@ import Foundation
 
 public enum SupportedGames {
     public static let all = ["40k", "AoS", "TOW", "30k", "Necromunda", "Warcry", "Blood Bowl", "MESBG"]
+
+    /// User-facing label for a stored game key or custom game name.
+    public static func displayName(for game: String) -> String {
+        switch game {
+        case "40k":
+            String(localized: "Warhammer 40,000")
+        case "AoS":
+            String(localized: "Age of Sigmar")
+        case "TOW":
+            String(localized: "Warhammer: The Old World")
+        case "30k":
+            String(localized: "Warhammer: The Horus Heresy")
+        case "Necromunda":
+            String(localized: "Necromunda")
+        case "Warcry":
+            String(localized: "Warcry")
+        case "Blood Bowl":
+            String(localized: "Blood Bowl")
+        case "MESBG":
+            String(localized: "Middle-earth Strategy Battle Game")
+        default:
+            game
+        }
+    }
 }
 
 public struct FactionDef: Hashable, Sendable {

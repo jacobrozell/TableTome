@@ -40,6 +40,12 @@ public final class AppConfiguration {
 
     /// One-time Muster tab intro for upgrades after 1.2.
     public var hasSeenMusterIntro: Bool = false
+
+    /// One-time Models tab intro — deferred until after Play engagement.
+    public var hasSeenCollectionIntro: Bool = false
+
+    /// Dismissible first-steps coach on Collection home after the intro.
+    public var hasDismissedCollectionFirstStepsCoach: Bool = false
     public var defaultBattleSizeKey40k: String = "strike-force"
 
     public init() {}

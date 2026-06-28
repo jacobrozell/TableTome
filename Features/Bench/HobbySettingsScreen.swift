@@ -33,6 +33,8 @@ struct HobbySettingsScreen: View {
                 MusterSettingsSection(cfg: cfg)
             }
 
+            CollectionSettingsSection(cfg: cfg)
+
             SettingsDataSection()
 
             Section(String(localized: "Help & Feedback")) {

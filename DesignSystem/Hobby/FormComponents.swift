@@ -30,6 +30,13 @@ enum FormHints {
     static var filterQuickView: String {
         String(localized: "Preset views for common painting progress slices.")
     }
+    static var filterQuickViewBeginner: String {
+        String(
+            localized: """
+            Backlog = still on the sprue. WIP = started painting. Table-ready = done enough to play.
+            """
+        )
+    }
     static var filterNarrow: String {
         String(localized: "Combine filters to focus on one army, state, or box.")
     }
@@ -44,6 +51,22 @@ enum FormHints {
             localized: """
             Put the model count in parentheses — e.g. \"Clanrats (5)\" — then multiply by quantity. \
             Without parentheses, each unit entry counts as one model.
+            """
+        )
+    }
+    static var modelCountBeginner: String {
+        String(
+            localized: """
+            Name what's on the sprue — e.g. \"Intercessors (5)\" for five models. The number in parentheses \
+            is how many physical models are in that entry.
+            """
+        )
+    }
+    static var pipelineBeginner: String {
+        String(
+            localized: """
+            Models move through painting stages left to right. Swipe right on a unit to advance — \
+            most start at Unassembled on the sprue.
             """
         )
     }
@@ -131,14 +154,25 @@ struct FormNotesField: View {
 struct FormNameField: View {
     let title: String
     @Binding var text: String
+    var prompt: String?
     var focus: FocusState<Bool>.Binding
 
     var body: some View {
-        TextField(title, text: $text)
-            .textInputAutocapitalization(.words)
-            .autocorrectionDisabled()
-            .submitLabel(.done)
-            .focused(focus)
+        Group {
+            if let prompt {
+                TextField(title, text: $text, prompt: Text(prompt))
+                    .textInputAutocapitalization(.words)
+                    .autocorrectionDisabled()
+                    .submitLabel(.done)
+                    .focused(focus)
+            } else {
+                TextField(title, text: $text)
+                    .textInputAutocapitalization(.words)
+                    .autocorrectionDisabled()
+                    .submitLabel(.done)
+                    .focused(focus)
+            }
+        }
     }
 }
 

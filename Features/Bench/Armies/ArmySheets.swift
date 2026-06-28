@@ -5,6 +5,7 @@ import TabletomeDomain
 /// New-army form. Mirrors `createArmyFlow` (`js/render/armies.js`).
 struct AddArmySheet: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(AppRouter.self) private var router
     @FocusState private var nameFocused: Bool
     let onCreate: (_ game: String, _ faction: String, _ name: String) -> Bool
 
@@ -13,8 +14,23 @@ struct AddArmySheet: View {
     @State private var customFaction = ""
     @State private var name = ""
     @State private var error = false
+    @State private var didApplyPrefill = false
+
+    private var sessionPrefill: CollectionArmyPrefillResolver.Prefill? {
+        CollectionArmyPrefillResolver.prefill(
+            onboardingChoice: FirstSessionStore.onboardingChoice,
+            activeGameSystemId: router.activeGameSystemId
+        )
+    }
 
     private var factions: [String] { FactionResolver.canonicalByGame[game]?.sorted() ?? [] }
+    private var suggestedFactions: [String] {
+        let suggested = sessionPrefill?.suggestedFactions ?? []
+        return suggested.filter { factions.contains($0) }
+    }
+    private var otherFactions: [String] {
+        factions.filter { !suggestedFactions.contains($0) }
+    }
     private var resolvedFaction: String { faction == customSentinel ? customFaction : faction }
     private var displayFaction: String {
         let f = resolvedFaction.trimmingCharacters(in: .whitespaces)
@@ -49,7 +65,7 @@ struct AddArmySheet: View {
 
                     Picker(String(localized: "Faction"), selection: $faction) {
                         Text(String(localized: "Choose…")).tag("")
-                        ForEach(factions, id: \.self) { f in
+                        ForEach(suggestedFactions + otherFactions, id: \.self) { f in
                             HStack(spacing: 8) {
                                 Circle()
                                     .fill(Color(hex: FactionResolver.resolve(faction: f, game: game, overrides: []).color))
@@ -62,6 +78,7 @@ struct AddArmySheet: View {
                         Text(String(localized: "Custom…")).tag(customSentinel)
                     }
                     .formNavigationPickerStyle()
+                    .onChange(of: faction) { _, _ in updateDefaultName() }
                     if faction == customSentinel {
                         TextField(String(localized: "Custom faction"), text: $customFaction)
                             .textInputAutocapitalization(.words)
@@ -82,6 +99,14 @@ struct AddArmySheet: View {
                     }
                 } header: {
                     Text(String(localized: "Game & faction"))
+                } footer: {
+                    if faction.isEmpty, sessionPrefill != nil, error == false {
+                        Text(
+                            String(
+                                localized: "We pre-selected your game from Play — pick the faction on your box lid."
+                            )
+                        )
+                    }
                 }
 
                 Section {
@@ -110,8 +135,33 @@ struct AddArmySheet: View {
                     .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty || faction.isEmpty)
                 }
             }
-            .onAppear { nameFocused = true }
+            .onAppear {
+                applySessionPrefillIfNeeded()
+                nameFocused = true
+            }
         }
+    }
+
+    private func applySessionPrefillIfNeeded() {
+        guard !didApplyPrefill, let prefill = sessionPrefill else { return }
+        didApplyPrefill = true
+        game = prefill.game
+        if let first = prefill.suggestedFactions.first {
+            faction = first
+        }
+        if name.trimmingCharacters(in: .whitespaces).isEmpty,
+           let suggested = prefill.suggestedArmyName {
+            name = suggested
+        }
+    }
+
+    private func updateDefaultName() {
+        guard name.trimmingCharacters(in: .whitespaces).isEmpty,
+              faction != customSentinel,
+              !resolvedFaction.isEmpty else { return }
+        let f = resolvedFaction.trimmingCharacters(in: .whitespaces)
+        guard !f.isEmpty else { return }
+        name = String(localized: "My \(f)")
     }
 }
 
@@ -144,7 +194,12 @@ struct AddUnitSheet: View {
         NavigationStack {
             Form {
                 Section {
-                    FormNameField(title: String(localized: "Unit name"), text: $name, focus: $nameFocused)
+                    FormNameField(
+                        title: String(localized: "Unit name"),
+                        text: $name,
+                        prompt: String(localized: "Intercessors (5)"),
+                        focus: $nameFocused
+                    )
                     QuantityStepper(label: String(localized: "Quantity"), value: $qty)
                     if !name.trimmingCharacters(in: .whitespaces).isEmpty {
                         ModelCountSummary(name: name, qty: qty)
@@ -152,7 +207,7 @@ struct AddUnitSheet: View {
                 } header: {
                     Text(String(localized: "Unit"))
                 } footer: {
-                    Text(FormHints.modelCount)
+                    Text(FormHints.modelCountBeginner)
                 }
 
                 Section {

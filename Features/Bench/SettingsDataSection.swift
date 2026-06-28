@@ -94,9 +94,13 @@ struct SettingsDataSection: View {
             Text(String(localized: "Collection & Data"))
         }
 
-        templateSection
-
         Section {
+            Button { exportArmiesTemplate() } label: {
+                Label(String(localized: "Armies template"), systemImage: "doc.badge.plus")
+            }
+            Button { exportPaintsTemplate() } label: {
+                Label(String(localized: "Paints template"), systemImage: "doc.badge.plus")
+            }
             Button { beginImport(.armies, .replace) } label: {
                 Label(String(localized: "Import armies (replace)…"), systemImage: "square.and.arrow.down")
             }
@@ -112,7 +116,14 @@ struct SettingsDataSection: View {
         } header: {
             Text(String(localized: "Import"))
         } footer: {
-            Text(String(localized: "CSV files from Excel, Numbers, or Google Sheets. Use a template below if you're starting fresh."))
+            Text(
+                String(
+                    localized: """
+                    CSV from Excel, Numbers, or Google Sheets. Starter templates include the correct \
+                    columns and an example row.
+                    """
+                )
+            )
         }
 
         Section {
@@ -172,21 +183,6 @@ struct SettingsDataSection: View {
         CollectionStore.clearAll(in: context)
         WidgetUpdater.refresh(context: context)
         banner.show(String(localized: "All data cleared"))
-    }
-
-    private var templateSection: some View {
-        Section {
-            Button { exportArmiesTemplate() } label: {
-                Label(String(localized: "Armies template"), systemImage: "doc.badge.plus")
-            }
-            Button { exportPaintsTemplate() } label: {
-                Label(String(localized: "Paints template"), systemImage: "doc.badge.plus")
-            }
-        } header: {
-            Text(String(localized: "CSV templates"))
-        } footer: {
-            Text(String(localized: "Download a starter CSV with the correct columns and an example row."))
-        }
     }
 
     private func handleCSV(_ result: Result<URL, Error>) {

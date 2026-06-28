@@ -110,6 +110,12 @@ enum ArmyFilter {
         cfg.quickViewRaw = "all"
     }
 
+    /// Hides advanced filter sections until the collection has enough data to filter.
+    static func usesBeginnerFilterLayout(armies: [Army]) -> Bool {
+        guard armies.count <= 2 else { return false }
+        return allSources(armies).isEmpty && allNoteTags(armies).isEmpty
+    }
+
     /// Count of non-default filter prefs (excludes search text).
     static func activeFilterCount(_ cfg: AppConfiguration) -> Int {
         var n = 0

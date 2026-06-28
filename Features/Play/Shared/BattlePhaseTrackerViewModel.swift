@@ -70,24 +70,6 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
         )
     }
 
-    var focusedDeploymentStep: DeploymentChecklistStep? {
-        guard playContext.capabilities.showsBattleTacticDecks, trackerState.battleRound == 1 else { return nil }
-        return BattleFlowGuide.nextIncompleteDeploymentStep(in: trackerState.completedDeploymentSteps)
-    }
-
-    var focusedWh40kDeploymentStep: Wh40kDeploymentChecklistStep? {
-        guard playContext.capabilities.deploymentChecklistStyle == .wh40k, trackerState.battleRound == 1 else { return nil }
-        return BattleFlowGuide.nextIncompleteWh40kSetupStep(in: trackerState.completedDeploymentSteps)
-    }
-
-    var focusedRoundOpenerStep: BattleRoundChecklistStep? {
-        guard playContext.capabilities.showsBattleTacticDecks else { return nil }
-        return BattleFlowGuide.nextIncompleteRoundOpenerStep(
-            round: trackerState.battleRound,
-            completedSteps: trackerState.completedRoundChecklistSteps
-        )
-    }
-
     var shootingEligibleUnits: [SpearheadUnit] {
         guard let army = activeArmy else { return [] }
         return army.units.filter(\.canShoot)
@@ -100,47 +82,6 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
         }
     }
 
-    var startOfRoundAbilities: [TriggeredAbility] {
-        startOfRoundAbilities(for: playerOneArmy) + startOfRoundAbilities(for: playerTwoArmy)
-    }
-
-    var needsStartOfRoundAbilitiesPrompt: Bool {
-        guard playContext.capabilities.showsBattleTacticDecks else { return false }
-        return !BattleRoundChecklist.isComplete(
-            step: .startOfRoundAbilities,
-            round: trackerState.battleRound,
-            completedSteps: trackerState.completedRoundChecklistSteps
-        )
-    }
-
-    var roundOpenerIsIncomplete: Bool {
-        focusedRoundOpenerStep != nil
-    }
-
-    /// Regiment ability and enhancement when they explicitly trigger in the current phase.
-    var phaseArmyRuleOptions: [ArmyRuleOption] {
-        guard let army = activeArmy else { return [] }
-        let player = activePlayer
-        var options: [ArmyRuleOption] = []
-        if let regiment = army.regimentAbilities.first(where: { $0.id == player.regimentAbilityId }),
-           regiment.isAvailableIn(phase: trackerState.currentPhase) {
-            options.append(regiment)
-        }
-        if let enhancement = army.enhancements.first(where: { $0.id == player.enhancementId }),
-           enhancement.isAvailableIn(phase: trackerState.currentPhase) {
-            options.append(enhancement)
-        }
-        return options
-    }
-
-    var phaseStratagems: [CombatPatrolStratagem] {
-        guard playContext.capabilities.usesPatrolFormatRules, let army = activeArmy else { return [] }
-        if trackerState.showAllAbilities {
-            return army.stratagems
-        }
-        return army.stratagems.filter { $0.matches(battlePhase: trackerState.currentPhase) }
-    }
-
     var nextPhaseTitle: String? {
         let phases = playContext.playEngine.mainPhases()
         guard let index = phases.firstIndex(of: trackerState.currentPhase),
@@ -148,23 +89,10 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
         return phases[index + 1].title
     }
 
-    private func startOfRoundAbilities(for army: SpearheadArmy?) -> [TriggeredAbility] {
-        guard let army else { return [] }
-        return BattleAbilityCatalog.abilities(for: army).filter(\.isStartOfBattleRound)
-    }
-
     var specialPhases: [BattleTurnPhase] {
         let phases = Set(allAbilities.flatMap(\.phases))
         return [BattleTurnPhase.enemyMovement, .endOfAnyTurn]
             .filter { phases.contains($0) }
-    }
-
-    var underdogIsPlayerOne: Bool? {
-        guard playContext.capabilities.showsBattleTacticDecks else { return nil }
-        let p1 = trackerState.playerOneVictoryPoints
-        let p2 = trackerState.playerTwoVictoryPoints
-        if p1 == p2 { return nil }
-        return p1 < p2
     }
 
     func refreshAbilities() {
@@ -204,7 +132,7 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
             return
         }
 
-        let player = activePlayer
+        let player = activePlayerSelection
         activeArmy = army
         armyName = army.name
         contentCoverage = army.contentCoverage
@@ -307,34 +235,6 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
 
     func isUsed(_ ability: TriggeredAbility) -> Bool {
         trackerState.usedOncePerBattleAbilityIds.contains(ability.id)
-    }
-
-    func toggleStratagem(_ stratagem: CombatPatrolStratagem) {
-        guard let armyId = activeArmy?.id else { return }
-        let key = "\(armyId):\(stratagem.id)"
-        if trackerState.usedStratagemIds.contains(key) {
-            trackerState.usedStratagemIds.remove(key)
-        } else {
-            trackerState.usedStratagemIds.insert(key)
-        }
-        persist()
-    }
-
-    func isStratagemUsed(_ stratagem: CombatPatrolStratagem) -> Bool {
-        guard let armyId = activeArmy?.id else { return false }
-        return trackerState.usedStratagemIds.contains("\(armyId):\(stratagem.id)")
-    }
-
-    func setRoundChecklistStep(_ step: BattleRoundChecklistStep, complete: Bool) {
-        let key = BattleRoundChecklist.storageKey(round: trackerState.battleRound)
-        var steps = trackerState.completedRoundChecklistSteps[key] ?? []
-        if complete {
-            steps.insert(step.rawValue)
-        } else {
-            steps.remove(step.rawValue)
-        }
-        trackerState.completedRoundChecklistSteps[key] = steps
-        persist()
     }
 
     func adjustVictoryPoints(
@@ -466,10 +366,6 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
         return BattleAbilityCatalog.abilities(for: army)
     }
 
-    private var activePlayer: PlayerArmySelection {
-        trackerState.activePlayerIsOne ? matchState.playerOne : matchState.playerTwo
-    }
-
     var activePlayerIsAttacker: Bool {
         guard let attackerIsPlayerOne = matchState.attackerIsPlayerOne else { return false }
         return trackerState.activePlayerIsOne == attackerIsPlayerOne
@@ -482,10 +378,6 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
 
     var attackerIsPlayerOne: Bool? {
         matchState.attackerIsPlayerOne
-    }
-
-    private var activeArmySelection: SpearheadArmy? {
-        army(for: activePlayer)
     }
 
     private func ensureWoundTrackingInitialized() {

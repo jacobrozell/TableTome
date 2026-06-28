@@ -1,6 +1,12 @@
 import Foundation
 import SwiftData
 
+/// Hobby SwiftData schema version. Bump when model shapes change.
+/// Pre-1.0: incompatible stores are deleted and recreated — no migration plan until after App Store launch.
+public enum HobbySchemaPolicy {
+    public static let version = 1
+}
+
 /// SwiftData container for hobby data (Collection, Paints, Rosters). Ports MiniMuster `AppContainer`.
 public enum HobbyAppContainer {
     public static let schema = Schema([
@@ -57,7 +63,15 @@ public enum HobbyAppContainer {
             ensureConfiguration(container.mainContext)
             return container
         } catch {
-            fatalError("Failed to create ModelContainer: \(error)")
+            // Pre-release: no production users — drop an incompatible store and retry once.
+            destroyPersistentStore(matching: config)
+            do {
+                let container = try ModelContainer(for: schema, configurations: config)
+                ensureConfiguration(container.mainContext)
+                return container
+            } catch {
+                fatalError("Failed to create ModelContainer after store reset: \(error)")
+            }
         }
     }
 
@@ -92,6 +106,13 @@ public enum HobbyAppContainer {
     public static func resetUITestPersistentStore() {
         let directory = FileManager.default.temporaryDirectory
             .appending(path: "TabletomeHobbyUITest-Persistent", directoryHint: .isDirectory)
+        try? FileManager.default.removeItem(at: directory)
+    }
+
+    /// Removes the on-disk store directory when schema creation fails (pre-1.0 only).
+    private static func destroyPersistentStore(matching config: ModelConfiguration) {
+        let storeURL = config.url
+        let directory = storeURL.deletingLastPathComponent()
         try? FileManager.default.removeItem(at: directory)
     }
 

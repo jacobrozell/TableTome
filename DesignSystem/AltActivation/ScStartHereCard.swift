@@ -6,40 +6,27 @@ struct ScStartHereCard: View {
     let gameSystem: GameSystem
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Label(String(localized: "Start here"), systemImage: "flag.checkered")
-                .font(.headline)
-                .foregroundStyle(Color.accentOnSurface)
-
-            Text(
-                String(
-                    localized: """
-                    Pick a path below, then run a guided match at the table. Roll physical dice — \
-                    the app tracks supply and scoring.
-                    """
-                )
-            )
-            .font(.callout)
-            .foregroundStyle(.secondary)
-            .fixedSize(horizontal: false, vertical: true)
-
+        GameGuideStartHereShell(gameSystemId: .scTmg, intro: intro) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                 newToWargamesTrack
                 starCraftPlayerTrack
             }
-
             ScWhatYouNeedCard()
-
-            NavigationLink(value: GuidedMatchLink(gameSystemId: .scTmg)) {
-                Label(String(localized: "Start Guided Match"), systemImage: "flag.checkered")
-                    .font(.subheadline.weight(.semibold))
-                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-                    .contentShape(Rectangle())
-            }
-            .buttonStyle(.borderedProminent)
-            .accessibilityIdentifier("guide.scTmg.guidedMatch")
+        } footer: {
+            GuidedMatchStartButton(
+                gameSystemId: .scTmg,
+                accessibilityId: "guide.scTmg.guidedMatch"
+            )
         }
-        .accentHighlightCard()
+    }
+
+    private var intro: String {
+        String(
+            localized: """
+            Pick a path below, then run a guided match at the table. Roll physical dice — \
+            the app tracks supply and scoring.
+            """
+        )
     }
 
     private var newToWargamesTrack: some View {

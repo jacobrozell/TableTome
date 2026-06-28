@@ -55,6 +55,30 @@ extension BattlePhaseTrackerViewModel {
         persist()
     }
 
+    var phaseStratagems: [CombatPatrolStratagem] {
+        guard playContext.capabilities.usesPatrolFormatRules, let army = activeArmy else { return [] }
+        if trackerState.showAllAbilities {
+            return army.stratagems
+        }
+        return army.stratagems.filter { $0.matches(battlePhase: trackerState.currentPhase) }
+    }
+
+    func toggleStratagem(_ stratagem: CombatPatrolStratagem) {
+        guard let armyId = activeArmy?.id else { return }
+        let key = "\(armyId):\(stratagem.id)"
+        if trackerState.usedStratagemIds.contains(key) {
+            trackerState.usedStratagemIds.remove(key)
+        } else {
+            trackerState.usedStratagemIds.insert(key)
+        }
+        persist()
+    }
+
+    func isStratagemUsed(_ stratagem: CombatPatrolStratagem) -> Bool {
+        guard let armyId = activeArmy?.id else { return false }
+        return trackerState.usedStratagemIds.contains("\(armyId):\(stratagem.id)")
+    }
+
     static func gotchas(for armyId: String, gameSystemId: GameSystemId, army: SpearheadArmy? = nil) -> [SpearheadGotcha] {
         gotchas(for: armyId, gameSystemId: gameSystemId.rawValue, army: army)
     }

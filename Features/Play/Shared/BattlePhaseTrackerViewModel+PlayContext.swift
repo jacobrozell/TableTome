@@ -17,4 +17,12 @@ extension BattlePhaseTrackerViewModel {
     var usesGuidedBattleTracker: Bool {
         playContext.usesGuidedBattleTracker
     }
+
+    var activePlayerSelection: PlayerArmySelection {
+        trackerState.activePlayerIsOne ? matchState.playerOne : matchState.playerTwo
+    }
+
+    var activeArmySelection: SpearheadArmy? {
+        army(for: activePlayerSelection)
+    }
 }

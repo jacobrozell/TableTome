@@ -250,12 +250,13 @@ The refactor is done when these hold (extends the play-engine spec's metrics):
 
 Each phase is independently shippable, ends green, and has an explicit exit gate. Phases 1–3 *finish work already started*; 4–6 are the new structural wins; 7–9 are hardening and polish. Rough sizing is relative effort, not calendar.
 
-### Phase 0 — Guardrails & baseline (small)
+### Phase 0 — Guardrails & baseline (small) — ✅ LANDED
 **Objective:** make regressions impossible to merge silently.
-- Add a CI/pre-commit grep gate that **fails on new** `switch gameSystemId`, raw id string literals, and `BattleRules.is*` outside an allowlist (ratchet down as counts drop).
-- Check the current metric counts (§1.2) into a `Verification` block so progress is measurable.
-- Stand up the content-lint scaffold (empty schemas + runner) wired into CI as non-blocking, then blocking.
-**Components:** D (scaffold), guardrails. **Exit:** CI prints the debt counts each run; new debt is blocked.
+- ✅ `Scripts/check_architecture_debt.sh` — grep ratchet that **fails on new** `switch gameSystemId`, raw id string literals, `BattleRules`/`is*` probes, and system-named capability flags. Budgets = measured baseline; ratchet down per phase.
+- ✅ Baseline counts recorded as budgets (switch 20 · raw-id 46 · BattleRules/probes 225 · system-caps 26).
+- ✅ Content-lint plane stood up: `Resources/Schemas/{game-systems-manifest,catalog,boxset}-v1.schema.json` + `Scripts/validate_content.py` (schema + cross-reference invariants; passes clean on current content, catches dangling box-set refs).
+- ✅ Both gates wired into `Scripts/pre-commit` (path-scoped) and `.github/workflows/ci.yml` (`guardrails` job, plus a `build-test` macOS/Xcode job).
+**Components:** D (scaffold), guardrails. **Exit:** ✅ CI prints debt counts and blocks new debt; content changes are schema/cross-ref validated.
 
 ### Phase 1 — Finish the registry as source of truth (medium)
 **Objective:** descriptors and release surface become data; remove static registry globals.

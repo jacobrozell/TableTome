@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://tabletome.app/schemas/game-systems-manifest-v1.schema.json",
+  "title": "Tabletome Game Systems Manifest v1",
+  "description": "Runtime wiring for every bundled game system. Adding a same-engine system/edition should be a row here plus catalog/boxset JSON — never a Swift switch.",
+  "type": "object",
+  "required": ["schemaVersion", "systems"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "systems": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/system" }
+    }
+  },
+  "definitions": {
+    "system": {
+      "type": "object",
+      "required": ["id", "playEngine", "publisher", "catalogBundleName"],
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Stable GameSystemId raw value, e.g. aos-spearhead.",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "playEngine": {
+          "type": "string",
+          "description": "Closed PlayEngineId set — adding an archetype is a deliberate engine change.",
+          "enum": [
+            "phasedRound",
+            "alternatingActivation",
+            "gridSportDrive",
+            "commandCardPool",
+            "heroSkirmish",
+            "rulesOnly"
+          ]
+        },
+        "publisher": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+$"
+        },
+        "catalogBundleName": {
+          "type": "string",
+          "description": "Basename (no extension) of the catalog JSON in Resources/Rules.",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "availability": {
+          "type": "string",
+          "description": "Release readiness gate — data, not code. Defaults to available when omitted.",
+          "enum": ["available", "comingSoon", "hidden"]
+        },
+        "armyDetailsSubdirectories": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "boxSetBundleName": {
+          "type": "string",
+          "description": "Optional basename of the box-set JSON in Resources/Rules (Phase 4+).",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        }
+      }
+    }
+  }
+}

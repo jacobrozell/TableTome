@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://tabletome.app/schemas/catalog-v1.schema.json",
+  "title": "Tabletome Play Catalog v1",
+  "description": "A game system's factions, armies (box rosters), optional missions, and guided-match steps. Generalizes the legacy 'Spearhead' catalog shape across all systems.",
+  "type": "object",
+  "required": ["schemaVersion", "factions"],
+  "additionalProperties": true,
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "factions": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/faction" }
+    },
+    "missions": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/mission" }
+    },
+    "matchSteps": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/matchStep" }
+    }
+  },
+  "definitions": {
+    "faction": {
+      "type": "object",
+      "required": ["id", "name", "armies"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "name": { "type": "string", "minLength": 1 },
+        "alliance": { "type": "string" },
+        "armies": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/army" }
+        }
+      }
+    },
+    "army": {
+      "type": "object",
+      "required": ["id", "name"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "name": { "type": "string", "minLength": 1 },
+        "roster": { "type": "array", "items": { "type": "string" } },
+        "officialRulesURL": { "type": "string", "format": "uri" }
+      }
+    },
+    "mission": {
+      "type": "object",
+      "required": ["id"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" }
+      }
+    },
+    "matchStep": {
+      "type": "object",
+      "required": ["id", "order", "title"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string" },
+        "order": { "type": "integer" },
+        "title": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

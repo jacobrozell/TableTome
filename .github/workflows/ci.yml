@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  # Fast, host-agnostic gates — no Xcode required. These are the backbone of
+  # the architecture refactor: they keep removed anti-patterns from creeping
+  # back and keep bundled game content valid as new editions/box sets land.
+  guardrails:
+    name: Guardrails (content-lint + architecture ratchet)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install jsonschema (full schema validation)
+        run: pip install jsonschema
+
+      - name: Content lint
+        run: python3 Scripts/validate_content.py
+
+      - name: Install ripgrep
+        run: sudo apt-get update && sudo apt-get install -y ripgrep
+
+      - name: Architecture-debt ratchet
+        run: Scripts/check_architecture_debt.sh
+
+  # Build + unit tests. Requires a macOS runner with Xcode 16 + xcodegen.
+  # Mirrors the TabletomeCI scheme in project.yml.
+  build-test:
+    name: Build & test (Xcode)
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate project
+        run: xcodegen generate
+
+      - name: Build & test
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project Tabletome.xcodeproj \
+            -scheme TabletomeCI \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
+            CODE_SIGNING_ALLOWED=NO | xcbeautify || \
+          xcodebuild test \
+            -project Tabletome.xcodeproj \
+            -scheme TabletomeCI \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
+            CODE_SIGNING_ALLOWED=NO

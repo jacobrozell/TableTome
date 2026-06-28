@@ -24,4 +24,23 @@ for file in $STAGED; do
   done
 done
 
+# Content lint — validate bundled game content when any of it changed.
+if echo "$STAGED" | grep -qE '^Resources/(Rules|Schemas)/'; then
+  if command -v python3 >/dev/null 2>&1; then
+    python3 Scripts/validate_content.py --quiet || {
+      echo "pre-commit: blocked — content-lint failed (see above)."
+      exit 1
+    }
+  fi
+fi
+
+# Architecture-debt ratchet — block re-introduction of removed anti-patterns
+# when Swift sources changed.
+if echo "$STAGED" | grep -qE '\.swift$'; then
+  Scripts/check_architecture_debt.sh || {
+    echo "pre-commit: blocked — architecture-debt budget exceeded (see above)."
+    exit 1
+  }
+fi
+
 exit 0

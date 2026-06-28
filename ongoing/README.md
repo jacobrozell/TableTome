@@ -36,3 +36,4 @@ _Move rows here when shipped._
 |------|-----|--------|-------|
 | Guided Match setup friction | [`guided-match-setup-friction.md`](guided-match-setup-friction.md) | **Complete** | Onboarding→Guided Match, inline setup UX, status copy |
 | Beginner UI polish | [`beginner-ui-polish-plan.md`](beginner-ui-polish-plan.md) | **Complete** | Glossary sheets, Play tab badge, path dedupe |
+| Collection / Models new-player UX | — | **Complete** | Intro sheet, coach, starter-box unit prefill, import/export tests, `CollectionFlowUITests` |

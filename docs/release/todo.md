@@ -9,7 +9,7 @@ Metadata: [`status.md`](status.md) · Expanded: [`release_checklist.md`](release
 - [ ] **Release surface defaults** — Spearhead + 40k 11e only; no Lists/Paints/CP/StarCraft/Q&A
 - [ ] **Tab bar** — Models (Collection), Play, Rules, Settings
 - [ ] **Core flows** — Getting Started both systems; Guided Match; match history; offline smoke
-- [ ] **Quality** — VoiceOver; AXXXL; iPhone Pro Max landscape Models stack nav
+- [ ] **Quality** — VoiceOver; AXXXL; iPhone Pro Max landscape Models stack nav; `CollectionFlowUITests` green in CI
 - [ ] **Settings legal links** — GitHub Pages open
 
 ## TestFlight upload

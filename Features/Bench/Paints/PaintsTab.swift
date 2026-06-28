@@ -46,8 +46,10 @@ struct PaintsTab: View {
             .presentationDetents([.medium, .large])
         }
         .sheet(isPresented: $showHobbySettings) {
-            HobbySettingsScreen()
-                .presentationDetents([.large])
+            NavigationStack {
+                HobbySettingsScreen()
+            }
+            .presentationDetents([.large])
         }
         .sheet(isPresented: $showFilters) {
             PaintFilterSheet(cfg: cfg, types: types, brands: brands)

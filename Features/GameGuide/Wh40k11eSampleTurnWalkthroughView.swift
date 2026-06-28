@@ -236,6 +236,7 @@ struct Wh40k11eSampleTurnWalkthroughView: View {
                         Label(String(localized: "Open Guided Match"), systemImage: "flag.checkered")
                             .font(.headline)
                             .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+                            .prominentButtonLabelStyle()
                     }
                     .buttonStyle(.borderedProminent)
                     .accessibilityIdentifier("wh40k11eSampleTurn.openGuidedMatch")

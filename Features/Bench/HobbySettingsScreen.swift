@@ -15,63 +15,61 @@ struct HobbySettingsScreen: View {
 
     var body: some View {
         @Bindable var cfg = cfg
-        NavigationStack {
-            Form {
-                Section {
-                    NavigationLink(value: HobbySettingsRoute.pipeline) {
-                        Label(String(localized: "Pipeline stages"), systemImage: "arrow.right.to.line")
-                    }
-                    NavigationLink(value: HobbySettingsRoute.factions) {
-                        Label(String(localized: "Faction crests & colours"), systemImage: "shield.lefthalf.filled")
-                    }
-                } header: {
-                    Text(String(localized: "Painting"))
-                } footer: {
-                    Text(String(localized: "Customize painting stages and how armies appear in your collection."))
+        Form {
+            Section {
+                NavigationLink(value: HobbySettingsRoute.pipeline) {
+                    Label(String(localized: "Pipeline stages"), systemImage: "arrow.right.to.line")
                 }
-
-                if ReleaseSurface.showsMusterTab {
-                    MusterSettingsSection(cfg: cfg)
+                NavigationLink(value: HobbySettingsRoute.factions) {
+                    Label(String(localized: "Faction crests & colours"), systemImage: "shield.lefthalf.filled")
                 }
+            } header: {
+                Text(String(localized: "Painting"))
+            } footer: {
+                Text(String(localized: "Customize painting stages and how armies appear in your collection."))
+            }
 
-                SettingsDataSection()
+            if ReleaseSurface.showsMusterTab {
+                MusterSettingsSection(cfg: cfg)
+            }
 
-                Section(String(localized: "Help & Feedback")) {
-                    NavigationLink(value: HobbySettingsRoute.accessibility) {
-                        Label(String(localized: "Accessibility"), systemImage: "accessibility")
-                    }
-                    NavigationLink(value: HobbySettingsRoute.privacy) {
-                        Label(String(localized: "Privacy Policy"), systemImage: "hand.raised")
-                    }
+            SettingsDataSection()
+
+            Section(String(localized: "Help & Feedback")) {
+                NavigationLink(value: HobbySettingsRoute.accessibility) {
+                    Label(String(localized: "Accessibility"), systemImage: "accessibility")
                 }
-
-                Section(String(localized: "About")) {
-                    LabeledContent(String(localized: "App"), value: AppInfo.displayName)
-                    LabeledContent(String(localized: "Version")) {
-                        Text(Bundle.main.appVersion)
-                            .foregroundStyle(.secondary)
-                    }
-                    Text(String(localized: "For the Emperor · For the Great Horned Rat · Sigmar Watches"))
-                        .font(.caption).foregroundStyle(.secondary)
+                NavigationLink(value: HobbySettingsRoute.privacy) {
+                    Label(String(localized: "Privacy Policy"), systemImage: "hand.raised")
                 }
             }
-            .navigationTitle(String(localized: "Collection & Data"))
-            .navigationBarTitleDisplayMode(.inline)
-            .tabBarScrollInset()
-            .navigationDestination(for: HobbySettingsRoute.self) { route in
-                switch route {
-                case .pipeline:
-                    PipelineEditor(cfg: cfg)
-                case .factions:
-                    FactionOverridesEditor(cfg: cfg, armies: armies)
-                case .accessibility:
-                    AccessibilityView()
-                case .privacy:
-                    PrivacyPolicyView()
+
+            Section(String(localized: "About")) {
+                LabeledContent(String(localized: "App"), value: AppInfo.displayName)
+                LabeledContent(String(localized: "Version")) {
+                    Text(Bundle.main.appVersion)
+                        .foregroundStyle(.secondary)
                 }
+                Text(String(localized: "For the Emperor · For the Great Horned Rat · Sigmar Watches"))
+                    .font(.caption).foregroundStyle(.secondary)
             }
-            .toolbar { ToolbarItem(placement: .confirmationAction) { Button(String(localized: "Done")) { dismiss() } } }
         }
+        .navigationTitle(String(localized: "Collection & Data"))
+        .navigationBarTitleDisplayMode(.inline)
+        .tabBarScrollInset()
+        .navigationDestination(for: HobbySettingsRoute.self) { route in
+            switch route {
+            case .pipeline:
+                PipelineEditor(cfg: cfg)
+            case .factions:
+                FactionOverridesEditor(cfg: cfg, armies: armies)
+            case .accessibility:
+                AccessibilityView()
+            case .privacy:
+                PrivacyPolicyView()
+            }
+        }
+        .toolbar { ToolbarItem(placement: .confirmationAction) { Button(String(localized: "Done")) { dismiss() } } }
     }
 }
 

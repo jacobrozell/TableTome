@@ -78,6 +78,7 @@ struct GuidedMatchStartButton: View {
                 .font(.subheadline.weight(.semibold))
                 .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
                 .contentShape(Rectangle())
+                .prominentButtonLabelStyle()
         }
         .buttonStyle(.borderedProminent)
         .accessibilityIdentifier(accessibilityId)

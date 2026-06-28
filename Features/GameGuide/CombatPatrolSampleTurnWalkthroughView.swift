@@ -225,6 +225,7 @@ struct CombatPatrolSampleTurnWalkthroughView: View {
                         Label(String(localized: "Open Guided Match"), systemImage: "flag.checkered")
                             .font(.headline)
                             .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+                            .prominentButtonLabelStyle()
                     }
                     .buttonStyle(.borderedProminent)
                     .accessibilityIdentifier("combatPatrolSampleTurn.openGuidedMatch")

@@ -5,3 +5,12 @@ extension Color {
     /// this variant keeps WCAG-friendly contrast for labels and links.
     static var accentOnSurface: Color { Color("AccentOnSurface") }
 }
+
+extension View {
+    /// Label content for `.borderedProminent` buttons. Dark-mode `AccentOnSurface` matches the accent
+    /// fill, so hierarchical SF Symbols can disappear without an explicit contrast color.
+    func prominentButtonLabelStyle() -> some View {
+        symbolRenderingMode(.monochrome)
+            .foregroundStyle(.white)
+    }
+}

@@ -155,6 +155,7 @@ struct BattlePhasePlaybookPanel: View {
                     Label(nextPhaseButtonTitle, systemImage: "arrow.right.circle.fill")
                         .font(.subheadline.weight(.semibold))
                         .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+                        .prominentButtonLabelStyle()
                 }
                 .buttonStyle(.borderedProminent)
                 .accessibilityIdentifier("battleTracker.phasePlaybook.nextPhase")

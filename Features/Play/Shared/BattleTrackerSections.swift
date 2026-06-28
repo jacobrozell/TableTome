@@ -375,6 +375,7 @@ private struct BattleTrackerPhaseControls: View {
                 } label: {
                     Label(String(localized: "Next Phase"), systemImage: "arrow.right.circle.fill")
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .prominentButtonLabelStyle()
                 }
                 .buttonStyle(.borderedProminent)
                 .frame(minHeight: DesignTokens.minTouchTarget)

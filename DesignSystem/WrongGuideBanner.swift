@@ -33,6 +33,7 @@ struct WrongGuideBanner: View {
                 Label(alert.buttonTitle, systemImage: "arrow.right.circle.fill")
                     .font(.subheadline.weight(.semibold))
                     .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+                    .prominentButtonLabelStyle()
             }
             .buttonStyle(.borderedProminent)
             .accessibilityIdentifier("guide.wrongGuide.openSuggested")

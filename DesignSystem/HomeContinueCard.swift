@@ -100,6 +100,7 @@ struct HomeContinueCard: View {
             .font(.subheadline.weight(.semibold))
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+            .prominentButtonLabelStyle()
     }
 
     private var continuationAccessibilityIdentifier: String {

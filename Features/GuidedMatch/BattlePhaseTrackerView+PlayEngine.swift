@@ -14,7 +14,7 @@ extension BattlePhaseTrackerView {
     @ViewBuilder
     var phasedRoundDeploymentSection: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            if viewModel.playContext.isWh40k11e {
+            if viewModel.playContext.capabilities.deploymentChecklistStyle == .wh40k {
                 Wh40kDeploymentChecklistCard(
                     completedSteps: viewModel.trackerState.completedDeploymentSteps,
                     focusedStep: viewModel.focusedWh40kDeploymentStep,
@@ -22,7 +22,7 @@ extension BattlePhaseTrackerView {
                     gameSystemId: viewModel.gameSystemId.rawValue,
                     ruleSections: ruleSections
                 )
-            } else if viewModel.playContext.isCombatPatrol {
+            } else if viewModel.playContext.capabilities.usesPatrolFormatRules {
                 CombatPatrolDeploymentChecklistCard(
                     completedSteps: viewModel.trackerState.completedDeploymentSteps,
                     focusedSteps: Set(
@@ -89,7 +89,7 @@ extension BattlePhaseTrackerView {
             gameSystemId: viewModel.gameSystemId
         )
         if viewModel.playContext.capabilities.showsBattleTacticDecks
-            || viewModel.playContext.isCombatPatrol {
+            || viewModel.playContext.capabilities.usesPatrolFormatRules {
             gotchaSection
         }
     }

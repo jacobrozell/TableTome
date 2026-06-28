@@ -184,7 +184,7 @@ struct UnitWarscrollCard: View {
     }
 
     private var weaponLegend: String {
-        if playContext.isWh40k {
+        if playContext.capabilities.resolvesWh40kRules {
             String(
                 localized: "A = attacks · Hit/Wound = roll this or higher on D6 · AP worsens save · Dmg = damage dealt"
             )

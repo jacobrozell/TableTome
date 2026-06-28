@@ -12,7 +12,7 @@ extension BattlePhaseTrackerView {
 
     var showsPhasePlaybook: Bool {
         supportsBattleTracker
-            && !viewModel.isStarCraft
+            && !viewModel.capabilities.showsActivationBar
             && viewModel.contentCoverage >= .battleTracker
     }
 

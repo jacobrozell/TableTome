@@ -78,7 +78,7 @@ extension BattleTrackerSectionTab {
         let playContext = GameSystemPlayContext.context(for: gameSystemId)
         switch self {
         case .setup:
-            return playContext.isWh40k
+            return playContext.capabilities.resolvesWh40kRules
                 ? String(localized: "Mission map, deployment, and pre-battle checklist.")
                 : String(localized: "Terrain, deployment, and round-opener steps.")
         case .turn:

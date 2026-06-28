@@ -44,7 +44,7 @@ struct AppSearchDestinationView: View {
                 AppSearchResultDetailView(result: result, gameSystemId: gameSystemId, ruleSections: ruleSections)
             }
         case .battleTactics, .cardDeck:
-            if GameSystemPlayContext.context(for: gameSystemId).isSpearhead {
+            if GameSystemPlayContext.context(for: gameSystemId).capabilities.showsBattleTacticDecks {
                 BattleTacticsReferenceView(ruleSections: ruleSections)
             } else {
                 AppSearchResultDetailView(result: result, gameSystemId: gameSystemId, ruleSections: ruleSections)

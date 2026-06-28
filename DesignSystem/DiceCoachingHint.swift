@@ -204,11 +204,11 @@ struct BattleTrackerScoringReminderBanner: View {
     }
 
     private var scoringDetail: String {
-        if playContext.isStarCraft {
+        if playContext.capabilities.showsActivationBar {
             String(
                 localized: "Add victory points for Supply held within 3\" of objectives, then advance the battle round."
             )
-        } else if playContext.isWh40k {
+        } else if playContext.capabilities.resolvesWh40kRules {
             String(
                 localized: "Add victory points for primary and secondary objectives before passing the phone."
             )

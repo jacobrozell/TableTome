@@ -83,7 +83,7 @@ struct RulesGlossaryView: View {
     }
 
     private var emptyStateMessage: String {
-        if GameSystemPlayContext.context(for: gameSystemId).isStarCraft {
+        if GameSystemPlayContext.context(for: gameSystemId).capabilities.showsActivationBar {
             return String(
                 localized: """
                 StarCraft glossary terms are in the StarCraft Rules reference. Open it from Browse or the game guide.

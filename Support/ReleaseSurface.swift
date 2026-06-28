@@ -1,5 +1,6 @@
 import Foundation
 import TabletomeDomain
+import TabletomeData
 
 public enum ReleaseSurface {
     /// Unlock gated features for CI, dogfood, and internal builds.
@@ -9,16 +10,28 @@ public enum ReleaseSurface {
 
     /// Combat Patrol (10th Edition rules) — ships in release defaults.
     public static var showsCombatPatrol: Bool {
-        releaseGameSystemIds.contains(GameSystemId.wh40k10eCp.rawValue)
+        manifestAvailableSystemIds.contains(GameSystemId.wh40k10eCp.rawValue)
             || ProcessInfo.processInfo.arguments.contains("-enable_combat_patrol")
     }
 
-    /// Game systems shipped in App Store 1.0.0.
-    private static let releaseGameSystemIds: Set<String> = [
-        GameSystemId.aosSpearhead.rawValue,
-        GameSystemId.wh40k11e.rawValue,
-        GameSystemId.wh40k10eCp.rawValue,
-    ]
+    private static let manifestAvailableSystemIds: Set<String> = {
+        guard let manifest = try? GameSystemsManifestLoader.load(from: .main) else {
+            return [
+                GameSystemId.aosSpearhead.rawValue,
+                GameSystemId.wh40k11e.rawValue,
+                GameSystemId.wh40k10eCp.rawValue,
+            ]
+        }
+        return Set(
+            manifest.systems.compactMap { entry -> String? in
+                guard (entry.availability ?? "available") == "available" else { return nil }
+                if GameSystemRegistry.seeded.capabilities(for: entry.id)?.requiresFullSurfaceFlag == true {
+                    return nil
+                }
+                return entry.id
+            }
+        )
+    }()
 
     // MARK: Tabs (1.0.0: Models, Play, Rules, Settings)
 
@@ -44,7 +57,7 @@ public enum ReleaseSurface {
 
     public static func isGameSystemIdVisible(
         _ gameSystemId: String,
-        registry: GameSystemRegistry = .bundled
+        registry: GameSystemRegistry = .bundled(withBoxSetsFrom: .main)
     ) -> Bool {
         if gameSystemId == GameSystemId.wh40k10eCp.rawValue {
             return showsCombatPatrol
@@ -65,33 +78,33 @@ public enum ReleaseSurface {
                 return true
             }
         }
-        return releaseGameSystemIds.contains(gameSystemId)
+        return manifestAvailableSystemIds.contains(gameSystemId)
     }
 
     public static func showsNewEditionBadge(
         for gameSystemId: GameSystemId,
-        registry: GameSystemRegistry = .bundled
+        registry: GameSystemRegistry = .bundled(withBoxSetsFrom: .main)
     ) -> Bool {
         showsNewEditionBadge(for: gameSystemId.rawValue, registry: registry)
     }
 
     public static func showsNewEditionBadge(
         for gameSystemId: String,
-        registry: GameSystemRegistry = .bundled
+        registry: GameSystemRegistry = .bundled(withBoxSetsFrom: .main)
     ) -> Bool {
         registry.capabilities(for: gameSystemId)?.showsNewEditionBadge == true
     }
 
     public static func showsGuidedMatch(
         for gameSystemId: GameSystemId,
-        registry: GameSystemRegistry = .bundled
+        registry: GameSystemRegistry = .bundled(withBoxSetsFrom: .main)
     ) -> Bool {
         showsGuidedMatch(for: gameSystemId.rawValue, registry: registry)
     }
 
     public static func showsGuidedMatch(
         for gameSystemId: String,
-        registry: GameSystemRegistry = .bundled
+        registry: GameSystemRegistry = .bundled(withBoxSetsFrom: .main)
     ) -> Bool {
         guard isGameSystemIdVisible(gameSystemId, registry: registry) else { return false }
         return registry.capabilities(for: gameSystemId)?.showsGuidedMatch == true
@@ -99,14 +112,14 @@ public enum ReleaseSurface {
 
     public static func showsCombatResolver(
         for gameSystemId: GameSystemId,
-        registry: GameSystemRegistry = .bundled
+        registry: GameSystemRegistry = .bundled(withBoxSetsFrom: .main)
     ) -> Bool {
         showsCombatResolver(for: gameSystemId.rawValue, registry: registry)
     }
 
     public static func showsCombatResolver(
         for gameSystemId: String,
-        registry: GameSystemRegistry = .bundled
+        registry: GameSystemRegistry = .bundled(withBoxSetsFrom: .main)
     ) -> Bool {
         guard showsRollEvaluator else { return false }
         guard isGameSystemIdVisible(gameSystemId, registry: registry) else { return false }
@@ -119,7 +132,7 @@ public enum ReleaseSurface {
 
     public static func isGameSystemVisible(
         _ system: GameSystem,
-        registry: GameSystemRegistry = .bundled
+        registry: GameSystemRegistry = .bundled(withBoxSetsFrom: .main)
     ) -> Bool {
         guard isGameSystemIdVisible(system.id, registry: registry) else { return false }
         if fullSurfaceEnabled {

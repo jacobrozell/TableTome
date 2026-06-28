@@ -62,7 +62,7 @@ public enum SpearheadContentCoverage: String, Codable, Sendable, CaseIterable, C
         case .battleTracker:
             String(localized: "Rules reminders ready")
         case .warscrolls:
-            if GameSystemPlayContext.context(for: gameSystemId).isWh40k {
+            if GameSystemPlayContext.context(for: gameSystemId).capabilities.resolvesWh40kRules {
                 String(localized: "Full unit support")
             } else {
                 String(localized: "Full tabletop support")

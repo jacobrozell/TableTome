@@ -15,6 +15,7 @@ final class AppDependencies: ObservableObject {
         playCatalogRepository: (any PlayCatalogRepository)? = nil,
         matchHistoryRepository: any MatchHistoryRepository = JSONMatchHistoryRepository()
     ) {
+        GameSystemRegistry.installBundled(gameSystemRegistry)
         self.rulesRepository = rulesRepository
         self.gameSystemRegistry = gameSystemRegistry
         self.playCatalogRepository = playCatalogRepository

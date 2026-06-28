@@ -29,10 +29,10 @@ struct BattleTrackerCoachCard: View {
     }
 
     private var steps: [CoachMarkStep] {
-        if playContext.isStarCraft {
+        if playContext.capabilities.showsActivationBar {
             return starCraftSteps
         }
-        if playContext.isWh40k {
+        if playContext.capabilities.resolvesWh40kRules {
             return wh40kSteps
         }
         return spearheadSteps

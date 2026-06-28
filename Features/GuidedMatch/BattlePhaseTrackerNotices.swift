@@ -232,7 +232,7 @@ extension BattlePhaseTrackerView {
                 title: String(localized: "Hand the phone to \(activeName)"),
                 detail: String(localized: "Hero phase — start of their turn.")
             )
-        } else if phase == .command, viewModel.playContext.isWh40k11e,
+        } else if phase == .command, viewModel.playContext.capabilities.deploymentChecklistStyle == .wh40k,
                   playerChanged || previousPhase == .endOfTurn {
             notice = TurnHandoffNotice(
                 title: String(localized: "Hand the phone to \(activeName)"),

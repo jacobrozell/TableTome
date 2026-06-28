@@ -86,14 +86,12 @@ final class GameSystemRegistryTests: XCTestCase {
 
     func testCombatPatrolUsesWh40k10eCombatRollEngine() throws {
         let descriptor = try registry.requireDescriptor(for: GameSystemId.wh40k10eCp.rawValue)
-        XCTAssertTrue(descriptor.capabilities.usesWh40k10eCombatRollEngine)
-        XCTAssertFalse(descriptor.capabilities.usesWh40k11eCombatRollEngine)
+        XCTAssertEqual(descriptor.capabilities.combatRollEngineKind, .wh40k10eCombatPatrol)
     }
 
     func testWh40k11eUsesDedicated11eCombatRollEngine() throws {
         let descriptor = try registry.requireDescriptor(for: GameSystemId.wh40k11e.rawValue)
-        XCTAssertTrue(descriptor.capabilities.usesWh40k11eCombatRollEngine)
-        XCTAssertFalse(descriptor.capabilities.usesWh40k10eCombatRollEngine)
+        XCTAssertEqual(descriptor.capabilities.combatRollEngineKind, .wh40k11e)
         XCTAssertTrue(descriptor.capabilities.showsCombatResolver)
     }
 }

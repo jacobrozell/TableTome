@@ -99,7 +99,7 @@ extension GuidedMatchView {
     }
 
     var inlineRollPickerTitle: String {
-        if playContext.isWh40k11e {
+        if playContext.capabilities.deploymentChecklistStyle == .wh40k {
             return String(localized: "Who takes the first turn?")
         }
         return String(localized: "Who is the attacker?")
@@ -120,12 +120,12 @@ extension GuidedMatchView {
 
     private func inlineRollDecidedCaption(isPlayerOne: Bool) -> String {
         let roller = isPlayerOne ? playerOneRollLabel : playerTwoRollLabel
-        if playContext.isWh40k11e {
+        if playContext.capabilities.deploymentChecklistStyle == .wh40k {
             return String(
                 localized: "Defaulted to \(roller) for first turn — change if your roll went differently."
             )
         }
-        if playContext.isSpearhead {
+        if playContext.capabilities.showsBattleTacticDecks {
             let defender = isPlayerOne ? playerTwoRollLabel : playerOneRollLabel
             return String(
                 localized: "Defaulted to \(roller) as attacker and \(defender) as defender — change if your roll went differently."

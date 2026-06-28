@@ -74,7 +74,7 @@ extension BattlePhaseTrackerView {
 
     var combatTabContent: some View {
         Group {
-            if viewModel.isStarCraft {
+            if viewModel.capabilities.showsActivationBar {
                 scCombatTabContent
             } else if usesPhoneLandscapeCombatSplit {
                 phoneLandscapeCombatSplitLayout

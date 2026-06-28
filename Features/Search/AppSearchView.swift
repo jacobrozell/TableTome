@@ -181,7 +181,7 @@ struct AppSearchView: View {
                 .accessibilityIdentifier("search.browse.cardDecks")
             }
 
-            if GameSystemPlayContext.context(for: viewModel.scopedGameSystemId).capabilities.showsCombatPatrolMode {
+            if GameSystemPlayContext.context(for: viewModel.scopedGameSystemId).capabilities.usesPatrolFormatRules {
                 NavigationLink(value: CombatPatrolMissionsLink(gameSystemId: viewModel.scopedGameSystemId)) {
                     Label(String(localized: "Missions Reference"), systemImage: "map")
                         .frame(minHeight: DesignTokens.minTouchTarget)

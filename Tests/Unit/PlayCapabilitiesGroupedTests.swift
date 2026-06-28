@@ -6,7 +6,7 @@ import XCTest
 /// descriptors so the new API stays equivalent to the old booleans during the
 /// strangler-fig migration.
 final class PlayCapabilitiesGroupedTests: XCTestCase {
-    private let registry = GameSystemRegistry.bundled
+    private let registry = GameSystemRegistry.bundled(withBoxSetsFrom: .main)
 
     private func capabilities(_ id: GameSystemId) throws -> PlayCapabilities {
         try XCTUnwrap(registry.capabilities(for: id))

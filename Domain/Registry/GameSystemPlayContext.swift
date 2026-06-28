@@ -22,77 +22,74 @@ public struct GameSystemPlayContext: Sendable, Equatable {
     public var copy: GameSystemCopy { descriptor.copy }
     public var victoryPointsScoring: VictoryPointsScoring { descriptor.victoryPointsScoring }
 
-    public var isSpearhead: Bool { capabilities.showsBattleTacticDecks }
-    public var isStarCraft: Bool { capabilities.showsActivationBar }
-    public var isCombatPatrol: Bool { capabilities.showsCombatPatrolMode }
-    public var isWh40k11e: Bool { capabilities.showsWh40kDeploymentChecklist }
-    public var isWh40k: Bool { isWh40k11e || isCombatPatrol }
     public var usesAlternatingActivation: Bool { playEngine.playEngineId == .alternatingActivation }
     public var usesPhasedRounds: Bool { playEngine.playEngineId == .phasedRound }
-    public var usesGuidedBattleTracker: Bool { isStarCraft || isWh40k }
+    public var usesGuidedBattleTracker: Bool {
+        capabilities.showsActivationBar || capabilities.resolvesWh40kRules
+    }
 
     /// Toolbar / sheet title for a single unit's rules reference.
     public var unitRulesDetailTitle: String {
-        if isWh40k { return String(localized: "Unit details") }
-        if isStarCraft { return String(localized: "Unit card") }
+        if capabilities.resolvesWh40kRules { return String(localized: "Unit details") }
+        if capabilities.showsActivationBar { return String(localized: "Unit card") }
         return String(localized: "Unit rules card")
     }
 
     /// Link to browse all units in an army roster during setup or battle.
     public var armyUnitRosterLinkTitle: String {
-        if isSpearhead { return String(localized: "View unit rules cards") }
+        if capabilities.showsBattleTacticDecks { return String(localized: "View unit rules cards") }
         return String(localized: "View unit roster")
     }
 
     /// Army picker link to unit reference content.
     public var unitReferenceLinkTitle: String {
-        if isWh40k { return String(localized: "Units & abilities") }
-        if isStarCraft { return String(localized: "Unit cards & abilities") }
+        if capabilities.resolvesWh40kRules { return String(localized: "Units & abilities") }
+        if capabilities.showsActivationBar { return String(localized: "Unit cards & abilities") }
         return String(localized: "Unit rules cards & abilities")
     }
 
     public var unitFocusAccessibilityHint: String {
-        if isWh40k { return String(localized: "Opens unit focus with unit details.") }
-        if isStarCraft { return String(localized: "Opens unit focus with unit card details.") }
+        if capabilities.resolvesWh40kRules { return String(localized: "Opens unit focus with unit details.") }
+        if capabilities.showsActivationBar { return String(localized: "Opens unit focus with unit card details.") }
         return String(localized: "Opens unit focus with unit rules and combat options.")
     }
 
     public var armyTabBrowseRulesHint: String {
-        if isStarCraft {
+        if capabilities.showsActivationBar {
             return String(localized: "During the battle: track unit health and browse unit cards here.")
         }
-        if isWh40k {
+        if capabilities.resolvesWh40kRules {
             return String(localized: "During the battle: track wounds and browse unit details here.")
         }
         return String(localized: "During the battle: track wounds and browse unit rules cards here.")
     }
 
     public var bundledUnitSourceAttribution: String {
-        if isWh40k {
+        if capabilities.resolvesWh40kRules {
             return String(localized: "Source: bundled unit notes — verify stats in the app or on your unit card.")
         }
-        if isStarCraft {
+        if capabilities.showsActivationBar {
             return String(localized: "Source: bundled unit card notes — verify stats in Command Center.")
         }
         return String(localized: "Source: bundled unit rules card — verify stats on your physical card.")
     }
 
     public func unitRulesInfoAccessibilityLabel(unitName: String) -> String {
-        if isWh40k { return String(localized: "View \(unitName) unit details") }
-        if isStarCraft { return String(localized: "View \(unitName) unit card") }
+        if capabilities.resolvesWh40kRules { return String(localized: "View \(unitName) unit details") }
+        if capabilities.showsActivationBar { return String(localized: "View \(unitName) unit card") }
         return String(localized: "View \(unitName) unit rules card")
     }
 
     /// Label for bundled health value in unit focus (vs match override).
     public var catalogHealthValueLabel: String {
-        if isWh40k { return String(localized: "Bundled value") }
-        if isStarCraft { return String(localized: "Unit card") }
+        if capabilities.resolvesWh40kRules { return String(localized: "Bundled value") }
+        if capabilities.showsActivationBar { return String(localized: "Unit card") }
         return String(localized: "Spearhead app")
     }
 
     public var useCatalogHealthValueLabel: String {
-        if isWh40k { return String(localized: "Use bundled value") }
-        if isStarCraft { return String(localized: "Use unit card value") }
+        if capabilities.resolvesWh40kRules { return String(localized: "Use bundled value") }
+        if capabilities.showsActivationBar { return String(localized: "Use unit card value") }
         return String(localized: "Use Spearhead value")
     }
 

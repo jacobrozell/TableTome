@@ -71,12 +71,12 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
     }
 
     var focusedDeploymentStep: DeploymentChecklistStep? {
-        guard playContext.isSpearhead, trackerState.battleRound == 1 else { return nil }
+        guard playContext.capabilities.showsBattleTacticDecks, trackerState.battleRound == 1 else { return nil }
         return BattleFlowGuide.nextIncompleteDeploymentStep(in: trackerState.completedDeploymentSteps)
     }
 
     var focusedWh40kDeploymentStep: Wh40kDeploymentChecklistStep? {
-        guard playContext.isWh40k11e, trackerState.battleRound == 1 else { return nil }
+        guard playContext.capabilities.deploymentChecklistStyle == .wh40k, trackerState.battleRound == 1 else { return nil }
         return BattleFlowGuide.nextIncompleteWh40kSetupStep(in: trackerState.completedDeploymentSteps)
     }
 
@@ -85,12 +85,12 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
         return BattleFlowGuide.nextIncompleteScTmgSetupStep(in: trackerState.completedDeploymentSteps)
     }
 
-    var isStarCraft: Bool {
+    var usesAlternatingActivationTracker: Bool {
         playContext.capabilities.showsActivationBar
     }
 
     var focusedRoundOpenerStep: BattleRoundChecklistStep? {
-        guard playContext.isSpearhead else { return nil }
+        guard playContext.capabilities.showsBattleTacticDecks else { return nil }
         return BattleFlowGuide.nextIncompleteRoundOpenerStep(
             round: trackerState.battleRound,
             completedSteps: trackerState.completedRoundChecklistSteps
@@ -119,7 +119,7 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
     }
 
     var needsStartOfRoundAbilitiesPrompt: Bool {
-        guard playContext.isSpearhead else { return false }
+        guard playContext.capabilities.showsBattleTacticDecks else { return false }
         return !BattleRoundChecklist.isComplete(
             step: .startOfRoundAbilities,
             round: trackerState.battleRound,
@@ -148,7 +148,7 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
     }
 
     var phaseStratagems: [CombatPatrolStratagem] {
-        guard playContext.isCombatPatrol, let army = activeArmy else { return [] }
+        guard playContext.capabilities.usesPatrolFormatRules, let army = activeArmy else { return [] }
         if trackerState.showAllAbilities {
             return army.stratagems
         }
@@ -174,7 +174,7 @@ final class BattlePhaseTrackerViewModel: ObservableObject {
     }
 
     var underdogIsPlayerOne: Bool? {
-        guard playContext.isSpearhead else { return nil }
+        guard playContext.capabilities.showsBattleTacticDecks else { return nil }
         let p1 = trackerState.playerOneVictoryPoints
         let p2 = trackerState.playerTwoVictoryPoints
         if p1 == p2 { return nil }

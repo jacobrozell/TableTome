@@ -252,7 +252,7 @@ struct BattleTrackerBothLoadoutsSection: View {
     }
 
     private func usesCatalogUnitReference(for army: SpearheadArmy) -> Bool {
-        if playContext.usesGuidedBattleTracker || playContext.isCombatPatrol {
+        if playContext.usesGuidedBattleTracker || playContext.capabilities.usesPatrolFormatRules {
             return !army.units.isEmpty
         }
         return army.units.contains(where: \.hasWarscroll)
@@ -453,7 +453,7 @@ struct BattleTrackerRoundOpenerSection: View {
                     onToggle: viewModel.setRoundChecklistStep
                 )
             }
-            if viewModel.playContext.isCombatPatrol {
+            if viewModel.playContext.capabilities.usesPatrolFormatRules {
                 CombatPatrolTableStateCard(
                     mission: viewModel.selectedMission,
                     playerOneName: viewModel.playerOneName,
@@ -516,7 +516,7 @@ struct BattleTrackerVictoryPointsSection: View {
                 playerTwoName: viewModel.playerTwoName,
                 playerOneVP: viewModel.trackerState.playerOneVictoryPoints,
                 playerTwoVP: viewModel.trackerState.playerTwoVictoryPoints,
-                highlightsScoring: viewModel.trackerState.currentPhase == (viewModel.isStarCraft ? .scoring : .endOfTurn),
+                highlightsScoring: viewModel.trackerState.currentPhase == (viewModel.capabilities.showsActivationBar ? .scoring : .endOfTurn),
                 gameSystemId: viewModel.gameSystemId,
                 onAdjust: { viewModel.adjustVictoryPoints(playerIsOne: $0, delta: $1, reason: $2) },
                 onQuickAdd: { viewModel.adjustVictoryPoints(playerIsOne: $0, delta: $1, reason: $2) }

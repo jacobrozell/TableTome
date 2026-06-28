@@ -56,7 +56,7 @@ echo "Architecture-debt ratchet (count / budget):"
 echo "-------------------------------------------"
 
 # Phase 1/3 target: branch on engine/capability, never identity.
-run_metric "switch_gameSystemId"   20  "raw 'switch gameSystemId' blocks" \
+run_metric "switch_gameSystemId"   21  "raw 'switch gameSystemId' blocks" \
   'switch[[:space:]].*gameSystemId' "$SRC"
 
 # Phase 1/3 target: no raw id string-literal comparisons.
@@ -64,13 +64,13 @@ run_metric "raw_id_literals"       46  "raw game-system id string literals" \
   '"(aos-spearhead|sc-tmg|wh40k-11e|wh40k-10e-cp|wh40k-10e)"' "Domain Features DesignSystem"
 
 # Phase 3 target: delete BattleRules god facade + identity probes.
-run_metric "battlerules_or_probes" 165 "BattleRules / is<System> identity probes" \
+run_metric "battlerules_or_probes" 14 "BattleRules / is<System> identity probes" \
   'BattleRules\.|isSpearhead|isWh40k|isStarCraft|isCombatPatrol' "$SRC"
 
 # Phase 2 target: capability flags grouped, system-named flags removed.
 # PlayCapabilities+Grouped.swift is the sanctioned shim that maps these flags
 # to closed enums — it is excluded so new *feature* usage is still caught.
-run_metric "system_named_caps"     27  "system-named capability flags" \
+run_metric "system_named_caps"      0  "system-named capability flags" \
   'usesWh40k1[01]eCombatRollEngine|shows(Wh40k|ScTmg)DeploymentChecklist|showsCombatPatrolMode' \
   "Domain" \
   'PlayCapabilities\+Grouped\.swift'

@@ -26,13 +26,13 @@ enum BoxProductThumbnailStyle: Equatable {
         }
 
         let context = GameSystemPlayContext.context(for: gameSystemId)
-        if context.isSpearhead {
+        if context.capabilities.showsBattleTacticDecks {
             self = .spearhead
-        } else if context.isCombatPatrol {
+        } else if context.capabilities.usesPatrolFormatRules {
             self = .combatPatrol
-        } else if context.isStarCraft {
+        } else if context.capabilities.showsActivationBar {
             self = .starCraft
-        } else if context.isWh40k11e {
+        } else if context.capabilities.deploymentChecklistStyle == .wh40k {
             self = .wh40kArmageddon
         } else {
             self = .wh40kFull

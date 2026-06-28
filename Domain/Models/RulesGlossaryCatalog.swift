@@ -6,10 +6,10 @@ public enum RulesGlossaryCatalog {
         ruleSections: [RuleSection] = []
     ) -> [RulesGlossaryEntry] {
         let context = GameSystemPlayContext.context(for: gameSystemId)
-        if context.isSpearhead {
+        if context.capabilities.showsBattleTacticDecks {
             return SpearheadRulesGlossary.entries
         }
-        if context.isCombatPatrol {
+        if context.capabilities.usesPatrolFormatRules {
             return CombatPatrolRulesGlossary.entries
         }
         return ruleSections
@@ -23,13 +23,13 @@ public enum RulesGlossaryCatalog {
         ruleSections: [RuleSection] = []
     ) -> [RulesGlossaryEntry] {
         let context = GameSystemPlayContext.context(for: gameSystemId)
-        if context.isSpearhead {
+        if context.capabilities.showsBattleTacticDecks {
             return SpearheadRulesGlossary.entriesReferenced(in: text)
         }
         let lower = text.lowercased()
         let allEntries = entries(gameSystemId: gameSystemId, ruleSections: ruleSections)
         var matched = allEntries.filter { lower.contains($0.term.lowercased()) }
-        if context.isWh40k11e {
+        if context.capabilities.deploymentChecklistStyle == .wh40k {
             for entryId in wh40k11eAliasEntryIdsMatching(text: lower) {
                 guard let entry = allEntries.first(where: { $0.id == entryId }),
                       !matched.contains(where: { $0.id == entry.id }) else { continue }
@@ -42,10 +42,10 @@ public enum RulesGlossaryCatalog {
     public static func linkablePhrases(for entry: RulesGlossaryEntry, gameSystemId: String) -> [String] {
         var phrases = [entry.term]
         let context = GameSystemPlayContext.context(for: gameSystemId)
-        if context.isSpearhead {
+        if context.capabilities.showsBattleTacticDecks {
             phrases.append(contentsOf: SpearheadRulesGlossary.aliasPhrases(for: entry.id))
         }
-        if context.isCombatPatrol {
+        if context.capabilities.usesPatrolFormatRules {
             phrases.append(contentsOf: CombatPatrolRulesGlossary.aliasPhrases(for: entry.id))
         }
         var seen = Set<String>()

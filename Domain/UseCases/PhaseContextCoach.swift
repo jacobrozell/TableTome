@@ -8,13 +8,13 @@ public enum PhaseContextCoach {
         gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId
     ) -> String? {
         let context = GameSystemPlayContext.context(for: gameSystemId)
-        if context.isWh40k11e {
+        if context.capabilities.deploymentChecklistStyle == .wh40k {
             return wh40k11ePhaseActionNudge(for: phase)
         }
-        if context.isCombatPatrol {
+        if context.capabilities.usesPatrolFormatRules {
             return combatPatrolPhaseActionNudge(for: phase)
         }
-        if context.isStarCraft {
+        if context.capabilities.showsActivationBar {
             return starCraftPhaseActionNudge(for: phase)
         }
         return spearheadPhaseActionNudge(for: phase)
@@ -25,13 +25,13 @@ public enum PhaseContextCoach {
         gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId
     ) -> [String] {
         let context = GameSystemPlayContext.context(for: gameSystemId)
-        if context.isWh40k11e {
+        if context.capabilities.deploymentChecklistStyle == .wh40k {
             return wh40k11eQuickTips(for: phase)
         }
-        if context.isCombatPatrol {
+        if context.capabilities.usesPatrolFormatRules {
             return combatPatrolQuickTips(for: phase)
         }
-        if context.isStarCraft {
+        if context.capabilities.showsActivationBar {
             return starCraftQuickTips(for: phase)
         }
         return spearheadQuickTips(for: phase)
@@ -316,13 +316,13 @@ public enum PhaseContextCoach {
         gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId
     ) -> String? {
         let context = GameSystemPlayContext.context(for: gameSystemId)
-        if context.isWh40k11e {
+        if context.capabilities.deploymentChecklistStyle == .wh40k {
             return wh40k11eRuleSectionId(for: phase)
         }
-        if context.isCombatPatrol {
+        if context.capabilities.usesPatrolFormatRules {
             return combatPatrolRuleSectionId(for: phase)
         }
-        if context.isStarCraft {
+        if context.capabilities.showsActivationBar {
             return starCraftRuleSectionId(for: phase)
         }
         return spearheadRuleSectionId(for: phase)

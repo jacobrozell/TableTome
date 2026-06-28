@@ -42,7 +42,7 @@ public enum MatchSetupCompletionEvaluator {
             }
         }
 
-        if context.isCombatPatrol {
+        if context.capabilities.usesPatrolFormatRules {
             if loadoutSatisfied(state: state, catalog: catalog) {
                 completed.insert("pick-enhancement")
             }
@@ -70,13 +70,13 @@ public enum MatchSetupCompletionEvaluator {
         }
 
         let deploymentComplete: Bool
-        if context.isWh40k11e {
+        if context.capabilities.deploymentChecklistStyle == .wh40k {
             deploymentComplete = Wh40kDeploymentChecklist.completionCount(completedSteps: deploymentSteps).done
                 == Wh40kDeploymentChecklistStep.allCases.count
-        } else if context.isStarCraft {
+        } else if context.capabilities.showsActivationBar {
             deploymentComplete = ScTmgDeploymentChecklist.completionCount(completedSteps: deploymentSteps).done
                 == ScTmgDeploymentChecklistStep.allCases.count
-        } else if context.isCombatPatrol {
+        } else if context.capabilities.usesPatrolFormatRules {
             deploymentComplete = CombatPatrolDeploymentChecklist.completionCount(completedSteps: deploymentSteps).done
                 == CombatPatrolDeploymentChecklistStep.allCases.count
                 && state.attackerIsPlayerOne != nil

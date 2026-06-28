@@ -427,7 +427,7 @@ struct BattlePhaseTrackerView: View {
 
     @ViewBuilder
     func armyTrackerSection(wideLayout: Bool, compactSidebar: Bool = false) -> some View {
-        if supportsBattleTracker, !viewModel.isStarCraft {
+        if supportsBattleTracker, !viewModel.capabilities.showsActivationBar {
             ArmyTrackerCard(
                 playerOneName: viewModel.playerOneName,
                 playerTwoName: viewModel.playerTwoName,
@@ -475,7 +475,7 @@ struct BattlePhaseTrackerView: View {
     var trackerContent: some View {
         if !supportsBattleTracker {
             emptyState
-        } else if viewModel.isStarCraft {
+        } else if viewModel.capabilities.showsActivationBar {
             scTrackerPlaceholder
         } else {
             BattleTrackerAbilitySections(
@@ -510,7 +510,7 @@ struct BattlePhaseTrackerView: View {
     }
 
     var supportsBattleTracker: Bool {
-        viewModel.isStarCraft || viewModel.contentCoverage >= .battleTracker
+        viewModel.capabilities.showsActivationBar || viewModel.contentCoverage >= .battleTracker
     }
 
     var showsSpearheadBattleChrome: Bool {

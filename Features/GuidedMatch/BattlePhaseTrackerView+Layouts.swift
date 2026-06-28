@@ -7,7 +7,7 @@ extension BattlePhaseTrackerView {
             Text(String(localized: "Battle tracker isn't available for this army yet."))
                 .font(.headline)
             Text(
-                viewModel.isStarCraft
+                viewModel.capabilities.showsActivationBar
                     ? String(
                         localized: """
                         Unit cards and Command Center have full combat detail. Use the Turn tab for activations and \

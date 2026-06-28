@@ -470,14 +470,14 @@ struct UnitFocusSheet: View {
     }
 
     private var matchHealthOverrideDetail: String {
-        if playContext.isWh40k {
+        if playContext.capabilities.resolvesWh40kRules {
             return String(
                 localized: """
                 If your unit card differs from what's bundled here, set wounds per model for this match only.
                 """
             )
         }
-        if playContext.isStarCraft {
+        if playContext.capabilities.showsActivationBar {
             return String(
                 localized: """
                 If your unit card differs from what's bundled here, set health per model for this match only.

@@ -40,15 +40,15 @@ public enum BattleFlowGuide {
         gameSystemId: String = GameSystemId.default.rawValue
     ) -> BattleFlowGuideStep? {
         let context = GameSystemPlayContext.context(for: gameSystemId)
-        if context.isStarCraft {
+        if context.capabilities.showsActivationBar {
             return starCraftStep(matchState: matchState, trackerState: trackerState)
         }
 
-        if context.isCombatPatrol {
+        if context.capabilities.usesPatrolFormatRules {
             return combatPatrolStep(matchState: matchState, trackerState: trackerState, gameSystemId: gameSystemId)
         }
 
-        if context.isWh40k {
+        if context.capabilities.resolvesWh40kRules {
             return wh40kStep(matchState: matchState, trackerState: trackerState, gameSystemId: gameSystemId)
         }
 
@@ -195,7 +195,7 @@ public enum BattleFlowGuide {
 
     private static func wh40kEndOfTurnHandoffStep(gameSystemId: String) -> BattleFlowGuideStep {
         let context = GameSystemPlayContext.context(for: gameSystemId)
-        let instruction = context.isWh40k11e
+        let instruction = context.capabilities.deploymentChecklistStyle == .wh40k
             ? String(
                 localized: """
                 Score primary and secondary objectives, remove models from out-of-coherency units, then pass the turn. \
@@ -456,20 +456,20 @@ private extension BattleTurnPhase {
         activePlayerIsOne: Bool = true
     ) -> String {
         let context = GameSystemPlayContext.context(for: gameSystemId)
-        if context.isStarCraft {
+        if context.capabilities.showsActivationBar {
             return scGuidance
         }
-        if context.isCombatPatrol {
+        if context.capabilities.usesPatrolFormatRules {
             return cpGuidance(round: round, matchState: matchState, activePlayerIsOne: activePlayerIsOne)
         }
-        if context.isWh40k {
+        if context.capabilities.resolvesWh40kRules {
             return wh40kGuidance(for: gameSystemId)
         }
         return defaultGuidance
     }
 
     func guideActionLabel(gameSystemId: String) -> String {
-        if GameSystemPlayContext.context(for: gameSystemId).isStarCraft, self == .scoring {
+        if GameSystemPlayContext.context(for: gameSystemId).capabilities.showsActivationBar, self == .scoring {
             return String(localized: "Next Round")
         }
         switch self {
@@ -481,7 +481,7 @@ private extension BattleTurnPhase {
     }
 
     private func wh40kGuidance(for gameSystemId: String) -> String {
-        if GameSystemPlayContext.context(for: gameSystemId).isWh40k11e {
+        if GameSystemPlayContext.context(for: gameSystemId).capabilities.deploymentChecklistStyle == .wh40k {
             return wh40k11eGuidance
         }
         return wh40k10eGuidance

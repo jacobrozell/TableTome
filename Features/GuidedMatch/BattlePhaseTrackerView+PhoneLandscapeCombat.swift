@@ -3,7 +3,7 @@ import TabletomeDomain
 
 extension BattlePhaseTrackerView {
     var usesPhoneLandscapeCombatSplit: Bool {
-        !viewModel.isStarCraft
+        !viewModel.capabilities.showsActivationBar
             && layoutContext == .phoneLandscape
             && !dynamicTypeSize.needsLayoutAdaptation
     }

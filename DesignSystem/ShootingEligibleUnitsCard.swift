@@ -38,7 +38,7 @@ struct ShootingEligibleUnitsCard: View {
     }
 
     private var helperText: String {
-        if playContext.isWh40k {
+        if playContext.capabilities.resolvesWh40kRules {
             return String(
                 localized: """
                 These \(armyName) units have ranged weapons for the Shooting phase. Tap a unit to open the dice \

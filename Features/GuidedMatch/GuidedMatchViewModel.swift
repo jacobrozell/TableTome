@@ -215,7 +215,7 @@ final class GuidedMatchViewModel: ObservableObject {
         let context = GameSystemPlayContext.context(for: gameSystemId)
         mutateMatchState {
             $0.attackerIsPlayerOne = isPlayerOne
-            if context.isWh40k11e {
+            if context.capabilities.deploymentChecklistStyle == .wh40k {
                 $0.firstTurnIsPlayerOne = isPlayerOne
             }
         }
@@ -334,7 +334,7 @@ final class GuidedMatchViewModel: ObservableObject {
         mutateMatchState(persist: true, syncCompletions: false) {
             featuredArmies.applyStarterMatchup(to: &$0)
             $0.attackerIsPlayerOne = true
-            if context.isWh40k11e || context.isCombatPatrol {
+            if context.capabilities.deploymentChecklistStyle == .wh40k || context.capabilities.usesPatrolFormatRules {
                 $0.firstTurnIsPlayerOne = true
             }
         }
@@ -358,11 +358,11 @@ final class GuidedMatchViewModel: ObservableObject {
         applyRecommendedLoadouts()
 
         let context = GameSystemPlayContext.context(for: gameSystemId)
-        if context.isWh40k11e {
+        if context.capabilities.deploymentChecklistStyle == .wh40k {
             Wh40kDeploymentChecklistStep.allCases.forEach { setWh40kDeploymentStep($0, complete: true) }
-        } else if context.isStarCraft {
+        } else if context.capabilities.showsActivationBar {
             ScTmgDeploymentChecklistStep.allCases.forEach { setScTmgDeploymentStep($0, complete: true) }
-        } else if context.isCombatPatrol {
+        } else if context.capabilities.usesPatrolFormatRules {
             CombatPatrolDeploymentChecklistStep.allCases.forEach { setCombatPatrolDeploymentStep($0, complete: true) }
             if matchState.firstTurnIsPlayerOne == nil {
                 setFirstTurn(isPlayerOne: true)

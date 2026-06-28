@@ -3,17 +3,17 @@ import TabletomeDomain
 
 extension BattlePhaseTrackerViewModel {
     var selectedMission: CombatPatrolMission? {
-        guard playContext.isCombatPatrol,
+        guard playContext.capabilities.usesPatrolFormatRules,
               let missionId = matchState.selectedMissionId else { return nil }
         return catalog.missions.first { $0.id == missionId }
     }
 
-    var isCombatPatrol: Bool {
-        playContext.isCombatPatrol
+    var usesPatrolFormatRules: Bool {
+        playContext.capabilities.usesPatrolFormatRules
     }
 
     var focusedCombatPatrolDeploymentStep: CombatPatrolDeploymentChecklistStep? {
-        guard playContext.isCombatPatrol, trackerState.battleRound == 1 else { return nil }
+        guard playContext.capabilities.usesPatrolFormatRules, trackerState.battleRound == 1 else { return nil }
         return BattleFlowGuide.nextIncompleteCombatPatrolSetupStep(in: trackerState.completedDeploymentSteps)
     }
 
@@ -61,10 +61,10 @@ extension BattlePhaseTrackerViewModel {
 
     static func gotchas(for armyId: String, gameSystemId: String, army: SpearheadArmy? = nil) -> [SpearheadGotcha] {
         let context = GameSystemPlayContext.context(for: gameSystemId)
-        if context.isSpearhead {
+        if context.capabilities.showsBattleTacticDecks {
             return SpearheadGotchaCatalog.gotchas(for: armyId)
         }
-        if context.isCombatPatrol {
+        if context.capabilities.usesPatrolFormatRules {
             return CombatPatrolGotchaCatalog.gotchas(for: armyId, army: army)
         }
         return []

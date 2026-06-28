@@ -10,7 +10,7 @@ public struct PhasedRoundBattleTrackerEngine: BattleTrackerEngine {
         matchState: GuidedMatchState,
         playContext: GameSystemPlayContext
     ) {
-        guard playContext.capabilities.showsCombatPatrolMode,
+        guard playContext.capabilities.usesPatrolFormatRules,
               let firstTurnIsPlayerOne = matchState.firstTurnIsPlayerOne,
               trackerState.battleRound == 1,
               trackerState.currentPhase == playContext.playEngine.initialPhase(),

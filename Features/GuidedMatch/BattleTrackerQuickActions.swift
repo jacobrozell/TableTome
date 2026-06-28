@@ -135,7 +135,7 @@ enum BattleTrackerQuickActions {
                     )
                 }
                 items.append(combatResolverAction(playContext: playContext))
-            } else if playContext.isWh40k {
+            } else if playContext.capabilities.resolvesWh40kRules {
                 items.append(wh40kPhaseReminder(phase: phase, gameSystemId: gameSystemId))
             }
         case .charge:
@@ -175,7 +175,7 @@ enum BattleTrackerQuickActions {
                 )
             } else if showsCombatResolver, playContext.capabilities.showsDedicatedCombatTab {
                 items.append(combatResolverAction(playContext: playContext))
-            } else if showsCombatResolver, playContext.isWh40k, !playContext.capabilities.showsDedicatedCombatTab {
+            } else if showsCombatResolver, playContext.capabilities.resolvesWh40kRules, !playContext.capabilities.showsDedicatedCombatTab {
                 items.append(
                     BattleTrackerQuickAction(
                         id: "fight-attacks",
@@ -185,7 +185,7 @@ enum BattleTrackerQuickActions {
                         target: .combatResolver
                     )
                 )
-            } else if playContext.isWh40k, !playContext.capabilities.showsDedicatedCombatTab {
+            } else if playContext.capabilities.resolvesWh40kRules, !playContext.capabilities.showsDedicatedCombatTab {
                 items.append(wh40kPhaseReminder(phase: phase, gameSystemId: gameSystemId))
             }
         case .endOfTurn:
@@ -274,7 +274,7 @@ enum BattleTrackerQuickActions {
         let usesCombatTab = playContext.capabilities.showsDedicatedCombatTab
         return BattleTrackerQuickAction(
             id: "resolve-combat",
-            title: playContext.isWh40k
+            title: playContext.capabilities.resolvesWh40kRules
                 ? String(localized: "Resolve attack dice")
                 : String(localized: "Resolve attacks in Combat"),
             detail: usesCombatTab
@@ -291,7 +291,7 @@ enum BattleTrackerQuickActions {
     }
 
     private static func scoringReminderDetail(playContext: GameSystemPlayContext) -> String {
-        if playContext.isWh40k {
+        if playContext.capabilities.resolvesWh40kRules {
             return String(localized: "Primary and secondary objectives — then pass the phone")
         }
         if playContext.capabilities.showsActivationBar {

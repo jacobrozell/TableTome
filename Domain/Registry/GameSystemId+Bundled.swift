@@ -24,6 +24,7 @@ extension GameSystemId {
                     showsDeploymentChecklist: true,
                     showsRoundChecklist: true,
                     showsBattleTacticDecks: true,
+                    deploymentChecklistStyle: .spearhead,
                     scoringRuleSectionId: "spearhead-scoring",
                     ruleCategories: [.core, .spearhead, .glossary]
                 ),
@@ -47,24 +48,6 @@ extension GameSystemId {
                     catalogLoadFailureMessage: String(localized: "Spearhead armies could not be loaded.")
                 ),
                 victoryPointsScoring: .spearheadDefault,
-                featuredArmies: FeaturedArmiesConfig(
-                    armyIds: ["vigilant-brotherhood", "gnawfeast-clawpack"],
-                    starterMatchupTitle: "Vigilant Brotherhood vs Gnawfeast Clawpack",
-                    starterSetDescription: String(
-                        localized: "Fill both armies automatically for the Vigilant Brotherhood vs Gnawfeast Clawpack starter matchup — setup and battle tools included."
-                    ),
-                    starterSetBadge: String(localized: "Age of Sigmar starter box"),
-                    playerOne: StarterArmySelection(
-                        playerName: "Player 1",
-                        factionId: "stormcast-eternals",
-                        armyId: "vigilant-brotherhood"
-                    ),
-                    playerTwo: StarterArmySelection(
-                        playerName: "Player 2",
-                        factionId: "skaven",
-                        armyId: "gnawfeast-clawpack"
-                    )
-                ),
                 catalogBundleName: "spearhead-catalog-v1",
                 armyDetailsSubdirectories: ["Spearhead/armies", "Rules/Spearhead/armies"]
             )
@@ -87,9 +70,9 @@ extension GameSystemId {
                     showsGuidedMatch: true,
                     showsCombatResolver: true,
                     showsVictoryPoints: true,
-                    showsWh40kDeploymentChecklist: true,
                     showsDedicatedCombatTab: false,
-                    usesWh40k11eCombatRollEngine: true,
+                    combatRollEngineKind: .wh40k11e,
+                    deploymentChecklistStyle: .wh40k,
                     ruleCategories: [.core, .glossary],
                     showsNewEditionBadge: true
                 ),
@@ -113,24 +96,6 @@ extension GameSystemId {
                     catalogLoadFailureMessage: String(localized: "40k armies could not be loaded.")
                 ),
                 victoryPointsScoring: .wh40k11e,
-                featuredArmies: FeaturedArmiesConfig(
-                    armyIds: ["operation-imperator", "waaagh-armageddon"],
-                    starterMatchupTitle: "Operation Imperator vs Waaagh! Armageddon",
-                    starterSetDescription: String(
-                        localized: "Quick-start the Armageddon launch box with fixed rosters, datasheets, setup, and battle tools."
-                    ),
-                    starterSetBadge: String(localized: "Warhammer 40,000: Armageddon"),
-                    playerOne: StarterArmySelection(
-                        playerName: "Player 1",
-                        factionId: "space-marines",
-                        armyId: "operation-imperator"
-                    ),
-                    playerTwo: StarterArmySelection(
-                        playerName: "Player 2",
-                        factionId: "orks",
-                        armyId: "waaagh-armageddon"
-                    )
-                ),
                 catalogBundleName: "wh40k-catalog-v1",
                 armyDetailsSubdirectories: ["Wh40k/armies", "Rules/Wh40k/armies"]
             )
@@ -153,8 +118,7 @@ extension GameSystemId {
                     showsGuidedMatch: true,
                     showsCombatResolver: true,
                     showsVictoryPoints: true,
-                    showsCombatPatrolMode: true,
-                    usesWh40k10eCombatRollEngine: true,
+                    combatRollEngineKind: .wh40k10eCombatPatrol,
                     scoringRuleSectionId: "cp-scoring",
                     ruleCategories: [.core, .combatPatrol, .glossary]
                 ),
@@ -178,25 +142,6 @@ extension GameSystemId {
                     catalogLoadFailureMessage: String(localized: "Combat Patrol armies could not be loaded.")
                 ),
                 victoryPointsScoring: .combatPatrol,
-                featuredArmies: FeaturedArmiesConfig(
-                    armyIds: ["space-marines-combat-patrol", "tyranids-combat-patrol"],
-                    starterMatchupTitle: "Space Marines vs Tyranids",
-                    starterSetDescription: String(
-                        localized: "Quick-start the Space Marines vs Tyranids starter matchup — works with any Combat Patrol box."
-                    ),
-                    starterSetBadge: String(localized: "Combat Patrol starter box"),
-                    playerOne: StarterArmySelection(
-                        playerName: "Player 1",
-                        factionId: "space-marines",
-                        armyId: "space-marines-combat-patrol"
-                    ),
-                    playerTwo: StarterArmySelection(
-                        playerName: "Player 2",
-                        factionId: "tyranids",
-                        armyId: "tyranids-combat-patrol"
-                    ),
-                    defaultMissionId: "clash-of-patrols"
-                ),
                 catalogBundleName: "combat-patrol-catalog-v1",
                 armyDetailsSubdirectories: ["CombatPatrol/armies", "Rules/CombatPatrol/armies"]
             )
@@ -217,9 +162,10 @@ extension GameSystemId {
                     showsVictoryPoints: true,
                     showsActivationBar: true,
                     showsSupplyPool: true,
-                    showsScTmgDeploymentChecklist: true,
+                    deploymentChecklistStyle: .scTmg,
                     scoringRuleSectionId: "sc-scoring",
-                    ruleCategories: [.core, .glossary]
+                    ruleCategories: [.core, .glossary],
+                    requiresFullSurfaceFlag: true
                 ),
                 copy: GameSystemCopy(
                     shortLabel: String(localized: "SC"),
@@ -241,24 +187,6 @@ extension GameSystemId {
                     catalogLoadFailureMessage: String(localized: "StarCraft armies could not be loaded.")
                 ),
                 victoryPointsScoring: .scTmg,
-                featuredArmies: FeaturedArmiesConfig(
-                    armyIds: ["raynors-raiders", "kerrigans-swarm"],
-                    starterMatchupTitle: "Raynor's Raiders vs Kerrigan's Swarm",
-                    starterSetDescription: String(
-                        localized: "Quick-start the 2-Player Founders Edition with guided setup and a supply-aware battle tracker."
-                    ),
-                    starterSetBadge: String(localized: "2-Player Founders Edition"),
-                    playerOne: StarterArmySelection(
-                        playerName: "Player 1",
-                        factionId: "terran",
-                        armyId: "raynors-raiders"
-                    ),
-                    playerTwo: StarterArmySelection(
-                        playerName: "Player 2",
-                        factionId: "zerg",
-                        armyId: "kerrigans-swarm"
-                    )
-                ),
                 catalogBundleName: "sc-tmg-catalog-v1",
                 armyDetailsSubdirectories: ["ScTmg/armies", "Rules/ScTmg/armies"]
             )

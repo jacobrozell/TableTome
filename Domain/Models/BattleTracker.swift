@@ -109,10 +109,10 @@ public enum BattleTurnPhase: String, Codable, Sendable, CaseIterable, Identifiab
 
     public func playerFacingSummary(gameSystemId: String) -> String {
         let context = GameSystemPlayContext.context(for: gameSystemId)
-        if context.isStarCraft {
+        if context.capabilities.showsActivationBar {
             return starCraftPlayerSummary
         }
-        if context.isWh40k {
+        if context.capabilities.resolvesWh40kRules {
             return wh40kPlayerSummary
         }
         return newPlayerSummary

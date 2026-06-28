@@ -30,7 +30,7 @@ public enum AppSearchResultKind: String, Sendable, CaseIterable {
         case .gettingStarted:
             return String(localized: "Getting Started")
         case .editionMigration:
-            if playContext.isStarCraft {
+            if playContext.capabilities.showsActivationBar {
                 return String(localized: "RTS → Tabletop")
             }
             return String(localized: "What's New in 11e")
@@ -153,7 +153,7 @@ public enum AppSearchIndexBuilder {
             items.append(contentsOf: matchSetupItems(from: catalog.matchSteps))
             items.append(contentsOf: armyItems(from: catalog, gameSystemId: gameSystemId))
             let capabilities = GameSystemPlayContext.context(for: gameSystemId).capabilities
-            if capabilities.showsCombatPatrolMode {
+            if capabilities.usesPatrolFormatRules {
                 items.append(contentsOf: combatPatrolMissionItems(from: catalog.missions))
             }
         }
@@ -192,7 +192,7 @@ public enum AppSearchIndexBuilder {
         if capabilities.showsBattleTacticDecks {
             return SpearheadRulesGlossary.entries.map { glossaryEntryItem($0) }
         }
-        if capabilities.showsCombatPatrolMode {
+        if capabilities.usesPatrolFormatRules {
             return CombatPatrolRulesGlossary.entries.map { glossaryEntryItem($0) }
         }
         return ruleSections
@@ -227,7 +227,7 @@ public enum AppSearchIndexBuilder {
     }
 
     private static func editionMigrationSubtitle(for gameSystemId: String) -> String {
-        GameSystemPlayContext.context(for: gameSystemId).isStarCraft
+        GameSystemPlayContext.context(for: gameSystemId).capabilities.showsActivationBar
             ? String(localized: "RTS → Tabletop")
             : String(localized: "What's New in 11e")
     }
@@ -579,7 +579,7 @@ public enum AppSearchIndexBuilder {
 
     private static func guidedMatchFeatureBody(gameSystemId: String) -> String {
         let playContext = GameSystemPlayContext.context(for: gameSystemId)
-        if playContext.isWh40k11e {
+        if playContext.capabilities.deploymentChecklistStyle == .wh40k {
             return String(
                 localized: """
                 Interactive match setup and battle tracker with Command-phase flow, army health, and optional two-phone sync.

@@ -120,7 +120,7 @@ extension BattlePhaseTrackerView {
                 completedSteps: viewModel.trackerState.completedDeploymentSteps
             ).done == ScTmgDeploymentChecklistStep.allCases.count
         }
-        if viewModel.playContext.isCombatPatrol {
+        if viewModel.playContext.capabilities.usesPatrolFormatRules {
             return CombatPatrolDeploymentChecklist.completionCount(
                 completedSteps: viewModel.trackerState.completedDeploymentSteps
             ).done == CombatPatrolDeploymentChecklistStep.allCases.count

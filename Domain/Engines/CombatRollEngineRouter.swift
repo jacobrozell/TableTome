@@ -12,14 +12,11 @@ public enum CombatRollEngineRouter: Sendable {
     }
 
     public static func rulesEdition(for gameSystemId: String) -> CombatRollRulesEdition {
-        let capabilities = GameSystemPlayContext.context(for: gameSystemId).capabilities
-        if capabilities.usesWh40k11eCombatRollEngine {
-            return .wh40k11e
+        switch GameSystemPlayContext.context(for: gameSystemId).capabilities.combatRollEngineKind {
+        case .wh40k11e: .wh40k11e
+        case .wh40k10eCombatPatrol: .wh40k10e
+        case .none: .aos
         }
-        if capabilities.usesWh40k10eCombatRollEngine {
-            return .wh40k10e
-        }
-        return .aos
     }
 
     public static func usesWh40kRules(gameSystemId: GameSystemId) -> Bool {

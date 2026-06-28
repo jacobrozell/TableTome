@@ -109,7 +109,7 @@ struct BattleTrackerTabHintBanner: View {
     private var hintDetail: String {
         switch suggestedTab {
         case .setup:
-            playContext.isWh40k
+            playContext.capabilities.resolvesWh40kRules
                 ? String(localized: "Mission setup steps still need attention.")
                 : String(localized: "Deployment or round-opener steps still need attention.")
         case .turn:

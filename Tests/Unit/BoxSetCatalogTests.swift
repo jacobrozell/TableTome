@@ -69,9 +69,7 @@ final class BoxSetCatalogTests: XCTestCase {
     }
 
     func testLoadsBundledBoxSetsForEverySystem() throws {
-        // The box-set JSON bundled for each system must decode and its featured
-        // armies must match the registry descriptor that currently hardcodes them.
-        let registry = GameSystemRegistry.bundled
+        let registry = GameSystemRegistry.bundled(withBoxSetsFrom: .main)
         let manifest = try GameSystemsManifestLoader.load(from: .main)
 
         for entry in manifest.systems {
@@ -80,21 +78,19 @@ final class BoxSetCatalogTests: XCTestCase {
             XCTAssertEqual(catalog.gameSystemId, entry.id)
 
             let featured = try XCTUnwrap(catalog.primaryFeaturedArmies)
-            let descriptorFeatured = registry.descriptor(for: entry.id)?.featuredArmies
-            if let descriptorFeatured {
-                XCTAssertEqual(
-                    featured.armyIds, descriptorFeatured.armyIds,
-                    "Box-set JSON armyIds drifted from the hardcoded descriptor for \(entry.id)"
-                )
-                XCTAssertEqual(
-                    featured.playerOne.armyId, descriptorFeatured.playerOne.armyId,
-                    "playerOne drifted for \(entry.id)"
-                )
-                XCTAssertEqual(
-                    featured.defaultMissionId, descriptorFeatured.defaultMissionId,
-                    "defaultMissionId drifted for \(entry.id)"
-                )
-            }
+            let descriptorFeatured = try XCTUnwrap(registry.descriptor(for: entry.id)?.featuredArmies)
+            XCTAssertEqual(
+                featured.armyIds, descriptorFeatured.armyIds,
+                "Box-set JSON armyIds missing or drifted for \(entry.id)"
+            )
+            XCTAssertEqual(
+                featured.playerOne.armyId, descriptorFeatured.playerOne.armyId,
+                "playerOne drifted for \(entry.id)"
+            )
+            XCTAssertEqual(
+                featured.defaultMissionId, descriptorFeatured.defaultMissionId,
+                "defaultMissionId drifted for \(entry.id)"
+            )
         }
     }
 }

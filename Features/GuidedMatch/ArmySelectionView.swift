@@ -307,7 +307,7 @@ private struct ContentCoverageBadge: View {
     }
 
     var body: some View {
-        if playContext.isStarCraft {
+        if playContext.capabilities.showsActivationBar {
             EmptyView()
         } else {
             Label(coverage.playerFacingTitle(gameSystemId: gameSystemId.rawValue), systemImage: coverage.systemImage)

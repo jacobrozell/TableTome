@@ -52,6 +52,24 @@ final class ArmyCSVTests: XCTestCase {
         XCTAssertFalse(result.ok)
         XCTAssertTrue(result.errors.joined().contains("missing Army"))
     }
+
+    func testExportImportRoundTripPreservesFields() throws {
+        let rows = [
+            CSVSchema.armyExportHeaders,
+            ["40k", "Space Marines", "My Chapter", "Captain", "1", "Box", "Primed", "Yes", "hero", "", "", "", "SM", "#1c4fa0"]
+        ]
+        let imported = ArmyCSV.import(rows, pipeline: pipeline, overrides: [])
+        XCTAssertTrue(imported.ok)
+
+        let draft = try XCTUnwrap(imported.armies?.first)
+        let unit = try XCTUnwrap(draft.units.first)
+        XCTAssertEqual(unit.name, "Captain")
+        XCTAssertEqual(unit.state, "Primed")
+        XCTAssertEqual(unit.spearhead, true)
+        XCTAssertEqual(unit.notes, "hero")
+        XCTAssertEqual(draft.crestOverride, "SM")
+        XCTAssertEqual(draft.colorOverrideHex, "#1c4fa0")
+    }
 }
 
 final class CSVSchemaTests: XCTestCase {

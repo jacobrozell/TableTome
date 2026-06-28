@@ -129,4 +129,82 @@ final class FirstSessionStoreTests: XCTestCase {
         FirstSessionStore.markRoundOneMilestoneSeen()
         XCTAssertFalse(FirstSessionStore.shouldShowRoundOneMilestone(isEmbeddedInGuidedMatch: true))
     }
+
+    func testCollectionIntroDeferredUntilSecondVisitOrGuide() {
+        XCTAssertFalse(
+            FirstSessionStore.shouldOfferCollectionIntro(
+                hasSeenCollectionIntro: false,
+                onboardingComplete: true
+            )
+        )
+
+        _ = FirstSessionStore.incrementCollectionVisits()
+        XCTAssertFalse(
+            FirstSessionStore.shouldOfferCollectionIntro(
+                hasSeenCollectionIntro: false,
+                onboardingComplete: true
+            )
+        )
+
+        _ = FirstSessionStore.incrementCollectionVisits()
+        XCTAssertTrue(
+            FirstSessionStore.shouldOfferCollectionIntro(
+                hasSeenCollectionIntro: false,
+                onboardingComplete: true
+            )
+        )
+
+        FirstSessionStore.clearPersistedState()
+        FirstSessionStore.recordGameGuideOpened()
+        XCTAssertTrue(
+            FirstSessionStore.shouldOfferCollectionIntro(
+                hasSeenCollectionIntro: false,
+                onboardingComplete: true
+            )
+        )
+    }
+
+    func testCollectionIntroNotOfferedAfterSeen() {
+        FirstSessionStore.recordGameGuideOpened()
+        XCTAssertFalse(
+            FirstSessionStore.shouldOfferCollectionIntro(
+                hasSeenCollectionIntro: true,
+                onboardingComplete: true
+            )
+        )
+    }
+
+    func testCollectionFirstStepsCoachRequiresIntroAndNoUnits() {
+        XCTAssertFalse(
+            FirstSessionStore.shouldShowCollectionFirstStepsCoach(
+                hasSeenCollectionIntro: false,
+                hasDismissedCoach: false,
+                totalUnitCount: 0
+            )
+        )
+
+        XCTAssertTrue(
+            FirstSessionStore.shouldShowCollectionFirstStepsCoach(
+                hasSeenCollectionIntro: true,
+                hasDismissedCoach: false,
+                totalUnitCount: 0
+            )
+        )
+
+        XCTAssertFalse(
+            FirstSessionStore.shouldShowCollectionFirstStepsCoach(
+                hasSeenCollectionIntro: true,
+                hasDismissedCoach: false,
+                totalUnitCount: 3
+            )
+        )
+
+        XCTAssertFalse(
+            FirstSessionStore.shouldShowCollectionFirstStepsCoach(
+                hasSeenCollectionIntro: true,
+                hasDismissedCoach: true,
+                totalUnitCount: 0
+            )
+        )
+    }
 }

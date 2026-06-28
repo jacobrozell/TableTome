@@ -46,4 +46,57 @@ final class BackupCodecTests: XCTestCase {
         XCTAssertEqual(backup.paints.count, 1)
         XCTAssertEqual(backup.paints.first?.name, "Macragge Blue")
     }
+
+    func testExportRestorePreservesUnitsAndPerModelStates() throws {
+        XCTAssertTrue(ArmyStore.addArmy(name: "Chapter", game: "40k", faction: "Space Marines", in: context))
+        let army = try XCTUnwrap((try? context.fetch(FetchDescriptor<Army>()))?.first)
+        XCTAssertTrue(
+            ArmyStore.addUnit(
+                to: army, name: "Intercessors (5)", qty: 1, source: "Starter", state: "Primed",
+                trackPerModel: true,
+                memberStates: ["Primed", "Detailed", "Primed", "Primed", "Primed"],
+                in: context
+            )
+        )
+
+        let exported = BackupCodec.export(context)
+        guard case .success(let backup) = BackupSanitizer.parse(exported) else {
+            return XCTFail("Exported backup should parse")
+        }
+
+        HobbyAppContainer.resetUnitTestStore()
+
+        BackupCodec.restore(backup, into: context)
+
+        let armies = try context.fetch(FetchDescriptor<Army>())
+        XCTAssertEqual(armies.count, 1)
+        let unit = try XCTUnwrap(armies.first?.units.first)
+        XCTAssertEqual(unit.name, "Intercessors (5)")
+        XCTAssertEqual(unit.source, "Starter")
+        XCTAssertTrue(unit.hasSquadMembers)
+        XCTAssertEqual(Members.effectiveState(of: unit, at: 1), "Detailed")
+    }
+
+    func testExportRestorePreservesFilterSettings() throws {
+        let cfg = HobbyConfig.current(context)
+        cfg.gameFilter = "40k"
+        cfg.factionFilter = "Space Marines"
+        cfg.quickViewRaw = "backlog"
+        cfg.spearheadOnly = true
+        try context.save()
+
+        let exported = BackupCodec.export(context)
+        guard case .success(let backup) = BackupSanitizer.parse(exported) else {
+            return XCTFail("Exported backup should parse")
+        }
+
+        HobbyAppContainer.resetUnitTestStore()
+        BackupCodec.restore(backup, into: context)
+
+        let restored = HobbyConfig.current(context)
+        XCTAssertEqual(restored.gameFilter, "40k")
+        XCTAssertEqual(restored.factionFilter, "Space Marines")
+        XCTAssertEqual(restored.quickViewRaw, "backlog")
+        XCTAssertTrue(restored.spearheadOnly)
+    }
 }

@@ -8,7 +8,7 @@ final class AppDeepLinkTests: XCTestCase {
     }
 
     func testMusterHomeURL() {
-        let url = URL(string: "minimuster://muster")!
+        let url = URL(string: "tabletome://muster")!
         XCTAssertEqual(AppDeepLink.destination(from: url), .musterHome)
     }
 

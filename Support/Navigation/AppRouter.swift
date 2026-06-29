@@ -110,6 +110,7 @@ final class AppRouter {
             hobbyTab = .armies
             selectedTab = .bench
         case .musterHome:
+            guard ReleaseSurface.showsMusterTab else { fallBackToCollection(); return }
             hobbyTab = .muster
             selectedTab = .muster
         case .musterRoster(let id):
@@ -118,10 +119,17 @@ final class AppRouter {
     }
 
     func openMuster(rosterId: UUID) {
+        // Army Lists (Muster) is gated post-1.0 — never route to a tab that isn't rendered.
+        guard ReleaseSurface.showsMusterTab else { fallBackToCollection(); return }
         pendingRosterId = rosterId
         selectedRosterId = rosterId
         hobbyTab = .muster
         selectedTab = .muster
+    }
+
+    private func fallBackToCollection() {
+        hobbyTab = .armies
+        selectedTab = .bench
     }
 
     func openCollection(armyId: UUID, unitId: UUID? = nil) {

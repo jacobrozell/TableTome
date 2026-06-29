@@ -405,17 +405,19 @@ struct ArmyDetailView: View {
                 Button(String(localized: "Merge duplicates"), systemImage: "square.on.square") {
                     if let army {
                         let n = ArmyStore.mergeDuplicates(in: army, ctx: context)
-                        if n > 0 {
-                            banner.show(String(localized: "Merged \(n) duplicate\(n == 1 ? "" : "s")"))
-                        }
+                        banner.show(n > 0
+                            ? String(localized: "Merged \(n) duplicate\(n == 1 ? "" : "s")")
+                            : String(localized: "No duplicates found"))
                     }
                 }
-                Divider()
-                Button(String(localized: "Link army list…"), systemImage: "flag") {
-                    if let army, let linked = linkedRoster(for: army) {
-                        router.openMuster(rosterId: linked.id)
-                    } else {
-                        showMusterRoster = true
+                if ReleaseSurface.showsMusterTab {
+                    Divider()
+                    Button(String(localized: "Link army list…"), systemImage: "flag") {
+                        if let army, let linked = linkedRoster(for: army) {
+                            router.openMuster(rosterId: linked.id)
+                        } else {
+                            showMusterRoster = true
+                        }
                     }
                 }
                 Button(String(localized: "Pipeline stages"), systemImage: "list.bullet") { showPipeline = true }

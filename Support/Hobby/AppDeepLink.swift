@@ -10,7 +10,7 @@ enum AppDeepLink {
         case musterRoster(UUID)
     }
 
-    static let scheme = "minimuster"
+    static let scheme = "tabletome"
 
     static var collectionBacklogURL: URL {
         URL(string: "\(scheme)://collection/backlog")!

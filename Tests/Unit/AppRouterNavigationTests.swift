@@ -39,15 +39,29 @@ final class AppRouterNavigationTests: XCTestCase {
         XCTAssertNil(router.consumePendingRulesSearchQuery())
     }
 
-    func testOpenMusterSelectsMusterTab() {
+    func testOpenMusterRedirectsToCollectionWhenMusterGated() {
+        // Default release surface (no -enable_full_product_surface): the Lists/Muster tab is
+        // gated, so muster routing must fall back to Collection rather than select a tab that
+        // isn't rendered in RootTabView.
+        XCTAssertFalse(ReleaseSurface.showsMusterTab)
+
         let router = AppRouter()
-        let rosterId = UUID()
+        router.openMuster(rosterId: UUID())
 
-        router.openMuster(rosterId: rosterId)
+        XCTAssertEqual(router.selectedTab, .bench)
+        XCTAssertEqual(router.hobbyTab, .armies)
+        XCTAssertNil(router.pendingRosterId)
+        XCTAssertNil(router.selectedRosterId)
+    }
 
-        XCTAssertEqual(router.selectedTab, .muster)
-        XCTAssertEqual(router.pendingRosterId, rosterId)
-        XCTAssertEqual(router.selectedRosterId, rosterId)
+    func testOpenMusterHomeDeepLinkRedirectsToCollectionWhenGated() {
+        XCTAssertFalse(ReleaseSurface.showsMusterTab)
+
+        let router = AppRouter()
+        router.open(.musterHome)
+
+        XCTAssertEqual(router.selectedTab, .bench)
+        XCTAssertEqual(router.hobbyTab, .armies)
     }
 
     func testSetActiveGameSystemPersistsAcrossRouterInstances() {

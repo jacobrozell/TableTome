@@ -79,7 +79,7 @@ struct CollectionHomeView: View {
             if armies.isEmpty { emptyState }
             else { listContent }
         }
-        .navigationTitle(String(localized: "Collection"))
+        .navigationTitle(String(localized: "Models"))
         .searchable(text: $search, prompt: String(localized: "Armies, factions, units…"))
         .toolbar { toolbarContent }
         .sheet(isPresented: Binding(
@@ -324,14 +324,16 @@ struct CollectionHomeView: View {
             )
         }
         ToolbarItem(placement: .topBarTrailing) {
-            Button(String(localized: "Settings"), systemImage: "gearshape") { showSettings = true }
+            Button(String(localized: "Data"), systemImage: "gearshape") { showSettings = true }
                 .accessibilityIdentifier("settings")
+                .accessibilityLabel(String(localized: "Collection data settings"))
+                .accessibilityHint(String(localized: "Import, export, sample data, and painting pipeline"))
         }
     }
 
     private var emptyState: some View {
         ScrollView {
-            VStack(spacing: 20) {
+            VStack(spacing: DesignTokens.Spacing.lg) {
                 if showsFirstStepsCoach {
                     CollectionFirstStepsCoach(hasArmies: false) {
                         cfg.hasDismissedCollectionFirstStepsCoach = true

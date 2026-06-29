@@ -182,7 +182,7 @@ final class DataActionsImportExportTests: XCTestCase {
         try context.save()
 
         let exported = DataActions.backupJSON(ctx: context)
-        XCTAssertTrue(exported.filename.hasPrefix("minimuster-backup-"))
+        XCTAssertTrue(exported.filename.hasPrefix("tabletome-backup-"))
         XCTAssertTrue(exported.text.contains("Ultramarines"))
         XCTAssertTrue(exported.text.contains("Intercessors (5)"))
 

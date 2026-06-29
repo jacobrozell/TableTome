@@ -46,7 +46,7 @@ struct HomeView: View {
                 EmptyStateView(
                     title: String(localized: "Unable to Load"),
                     message: error,
-                    systemImage: "wifi.exclamationmark",
+                    systemImage: "exclamationmark.triangle",
                     actionTitle: String(localized: "Retry"),
                     action: { Task { await viewModel.load() } }
                 )

@@ -51,7 +51,7 @@ struct FilterSheet: View {
                     Picker(String(localized: "View"), selection: $cfg.quickViewRaw) {
                         Text(String(localized: "All")).tag("all")
                         Text(String(localized: "Backlog")).tag("backlog")
-                        Text(String(localized: "WIP")).tag("wip")
+                        Text(String(localized: "In progress")).tag("wip")
                         Text(String(localized: "Table-ready")).tag("ready")
                     }
                     .pickerStyle(.segmented)

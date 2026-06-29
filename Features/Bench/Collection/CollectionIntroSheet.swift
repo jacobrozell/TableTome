@@ -45,7 +45,7 @@ struct CollectionIntroSheet: View {
                         introStep(
                             number: 3,
                             title: String(localized: "Track painting"),
-                            detail: String(localized: "Swipe right to advance — Unassembled → Primed → Done."),
+                            detail: String(localized: "Swipe right to advance through painting stages."),
                             symbol: "arrow.right.circle"
                         )
                     }

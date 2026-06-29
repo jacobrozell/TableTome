@@ -294,7 +294,7 @@ enum DataActions {
         cfg.lastBackupAt = Date()
         try? ctx.save()
         let json = BackupCodec.export(ctx)
-        return (json, "minimuster-backup-\(Date().fileStamp).json")
+        return (json, "tabletome-backup-\(Date().fileStamp).json")
     }
 
     static func armiesTemplateCSV() -> (text: String, filename: String) {

@@ -41,13 +41,17 @@ struct HobbySettingsScreen: View {
 
             SettingsDataSection()
 
-            Section(String(localized: "Help & Feedback")) {
-                NavigationLink(value: HobbySettingsRoute.accessibility) {
+            Section {
+                Link(destination: AppLinks.accessibility) {
                     Label(String(localized: "Accessibility"), systemImage: "accessibility")
                 }
-                NavigationLink(value: HobbySettingsRoute.privacy) {
+                .accessibilityHint(String(localized: "Opens the accessibility page in your browser"))
+                Link(destination: AppLinks.privacy) {
                     Label(String(localized: "Privacy Policy"), systemImage: "hand.raised")
                 }
+                .accessibilityHint(String(localized: "Opens the privacy policy in your browser"))
+            } header: {
+                Text(String(localized: "Help & Feedback"))
             }
 
             Section(String(localized: "About")) {
@@ -69,10 +73,6 @@ struct HobbySettingsScreen: View {
                 PipelineEditor(cfg: cfg)
             case .factions:
                 FactionOverridesEditor(cfg: cfg, armies: armies)
-            case .accessibility:
-                AccessibilityView()
-            case .privacy:
-                PrivacyPolicyView()
             }
         }
         .toolbar { ToolbarItem(placement: .confirmationAction) { Button(String(localized: "Done")) { dismiss() } } }

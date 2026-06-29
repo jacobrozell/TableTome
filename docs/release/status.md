@@ -5,7 +5,7 @@
 | **Version** | 1.0.0 (`MARKETING_VERSION` in `project.yml`) |
 | **Phase** | **TestFlight** — not App Store production |
 | **Branch** | `release/1.0.0` |
-| **Build** | **8** (`CURRENT_PROJECT_VERSION` in `project.yml`) — [TestFlight notes](testflight-1.0.0-build-8.md) |
+| **Build** | **11** (`CURRENT_PROJECT_VERSION` in `project.yml`) — [TestFlight notes](testflight-1.0.0-build-11.md) |
 
 ## 1.0.0 scope
 
@@ -34,7 +34,7 @@ Add `-enable_full_product_surface` in **Edit Scheme → Run → Arguments** to u
 ## Related docs
 
 - [Release checklist (1.0.0 TestFlight)](release_checklist.md)
-- [TestFlight build 8 notes](testflight-1.0.0-build-8.md)
+- [TestFlight build 11 notes](testflight-1.0.0-build-11.md)
 - [App Store listing copy](app-store-listing.md)
 - [Firebase analytics](firebase-analytics.md)
 - [Product scope](../game-modes/PRODUCT_SCOPE.md)

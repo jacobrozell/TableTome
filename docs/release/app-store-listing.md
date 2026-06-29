@@ -13,12 +13,12 @@ Update this file when listing copy changes; keep URLs in sync with `Support/AppL
 |--------|--------|
 | **App name** | Tabletome |
 | **Bundle ID** | `com.jacobrozell.tabletome` |
-| **Version** | 1.0.0 (build 8) |
+| **Version** | 1.0.0 (build 11) |
 | **Min iOS** | 18.0 |
 | **Devices** | iPhone + iPad |
 | **Primary category** | Reference |
 | **Secondary category** | Games → Strategy |
-| **Binary category** | ⚠️ `project.yml` sets `LSApplicationCategoryType = public.app-category.utilities` — align to `public.app-category.reference` on the next build, or set Connect categories to match. |
+| **Binary category** | `LSApplicationCategoryType = public.app-category.reference` (`project.yml`) — matches Connect Primary (build 11). |
 | **Price** | Free (recommended for v1.0) |
 | **Privacy URL** | https://jacobrozell.github.io/TableTome/privacy.html |
 | **Support URL** | https://jacobrozell.github.io/TableTome/support.html |
@@ -40,9 +40,9 @@ What the **default release** build actually exposes (no launch args). Keep listi
 | **40k 11e** | 6 fully-rostered armies (Armageddon + Battleforces); 1 starter matchup | "build any list / any faction" — **no list editor in 1.0** |
 | **Combat Patrol** | All 23 patrol boxes w/ datasheets; 6 missions; 1 starter matchup | that it's 11e |
 | **Rules tab** | Section browse + filter + text **search** + glossary | a full warscroll/unit search index (that's the gated `AppSearchView`) |
-| **Models** | Collection CRUD + painting-stage pipeline + CSV backup | a Paints inventory library (gated) |
+| **Models** | Collection CRUD + painting-stage pipeline + **Paints inventory** + CSV backup | — |
 
-**Gated, do not mention:** Army Lists (Muster), Paints inventory, StarCraft TMG, Rules Q&A assistant.
+**Gated, do not mention:** Army Lists (Muster), StarCraft TMG, Rules Q&A assistant.
 
 ---
 
@@ -275,7 +275,7 @@ Full shot list: [`screenshot-script.md`](screenshot-script.md).
 
 **Rules for App Store assets:**
 - No Games Workshop box art, logos, or trademarked product photography
-- No gated tabs (Lists/Muster, Paints) or StarCraft in 1.0 shots
+- No gated tabs (Lists/Muster) or StarCraft in 1.0 shots — **Paints** (Models segment) is OK
 - Frame 4 must show combat resolver — not "coming soon"
 - Label Combat Patrol frames as 10th Edition if shown
 
@@ -348,12 +348,12 @@ Please report crashes, VoiceOver issues, and any rules wording that feels wrong.
 
 ---
 
-## TestFlight — What to Test (build 8 / 1.0.0)
+## TestFlight — What to Test (build 11 / 1.0.0)
 
-See also [`testflight-1.0.0-build-8.md`](testflight-1.0.0-build-8.md).
+See also [`testflight-1.0.0-build-11.md`](testflight-1.0.0-build-11.md).
 
 ```
-Thanks for testing Tabletome 1.0.0 (8)!
+Thanks for testing Tabletome 1.0.0 (11)!
 
 Please try:
 1. First launch — onboarding game picker; confirm Spearhead, Combat Patrol, and 40k 11e are visible (no StarCraft).
@@ -384,7 +384,7 @@ Send feedback via TestFlight → Send Beta Feedback. Include device model and iO
 
 ### Store copy
 
-- [ ] Description lists only v1.0 features (no Lists, Paints, StarCraft, Rules Q&A)
+- [ ] Description lists only v1.0 features (no Lists, StarCraft, Rules Q&A) — **Paints inventory OK**
 - [ ] Combat Patrol labeled **10th Edition rules** — distinct from 11e
 - [ ] GW disclaimer matches Settings → About
 - [ ] Keywords match shipped behavior

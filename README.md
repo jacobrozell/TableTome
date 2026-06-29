@@ -2,9 +2,9 @@
 
 Offline-first iOS reference and rules companion for Warhammer tabletop games — guided matches, roll evaluation, rules browser, and miniature collection tracking. No account required; all rules data ships in the bundle.
 
-**Status:** TestFlight 1.0.0 (build 8) · **Branch:** `release/1.0.0` · [Release status](docs/release/status.md)
+**Status:** TestFlight 1.0.0 (build 11) · **Branch:** `release/1.0.0` · [Release status](docs/release/status.md)
 
-**Shipped in 1.0:** Age of Sigmar **Spearhead**, Warhammer 40,000 **11th Edition**, and **Combat Patrol (10th Edition rules)**. Gated until post-1.0: Army Lists/Muster, Paints, StarCraft TMG, Rules Q&A — see [release surface spec](specs/ReleaseSurfaceSpec.md).
+**Shipped in 1.0:** Age of Sigmar **Spearhead**, Warhammer 40,000 **11th Edition**, **Combat Patrol (10th Edition rules)**, and **Paints inventory**. Gated until post-1.0: Army Lists/Muster, StarCraft TMG, Rules Q&A — see [release surface spec](specs/ReleaseSurfaceSpec.md).
 
 **Agents:** start at [`AGENTS.md`](AGENTS.md)
 

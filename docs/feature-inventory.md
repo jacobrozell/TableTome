@@ -18,7 +18,7 @@ What the build exposes today vs planned. Updated when release surface changes.
 | Combat Patrol (10e rules) | **shipped** | 1.0.0 | `wh40k-10e-cp` — not 11e; not full 10e matched play |
 | Match history | **shipped** | 1.0.0 | Local match log |
 | Settings & legal links | **shipped** | 1.0.0 | GitHub Pages docs |
-| Paints inventory | gated | post-1.0 | `-enable_full_product_surface` |
+| Paints inventory | **shipped** | 1.0.0 (build 11) | Models tab segment; catalog swatches + autocomplete |
 | Army lists (Muster) | gated | post-1.0 | `-enable_full_product_surface` |
 | Full 10e matched play | **not planned** | — | See [PRODUCT_SCOPE.md](game-modes/PRODUCT_SCOPE.md) |
 | StarCraft TMG | gated | post-1.0 | `-enable_full_product_surface` |

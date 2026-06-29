@@ -54,7 +54,7 @@ struct ChecklistStepRow<Extra: View>: View {
         .padding(.horizontal, isFocused ? DesignTokens.Spacing.xs : 0)
         .background(
             isFocused ? Color.accentColor.opacity(0.08) : Color.clear,
-            in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
+            in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous)
         )
         .minimumTouchTarget(alignment: .leading)
     }

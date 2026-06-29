@@ -95,4 +95,26 @@ extension View {
             self
         }
     }
+
+    /// Breathing room below the nav bar so inset grouped form sections show rounded top corners.
+    func formEditorTopContentMargin() -> some View {
+        contentMargins(.top, DesignTokens.Spacing.sm, for: .scrollContent)
+    }
+
+    /// Top margin + standard form editor chrome for NavigationStack sheets.
+    func formEditorScreenChrome() -> some View {
+        formEditorTopContentMargin()
+    }
+}
+
+extension ToolbarContent {
+    /// Plain toolbar actions without the iOS 26 floating glass capsule.
+    @ToolbarContentBuilder
+    func hidingToolbarGlassBackgroundIfAvailable() -> some ToolbarContent {
+        if #available(iOS 26.0, *) {
+            self.sharedBackgroundVisibility(.hidden)
+        } else {
+            self
+        }
+    }
 }

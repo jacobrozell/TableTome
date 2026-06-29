@@ -1,4 +1,5 @@
 import SwiftUI
+import TabletomeDomain
 
 /// Applies stable accessibility identifiers and visibility to the root `UITabBarController`.
 struct TabBarAccessibilityBridge: UIViewControllerRepresentable {
@@ -77,13 +78,77 @@ struct TabBarAccessibilityBridge: UIViewControllerRepresentable {
     }
 }
 
-/// Keeps iPhone tab bars at the bottom in landscape instead of the iOS 18+ sidebar strip.
-struct PhoneTabBarOnlyStyle: ViewModifier {
+/// Keeps tabs in the tab bar on iPhone and iPad (avoids iPad sidebar selection/content desync).
+struct TabBarOnlyStyle: ViewModifier {
     func body(content: Content) -> some View {
-        if TabletomeLayout.currentIdiom() == .phone {
-            content.tabViewStyle(.tabBarOnly)
-        } else {
-            content
+        content.tabViewStyle(.tabBarOnly)
+    }
+}
+
+/// Forces UIKit tab bar selection to match SwiftUI when iPad tab highlight desyncs from `selection`.
+struct TabBarSelectionBridge: UIViewControllerRepresentable {
+    let selectedTab: AppTab
+
+    func makeUIViewController(context: Context) -> Controller {
+        Controller(selectedTab: selectedTab)
+    }
+
+    func updateUIViewController(_ controller: Controller, context: Context) {
+        controller.selectedTab = selectedTab
+        controller.apply()
+        DispatchQueue.main.async {
+            controller.apply()
+        }
+    }
+
+    final class Controller: UIViewController {
+        var selectedTab: AppTab
+
+        init(selectedTab: AppTab) {
+            self.selectedTab = selectedTab
+            super.init(nibName: nil, bundle: nil)
+            view.isHidden = true
+            view.isUserInteractionEnabled = false
+        }
+
+        @available(*, unavailable)
+        required init?(coder: NSCoder) { nil }
+
+        override func viewDidLayoutSubviews() {
+            super.viewDidLayoutSubviews()
+            apply()
+        }
+
+        func apply() {
+            guard let tabBarController = tabBarController() else { return }
+            let targetIndex = Self.tabIndex(for: selectedTab)
+            guard tabBarController.selectedIndex != targetIndex else { return }
+            tabBarController.selectedIndex = targetIndex
+        }
+
+        private static func tabIndex(for tab: AppTab) -> Int {
+            var index = 0
+            if ReleaseSurface.showsBenchTab {
+                if tab == .bench { return index }
+                index += 1
+            }
+            if ReleaseSurface.showsMusterTab {
+                if tab == .muster { return index }
+                index += 1
+            }
+            if tab == .learn { return index }
+            index += 1
+            if tab == .search { return index }
+            index += 1
+            return index
+        }
+
+        private func tabBarController() -> UITabBarController? {
+            guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                  let root = scene.windows.first(where: \.isKeyWindow)?.rootViewController else {
+                return nil
+            }
+            return root.findTabBarController()
         }
     }
 }

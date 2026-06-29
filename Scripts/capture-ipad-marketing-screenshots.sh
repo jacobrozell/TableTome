@@ -36,5 +36,6 @@ export APP_STORE_WIDTH="${APP_STORE_WIDTH:-2064}"
 export APP_STORE_HEIGHT="${APP_STORE_HEIGHT:-2752}"
 export APP_STORE_RESIZE="${APP_STORE_RESIZE:-1}"
 export LAUNCH_DELAY="${LAUNCH_DELAY:-10}"
+export UNIT_FOCUS_LAUNCH_DELAY="${UNIT_FOCUS_LAUNCH_DELAY:-14}"
 
 exec "$ROOT/Scripts/capture-marketing-screenshots.sh"

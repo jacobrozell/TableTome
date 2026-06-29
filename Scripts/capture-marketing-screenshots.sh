@@ -10,8 +10,9 @@
 # Output: marketing-screenshots/raw/*.png
 # Then run: ./Scripts/frame-marketing-screenshots.sh (optional bezels for web/social)
 #
-# App Store 6.9" slot: iPhone 17 Pro Max native 1320×2868 — set APP_STORE_RESIZE=0 (default here).
-# App Store 6.5" slot: iPhone 17 Pro + APP_STORE_RESIZE=1 (1284×2778).
+# App Store 6.5"/6.7" slot (default): 1284×2778 portrait after capture.
+# Native iPhone 17 Pro Max (1320×2868) is rejected unless you upload to the 6.9" slot only.
+# For 6.9" native: APP_STORE_RESIZE=0 SIM_NAME="iPhone 17 Pro Max"
 
 set -euo pipefail
 
@@ -32,7 +33,7 @@ PROJECT="$ROOT/Tabletome.xcodeproj"
 DERIVED_DATA="${DERIVED_DATA:-$ROOT/.derivedData/marketing-screenshots}"
 LAUNCH_DELAY="${LAUNCH_DELAY:-8}"
 ORIENTATION_SETTLE_SEC="${ORIENTATION_SETTLE_SEC:-1.5}"
-APP_STORE_RESIZE="${APP_STORE_RESIZE:-0}"
+APP_STORE_RESIZE="${APP_STORE_RESIZE:-1}"
 
 COMMON_ARGS=(-skip_onboarding -reset_user_defaults)
 
@@ -176,28 +177,28 @@ THEME="$(theme_arg)"
 
 # App Store priority order — see marketing-screenshots/README.md and docs/release/screenshot-script.md
 capture "01-play-home" \
-  "${COMMON_ARGS[@]}" -snapshot_play_home "$(theme_arg)"
+  "${COMMON_ARGS[@]}" -snapshot_play_home -snapshot_tab play "$(theme_arg)"
 
 capture "02-spearhead-start-here" \
-  "${COMMON_ARGS[@]}" -open_game_guide aos-spearhead "$(theme_arg)"
+  "${COMMON_ARGS[@]}" -open_game_guide aos-spearhead -snapshot_tab play "$(theme_arg)"
 
 capture "03-guided-match-armies" \
-  "${COMMON_ARGS[@]}" -open_guided_match -snapshot_guided_match_armies "$(theme_arg)"
+  "${COMMON_ARGS[@]}" -open_guided_match -snapshot_guided_match_armies -snapshot_tab play "$(theme_arg)"
 
 capture "04-battle-combat" \
-  "${COMMON_ARGS[@]}" -open_guided_match -open_battle_tracker -snapshot_battle_combat "$(theme_arg)"
+  "${COMMON_ARGS[@]}" -open_guided_match -open_battle_tracker -snapshot_battle_combat -snapshot_tab play "$(theme_arg)"
 
-capture "05-unit-focus" \
-  "${COMMON_ARGS[@]}" -open_guided_match -open_battle_tracker -snapshot_battle_combat -open_unit_focus "$(theme_arg)"
+LAUNCH_DELAY="${UNIT_FOCUS_LAUNCH_DELAY:-12}" capture "05-unit-focus" \
+  "${COMMON_ARGS[@]}" -open_guided_match -open_battle_tracker -snapshot_battle_combat -open_unit_focus -snapshot_tab play "$(theme_arg)"
 
 capture "06-rules-search" \
-  "${COMMON_ARGS[@]}" -open_rules_search rend "$(theme_arg)"
+  "${COMMON_ARGS[@]}" -open_rules_search rend -snapshot_tab rules "$(theme_arg)"
 
 capture "07-wh40k-guide" \
-  "${COMMON_ARGS[@]}" -open_game_guide wh40k-11e "$(theme_arg)"
+  "${COMMON_ARGS[@]}" -open_game_guide wh40k-11e -snapshot_tab play "$(theme_arg)"
 
 capture "08-models-collection" \
-  "${COMMON_ARGS[@]}" -snapshot_models_collection -load_sample_collection \
+  "${COMMON_ARGS[@]}" -snapshot_models_collection -load_sample_collection -snapshot_tab models \
   -onboarding_choice aos-spearhead UI-Testing-Persistent "$(theme_arg)" \
   $([[ "$SIM_NAME" == *iPad* ]] && echo UI-Testing)
 

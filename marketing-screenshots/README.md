@@ -5,7 +5,7 @@ Professional App Store and marketing assets for **Tabletome**.
 ## Quick start
 
 ```bash
-# iPhone (6.9" slot — iPhone 17 Pro Max, native 1320×2868)
+# iPhone (6.5"/6.7" slot — 1284×2778 after capture)
 ./Scripts/capture-marketing-screenshots.sh
 
 # Light mode
@@ -31,17 +31,14 @@ brew install imagemagick   # once
 
 Upload **`raw/`** and **`ipad/raw/`** only (no device frames).
 
-**iPhone 6.9" Display** (default simulator: iPhone 17 Pro Max):
+**iPhone 6.5" / 6.7" Display** (default — what App Store Connect accepts for most iPhone slots):
 
-- Native **1320 × 2868** — `APP_STORE_RESIZE=0` (default)
+- **1284 × 2778** portrait (capture script resizes automatically)
+- Alternate: **1242 × 2688** — `APP_STORE_WIDTH=1242 APP_STORE_HEIGHT=2688 ./Scripts/capture-marketing-screenshots.sh`
 
-**iPhone 6.5" Display** (alternate):
+**iPhone 6.9" Display** (separate slot only):
 
-```bash
-SIM_NAME="iPhone 17 Pro" APP_STORE_RESIZE=1 ./Scripts/capture-marketing-screenshots.sh
-```
-
-Resizes to **1284 × 2778** after capture.
+- Native **1320 × 2868** — `APP_STORE_RESIZE=0` (do not upload these to the 6.5" slot)
 
 **iPad 13" Display:**
 

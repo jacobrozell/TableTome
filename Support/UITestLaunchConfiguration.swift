@@ -28,6 +28,8 @@ enum UITestLaunchConfiguration {
             MarketingSnapshotBootstrap.preparePlayHomeSnapshot()
         }
 
+        MarketingSnapshotBootstrap.prepareCaptureStateIfNeeded()
+
         if args.contains(MarketingSnapshotBootstrap.snapshotModelsCollection)
             || args.contains(MarketingSnapshotBootstrap.loadSampleCollection) {
             OnboardingStore.markCompleted()

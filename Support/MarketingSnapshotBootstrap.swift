@@ -11,6 +11,18 @@ enum MarketingSnapshotBootstrap {
     static let openUnitFocus = "-open_unit_focus"
     static let loadSampleCollection = "-load_sample_collection"
     static let snapshotModelsCollection = "-snapshot_models_collection"
+    static let snapshotTab = "-snapshot_tab"
+
+    static var forcedSnapshotTab: AppTab? {
+        guard let value = value(following: snapshotTab) else { return nil }
+        switch value {
+        case "play": return .learn
+        case "rules": return .search
+        case "models": return .bench
+        case "settings": return .settings
+        default: return nil
+        }
+    }
 
     static var shouldSnapshotPlayHome: Bool {
         ProcessInfo.processInfo.arguments.contains(snapshotPlayHome)
@@ -37,6 +49,26 @@ enum MarketingSnapshotBootstrap {
         ProcessInfo.processInfo.arguments.contains(snapshotModelsCollection)
     }
 
+    /// Any `-snapshot_*` flag or screenshot deep-link argument is active.
+    static var isMarketingCapture: Bool {
+        let args = ProcessInfo.processInfo.arguments
+        if args.contains(where: { $0.hasPrefix("-snapshot_") }) { return true }
+        if args.contains(openUnitFocus) { return true }
+        if args.contains(openGameGuide) { return true }
+        if args.contains(openRulesSearch) { return true }
+        return forcedSnapshotTab != nil
+    }
+
+    /// Hide Guided Match sidebar so battle / unit-focus frames fill the detail column.
+    static var hidesGuidedMatchSidebar: Bool {
+        shouldSnapshotBattleCombat || shouldOpenUnitFocus
+    }
+
+    /// Suppress first-session coaching banners and coach cards during automation capture.
+    static var suppressesCoachingUI: Bool {
+        isMarketingCapture
+    }
+
     static var openGameGuideGameSystemId: String? {
         value(following: openGameGuide)
     }
@@ -56,25 +88,33 @@ enum MarketingSnapshotBootstrap {
         if shouldSnapshotModelsCollection {
             router.selectedTab = .bench
             router.hobbyTab = .armies
-            return
         }
 
         if let gameSystemId = openGameGuideGameSystemId {
             router.openGameGuide(gameSystemId: gameSystemId)
-            return
-        }
-
-        if AppLaunchArguments.shouldOpenGuidedMatch {
+        } else if AppLaunchArguments.shouldOpenGuidedMatch {
             router.openGuidedMatch(gameSystemId: OnboardingCompletion.defaultGameSystemId)
-            return
-        }
-
-        if let query = openRulesSearchQuery {
+        } else if let query = openRulesSearchQuery {
             router.openRulesSearch(
                 gameSystemId: OnboardingCompletion.spearheadGameSystemId,
                 query: query
             )
-            return
+        }
+
+        if let tab = forcedSnapshotTab {
+            router.selectedTab = tab
+        }
+    }
+
+    /// Re-applies tab selection after navigation settles (iPad tab bar highlight desync).
+    @MainActor
+    static func reinforceTabSelectionIfNeeded(router: AppRouter) {
+        guard let tab = forcedSnapshotTab else { return }
+        Task {
+            for delayMs in [100, 400, 900] {
+                try? await Task.sleep(for: .milliseconds(delayMs))
+                router.selectedTab = tab
+            }
         }
     }
 
@@ -82,6 +122,18 @@ enum MarketingSnapshotBootstrap {
         OnboardingStore.markCompleted()
         FirstSessionStore.recordOnboardingChoice(gameSystemId: OnboardingCompletion.spearheadGameSystemId)
         FirstSessionStore.recordGameGuideOpened()
+    }
+
+    /// Marks coaching milestones seen so battle and setup frames stay clean after `-reset_user_defaults`.
+    static func prepareCaptureStateIfNeeded() {
+        guard suppressesCoachingUI else { return }
+        FirstSessionStore.markModelsNudgeSeen()
+        FirstSessionStore.markRoundOneMilestoneSeen()
+        FirstSessionStore.recordFirstBattleRound()
+        NewPlayerTipsStore.markBattleTrackerCoachSeen()
+        NewPlayerTipsStore.dismissCombatSequencePrimer()
+        NewPlayerTipsStore.markPhysicalDiceResolverHintSeen()
+        NewPlayerTipsStore.dismissHeroRoundOneNudge()
     }
 
     private static func value(following flag: String) -> String? {

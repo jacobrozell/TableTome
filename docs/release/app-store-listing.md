@@ -18,6 +18,7 @@ Update this file when listing copy changes; keep URLs in sync with `Support/AppL
 | **Devices** | iPhone + iPad |
 | **Primary category** | Reference |
 | **Secondary category** | Games → Strategy |
+| **Binary category** | ⚠️ `project.yml` sets `LSApplicationCategoryType = public.app-category.utilities` — align to `public.app-category.reference` on the next build, or set Connect categories to match. |
 | **Price** | Free (recommended for v1.0) |
 | **Privacy URL** | https://jacobrozell.github.io/TableTome/privacy.html |
 | **Support URL** | https://jacobrozell.github.io/TableTome/support.html |
@@ -27,9 +28,37 @@ Before submit: confirm GitHub Pages is live for the URLs above.
 
 ---
 
+## Ground-truth feature parity (verified 2026-06-29)
+
+What the **default release** build actually exposes (no launch args). Keep listing copy within these bounds — see [`feature-inventory.md`](../feature-inventory.md) and `Support/ReleaseSurface.swift`.
+
+| Surface | Reality | Listing must NOT imply |
+|---------|---------|------------------------|
+| **Tabs** | Models, Play, Rules, Settings (4) | a Lists/army-builder tab |
+| **Game systems** | Spearhead, 40k 11e, Combat Patrol 10e (3) | StarCraft, full 10e matched play |
+| **Spearhead** | 48 armies / 24 factions selectable; 1 built-in starter matchup | — |
+| **40k 11e** | 6 fully-rostered armies (Armageddon + Battleforces); 1 starter matchup | "build any list / any faction" — **no list editor in 1.0** |
+| **Combat Patrol** | All 23 patrol boxes w/ datasheets; 6 missions; 1 starter matchup | that it's 11e |
+| **Rules tab** | Section browse + filter + text **search** + glossary | a full warscroll/unit search index (that's the gated `AppSearchView`) |
+| **Models** | Collection CRUD + painting-stage pipeline + CSV backup | a Paints inventory library (gated) |
+
+**Gated, do not mention:** Army Lists (Muster), Paints inventory, StarCraft TMG, Rules Q&A assistant.
+
+---
+
 ## Subtitle (30 characters max)
 
-**Option A (recommended):**
+The subtitle is indexed for search — pack it with keywords not already in the app name.
+
+**Option A (recommended — keyword-dense):**
+
+```
+Wargame guide & battle tracker
+```
+
+(30 characters — adds "wargame", "guide", "battle", "tracker")
+
+**Option B:**
 
 ```
 Guided play & rules lookup
@@ -37,7 +66,7 @@ Guided play & rules lookup
 
 (26 characters)
 
-**Option B:**
+**Option C:**
 
 ```
 Offline wargame companion
@@ -45,7 +74,7 @@ Offline wargame companion
 
 (25 characters)
 
-**Option C:**
+**Option D:**
 
 ```
 Learn and play at the table
@@ -60,25 +89,29 @@ Learn and play at the table
 Editable without a new build.
 
 ```
-Offline companion for Age of Sigmar Spearhead, Warhammer 40,000 11th Edition, and Combat Patrol. Guided setup, phase tracker, rules search — no account required.
+Offline companion for Age of Sigmar Spearhead, Warhammer 40,000 11th Edition, and all 23 Combat Patrol boxes. Guided setup, phase tracker, rules reference — no account.
 ```
 
-(158 characters)
+(168 characters)
 
 ---
 
 ## Description
 
 ```
-Tabletome is an offline companion for Warhammer tabletop games — built for the table, not the bookshelf. Pick your starter box, follow step-by-step setup, look up rules mid-game, and track each turn without an account or internet connection.
+Tabletome is an offline companion for Warhammer tabletop games — built for the table, not the bookshelf. Pick your starter box, follow step-by-step setup, look up rules mid-game, and track every turn without an account or internet connection.
+
+NOT SURE WHERE TO START
+• "What did you buy?" picker matches your box to the right guide
+• Box identifier and wrong-guide warnings keep new players on track
+• Preview a Turn — watch a full round play out before your first game
 
 WHAT'S IN 1.0
 
 Age of Sigmar: Spearhead
 • Getting Started walkthrough for your first game
-• Guided Match with built-in starter matchups
-• Phase-by-phase battle tracker with combat tools
-• Offline rules reference with search and glossary links
+• 48 ready-to-play armies across 24 factions in Guided Match
+• Phase-by-phase battle tracker with combat tools and Unit Focus
 
 Warhammer 40,000 — 11th Edition
 • Full 11e guide with Armageddon and Battleforce starter armies
@@ -86,11 +119,12 @@ Warhammer 40,000 — 11th Edition
 • Combat resolver for hit, wound, and save rolls at the table
 
 Warhammer 40,000 — Combat Patrol (10th Edition rules)
-• Separate guide for Combat Patrol boxes — patrol rules, missions, and tracker
-• Not the same as 11th Edition full 40k; pick the guide that matches your box
+• All 23 current Combat Patrol boxes with full unit datasheets
+• Patrol missions, enhancements, and a dedicated battle tracker
+• Not the same as 11th Edition full 40k — pick the guide that matches your box
 
 ALWAYS WITH YOU AT THE TABLE
-• Rules browser — search and filter without leaving the game
+• Rules reference — browse, filter, and search with glossary links
 • Unit Focus — stats, weapons, and wound tracking one tap away
 • Match history — pick up where you left off
 • Models — track armies and painting progress between games
@@ -130,15 +164,15 @@ Unofficial fan app — not affiliated with Games Workshop.
 
 ## Keywords (100 characters total)
 
-Comma-separated, no spaces after commas. Do not repeat words in the app name.
+Comma-separated, no spaces after commas. Use single tokens where possible — Apple auto-combines keyword-field words (and the app name) into phrases, so splitting "combat patrol" → `combat,patrol` saves a character and still matches the phrase. Don't repeat the app name ("Tabletome") or stopwords ("of", "the").
 
 ```
-warhammer,40k,spearhead,combat patrol,age of sigmar,wargame,miniatures,rules,tabletop,battle tracker
+warhammer,40k,wh40k,aos,sigmar,spearhead,combat,patrol,wargame,miniatures,tabletop,rules,tracker
 ```
 
-(99 characters)
+(96 characters — yields combos like "age of sigmar", "combat patrol", "battle tracker", "warhammer 40k")
 
-**Alternates to swap in:** `guided match`, `turn tracker`, `aos`, `wh40k`, `11th edition`
+**Alternates to swap in:** `painting`, `roster`, `dice`, `turn`, `phase`, `guided`, `40000`
 
 ---
 

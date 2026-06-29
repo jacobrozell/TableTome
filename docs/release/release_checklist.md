@@ -37,6 +37,13 @@
 - [ ] Archive + upload to App Store Connect
 - [ ] TestFlight release notes mention Spearhead, 40k 11e, and Combat Patrol (10th Edition rules)
 
+## Telemetry (Release)
+
+- [ ] Real `GoogleService-Info.plist` for archive (copy from [`Resources/GoogleService-Info.plist.example`](../../Resources/GoogleService-Info.plist.example))
+- [ ] Crashlytics dSYM upload succeeds on archive
+- [ ] TestFlight smoke: `app_open`, one guided match, Models tab visit — see [firebase-analytics.md](firebase-analytics.md)
+- [ ] Privacy policy + App Store labels mention Analytics/Crashlytics (no ads/tracking)
+
 ## After 1.0.0 (gated features)
 
 Do **not** ungate Lists, Paints, StarCraft, or Rules Q&A until the matching section in [gated-features-testing.md](gated-features-testing.md) is signed off. Combat Patrol ships in 1.0 — full 10e matched play is not planned.

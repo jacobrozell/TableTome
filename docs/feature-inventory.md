@@ -23,7 +23,7 @@ What the build exposes today vs planned. Updated when release surface changes.
 | Full 10e matched play | **not planned** | — | See [PRODUCT_SCOPE.md](game-modes/PRODUCT_SCOPE.md) |
 | StarCraft TMG | gated | post-1.0 | `-enable_full_product_surface` |
 | Rules Q&A assistant | stub | post-1.0 | Behind release gate |
-| Telemetry | stub | — | Off by default |
+| Telemetry | **shipped** | 1.0.0 | Firebase Analytics + Crashlytics in Release; see [firebase-analytics.md](release/firebase-analytics.md) |
 | Localization (non-en) | planned | v1.x | Files in repo when added |
 
 **Gated feature testing:** [docs/release/gated-features-testing.md](release/gated-features-testing.md) — complete before ungating each item above.

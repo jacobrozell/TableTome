@@ -42,7 +42,7 @@
 - [ ] Real `GoogleService-Info.plist` for archive (copy from [`Resources/GoogleService-Info.plist.example`](../../Resources/GoogleService-Info.plist.example))
 - [ ] Crashlytics dSYM upload succeeds on archive
 - [ ] TestFlight smoke: `app_open`, one guided match, Models tab visit — see [firebase-analytics.md](firebase-analytics.md)
-- [x] Hosted privacy policy updated for Analytics/Crashlytics — [`privacy.html`](../privacy.html) (2026-06-29); **push to GitHub Pages before external testers**
+- [x] Hosted privacy policy updated for Analytics/Crashlytics — [`privacy.html`](../privacy.html) (2026-06-29); live on GitHub Pages after `main` merge
 - [ ] App Store Connect privacy labels: Diagnostics + Usage data, no tracking — see [app-store-listing.md](app-store-listing.md) § App Privacy
 
 ## After 1.0.0 (gated features)

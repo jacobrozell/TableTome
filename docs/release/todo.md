@@ -17,7 +17,7 @@ Metadata: [`status.md`](status.md) · Expanded: [`release_checklist.md`](release
 - [x] **Bump build** — `CURRENT_PROJECT_VERSION` → 8 in `project.yml`
 - [x] **Privacy policy** — [`privacy.html`](../privacy.html) Firebase disclosure
 - [x] **App Store listing draft** — analytics + nutrition labels in [`app-store-listing.md`](app-store-listing.md)
-- [ ] **Push GitHub Pages** — merge/push `docs/` to `main` so hosted privacy URL is live
+- [x] **Push GitHub Pages** — `main` merged from `release/1.0.0` (2026-06-29); allow 1–3 min for deploy
 - [ ] **Archive + upload** — Release notes: [`testflight-1.0.0-build-8.md`](testflight-1.0.0-build-8.md)
 - [ ] **Telemetry smoke** — `app_open` in Firebase after TestFlight install
 - [ ] **App Store Connect privacy** — Diagnostics + Usage data (not “Data Not Collected”)

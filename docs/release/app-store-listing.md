@@ -13,7 +13,7 @@ Update this file when listing copy changes; keep URLs in sync with `Support/AppL
 |--------|--------|
 | **App name** | Tabletome |
 | **Bundle ID** | `com.jacobrozell.tabletome` |
-| **Version** | 1.0.0 (build 6) |
+| **Version** | 1.0.0 (build 8) |
 | **Min iOS** | 18.0 |
 | **Devices** | iPhone + iPad |
 | **Primary category** | Reference |
@@ -154,20 +154,31 @@ Initial release.
 • Models collection for armies and paint progress
 • Match history and optional nearby device sync
 • iPhone and iPad — light and dark mode, VoiceOver, Dynamic Type
+• Anonymous diagnostics in Release builds (Firebase Analytics + Crashlytics; no PII) — see Privacy Policy
 ```
 
 ---
 
 ## App Privacy (Privacy Nutrition Labels)
 
+Align answers with [`privacy.html`](../privacy.html) (updated 2026-06-29).
+
 | Question | Answer |
 |----------|--------|
-| **Do you collect data?** | No — nothing is transmitted to developer-operated servers |
-| **Data linked to user** | None |
-| **Data used to track** | None |
-| **Third-party SDKs** | Google Firebase (Analytics + Crashlytics, Release only; no ads) |
+| **Developer-operated servers** | No — game data stays on device; no Tabletome account or cloud sync |
+| **Third-party SDKs** | Google Firebase (Analytics + Crashlytics) in **Release / TestFlight builds only** |
+| **Data linked to user identity** | None (anonymous Firebase installation identifiers only) |
+| **Data used to track** | None — no ads, no ATT, no cross-app tracking |
 
-In App Store Connect: **Data Not Collected**.
+**App Store Connect → App Privacy (typical for this app):**
+
+| Category | Collect? | Linked to identity? | Used for tracking? |
+|----------|----------|---------------------|-------------------|
+| **Diagnostics** — Crash data | Yes | No | No |
+| **Usage data** — Product interaction (allowlisted events) | Yes | No | No |
+| **User content** (army names, photos, match notes) | **No** — stored on device only, not transmitted |
+
+Do **not** select **Data Not Collected** if Firebase ships in the Release archive.
 
 All game state, collection data, and preferences are stored locally on device. Optional nearby match sync exchanges state directly between two devices on the local network — not uploaded to Tabletome.
 
@@ -216,6 +227,8 @@ No login or network is required for core features. To test:
 Combat Patrol is a separate game mode from 11th Edition full 40k — Play → Warhammer 40,000 sub-picker → Combat Patrol.
 
 Optional nearby match sync: Play → Guided Match → sync icon; uses local Wi‑Fi/Bluetooth peer-to-peer only when both players opt in. iOS may prompt for local network permission.
+
+Release builds include Google Firebase Analytics and Crashlytics (allowlisted events, no army names or player PII). Debug builds from Xcode typically do not send telemetry. Privacy Policy URL describes diagnostics.
 
 Unofficial app — not affiliated with Games Workshop. Rules text is original paraphrase for learning, not reproduced rulebook content. No Games Workshop logos or box art in the app or marketing screenshots.
 ```
@@ -301,10 +314,12 @@ Please report crashes, VoiceOver issues, and any rules wording that feels wrong.
 
 ---
 
-## TestFlight — What to Test (build 6 / 1.0.0)
+## TestFlight — What to Test (build 8 / 1.0.0)
+
+See also [`testflight-1.0.0-build-8.md`](testflight-1.0.0-build-8.md).
 
 ```
-Thanks for testing Tabletome 1.0.0!
+Thanks for testing Tabletome 1.0.0 (8)!
 
 Please try:
 1. First launch — onboarding game picker; confirm Spearhead, Combat Patrol, and 40k 11e are visible (no StarCraft).
@@ -316,6 +331,8 @@ Please try:
 7. Offline — airplane mode on Play + Rules.
 8. iPad — split layouts for Collection and Guided Match.
 9. Accessibility — VoiceOver on Play/Rules; Dynamic Type at AXXXL on step detail.
+
+Release builds send anonymous usage and crash diagnostics (Firebase) — no personal content from your collection.
 
 Send feedback via TestFlight → Send Beta Feedback. Include device model and iOS version.
 ```
@@ -341,7 +358,8 @@ Send feedback via TestFlight → Send Beta Feedback. Include device model and iO
 
 ### Legal / policy
 
-- [ ] Privacy nutrition: Data Not Collected
+- [ ] Privacy nutrition aligned with Firebase (Diagnostics + Usage data; not “Data Not Collected”) — see **App Privacy** section above
+- [ ] Hosted [`privacy.html`](../privacy.html) live on GitHub Pages (29 June 2026 Firebase disclosure)
 - [ ] Local network usage explained in Review Notes (nearby sync)
 - [ ] No GW logos in icon, screenshots, or preview video
 

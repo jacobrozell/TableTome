@@ -16,8 +16,8 @@ Index for TestFlight and App Store delivery. Current state: [`status.md`](status
 | [gated-features-testing.md](gated-features-testing.md) | QA before ungating Lists, Paints, TMG, Rules Q&A |
 | [firebase-analytics.md](firebase-analytics.md) | Telemetry setup, GA4 dimensions, TestFlight smoke |
 | [screenshot-script.md](screenshot-script.md) | App Store screenshot capture |
-| [testflight-1.0.0-build-6.md](testflight-1.0.0-build-6.md) | Historical TestFlight notes |
-| [app-store-listing.md](app-store-listing.md) | Store copy reference |
+| [testflight-1.0.0-build-8.md](testflight-1.0.0-build-8.md) | Current TestFlight tester notes (build 8) |
+| [app-store-listing.md](app-store-listing.md) | App Store Connect copy + privacy labels |
 
 ---
 

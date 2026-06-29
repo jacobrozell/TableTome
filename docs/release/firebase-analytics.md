@@ -168,9 +168,9 @@ xcodebuild test -scheme Tabletome -destination 'platform=iOS Simulator,name=iPho
 
 ## Privacy & App Store
 
-- Update hosted privacy policy when shipping telemetry (Analytics + Crashlytics, no ads/tracking)
-- App Store privacy labels: **Usage data** / **Diagnostics** as applicable
-- See [release_checklist.md](release_checklist.md) telemetry section
+- [x] Hosted privacy policy updated (Analytics + Crashlytics, no ads/tracking) — [`privacy.html`](../privacy.html)
+- [ ] GitHub Pages deployed with updated privacy/support pages
+- [ ] App Store privacy labels aligned — [`app-store-listing.md`](release/app-store-listing.md) § App Privacy
 
 ---
 

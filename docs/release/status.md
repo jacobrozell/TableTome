@@ -5,7 +5,7 @@
 | **Version** | 1.0.0 (`MARKETING_VERSION` in `project.yml`) |
 | **Phase** | **TestFlight** — not App Store production |
 | **Branch** | `release/1.0.0` |
-| **Build** | `CURRENT_PROJECT_VERSION` in `project.yml` (increment per TestFlight upload) |
+| **Build** | **8** (`CURRENT_PROJECT_VERSION` in `project.yml`) — [TestFlight notes](testflight-1.0.0-build-8.md) |
 
 ## 1.0.0 scope
 
@@ -23,6 +23,8 @@ Gated until after 1.0.0 polish (see [ReleaseSurfaceSpec.md](../../specs/ReleaseS
 
 **QA:** Combat Patrol manual pass — [gated-features-testing.md](gated-features-testing.md) §3 (content ships; sign-off pending).
 
+**Telemetry:** Firebase Analytics + Crashlytics in Release/TestFlight (allowlisted events; privacy policy updated 2026-06-29). See [firebase-analytics.md](firebase-analytics.md).
+
 ## Dogfood / internal builds
 
 Add `-enable_full_product_surface` in **Edit Scheme → Run → Arguments** to unlock Lists, Paints, StarCraft, Rules Q&A, etc.
@@ -32,6 +34,9 @@ Add `-enable_full_product_surface` in **Edit Scheme → Run → Arguments** to u
 ## Related docs
 
 - [Release checklist (1.0.0 TestFlight)](release_checklist.md)
+- [TestFlight build 8 notes](testflight-1.0.0-build-8.md)
+- [App Store listing copy](app-store-listing.md)
+- [Firebase analytics](firebase-analytics.md)
 - [Product scope](../game-modes/PRODUCT_SCOPE.md)
 - [Gated features testing backlog](gated-features-testing.md)
 - [Feature inventory](../feature-inventory.md)

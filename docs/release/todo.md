@@ -8,12 +8,17 @@ Metadata: [`status.md`](status.md) · Expanded: [`release_checklist.md`](release
 
 - [ ] **Release surface defaults** — Spearhead + 40k 11e + Combat Patrol (10e); no Lists/Paints/StarCraft/Q&A
 - [ ] **Tab bar** — Models (Collection), Play, Rules, Settings
-- [ ] **Core flows** — Getting Started both systems; Guided Match; match history; offline smoke
-- [ ] **Quality** — VoiceOver; AXXXL; iPhone Pro Max landscape Models stack nav; `CollectionFlowUITests` green in CI
-- [ ] **Settings legal links** — GitHub Pages open
+- [ ] **Core flows** — Getting Started all three systems; Guided Match; match history; offline smoke
+- [ ] **Quality** — VoiceOver; AXXXL; iPhone Pro Max landscape Models stack nav
+- [ ] **Settings legal links** — GitHub Pages open (privacy updated 2026-06-29)
 
-## TestFlight upload
+## TestFlight upload (build 8)
 
-- [ ] **Bump build** — `CURRENT_PROJECT_VERSION` in `project.yml`
-- [ ] **Archive + upload** — release notes mention Spearhead + 40k 11e scope
+- [x] **Bump build** — `CURRENT_PROJECT_VERSION` → 8 in `project.yml`
+- [x] **Privacy policy** — [`privacy.html`](../privacy.html) Firebase disclosure
+- [x] **App Store listing draft** — analytics + nutrition labels in [`app-store-listing.md`](app-store-listing.md)
+- [ ] **Push GitHub Pages** — merge/push `docs/` to `main` so hosted privacy URL is live
+- [ ] **Archive + upload** — Release notes: [`testflight-1.0.0-build-8.md`](testflight-1.0.0-build-8.md)
+- [ ] **Telemetry smoke** — `app_open` in Firebase after TestFlight install
+- [ ] **App Store Connect privacy** — Diagnostics + Usage data (not “Data Not Collected”)
 - [ ] **Gated backlog triage** — [`gated-features-testing.md`](gated-features-testing.md) before ungating

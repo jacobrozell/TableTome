@@ -53,6 +53,7 @@ extension BattlePhaseTrackerView {
             startOfRoundHelper
             if !showsDedicatedCombatTab {
                 shootingPhaseHelper
+                combatActivationSection
             }
             phaseActionNudgeSection
             turnHandoffSection
@@ -83,10 +84,12 @@ extension BattlePhaseTrackerView {
                     if showsDedicatedCombatTab {
                         shootingPhaseHelper
                     }
+                    combatActivationSection
                     damageUndoSection
                     combatPhaseHelper
                     shootInCombatPhaseHelper
                     combatResolverSection()
+                    armyTrackerSection(wideLayout: false)
                 }
             }
         }

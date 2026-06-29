@@ -3,6 +3,37 @@ import TabletomeDomain
 import TabletomeData
 
 extension BattlePhaseTrackerView {
+    @ViewBuilder
+    var combatActivationSection: some View {
+        if supportsBattleTracker, viewModel.showsCombatActivationTracker {
+            CombatActivationTrackerCard(
+                units: viewModel.combatActivationUnits,
+                playerName: viewModel.trackerState.activePlayerIsOne
+                    ? viewModel.playerOneName
+                    : viewModel.playerTwoName,
+                phaseTitle: viewModel.trackerState.currentPhase.title,
+                doneCount: viewModel.combatActivationDoneCount,
+                hasActed: { viewModel.unitHasActed(unitId: $0) },
+                weaponSummary: { viewModel.activationWeaponNames(for: $0) },
+                onToggleActed: { viewModel.toggleUnitActed(unitId: $0) },
+                onSelectUnit: { unitId in
+                    guard let armyId = viewModel.activeArmy?.id else { return }
+                    let weaponId = viewModel.activeArmy?
+                        .units
+                        .first(where: { $0.id == unitId })?
+                        .weapons
+                        .first?
+                        .id
+                    handleArmyUnitSelection(
+                        armyId: armyId,
+                        unitId: unitId,
+                        preferredWeaponId: weaponId
+                    )
+                }
+            )
+        }
+    }
+
     func syncCombatContext() {
         combatViewModel.syncBattleContext(
             activePlayerIsOne: viewModel.trackerState.activePlayerIsOne,
@@ -43,6 +74,10 @@ extension BattlePhaseTrackerView {
     func applyCombatDamage(_ damage: Int, batchLog: CombatBatchLogContext? = nil) {
         if let batchLog {
             viewModel.recordCombatBatchResolved(batchLog)
+        }
+        if let attackerArmyId = combatViewModel.attackerArmyId.nilIfEmpty,
+           let attackerUnitId = combatViewModel.attackerUnitId.nilIfEmpty {
+            viewModel.markActiveAttackerActed(armyId: attackerArmyId, unitId: attackerUnitId)
         }
         guard let armyId = combatViewModel.defenderArmyId.nilIfEmpty,
               let unitId = combatViewModel.defenderUnitId.nilIfEmpty,
@@ -85,7 +120,7 @@ extension BattlePhaseTrackerView {
         } else if armyId == defenderArmyId {
             combatViewModel.setDefenderUnit(unitId)
         }
-        showsAdvancedOptions = combatViewModel.hasSuggestedWardBuffs
+        showsAdvancedOptions = false
         showsCombatResolver = true
         scrollToCombatResolver = true
     }
@@ -95,8 +130,8 @@ extension BattlePhaseTrackerView {
         if let unitId = viewModel.unitId(matchingSource: ability.source, in: viewModel.activeArmy) {
             combatViewModel.prefillAttackerUnit(unitId: unitId)
         }
-        showsAdvancedOptions = combatViewModel.hasSuggestedWardBuffs
-        scrollToCombatResolver = true
+        showsAdvancedOptions = false
+        focusCombatResolverSection()
     }
 
     func requestCombatResolverFocus(using proxy: ScrollViewProxy) {

@@ -99,11 +99,13 @@ extension BattlePhaseTrackerView {
                 if showsDedicatedCombatTab {
                     shootingPhaseHelper
                 }
+                combatActivationSection
                 damageUndoSection
                 combatPhaseHelper
                 shootInCombatPhaseHelper
             } secondary: {
                 combatResolverSection(usesLandscapeSplit: true)
+                armyTrackerSection(wideLayout: false)
             }
         }
     }

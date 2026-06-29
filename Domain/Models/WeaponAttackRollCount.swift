@@ -174,6 +174,14 @@ extension SpearheadUnit {
     public var canShoot: Bool {
         !shootingWeapons.isEmpty
     }
+
+    public var meleeWeapons: [SpearheadWeapon] {
+        weapons.filter { !$0.isRanged }
+    }
+
+    public var canFight: Bool {
+        !meleeWeapons.isEmpty
+    }
 }
 
 extension TriggeredAbility {

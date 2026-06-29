@@ -35,6 +35,7 @@ extension BattlePhaseTrackerView {
                     if showsDedicatedCombatTab {
                         shootingPhaseHelper
                     }
+                    combatActivationSection
                     damageUndoSection
                     combatPhaseHelper
                     shootInCombatPhaseHelper

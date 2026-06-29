@@ -18,6 +18,7 @@ struct BattlePhaseTrackerView: View {
     @State var selectedSectionTab: BattleTrackerSectionTab = .turn
     @State var showsDeploymentSetup = true
     @State var scrollToCombatResolver = false
+    @State var pendingCombatResolverScroll = false
     @State var showsBattleTrackerCoach = false
     @State var dismissedBattleCompleteGuide = false
     @State var showsVictoryScreen = false
@@ -348,7 +349,8 @@ struct BattlePhaseTrackerView: View {
     var shootingPhaseHelper: some View {
         if supportsBattleTracker,
            ReleaseSurface.showsCombatResolver(for: viewModel.gameSystemId),
-           viewModel.trackerState.currentPhase == .shooting {
+           viewModel.trackerState.currentPhase == .shooting,
+           !viewModel.showsCombatActivationTracker {
             ShootingEligibleUnitsCard(
                 units: viewModel.shootingEligibleUnits,
                 armyName: viewModel.armyName,

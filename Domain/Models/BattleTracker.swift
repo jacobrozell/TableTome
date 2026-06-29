@@ -348,6 +348,9 @@ public struct BattleTrackerState: Codable, Sendable, Equatable {
     public var usedStratagemIds: Set<String>
     /// Combat Patrol — Retrieve Intelligence: objectives data recovered from.
     public var intelRecoveredObjectiveIds: Set<String>
+    /// Units that have already attacked this activation context.
+    /// Keyed by `round-activePlayer-phase` so the set scopes itself to the current phase.
+    public var unitsActedThisPhase: [String: Set<String>]
 
     public init(
         battleRound: Int = 1,
@@ -367,7 +370,8 @@ public struct BattleTrackerState: Codable, Sendable, Equatable {
         playerTwoBattleReady: Bool? = nil,
         securedObjectiveIds: Set<String> = [],
         usedStratagemIds: Set<String> = [],
-        intelRecoveredObjectiveIds: Set<String> = []
+        intelRecoveredObjectiveIds: Set<String> = [],
+        unitsActedThisPhase: [String: Set<String>] = [:]
     ) {
         self.battleRound = battleRound
         self.activePlayerIsOne = activePlayerIsOne
@@ -387,6 +391,7 @@ public struct BattleTrackerState: Codable, Sendable, Equatable {
         self.securedObjectiveIds = securedObjectiveIds
         self.usedStratagemIds = usedStratagemIds
         self.intelRecoveredObjectiveIds = intelRecoveredObjectiveIds
+        self.unitsActedThisPhase = unitsActedThisPhase
     }
 
     public init(from decoder: Decoder) throws {
@@ -412,6 +417,10 @@ public struct BattleTrackerState: Codable, Sendable, Equatable {
         securedObjectiveIds = try container.decodeIfPresent(Set<String>.self, forKey: .securedObjectiveIds) ?? []
         usedStratagemIds = try container.decodeIfPresent(Set<String>.self, forKey: .usedStratagemIds) ?? []
         intelRecoveredObjectiveIds = try container.decodeIfPresent(Set<String>.self, forKey: .intelRecoveredObjectiveIds) ?? []
+        unitsActedThisPhase = try container.decodeIfPresent(
+            [String: Set<String>].self,
+            forKey: .unitsActedThisPhase
+        ) ?? [:]
     }
 }
 

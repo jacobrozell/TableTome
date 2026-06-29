@@ -41,6 +41,7 @@ extension GuidedMatchView {
                     onMatchStateChange: { viewModel.reloadFromStore() },
                     onVictoryComplete: handleVictoryComplete
                 )
+                .environment(\.battleTrackerIsEmbeddedInGuidedMatch, true)
             } else {
                 guidedMatchPlaceholder(
                     title: String(localized: "Battle Phase Tracker"),

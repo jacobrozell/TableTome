@@ -106,3 +106,27 @@ extension BattlePhaseTrackerView {
         }
     }
 }
+
+struct UnitFocusPresentationModifier<Presented: View>: ViewModifier {
+    @Binding var selection: UnitFocusSelection?
+    let usesFullScreen: Bool
+    @ViewBuilder let presented: () -> Presented
+
+    func body(content: Content) -> some View {
+        if usesFullScreen {
+            content.fullScreenCover(item: $selection) { _ in presented() }
+        } else {
+            content.sheet(item: $selection) { _ in
+                presented()
+                    .presentationCompactAdaptation(.fullScreenCover)
+            }
+        }
+    }
+}
+
+extension BattlePhaseTrackerView {
+    /// Full-screen unit focus on iPhone only — iPad `fullScreenCover` blanked marketing captures.
+    var usesUnitFocusFullScreenPresentation: Bool {
+        AppLaunchArguments.shouldOpenUnitFocus && !usesPadTabbedTwoColumnLayout
+    }
+}

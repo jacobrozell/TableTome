@@ -168,6 +168,7 @@ struct AddArmySheet: View {
                     }
                 }
             }
+            .formEditorScreenChrome()
             .navigationTitle(String(localized: "New army"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -192,6 +193,7 @@ struct AddArmySheet: View {
                             || resolvedGame.isEmpty
                     )
                 }
+                .hidingToolbarGlassBackgroundIfAvailable()
             }
             .task(id: starterSeedKey) {
                 await loadStarterUnitSeeds()
@@ -350,6 +352,7 @@ struct AddUnitSheet: View {
                     }
                 }
             }
+            .formEditorScreenChrome()
             .navigationTitle(String(localized: "Add unit"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -361,6 +364,7 @@ struct AddUnitSheet: View {
                     .accessibilityIdentifier("addUnitConfirm")
                     .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
+                .hidingToolbarGlassBackgroundIfAvailable()
             }
             .onAppear {
                 nameFocused = true
@@ -499,6 +503,7 @@ struct RenameArmySheet: View {
                     }
                 }
             }
+            .formEditorScreenChrome()
             .navigationTitle(String(localized: "Rename army"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -507,8 +512,10 @@ struct RenameArmySheet: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(String(localized: "Save")) { if onRename(name) { dismiss() } else { error = true } }
+                        .fontWeight(.semibold)
                         .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
+                .hidingToolbarGlassBackgroundIfAvailable()
             }
             .onAppear { nameFocused = true }
         }
@@ -619,6 +626,7 @@ struct ArmyPipelineEditorSheet: View {
                     }
                 }
             }
+            .formEditorScreenChrome()
             .tabBarScrollInset()
             .readableContentWidth()
             .navigationTitle(String(localized: "Army pipeline"))
@@ -629,7 +637,9 @@ struct ArmyPipelineEditorSheet: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(String(localized: "Save")) { save(); dismiss() }
+                        .fontWeight(.semibold)
                 }
+                .hidingToolbarGlassBackgroundIfAvailable()
                 if mode == .custom { ToolbarItem(placement: .topBarLeading) { EditButton() } }
             }
             .onAppear {
@@ -722,6 +732,7 @@ struct MoveUnitSheet: View {
                     }
                 }
             }
+            .formEditorScreenChrome()
             .navigationTitle(String(localized: "Move unit"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -737,6 +748,7 @@ struct MoveUnitSheet: View {
                     }
                     .disabled(selection == nil || destinationArmies.isEmpty)
                 }
+                .hidingToolbarGlassBackgroundIfAvailable()
             }
         }
     }

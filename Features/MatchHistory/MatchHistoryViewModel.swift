@@ -6,19 +6,23 @@ final class MatchHistoryViewModel: ObservableObject {
     @Published private(set) var records: [MatchRecord] = []
     @Published private(set) var isLoading = false
     @Published private(set) var errorMessage: String?
+
     @Published var filterGameSystemId: String? {
         didSet { Task { await load() } }
     }
 
     private let historyRepository: any MatchHistoryRepository
     private let rulesRepository: any RulesRepository
+    private let logger: any AppLogger
 
     init(
         historyRepository: any MatchHistoryRepository,
-        rulesRepository: any RulesRepository
+        rulesRepository: any RulesRepository,
+        logger: any AppLogger = DefaultAppLogger.makeForCurrentBuild()
     ) {
         self.historyRepository = historyRepository
         self.rulesRepository = rulesRepository
+        self.logger = logger
     }
 
     func load() async {
@@ -27,14 +31,52 @@ final class MatchHistoryViewModel: ObservableObject {
         do {
             records = try await historyRepository.fetchRecords(limit: nil, gameSystemId: filterGameSystemId)
             errorMessage = nil
+            var metadata: [String: String] = [
+                "recordCount": String(records.count)
+            ]
+            if let filterGameSystemId {
+                metadata["filterGameSystemId"] = filterGameSystemId
+            }
+            logger.info(
+                .persistence,
+                eventName: "match_history_loaded",
+                message: "Match history loaded.",
+                metadata: metadata
+            )
+        } catch let error as MatchHistoryRepositoryError {
+            errorMessage = String(localized: "Match history could not be loaded.")
+            logger.error(
+                .persistence,
+                eventName: "match_history_load_failed",
+                message: "Match history load failed.",
+                metadata: [
+                    "errorCode": TabletomeAnalytics.errorCode(for: error),
+                    "filterGameSystemId": filterGameSystemId ?? "all"
+                ]
+            )
         } catch {
             errorMessage = String(localized: "Match history could not be loaded.")
+            logger.error(
+                .persistence,
+                eventName: "match_history_load_failed",
+                message: "Match history load failed.",
+                metadata: ["errorCode": "unknown"]
+            )
         }
     }
 
     func delete(record: MatchRecord) async {
         do {
             try await historyRepository.deleteRecord(id: record.id)
+            logger.info(
+                .persistence,
+                eventName: "match_history_deleted",
+                message: "Match history record deleted.",
+                metadata: [
+                    "gameSystemId": record.gameSystemId,
+                    "status": record.status.rawValue
+                ]
+            )
             await load()
         } catch {
             errorMessage = String(localized: "Could not delete this match.")

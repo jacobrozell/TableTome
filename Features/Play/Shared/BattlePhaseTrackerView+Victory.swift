@@ -37,6 +37,20 @@ extension BattlePhaseTrackerView {
         victoryPlayerTwoVP = viewModel.trackerState.playerTwoVictoryPoints
         dismissedBattleCompleteGuide = true
         showsVictoryScreen = true
+        TabletomeAnalytics.logger?.info(
+            .guidedMatch,
+            eventName: "battle_tracker_victory_presented",
+            message: "Victory screen presented.",
+            metadata: [
+                "gameSystemId": viewModel.gameSystemId.rawValue,
+                "playerOneVP": String(victoryPlayerOneVP),
+                "playerTwoVP": String(victoryPlayerTwoVP),
+                "battleRound": String(viewModel.trackerState.battleRound),
+                "durationSeconds": TabletomeAnalytics.durationSeconds(
+                    since: MatchSessionStore.startedAt(gameSystemId: viewModel.gameSystemId)
+                ) ?? "0"
+            ]
+        )
     }
 
     func completeVictory(rematch: Bool) async {

@@ -30,6 +30,7 @@ struct GuidedMatchView: View {
     @State var showsStarterMatchupHandoff = false
     @State var dismissedStarterMatchupHandoff = false
     @AppStorage(BattleTrackerChromeStorage.guidedMatchHubCollapsedKey) var isHubChromeCollapsed = false
+    @State var splitColumnVisibility: NavigationSplitViewVisibility = .all
 
     let initialHubTab: GuidedMatchHubTab?
 
@@ -99,6 +100,9 @@ struct GuidedMatchView: View {
                     viewModel.applyStarterMatchup()
                 }
                 hubTab = .setup
+                if usesPadSplitNavigation {
+                    selectedDestination = .playerOne
+                }
             } else if AppLaunchArguments.shouldOpenBattleTracker
                 || AppLaunchArguments.shouldSnapshotBattleCombat {
                 if !viewModel.matchState.hasBothArmies {
@@ -111,6 +115,9 @@ struct GuidedMatchView: View {
                 }
                 selectedDestination = .battleTracker
                 hubTab = .battle
+                if MarketingSnapshotBootstrap.hidesGuidedMatchSidebar {
+                    splitColumnVisibility = .detailOnly
+                }
             } else {
                 let wantsStarterArmies = AppLaunchArguments.shouldApplyStarterMatchup
                 if wantsStarterArmies, !viewModel.matchState.hasBothArmies {
@@ -122,6 +129,7 @@ struct GuidedMatchView: View {
             }
         }
         .task {
+            configureMatchSyncAnalytics()
             showsMatchHistoryToolbar = await MatchHistoryVisibility.showsToolbar(
                 repository: dependencies.matchHistoryRepository
             )
@@ -198,8 +206,17 @@ struct PlayerArmyRow: View {
 struct GuidedMatchDetailWidth: ViewModifier {
     let destination: GuidedMatchDestination?
 
+    private var usesFullDetailWidth: Bool {
+        switch destination {
+        case .battleTracker, .playerOne, .playerTwo:
+            true
+        default:
+            false
+        }
+    }
+
     func body(content: Content) -> some View {
-        if destination == .battleTracker {
+        if usesFullDetailWidth {
             content.frame(maxWidth: .infinity, alignment: .leading)
         } else {
             content.readableContentWidth()

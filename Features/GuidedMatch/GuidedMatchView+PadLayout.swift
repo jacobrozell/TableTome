@@ -7,7 +7,7 @@ extension GuidedMatchView {
 
     @ViewBuilder
     func regularLayout(catalog: SpearheadCatalog) -> some View {
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: $splitColumnVisibility) {
             List(selection: $selectedDestination) {
                 guidedMatchSections(catalog: catalog, useSplitSelection: true)
             }

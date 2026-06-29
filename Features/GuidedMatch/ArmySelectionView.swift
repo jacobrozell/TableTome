@@ -193,11 +193,11 @@ struct ArmySelectionView: View {
                 }
             }
         }
-        .readableContentWidth()
+        .formEditorTopContentMargin()
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .confirmationAction) {
+            ToolbarItem(id: "guidedMatch.saveArmy", placement: .confirmationAction) {
                 Button(dismissesOnSave ? String(localized: "Done") : String(localized: "Save")) {
                     var updated = selection
                     updated.playerName = playerName.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -214,9 +214,11 @@ struct ArmySelectionView: View {
                         dismiss()
                     }
                 }
+                .fontWeight(.semibold)
                 .disabled(selectedFactionId.isEmpty || selectedArmyId.isEmpty)
                 .accessibilityIdentifier("guidedMatch.saveArmy")
             }
+            .hidingToolbarGlassBackgroundIfAvailable()
         }
     }
 

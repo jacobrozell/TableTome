@@ -1,20 +1,37 @@
 import SwiftUI
 import TabletomeDomain
 import TabletomeData
+import TabletomeHobbyData
 
 @MainActor
 final class AppDependencies: ObservableObject {
+    let logger: any AppLogger
     let rulesRepository: any RulesRepository
     let gameSystemRegistry: GameSystemRegistry
     let playCatalogRepository: any PlayCatalogRepository
     let matchHistoryRepository: any MatchHistoryRepository
 
     init(
+        logger: any AppLogger = DefaultAppLogger.makeForCurrentBuild(),
         rulesRepository: any RulesRepository = BundledRulesRepository(),
         gameSystemRegistry: GameSystemRegistry = .bundled(withBoxSetsFrom: .main),
         playCatalogRepository: (any PlayCatalogRepository)? = nil,
         matchHistoryRepository: any MatchHistoryRepository = JSONMatchHistoryRepository()
     ) {
+        self.logger = logger
+        TabletomeAnalytics.register(logger)
+        HobbyAppContainer.openFailureHandler = { operation, errorDescription in
+            logger.error(
+                .persistence,
+                eventName: "hobby_container_open_failed",
+                message: "Hobby SwiftData container open failed.",
+                metadata: [
+                    "operation": operation,
+                    "errorCode": String(errorDescription.prefix(100)),
+                    "schemaVersion": String(HobbySchemaPolicy.version)
+                ]
+            )
+        }
         GameSystemRegistry.installBundled(gameSystemRegistry)
         self.rulesRepository = rulesRepository
         self.gameSystemRegistry = gameSystemRegistry
@@ -24,7 +41,7 @@ final class AppDependencies: ObservableObject {
     }
 
     func makeHomeViewModel() -> HomeViewModel {
-        HomeViewModel(rulesRepository: rulesRepository)
+        HomeViewModel(rulesRepository: rulesRepository, logger: logger)
     }
 
     func makeRulesReferenceViewModel(
@@ -65,14 +82,16 @@ final class AppDependencies: ObservableObject {
     func makeGuidedMatchViewModel(gameSystemId: GameSystemId = .default) -> GuidedMatchViewModel {
         GuidedMatchViewModel(
             gameSystemId: gameSystemId,
-            catalogRepository: catalogRepository(for: gameSystemId)
+            catalogRepository: catalogRepository(for: gameSystemId),
+            logger: logger
         )
     }
 
     func makeMatchHistoryViewModel() -> MatchHistoryViewModel {
         MatchHistoryViewModel(
             historyRepository: matchHistoryRepository,
-            rulesRepository: rulesRepository
+            rulesRepository: rulesRepository,
+            logger: logger
         )
     }
 }

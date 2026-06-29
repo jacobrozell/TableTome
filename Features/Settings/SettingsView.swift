@@ -4,6 +4,7 @@ import TabletomeHobbyData
 
 struct SettingsView: View {
     @Environment(AppRouter.self) private var router
+    @EnvironmentObject private var dependencies: AppDependencies
     @Environment(\.modelContext) private var modelContext
     @AppStorage(AppearanceStore.storageKey) private var appearanceRaw = ThemePreference.system.rawValue
     @State private var showsOnboarding = false
@@ -141,8 +142,15 @@ struct SettingsView: View {
                 }
                 .accessibilityIdentifier("settings.appearance")
                 .accessibilityHint(String(localized: "Changes app color scheme"))
-                .onChange(of: appearanceRaw) { _, _ in
+                .onChange(of: appearanceRaw) { _, newValue in
                     AppearancePreferenceStorage.syncToHobbyConfiguration(modelContext)
+                    dependencies.logger.info(
+                        .settings,
+                        eventName: "settings_theme_changed",
+                        message: "Theme preference changed.",
+                        metadata: ["appearanceMode": newValue]
+                    )
+                    AnalyticsUserContext.sync()
                 }
             }
 
@@ -234,6 +242,7 @@ struct SettingsView: View {
             OnboardingView(mode: .replay) { completion in
                 showsOnboarding = false
                 HobbyConfig.markAppTourCompleted(modelContext)
+                logSettingsOnboardingCompleted(completion)
                 switch completion {
                 case .openGuidedMatch(let gameSystemId):
                     router.openGuidedMatch(gameSystemId: gameSystemId)
@@ -244,6 +253,29 @@ struct SettingsView: View {
                 }
             }
         }
+    }
+
+    private func logSettingsOnboardingCompleted(_ completion: OnboardingCompletion) {
+        var metadata: [String: String] = [
+            "skipped": "false",
+            "source": "settings_replay"
+        ]
+        switch completion {
+        case .exploreApp:
+            metadata["completionType"] = "explore_app"
+        case .openGuidedMatch(let gameSystemId):
+            metadata["completionType"] = "guided_match"
+            metadata["onboardingChoice"] = gameSystemId
+        case .openGameGuide(let gameSystemId):
+            metadata["completionType"] = "game_guide"
+            metadata["onboardingChoice"] = gameSystemId
+        }
+        dependencies.logger.info(
+            .settings,
+            eventName: "settings_app_tour_replayed",
+            message: "App tour replayed from settings.",
+            metadata: metadata
+        )
     }
 
     private var appVersion: String {

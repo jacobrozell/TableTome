@@ -62,6 +62,9 @@ public enum HobbyAppContainer {
         try? context.save()
     }
 
+    /// Optional hook for app-layer telemetry when SwiftData container creation fails.
+    nonisolated(unsafe) public static var openFailureHandler: (@Sendable (_ operation: String, _ errorDescription: String) -> Void)?
+
     @MainActor
     public static func make() -> ModelContainer {
         let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
@@ -71,12 +74,14 @@ public enum HobbyAppContainer {
             return container
         } catch {
             // Pre-release: no production users — drop an incompatible store and retry once.
+            openFailureHandler?("create", String(describing: error))
             destroyPersistentStore(matching: config)
             do {
                 let container = try ModelContainer(for: schema, configurations: config)
                 ensureConfiguration(container.mainContext)
                 return container
             } catch {
+                openFailureHandler?("retry_after_reset", String(describing: error))
                 fatalError("Failed to create ModelContainer after store reset: \(error)")
             }
         }

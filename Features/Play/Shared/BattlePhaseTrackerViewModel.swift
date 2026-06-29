@@ -103,6 +103,15 @@ class BattlePhaseTrackerViewModel: ObservableObject {
     }
 
     func resetTracker() {
+        TabletomeAnalytics.logger?.info(
+            .guidedMatch,
+            eventName: "battle_tracker_reset",
+            message: "Battle tracker reset.",
+            metadata: [
+                "gameSystemId": gameSystemId.rawValue,
+                "battleRound": String(trackerState.battleRound)
+            ]
+        )
         trackerState = BattleTrackerState(
             activePlayerIsOne: trackerState.activePlayerIsOne,
             currentPhase: playContext.playEngine.initialPhase()

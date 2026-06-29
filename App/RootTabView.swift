@@ -62,27 +62,48 @@ struct RootTabView: View {
             }
             .tag(AppTab.settings)
         }
-        .modifier(PhoneTabBarOnlyStyle())
+        .modifier(TabBarOnlyStyle())
         .toolbar(tabBarChrome.isHidden ? .hidden : .visible, for: .tabBar)
         .background {
             TabBarAccessibilityBridge(
                 itemIdentifiers: tabBarItemIdentifiers,
                 isHidden: tabBarChrome.isHidden
             )
+            TabBarSelectionBridge(selectedTab: router.selectedTab)
         }
         .fullScreenCover(isPresented: $showsOnboarding) {
             OnboardingView(mode: .firstLaunch, onFinished: handleOnboardingCompletion)
         }
         .task {
+            AppBootstrapper.bootstrap(using: dependencies.logger)
+            ClientEnvironmentMonitor.startReportingChanges(using: dependencies.logger)
+            dependencies.logger.info(
+                .ui,
+                eventName: "main_tab_presented",
+                message: "Main tab shell rendered."
+            )
+            AnalyticsFeatureUsage.recordTabVisit(router.selectedTab)
+            AnalyticsFeatureUsage.syncUserProperties(activeGameSystemId: router.activeGameSystemId)
             if OnboardingStore.shouldPresentOnLaunch, !showsOnboarding {
                 showsOnboarding = true
             } else {
                 MarketingSnapshotBootstrap.applyNavigationIfNeeded(router: router)
+                MarketingSnapshotBootstrap.reinforceTabSelectionIfNeeded(router: router)
             }
             AppearancePreferenceStorage.migrateFromHobbyConfigurationIfNeeded(modelContext)
         }
         .onChange(of: router.selectedTab) { oldTab, newTab in
             guard oldTab != newTab else { return }
+            dependencies.logger.info(
+                .ui,
+                eventName: "main_tab_selected",
+                message: "Main tab changed.",
+                metadata: [
+                    "activeTab": newTab.analyticsLabel,
+                    "previousTab": oldTab.analyticsLabel
+                ]
+            )
+            AnalyticsFeatureUsage.recordTabVisit(newTab)
             tabBarChrome.isHidden = false
             if newTab == .muster, router.hobbyTab != .muster {
                 router.hobbyTab = .muster
@@ -178,6 +199,7 @@ struct RootTabView: View {
     private func handleOnboardingCompletion(_ completion: OnboardingCompletion) {
         showsOnboarding = false
         HobbyConfig.markAppTourCompleted(modelContext)
+        logOnboardingCompleted(completion)
         switch completion {
         case .exploreApp:
             break
@@ -187,6 +209,34 @@ struct RootTabView: View {
         case .openGameGuide(let gameSystemId):
             FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
             router.openGameGuide(gameSystemId: gameSystemId)
+        }
+    }
+
+    private func logOnboardingCompleted(_ completion: OnboardingCompletion) {
+        var metadata: [String: String] = [
+            "skipped": "false",
+            "completionType": completionTypeLabel(completion)
+        ]
+        switch completion {
+        case .exploreApp:
+            break
+        case .openGuidedMatch(let gameSystemId), .openGameGuide(let gameSystemId):
+            metadata["onboardingChoice"] = gameSystemId
+        }
+        dependencies.logger.info(
+            .ui,
+            eventName: "onboarding_completed",
+            message: "Onboarding finished.",
+            metadata: metadata
+        )
+        AnalyticsUserContext.syncOnboardingCompleted()
+    }
+
+    private func completionTypeLabel(_ completion: OnboardingCompletion) -> String {
+        switch completion {
+        case .exploreApp: "explore_app"
+        case .openGuidedMatch: "guided_match"
+        case .openGameGuide: "game_guide"
         }
     }
 }

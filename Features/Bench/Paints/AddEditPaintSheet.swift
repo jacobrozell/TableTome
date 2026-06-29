@@ -126,6 +126,7 @@ struct AddEditPaintSheet: View {
                     ? String(localized: "Add paint")
                     : String(localized: "Edit paint")
             )
+            .formEditorScreenChrome()
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -136,8 +137,10 @@ struct AddEditPaintSheet: View {
                         if onSave(name, type, brand, source, qty, notes, low) { dismiss() }
                         else { error = true }
                     }
+                    .fontWeight(.semibold)
                     .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
+                .hidingToolbarGlassBackgroundIfAvailable()
             }
             .onAppear { if existing == nil { nameFocused = true } }
         }

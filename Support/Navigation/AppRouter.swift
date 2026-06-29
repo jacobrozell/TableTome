@@ -43,14 +43,27 @@ final class AppRouter {
     }
 
     func setActiveGameSystem(_ id: String) {
+        let previous = activeGameSystemId
         activeGameSystemId = id
+        guard previous != id else { return }
+        TabletomeAnalytics.logger?.info(
+            .ui,
+            eventName: "game_system_changed",
+            message: "Active game system changed.",
+            metadata: [
+                "gameSystemId": id,
+                "gameSystemSection": TabletomeAnalytics.gameSystemSection(for: id),
+                "previousTab": previous
+            ]
+        )
+        AnalyticsFeatureUsage.recordActiveGameSystem(id)
     }
 
     func openGuidedMatch(
         gameSystemId: String = OnboardingCompletion.defaultGameSystemId,
         opensBattleTab: Bool = false
     ) {
-        activeGameSystemId = gameSystemId
+        setActiveGameSystem(gameSystemId)
         selectedTab = .learn
         learnPath = NavigationPath([
             GuidedMatchLink(
@@ -61,7 +74,14 @@ final class AppRouter {
     }
 
     func openGameGuide(gameSystemId: String) {
-        activeGameSystemId = gameSystemId
+        setActiveGameSystem(gameSystemId)
+        TabletomeAnalytics.logger?.info(
+            .ui,
+            eventName: "game_guide_opened",
+            message: "Game guide opened.",
+            metadata: TabletomeAnalytics.gameSystemMetadata(gameSystemId).merging(["source": "router"]) { _, new in new }
+        )
+        AnalyticsFeatureUsage.recordGameGuideOpened(gameSystemId: gameSystemId)
         selectedTab = .learn
         learnPath = NavigationPath([gameSystemId])
     }

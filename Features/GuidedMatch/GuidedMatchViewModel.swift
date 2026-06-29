@@ -11,16 +11,20 @@ final class GuidedMatchViewModel: ObservableObject {
     @Published var matchState: GuidedMatchState
 
     private let catalogRepository: any SpearheadCatalogRepository
+    let logger: any AppLogger
+    var hasLoggedMatchStarted = false
 
     init(
         gameSystemId: GameSystemId = .default,
         catalogRepository: any SpearheadCatalogRepository,
         featuredArmies: GuidedMatchFeaturedArmies? = nil,
-        initialState: GuidedMatchState? = nil
+        initialState: GuidedMatchState? = nil,
+        logger: any AppLogger = DefaultAppLogger.makeForCurrentBuild()
     ) {
         self.gameSystemId = gameSystemId
         self.featuredArmies = featuredArmies ?? GuidedMatchFeaturedArmies.resolved(for: gameSystemId)
         self.catalogRepository = catalogRepository
+        self.logger = logger
         self.matchState = initialState ?? MatchSetupStore.load(gameSystemId: gameSystemId)
     }
 
@@ -56,8 +60,26 @@ final class GuidedMatchViewModel: ObservableObject {
             catalog = try await catalogRepository.loadCatalog()
             errorMessage = nil
             syncAutoCompletions()
+        } catch let error as SpearheadCatalogRepositoryError {
+            errorMessage = GameSystemPlayContext.context(for: gameSystemId).copy.catalogLoadFailureMessage
+            TabletomeAnalytics.logCatalogLoadFailed(
+                logger: logger,
+                layer: "guidedMatch",
+                gameSystemId: gameSystemId.rawValue,
+                error: error
+            )
         } catch {
             errorMessage = GameSystemPlayContext.context(for: gameSystemId).copy.catalogLoadFailureMessage
+            logger.error(
+                .catalog,
+                eventName: "catalog_load_failed",
+                message: "Unexpected catalog load failure.",
+                metadata: [
+                    "gameSystemId": gameSystemId.rawValue,
+                    "layer": "guidedMatch",
+                    "errorCode": "unknown"
+                ]
+            )
         }
     }
 
@@ -179,6 +201,7 @@ final class GuidedMatchViewModel: ObservableObject {
         mutateMatchState(persist: true, syncCompletions: false) {
             $0.completedStepIds = merged
         }
+        logMatchStartedIfNeeded()
     }
 
     func updatePlayerOne(_ selection: PlayerArmySelection) {
@@ -251,9 +274,16 @@ final class GuidedMatchViewModel: ObservableObject {
         if complete {
             recordSetupStepComplete(stepId)
         }
+        logMatchStartedIfNeeded()
     }
 
     func resetMatch() {
+        logger.info(
+            .guidedMatch,
+            eventName: "guided_match_reset_discarded",
+            message: "Match reset without saving.",
+            metadata: matchAnalyticsMetadata(status: "discarded")
+        )
         matchState = GuidedMatchState()
         MatchSetupStore.reset(gameSystemId: gameSystemId)
         BattleTrackerStore.reset(gameSystemId: gameSystemId)
@@ -262,6 +292,12 @@ final class GuidedMatchViewModel: ObservableObject {
     }
 
     func rematchPreservingArmies() {
+        logger.info(
+            .guidedMatch,
+            eventName: "guided_match_rematch_started",
+            message: "Rematch started with same armies.",
+            metadata: matchAnalyticsMetadata(rematch: true)
+        )
         BattleTrackerStore.reset(gameSystemId: gameSystemId)
         MatchSessionStore.markStartedIfNeeded(gameSystemId: gameSystemId)
         MatchLogRecorder.ensureSession(gameSystemId: gameSystemId)
@@ -317,8 +353,47 @@ final class GuidedMatchViewModel: ObservableObject {
                 playerTwoVictoryPoints: playerTwoVictoryPoints,
                 repository: repository
             )
+            logger.info(
+                .persistence,
+                eventName: "match_history_saved",
+                message: "Match archived to history.",
+                metadata: matchAnalyticsMetadata(
+                    status: status == .completed ? "completed" : "abandoned",
+                    playerOneVP: playerOneVictoryPoints,
+                    playerTwoVP: playerTwoVictoryPoints
+                )
+            )
+            logger.info(
+                .guidedMatch,
+                eventName: status == .completed ? "guided_match_completed" : "guided_match_abandoned",
+                message: status == .completed ? "Guided match completed." : "Guided match abandoned.",
+                metadata: matchAnalyticsMetadata(
+                    status: status == .completed ? "completed" : "abandoned",
+                    rematch: rematch,
+                    playerOneVP: playerOneVictoryPoints,
+                    playerTwoVP: playerTwoVictoryPoints
+                )
+            )
+        } catch let error as MatchHistoryRepositoryError {
+            logger.error(
+                .persistence,
+                eventName: "match_history_save_failed",
+                message: "Failed to archive match.",
+                metadata: matchAnalyticsMetadata(
+                    status: status == .completed ? "completed" : "abandoned",
+                    errorCode: TabletomeAnalytics.errorCode(for: error)
+                )
+            )
         } catch {
-            // Archive failure should not block clearing an ended match at the table.
+            logger.error(
+                .persistence,
+                eventName: "match_history_save_failed",
+                message: "Failed to archive match.",
+                metadata: matchAnalyticsMetadata(
+                    status: status == .completed ? "completed" : "abandoned",
+                    errorCode: "unknown"
+                )
+            )
         }
         if rematch {
             rematchPreservingArmies()
@@ -368,6 +443,13 @@ final class GuidedMatchViewModel: ObservableObject {
             let key = UnitWoundTracker.unitKey(armyId: army.id, unitId: unit.id)
             let capacity = UnitWoundCapacity.capacity(for: unit)
             tracker.unitWoundsRemaining[key] = max(1, capacity - 3)
+        }
+
+        for round in 1...tracker.battleRound {
+            let key = BattleRoundChecklist.storageKey(round: round)
+            tracker.completedRoundChecklistSteps[key] = Set(
+                BattleRoundChecklistStep.steps(forRound: round).map(\.rawValue)
+            )
         }
 
         BattleTrackerStore.save(tracker, gameSystemId: gameSystemId)

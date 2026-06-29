@@ -154,6 +154,7 @@ extension BattlePhaseTrackerView {
     }
 
     func presentRoundOpenerNudgeIfNeeded() {
+        guard !MarketingSnapshotBootstrap.suppressesCoachingUI else { return }
         guard showsSpearheadBattleChrome, let step = viewModel.focusedRoundOpenerStep else { return }
         let round = viewModel.trackerState.battleRound
         withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) {
@@ -165,6 +166,7 @@ extension BattlePhaseTrackerView {
     }
 
     func presentHeroRoundOneNudgeIfNeeded() {
+        guard !MarketingSnapshotBootstrap.suppressesCoachingUI else { return }
         guard viewModel.gameSystemId == .aosSpearhead else { return }
         guard viewModel.trackerState.battleRound == 1 else { return }
         guard viewModel.trackerState.currentPhase == .hero else { return }

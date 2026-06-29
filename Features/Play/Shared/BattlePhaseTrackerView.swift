@@ -116,16 +116,22 @@ struct BattlePhaseTrackerView: View {
             )
         )
         .accessibilityIdentifier("battleTracker.screen")
-        .sheet(item: $unitFocusSelection) { _ in
+        .modifier(UnitFocusPresentationModifier(selection: $unitFocusSelection, usesFullScreen: usesUnitFocusFullScreenPresentation) {
             unitFocusSheet
-        }
+        })
         .fullScreenCover(isPresented: $showsVictoryScreen) {
             victoryScreen
         }
         .onAppear {
             MatchLogRecorder.ensureSession(gameSystemId: viewModel.gameSystemId)
-            showsBattleTrackerCoach = supportsBattleTracker && !NewPlayerTipsStore.hasSeenBattleTrackerCoach
-            FirstSessionStore.recordSetupComplete()
+            logStandaloneBattleTrackerOpenedIfNeeded()
+            let suppressCoaching = MarketingSnapshotBootstrap.suppressesCoachingUI
+            showsBattleTrackerCoach = supportsBattleTracker
+                && !NewPlayerTipsStore.hasSeenBattleTrackerCoach
+                && !suppressCoaching
+            if !suppressCoaching {
+                FirstSessionStore.recordSetupComplete()
+            }
             if !hasAppliedInitialSectionTab {
                 hasAppliedInitialSectionTab = true
                 if AppLaunchArguments.shouldSnapshotBattleCombat {
@@ -137,15 +143,19 @@ struct BattlePhaseTrackerView: View {
             applyPhoneLandscapeTopChromeDefault()
             if AppLaunchArguments.shouldOpenUnitFocus {
                 Task {
-                    try? await Task.sleep(for: .milliseconds(900))
+                    try? await Task.sleep(for: .milliseconds(1_400))
                     presentMarketingUnitFocusIfNeeded()
                 }
             }
-            Task {
-                try? await Task.sleep(for: .milliseconds(400))
+            if !suppressCoaching {
+                Task {
+                    try? await Task.sleep(for: .milliseconds(400))
+                    handoffBaselineEstablished = true
+                    presentRoundOpenerNudgeIfNeeded()
+                    presentHeroRoundOneNudgeIfNeeded()
+                }
+            } else {
                 handoffBaselineEstablished = true
-                presentRoundOpenerNudgeIfNeeded()
-                presentHeroRoundOneNudgeIfNeeded()
             }
         }
         .onChange(of: layoutContext) { _, _ in

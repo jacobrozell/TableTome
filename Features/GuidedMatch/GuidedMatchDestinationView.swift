@@ -38,8 +38,49 @@ struct GuidedMatchDestinationView: View {
         do {
             let gameSystem = try await dependencies.rulesRepository.gameSystem(id: gameSystemId.rawValue)
             ruleSections = gameSystem.ruleSections
+            dependencies.logger.info(
+                .guidedMatch,
+                eventName: "guided_match_opened",
+                message: "Guided match destination loaded.",
+                metadata: [
+                    "gameSystemId": gameSystemId.rawValue,
+                    "opensBattleTab": opensBattleTab ? "true" : "false",
+                    "source": "destination"
+                ]
+            )
+        } catch let error as RulesRepositoryError {
+            errorMessage = String(localized: "Guided Match could not be loaded.")
+            var metadata: [String: String] = [
+                "layer": "guidedMatchDestination",
+                "gameSystemId": gameSystemId.rawValue,
+                "errorCode": rulesErrorCode(error)
+            ]
+            dependencies.logger.error(
+                .catalog,
+                eventName: "rules_load_failed",
+                message: "Rules load failed.",
+                metadata: metadata
+            )
         } catch {
             errorMessage = String(localized: "Guided Match could not be loaded.")
+            dependencies.logger.error(
+                .catalog,
+                eventName: "rules_load_failed",
+                message: "Unexpected guided match rules load failure.",
+                metadata: [
+                    "gameSystemId": gameSystemId.rawValue,
+                    "layer": "guidedMatchDestination",
+                    "errorCode": "unknown"
+                ]
+            )
+        }
+    }
+
+    private func rulesErrorCode(_ error: RulesRepositoryError) -> String {
+        switch error {
+        case .bundleNotFound: "bundleNotFound"
+        case .decodeFailed: "decodeFailed"
+        case .gameSystemNotFound: "gameSystemNotFound"
         }
     }
 }

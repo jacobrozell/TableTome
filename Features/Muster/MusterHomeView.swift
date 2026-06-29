@@ -376,6 +376,7 @@ struct RenameRosterSheet: View {
                     }
                 }
             }
+            .formEditorScreenChrome()
             .navigationTitle(String(localized: "Rename list"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -384,8 +385,10 @@ struct RenameRosterSheet: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(String(localized: "Save")) { if onRename(name) { dismiss() } else { error = true } }
+                        .fontWeight(.semibold)
                         .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
+                .hidingToolbarGlassBackgroundIfAvailable()
             }
             .onAppear { nameFocused = true }
         }

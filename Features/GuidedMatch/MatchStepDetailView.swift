@@ -88,12 +88,14 @@ struct MatchStepDetailView: View {
         .navigationTitle(step.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .confirmationAction) {
+            ToolbarItem(id: "guidedMatch.stepDone.\(step.id)", placement: .confirmationAction) {
                 Button(String(localized: "Done")) {
                     dismiss()
                 }
+                .fontWeight(.semibold)
                 .accessibilityIdentifier("guidedMatch.stepDone.\(step.id)")
             }
+            .hidingToolbarGlassBackgroundIfAvailable()
         }
     }
 

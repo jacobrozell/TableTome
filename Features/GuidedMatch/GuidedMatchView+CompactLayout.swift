@@ -36,6 +36,7 @@ extension GuidedMatchView {
             tabBarChrome.isHidden = hidesTabBarInLandscapeBattle
             if hasResumableBattleSession, hubTab == .armies {
                 hubTab = .battle
+                logBattleTrackerOpened(source: "resume")
             }
         }
         .onChange(of: viewModel.matchState.hasBothArmies) { _, _ in
@@ -46,13 +47,31 @@ extension GuidedMatchView {
             if newTab == .setup, !setupIsComplete {
                 isHubChromeCollapsed = true
             }
+            if newTab == .battle, setupIsComplete {
+                logBattleTrackerOpened(source: "hub_tab")
+            }
         }
         .onChange(of: viewModel.matchState.completedStepIds) { _, _ in
             guard !AppLaunchArguments.shouldSnapshotGuidedMatchArmies else { return }
             if setupIsComplete, hubTab == .setup {
                 hubTab = .battle
+                logBattleTrackerOpened(source: "setup_complete")
             }
         }
+    }
+
+    func logBattleTrackerOpened(source: String) {
+        dependencies.logger.info(
+            .guidedMatch,
+            eventName: "battle_tracker_opened",
+            message: "Battle tracker presented.",
+            metadata: [
+                "gameSystemId": gameSystemId.rawValue,
+                "source": source,
+                "embedded": "true",
+                "battleRound": String(BattleTrackerStore.load(gameSystemId: gameSystemId).battleRound)
+            ]
+        )
     }
 
     func applyInitialHubTabIfNeeded() {

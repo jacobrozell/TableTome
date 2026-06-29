@@ -110,6 +110,19 @@ struct HomeView: View {
         }
         .task {
             await viewModel.load()
+            if viewModel.errorMessage == nil, !viewModel.gameSystems.isEmpty {
+                dependencies.logger.info(
+                    .ui,
+                    eventName: "play_home_ready",
+                    message: "Play home loaded.",
+                    metadata: [
+                        "eventCount": String(viewModel.gameSystems.count),
+                        "source": ProcessInfo.processInfo.arguments.contains("-open_guided_match")
+                            ? "automation"
+                            : "launch"
+                    ]
+                )
+            }
             showsMatchHistoryToolbar = await MatchHistoryVisibility.showsToolbar(
                 repository: dependencies.matchHistoryRepository
             )

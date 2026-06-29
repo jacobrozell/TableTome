@@ -580,6 +580,7 @@ private struct LinkArmySheet: View {
                     }
                 }
             }
+            .formEditorScreenChrome()
             .navigationTitle(String(localized: "Link army"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -591,8 +592,10 @@ private struct LinkArmySheet: View {
                         onSelect(selection)
                         dismiss()
                     }
+                    .fontWeight(.semibold)
                     .disabled(armies.isEmpty)
                 }
+                .hidingToolbarGlassBackgroundIfAvailable()
             }
             .onAppear { selection = roster.linkedArmyId }
         }

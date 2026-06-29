@@ -1,7 +1,21 @@
 import SwiftUI
+import TabletomeDomain
 import TabletomeData
+import TabletomeHobbyData
 
 extension GuidedMatchView {
+    func configureMatchSyncAnalytics() {
+        matchSyncService.analyticsHandler = { eventName, metadata in
+            let level: LogLevel = eventName.hasSuffix("_failed") ? .error : .info
+            switch level {
+            case .error:
+                dependencies.logger.error(.network, eventName: eventName, message: eventName, metadata: metadata)
+            default:
+                dependencies.logger.info(.network, eventName: eventName, message: eventName, metadata: metadata)
+            }
+        }
+    }
+
     @ToolbarContentBuilder
     var matchSyncToolbar: some ToolbarContent {
         matchHistoryToolbarItems

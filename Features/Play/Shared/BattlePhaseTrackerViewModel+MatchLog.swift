@@ -9,6 +9,18 @@ extension BattlePhaseTrackerViewModel {
 
     func recordPhaseChanged(previousPhase: BattleTurnPhase) {
         guard previousPhase != trackerState.currentPhase else { return }
+        TabletomeAnalytics.logger?.info(
+            .guidedMatch,
+            eventName: "battle_tracker_phase_changed",
+            message: "Battle phase changed.",
+            metadata: [
+                "gameSystemId": gameSystemId.rawValue,
+                "phase": trackerState.currentPhase.rawValue,
+                "previousPhase": previousPhase.rawValue,
+                "battleRound": String(trackerState.battleRound),
+                "playerSide": trackerState.activePlayerIsOne ? "player_one" : "player_two"
+            ]
+        )
         recordMatchLog(
             kind: .phaseChanged,
             payload: MatchLogEventPayload(
@@ -34,6 +46,18 @@ extension BattlePhaseTrackerViewModel {
 
     func recordRoundAdvanced(previousRound: Int) {
         guard trackerState.battleRound != previousRound else { return }
+        TabletomeAnalytics.logger?.info(
+            .guidedMatch,
+            eventName: "battle_tracker_round_advanced",
+            message: "Battle round advanced.",
+            metadata: [
+                "gameSystemId": gameSystemId.rawValue,
+                "battleRound": String(trackerState.battleRound),
+                "previousRound": String(previousRound),
+                "playerOneVP": String(trackerState.playerOneVictoryPoints),
+                "playerTwoVP": String(trackerState.playerTwoVictoryPoints)
+            ]
+        )
         recordMatchLog(
             kind: .roundAdvanced,
             payload: MatchLogEventPayload(round: trackerState.battleRound)
@@ -45,6 +69,22 @@ extension BattlePhaseTrackerViewModel {
         delta: Int,
         reason: MatchVictoryPointsReason
     ) {
+        guard delta != 0 else { return }
+        TabletomeAnalytics.logger?.info(
+            .guidedMatch,
+            eventName: "battle_tracker_vp_adjusted",
+            message: "Victory points adjusted.",
+            metadata: [
+                "gameSystemId": gameSystemId.rawValue,
+                "battleRound": String(trackerState.battleRound),
+                "phase": trackerState.currentPhase.rawValue,
+                "playerSide": playerIsOne ? "player_one" : "player_two",
+                "victoryPointsDelta": String(delta),
+                "playerOneVP": String(trackerState.playerOneVictoryPoints),
+                "playerTwoVP": String(trackerState.playerTwoVictoryPoints),
+                "reason": reason.rawValue
+            ]
+        )
         recordMatchLog(
             kind: .victoryPointsChanged,
             payload: MatchLogEventPayload(
@@ -135,6 +175,20 @@ extension BattlePhaseTrackerViewModel {
     }
 
     func recordCombatBatchResolved(_ context: CombatBatchLogContext) {
+        TabletomeAnalytics.logger?.info(
+            .guidedMatch,
+            eventName: "battle_tracker_combat_resolved",
+            message: "Combat batch resolved.",
+            metadata: [
+                "gameSystemId": gameSystemId.rawValue,
+                "battleRound": String(trackerState.battleRound),
+                "phase": trackerState.currentPhase.rawValue,
+                "combatHits": String(context.hits),
+                "combatWounds": String(context.wounds),
+                "combatDamageDealt": String(context.damageDealt),
+                "combatBatchSize": String(max(context.hits, context.wounds, context.damageDealt))
+            ]
+        )
         recordMatchLog(
             kind: .combatBatchResolved,
             payload: MatchLogEventPayload(

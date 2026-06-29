@@ -17,6 +17,7 @@ public final class NearbyMatchSyncService: NSObject, ObservableObject, @unchecke
     @MainActor @Published public private(set) var statusMessage: String?
     @MainActor @Published public private(set) var pendingJoinPeerName: String?
     @MainActor public var syncGameSystemId: String = "aos-spearhead"
+    @MainActor public var analyticsHandler: ((String, [String: String]) -> Void)?
 
     private static let serviceType = "tabletome-match"
     private let peerID: MCPeerID
@@ -67,6 +68,10 @@ public final class NearbyMatchSyncService: NSObject, ObservableObject, @unchecke
         setRole(.hosting(code: code))
         setStatus(String(localized: "Waiting for another player to join with code \(code)."))
         MatchSyncLogger.sessionInfo("Hosting started code=\(code) gameSystemId=\(syncGameSystemId)")
+        logAnalytics(
+            eventName: "match_sync_started",
+            metadata: ["operation": "host", "gameSystemId": syncGameSystemId]
+        )
     }
 
     @MainActor
@@ -87,6 +92,10 @@ public final class NearbyMatchSyncService: NSObject, ObservableObject, @unchecke
         setRole(.joining)
         setStatus(String(localized: "Searching for host \(normalized)…"))
         MatchSyncLogger.sessionInfo("Joining started code=\(normalized) gameSystemId=\(syncGameSystemId)")
+        logAnalytics(
+            eventName: "match_sync_started",
+            metadata: ["operation": "join", "gameSystemId": syncGameSystemId]
+        )
     }
 
     @MainActor
@@ -102,6 +111,10 @@ public final class NearbyMatchSyncService: NSObject, ObservableObject, @unchecke
         hostCode = nil
         setRole(.idle)
         setStatus(nil)
+        logAnalytics(
+            eventName: "match_sync_stopped",
+            metadata: ["gameSystemId": syncGameSystemId, "operation": "stop"]
+        )
     }
 
     @MainActor
@@ -147,6 +160,10 @@ public final class NearbyMatchSyncService: NSObject, ObservableObject, @unchecke
             }
             setStatus(String(localized: "Match imported from paste code."))
             broadcastCurrentStateIfConnected()
+            logAnalytics(
+                eventName: "match_sync_paste_applied",
+                metadata: ["gameSystemId": syncGameSystemId, "source": "paste", "operation": "import"]
+            )
             return true
         }
     }
@@ -258,6 +275,37 @@ public final class NearbyMatchSyncService: NSObject, ObservableObject, @unchecke
     private func reportUserError(_ message: String, logMessage: String, error: Error? = nil) {
         setStatus(message)
         MatchSyncLogger.sessionError(logMessage, error: error)
+        logSyncFailure(logMessage: logMessage)
+    }
+
+    @MainActor
+    private func logAnalytics(eventName: String, metadata: [String: String]) {
+        analyticsHandler?(eventName, metadata)
+    }
+
+    @MainActor
+    private func logSyncFailure(logMessage: String) {
+        var metadata: [String: String] = [
+            "gameSystemId": syncGameSystemId,
+            "source": "nearby"
+        ]
+        if logMessage.contains("Paste") {
+            metadata["operation"] = "paste"
+        } else if logMessage.contains("Broadcast") {
+            metadata["operation"] = "broadcast"
+        } else if logMessage.contains("Advertiser") {
+            metadata["operation"] = "host"
+        } else if logMessage.contains("Browser") {
+            metadata["operation"] = "join"
+        } else if logMessage.contains("Wire receive") {
+            metadata["operation"] = "receive"
+        } else if logMessage.contains("Remote apply") {
+            metadata["operation"] = "apply"
+        } else {
+            metadata["operation"] = "sync"
+        }
+        metadata["errorCode"] = String(logMessage.suffix(100))
+        logAnalytics(eventName: "match_sync_failed", metadata: metadata)
     }
 
     private func roleLabel(_ role: Role) -> String {
@@ -362,6 +410,14 @@ extension NearbyMatchSyncService: MCSessionDelegate {
                 setRole(.connected(peerName: name))
                 setStatus(String(localized: "Connected to \(name). Changes sync automatically."))
                 MatchSyncLogger.sessionInfo("Connected peer=\(name)")
+                logAnalytics(
+                    eventName: "match_sync_connected",
+                    metadata: [
+                        "gameSystemId": syncGameSystemId,
+                        "participantCount": "1",
+                        "operation": "connect"
+                    ]
+                )
                 broadcastCurrentStateIfConnected()
             case .connecting:
                 setStatus(String(localized: "Connecting…"))

@@ -12,12 +12,12 @@ final class PillarSurfaceTests: XCTestCase {
         XCTAssertFalse(ReleaseSurface.showsMusterTab)
     }
 
-    func testPaintsHiddenForRelease() {
-        XCTAssertFalse(ReleaseSurface.showsPaintsInBench)
+    func testPaintsVisibleForRelease() {
+        XCTAssertTrue(ReleaseSurface.showsPaintsInBench)
     }
 
     func testCrossPillarLinksHiddenForRelease() {
         XCTAssertFalse(ReleaseSurface.showsPlayFromRoster)
-        XCTAssertFalse(ReleaseSurface.showsPaintStatusInMatch)
+        XCTAssertTrue(ReleaseSurface.showsPaintStatusInMatch)
     }
 }

@@ -3,7 +3,7 @@
 **Status:** Future work · **Target:** complete before each gated feature ships to production  
 **Context:** [1.0.0 TestFlight status](status.md) · [Release surface gates](../../specs/ReleaseSurfaceSpec.md)
 
-1.0.0 TestFlight validates the **default release surface** only (Spearhead + 40k 11e, four tabs, no Paints/Lists). Everything behind `-enable_full_product_surface` or a separate launch arg still needs a defined test pass before ungating.
+1.0.0 TestFlight validates the **default release surface** (Spearhead + 40k 11e + Combat Patrol + **Paints**). Everything still behind `-enable_full_product_surface` or a separate launch arg needs a defined test pass before ungating.
 
 ## How to test gated features today
 
@@ -23,7 +23,7 @@
 
 | Gated feature | Unit / domain tests | Release-surface tests | Manual QA | UI automation | Ship blocker |
 |---------------|--------------------|-----------------------|-----------|---------------|--------------|
-| Paints (Models) | Partial | ❌ | ❌ | ❌ | Polish + QA pass |
+| Paints (Models) | Partial | ✅ | ❌ | ❌ | Manual QA before App Store |
 | Lists (Muster) | Partial | ❌ | ❌ | ❌ | Polish + QA pass |
 | Play from roster | ❌ | ❌ | ❌ | ❌ | Depends on Muster |
 | Paint status in match | ❌ | ❌ | ❌ | ❌ | Depends on Paints |
@@ -38,9 +38,9 @@
 
 ---
 
-## 1. Paints (Models tab segment)
+## 1. Paints (Models tab segment) — **shipped build 11**
 
-**Gate:** `ReleaseSurface.showsPaintsInBench`
+**Gate:** `ReleaseSurface.showsPaintsInBench` (default `true` since build 11)
 
 ### Existing automated coverage
 
@@ -51,7 +51,7 @@
 
 **Unit / integration**
 
-- [ ] `ReleaseSurfaceTests` — full-surface path asserts `showsPaintsInBench == true`
+- [x] `ReleaseSurfaceTests` — release defaults assert `showsPaintsInBench == true`
 - [ ] Paints CRUD ViewModel or store tests (add, edit, delete, filter)
 - [ ] Backup round-trip with non-empty paints array
 - [ ] `BenchTab` — when gated off, router `.paints` deep link falls back to Collection
@@ -81,7 +81,7 @@
 - `Tests/Unit/Muster/RosterStoreTests.swift`, `UnitCatalogLoaderTests.swift`, `UnitNameMatchTests.swift`
 - `Tests/Unit/Hobby/RosterPointsTests.swift`
 - `Tests/Unit/NewRosterPrefillResolverTests.swift`
-- `Tests/Unit/AppDeepLinkTests.swift` — `minimuster://muster` URLs
+- `Tests/Unit/AppDeepLinkTests.swift` — `tabletome://muster` URLs
 
 ### Still needed
 
@@ -90,7 +90,7 @@
 - [ ] `ReleaseSurfaceTests` — full-surface path asserts `showsMusterTab` and `showsPlayFromRoster`
 - [ ] `NewRosterSheet` / roster editor integration tests (create 40k + AoS lists, point totals)
 - [ ] Collection ↔ roster linking when both Bench and Muster visible
-- [ ] Deep links reach Muster tab when `showsMusterTab == false` (graceful no-op or redirect)
+- [x] Deep links reach Muster tab when `showsMusterTab == false` (graceful redirect to Collection — `AppRouter.openMuster`/`open`)
 
 **Manual QA**
 
@@ -99,7 +99,7 @@
 - [ ] **Play from roster** opens Guided Match with prefilled armies
 - [ ] Link roster to Collection army
 - [ ] New list keyboard Done dismisses (see [release checklist](release_checklist.md))
-- [ ] Deep links: `minimuster://muster`, roster detail URLs
+- [ ] Deep links: `tabletome://muster`, roster detail URLs
 - [ ] Onboarding tab tour includes Lists when full surface on
 
 **UI automation**

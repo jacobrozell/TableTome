@@ -37,7 +37,7 @@ public enum ReleaseSurface {
 
     public static var showsBenchTab: Bool { true }
     public static var showsMusterTab: Bool { fullSurfaceEnabled }
-    public static var showsPaintsInBench: Bool { fullSurfaceEnabled }
+    public static var showsPaintsInBench: Bool { true }
     public static var showsPlayTab: Bool { true }
     public static var showsRulesTab: Bool { true }
 

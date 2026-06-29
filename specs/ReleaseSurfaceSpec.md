@@ -20,7 +20,7 @@ See [docs/game-modes/PRODUCT_SCOPE.md](../docs/game-modes/PRODUCT_SCOPE.md). Pla
 | Feature | Release | Full Surface |
 |---------|---------|--------------|
 | Models tab (Collection) | ✅ | ✅ |
-| Paints (in Models) | ❌ | ✅ |
+| Paints (in Models) | ✅ | ✅ |
 | Lists tab (Muster) | ❌ | ✅ |
 | Play tab | ✅ | ✅ |
 | Rules reference | ✅ | ✅ |
@@ -39,7 +39,7 @@ Combat Patrol uses `Wh40k10eCombatRollEngine`. 11e uses `Wh40k11eCombatRollEngin
 
 ## Gated feature testing (future work)
 
-Before ungating StarCraft, Lists, Paints, or Rules Q&A, complete the matching checklist in [docs/release/gated-features-testing.md](../docs/release/gated-features-testing.md).
+Before ungating StarCraft, Lists, or Rules Q&A, complete the matching checklist in [docs/release/gated-features-testing.md](../docs/release/gated-features-testing.md). **Paints** ungated in build 11.
 
 Combat Patrol ships in release defaults — run CP manual QA from that doc before App Store if not already signed off.
 

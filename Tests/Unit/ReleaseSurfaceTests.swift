@@ -107,7 +107,7 @@ final class ReleaseSurfaceTests: XCTestCase {
     func testReleaseTabs() {
         XCTAssertTrue(ReleaseSurface.showsBenchTab)
         XCTAssertFalse(ReleaseSurface.showsMusterTab)
-        XCTAssertFalse(ReleaseSurface.showsPaintsInBench)
+        XCTAssertTrue(ReleaseSurface.showsPaintsInBench)
         XCTAssertTrue(ReleaseSurface.showsPlayTab)
         XCTAssertTrue(ReleaseSurface.showsRulesTab)
     }

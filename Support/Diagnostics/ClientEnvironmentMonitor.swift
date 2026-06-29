@@ -1,0 +1,99 @@
+import Foundation
+#if canImport(UIKit)
+import UIKit
+#endif
+
+@MainActor
+enum ClientEnvironmentMonitor {
+    private static var lastSnapshot: ClientEnvironmentSnapshot?
+    private static var observers: [NSObjectProtocol] = []
+
+    static func startReportingChanges(using logger: any AppLogger) {
+        guard !ProcessInfo.processInfo.arguments.contains("-ui_test_reset") else { return }
+        guard observers.isEmpty else { return }
+
+        lastSnapshot = ClientEnvironment.snapshot
+        AnalyticsAccessibilityContext.sync()
+        registerObservers(logger: logger)
+    }
+
+    #if canImport(UIKit)
+    private static func registerObservers(logger: any AppLogger) {
+        UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+
+        let center = NotificationCenter.default
+        let names: [Notification.Name] = [
+            UIAccessibility.voiceOverStatusDidChangeNotification,
+            UIAccessibility.switchControlStatusDidChangeNotification,
+            UIAccessibility.boldTextStatusDidChangeNotification,
+            UIAccessibility.reduceMotionStatusDidChangeNotification,
+            UIContentSizeCategory.didChangeNotification,
+            UIScreen.capturedDidChangeNotification,
+            UIDevice.orientationDidChangeNotification,
+            UIScene.willConnectNotification,
+            UIScene.didDisconnectNotification,
+            Notification.Name.NSProcessInfoPowerStateDidChange
+        ]
+
+        for name in names {
+            let token = center.addObserver(
+                forName: name,
+                object: nil,
+                queue: .main
+            ) { _ in
+                Task { @MainActor in
+                    reportChangeIfNeeded(using: logger, trigger: notificationTrigger(for: name))
+                }
+            }
+            observers.append(token)
+        }
+    }
+
+    private static func notificationTrigger(for name: Notification.Name) -> String {
+        switch name {
+        case UIAccessibility.voiceOverStatusDidChangeNotification:
+            return "voiceover"
+        case UIAccessibility.switchControlStatusDidChangeNotification:
+            return "switchControl"
+        case UIAccessibility.boldTextStatusDidChangeNotification:
+            return "boldText"
+        case UIAccessibility.reduceMotionStatusDidChangeNotification:
+            return "reduceMotion"
+        case UIContentSizeCategory.didChangeNotification:
+            return "contentSize"
+        case UIScreen.capturedDidChangeNotification:
+            return "screenCapture"
+        case UIDevice.orientationDidChangeNotification:
+            return "orientation"
+        case UIScene.willConnectNotification, UIScene.didDisconnectNotification:
+            return "display"
+        case Notification.Name.NSProcessInfoPowerStateDidChange:
+            return "lowPowerMode"
+        default:
+            return "unknown"
+        }
+    }
+    #else
+    private static func registerObservers(logger: any AppLogger) {}
+    #endif
+
+    private static func reportChangeIfNeeded(using logger: any AppLogger, trigger: String) {
+        let current = ClientEnvironment.snapshot
+        guard current != lastSnapshot else { return }
+
+        var metadata = current.analyticsMetadata
+        metadata["trigger"] = trigger
+        if let previous = lastSnapshot {
+            metadata["changedSignals"] = ClientEnvironmentSnapshot.changedSignals(from: previous, to: current)
+        }
+
+        logger.info(
+            .appLifecycle,
+            eventName: "client_environment_changed",
+            message: "Client environment context changed.",
+            metadata: metadata
+        )
+        AnalyticsAccessibilityContext.sync(from: current)
+        lastSnapshot = current
+    }
+}

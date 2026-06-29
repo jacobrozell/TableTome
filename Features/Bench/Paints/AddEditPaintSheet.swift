@@ -1,5 +1,6 @@
 import SwiftUI
 import TabletomeHobbyData
+import TabletomeDomain
 
 /// Add/edit paint form. Mirrors `paintForm` (`js/render/paints.js`).
 struct AddEditPaintSheet: View {
@@ -10,7 +11,8 @@ struct AddEditPaintSheet: View {
     let extraTypes: [String]
     /// Returns true on success; false on duplicate-name conflict.
     let onSave: (_ name: String, _ type: String, _ brand: String, _ source: String,
-                 _ qty: Int, _ notes: String, _ low: Bool) -> Bool
+                 _ qty: Int, _ notes: String, _ low: Bool,
+                 _ swatchHex: String, _ usesCustomSwatch: Bool) -> Bool
 
     @State private var name: String
     @State private var type: String
@@ -19,10 +21,13 @@ struct AddEditPaintSheet: View {
     @State private var qty: Int
     @State private var notes: String
     @State private var low: Bool
+    @State private var swatchHex: String
+    @State private var usesCustomSwatch: Bool
     @State private var error = false
+    @State private var dismissedCatalogSuggestions = false
 
     init(existing: HobbyPaint?, extraTypes: [String],
-         onSave: @escaping (String, String, String, String, Int, String, Bool) -> Bool) {
+         onSave: @escaping (String, String, String, String, Int, String, Bool, String, Bool) -> Bool) {
         self.existing = existing
         self.extraTypes = extraTypes
         self.onSave = onSave
@@ -33,15 +38,13 @@ struct AddEditPaintSheet: View {
         _qty = State(initialValue: existing?.qty ?? 1)
         _notes = State(initialValue: existing?.notes ?? "")
         _low = State(initialValue: existing?.low ?? false)
+        _swatchHex = State(initialValue: existing?.swatchHex ?? PaintType.swatchHex(for: existing?.type ?? ""))
+        _usesCustomSwatch = State(initialValue: existing?.usesCustomSwatch ?? false)
     }
 
     private var typeOptions: [String] {
         var seen = Set<String>()
         return (PaintType.known + extraTypes).filter { seen.insert($0).inserted }
-    }
-
-    private var previewHex: String {
-        existing?.swatchHex ?? PaintType.swatchHex(for: type)
     }
 
     var body: some View {
@@ -50,7 +53,7 @@ struct AddEditPaintSheet: View {
                 if !name.trimmingCharacters(in: .whitespaces).isEmpty {
                     Section {
                         HStack(spacing: 14) {
-                            PaintSwatch(hex: previewHex, size: 48, cornerRadius: 10)
+                            PaintSwatch(hex: swatchHex, size: 48, cornerRadius: 10)
                             VStack(alignment: .leading, spacing: 4) {
                                 HStack(spacing: 6) {
                                     Text(name)
@@ -81,6 +84,9 @@ struct AddEditPaintSheet: View {
 
                 Section {
                     FormNameField(title: String(localized: "Name"), text: $name, focus: $nameFocused)
+                        .onChange(of: name) { _, _ in
+                            dismissedCatalogSuggestions = false
+                        }
                     Picker(String(localized: "Type"), selection: $type) {
                         ForEach(typeOptions, id: \.self) { Text($0.isEmpty ? "—" : $0).tag($0) }
                     }
@@ -94,8 +100,25 @@ struct AddEditPaintSheet: View {
                         FormValidationFooter(
                             message: String(localized: "A paint with that name already exists.")
                         )
+                    } else if existing == nil {
+                        Text(type == "Basing" ? FormHints.basingCatalogSearch : FormHints.paintCatalogSearch)
                     }
                 }
+
+                PaintCatalogSuggestionsSection(
+                    name: name,
+                    type: type,
+                    isActive: existing == nil && !dismissedCatalogSuggestions,
+                    onSelect: applyCatalogEntry
+                )
+
+                PaintColorSection(
+                    swatchHex: $swatchHex,
+                    usesCustomSwatch: $usesCustomSwatch,
+                    name: name,
+                    brand: brand,
+                    type: type
+                )
 
                 Section {
                     QuantityStepper(label: String(localized: "Quantity"), value: $qty)
@@ -134,15 +157,34 @@ struct AddEditPaintSheet: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(String(localized: "Save")) {
-                        if onSave(name, type, brand, source, qty, notes, low) { dismiss() }
-                        else { error = true }
+                        if onSave(name, type, brand, source, qty, notes, low, swatchHex, usesCustomSwatch) {
+                            dismiss()
+                        } else {
+                            error = true
+                        }
                     }
                     .fontWeight(.semibold)
                     .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
                 .hidingToolbarGlassBackgroundIfAvailable()
             }
-            .onAppear { if existing == nil { nameFocused = true } }
+            .onAppear {
+                if existing == nil {
+                    nameFocused = true
+                } else if !usesCustomSwatch {
+                    swatchHex = PaintSwatchResolver.defaultSwatch(name: name, brand: brand, type: type)
+                }
+            }
         }
+    }
+
+    private func applyCatalogEntry(_ entry: PaintCatalogEntry) {
+        name = entry.name
+        if let brand = entry.brand { self.brand = brand }
+        if let type = entry.type, !type.isEmpty { self.type = type }
+        swatchHex = entry.hex
+        usesCustomSwatch = false
+        dismissedCatalogSuggestions = true
+        error = false
     }
 }

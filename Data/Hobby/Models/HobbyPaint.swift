@@ -10,7 +10,8 @@ public final class HobbyPaint {
     public var id: UUID = UUID()
     public var name: String = ""
     public var type: String = ""            // "" or a known type (see PaintType)
-    public var swatchHex: String = "#777"   // derived from type on create/import; persisted
+    public var swatchHex: String = "#777"   // catalog, type default, or user-picked colour
+    public var usesCustomSwatch: Bool = false
     public var qty: Int = 1                 // clamped 1...9999
     public var brand: String = ""
     public var source: String = ""
@@ -22,6 +23,7 @@ public final class HobbyPaint {
     public init(name: String,
          type: String = "",
          swatchHex: String = "#777",
+         usesCustomSwatch: Bool = false,
          qty: Int = 1,
          brand: String = "",
          source: String = "",
@@ -30,6 +32,7 @@ public final class HobbyPaint {
         self.name = name
         self.type = type
         self.swatchHex = swatchHex
+        self.usesCustomSwatch = usesCustomSwatch
         self.qty = max(1, qty)
         self.brand = brand
         self.source = source

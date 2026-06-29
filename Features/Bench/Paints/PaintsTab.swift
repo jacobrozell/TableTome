@@ -37,9 +37,13 @@ struct PaintsTab: View {
             }
         }
         .sheet(isPresented: $showAdd) {
-            AddEditPaintSheet(existing: nil, extraTypes: types) { name, type, brand, source, qty, notes, low in
-                let ok = PaintStore.add(name: name, type: type, brand: brand, source: source,
-                                        qty: qty, notes: notes, low: low, in: context)
+            AddEditPaintSheet(existing: nil, extraTypes: types) { name, type, brand, source, qty, notes, low, swatchHex, usesCustomSwatch in
+                let ok = PaintStore.add(
+                    name: name, type: type, brand: brand, source: source,
+                    qty: qty, notes: notes, low: low,
+                    swatchHex: swatchHex, usesCustomSwatch: usesCustomSwatch,
+                    in: context
+                )
                 if ok { banner.show(String(localized: "Paint added")) } else { banner.show(String(localized: "That name already exists")) }
                 return ok
             }

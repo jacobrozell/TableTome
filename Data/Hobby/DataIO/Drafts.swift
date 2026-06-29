@@ -75,6 +75,7 @@ public struct PaintDraft: Sendable, Equatable {
     public var name: String
     public var type: String
     public var swatchHex: String
+    public var usesCustomSwatch: Bool
     public var qty: Int
     public var brand: String
     public var source: String
@@ -86,6 +87,7 @@ public struct PaintDraft: Sendable, Equatable {
         name: String,
         type: String = "",
         swatchHex: String = "#777",
+        usesCustomSwatch: Bool = false,
         qty: Int = 1,
         brand: String = "",
         source: String = "",
@@ -96,6 +98,7 @@ public struct PaintDraft: Sendable, Equatable {
         self.name = name
         self.type = type
         self.swatchHex = swatchHex
+        self.usesCustomSwatch = usesCustomSwatch
         self.qty = qty
         self.brand = brand
         self.source = source

@@ -8,6 +8,7 @@ import TabletomeHobbyData
 struct SettingsDataSection: View {
     @Environment(\.modelContext) private var context
     @Environment(BannerCenter.self) private var banner
+    @Query private var paints: [HobbyPaint]
 
     @State private var importMode: DataActions.Mode = .replace
     @State private var importDomain: ImportDomain = .armies
@@ -39,6 +40,14 @@ struct SettingsDataSection: View {
             case .armies: String(localized: "Armies")
             case .paints: String(localized: "Paints")
             }
+        }
+
+        static var visibleCases: [ImportDomain] {
+            var domains: [ImportDomain] = [.armies]
+            if ReleaseSurface.showsPaintsInBench {
+                domains.append(.paints)
+            }
+            return domains
         }
     }
 
@@ -115,6 +124,7 @@ struct SettingsDataSection: View {
                 CSVImportScreen(
                     importDomain: $importDomain,
                     importMode: $importMode,
+                    showsPaintsOptions: ReleaseSurface.showsPaintsInBench,
                     onChooseFile: { showCSVImporter = true },
                     onExportArmiesTemplate: exportArmiesTemplate,
                     onExportPaintsTemplate: exportPaintsTemplate
@@ -125,6 +135,7 @@ struct SettingsDataSection: View {
 
             NavigationLink {
                 DataExportScreen(
+                    showsPaintsExport: ReleaseSurface.showsPaintsInBench,
                     onExportArmies: exportArmiesCSV,
                     onExportPaints: exportPaintsCSV,
                     onExportBackup: exportBackup
@@ -154,6 +165,25 @@ struct SettingsDataSection: View {
                     """
                 )
             )
+        }
+
+        if !paints.isEmpty {
+            Section {
+                Button {
+                    let count = PaintStore.refreshCatalogColors(in: context)
+                    if count > 0 {
+                        banner.show(String(localized: "\(count) paint colours updated"))
+                    } else {
+                        banner.show(String(localized: "All paint colours are up to date"))
+                    }
+                } label: {
+                    Label(String(localized: "Refresh paint colours"), systemImage: "arrow.triangle.2.circlepath")
+                }
+            } header: {
+                Text(String(localized: "Paints"))
+            } footer: {
+                Text(FormHints.paintRefreshCatalog)
+            }
         }
     }
 
@@ -200,7 +230,14 @@ struct SettingsDataSection: View {
     private func importFrom(_ url: URL) -> DataActions.ImportOutcome {
         switch importDomain {
         case .armies: return DataActions.importArmiesOutcome(from: url, mode: importMode, ctx: context)
-        case .paints: return DataActions.importPaintsOutcome(from: url, mode: importMode, ctx: context)
+        case .paints:
+            guard ReleaseSurface.showsPaintsInBench else {
+                return .failure(
+                    title: String(localized: "Import unavailable"),
+                    message: String(localized: "Paints inventory is not available in this version.")
+                )
+            }
+            return DataActions.importPaintsOutcome(from: url, mode: importMode, ctx: context)
         }
     }
 
@@ -282,6 +319,7 @@ struct SettingsDataSection: View {
 private struct CSVImportScreen: View {
     @Binding var importDomain: SettingsDataSection.ImportDomain
     @Binding var importMode: DataActions.Mode
+    var showsPaintsOptions: Bool
     let onChooseFile: () -> Void
     let onExportArmiesTemplate: () -> Void
     let onExportPaintsTemplate: () -> Void
@@ -290,7 +328,7 @@ private struct CSVImportScreen: View {
         Form {
             Section {
                 Picker(String(localized: "Import"), selection: $importDomain) {
-                    ForEach(SettingsDataSection.ImportDomain.allCases) { domain in
+                    ForEach(SettingsDataSection.ImportDomain.visibleCases) { domain in
                         Text(domain.label).tag(domain)
                     }
                 }
@@ -316,8 +354,10 @@ private struct CSVImportScreen: View {
                 Button(action: onExportArmiesTemplate) {
                     Label(String(localized: "Armies template"), systemImage: "doc")
                 }
-                Button(action: onExportPaintsTemplate) {
-                    Label(String(localized: "Paints template"), systemImage: "doc")
+                if showsPaintsOptions {
+                    Button(action: onExportPaintsTemplate) {
+                        Label(String(localized: "Paints template"), systemImage: "doc")
+                    }
                 }
             } header: {
                 Text(String(localized: "Templates"))
@@ -335,6 +375,11 @@ private struct CSVImportScreen: View {
         .navigationTitle(String(localized: "Import CSV"))
         .navigationBarTitleDisplayMode(.inline)
         .tabBarScrollInset()
+        .onAppear {
+            if !showsPaintsOptions, importDomain == .paints {
+                importDomain = .armies
+            }
+        }
     }
 
     private var importModeFooter: String {
@@ -354,6 +399,7 @@ private struct CSVImportScreen: View {
 // MARK: - Export
 
 private struct DataExportScreen: View {
+    var showsPaintsExport: Bool
     let onExportArmies: () -> Void
     let onExportPaints: () -> Void
     let onExportBackup: () -> Void
@@ -364,8 +410,10 @@ private struct DataExportScreen: View {
                 Button(action: onExportArmies) {
                     Label(String(localized: "Armies CSV"), systemImage: "doc.text")
                 }
-                Button(action: onExportPaints) {
-                    Label(String(localized: "Paints CSV"), systemImage: "doc.text")
+                if showsPaintsExport {
+                    Button(action: onExportPaints) {
+                        Label(String(localized: "Paints CSV"), systemImage: "doc.text")
+                    }
                 }
                 Button(action: onExportBackup) {
                     Label(String(localized: "Full backup (JSON)"), systemImage: "externaldrive")
@@ -373,10 +421,15 @@ private struct DataExportScreen: View {
             } footer: {
                 Text(
                     String(
-                        localized: """
-                        JSON backup includes armies, paints, pipeline settings, and list defaults. \
-                        Custom crest image files stay on this device — re-upload after restore on a new iPad or iPhone.
-                        """
+                        localized: showsPaintsExport
+                            ? """
+                            JSON backup includes armies, paints, pipeline settings, and list defaults. \
+                            Custom crest image files stay on this device — re-upload after restore on a new iPad or iPhone.
+                            """
+                            : """
+                            JSON backup includes armies, pipeline settings, and list defaults. \
+                            Custom crest image files stay on this device — re-upload after restore on a new iPad or iPhone.
+                            """
                     )
                 )
             }

@@ -1,0 +1,1697 @@
+{
+  "version": 1,
+  "paints": [
+    {
+      "name": "Abaddon Black",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#1a1a1a"
+    },
+    {
+      "name": "Administratum Grey",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#949494"
+    },
+    {
+      "name": "Averland Sunset",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#f4c430"
+    },
+    {
+      "name": "Balthasar Gold",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#a8894a"
+    },
+    {
+      "name": "Bugman's Glow",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#c89878"
+    },
+    {
+      "name": "Caledor Sky",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#3a8cc4"
+    },
+    {
+      "name": "Caliban Green",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#1a4828"
+    },
+    {
+      "name": "Carnelian",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#c04040"
+    },
+    {
+      "name": "Castellan Green",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#3a4828"
+    },
+    {
+      "name": "Catachan Flesh",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#6a5840"
+    },
+    {
+      "name": "Celestra Grey",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#90a0a8"
+    },
+    {
+      "name": "Corvus Black",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#303030"
+    },
+    {
+      "name": "Daemonette Hide",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#7a5888"
+    },
+    {
+      "name": "Death Guard Green",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#6a7858"
+    },
+    {
+      "name": "Death Korps Drab",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#6a6850"
+    },
+    {
+      "name": "Deathworld Forest",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#4a5838"
+    },
+    {
+      "name": "Dryad Bark",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#4a3828"
+    },
+    {
+      "name": "Eshin Grey",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#484848"
+    },
+    {
+      "name": "Flash Gitz Yellow",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#ffe040"
+    },
+    {
+      "name": "Genestealer Purple",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#6a3888"
+    },
+    {
+      "name": "Gretchin Green",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#688848"
+    },
+    {
+      "name": "Hoeth Blue",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#4a90c8"
+    },
+    {
+      "name": "Incubi Darkness",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#1a3848"
+    },
+    {
+      "name": "Jokaero Orange",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#f87820"
+    },
+    {
+      "name": "Kantor Blue",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#002158"
+    },
+    {
+      "name": "Karak Stone",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#9a8870"
+    },
+    {
+      "name": "Khorne Red",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#9a0200"
+    },
+    {
+      "name": "Korvid Brown",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#402820"
+    },
+    {
+      "name": "Leadbelcher",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#888c8d"
+    },
+    {
+      "name": "Lugganath Orange",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#f09848"
+    },
+    {
+      "name": "Macragge Blue",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#1c4fa0"
+    },
+    {
+      "name": "Mechanicus Standard Grey",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#5a5a58"
+    },
+    {
+      "name": "Mephiston Red",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#9a0200"
+    },
+    {
+      "name": "Morghast Bone",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#d8c898"
+    },
+    {
+      "name": "Mournfang Brown",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#6a4028"
+    },
+    {
+      "name": "Naggaroth Night",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#4a2868"
+    },
+    {
+      "name": "Nurgle Base",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#788860"
+    },
+    {
+      "name": "Phoenician Purple",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#401848"
+    },
+    {
+      "name": "Pink Horror",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#f08098"
+    },
+    {
+      "name": "Rakarth Flesh",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#f0d5c8"
+    },
+    {
+      "name": "Ratkin Fleece",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#9a9890"
+    },
+    {
+      "name": "Retributor Armour",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#c3954d"
+    },
+    {
+      "name": "Rhinox Hide",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#4a3020"
+    },
+    {
+      "name": "Russ Grey",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#708898"
+    },
+    {
+      "name": "Screaming Skull",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#e8e8d8"
+    },
+    {
+      "name": "Screamer Pink",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#e84888"
+    },
+    {
+      "name": "Steel Legion Drab",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#6e6847"
+    },
+    {
+      "name": "Stormvermin Fur",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#6a6058"
+    },
+    {
+      "name": "Troll Slayer Orange",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#f06020"
+    },
+    {
+      "name": "Vulkan Green",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#3a6850"
+    },
+    {
+      "name": "Waaagh! Flesh",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#6a8848"
+    },
+    {
+      "name": "Warpfiend Grey",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#888888"
+    },
+    {
+      "name": "Warplock Bronze",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#808880"
+    },
+    {
+      "name": "Wraithbone",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#e8dcc8"
+    },
+    {
+      "name": "XV-88",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#6a5030"
+    },
+    {
+      "name": "Zandri Dust",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#9a8f6a"
+    },
+    {
+      "name": "Corax White",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#e8ecef"
+    },
+    {
+      "name": "Grey Seer",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#b8bcc0"
+    },
+    {
+      "name": "Iron Warriors",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#4a5058"
+    },
+    {
+      "name": "Thondia Brown",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#684830"
+    },
+    {
+      "name": "Cadian Fleshtone",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#c89870"
+    },
+    {
+      "name": "Evil Sunz Scarlet",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#c01818"
+    },
+    {
+      "name": "Wazdakka Red",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#a81818"
+    },
+    {
+      "name": "Ogryn Camo",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#6a6848"
+    },
+    {
+      "name": "Steel Conflicts",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#788898"
+    },
+    {
+      "name": "Thousand Sons Blue",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#1848a0"
+    },
+    {
+      "name": "Ultramarines Blue",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#1b4d8a"
+    },
+    {
+      "name": "Calgar Blue",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#2f6db5"
+    },
+    {
+      "name": "Alaitoc Blue",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#2858a0"
+    },
+    {
+      "name": "Sotek Green",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#208878"
+    },
+    {
+      "name": "Temple Guard Blue",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#208878"
+    },
+    {
+      "name": "Dorn Yellow",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#f0c020"
+    },
+    {
+      "name": "Imperial Fist",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#f0c020"
+    },
+    {
+      "name": "Blood Angels Red",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#8a0818"
+    },
+    {
+      "name": "Dark Angels Green",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#1a3828"
+    },
+    {
+      "name": "Runelord Brass",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#a89858"
+    },
+    {
+      "name": "Runefang Steel",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#c8ccd0"
+    },
+    {
+      "name": "Stormhost Silver",
+      "brand": "Citadel",
+      "type": "Base",
+      "hex": "#b0b4b8"
+    },
+    {
+      "name": "Coilex Grey",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#484848"
+    },
+    {
+      "name": "Deepkin",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#2088a8"
+    },
+    {
+      "name": "Loren Forest",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#486838"
+    },
+    {
+      "name": "Lothern Blue",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#4898c8"
+    },
+    {
+      "name": "Moot Green",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#58a848"
+    },
+    {
+      "name": "Nurgling Green",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#88a858"
+    },
+    {
+      "name": "Phalanx Yellow",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#f0e040"
+    },
+    {
+      "name": "Reiver Flesh",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#c8a890"
+    },
+    {
+      "name": "Slaanesh Grey",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#c8c0c8"
+    },
+    {
+      "name": "Sycorax Green",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#88b878"
+    },
+    {
+      "name": "Ulthuan Grey",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#d8e0e8"
+    },
+    {
+      "name": "Waystone Green",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#58a868"
+    },
+    {
+      "name": "White Scar",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#f8f8f8"
+    },
+    {
+      "name": "Wild Rider Red",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#d02828"
+    },
+    {
+      "name": "Xereus Purple",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#682878"
+    },
+    {
+      "name": "Yriel Yellow",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#f0d830"
+    },
+    {
+      "name": "Golden Gryph",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#c8a848"
+    },
+    {
+      "name": "Gehenna's Gold",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#a86828"
+    },
+    {
+      "name": "Hashut Copper",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#a86838"
+    },
+    {
+      "name": "Ironbreaker",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#a8acb0"
+    },
+    {
+      "name": "Liberator Gold",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#e0c868"
+    },
+    {
+      "name": "Lucius Lilac",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#9888a8"
+    },
+    {
+      "name": "Nuln Oil Gloss",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#282828"
+    },
+    {
+      "name": "Sigmarite",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#d8c878"
+    },
+    {
+      "name": "Agrax Earthshade",
+      "brand": "Citadel",
+      "type": "Shade",
+      "hex": "#392714"
+    },
+    {
+      "name": "Biel-Tan Green",
+      "brand": "Citadel",
+      "type": "Shade",
+      "hex": "#285828"
+    },
+    {
+      "name": "Casandora Yellow",
+      "brand": "Citadel",
+      "type": "Shade",
+      "hex": "#c8a820"
+    },
+    {
+      "name": "Coelia Greenshade",
+      "brand": "Citadel",
+      "type": "Shade",
+      "hex": "#184838"
+    },
+    {
+      "name": "Drakenhof Nightshade",
+      "brand": "Citadel",
+      "type": "Shade",
+      "hex": "#102878"
+    },
+    {
+      "name": "Fuegan Orange",
+      "brand": "Citadel",
+      "type": "Shade",
+      "hex": "#883818"
+    },
+    {
+      "name": "Leviathan Purple",
+      "brand": "Citadel",
+      "type": "Shade",
+      "hex": "#381848"
+    },
+    {
+      "name": "Nuln Oil",
+      "brand": "Citadel",
+      "type": "Shade",
+      "hex": "#181818"
+    },
+    {
+      "name": "Reikland Fleshshade",
+      "brand": "Citadel",
+      "type": "Shade",
+      "hex": "#884828"
+    },
+    {
+      "name": "Seraphim Sepia",
+      "brand": "Citadel",
+      "type": "Shade",
+      "hex": "#684818"
+    },
+    {
+      "name": "Carroburg Crimson",
+      "brand": "Citadel",
+      "type": "Shade",
+      "hex": "#681828"
+    },
+    {
+      "name": "Druchii Violet",
+      "brand": "Citadel",
+      "type": "Shade",
+      "hex": "#481858"
+    },
+    {
+      "name": "Cryptek Armourshade Gloss",
+      "brand": "Citadel",
+      "type": "Shade",
+      "hex": "#285868"
+    },
+    {
+      "name": "Militarum Green",
+      "brand": "Citadel",
+      "type": "Shade",
+      "hex": "#385828"
+    },
+    {
+      "name": "Soulblight Grey",
+      "brand": "Citadel",
+      "type": "Shade",
+      "hex": "#484848"
+    },
+    {
+      "name": "Longbeard Grey",
+      "brand": "Citadel",
+      "type": "Dry",
+      "hex": "#c8c0b0"
+    },
+    {
+      "name": "Niblet Green",
+      "brand": "Citadel",
+      "type": "Dry",
+      "hex": "#88c868"
+    },
+    {
+      "name": "Elysian Green",
+      "brand": "Citadel",
+      "type": "Dry",
+      "hex": "#68a858"
+    },
+    {
+      "name": "Underhive Ash",
+      "brand": "Citadel",
+      "type": "Dry",
+      "hex": "#888888"
+    },
+    {
+      "name": "Tyrant Skull",
+      "brand": "Citadel",
+      "type": "Dry",
+      "hex": "#d8d0c0"
+    },
+    {
+      "name": "Praxeti White",
+      "brand": "Citadel",
+      "type": "Dry",
+      "hex": "#e8e8e8"
+    },
+    {
+      "name": "Chronus Blue",
+      "brand": "Citadel",
+      "type": "Dry",
+      "hex": "#6898b8"
+    },
+    {
+      "name": "Dawnstone",
+      "brand": "Citadel",
+      "type": "Dry",
+      "hex": "#888888"
+    },
+    {
+      "name": "Hellion Green",
+      "brand": "Citadel",
+      "type": "Dry",
+      "hex": "#88c848"
+    },
+    {
+      "name": "Terminatus Stone",
+      "brand": "Citadel",
+      "type": "Dry",
+      "hex": "#a89888"
+    },
+    {
+      "name": "Verminlord Hide",
+      "brand": "Citadel",
+      "type": "Dry",
+      "hex": "#884828"
+    },
+    {
+      "name": "Golden Griffon",
+      "brand": "Citadel",
+      "type": "Dry",
+      "hex": "#b89848"
+    },
+    {
+      "name": "Astrogranite",
+      "brand": "Citadel",
+      "type": "Technical",
+      "hex": "#54504a"
+    },
+    {
+      "name": "Stirland Mud",
+      "brand": "Citadel",
+      "type": "Technical",
+      "hex": "#3e3226"
+    },
+    {
+      "name": "Agrellan Earth",
+      "brand": "Citadel",
+      "type": "Technical",
+      "hex": "#937b62"
+    },
+    {
+      "name": "Agrellan Badland",
+      "brand": "Citadel",
+      "type": "Technical",
+      "hex": "#886848"
+    },
+    {
+      "name": "Armageddon Dust",
+      "brand": "Citadel",
+      "type": "Technical",
+      "hex": "#886848"
+    },
+    {
+      "name": "Black Templar",
+      "brand": "Citadel",
+      "type": "Technical",
+      "hex": "#282828"
+    },
+    {
+      "name": "Blood for the Blood God",
+      "brand": "Citadel",
+      "type": "Technical",
+      "hex": "#880808"
+    },
+    {
+      "name": "'Ardcoat",
+      "brand": "Citadel",
+      "type": "Technical",
+      "hex": "#c8c8c8"
+    },
+    {
+      "name": "Typhus Corrosion",
+      "brand": "Citadel",
+      "type": "Technical",
+      "hex": "#484838"
+    },
+    {
+      "name": "Ryza Rust",
+      "brand": "Citadel",
+      "type": "Technical",
+      "hex": "#883818"
+    },
+    {
+      "name": "Martian Ironearth",
+      "brand": "Citadel",
+      "type": "Technical",
+      "hex": "#884838"
+    },
+    {
+      "name": "Valhallan Blizzard",
+      "brand": "Citadel",
+      "type": "Technical",
+      "hex": "#e8ece8"
+    },
+    {
+      "name": "Mordant Earth",
+      "brand": "Citadel",
+      "type": "Technical",
+      "hex": "#383028"
+    },
+    {
+      "name": "Soulstone",
+      "brand": "Citadel",
+      "type": "Technical",
+      "hex": "#682878"
+    },
+    {
+      "name": "Tesseract Glow",
+      "brand": "Citadel",
+      "type": "Technical",
+      "hex": "#68c868"
+    },
+    {
+      "name": "Basilicanum Grey",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#585860"
+    },
+    {
+      "name": "Bullgryn Flesh",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#a87858"
+    },
+    {
+      "name": "Contrast Medium",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#d8d4c8"
+    },
+    {
+      "name": "Gryph-Charger Grey",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#788898"
+    },
+    {
+      "name": "Iyanden Yellow",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#f0c820"
+    },
+    {
+      "name": "Magos Purple",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#684878"
+    },
+    {
+      "name": "Ork Flesh",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#588848"
+    },
+    {
+      "name": "Plaguebearer Flesh",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#98a878"
+    },
+    {
+      "name": "Snakebite Leather",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#886848"
+    },
+    {
+      "name": "Space Wolves Grey",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#788898"
+    },
+    {
+      "name": "Stormfiend",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#6898a8"
+    },
+    {
+      "name": "Talassar Blue",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#2858a8"
+    },
+    {
+      "name": "Volupus Pink",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#e84888"
+    },
+    {
+      "name": "Wyldwood",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#584828"
+    },
+    {
+      "name": "Apothecary White",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#e8ece8"
+    },
+    {
+      "name": "Bad Moon Yellow",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#f0d820"
+    },
+    {
+      "name": "Flesh Tearers Red",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#881018"
+    },
+    {
+      "name": "Guilliman Flesh",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#c89878"
+    },
+    {
+      "name": "Slaughter Red",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#8b0000"
+    },
+    {
+      "name": "Bright Red",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#e02020"
+    },
+    {
+      "name": "Murder Scene",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#4a1020"
+    },
+    {
+      "name": "Purple Swarm",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#5a2080"
+    },
+    {
+      "name": "Familiar Pink",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#e080a0"
+    },
+    {
+      "name": "Dark Wood",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#4a3020"
+    },
+    {
+      "name": "Nuclear Sunrise",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#ff6600"
+    },
+    {
+      "name": "Zealot Yellow",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#ffd700"
+    },
+    {
+      "name": "Warrior Skin",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#c89878"
+    },
+    {
+      "name": "Crusader Skin",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#e8d0b8"
+    },
+    {
+      "name": "Pallid Bone",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#e8dcc8"
+    },
+    {
+      "name": "Forest Sprite",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#40a040"
+    },
+    {
+      "name": "Gravelord Grey",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#808080"
+    },
+    {
+      "name": "Tidal Wave",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#6090c0"
+    },
+    {
+      "name": "Beowulf Blue",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#102878"
+    },
+    {
+      "name": "Plasmatic Bolt",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#208878"
+    },
+    {
+      "name": "Absolution Green",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#184828"
+    },
+    {
+      "name": "Shamrock Green",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#308840"
+    },
+    {
+      "name": "Desolate Brown",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#605030"
+    },
+    {
+      "name": "Holy White",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#f0f0f0"
+    },
+    {
+      "name": "Grim Black",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#181818"
+    },
+    {
+      "name": "Fire Drake",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#c83818"
+    },
+    {
+      "name": "Fire Giant",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#e85828"
+    },
+    {
+      "name": "Fire Lizard",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#f87838"
+    },
+    {
+      "name": "Goblin Green",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#388838"
+    },
+    {
+      "name": "Orc Skin",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#588848"
+    },
+    {
+      "name": "Hive Dweller Purple",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#582868"
+    },
+    {
+      "name": "Malignant Green",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#286838"
+    },
+    {
+      "name": "Marching Metal",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#788898"
+    },
+    {
+      "name": "Megalith Grey",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#686868"
+    },
+    {
+      "name": "Military Shade",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#585848"
+    },
+    {
+      "name": "Mourning Red",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#681828"
+    },
+    {
+      "name": "Necrotic Flesh",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#788858"
+    },
+    {
+      "name": "Raging Sea",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#286898"
+    },
+    {
+      "name": "Raging Tempest",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#4888a8"
+    },
+    {
+      "name": "Scarlet Red",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#c01818"
+    },
+    {
+      "name": "Shining Silver",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#b0b4b8"
+    },
+    {
+      "name": "Aged Hide",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#886848"
+    },
+    {
+      "name": "Boiled Bone",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#d8c898"
+    },
+    {
+      "name": "Bony Matter",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#c8b898"
+    },
+    {
+      "name": "Burnt Moss",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#486838"
+    },
+    {
+      "name": "Camo Cloak",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#586848"
+    },
+    {
+      "name": "Cloudburst Blue",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#4888b8"
+    },
+    {
+      "name": "Cobalt Metal",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#2858a8"
+    },
+    {
+      "name": "Defiled Grey",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#585858"
+    },
+    {
+      "name": "Desolate Agony",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#482838"
+    },
+    {
+      "name": "Diabetic Grey",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#787878"
+    },
+    {
+      "name": "Divine White",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#f0f0e8"
+    },
+    {
+      "name": "Duskcrystal",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#7888a8"
+    },
+    {
+      "name": "Hardened Leather",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#684830"
+    },
+    {
+      "name": "Irongrave",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#586868"
+    },
+    {
+      "name": "Jaded Grey",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#687868"
+    },
+    {
+      "name": "Speedpaint Medium",
+      "brand": "Army Painter",
+      "type": "Speedpaint",
+      "hex": "#d8d4c8"
+    },
+    {
+      "name": "Hoplite Gold",
+      "brand": "Army Painter",
+      "type": "Speedpaint Metallic",
+      "hex": "#c8a040"
+    },
+    {
+      "name": "Broadsword Silver",
+      "brand": "Army Painter",
+      "type": "Speedpaint Metallic",
+      "hex": "#a0a4a8"
+    },
+    {
+      "name": "Matt Black",
+      "brand": "Army Painter",
+      "type": "Base",
+      "hex": "#1a1a1a"
+    },
+    {
+      "name": "Pure Red",
+      "brand": "Army Painter",
+      "type": "Base",
+      "hex": "#c01818"
+    },
+    {
+      "name": "Dragon Red",
+      "brand": "Army Painter",
+      "type": "Base",
+      "hex": "#881018"
+    },
+    {
+      "name": "Wolf Grey",
+      "brand": "Army Painter",
+      "type": "Base",
+      "hex": "#788898"
+    },
+    {
+      "name": "Uniform Grey",
+      "brand": "Army Painter",
+      "type": "Base",
+      "hex": "#686868"
+    },
+    {
+      "name": "Ash Grey",
+      "brand": "Army Painter",
+      "type": "Base",
+      "hex": "#888888"
+    },
+    {
+      "name": "Skeleton Bone",
+      "brand": "Army Painter",
+      "type": "Base",
+      "hex": "#d8c898"
+    },
+    {
+      "name": "Barbarian Flesh",
+      "brand": "Army Painter",
+      "type": "Base",
+      "hex": "#c89878"
+    },
+    {
+      "name": "Alien Purple",
+      "brand": "Army Painter",
+      "type": "Base",
+      "hex": "#582868"
+    },
+    {
+      "name": "Electric Blue",
+      "brand": "Army Painter",
+      "type": "Base",
+      "hex": "#2858c8"
+    },
+    {
+      "name": "Crystal Blue",
+      "brand": "Army Painter",
+      "type": "Base",
+      "hex": "#4898d8"
+    },
+    {
+      "name": "Angel Green",
+      "brand": "Army Painter",
+      "type": "Base",
+      "hex": "#388838"
+    },
+    {
+      "name": "Greenskin",
+      "brand": "Army Painter",
+      "type": "Base",
+      "hex": "#488848"
+    },
+    {
+      "name": "Desert Yellow",
+      "brand": "Army Painter",
+      "type": "Base",
+      "hex": "#c8a848"
+    },
+    {
+      "name": "Leather Brown",
+      "brand": "Army Painter",
+      "type": "Base",
+      "hex": "#684830"
+    },
+    {
+      "name": "Black Primer",
+      "brand": "Army Painter",
+      "type": "Primer",
+      "hex": "#1a1a1a"
+    },
+    {
+      "name": "Grey Primer",
+      "brand": "Army Painter",
+      "type": "Primer",
+      "hex": "#808080"
+    },
+    {
+      "name": "White Primer",
+      "brand": "Army Painter",
+      "type": "Primer",
+      "hex": "#e8ece8"
+    },
+    {
+      "name": "Gold Primer",
+      "brand": "Army Painter",
+      "type": "Primer",
+      "hex": "#b89840"
+    },
+    {
+      "name": "Blue Primer",
+      "brand": "Army Painter",
+      "type": "Primer",
+      "hex": "#204878"
+    },
+    {
+      "name": "Summer Undergrowth",
+      "brand": "Army Painter",
+      "type": "Base",
+      "hex": "#6a8040"
+    },
+    {
+      "name": "Chaos Black Spray",
+      "brand": "Citadel",
+      "type": "Primer",
+      "hex": "#1a1a1a"
+    },
+    {
+      "name": "Corax White Spray",
+      "brand": "Citadel",
+      "type": "Primer",
+      "hex": "#e8ecef"
+    },
+    {
+      "name": "Wraithbone Spray",
+      "brand": "Citadel",
+      "type": "Primer",
+      "hex": "#e8dcc8"
+    },
+    {
+      "name": "Grey Seer Spray",
+      "brand": "Citadel",
+      "type": "Primer",
+      "hex": "#b8bcc0"
+    },
+    {
+      "name": "Contrast Spray Wraithbone",
+      "brand": "Citadel",
+      "type": "Primer",
+      "hex": "#e8dcc8"
+    },
+    {
+      "name": "Contrast Spray Grey Seer",
+      "brand": "Citadel",
+      "type": "Primer",
+      "hex": "#b8bcc0"
+    },
+    {
+      "name": "Contrast Spray Black",
+      "brand": "Citadel",
+      "type": "Primer",
+      "hex": "#1a1a1a"
+    },
+    {
+      "name": "Army Painter Colour Primer Matt Black",
+      "brand": "Army Painter",
+      "type": "Primer",
+      "hex": "#1a1a1a"
+    },
+    {
+      "name": "Army Painter Colour Primer Matt White",
+      "brand": "Army Painter",
+      "type": "Primer",
+      "hex": "#f0f0f0"
+    },
+    {
+      "name": "Army Painter Colour Primer Uniform Grey",
+      "brand": "Army Painter",
+      "type": "Primer",
+      "hex": "#686868"
+    },
+    {
+      "name": "Ceramite White",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#f8f8f8"
+    },
+    {
+      "name": "Kislev Flesh",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#d8a878"
+    },
+    {
+      "name": "Tallarn Sand",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#a88848"
+    },
+    {
+      "name": "Gauss Blaster Green",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#88d848"
+    },
+    {
+      "name": "Warpstone Glow",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#68c848"
+    },
+    {
+      "name": "Altdorf Guard Blue",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#4898d8"
+    },
+    {
+      "name": "Doombull Brown",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#682818"
+    },
+    {
+      "name": "Gorthor Brown",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#584030"
+    },
+    {
+      "name": "Baneblade Brown",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#786858"
+    },
+    {
+      "name": "Eversor Assassin Lilac",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#8858a8"
+    },
+    {
+      "name": "Ushabti Bone",
+      "brand": "Citadel",
+      "type": "Layer",
+      "hex": "#d8c898"
+    },
+    {
+      "name": "Lahmian Medium",
+      "brand": "Citadel",
+      "type": "Medium",
+      "hex": "#d8d4c8"
+    },
+    {
+      "name": "Nurgle's Rot",
+      "brand": "Citadel",
+      "type": "Technical",
+      "hex": "#588838"
+    },
+    {
+      "name": "Skeleton Horde",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#d8c898"
+    },
+    {
+      "name": "Gore-Grunta Fur",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#684830"
+    },
+    {
+      "name": "Darkoath Flesh",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#886848"
+    },
+    {
+      "name": "Contrast Blood Angels Red",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#881018"
+    },
+    {
+      "name": "Contrast Ultramarines Blue",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#1848a0"
+    },
+    {
+      "name": "Contrast Space Wolves Grey",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#788898"
+    },
+    {
+      "name": "Contrast Ork Flesh",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#588848"
+    },
+    {
+      "name": "Contrast Basilicanum Grey",
+      "brand": "Citadel",
+      "type": "Contrast",
+      "hex": "#585860"
+    },
+    {
+      "name": "Matt White",
+      "brand": "Army Painter",
+      "type": "Base",
+      "hex": "#f0f0f0"
+    },
+    {
+      "name": "Vallejo Model Color White",
+      "brand": "Vallejo",
+      "type": "Base",
+      "hex": "#f8f8f8"
+    },
+    {
+      "name": "Vallejo Model Color Black",
+      "brand": "Vallejo",
+      "type": "Base",
+      "hex": "#1a1a1a"
+    },
+    {
+      "name": "Vallejo Model Color German Grey",
+      "brand": "Vallejo",
+      "type": "Base",
+      "hex": "#585860"
+    },
+    {
+      "name": "Vallejo Model Color Dark Sea Grey",
+      "brand": "Vallejo",
+      "type": "Base",
+      "hex": "#485860"
+    },
+    {
+      "name": "Vallejo Model Color London Grey",
+      "brand": "Vallejo",
+      "type": "Base",
+      "hex": "#788898"
+    },
+    {
+      "name": "Vallejo Model Color Beige Brown",
+      "brand": "Vallejo",
+      "type": "Base",
+      "hex": "#886848"
+    },
+    {
+      "name": "Vallejo Model Color Flat Earth",
+      "brand": "Vallejo",
+      "type": "Base",
+      "hex": "#584830"
+    },
+    {
+      "name": "Vallejo Game Color Washed Blue",
+      "brand": "Vallejo",
+      "type": "Base",
+      "hex": "#2858a8"
+    },
+    {
+      "name": "Vallejo Game Color Dead White",
+      "brand": "Vallejo",
+      "type": "Base",
+      "hex": "#f0f0e8"
+    },
+    {
+      "name": "AK Interactive Black Primer",
+      "brand": "AK Interactive",
+      "type": "Primer",
+      "hex": "#1a1a1a"
+    },
+    {
+      "name": "AK Interactive White Primer",
+      "brand": "AK Interactive",
+      "type": "Primer",
+      "hex": "#f0f0f0"
+    },
+    {
+      "name": "AK Interactive Grey Primer",
+      "brand": "AK Interactive",
+      "type": "Primer",
+      "hex": "#686868"
+    }
+  ]
+}

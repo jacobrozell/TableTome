@@ -1,0 +1,510 @@
+{
+  "version": 1,
+  "materials": [
+    {
+      "name": "Battlefield Grass Green",
+      "brand": "Army Painter",
+      "category": "Static Grass",
+      "hex": "#4a7040",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Battlefield Steppe Grass",
+      "brand": "Army Painter",
+      "category": "Static Grass",
+      "hex": "#8a9850",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Battlefield Brown Grass",
+      "brand": "Army Painter",
+      "category": "Static Grass",
+      "hex": "#6a5838",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Battlefield Wasteland Grass",
+      "brand": "Army Painter",
+      "category": "Static Grass",
+      "hex": "#8a8068",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Static Grass Green",
+      "brand": "Army Painter",
+      "category": "Static Grass",
+      "hex": "#488848",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Static Grass Meadow",
+      "brand": "Army Painter",
+      "category": "Static Grass",
+      "hex": "#68a848",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Static Grass Autumn",
+      "brand": "Army Painter",
+      "category": "Static Grass",
+      "hex": "#a87838",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Static Grass Winter",
+      "brand": "Army Painter",
+      "category": "Static Grass",
+      "hex": "#b8c8b8",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Static Grass Scorched",
+      "brand": "Army Painter",
+      "category": "Static Grass",
+      "hex": "#686048",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Static Grass Wild",
+      "brand": "Army Painter",
+      "category": "Static Grass",
+      "hex": "#588838",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Battlefield Snow",
+      "brand": "Army Painter",
+      "category": "Snow Flock",
+      "hex": "#e8ece8",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Light Baseline",
+      "brand": "Army Painter",
+      "category": "Baseline Gel",
+      "hex": "#988868",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Dark Baseline",
+      "brand": "Army Painter",
+      "category": "Baseline Gel",
+      "hex": "#584830",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Brown Battlefield Baseline",
+      "brand": "Army Painter",
+      "category": "Baseline Gel",
+      "hex": "#684830",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Summer Undergrowth",
+      "brand": "Army Painter",
+      "category": "Tuft",
+      "hex": "#6a8040",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Meadow Flowers Tuft",
+      "brand": "Army Painter",
+      "category": "Tuft",
+      "hex": "#88a848",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Autumn Tuft",
+      "brand": "Army Painter",
+      "category": "Tuft",
+      "hex": "#a86828",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Wasteland Tuft",
+      "brand": "Army Painter",
+      "category": "Tuft",
+      "hex": "#887858",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Jungle Tuft",
+      "brand": "Army Painter",
+      "category": "Tuft",
+      "hex": "#286828",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Alien Flores Tuft",
+      "brand": "Army Painter",
+      "category": "Tuft",
+      "hex": "#684878",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Scorched Tuft",
+      "brand": "Army Painter",
+      "category": "Tuft",
+      "hex": "#684828",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Razor Shrubs",
+      "brand": "Army Painter",
+      "category": "Shrubs",
+      "hex": "#486838",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Dark Green Shrubs",
+      "brand": "Army Painter",
+      "category": "Shrubs",
+      "hex": "#284828",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Wild Shrubs",
+      "brand": "Army Painter",
+      "category": "Shrubs",
+      "hex": "#588848",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Dead Shrubs",
+      "brand": "Army Painter",
+      "category": "Shrubs",
+      "hex": "#685848",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Barren Wasteland",
+      "brand": "Army Painter",
+      "category": "Tuft",
+      "hex": "#786858",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Flowering Grass Tuft",
+      "brand": "Army Painter",
+      "category": "Tuft",
+      "hex": "#78a848",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Highland Tuft",
+      "brand": "Army Painter",
+      "category": "Tuft",
+      "hex": "#688838",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Plains Tuft",
+      "brand": "Army Painter",
+      "category": "Tuft",
+      "hex": "#98a858",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Basing Glue",
+      "brand": "Army Painter",
+      "category": "Glue",
+      "hex": "#d8d4c8",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Battlefields Basing Set",
+      "brand": "Army Painter",
+      "category": "Set",
+      "hex": "#6a8040",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Battlefields Essential Set",
+      "brand": "Army Painter",
+      "category": "Set",
+      "hex": "#588848",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Battlefields Wasteland Set",
+      "brand": "Army Painter",
+      "category": "Set",
+      "hex": "#887858",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Stirland Mud",
+      "brand": "Citadel",
+      "category": "Texture Paste",
+      "hex": "#3e3226"
+    },
+    {
+      "name": "Agrellan Earth",
+      "brand": "Citadel",
+      "category": "Texture Paste",
+      "hex": "#937b62"
+    },
+    {
+      "name": "Agrellan Badland",
+      "brand": "Citadel",
+      "category": "Texture Paste",
+      "hex": "#886848"
+    },
+    {
+      "name": "Armageddon Dust",
+      "brand": "Citadel",
+      "category": "Texture Paste",
+      "hex": "#886848"
+    },
+    {
+      "name": "Martian Ironearth",
+      "brand": "Citadel",
+      "category": "Texture Paste",
+      "hex": "#884838"
+    },
+    {
+      "name": "Mordant Earth",
+      "brand": "Citadel",
+      "category": "Texture Paste",
+      "hex": "#383028"
+    },
+    {
+      "name": "Valhallan Blizzard",
+      "brand": "Citadel",
+      "category": "Snow Flock",
+      "hex": "#e8ece8"
+    },
+    {
+      "name": "Astrogranite",
+      "brand": "Citadel",
+      "category": "Texture Paste",
+      "hex": "#54504a"
+    },
+    {
+      "name": "Astrogranite Debris",
+      "brand": "Citadel",
+      "category": "Texture Paste",
+      "hex": "#585450"
+    },
+    {
+      "name": "Typhus Corrosion",
+      "brand": "Citadel",
+      "category": "Texture Paste",
+      "hex": "#484838"
+    },
+    {
+      "name": "Ryza Rust",
+      "brand": "Citadel",
+      "category": "Texture Paste",
+      "hex": "#883818"
+    },
+    {
+      "name": "Black Templar",
+      "brand": "Citadel",
+      "category": "Texture Gel",
+      "hex": "#282828"
+    },
+    {
+      "name": "Basilicanum Grey",
+      "brand": "Citadel",
+      "category": "Texture Gel",
+      "hex": "#585860"
+    },
+    {
+      "name": "Static Grass Dark Green",
+      "brand": "Army Painter",
+      "category": "Static Grass",
+      "hex": "#285828",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Static Grass Light Green",
+      "brand": "Army Painter",
+      "category": "Static Grass",
+      "hex": "#68a848",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Dead Grass Tuft",
+      "brand": "Army Painter",
+      "category": "Tuft",
+      "hex": "#786848",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Lowland Tuft",
+      "brand": "Army Painter",
+      "category": "Tuft",
+      "hex": "#688838",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Desert Tuft",
+      "brand": "Army Painter",
+      "category": "Tuft",
+      "hex": "#a89858",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Winter Tuft",
+      "brand": "Army Painter",
+      "category": "Tuft",
+      "hex": "#b8c8b8",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Pink Flowers Tuft",
+      "brand": "Army Painter",
+      "category": "Tuft",
+      "hex": "#d87898",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Yellow Flowers Tuft",
+      "brand": "Army Painter",
+      "category": "Tuft",
+      "hex": "#d8c848",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Red Flowers Tuft",
+      "brand": "Army Painter",
+      "category": "Tuft",
+      "hex": "#a83838",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Battlefields Snow Tub",
+      "brand": "Army Painter",
+      "category": "Snow Flock",
+      "hex": "#e8ece8",
+      "line": "Battlefields"
+    },
+    {
+      "name": "Stirland Battlemire",
+      "brand": "Citadel",
+      "category": "Texture Paste",
+      "hex": "#3a3020"
+    },
+    {
+      "name": "Death Guard Green Texture",
+      "brand": "Citadel",
+      "category": "Texture Paste",
+      "hex": "#586848"
+    },
+    {
+      "name": "Steel Legion Drab Texture",
+      "brand": "Citadel",
+      "category": "Texture Paste",
+      "hex": "#6e6847"
+    },
+    {
+      "name": "Lustrian Undergrowth",
+      "brand": "Citadel",
+      "category": "Texture Paste",
+      "hex": "#486838"
+    },
+    {
+      "name": "Breakaway Rust",
+      "brand": "Citadel",
+      "category": "Texture Paste",
+      "hex": "#884838"
+    },
+    {
+      "name": "Gaming Base: Mordian",
+      "brand": "Citadel",
+      "category": "Texture Gel",
+      "hex": "#383028"
+    },
+    {
+      "name": "Fine Turf Green Grass",
+      "brand": "Woodland Scenics",
+      "category": "Static Grass",
+      "hex": "#488848"
+    },
+    {
+      "name": "Coarse Turf Medium Green",
+      "brand": "Woodland Scenics",
+      "category": "Static Grass",
+      "hex": "#588848"
+    },
+    {
+      "name": "Coarse Turf Burnt Grass",
+      "brand": "Woodland Scenics",
+      "category": "Static Grass",
+      "hex": "#886848"
+    },
+    {
+      "name": "Static Grass Medium Green",
+      "brand": "Woodland Scenics",
+      "category": "Static Grass",
+      "hex": "#488848"
+    },
+    {
+      "name": "Clump Foliage Light Green",
+      "brand": "Woodland Scenics",
+      "category": "Foliage",
+      "hex": "#68a848"
+    },
+    {
+      "name": "Clump Foliage Medium Green",
+      "brand": "Woodland Scenics",
+      "category": "Foliage",
+      "hex": "#488838"
+    },
+    {
+      "name": "Static Grass 2mm Spring",
+      "brand": "Geek Gaming",
+      "category": "Static Grass",
+      "hex": "#58a848"
+    },
+    {
+      "name": "Static Grass 4mm Spring",
+      "brand": "Geek Gaming",
+      "category": "Static Grass",
+      "hex": "#58a848"
+    },
+    {
+      "name": "Static Grass 2mm Summer",
+      "brand": "Geek Gaming",
+      "category": "Static Grass",
+      "hex": "#68a848"
+    },
+    {
+      "name": "Static Grass 2mm Autumn",
+      "brand": "Geek Gaming",
+      "category": "Static Grass",
+      "hex": "#a87838"
+    },
+    {
+      "name": "Static Grass 2mm Winter",
+      "brand": "Geek Gaming",
+      "category": "Static Grass",
+      "hex": "#b8c8b8"
+    },
+    {
+      "name": "Dark Earth",
+      "brand": "AK Interactive",
+      "category": "Texture Paste",
+      "hex": "#584830"
+    },
+    {
+      "name": "Light Earth",
+      "brand": "AK Interactive",
+      "category": "Texture Paste",
+      "hex": "#886848"
+    },
+    {
+      "name": "Wet Ground",
+      "brand": "AK Interactive",
+      "category": "Texture Paste",
+      "hex": "#484830"
+    },
+    {
+      "name": "Snow Sprinkles",
+      "brand": "AK Interactive",
+      "category": "Snow Flock",
+      "hex": "#e8ece8"
+    }
+  ]
+}

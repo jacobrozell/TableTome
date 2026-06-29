@@ -15,6 +15,34 @@ enum FormHints {
     static var paintLow: String {
         String(localized: "Flag bottles you want to restock.")
     }
+    static var paintSwatch: String {
+        String(
+            localized: """
+            Match a known paint by name, or pick a custom swatch colour. Unknown paints use a type \
+            placeholder until you match or choose one.
+            """
+        )
+    }
+    static var paintCatalogSearch: String {
+        String(localized: "Start typing to search the built-in Citadel and Army Painter catalog.")
+    }
+    static var paintCatalogPick: String {
+        String(localized: "Pick a row to fill name, brand, type, and swatch colour.")
+    }
+    static var basingCatalogSearch: String {
+        String(localized: "Search flock, tufts, texture paste, and gel basing products.")
+    }
+    static var basingCatalogPick: String {
+        String(localized: "Pick a basing material to fill name, brand, type, and swatch colour.")
+    }
+    static var paintRefreshCatalog: String {
+        String(
+            localized: """
+            Updates swatch colours from the built-in paint and basing catalogs for inventory rows that \
+            aren't using a custom colour.
+            """
+        )
+    }
     static var uniqueName: String {
         String(localized: "Names must be unique.")
     }

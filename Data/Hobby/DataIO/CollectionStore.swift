@@ -46,9 +46,16 @@ public enum CollectionStore {
     }
 
     private static func makePaint(_ d: PaintDraft, into ctx: ModelContext) -> HobbyPaint {
+        let hex = safeColor(d.swatchHex)
+        let custom = d.usesCustomSwatch
+            || PaintSwatchResolver.inferUsesCustom(
+                storedHex: hex, name: d.name, brand: d.brand, type: d.type
+            )
         let p = HobbyPaint(name: d.name.hobbyCapped(HobbyLimits.maxStringLen),
                       type: d.type.hobbyCapped(HobbyLimits.maxStringLen),
-                      swatchHex: safeColor(d.swatchHex), qty: d.qty,
+                      swatchHex: hex,
+                      usesCustomSwatch: custom,
+                      qty: d.qty,
                       brand: d.brand.hobbyCapped(HobbyLimits.maxStringLen),
                       source: d.source.hobbyCapped(HobbyLimits.maxStringLen),
                       notes: d.notes.hobbyCapped(HobbyLimits.maxNotesLen), low: d.low)

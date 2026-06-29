@@ -17,7 +17,10 @@ public enum PaintCSV {
             let q = Normalize.qty(hm.value(r, "quantity"))
             if let w = q.warning { warnings.append("Row \(line): \(w)") }
             parsed.append(PaintDraft(
-                name: name, type: type, swatchHex: PaintType.swatchHex(for: type),
+                name: name, type: type,
+                swatchHex: PaintSwatchResolver.defaultSwatch(
+                    name: name, brand: hm.value(r, "brand"), type: type
+                ),
                 qty: q.qty, brand: hm.value(r, "brand"), source: hm.value(r, "source"),
                 notes: hm.value(r, "notes")))
         }

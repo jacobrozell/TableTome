@@ -131,11 +131,21 @@ public enum BackupSanitizer {
         let paints: [PaintDraft] = (s.paints ?? []).prefix(HobbyLimits.maxPaints).compactMap { dto in
             let name = (dto.name ?? "").hobbyCapped(HobbyLimits.maxStringLen)
             guard !name.isEmpty else { return nil }
+            let type = (dto.type ?? "").hobbyCapped(HobbyLimits.maxStringLen)
+            let brand = (dto.brand ?? "").hobbyCapped(HobbyLimits.maxStringLen)
+            let rawSwatch = (dto.swatch ?? "").trimmingCharacters(in: .whitespaces)
+            let hex = rawSwatch.isEmpty
+                ? PaintSwatchResolver.defaultSwatch(name: name, brand: brand, type: type)
+                : safeColor(rawSwatch)
+            let custom = PaintSwatchResolver.inferUsesCustom(
+                storedHex: hex, name: name, brand: brand, type: type
+            )
             return PaintDraft(name: name,
-                              type: (dto.type ?? "").hobbyCapped(HobbyLimits.maxStringLen),
-                              swatchHex: safeColor(dto.swatch ?? ""),
+                              type: type,
+                              swatchHex: hex,
+                              usesCustomSwatch: custom,
                               qty: max(1, min(9999, dto.qty ?? 1)),
-                              brand: (dto.brand ?? "").hobbyCapped(HobbyLimits.maxStringLen),
+                              brand: brand,
                               source: (dto.source ?? "").hobbyCapped(HobbyLimits.maxStringLen),
                               notes: (dto.notes ?? "").hobbyCapped(HobbyLimits.maxNotesLen),
                               low: dto.low == true,

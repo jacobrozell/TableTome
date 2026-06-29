@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import TabletomeHobbyData
+import TabletomeDomain
 
 @MainActor
 struct PaintDetailView: View {
@@ -15,6 +16,7 @@ struct PaintDetailView: View {
 
     @State private var confirmDelete = false
     @State private var filterTrigger = false
+    @State private var dismissedCatalogSuggestions = false
 
     private var paint: HobbyPaint? { allPaints.first { $0.id == paintId } }
     private var types: [String] {
@@ -93,6 +95,9 @@ struct PaintDetailView: View {
             Section {
                 TextField(String(localized: "Name"), text: $paint.name)
                     .textInputAutocapitalization(.words)
+                    .onChange(of: paint.name) { _, _ in
+                        dismissedCatalogSuggestions = false
+                    }
                 Picker(String(localized: "Type"), selection: $paint.type) {
                     ForEach(typeOptions, id: \.self) { Text($0.isEmpty ? "—" : $0).tag($0) }
                 }
@@ -101,7 +106,24 @@ struct PaintDetailView: View {
                     .textInputAutocapitalization(.words)
             } header: {
                 Text(String(localized: "Paint"))
+            } footer: {
+                Text(paint.type == "Basing" ? FormHints.basingCatalogSearch : FormHints.paintCatalogSearch)
             }
+
+            PaintCatalogSuggestionsSection(
+                name: paint.name,
+                type: paint.type,
+                isActive: !dismissedCatalogSuggestions,
+                onSelect: { applyCatalogEntry($0, to: paint) }
+            )
+
+            PaintColorSection(
+                swatchHex: $paint.swatchHex,
+                usesCustomSwatch: $paint.usesCustomSwatch,
+                name: paint.name,
+                brand: paint.brand,
+                type: paint.type
+            )
 
             Section {
                 QuantityStepper(label: String(localized: "Quantity"), value: $paint.qty)
@@ -140,11 +162,27 @@ struct PaintDetailView: View {
             }
         }
         .tabBarScrollInset()
+        .onAppear {
+            if !paint.usesCustomSwatch {
+                paint.swatchHex = PaintSwatchResolver.defaultSwatch(
+                    name: paint.name, brand: paint.brand, type: paint.type
+                )
+            }
+        }
         .onDisappear { try? context.save() }
     }
 
     private var typeOptions: [String] {
         var seen = Set<String>()
         return (PaintType.known + types).filter { seen.insert($0).inserted }
+    }
+
+    private func applyCatalogEntry(_ entry: PaintCatalogEntry, to paint: HobbyPaint) {
+        paint.name = entry.name
+        if let brand = entry.brand { paint.brand = brand }
+        if let type = entry.type, !type.isEmpty { paint.type = type }
+        paint.swatchHex = entry.hex
+        paint.usesCustomSwatch = false
+        dismissedCatalogSuggestions = true
     }
 }

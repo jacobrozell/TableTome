@@ -25,12 +25,14 @@
   </nav>
 
   <main id="main">
-    <p class="meta">Last updated: 22 June 2026</p>
+    <p class="meta">Last updated: 29 June 2026</p>
 
     <h2>Overview</h2>
     <p>
-      Tabletome is an offline-first iOS app for tabletop battle games (Age of Sigmar: Spearhead and Warhammer 40,000 11th Edition in v1.0).
-      You do not need an account. This policy describes what the app stores on your device and when it uses the network.
+      Tabletome is an offline-first iOS app for tabletop battle games — Age of Sigmar: Spearhead,
+      Warhammer 40,000 11th Edition, and Combat Patrol (10th Edition rules) in v1.0.
+      You do not need an account. This policy describes what the app stores on your device,
+      when it uses the network, and what may be sent to diagnostics services in Release builds.
     </p>
 
     <h3>Data stored on your device</h3>
@@ -44,17 +46,29 @@
     </ul>
     <p>All of the above stays on your iPhone or iPad unless you explicitly share it (for example, exporting a backup file or a match paste code).</p>
 
+    <h3>Diagnostics in Release builds (Firebase)</h3>
+    <p>
+      In <strong>Release builds</strong> from TestFlight or the App Store (not typical Debug builds from Xcode),
+      the app may send limited, anonymous usage and crash data to <strong>Google Firebase</strong> (Google LLC):
+    </p>
+    <ul>
+      <li><strong>Firebase Analytics</strong> — a small allowlisted set of product-health events (for example app open, tab navigation, guided match started/completed, battle tracker actions). Parameters are restricted to non-identifying context such as game system, app version, error codes, and accessibility-setting flags. We do <strong>not</strong> send army names, roster names, player names, or freeform notes.</li>
+      <li><strong>Firebase Crashlytics</strong> — crash stack traces, allowlisted non-fatal errors, and short diagnostic breadcrumbs (event names only) to help fix bugs. No personal content from your collection or match notes is included.</li>
+    </ul>
+    <p>We do not use Firebase for advertising, cross-app tracking, or selling personal information. Firebase is disabled in Debug builds and in builds without a valid production configuration.</p>
+
     <h3>Data we do not collect</h3>
     <ul>
-      <li>No analytics or crash reporting in v1.0.</li>
-      <li>No advertising identifiers.</li>
+      <li>No advertising identifiers or cross-app tracking.</li>
       <li>No developer-operated account or cloud profile storage.</li>
       <li>No sale of personal information.</li>
+      <li>No upload of your collection photos, army names, or match notes to Analytics.</li>
     </ul>
 
     <h3>Network use</h3>
     <ul>
       <li><strong>Offline core</strong> — guides, rules reference, and Guided Match work without internet after install.</li>
+      <li><strong>Diagnostics (Release only)</strong> — Firebase Analytics and Crashlytics as described above.</li>
       <li><strong>Settings links</strong> — Privacy, Support, Accessibility, and source repository open in Safari when you tap them.</li>
       <li><strong>Official publisher links</strong> — optional links on game guide screens open externally (for example, Warhammer Community downloads).</li>
       <li><strong>Nearby match sync (optional)</strong> — when both players choose to sync a Guided Match, the app may use local Wi‑Fi or Bluetooth between nearby devices. Match state is exchanged peer-to-peer; it is not uploaded to a Tabletome server. iOS may show a local network permission prompt the first time you host or join.</li>

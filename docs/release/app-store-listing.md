@@ -98,7 +98,8 @@ ALWAYS WITH YOU AT THE TABLE
 
 BUILT FOR PRIVACY
 • Works fully offline after install — guides, rules, and play tools
-• No account, no ads, no analytics in v1.0
+• No account, no ads, no cross-app tracking
+• Release builds use allowlisted Firebase Analytics + Crashlytics (no PII) — see Privacy Policy
 • Your collection, match history, and game state stay on your device
 
 HOW TO START
@@ -164,7 +165,7 @@ Initial release.
 | **Do you collect data?** | No — nothing is transmitted to developer-operated servers |
 | **Data linked to user** | None |
 | **Data used to track** | None |
-| **Third-party SDKs** | None for analytics/ads |
+| **Third-party SDKs** | Google Firebase (Analytics + Crashlytics, Release only; no ads) |
 
 In App Store Connect: **Data Not Collected**.
 

@@ -16,7 +16,7 @@ settings:
     SWIFT_VERSION: "6.0"
     DEVELOPMENT_TEAM: "7JT2JB89AV"
     MARKETING_VERSION: "1.0.0"
-    CURRENT_PROJECT_VERSION: "7"
+    CURRENT_PROJECT_VERSION: "8"
 
 configs:
   Debug: debug
@@ -29,8 +29,14 @@ targets:
     sources:
       - path: App
       - path: Features
+        excludes:
+          - "**/README.md"
       - path: DesignSystem
+        excludes:
+          - "**/README.md"
       - path: Support
+        excludes:
+          - "**/README.md"
       - path: Resources/Rules
         buildPhase: resources
         type: folder

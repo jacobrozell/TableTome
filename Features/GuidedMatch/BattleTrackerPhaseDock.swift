@@ -36,6 +36,9 @@ struct BattleTrackerPhaseDock: View {
                         systemImage: "person.crop.circle",
                         isEnabled: myUnitEnabled,
                         accessibilityId: "battleTracker.phaseDock.myUnit",
+                        accessibilityHint: myUnitEnabled
+                            ? nil
+                            : String(localized: "Select a unit on the Turn tab first."),
                         action: onMyUnit
                     )
                     dockButton(
@@ -53,6 +56,9 @@ struct BattleTrackerPhaseDock: View {
                         systemImage: "star.fill",
                         isEnabled: scoreVictoryPointsEnabled,
                         accessibilityId: "battleTracker.phaseDock.score",
+                        accessibilityHint: scoreVictoryPointsEnabled
+                            ? nil
+                            : String(localized: "Victory points are on the Turn tab."),
                         action: onScoreVictoryPoints
                     )
                 }
@@ -66,6 +72,9 @@ struct BattleTrackerPhaseDock: View {
                         systemImage: "person.crop.circle",
                         isEnabled: myUnitEnabled,
                         accessibilityId: "battleTracker.phaseDock.myUnit",
+                        accessibilityHint: myUnitEnabled
+                            ? nil
+                            : String(localized: "Select a unit on the Turn tab first."),
                         action: onMyUnit
                     )
                     dockButton(
@@ -83,6 +92,9 @@ struct BattleTrackerPhaseDock: View {
                         systemImage: "star.fill",
                         isEnabled: scoreVictoryPointsEnabled,
                         accessibilityId: "battleTracker.phaseDock.score",
+                        accessibilityHint: scoreVictoryPointsEnabled
+                            ? nil
+                            : String(localized: "Victory points are on the Turn tab."),
                         action: onScoreVictoryPoints
                     )
                 }
@@ -133,6 +145,8 @@ struct BattleTrackerPhaseDock: View {
             )
         }
         .accessibilityIdentifier("battleTracker.phaseDock.phase")
+        .accessibilityLabel(String(localized: "Phase, \(currentPhase.title)"))
+        .accessibilityHint(String(localized: "Jump to another phase or advance to the next phase"))
     }
 
     private var phaseSubtitle: String {
@@ -148,6 +162,7 @@ struct BattleTrackerPhaseDock: View {
         systemImage: String,
         isEnabled: Bool,
         accessibilityId: String,
+        accessibilityHint: String? = nil,
         action: @escaping () -> Void
     ) -> some View {
         Button(action: action) {
@@ -157,6 +172,7 @@ struct BattleTrackerPhaseDock: View {
         .disabled(!isEnabled)
         .frame(maxWidth: .infinity)
         .accessibilityLabel(title)
+        .optionalAccessibilityHint(accessibilityHint)
         .accessibilityIdentifier(accessibilityId)
     }
 

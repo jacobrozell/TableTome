@@ -201,6 +201,12 @@ enum OnboardingContent {
         gameHighlights.filter { ReleaseSurface.isGameSystemIdVisible($0.id) }
     }
 
+    static var rulesTabTourBody: String {
+        ReleaseSurface.showsRulesAssistant
+            ? String(localized: "Look up rules, units, and glossary terms for your selected game")
+            : String(localized: "Look up rules and glossary terms for your selected game")
+    }
+
     static var visibleTabTourItems: [OnboardingTabTourItem] {
         tabTourItems
             .filter { item in
@@ -211,13 +217,27 @@ enum OnboardingContent {
                 }
             }
             .map { item in
-                guard item.id == "bench" else { return item }
-                return OnboardingTabTourItem(
-                    id: item.id,
-                    symbol: item.symbol,
-                    title: item.title,
-                    body: benchTabTourBody
-                )
+                switch item.id {
+                case "bench":
+                    return OnboardingTabTourItem(
+                        id: item.id,
+                        symbol: item.symbol,
+                        title: item.title,
+                        body: benchTabTourBody
+                    )
+                case "rules":
+                    // Mirror RootTabView: release ships browse-only Rules (doc icon), not Rules Search.
+                    return OnboardingTabTourItem(
+                        id: item.id,
+                        symbol: ReleaseSurface.showsRulesAssistant ? "magnifyingglass" : "doc.text.fill",
+                        title: ReleaseSurface.showsRulesAssistant
+                            ? String(localized: "Rules Search")
+                            : String(localized: "Rules"),
+                        body: rulesTabTourBody
+                    )
+                default:
+                    return item
+                }
             }
     }
 }

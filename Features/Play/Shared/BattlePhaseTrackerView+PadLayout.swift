@@ -27,8 +27,8 @@ extension BattlePhaseTrackerView {
             tabHintSection
             padTwoColumnTabContent
         }
-        .animation(.easeInOut(duration: 0.25), value: showsBattleTrackerCoach)
-        .animation(.easeInOut(duration: 0.25), value: selectedSectionTab)
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: showsBattleTrackerCoach)
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: selectedSectionTab)
         .frame(maxWidth: DesignTokens.battleTrackerRegularMaxWidth)
         .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityIdentifier("battleTracker.padTwoColumnLayout")

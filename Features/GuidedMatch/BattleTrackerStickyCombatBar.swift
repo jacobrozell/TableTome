@@ -103,11 +103,13 @@ struct BattleTrackerDamageUndoBanner: View {
             Spacer(minLength: 0)
             Button(String(localized: "Undo"), action: onUndo)
                 .font(.caption.weight(.semibold))
+                .minimumTouchTarget()
             Button(action: onDismiss) {
                 Image(systemName: "xmark.circle.fill")
                     .foregroundStyle(.secondary)
             }
             .buttonStyle(.plain)
+            .minimumTouchTarget()
             .accessibilityLabel(String(localized: "Dismiss"))
         }
         .padding(DesignTokens.Spacing.md)

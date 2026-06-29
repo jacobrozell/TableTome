@@ -23,6 +23,7 @@ struct BattleTrackerCoachCard: View {
     @State private var step = 0
     @State private var showsAllSteps = false
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var playContext: GameSystemPlayContext {
         GameSystemPlayContext.context(for: gameSystemId)
@@ -142,6 +143,7 @@ struct BattleTrackerCoachCard: View {
                                     .foregroundStyle(.secondary)
                             }
                             .buttonStyle(.plain)
+                            .minimumTouchTarget()
                             .accessibilityLabel(String(localized: "Dismiss tips"))
                         }
                         if showsAllSteps {
@@ -165,6 +167,7 @@ struct BattleTrackerCoachCard: View {
                                 .foregroundStyle(.secondary)
                         }
                         .buttonStyle(.plain)
+                        .minimumTouchTarget()
                         .accessibilityLabel(String(localized: "Dismiss tips"))
                     }
                 }
@@ -192,7 +195,7 @@ struct BattleTrackerCoachCard: View {
                 HStack(spacing: DesignTokens.Spacing.sm) {
                     if step > 0 {
                         Button(String(localized: "Back")) {
-                            withAnimation(.easeInOut(duration: 0.2)) { step -= 1 }
+                            withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) { step -= 1 }
                         }
                         .buttonStyle(.bordered)
                         .minimumTouchTarget()
@@ -200,7 +203,7 @@ struct BattleTrackerCoachCard: View {
                     Spacer()
                     Button(step < steps.count - 1 ? String(localized: "Next") : String(localized: "Got it")) {
                         if step < steps.count - 1 {
-                            withAnimation(.easeInOut(duration: 0.2)) { step += 1 }
+                            withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) { step += 1 }
                         } else {
                             onDismiss()
                         }
@@ -211,7 +214,7 @@ struct BattleTrackerCoachCard: View {
             } else {
                 HStack(spacing: DesignTokens.Spacing.sm) {
                     Button(String(localized: "See all tips")) {
-                        withAnimation(.easeInOut(duration: 0.2)) {
+                        withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) {
                             showsAllSteps = true
                             step = 0
                         }

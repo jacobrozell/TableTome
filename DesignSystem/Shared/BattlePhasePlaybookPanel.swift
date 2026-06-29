@@ -10,6 +10,7 @@ struct BattlePhasePlaybookPanel: View {
     let onAdvancePhase: () -> Void
 
     @State private var advancePhaseTrigger = 0
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var phase: BattleTurnPhase { viewModel.trackerState.currentPhase }
     private var gameSystemId: GameSystemId { viewModel.gameSystemId }
@@ -31,7 +32,7 @@ struct BattlePhasePlaybookPanel: View {
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("battleTracker.phasePlaybook")
         .id("battleTracker.phasePlaybook")
-        .animation(.easeInOut(duration: 0.2), value: phase)
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.2), value: phase)
         .sensoryFeedback(.selection, trigger: advancePhaseTrigger)
     }
 

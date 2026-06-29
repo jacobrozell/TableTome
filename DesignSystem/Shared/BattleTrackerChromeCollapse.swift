@@ -34,7 +34,7 @@ struct ChromeCollapseChevronButton: View {
                 .foregroundStyle(.secondary)
                 .frame(
                     width: DesignTokens.minTouchTarget,
-                    height: compact ? 28 : DesignTokens.minTouchTarget
+                    height: DesignTokens.minTouchTarget
                 )
                 .contentShape(Rectangle())
         }
@@ -64,10 +64,11 @@ struct ChromeCollapseToolbarButton: View {
     let expandedAccessibilityLabel: String
     let collapsedAccessibilityLabel: String
     var accessibilityIdentifier: String
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         Button {
-            withAnimation(.easeInOut(duration: 0.2)) {
+            withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) {
                 isCollapsed.toggle()
             }
         } label: {
@@ -123,7 +124,7 @@ struct BattleTrackerCollapsedTopChrome: View {
                 action: onExpand
             )
         }
-        .frame(minHeight: 32)
+        .frame(minHeight: DesignTokens.minTouchTarget)
         .barChromeBackground(horizontalPadding: DesignTokens.Spacing.sm, verticalPadding: 2)
         .accessibilityIdentifier("battleTracker.collapsedTopChrome")
     }
@@ -165,7 +166,7 @@ struct GuidedMatchCollapsedHubChrome: View {
                 action: onExpand
             )
         }
-        .frame(minHeight: 32)
+        .frame(minHeight: DesignTokens.minTouchTarget)
         .barChromeBackground(horizontalPadding: DesignTokens.Spacing.md, verticalPadding: 2)
         .accessibilityIdentifier("guidedMatch.collapsedHubChrome")
     }

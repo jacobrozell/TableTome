@@ -57,7 +57,8 @@ struct RootTabView: View {
                 TabBarItemLabel(
                     title: String(localized: "Settings"),
                     systemImage: "gearshape.fill",
-                    identifier: "tab.settings"
+                    identifier: "tab.settings",
+                    accessibilityLabel: String(localized: "Settings, appearance and app tour")
                 )
             }
             .tag(AppTab.settings)

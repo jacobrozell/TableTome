@@ -255,21 +255,26 @@ struct BattlePhaseTrackerView: View {
     private func applyPhoneLandscapeTopChromeDefault() {
         guard layoutContext.prefersCollapsedBattleChrome, !topChromeExpandedInLandscape else { return }
         guard !isTopChromeCollapsed else { return }
-        withAnimation(.easeInOut(duration: 0.2)) {
+        withAnimation(chromeAnimation) {
             isTopChromeCollapsed = true
         }
     }
 
     private func expandTopChrome() {
-        withAnimation(.easeInOut(duration: 0.2)) {
+        withAnimation(chromeAnimation) {
             isTopChromeCollapsed = false
         }
     }
 
     private func collapseTopChrome() {
-        withAnimation(.easeInOut(duration: 0.2)) {
+        withAnimation(chromeAnimation) {
             isTopChromeCollapsed = true
         }
+    }
+
+    /// Battle chrome collapse/expand animation, suppressed under Reduce Motion.
+    private var chromeAnimation: Animation? {
+        reduceMotion ? nil : .easeInOut(duration: 0.2)
     }
 
     @ViewBuilder
@@ -306,7 +311,7 @@ struct BattlePhaseTrackerView: View {
     var coachSection: some View {
         if supportsBattleTracker, showsBattleTrackerCoach, !showsPhasePlaybook {
             BattleTrackerCoachCard(gameSystemId: viewModel.gameSystemId) {
-                withAnimation(.easeInOut(duration: 0.25)) {
+                withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) {
                     NewPlayerTipsStore.markBattleTrackerCoachSeen()
                     showsBattleTrackerCoach = false
                 }

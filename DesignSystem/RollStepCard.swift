@@ -91,7 +91,9 @@ struct RollStepCard: View {
         }
         .surfaceCard()
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(step.name). \(step.explanation)")
+        .accessibilityLabel(
+            "\(step.name). \(step.explanation). \(step.outcome == .success ? String(localized: "Pass") : String(localized: "Fail"))"
+        )
         .accessibilityIdentifier("rollEvaluator.step.\(step.id)")
     }
 }

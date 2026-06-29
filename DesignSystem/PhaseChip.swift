@@ -99,6 +99,7 @@ struct PhaseChipRow: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var usesPhaseGrid: Bool {
         guard !dynamicTypeSize.needsLayoutAdaptation else { return false }
@@ -135,7 +136,7 @@ struct PhaseChipRow: View {
                     .transition(.opacity.combined(with: .move(edge: .top)))
             }
         }
-        .animation(.easeInOut(duration: 0.2), value: selectedPhase)
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.2), value: selectedPhase)
     }
 
     @ViewBuilder

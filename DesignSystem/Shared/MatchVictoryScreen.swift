@@ -197,7 +197,8 @@ public struct MatchVictoryScreen: View {
     private var headline: some View {
         VStack(spacing: DesignTokens.Spacing.sm) {
             Image(systemName: headlineSymbol)
-                .font(.system(size: mode == .readOnly ? 36 : 44))
+                .font(mode == .readOnly ? .title : .largeTitle)
+                .symbolRenderingMode(.hierarchical)
                 .foregroundStyle(headlineSymbolColor)
                 .scaleEffect(celebrateScale)
                 .accessibilityHidden(true)

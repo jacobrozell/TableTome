@@ -16,6 +16,7 @@ struct GuidedMatchView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.accessibilityReduceMotion) var reduceMotion
     @Environment(TabBarChrome.self) var tabBarChrome
     @State var selectedDestination: GuidedMatchDestination?
     @State var showsAllSetupSteps = NewPlayerTipsStore.hasExpandedGuidedMatchSetup
@@ -92,6 +93,18 @@ struct GuidedMatchView: View {
             Button(String(localized: "Cancel"), role: .cancel) {}
         } message: {
             Text(String(localized: "Save this match to history before clearing, or discard it permanently."))
+        }
+        .alert(
+            String(localized: "Match not saved"),
+            isPresented: Binding(
+                get: { viewModel.saveFailureNotice != nil },
+                set: { if !$0 { viewModel.saveFailureNotice = nil } }
+            ),
+            presenting: viewModel.saveFailureNotice
+        ) { _ in
+            Button(String(localized: "OK"), role: .cancel) { viewModel.saveFailureNotice = nil }
+        } message: { notice in
+            Text(notice)
         }
         .task {
             await viewModel.load()

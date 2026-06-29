@@ -8,6 +8,8 @@ final class GuidedMatchViewModel: ObservableObject {
 
     @Published private(set) var catalog: SpearheadCatalog?
     @Published private(set) var errorMessage: String?
+    /// Transient alert when a finished match could not be written to history.
+    @Published var saveFailureNotice: String?
     @Published var matchState: GuidedMatchState
 
     private let catalogRepository: any SpearheadCatalogRepository
@@ -384,6 +386,7 @@ final class GuidedMatchViewModel: ObservableObject {
                     errorCode: TabletomeAnalytics.errorCode(for: error)
                 )
             )
+            saveFailureNotice = matchSaveFailureMessage(status: status)
         } catch {
             logger.error(
                 .persistence,
@@ -394,12 +397,19 @@ final class GuidedMatchViewModel: ObservableObject {
                     errorCode: "unknown"
                 )
             )
+            saveFailureNotice = matchSaveFailureMessage(status: status)
         }
         if rematch {
             rematchPreservingArmies()
         } else {
             resetMatch()
         }
+    }
+
+    private func matchSaveFailureMessage(status: MatchArchiveStatus) -> String {
+        status == .completed
+            ? String(localized: "This match couldn't be saved to History — the final scores weren't recorded.")
+            : String(localized: "This match couldn't be saved to History.")
     }
 
     func applyStarterMatchup() {

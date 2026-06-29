@@ -58,7 +58,7 @@ extension BattlePhaseTrackerView {
         modelsMilestoneSection
         if !MarketingSnapshotBootstrap.suppressesCoachingUI, showsTabHint {
             BattleTrackerTabHintBanner(suggestedTab: suggestedSectionTab, gameSystemId: viewModel.gameSystemId) {
-                withAnimation(.easeInOut(duration: 0.25)) {
+                withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) {
                     selectedSectionTab = suggestedSectionTab
                 }
                 if suggestedSectionTab == .combat {

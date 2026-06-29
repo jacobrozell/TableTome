@@ -80,7 +80,14 @@ struct ChecklistStepRow<Extra: View>: View {
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
         }
         .accessibilityElement(children: .combine)
+        .accessibilityValue(statusAccessibilityValue)
         .accessibilityIdentifier(accessibilityIdentifier)
+    }
+
+    private var statusAccessibilityValue: String {
+        if isComplete { return String(localized: "Complete") }
+        if isFocused { return String(localized: "Current step") }
+        return String(localized: "Not started")
     }
 
     @ViewBuilder

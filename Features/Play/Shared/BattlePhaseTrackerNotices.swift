@@ -51,7 +51,7 @@ extension BattlePhaseTrackerView {
                 title: notice.title,
                 detail: notice.detail,
                 onDismiss: {
-                    withAnimation(.easeInOut(duration: 0.25)) {
+                    withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) {
                         turnHandoffNotice = nil
                     }
                 }

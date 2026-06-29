@@ -119,11 +119,14 @@ struct MatchStepDetailView: View {
             HStack(spacing: DesignTokens.Spacing.sm) {
                 Image(systemName: isComplete ? "checkmark.circle.fill" : "circle")
                     .foregroundStyle(isComplete ? .green : .secondary)
+                    .accessibilityHidden(true)
                 Text(completionHint)
                     .font(.subheadline)
                     .foregroundStyle(isComplete ? .primary : .secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityValue(isComplete ? String(localized: "Complete") : String(localized: "Incomplete"))
 
             if usesManualConfirmation, !isComplete {
                 Button(String(localized: "Mark step complete")) {

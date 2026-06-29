@@ -200,7 +200,7 @@ extension GuidedMatchView {
                     Text(String(localized: "Use Starter Matchup"))
                         .font(.subheadline.weight(.semibold))
                         .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-                        .foregroundStyle(Color.white)
+                        .prominentButtonLabelStyle()
                         .background(Color.accentColor, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -631,8 +631,14 @@ extension GuidedMatchView {
 
     @ViewBuilder
     func matchSetupSection(catalog: SpearheadCatalog, useSplitSelection: Bool) -> some View {
-        Section(String(localized: "Match Setup")) {
+        Section {
             matchSetupRows(catalog: catalog, useSplitSelection: useSplitSelection)
+        } header: {
+            Text(String(localized: "Match Setup"))
+        } footer: {
+            if !viewModel.matchState.hasBothArmies {
+                Text(String(localized: "Choose both armies above to unlock setup steps."))
+            }
         }
     }
 

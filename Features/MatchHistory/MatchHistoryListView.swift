@@ -25,7 +25,7 @@ struct MatchHistoryListView: View {
                 EmptyStateView(
                     title: String(localized: "Unable to Load"),
                     message: error,
-                    systemImage: "wifi.exclamationmark",
+                    systemImage: "exclamationmark.triangle",
                     actionTitle: String(localized: "Retry"),
                     action: { Task { await viewModel.load() } }
                 )
@@ -253,5 +253,27 @@ private struct MatchHistoryRow: View {
         }
         .padding(.vertical, DesignTokens.Spacing.xs)
         .contentShape(Rectangle())
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(voiceOverSummary)
+    }
+
+    private var voiceOverSummary: String {
+        let players = "\(record.players.playerOneName) vs \(record.players.playerTwoName)"
+        let armies = "\(record.players.playerOneArmyLabel) vs \(record.players.playerTwoArmyLabel)"
+        let score = "\(record.result.playerOneVictoryPoints) to \(record.result.playerTwoVictoryPoints) victory points"
+        let date = MatchHistoryDisplayFormatter.relativeDateLabel(for: record.endedAt)
+
+        var outcome: String
+        if record.status == .abandoned {
+            outcome = String(localized: "Abandoned")
+        } else if record.result.winner == .tie {
+            outcome = String(localized: "Draw")
+        } else if let winnerName = record.winnerPlayerName {
+            outcome = String(localized: "\(winnerName) won")
+        } else {
+            outcome = String(localized: "No winner recorded")
+        }
+
+        return "\(record.gameSystemName), \(date). \(players). \(armies). \(score). \(outcome)."
     }
 }

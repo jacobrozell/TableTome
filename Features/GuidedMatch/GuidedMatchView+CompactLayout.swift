@@ -85,7 +85,7 @@ extension GuidedMatchView {
         if !usesPhoneLandscapeBattleImmersion {
             if isHubChromeCollapsed {
                 GuidedMatchCollapsedHubChrome(summary: hubChromeSummaryLine(catalog: catalog)) {
-                    withAnimation(.easeInOut(duration: 0.2)) {
+                    withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) {
                         isHubChromeCollapsed = false
                     }
                 }
@@ -118,7 +118,7 @@ extension GuidedMatchView {
                             accessibilityLabel: String(localized: "Hide match summary"),
                             accessibilityIdentifier: "guidedMatch.hubChromeCollapseInline",
                             onCollapse: {
-                                withAnimation(.easeInOut(duration: 0.2)) {
+                                withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) {
                                     isHubChromeCollapsed = true
                                 }
                             }

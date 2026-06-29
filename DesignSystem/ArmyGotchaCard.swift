@@ -4,11 +4,12 @@ import TabletomeDomain
 struct ArmyGotchaCard: View {
     let gotcha: SpearheadGotcha
     @State private var isExpanded = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
             Button {
-                withAnimation(.easeInOut(duration: 0.2)) {
+                withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) {
                     isExpanded.toggle()
                 }
             } label: {

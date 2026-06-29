@@ -144,6 +144,7 @@ struct BattleTrackerRoundOpenerBanner: View {
                         .foregroundStyle(.secondary)
                 }
                 .buttonStyle(.plain)
+                .minimumTouchTarget()
                 .accessibilityLabel(String(localized: "Dismiss"))
             }
 
@@ -189,6 +190,7 @@ struct BattleTrackerScoringReminderBanner: View {
                         .foregroundStyle(.secondary)
                 }
                 .buttonStyle(.plain)
+                .minimumTouchTarget()
                 .accessibilityLabel(String(localized: "Dismiss"))
             }
 
@@ -246,9 +248,11 @@ private struct BattleTrackerNoticeBanner: View {
                     .foregroundStyle(.secondary)
             }
             .buttonStyle(.plain)
+            .minimumTouchTarget()
             .accessibilityLabel(String(localized: "Dismiss"))
         }
         .accentHighlightCard()
+        .accessibilityElement(children: .combine)
         .accessibilityIdentifier(accessibilityIdentifier)
     }
 }

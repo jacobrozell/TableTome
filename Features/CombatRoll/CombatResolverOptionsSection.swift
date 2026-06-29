@@ -51,7 +51,7 @@ struct CombatResolverOptionsSection: View {
             .padding(.top, DesignTokens.Spacing.sm)
         } label: {
             if isEmbedded {
-                Text(String(localized: "Abilities & Options"))
+                Label(String(localized: "Extra rules (Ward, modifiers)"), systemImage: "sparkles")
                     .font(.subheadline.weight(.semibold))
             } else {
                 SectionHeader(title: String(localized: "Abilities & Options"), systemImage: "sparkles")

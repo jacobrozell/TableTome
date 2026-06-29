@@ -65,6 +65,8 @@ struct CombatResolverPanel: View {
             }
             if isEmbedded {
                 advancedSingleAttackSection
+                wardReminderSection
+                optionsSection
             } else {
                 resultsSection
                 diceSection
@@ -91,10 +93,10 @@ struct CombatResolverPanel: View {
         }
         .onChange(of: viewModel.defenderUnitId) { _, _ in
             guard isEmbedded else { return }
+            // Suggested wards are auto-applied so the batch math stays correct; the modifier
+            // list stays collapsed to avoid overwhelming new players. The ward reminder nudges
+            // them to open it when nothing protective is detected.
             viewModel.applySuggestedDefenderWards()
-            if viewModel.hasSuggestedWardBuffs {
-                showsAdvancedOptions = true
-            }
             onSyncMultiAttack()
             syncBatchCombat()
         }
@@ -147,7 +149,6 @@ struct CombatResolverPanel: View {
             Text(String(localized: "Single attack & coaching"))
                 .font(.subheadline.weight(.semibold))
         }
-        optionsSection
     }
 
     @ViewBuilder

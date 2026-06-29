@@ -181,3 +181,5 @@ xcodebuild test -scheme Tabletome -destination 'platform=iOS Simulator,name=iPho
 3. Add any new parameter keys to `AnalyticsMetadataKeys` (and block PII keys)
 4. Register GA4 custom dimension if you need breakdowns in Console
 5. Add mapping test in `FirebaseAnalyticsEventMappingTests.swift`
+
+Step-by-step: [`docs/development/playbooks/add-analytics-event.md`](../development/playbooks/add-analytics-event.md)

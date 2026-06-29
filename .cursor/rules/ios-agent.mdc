@@ -1,37 +1,61 @@
 ---
-description: Tabletome iOS agent conventions — architecture, git, accessibility
+description: Tabletome iOS agent conventions — architecture, git, accessibility, docs
 globs:
   - "**/*.swift"
   - "**/project.yml"
   - "specs/**"
   - "docs/**"
+  - "AGENTS.md"
 ---
 
 # Tabletome iOS Agent Rules
 
-Read `docs/agent-build-checklist.md` for phase workflow.
+**Start every session:** read [`AGENTS.md`](../../AGENTS.md) and [`docs/development/code-map.md`](../../docs/development/code-map.md).
+
+## Documentation
+
+| Need | Path |
+|------|------|
+| Doc hub | `docs/README.md` |
+| Where is code? | `docs/development/code-map.md` |
+| Setup / launch args | `docs/development/setup.md` |
+| Add analytics event | `docs/development/playbooks/add-analytics-event.md` |
+| Firebase / PII | `Support/Logging/AnalyticsMetadataKeys.swift` |
+| Release gating | `Support/ReleaseSurface.swift` + `specs/ReleaseSurfaceSpec.md` |
 
 ## Architecture
+
 - Domain (`Domain/`) must not import SwiftUI or UIKit.
 - Features depend on repository protocols, never concrete JSON loaders.
+- Data layer: use **callbacks** for analytics — do not import app logging types from Data targets.
 - Gate unfinished features in `Support/ReleaseSurface.swift`.
 
 ## Git
-- Do not commit `.xcodeproj` or secrets.
+
+- Do not commit `.xcodeproj`, `GoogleService-Info.plist`, or secrets.
 - Do not push unless explicitly asked.
 - Run `xcodegen generate` after `project.yml` changes.
 
 ## Accessibility
+
 - Every interactive control: `accessibilityLabel`, `accessibilityHint`, `accessibilityIdentifier`.
 - Minimum 44×44 pt touch targets.
 - Use semantic Dynamic Type text styles.
 
 ## UI Tests
+
 - Identifiers: `screen.element.action` (e.g. `home.gameSystem.aosSpearhead`).
 
 ## Specs
+
 - Behavior changes require updating the matching spec Verification block.
 - Brainstorm in `docs/brainstorm.md` is non-authoritative.
+- Update `docs/feature-inventory.md` when scope changes.
 
 ## Layout
+
 - Use `UIDevice.current.userInterfaceIdiom` for phone vs pad — not horizontal size class alone.
+
+## Scope updates
+
+When release stage or version changes, update `docs/release/status.md` and workspace project-status if applicable.

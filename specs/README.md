@@ -2,6 +2,8 @@
 
 Authoritative behavior contracts. Brainstorm (`docs/brainstorm.md`) is **not** authoritative.
 
+**Documentation hub:** [docs/README.md](../docs/README.md) · **Code map:** [docs/development/code-map.md](../docs/development/code-map.md) · **Agents:** [AGENTS.md](../AGENTS.md)
+
 **Game mode docs** (verification, launch plans, scope): [docs/game-modes/](../docs/game-modes/)
 
 | Spec | Scope |

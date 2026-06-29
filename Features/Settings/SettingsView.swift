@@ -25,7 +25,7 @@ struct SettingsView: View {
                         Text(
                             ReleaseSurface.showsMusterTab
                                 ? String(localized: "Offline tabletop companion — play, rules, collection, and lists.")
-                                : String(localized: "Offline tabletop companion — play, rules, and collection.")
+                                : String(localized: "Offline tabletop companion — play, rules, and model tracking.")
                         )
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
@@ -159,7 +159,12 @@ struct SettingsView: View {
                     NavigationLink {
                         HobbySettingsScreen()
                     } label: {
-                        Label(String(localized: "Collection & Lists"), systemImage: "tray.full")
+                        Label(
+                            ReleaseSurface.showsMusterTab
+                                ? String(localized: "Collection & Lists")
+                                : String(localized: "Models & Data"),
+                            systemImage: "tray.full"
+                        )
                             .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
                     }
                     .accessibilityIdentifier("settings.hobby")
@@ -200,6 +205,17 @@ struct SettingsView: View {
             }
 
             Section(String(localized: "Support & Legal")) {
+                NavigationLink {
+                    FeedbackFormView()
+                } label: {
+                    Label(String(localized: "Suggest something"), systemImage: "lightbulb")
+                        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                }
+                .accessibilityIdentifier("settings.feedbackForm")
+                .accessibilityHint(
+                    String(localized: "Send paint, content, or improvement suggestions by email")
+                )
+
                 settingsLink(
                     title: String(localized: "Privacy Policy"),
                     systemImage: "hand.raised",

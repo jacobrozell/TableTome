@@ -1,10 +1,12 @@
 import XCTest
 
 /// Shared launch configuration for Models / Collection UI tests.
+@MainActor
 class ModelsFlowUITestCase: XCTestCase {
     var app: XCUIApplication!
 
-    override func setUpWithError() throws {
+    override func setUp() async throws {
+        try await super.setUp()
         continueAfterFailure = false
         launchModelsFlow(persistent: true)
     }
@@ -28,6 +30,26 @@ class ModelsFlowUITestCase: XCTestCase {
         let modelsTab = app.buttons["tab.bench"]
         XCTAssertTrue(modelsTab.waitForExistence(timeout: 8))
         modelsTab.tap()
+    }
+
+    func openPaintsTab() {
+        openModelsTab()
+
+        let identifiedSegment = app.buttons["bench.section.paints"]
+        if identifiedSegment.waitForExistence(timeout: 3) {
+            identifiedSegment.tap()
+            return
+        }
+
+        let paintsSegment = app.buttons["Paints"]
+        XCTAssertTrue(paintsSegment.waitForExistence(timeout: 8))
+        paintsSegment.tap()
+    }
+
+    func openSettingsTab() {
+        let settingsTab = app.buttons["tab.settings"]
+        XCTAssertTrue(settingsTab.waitForExistence(timeout: 8))
+        settingsTab.tap()
     }
 
     func tapNewArmy() {

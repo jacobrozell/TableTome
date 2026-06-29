@@ -59,4 +59,33 @@ final class CollectionFlowUITests: ModelsFlowUITestCase {
 
         XCTAssertTrue(app.staticTexts["Hallowed Knights"].waitForExistence(timeout: 10))
     }
+
+    func testAddPaintFromEmptyPaintsTab() throws {
+        app.terminate()
+        launchModelsFlow(persistent: false)
+
+        openPaintsTab()
+
+        let emptyAdd = app.buttons["paint.add.empty"]
+        XCTAssertTrue(emptyAdd.waitForExistence(timeout: 8))
+        emptyAdd.tap()
+
+        let saveButton = app.buttons["paint.save"]
+        XCTAssertTrue(saveButton.waitForExistence(timeout: 8))
+        XCTAssertFalse(saveButton.isEnabled)
+
+        let nameField = app.textFields["paint.name"]
+        XCTAssertTrue(nameField.waitForExistence(timeout: 8))
+        nameField.tap()
+        nameField.typeText("Kantor Blue")
+
+        waitForEnabled(saveButton, timeout: 8)
+        saveButton.tap()
+
+        let paintRow = app.descendants(matching: .any).matching(identifier: "paint.row.Kantor Blue").firstMatch
+        XCTAssertTrue(paintRow.waitForExistence(timeout: 8))
+        paintRow.tap()
+
+        XCTAssertTrue(app.staticTexts["Kantor Blue"].waitForExistence(timeout: 8))
+    }
 }

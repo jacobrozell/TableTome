@@ -84,6 +84,7 @@ struct AddEditPaintSheet: View {
 
                 Section {
                     FormNameField(title: String(localized: "Name"), text: $name, focus: $nameFocused)
+                        .accessibilityIdentifier("paint.name")
                         .onChange(of: name) { _, _ in
                             dismissedCatalogSuggestions = false
                         }
@@ -165,6 +166,7 @@ struct AddEditPaintSheet: View {
                     }
                     .fontWeight(.semibold)
                     .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
+                    .accessibilityIdentifier("paint.save")
                 }
                 .hidingToolbarGlassBackgroundIfAvailable()
             }

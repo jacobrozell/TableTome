@@ -41,6 +41,44 @@ final class PaintStoreSwatchTests: XCTestCase {
         XCTAssertTrue(paint.usesCustomSwatch)
     }
 
+    func testAddRejectsBlankAndDuplicateNamesCaseInsensitively() throws {
+        XCTAssertFalse(
+            PaintStore.add(
+                name: "   ", type: "Base", brand: "",
+                source: "", qty: 1, notes: "", low: false, in: context
+            )
+        )
+        XCTAssertTrue(
+            PaintStore.add(
+                name: "Kantor Blue", type: "Base", brand: "Citadel",
+                source: "", qty: 1, notes: "", low: false, in: context
+            )
+        )
+        XCTAssertFalse(
+            PaintStore.add(
+                name: "kantor blue", type: "Base", brand: "Citadel",
+                source: "", qty: 1, notes: "", low: false, in: context
+            )
+        )
+
+        let paints = try context.fetch(FetchDescriptor<HobbyPaint>())
+        XCTAssertEqual(paints.count, 1)
+    }
+
+    func testAddTrimsNameAndClampsMinimumQuantity() throws {
+        XCTAssertTrue(
+            PaintStore.add(
+                name: "  Reikland Fleshshade  ", type: "Shade", brand: "Citadel",
+                source: "", qty: 0, notes: "", low: true, in: context
+            )
+        )
+
+        let paint = try XCTUnwrap((try? context.fetch(FetchDescriptor<HobbyPaint>()))?.first)
+        XCTAssertEqual(paint.name, "Reikland Fleshshade")
+        XCTAssertEqual(paint.qty, 1)
+        XCTAssertTrue(paint.low)
+    }
+
     func testUpdateTypeKeepsCustomSwatch() throws {
         context.insert(
             HobbyPaint(
@@ -80,6 +118,47 @@ final class PaintStoreSwatchTests: XCTestCase {
         )
 
         XCTAssertEqual(paint.swatchHex, "#002158")
+    }
+
+    func testUpdateRejectsDuplicateNameAndClampsMaximumQuantity() throws {
+        context.insert(HobbyPaint(name: "Kantor Blue", type: "Base", qty: 1))
+        context.insert(HobbyPaint(name: "Nuln Oil", type: "Shade", qty: 1))
+        try context.save()
+        let paints = try context.fetch(FetchDescriptor<HobbyPaint>())
+        let kantor = try XCTUnwrap(paints.first { $0.name == "Kantor Blue" })
+        let nulnOil = try XCTUnwrap(paints.first { $0.name == "Nuln Oil" })
+
+        XCTAssertFalse(
+            PaintStore.update(
+                nulnOil, name: "kantor blue", type: "Shade", brand: "",
+                source: "", qty: 10_000, notes: "", low: false, in: context
+            )
+        )
+        XCTAssertTrue(
+            PaintStore.update(
+                nulnOil, name: "Nuln Oil", type: "Shade", brand: "",
+                source: "", qty: 10_000, notes: "", low: false, in: context
+            )
+        )
+
+        XCTAssertEqual(kantor.name, "Kantor Blue")
+        XCTAssertEqual(nulnOil.qty, 9_999)
+    }
+
+    func testLinkedUnitCountMatchesSourceAcrossArmies() throws {
+        let first = Army(name: "Stormcast", game: "AoS", faction: "Stormcast Eternals")
+        first.units = [
+            ArmyUnit(name: "Liberators (5)", source: "Spearhead Stormcast Box", state: "Primed"),
+            ArmyUnit(name: "Prosecutors (3)", source: "Skaventide", state: "Primed"),
+        ]
+        let second = Army(name: "Skaven", game: "AoS", faction: "Skaven")
+        second.units = [
+            ArmyUnit(name: "Clanrats (20)", source: "Spearhead Skaven", state: "Unassembled")
+        ]
+
+        XCTAssertEqual(PaintStore.linkedUnitCount(source: "Spearhead Stormcast", armies: [first, second]), 1)
+        XCTAssertEqual(PaintStore.linkedUnitCount(source: "Spearhead", armies: [first, second]), 2)
+        XCTAssertEqual(PaintStore.linkedUnitCount(source: "", armies: [first, second]), 0)
     }
 
     func testRefreshCatalogColorsUpdatesStaleSwatches() throws {

@@ -145,6 +145,7 @@ struct PaintListView: View {
                         }
                     }
                     .listSidebarSelection(isSelected: paint.id == selectedPaintId, enabled: usesPadSidebarList)
+                    .paintRowIdentifier(paint)
                     .swipeActions(edge: .trailing) {
                         Button(String(localized: "Delete"), role: .destructive) { paintToDelete = paint }
                     }
@@ -227,6 +228,7 @@ struct PaintListView: View {
     @ToolbarContentBuilder private var toolbar: some ToolbarContent {
         ToolbarItem(placement: .topBarLeading) {
             Button(String(localized: "Add paint"), systemImage: "plus") { showAdd = true }
+                .accessibilityIdentifier("paint.add")
         }
         ToolbarItem(placement: .topBarTrailing) {
             Button(
@@ -267,6 +269,7 @@ struct PaintListView: View {
             )
         } actions: {
             Button(String(localized: "Add paint")) { showAdd = true }.buttonStyle(.borderedProminent)
+                .accessibilityIdentifier("paint.add.empty")
         }
         .adaptiveEmptyStateLayout()
     }
@@ -289,5 +292,11 @@ struct PaintListView: View {
             }
         }
         .adaptiveEmptyStateLayout()
+    }
+}
+
+private extension View {
+    func paintRowIdentifier(_ paint: HobbyPaint) -> some View {
+        accessibilityIdentifier("paint.row.\(paint.name)")
     }
 }

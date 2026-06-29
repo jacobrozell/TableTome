@@ -54,8 +54,10 @@ struct FeedbackFormView: View {
             Section {
                 TextField(category.specificItemLabel, text: $specificItem, prompt: Text(category.specificItemPlaceholder))
                     .textInputAutocapitalization(.words)
+                    .accessibilityIdentifier("feedback.specificItem")
                 TextField(String(localized: "Summary"), text: $summary, prompt: Text(category.summaryPlaceholder))
                     .textInputAutocapitalization(.sentences)
+                    .accessibilityIdentifier("feedback.summary")
             } header: {
                 Text(String(localized: "Your suggestion"))
             } footer: {
@@ -70,6 +72,7 @@ struct FeedbackFormView: View {
                     axis: .vertical
                 )
                 .lineLimit(4...12)
+                .accessibilityIdentifier("feedback.details")
             } header: {
                 Text(String(localized: "Extra detail"))
             } footer: {

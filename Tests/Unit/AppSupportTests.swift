@@ -19,6 +19,17 @@ final class AppSupportTests: XCTestCase {
         XCTAssertTrue(subject.contains("Macragge Blue"))
     }
 
+    func testMailSubjectFallsBackToTrimmedSummaryWhenItemBlank() {
+        let draft = FeedbackDraft(
+            category: .improvement,
+            specificItem: "   ",
+            summary: "  Add paint filters  ",
+            details: ""
+        )
+
+        XCTAssertEqual(AppSupport.mailSubject(for: draft), "[Tabletome] Improvement — Add paint filters")
+    }
+
     func testMailBodyIncludesSummaryAndDiagnostics() {
         let draft = FeedbackDraft(
             category: .basingMaterial,
@@ -51,5 +62,11 @@ final class AppSupportTests: XCTestCase {
     func testInvalidDraftWhenSummaryEmpty() {
         let draft = FeedbackDraft(category: .other, specificItem: "", summary: "   ", details: "")
         XCTAssertFalse(draft.isValid)
+    }
+
+    func testValidDraftTrimsSummaryWhitespace() {
+        let draft = FeedbackDraft(category: .other, specificItem: "", summary: "  Useful idea  ", details: "")
+        XCTAssertTrue(draft.isValid)
+        XCTAssertEqual(draft.trimmedSummary, "Useful idea")
     }
 }

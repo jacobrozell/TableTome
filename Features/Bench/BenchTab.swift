@@ -40,6 +40,7 @@ struct BenchTab: View {
         Picker(String(localized: "Models section"), selection: $section) {
           ForEach(visibleSections) { item in
             Label(item.label, systemImage: item.icon).tag(item)
+              .accessibilityIdentifier("bench.section.\(item.rawValue)")
           }
         }
         .pickerStyle(.segmented)

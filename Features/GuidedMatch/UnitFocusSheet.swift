@@ -145,7 +145,9 @@ struct UnitFocusSheet: View {
                     sourceLabel
                 }
                 .padding(DesignTokens.Spacing.md)
+                .padding(.bottom, DesignTokens.Spacing.lg)
             }
+            .background(Color(.systemGroupedBackground))
             .navigationTitle(unit.name)
             .navigationBarTitleDisplayMode(.inline)
             .alert(String(localized: "Copied"), isPresented: $copiedStatReport) {
@@ -183,7 +185,8 @@ struct UnitFocusSheet: View {
                         onSetAsDefender()
                     }
                     .padding(DesignTokens.Spacing.md)
-                    .background(.bar)
+                    .background(Color(.systemBackground))
+                    .overlay(alignment: .top) { Divider() }
                 }
             }
             .navigationDestination(isPresented: $showsFullWarscroll) {

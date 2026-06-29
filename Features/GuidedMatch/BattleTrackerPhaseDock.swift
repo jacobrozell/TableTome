@@ -104,7 +104,13 @@ struct BattleTrackerPhaseDock: View {
         .fixedSize(horizontal: false, vertical: true)
         .padding(.horizontal, DesignTokens.Spacing.sm)
         .padding(.vertical, compactLandscape ? DesignTokens.Spacing.xs : DesignTokens.Spacing.sm)
-        .background(.bar)
+        .background {
+            Color(.systemBackground)
+                .shadow(color: Color.black.opacity(0.12), radius: 6, y: -2)
+        }
+        .overlay(alignment: .top) {
+            Divider()
+        }
         .accessibilityIdentifier("battleTracker.phaseDock")
     }
 
@@ -204,9 +210,12 @@ struct BattleTrackerPhaseDock: View {
         }
         .frame(maxWidth: .infinity)
         .minimumTouchTarget()
-        .foregroundStyle(isEnabled ? Color.primary : Color.secondary.opacity(0.5))
+        .foregroundStyle(isEnabled ? Color.primary : Color.secondary)
         .padding(.horizontal, DesignTokens.Spacing.xs)
         .padding(.vertical, compactLandscape ? 2 : DesignTokens.Spacing.xs)
-        .background(Color(.tertiarySystemFill).opacity(isEnabled ? 0.6 : 0.25), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
+        .background(
+            Color(isEnabled ? .secondarySystemGroupedBackground : .tertiarySystemFill),
+            in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
+        )
     }
 }

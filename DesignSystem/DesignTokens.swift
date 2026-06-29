@@ -37,7 +37,7 @@ public enum DesignTokens {
     public static let guidedMatchSetupScrollExtraInset: CGFloat = 48
 
     /// Extra scroll inset when the phase dock sits below the battle tracker scroll view.
-    public static let battleTrackerPhaseDockScrollBottomInset: CGFloat = 8
+    public static let battleTrackerPhaseDockScrollBottomInset: CGFloat = 32
 
     /// Horizontal padding on iPhone landscape to preserve vertical space.
     public static let phoneLandscapeHorizontalPadding: CGFloat = 16

@@ -114,19 +114,22 @@ struct UnitFocusPresentationModifier<Presented: View>: ViewModifier {
 
     func body(content: Content) -> some View {
         if usesFullScreen {
-            content.fullScreenCover(item: $selection) { _ in presented() }
+            content.fullScreenCover(item: $selection) { _ in
+                presented()
+                    .presentationBackground(Color(.systemGroupedBackground))
+            }
         } else {
             content.sheet(item: $selection) { _ in
                 presented()
-                    .presentationCompactAdaptation(.fullScreenCover)
+                    .presentationBackground(Color(.systemGroupedBackground))
             }
         }
     }
 }
 
 extension BattlePhaseTrackerView {
-    /// Full-screen unit focus on iPhone only — iPad `fullScreenCover` blanked marketing captures.
+    /// Full-screen unit focus on iPhone — half-height sheets hid controls behind the tab bar.
     var usesUnitFocusFullScreenPresentation: Bool {
-        AppLaunchArguments.shouldOpenUnitFocus && !usesPadTabbedTwoColumnLayout
+        !usesPadTabbedTwoColumnLayout
     }
 }

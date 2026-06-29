@@ -30,8 +30,8 @@ extension BattlePhaseTrackerView {
             .padding(trackerContentPadding)
         }
         .scrollBounceBehavior(.basedOnSize, axes: .vertical)
-        .tabBarScrollInset(enabled: !(isEmbeddedInGuidedMatch && layoutContext.prefersCollapsedBattleChrome))
-        .modifier(BattleTrackerPhaseDockScrollInset(isEnabled: usesCompactBattleTrackerChrome && isEmbeddedInGuidedMatch))
+        .tabBarScrollInset()
+        .modifier(BattleTrackerPhaseDockScrollInset(isEnabled: usesCompactBattleTrackerChrome))
     }
 
     private struct BattleTrackerPhaseDockScrollInset: ViewModifier {
@@ -172,6 +172,11 @@ extension BattlePhaseTrackerView {
         proxy: ScrollViewProxy
     ) -> some View {
         content
+            .onChange(of: selectedSectionTab) { _, _ in
+                guard pendingCombatResolverScroll else { return }
+                pendingCombatResolverScroll = false
+                scrollToCombatResolver = true
+            }
             .onChange(of: scrollToCombatResolver) { _, shouldScroll in
                 guard shouldScroll else { return }
                 showsCombatResolver = true

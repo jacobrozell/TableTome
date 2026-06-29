@@ -3,11 +3,14 @@ import TabletomeDomain
 
 extension BattlePhaseTrackerView {
     func focusCombatResolverSection() {
-        if viewModel.playContext.capabilities.showsDedicatedCombatTab {
-            selectedSectionTab = .combat
+        let targetTab: BattleTrackerSectionTab = viewModel.playContext.capabilities.showsDedicatedCombatTab
+            ? .combat
+            : .turn
+        if selectedSectionTab == targetTab {
+            scrollToCombatResolver = true
         } else {
-            selectedSectionTab = .turn
+            selectedSectionTab = targetTab
+            pendingCombatResolverScroll = true
         }
-        scrollToCombatResolver = true
     }
 }

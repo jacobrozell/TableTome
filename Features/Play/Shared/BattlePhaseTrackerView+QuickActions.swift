@@ -59,10 +59,11 @@ extension BattlePhaseTrackerView {
         if !MarketingSnapshotBootstrap.suppressesCoachingUI, showsTabHint {
             BattleTrackerTabHintBanner(suggestedTab: suggestedSectionTab, gameSystemId: viewModel.gameSystemId) {
                 withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) {
-                    selectedSectionTab = suggestedSectionTab
-                }
-                if suggestedSectionTab == .combat {
-                    scrollToCombatResolver = true
+                    if suggestedSectionTab == .combat {
+                        focusCombatResolverSection()
+                    } else {
+                        selectedSectionTab = suggestedSectionTab
+                    }
                 }
             }
         }
@@ -78,9 +79,10 @@ extension BattlePhaseTrackerView {
     func handleQuickAction(_ action: BattleTrackerQuickAction) {
         switch action.target {
         case .sectionTab(let tab):
-            selectedSectionTab = tab
             if tab == .combat {
-                scrollToCombatResolver = true
+                focusCombatResolverSection()
+            } else {
+                selectedSectionTab = tab
             }
         case .combatResolver:
             focusCombatResolverSection()

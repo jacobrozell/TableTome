@@ -29,6 +29,14 @@ jobs:
       - name: Install ripgrep
         run: sudo apt-get update && sudo apt-get install -y ripgrep
 
+      - name: Block Firebase plist secrets
+        run: |
+          tracked=$(git ls-files '**/GoogleService-Info.plist' | grep -v '\.example$' || true)
+          if [ -n "$tracked" ]; then
+            echo "::error::Tracked GoogleService-Info.plist must stay gitignored: $tracked"
+            exit 1
+          fi
+
       - name: Architecture-debt ratchet
         run: Scripts/check_architecture_debt.sh
 
@@ -42,6 +50,9 @@ jobs:
 
       - name: Install XcodeGen
         run: brew install xcodegen
+
+      - name: Prepare Firebase config
+        run: cp Resources/GoogleService-Info.plist.example Resources/GoogleService-Info.plist
 
       - name: Generate project
         run: xcodegen generate

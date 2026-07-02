@@ -55,6 +55,13 @@ public enum SpearheadGotchaCatalog {
             summary: "Liberators can arrive from reserves via Call for Reinforcements.",
             detail: "Liberators have the Reinforcements keyword. Use the Spearhead Call for Reinforcements rule to bring them on from a battlefield edge when eligible.",
             systemImage: "arrow.down.to.line"
+        ),
+        SpearheadGotcha(
+            id: "judgement-blade-anti",
+            title: "Judgement Blade (Anti-Wizard / Anti-Priest)",
+            summary: "Lord-Veritant's melee weapon only wounds Wizard or Priest units.",
+            detail: "When attacking with Judgement Blade, check the defender's warscroll keywords. Skaven wizards and Stormcast priests are valid targets; clanrats without those keywords are not.",
+            systemImage: "target"
         )
     ]
 
@@ -79,6 +86,16 @@ public enum SpearheadGotchaCatalog {
             summary: "Your general has Ward (6+) on their warscroll.",
             detail: "Remember to roll ward after a failed save when evaluating damage against the Clawlord. Enable the Ward toggle in Unit Matchup.",
             systemImage: "shield.lefthalf.filled"
+        ),
+        SpearheadGotcha(
+            id: "enemy-anti-wizard",
+            title: "Enemy Anti-Wizard weapons",
+            summary: "Stormcast Judgement Blade only wounds Wizard or Priest units.",
+            detail: """
+            If the opponent fields Lord-Veritant, his Judgement Blade has Anti-Wizard and Anti-Priest. \
+            Your Master Moulder (Wizard) is a valid target; clanrats without those keywords are not.
+            """,
+            systemImage: "target"
         )
     ]
 }

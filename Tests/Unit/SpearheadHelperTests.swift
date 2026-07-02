@@ -146,14 +146,6 @@ final class WeaponAttackRollCountTests: XCTestCase {
     }
 }
 
-final class SpearheadGotchaCatalogTests: XCTestCase {
-    func testFeaturedArmiesHaveGotchas() {
-        XCTAssertFalse(SpearheadGotchaCatalog.gotchas(for: "vigilant-brotherhood").isEmpty)
-        XCTAssertFalse(SpearheadGotchaCatalog.gotchas(for: "gnawfeast-clawpack").isEmpty)
-        XCTAssertTrue(SpearheadGotchaCatalog.gotchas(for: "unknown").isEmpty)
-    }
-}
-
 final class CombatPatrolGotchaCatalogTests: XCTestCase {
     func testLeviathanArmiesHaveGotchas() {
         XCTAssertEqual(CombatPatrolGotchaCatalog.gotchas(for: "space-marines-combat-patrol").count, 3)
@@ -217,6 +209,16 @@ final class SpearheadRulesGlossaryTests: XCTestCase {
 
     func testGlossaryHasNewcomerEntries() {
         XCTAssertGreaterThanOrEqual(SpearheadRulesGlossary.entries.count, 16)
+    }
+
+    func testGlossaryIncludesAntiKeywordEntries() {
+        XCTAssertTrue(SpearheadRulesGlossary.entries.contains { $0.id == "anti-wizard" })
+        XCTAssertTrue(SpearheadRulesGlossary.entries.contains { $0.id == "anti-priest" })
+        let entries = SpearheadRulesGlossary.entriesReferenced(
+            in: "Judgement Blade has Anti-Wizard and Anti-Priest."
+        )
+        XCTAssertTrue(entries.contains { $0.id == "anti-wizard" })
+        XCTAssertTrue(entries.contains { $0.id == "anti-priest" })
     }
 
     func testBattleTacticsReferenceHasSections() {

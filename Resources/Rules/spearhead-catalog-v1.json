@@ -3504,21 +3504,21 @@
       "id": "choose-armies",
       "order": 1,
       "title": "Choose Spearhead Armies",
-      "summary": "Each player picks their faction and specific Spearhead army.",
-      "body": "Spearhead armies are fixed box-set rosters \u2014 you cannot change unit composition. Many factions have multiple Spearhead options with different playstyles. Pick the army each player is fielding today.",
+      "summary": "Each player picks their faction and the Spearhead box they brought today.",
+      "body": "Spearhead armies are fixed box-set rosters — you cannot change unit composition. Many factions have multiple Spearhead options with different playstyles. Pick the army each player is fielding today.",
       "tips": [
-        "Check which Spearhead box your models came from if you're unsure.",
-        "Download free faction Spearhead packs from Warhammer Community for warscrolls."
+        "Your box includes unit rules cards — use those at the table.",
+        "Check which Spearhead box your models came from if you're unsure."
       ]
     },
     {
       "id": "roll-attacker",
       "order": 2,
       "title": "Roll for Attacker & Defender",
-      "summary": "Winner chooses attacker or defender.",
+      "summary": "Roll off — winner picks attacker or defender.",
       "body": "Roll off to determine who picks attacker and defender. The attacker picks regiment abilities and enhancements first, then the defender. The defender also chooses which realm side of the battlefield to fight on.",
       "tips": [
-        "Going first in round 1 lets the attacker choose who takes the first turn.",
+        "Round 1 first turn is a separate priority roll on the Battle tab — not the same as picking attacker.",
         "Consider your army's strengths when choosing attacker vs defender."
       ],
       "relatedRuleSectionId": "spearhead-overview"
@@ -3526,9 +3526,9 @@
     {
       "id": "regiment-abilities",
       "order": 3,
-      "title": "Pick Regiment Abilities",
-      "summary": "Attacker picks first, then defender.",
-      "body": "Each Spearhead army offers two regiment abilities. The attacker picks one, then the defender picks one. These range from passive bonuses to once-per-battle actions that can shift the game.",
+      "title": "Regiment ability (pick one army rule)",
+      "summary": "Attacker picks first, then defender — one army-wide rule each.",
+      "body": "Each Spearhead army sheet lists two regiment abilities. This is not a unit group on the table — pick one pre-battle rule for your whole army. The attacker picks first, then the defender.",
       "tips": [
         "Some abilities counter specific opponents \u2014 study the enemy army before choosing.",
         "Passive abilities are reliable; once-per-battle abilities can be game-swinging."
@@ -3537,9 +3537,9 @@
     {
       "id": "enhancements",
       "order": 4,
-      "title": "Pick General Enhancements",
-      "summary": "Attacker picks first, then defender.",
-      "body": "Each army has four enhancements for its general. The attacker picks one, then the defender. Enhancements upgrade your general only \u2014 protect them accordingly.",
+      "title": "Pick general enhancements",
+      "summary": "Attacker picks first — one upgrade card for your general only.",
+      "body": "Each army has four enhancement cards for its general. The attacker picks one, then the defender. Enhancements upgrade your general only — protect them accordingly.",
       "tips": [
         "Ward enhancements help fragile generals survive longer.",
         "Offensive enhancements can turn your general into a linchpin \u2014 but losing them hurts."

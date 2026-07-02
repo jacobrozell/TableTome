@@ -3,10 +3,10 @@
   "gameSystemId": "aos-spearhead",
   "boxSets": [
     {
-      "id": "vigilant-vs-gnawfeast",
-      "starterMatchupTitle": "Vigilant Brotherhood vs Gnawfeast Clawpack",
-      "starterSetDescription": "Fill both armies automatically for the Vigilant Brotherhood vs Gnawfeast Clawpack starter matchup — setup and battle tools included.",
-      "starterSetBadge": "Age of Sigmar starter box",
+      "id": "skaventide",
+      "starterMatchupTitle": "Skaventide",
+      "starterSetDescription": "Stormcast Eternals vs Skaven — the Ultimate Starter Set armies, filled in automatically with setup and battle tools.",
+      "starterSetBadge": "Skaventide starter box",
       "armyIds": ["vigilant-brotherhood", "gnawfeast-clawpack"],
       "playerOne": { "playerName": "Player 1", "factionId": "stormcast-eternals", "armyId": "vigilant-brotherhood" },
       "playerTwo": { "playerName": "Player 2", "factionId": "skaven", "armyId": "gnawfeast-clawpack" }

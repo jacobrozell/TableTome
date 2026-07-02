@@ -179,6 +179,22 @@ public enum SpearheadRulesGlossary {
             """
         ),
         RulesGlossaryEntry(
+            id: "anti-wizard",
+            term: "Anti-Wizard",
+            definition: """
+            A weapon ability. Hits and wounds from this weapon only apply against units with the Wizard keyword \
+            on their warscroll — other targets are unaffected.
+            """
+        ),
+        RulesGlossaryEntry(
+            id: "anti-priest",
+            term: "Anti-Priest",
+            definition: """
+            A weapon ability. Hits and wounds from this weapon only apply against units with the Priest keyword \
+            on their warscroll — other targets are unaffected.
+            """
+        ),
+        RulesGlossaryEntry(
             id: "charge",
             term: "Charge",
             definition: """
@@ -299,6 +315,8 @@ public enum SpearheadRulesGlossary {
         "contest": ["contest"],
         "combat-range": ["combat range", "in combat", "3\""],
         "retreat": ["retreat", "retreating"],
+        "anti-wizard": ["anti-wizard", "anti wizard"],
+        "anti-priest": ["anti-priest", "anti priest"],
         "charge": ["charge", "charging", "charge roll"],
         "fight": ["fight", "fighting"],
         "strike-first": ["strike-first", "strike first", "strikes first"],

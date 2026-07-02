@@ -20,4 +20,8 @@ public enum GameSystemId: String, Codable, Sendable, CaseIterable, Identifiable,
     public init(resolving rawValue: String) {
         self = GameSystemId(rawValue: rawValue) ?? .default
     }
+
+    public var isSpearhead: Bool {
+        self == .aosSpearhead
+    }
 }

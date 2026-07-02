@@ -173,9 +173,11 @@ extension GuidedMatchView {
             nextStepTitle: viewModel.nextIncompleteStep?.title,
             attackerLabel: spearheadAttackerLabel,
             usesSpearheadCopy: gameSystemId == .aosSpearhead,
+            profileAssignNote: viewModel.starterMatchupProfileNote,
             onDismiss: {
                 dismissedStarterMatchupHandoff = true
                 showsStarterMatchupHandoff = false
+                viewModel.starterMatchupProfileNote = nil
             }
         )
     }

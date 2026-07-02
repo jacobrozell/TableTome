@@ -47,12 +47,14 @@ struct BattlePhaseTrackerView: View {
     let onMatchStateChange: (() -> Void)?
     let onVictoryComplete: ((Bool, Int, Int) async -> Void)?
     let onVictoryPresented: ((Int, Int) async -> Void)?
+    var householdProfiles: [PlayerProfile] = []
 
     init(
         gameSystemId: GameSystemId = .default,
         matchState: GuidedMatchState,
         catalog: SpearheadCatalog,
         ruleSections: [RuleSection] = [],
+        householdProfiles: [PlayerProfile] = [],
         onMatchStateChange: (() -> Void)? = nil,
         onVictoryComplete: ((Bool, Int, Int) async -> Void)? = nil,
         onVictoryPresented: ((Int, Int) async -> Void)? = nil
@@ -60,6 +62,7 @@ struct BattlePhaseTrackerView: View {
         self.onMatchStateChange = onMatchStateChange
         self.onVictoryComplete = onVictoryComplete
         self.onVictoryPresented = onVictoryPresented
+        self.householdProfiles = householdProfiles
         _viewModel = StateObject(
             wrappedValue: BattleTrackerViewModelFactory.make(
                 gameSystemId: gameSystemId,
@@ -139,9 +142,15 @@ struct BattlePhaseTrackerView: View {
             MatchLogRecorder.ensureSession(gameSystemId: viewModel.gameSystemId)
             logStandaloneBattleTrackerOpenedIfNeeded()
             let suppressCoaching = MarketingSnapshotBootstrap.suppressesCoachingUI
+            let activeProfile = activePlayerProfile
             showsBattleTrackerCoach = supportsBattleTracker
-                && !NewPlayerTipsStore.hasSeenBattleTrackerCoach
                 && !suppressCoaching
+                && PlayerCoachingPolicy.shouldShowTip(
+                    tipKey: .battleTrackerCoach,
+                    profile: activeProfile,
+                    globallyDismissed: NewPlayerTipsStore.hasSeenBattleTrackerCoach
+                )
+            applyDiceModeForActivePlayer()
             if !suppressCoaching {
                 FirstSessionStore.recordSetupComplete()
             }

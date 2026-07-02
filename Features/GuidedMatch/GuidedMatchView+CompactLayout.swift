@@ -11,7 +11,8 @@ extension GuidedMatchView {
                     guidedMatchScreen(
                         destination: destination,
                         catalog: catalog,
-                        dismissesArmySelectionOnSave: true
+                        dismissesArmySelectionOnSave: true,
+                        household: householdPlayers
                     )
                 }
                 .playNavigationDestinations()

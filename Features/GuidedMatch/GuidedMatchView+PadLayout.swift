@@ -98,7 +98,8 @@ extension GuidedMatchView {
             guidedMatchScreen(
                 destination: selectedDestination,
                 catalog: catalog,
-                dismissesArmySelectionOnSave: false
+                dismissesArmySelectionOnSave: false,
+                household: householdPlayers
             )
         } else {
             guidedMatchPadWelcome(catalog: catalog)

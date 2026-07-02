@@ -5,6 +5,7 @@ public enum PlayerProfileRepositoryError: Error, Equatable, Sendable {
     case writeFailed
     case profileNotFound
     case cannotDeleteLastProfile
+    case invalidDisplayName
 }
 
 public protocol PlayerProfileRepository: Sendable {

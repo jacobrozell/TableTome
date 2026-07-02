@@ -6,8 +6,11 @@ extension GuidedMatchView {
     func guidedMatchScreen(
         destination: GuidedMatchDestination,
         catalog: SpearheadCatalog,
-        dismissesArmySelectionOnSave: Bool
+        dismissesArmySelectionOnSave: Bool,
+        household: HouseholdPlayersState?
     ) -> some View {
+        let profiles = household?.sortedProfiles ?? []
+        let primaryId = household?.defaultPlayerOneProfileId
         switch destination {
         case .playerOne:
             ArmySelectionView(
@@ -18,6 +21,9 @@ extension GuidedMatchView {
                 ruleSections: ruleSections,
                 gameSystemId: viewModel.gameSystemId,
                 dismissesOnSave: dismissesArmySelectionOnSave,
+                profiles: profiles,
+                primaryProfileId: primaryId,
+                profileSlotLabel: String(localized: "Player 1"),
                 onSave: viewModel.updatePlayerOne
             )
         case .playerTwo:
@@ -29,6 +35,12 @@ extension GuidedMatchView {
                 ruleSections: ruleSections,
                 gameSystemId: viewModel.gameSystemId,
                 dismissesOnSave: dismissesArmySelectionOnSave,
+                profiles: profiles,
+                primaryProfileId: primaryId,
+                profileSlotLabel: String(localized: "Player 2"),
+                opponentArmyId: viewModel.matchState.playerOne.armyId.isEmpty
+                    ? nil
+                    : viewModel.matchState.playerOne.armyId,
                 onSave: viewModel.updatePlayerTwo
             )
         case .battleTracker:
@@ -38,6 +50,7 @@ extension GuidedMatchView {
                     matchState: viewModel.matchState,
                     catalog: catalog,
                     ruleSections: ruleSections,
+                    householdProfiles: profiles,
                     onMatchStateChange: { viewModel.reloadFromStore() },
                     onVictoryComplete: handleVictoryComplete,
                     onVictoryPresented: handleVictoryPresented
@@ -69,11 +82,13 @@ extension GuidedMatchView {
 
     @ViewBuilder
     func embeddedBattleTracker(catalog: SpearheadCatalog) -> some View {
+        let profiles = householdPlayers?.sortedProfiles ?? []
         PlayShell(
             gameSystemId: gameSystemId,
             matchState: viewModel.matchState,
             catalog: catalog,
             ruleSections: ruleSections,
+            householdProfiles: profiles,
             onMatchStateChange: {
                 viewModel.reloadFromStore()
                 hubTrackerTick += 1

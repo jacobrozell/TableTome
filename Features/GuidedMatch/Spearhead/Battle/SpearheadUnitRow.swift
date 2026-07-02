@@ -12,17 +12,24 @@ struct SpearheadUnitRow: View {
     let relevance: UnitPhaseRelevance
     let currentPhase: BattleTurnPhase
     let isActivePlayer: Bool
+    let hasActed: Bool
     let resolverContext: InlineResolverContext?
     let opponentUnits: [SpearheadUnit]
     let opponentArmy: SpearheadArmy?
     let opponentWoundsRemaining: [String: Int]
+    let gameSystemId: GameSystemId
+    let playerOneArmyId: String?
+    let playerTwoArmyId: String?
+    let activePlayerIsOne: Bool
+    let attackerPlayerName: String
+    let defenderPlayerName: String
     var opponentEnhancement: ArmyRuleOption?
     var opponentGeneralUnitId: String?
     let onTap: () -> Void
     let onSelectWeapon: (String) -> Void
     let onSelectTarget: (String?) -> Void
     let onSetWounds: (Int) -> Void
-    let onApplyDamage: (Int) -> Void
+    let onApplyDamage: (Int, CombatBatchLogContext?) -> Void
     let onCancelResolver: () -> Void
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -33,11 +40,19 @@ struct SpearheadUnitRow: View {
 
     private var phaseIcon: String {
         if isDestroyed { return "xmark.circle.fill" }
+        if hasActed { return "checkmark.circle.fill" }
         if unit.canShoot && currentPhase == .shooting { return "scope" }
         if !unit.weapons.filter({ !$0.isRanged }).isEmpty && (currentPhase == .combat || currentPhase == .anyCombat) {
             return "burst.fill"
         }
         return "circle.fill"
+    }
+
+    private var iconColor: Color {
+        if isDestroyed { return .secondary }
+        if hasActed { return .green }
+        if relevance == .primary { return Color.accentColor }
+        return Color.secondary
     }
 
     var body: some View {
@@ -71,15 +86,23 @@ struct SpearheadUnitRow: View {
                 HStack(spacing: DesignTokens.Spacing.sm) {
                     Image(systemName: phaseIcon)
                         .font(.caption)
-                        .foregroundStyle(relevance == .primary ? Color.accentColor : Color.secondary)
+                        .foregroundStyle(iconColor)
                         .frame(width: 20)
 
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(unit.name)
-                            .font(.subheadline.weight(.medium))
-                            .foregroundStyle(isDestroyed ? .secondary : .primary)
-                            .strikethrough(isDestroyed)
-                            .lineLimit(1)
+                        HStack(spacing: 4) {
+                            Text(unit.name)
+                                .font(.subheadline.weight(.medium))
+                                .foregroundStyle(isDestroyed ? .secondary : .primary)
+                                .strikethrough(isDestroyed)
+                                .lineLimit(1)
+                            if hasActed && !isDestroyed {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .font(.caption)
+                                    .foregroundStyle(.green)
+                                    .accessibilityLabel(String(localized: "Acted this phase"))
+                            }
+                        }
 
                         if !isExpanded {
                             keywordBadges
@@ -509,13 +532,20 @@ struct SpearheadUnitRow: View {
             Divider()
             SpearheadInlineResolver(
                 context: context,
+                gameSystemId: gameSystemId,
                 attackerUnit: unit,
                 defenderUnits: opponentUnits,
                 defenderArmy: opponentArmy,
                 defenderWoundsRemaining: opponentWoundsRemaining,
+                playerOneArmyId: playerOneArmyId,
+                playerTwoArmyId: playerTwoArmyId,
+                activePlayerIsOne: activePlayerIsOne,
+                attackerPlayerName: attackerPlayerName,
+                defenderPlayerName: defenderPlayerName,
                 defenderEnhancement: opponentEnhancement,
                 defenderIsGeneral: defenderIsGeneral,
                 onSelectTarget: onSelectTarget,
+                onSelectWeapon: onSelectWeapon,
                 onApplyDamage: onApplyDamage,
                 onCancel: onCancelResolver
             )

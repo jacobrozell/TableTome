@@ -4,7 +4,10 @@ import TabletomeDomain
 struct PlayerDetailView: View {
     @StateObject private var viewModel: PlayerDetailViewModel
     @Environment(AppRouter.self) private var router
+    @Environment(\.dismiss) private var dismiss
     @State private var editingName: String = ""
+    @State private var showsDeleteConfirmation = false
+    @State private var deleteBlockedMessage: String?
 
     init(viewModel: PlayerDetailViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -43,6 +46,7 @@ struct PlayerDetailView: View {
                                 }
                             )
                         )
+                        .disabled(viewModel.isPrimaryPlayer())
                         .accessibilityIdentifier("playersHub.primaryToggle")
                     } footer: {
                         Text(
@@ -89,6 +93,8 @@ struct PlayerDetailView: View {
                         stats: viewModel.stats
                     )
 
+                    PlayerGuidedMatchPrefsSection(viewModel: viewModel)
+
                     Section {
                         Button {
                             router.selectedTab = .bench
@@ -105,6 +111,17 @@ struct PlayerDetailView: View {
                                 """
                             )
                         )
+                    }
+
+                    Section {
+                        Button(role: .destructive) {
+                            showsDeleteConfirmation = true
+                        } label: {
+                            Label(String(localized: "Delete player"), systemImage: "trash")
+                        }
+                        .accessibilityIdentifier("playersHub.deletePlayer")
+                    } footer: {
+                        Text(String(localized: "Past matches keep archived names. Stats for deleted players are hidden."))
                     }
                 }
                 .formEditorTopContentMargin()
@@ -124,5 +141,31 @@ struct PlayerDetailView: View {
         .accessibilityIdentifier("playersHub.detail.\(viewModel.profileId.uuidString)")
         .task { await viewModel.load() }
         .refreshable { await viewModel.load() }
+        .confirmationDialog(
+            String(localized: "Delete \(viewModel.profile?.displayName ?? "player")?"),
+            isPresented: $showsDeleteConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button(String(localized: "Delete"), role: .destructive) {
+                Task {
+                    if await viewModel.deleteProfile() {
+                        dismiss()
+                    } else {
+                        deleteBlockedMessage = viewModel.errorMessage
+                    }
+                }
+            }
+            Button(String(localized: "Cancel"), role: .cancel) {}
+        } message: {
+            Text(String(localized: "This cannot be undone."))
+        }
+        .alert(String(localized: "Cannot Delete"), isPresented: Binding(
+            get: { deleteBlockedMessage != nil },
+            set: { if !$0 { deleteBlockedMessage = nil } }
+        )) {
+            Button(String(localized: "OK"), role: .cancel) {}
+        } message: {
+            Text(deleteBlockedMessage ?? "")
+        }
     }
 }

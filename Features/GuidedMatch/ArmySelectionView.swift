@@ -12,6 +12,7 @@ struct ArmySelectionView: View {
     var profiles: [PlayerProfile] = []
     var primaryProfileId: UUID?
     var profileSlotLabel: String = ""
+    var opponentArmyId: String?
     let onSave: (PlayerArmySelection) -> Void
 
     @State private var playerName: String
@@ -36,6 +37,7 @@ struct ArmySelectionView: View {
         profiles: [PlayerProfile] = [],
         primaryProfileId: UUID? = nil,
         profileSlotLabel: String = "",
+        opponentArmyId: String? = nil,
         onSave: @escaping (PlayerArmySelection) -> Void
     ) {
         self.title = title
@@ -48,6 +50,7 @@ struct ArmySelectionView: View {
         self.profiles = profiles
         self.primaryProfileId = primaryProfileId
         self.profileSlotLabel = profileSlotLabel
+        self.opponentArmyId = opponentArmyId
         self.onSave = onSave
         _playerName = State(initialValue: selection.playerName)
         _selectedProfileId = State(initialValue: selection.profileId)
@@ -66,6 +69,7 @@ struct ArmySelectionView: View {
         profiles: [PlayerProfile] = [],
         primaryProfileId: UUID? = nil,
         profileSlotLabel: String = "",
+        opponentArmyId: String? = nil,
         onSave: @escaping (PlayerArmySelection) -> Void
     ) {
         self.init(
@@ -79,6 +83,7 @@ struct ArmySelectionView: View {
             profiles: profiles,
             primaryProfileId: primaryProfileId,
             profileSlotLabel: profileSlotLabel,
+            opponentArmyId: opponentArmyId,
             onSave: onSave
         )
     }
@@ -133,11 +138,7 @@ struct ArmySelectionView: View {
                     if let newValue, let profile = profiles.first(where: { $0.id == newValue }) {
                         playerName = profile.displayName
                         showsAllCatalogArmies = false
-                        if let armyId = profile.ownedSpearheadArmyIds.first,
-                           let faction = factions.first(where: { $0.armies.contains(where: { $0.id == armyId }) }) {
-                            selectedFactionId = faction.id
-                            selectedArmyId = armyId
-                        }
+                        applyPreferredArmy(for: profile)
                     }
                 }
             } else {
@@ -273,6 +274,48 @@ struct ArmySelectionView: View {
         }
     }
 
+    private func armyListSection(armies: [SpearheadArmy], faction: SpearheadFaction, header: String) -> some View {
+        Section {
+            ForEach(armies) { army in
+                armyButton(army)
+            }
+        } header: {
+            Text(header)
+        } footer: {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                if gameSystemId != .scTmg {
+                    Text(
+                        String(
+                            localized: """
+                            Badges show how much rules help is built in: army list, full setup options, or \
+                            in-battle ability reminders.
+                            """
+                        )
+                    )
+                }
+                if let army = armies.first(where: { $0.id == selectedArmyId }) {
+                    Text(army.playstyle)
+                }
+            }
+        }
+    }
+
+    private func armyButton(_ army: SpearheadArmy) -> some View {
+        Button {
+            selectedArmyId = army.id
+        } label: {
+            ArmyOptionRow(
+                army: army,
+                isSelected: army.id == selectedArmyId,
+                featuredArmies: featuredArmies,
+                gameSystemId: gameSystemId
+            )
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(army.id == selectedArmyId ? .isSelected : [])
+        .accessibilityIdentifier("guidedMatch.army.\(army.id)")
+    }
+
     private var officialRulesLinkTitle: String {
         switch gameSystemId {
         case .scTmg:
@@ -304,6 +347,22 @@ struct ArmySelectionView: View {
             return !army.units.isEmpty
         }
         return army.units.contains(where: \.hasWarscroll)
+    }
+
+    private func applyPreferredArmy(for profile: PlayerProfile) {
+        if let opponentArmyId, !opponentArmyId.isEmpty,
+           let preferredId = profile.guidedMatchPreferences.preferredArmyIdByOpponentArmyId[opponentArmyId],
+           let faction = factions.first(where: { $0.armies.contains(where: { $0.id == preferredId }) }) {
+            selectedFactionId = faction.id
+            selectedArmyId = preferredId
+            return
+        }
+
+        if let armyId = profile.ownedSpearheadArmyIds.first,
+           let faction = factions.first(where: { $0.armies.contains(where: { $0.id == armyId }) }) {
+            selectedFactionId = faction.id
+            selectedArmyId = armyId
+        }
     }
 }
 

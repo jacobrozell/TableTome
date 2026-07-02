@@ -12,6 +12,7 @@ public struct GuidedMatchPlayerPreferences: Codable, Sendable, Equatable {
     public var defaultRegimentAbilityByArmyId: [String: String]
     public var defaultEnhancementByArmyId: [String: String]
     public var showExpandedSetupSteps: Bool?
+    public var dismissedCoachTipKeys: Set<String>
 
     public init(
         experienceLevel: PlayerExperienceLevel = .beginner,
@@ -19,7 +20,8 @@ public struct GuidedMatchPlayerPreferences: Codable, Sendable, Equatable {
         preferredArmyIdByOpponentArmyId: [String: String] = [:],
         defaultRegimentAbilityByArmyId: [String: String] = [:],
         defaultEnhancementByArmyId: [String: String] = [:],
-        showExpandedSetupSteps: Bool? = nil
+        showExpandedSetupSteps: Bool? = nil,
+        dismissedCoachTipKeys: Set<String> = []
     ) {
         self.experienceLevel = experienceLevel
         self.defaultDiceInputMode = defaultDiceInputMode
@@ -27,6 +29,7 @@ public struct GuidedMatchPlayerPreferences: Codable, Sendable, Equatable {
         self.defaultRegimentAbilityByArmyId = defaultRegimentAbilityByArmyId
         self.defaultEnhancementByArmyId = defaultEnhancementByArmyId
         self.showExpandedSetupSteps = showExpandedSetupSteps
+        self.dismissedCoachTipKeys = dismissedCoachTipKeys
     }
 }
 

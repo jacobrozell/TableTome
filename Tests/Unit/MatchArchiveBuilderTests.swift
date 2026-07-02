@@ -45,4 +45,40 @@ final class MatchArchiveBuilderTests: XCTestCase {
         XCTAssertEqual(record.createdAt, startedAt)
         XCTAssertEqual(record.status, .completed)
     }
+
+    func testBuildRecordPersistsProfileIds() {
+        let jacobId = UUID()
+        let chrisId = UUID()
+        var matchState = GuidedMatchState()
+        matchState.playerOne = PlayerArmySelection(
+            playerName: "Jacob",
+            factionId: "skaven",
+            armyId: "gnawfeast-clawpack",
+            profileId: jacobId
+        )
+        matchState.playerTwo = PlayerArmySelection(
+            playerName: "Chris",
+            factionId: "stormcast",
+            armyId: "vigilant-brotherhood",
+            profileId: chrisId
+        )
+
+        let record = MatchArchiveBuilder.buildRecord(
+            from: MatchArchiveInput(
+                gameSystemId: "aos-spearhead",
+                gameSystemName: "Spearhead",
+                matchState: matchState,
+                trackerState: BattleTrackerState(battleRound: 4),
+                status: .completed,
+                startedAt: Date(),
+                playerOneArmyLabel: "Skaven",
+                playerTwoArmyLabel: "Stormcast",
+                playerOneVictoryPoints: 10,
+                playerTwoVictoryPoints: 8
+            )
+        )
+
+        XCTAssertEqual(record.players.playerOneProfileId, jacobId)
+        XCTAssertEqual(record.players.playerTwoProfileId, chrisId)
+    }
 }

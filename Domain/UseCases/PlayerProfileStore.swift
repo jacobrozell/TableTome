@@ -19,7 +19,7 @@ public struct PlayerProfileStore: Sendable {
         var household = try await repository.loadHousehold()
         let trimmed = displayName.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else {
-            throw PlayerProfileRepositoryError.writeFailed
+            throw PlayerProfileRepositoryError.invalidDisplayName
         }
         let now = Date()
         let profile = PlayerProfile(
@@ -98,6 +98,18 @@ public struct PlayerProfileStore: Sendable {
         for armyId in armyIds {
             profile.ownedSpearheadArmyIds.insert(armyId)
         }
+        profile.updatedAt = Date()
+        household.profiles[index] = profile
+        try await repository.saveHousehold(household)
+    }
+
+    public func resetCoachingTips(profileId: UUID) async throws {
+        var household = try await repository.loadHousehold()
+        guard let index = household.profiles.firstIndex(where: { $0.id == profileId }) else {
+            throw PlayerProfileRepositoryError.profileNotFound
+        }
+        var profile = household.profiles[index]
+        profile.guidedMatchPreferences.dismissedCoachTipKeys = []
         profile.updatedAt = Date()
         household.profiles[index] = profile
         try await repository.saveHousehold(household)

@@ -31,14 +31,15 @@ struct MatchHistoryListView: View {
                 )
                 .asyncContentShell()
             } else if viewModel.records.isEmpty {
-                if viewModel.filterGameSystemId != nil {
+                if viewModel.filterGameSystemId != nil || viewModel.filterProfileId != nil {
                     ContentUnavailableView {
                         Label(String(localized: "No Matches for Filter"), systemImage: "line.3.horizontal.decrease.circle")
                     } description: {
-                        Text(String(localized: "Try another game system or clear the filter."))
+                        Text(String(localized: "Try another filter or clear the current selection."))
                     } actions: {
                         Button(String(localized: "Show All")) {
                             viewModel.filterGameSystemId = nil
+                            viewModel.filterProfileId = nil
                         }
                     }
                 } else {
@@ -93,6 +94,11 @@ struct MatchHistoryListView: View {
             MatchHistoryDetailView(recordId: link.recordId, viewModel: viewModel)
         }
         .toolbar {
+            if ReleaseSurface.showsPlayersHub, viewModel.householdProfiles.count > 1 {
+                ToolbarItem(placement: .topBarLeading) {
+                    playerFilterMenu
+                }
+            }
             if filters.count > 2 {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
@@ -142,6 +148,37 @@ struct MatchHistoryListView: View {
             return activeId
         }
         return OnboardingCompletion.spearheadGameSystemId
+    }
+
+    @ViewBuilder
+    private var playerFilterMenu: some View {
+        Menu {
+            Picker(String(localized: "Player"), selection: $viewModel.filterProfileId) {
+                Text(String(localized: "All players")).tag(UUID?.none)
+                ForEach(viewModel.householdProfiles) { profile in
+                    Text(profile.displayName).tag(Optional(profile.id))
+                }
+            }
+        } label: {
+            Label {
+                Text(playerFilterLabel)
+            } icon: {
+                Image(systemName: viewModel.filterProfileId == nil
+                    ? "person.2"
+                    : "person.2.fill")
+            }
+        }
+        .accessibilityIdentifier(
+            "matchHistory.filter.player.\(viewModel.filterProfileId?.uuidString ?? "all")"
+        )
+    }
+
+    private var playerFilterLabel: String {
+        guard let filterProfileId = viewModel.filterProfileId,
+              let profile = viewModel.householdProfiles.first(where: { $0.id == filterProfileId }) else {
+            return String(localized: "All players")
+        }
+        return profile.displayName
     }
 }
 

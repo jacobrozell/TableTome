@@ -33,6 +33,7 @@ struct GuidedMatchView: View {
     @State var guidedMatchNavigationPath = NavigationPath()
     @State var padDetailNavigationPath = NavigationPath()
     @State var showsMatchHistory = false
+    @State var householdPlayers: HouseholdPlayersState?
     @AppStorage(BattleTrackerChromeStorage.guidedMatchHubCollapsedKey) var isHubChromeCollapsed = false
     @AppStorage(SpearheadStarterBoxStorage.selectedBoxIdKey) var selectedSpearheadBoxId = SpearheadStarterBoxStorage.defaultBoxId
     @State var splitColumnVisibility: NavigationSplitViewVisibility = .all
@@ -116,9 +117,15 @@ struct GuidedMatchView: View {
         }
         .task {
             await viewModel.load()
+            if ReleaseSurface.showsPlayersHub {
+                if let household = try? await dependencies.playerProfileStore.loadHousehold() {
+                    householdPlayers = household
+                    viewModel.applyHouseholdDefaultsIfNeeded(household)
+                }
+            }
             if AppLaunchArguments.shouldSnapshotGuidedMatchArmies {
                 if !viewModel.matchState.hasBothArmies {
-                    viewModel.applyStarterMatchup()
+                    viewModel.applyStarterMatchup(household: householdPlayers)
                 }
                 hubTab = .setup
                 if usesPadSplitNavigation {
@@ -127,7 +134,7 @@ struct GuidedMatchView: View {
             } else if AppLaunchArguments.shouldOpenBattleTracker
                 || AppLaunchArguments.shouldSnapshotBattleCombat {
                 if !viewModel.matchState.hasBothArmies {
-                    viewModel.applyStarterMatchup()
+                    viewModel.applyStarterMatchup(household: householdPlayers)
                 }
                 if AppLaunchArguments.shouldSnapshotBattleCombat {
                     viewModel.seedMarketingBattleSnapshot()
@@ -142,7 +149,7 @@ struct GuidedMatchView: View {
             } else {
                 let wantsStarterArmies = AppLaunchArguments.shouldApplyStarterMatchup
                 if wantsStarterArmies, !viewModel.matchState.hasBothArmies {
-                    viewModel.applyStarterMatchup()
+                    viewModel.applyStarterMatchup(household: householdPlayers)
                 }
                 if AppLaunchArguments.shouldApplyStarterMatchup, usesPadSplitNavigation {
                     selectedDestination = .battleTracker

@@ -13,7 +13,7 @@ struct OwnedSpearheadArmiesSection: View {
     var body: some View {
         if !factions.isEmpty {
             if !viewModel.boxSets.isEmpty {
-                Section(String(localized: "Starter box")) {
+                Section {
                     ForEach(viewModel.boxSets) { box in
                         let isLinked = viewModel.profile?.linkedStarterBoxIds.contains(box.id) == true
                         Button {
@@ -39,6 +39,8 @@ struct OwnedSpearheadArmiesSection: View {
                         }
                         .accessibilityIdentifier("playersHub.starterBox.\(box.id)")
                     }
+                } header: {
+                    Text(String(localized: "Starter box"))
                 } footer: {
                     Text(String(localized: "Adds both armies from your starter box to this player."))
                 }

@@ -98,6 +98,7 @@ final class AppDependencies: ObservableObject {
         MatchHistoryViewModel(
             historyRepository: matchHistoryRepository,
             rulesRepository: rulesRepository,
+            profileStore: playerProfileStore,
             logger: logger
         )
     }

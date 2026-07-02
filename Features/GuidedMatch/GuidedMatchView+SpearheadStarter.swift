@@ -5,7 +5,7 @@ import TabletomeData
 extension GuidedMatchView {
     func useStarterMatchup(navigateToSetup: Bool = true) {
         let box = spearheadBoxSets.first { $0.id == selectedSpearheadBoxId } ?? spearheadBoxSets.first
-        viewModel.applyStarterMatchup(boxSet: box)
+        viewModel.applyStarterMatchup(boxSet: box, household: householdPlayers)
         showsStarterMatchupHandoff = true
         dismissedStarterMatchupHandoff = false
         if usesPadSplitNavigation {

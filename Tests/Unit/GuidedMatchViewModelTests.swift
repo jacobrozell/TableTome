@@ -144,6 +144,94 @@ final class GuidedMatchViewModelTests: XCTestCase {
             XCTAssertTrue(deployment.contains(step.rawValue), "Missing deployment step \(step.rawValue)")
         }
     }
+
+    func testApplyHouseholdDefaultsPrefillsJacobAndChris() async throws {
+        let catalog = try await BundledSpearheadCatalogRepository(
+            bundle: Bundle(for: GuidedMatchViewModelTests.self)
+        ).loadCatalog()
+        defer { MatchSetupStore.reset() }
+
+        let viewModel = GuidedMatchViewModel(
+            catalogRepository: StubSpearheadCatalogRepository(catalog: catalog),
+            initialState: GuidedMatchState()
+        )
+        await viewModel.load()
+
+        let household = PlayerProfileSeed.makeDefaultHousehold()
+        viewModel.applyHouseholdDefaultsIfNeeded(household)
+
+        XCTAssertEqual(viewModel.matchState.playerOne.playerName, "Jacob")
+        XCTAssertEqual(viewModel.matchState.playerOne.profileId, household.defaultPlayerOneProfileId)
+        XCTAssertEqual(viewModel.matchState.playerTwo.playerName, "Chris")
+        XCTAssertEqual(
+            viewModel.matchState.playerTwo.profileId,
+            household.sortedProfiles.last?.id
+        )
+    }
+
+    func testApplyHouseholdDefaultsDoesNotOverwriteExistingArmies() async throws {
+        let catalog = try await BundledSpearheadCatalogRepository(
+            bundle: Bundle(for: GuidedMatchViewModelTests.self)
+        ).loadCatalog()
+        defer { MatchSetupStore.reset() }
+
+        var state = GuidedMatchState()
+        state.playerOne = PlayerArmySelection(
+            playerName: "Guest",
+            factionId: "skaven",
+            armyId: "gnawfeast-clawpack"
+        )
+        let viewModel = GuidedMatchViewModel(
+            catalogRepository: StubSpearheadCatalogRepository(catalog: catalog),
+            initialState: state
+        )
+        await viewModel.load()
+        viewModel.applyHouseholdDefaultsIfNeeded(PlayerProfileSeed.makeDefaultHousehold())
+
+        XCTAssertEqual(viewModel.matchState.playerOne.playerName, "Guest")
+        XCTAssertNil(viewModel.matchState.playerOne.profileId)
+    }
+
+    func testApplyHouseholdDefaultsNoOpsOutsideSpearhead() async throws {
+        let catalog = try await BundledPlayCatalogRepository(
+            bundle: Bundle(for: GuidedMatchViewModelTests.self)
+        ).loadCatalog(for: "wh40k-11e")
+        defer { MatchSetupStore.reset(gameSystemId: .wh40k11e) }
+
+        let viewModel = GuidedMatchViewModel(
+            gameSystemId: .wh40k11e,
+            catalogRepository: StubSpearheadCatalogRepository(catalog: catalog),
+            initialState: GuidedMatchState()
+        )
+        await viewModel.load()
+        viewModel.applyHouseholdDefaultsIfNeeded(PlayerProfileSeed.makeDefaultHousehold())
+
+        XCTAssertEqual(viewModel.matchState.playerOne.playerName, "Player 1")
+        XCTAssertEqual(viewModel.matchState.playerTwo.playerName, "Player 2")
+        XCTAssertNil(viewModel.matchState.playerOne.profileId)
+        XCTAssertNil(viewModel.matchState.playerTwo.profileId)
+    }
+
+    func testApplyHouseholdDefaultsBackfillsNameWhenProfileIdMatches() async throws {
+        let catalog = try await BundledSpearheadCatalogRepository(
+            bundle: Bundle(for: GuidedMatchViewModelTests.self)
+        ).loadCatalog()
+        defer { MatchSetupStore.reset() }
+
+        let household = PlayerProfileSeed.makeDefaultHousehold()
+        let jacobId = try XCTUnwrap(household.defaultPlayerOneProfileId)
+        var state = GuidedMatchState()
+        state.playerOne = PlayerArmySelection(playerName: "", profileId: jacobId)
+        let viewModel = GuidedMatchViewModel(
+            catalogRepository: StubSpearheadCatalogRepository(catalog: catalog),
+            initialState: state
+        )
+        await viewModel.load()
+        viewModel.applyHouseholdDefaultsIfNeeded(household)
+
+        XCTAssertEqual(viewModel.matchState.playerOne.playerName, "Jacob")
+        XCTAssertEqual(viewModel.matchState.playerOne.profileId, jacobId)
+    }
 }
 
 private struct StubSpearheadCatalogRepository: SpearheadCatalogRepository {

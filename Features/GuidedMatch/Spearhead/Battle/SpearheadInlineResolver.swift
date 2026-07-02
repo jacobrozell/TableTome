@@ -1,28 +1,77 @@
 import SwiftUI
 import TabletomeDomain
+import TabletomeData
 
-/// Inline combat resolver that appears below the attacker unit row.
-/// Shows all relevant information without requiring navigation.
-// swiftlint:disable:next type_body_length
+/// Inline combat resolver — target picker plus the shared batch combat path used in the tab tracker.
 struct SpearheadInlineResolver: View {
     let context: InlineResolverContext
+    let gameSystemId: GameSystemId
     let attackerUnit: SpearheadUnit
     let defenderUnits: [SpearheadUnit]
     let defenderArmy: SpearheadArmy?
     let defenderWoundsRemaining: [String: Int]
+    let playerOneArmyId: String?
+    let playerTwoArmyId: String?
+    let activePlayerIsOne: Bool
+    let attackerPlayerName: String
+    let defenderPlayerName: String
     var defenderEnhancement: ArmyRuleOption?
     var defenderIsGeneral: Bool = false
     let onSelectTarget: (String?) -> Void
-    let onApplyDamage: (Int) -> Void
+    let onSelectWeapon: (String) -> Void
+    let onApplyDamage: (Int, CombatBatchLogContext?) -> Void
     let onCancel: () -> Void
 
-    @State private var hitsEntered: String = ""
-    @State private var woundsEntered: String = ""
-    @State private var failedSavesEntered: String = ""
-    @State private var wardedOff: String = ""
-    @State private var showsModifiers = false
+    @StateObject private var combatViewModel: UnitMatchupEvaluatorViewModel
+    @StateObject private var batchViewModel = BatchCombatEvaluatorViewModel()
+    @State private var catalogsLoaded = false
 
-    // MARK: - Computed Properties
+    init(
+        context: InlineResolverContext,
+        gameSystemId: GameSystemId,
+        attackerUnit: SpearheadUnit,
+        defenderUnits: [SpearheadUnit],
+        defenderArmy: SpearheadArmy?,
+        defenderWoundsRemaining: [String: Int],
+        playerOneArmyId: String?,
+        playerTwoArmyId: String?,
+        activePlayerIsOne: Bool,
+        attackerPlayerName: String,
+        defenderPlayerName: String,
+        defenderEnhancement: ArmyRuleOption? = nil,
+        defenderIsGeneral: Bool = false,
+        onSelectTarget: @escaping (String?) -> Void,
+        onSelectWeapon: @escaping (String) -> Void,
+        onApplyDamage: @escaping (Int, CombatBatchLogContext?) -> Void,
+        onCancel: @escaping () -> Void
+    ) {
+        self.context = context
+        self.gameSystemId = gameSystemId
+        self.attackerUnit = attackerUnit
+        self.defenderUnits = defenderUnits
+        self.defenderArmy = defenderArmy
+        self.defenderWoundsRemaining = defenderWoundsRemaining
+        self.playerOneArmyId = playerOneArmyId
+        self.playerTwoArmyId = playerTwoArmyId
+        self.activePlayerIsOne = activePlayerIsOne
+        self.attackerPlayerName = attackerPlayerName
+        self.defenderPlayerName = defenderPlayerName
+        self.defenderEnhancement = defenderEnhancement
+        self.defenderIsGeneral = defenderIsGeneral
+        self.onSelectTarget = onSelectTarget
+        self.onSelectWeapon = onSelectWeapon
+        self.onApplyDamage = onApplyDamage
+        self.onCancel = onCancel
+        _combatViewModel = StateObject(
+            wrappedValue: UnitMatchupEvaluatorViewModel(
+                catalogRepository: GameSystemCatalogRepository(
+                    gameSystemId: gameSystemId.rawValue,
+                    repository: BundledPlayCatalogRepository()
+                ),
+                gameSystemId: gameSystemId.rawValue
+            )
+        )
+    }
 
     private var weapon: SpearheadWeapon? {
         attackerUnit.weapons.first { $0.id == context.weaponId }
@@ -34,20 +83,14 @@ struct SpearheadInlineResolver: View {
         return defenderUnits.first { $0.id == unitId }
     }
 
-    private var defenderWounds: Int {
-        guard let defenderKey = context.defenderKey else { return 0 }
+    private var defenderWounds: Int? {
+        guard let defenderKey = context.defenderKey else { return nil }
         return defenderWoundsRemaining[defenderKey] ?? totalDefenderWounds
     }
 
     private var totalDefenderWounds: Int {
         guard let defender else { return 0 }
         return (defender.health ?? 1) * (defender.modelCount ?? 1)
-    }
-
-    private var totalAttacks: Int {
-        guard let weapon else { return 0 }
-        let base = Int(weapon.attacks) ?? 1
-        return base * (attackerUnit.modelCount ?? 1)
     }
 
     private var attacksDisplay: String {
@@ -60,14 +103,6 @@ struct SpearheadInlineResolver: View {
         return models > 1 ? "\(base)×\(models)" : base
     }
 
-    private var hitTarget: Int { weapon?.hit ?? 3 }
-    private var woundTarget: Int { weapon?.wound ?? 3 }
-    private var defenderSave: Int { defender?.save ?? 6 }
-    private var rend: Int { weapon?.rend ?? 0 }
-    private var modifiedSave: Int { min(7, defenderSave + rend) }
-    private var damagePerWound: Int { Int(weapon?.damage ?? "1") ?? 1 }
-    private var damageDisplay: String { weapon?.damage ?? "1" }
-
     private var targetPickerWeaponSummary: String? {
         guard let weapon else { return nil }
         var parts: [String] = []
@@ -78,70 +113,25 @@ struct SpearheadInlineResolver: View {
         return "\(weapon.name) · \(parts.joined(separator: " · "))"
     }
 
-    private var wardTarget: Int? {
-        // Check defender keywords for ward
-        if let defender {
-            for keyword in defender.keywords {
-                if let match = keyword.firstMatch(of: /[Ww]ard\s*\((\d+)\+\)/),
-                   let value = Int(match.1) {
-                    return value
-                }
-            }
-        }
-        // Check enhancement for ward (if defender is general)
-        if defenderIsGeneral, let enhancement = defenderEnhancement {
-            let text = enhancement.summary.lowercased()
-            if let match = text.firstMatch(of: /ward\s*\(?\s*(\d+)\+?\)?/),
-               let value = Int(match.1) {
-                return value
-            }
-        }
-        return nil
-    }
-
-    private var wardSource: String? {
-        if let defender {
-            for keyword in defender.keywords where keyword.lowercased().contains("ward") {
-                return defender.name
-            }
-        }
-        if defenderIsGeneral, let enhancement = defenderEnhancement {
-            let text = enhancement.summary.lowercased()
-            if text.contains("ward") {
-                return enhancement.name
-            }
-        }
-        return nil
-    }
-
-    private var calculatedDamage: Int {
-        let saves = Int(failedSavesEntered) ?? 0
-        let warded = Int(wardedOff) ?? 0
-        return max(0, saves - warded) * damagePerWound
-    }
-
-    private var woundsAfterDamage: Int {
-        max(0, defenderWounds - calculatedDamage)
-    }
-
-    private var isDestroyed: Bool {
-        woundsAfterDamage == 0 && calculatedDamage > 0
-    }
-
-    // MARK: - Body
-
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             if context.defenderKey == nil {
                 targetPicker
+            } else if catalogsLoaded {
+                batchResolverContent
             } else {
-                matchupHeader
-                weaponProfileCard
-                defenderInfoCard
-                resolverFlow
-                damageResultCard
-                actionBar
+                ProgressView()
+                    .frame(maxWidth: .infinity)
+                    .padding()
             }
+        }
+        .task {
+            await combatViewModel.load()
+            catalogsLoaded = true
+            syncCombatSelection()
+        }
+        .onChange(of: context) { _, _ in
+            syncCombatSelection()
         }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("spearheadBattle.inlineResolver")
@@ -163,11 +153,17 @@ struct SpearheadInlineResolver: View {
                     }
                 }
                 Spacer()
-                Button("Cancel") { onCancel() }
+                Button(String(localized: "Cancel")) { onCancel() }
                     .font(.subheadline)
             }
 
-            Text(String(localized: "Select target"))
+            if !NewPlayerTipsStore.hasSeenPhysicalDiceResolverHint {
+                PhysicalDiceResolverHint {
+                    NewPlayerTipsStore.markPhysicalDiceResolverHintSeen()
+                }
+            }
+
+            Text(String(localized: "Tap a living unit to attack"))
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(.secondary)
 
@@ -176,7 +172,7 @@ struct SpearheadInlineResolver: View {
             }
 
             if aliveDefenders.isEmpty {
-                Text("No targets available")
+                Text(String(localized: "No targets available"))
                     .font(.callout)
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, alignment: .center)
@@ -237,28 +233,65 @@ struct SpearheadInlineResolver: View {
         .buttonStyle(.plain)
     }
 
-    // MARK: - Matchup Header
+    // MARK: - Batch Resolver
+
+    @ViewBuilder
+    private var batchResolverContent: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            matchupHeader
+
+            CombatResolverAttackContextCard(
+                viewModel: combatViewModel,
+                attackerPlayerName: attackerPlayerName,
+                defenderPlayerName: defenderPlayerName,
+                unitWoundsRemaining: defenderWoundsRemaining,
+                defenderWoundsRemaining: defenderWounds,
+                accessibilityPrefix: "spearheadBattle.inlineResolver"
+            )
+
+            BatchCombatResolverSection(
+                batchViewModel: batchViewModel,
+                combatViewModel: combatViewModel,
+                accessibilityPrefix: "spearheadBattle.inlineResolver",
+                defenderName: defender?.name,
+                defenderWoundsRemaining: defenderWounds,
+                onApplyDamage: { damage, logContext in
+                    onApplyDamage(damage, logContext)
+                }
+            )
+
+            Button(String(localized: "Cancel"), role: .cancel) {
+                onCancel()
+            }
+            .frame(maxWidth: .infinity, alignment: .center)
+        }
+    }
 
     @ViewBuilder
     private var matchupHeader: some View {
-        HStack {
+        HStack(alignment: .center) {
             VStack(alignment: .leading, spacing: 2) {
-                HStack(spacing: 4) {
-                    Image(systemName: "scope")
-                        .foregroundStyle(Color.orange)
-                    Text(attackerUnit.name)
-                        .font(.subheadline.weight(.semibold))
-                    Image(systemName: "arrow.right")
+                Text(String(localized: "Resolving attack"))
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                Text("\(attackerUnit.name) → \(defender?.name ?? "—")")
+                    .font(.subheadline.weight(.semibold))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: DesignTokens.Spacing.sm)
+            if let weapon, attackerUnit.weapons.filter(\.isRollEvaluable).count > 1 {
+                Menu {
+                    ForEach(attackerUnit.weapons.filter(\.isRollEvaluable), id: \.id) { candidate in
+                        Button(candidate.name) {
+                            onSelectWeapon(candidate.id)
+                        }
+                    }
+                } label: {
+                    Label(String(localized: "Weapon"), systemImage: "arrow.triangle.swap")
                         .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Image(systemName: "shield.fill")
-                        .foregroundStyle(Color.blue)
-                    Text(defender?.name ?? "—")
-                        .font(.subheadline.weight(.semibold))
                 }
             }
-            Spacer()
-            Button("Change") {
+            Button(String(localized: "Change target")) {
                 onSelectTarget(nil)
             }
             .font(.caption)
@@ -266,289 +299,35 @@ struct SpearheadInlineResolver: View {
         }
     }
 
-    // MARK: - Weapon Profile Card
-
-    @ViewBuilder
-    private var weaponProfileCard: some View {
-        if let weapon {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                HStack {
-                    Image(systemName: weapon.isRanged ? "scope" : "burst.fill")
-                        .foregroundStyle(weapon.isRanged ? Color.blue : Color.orange)
-                    Text(weapon.name)
-                        .font(.subheadline.weight(.semibold))
-                    Spacer()
-                    if weapon.isRanged, let range = weapon.rangeInches {
-                        Text("\(range)\"")
-                            .font(.caption.weight(.medium))
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(Color.blue.opacity(0.15), in: Capsule())
-                            .foregroundStyle(.blue)
-                    }
-                }
-
-                HStack(spacing: 0) {
-                    weaponStatCell(label: "Attacks", value: attacksDisplay, highlight: true)
-                    Divider().frame(height: 32)
-                    weaponStatCell(label: "Hit", value: "\(hitTarget)+")
-                    Divider().frame(height: 32)
-                    weaponStatCell(label: "Wound", value: "\(woundTarget)+")
-                    Divider().frame(height: 32)
-                    weaponStatCell(label: "Rend", value: rend > 0 ? "-\(rend)" : "—", highlight: rend > 0)
-                    Divider().frame(height: 32)
-                    weaponStatCell(label: "Damage", value: damageDisplay)
-                }
-                .background(Color(.tertiarySystemFill), in: CardSurface.shape(radius: DesignTokens.Radius.inset))
-
-                if let ability = weapon.ability, !ability.isEmpty {
-                    Text(ability)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
-            .padding(DesignTokens.Spacing.sm)
-            .background(Color(.secondarySystemFill), in: CardSurface.shape(radius: DesignTokens.Radius.nested))
-        }
-    }
-
-    @ViewBuilder
-    private func weaponStatCell(label: String, value: String, highlight: Bool = false) -> some View {
-        VStack(spacing: 2) {
-            Text(value)
-                .font(.subheadline.weight(.bold))
-                .foregroundStyle(highlight ? Color.accentColor : Color.primary)
-            Text(label)
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, DesignTokens.Spacing.xs)
-    }
-
-    // MARK: - Defender Info Card
-
-    @ViewBuilder
-    private var defenderInfoCard: some View {
-        if let defender {
-            HStack(spacing: DesignTokens.Spacing.md) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Defender")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    HStack(spacing: DesignTokens.Spacing.sm) {
-                        statPill(icon: "shield.fill", value: "\(defenderSave)+", color: .blue)
-                        if rend > 0 {
-                            HStack(spacing: 2) {
-                                Image(systemName: "arrow.right")
-                                    .font(.caption2)
-                                statPill(
-                                    icon: "shield.slash.fill",
-                                    value: modifiedSave >= 7 ? "None" : "\(modifiedSave)+",
-                                    color: .red
-                                )
-                            }
-                        }
-                        if let ward = wardTarget {
-                            statPill(icon: "sparkles", value: "\(ward)+", color: .purple)
-                        }
-                    }
-                }
-
-                Spacer()
-
-                woundBadge(current: defenderWounds, total: totalDefenderWounds)
-            }
-            .padding(DesignTokens.Spacing.sm)
-            .background(Color(.secondarySystemFill), in: CardSurface.shape(radius: DesignTokens.Radius.nested))
-
-            if let source = wardSource {
-                HStack(spacing: 4) {
-                    Image(systemName: "sparkles")
-                        .font(.caption2)
-                    Text("Ward from: \(source)")
-                        .font(.caption)
-                }
-                .foregroundStyle(.purple)
-            }
-        }
-    }
-
-    // MARK: - Resolver Flow
-
-    @ViewBuilder
-    private var resolverFlow: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            resolverStep(
-                step: 1,
-                title: "Hit",
-                instruction: "Roll \(totalAttacks) dice, \(hitTarget)+ to hit",
-                hint: "6s are critical (auto-wound)",
-                inputLabel: "Hits",
-                value: $hitsEntered
-            )
-
-            let hits = Int(hitsEntered) ?? 0
-            resolverStep(
-                step: 2,
-                title: "Wound",
-                instruction: "Roll \(hits) dice, \(woundTarget)+ to wound",
-                hint: nil,
-                inputLabel: "Wounds",
-                value: $woundsEntered,
-                disabled: hits == 0
-            )
-
-            let wounds = Int(woundsEntered) ?? 0
-            resolverStep(
-                step: 3,
-                title: "Save",
-                instruction: "Defender rolls \(wounds) saves at \(modifiedSave)+",
-                hint: rend > 0 ? "Rend -\(rend) applied" : nil,
-                inputLabel: "Failed",
-                value: $failedSavesEntered,
-                disabled: wounds == 0
-            )
-
-            if let ward = wardTarget {
-                let failed = Int(failedSavesEntered) ?? 0
-                resolverStep(
-                    step: 4,
-                    title: "Ward",
-                    instruction: "Roll \(failed) ward saves at \(ward)+",
-                    hint: wardSource.map { "From: \($0)" },
-                    inputLabel: "Saved",
-                    value: $wardedOff,
-                    disabled: failed == 0,
-                    accentColor: .purple
-                )
-            }
-        }
-    }
-
-    @ViewBuilder
-    private func resolverStep(
-        step: Int,
-        title: String,
-        instruction: String,
-        hint: String?,
-        inputLabel: String,
-        value: Binding<String>,
-        disabled: Bool = false,
-        accentColor: Color = .accentColor
-    ) -> some View {
-        HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
-            Text("\(step)")
-                .font(.caption.weight(.bold))
-                .frame(width: 20, height: 20)
-                .background(disabled ? Color.secondary.opacity(0.3) : accentColor, in: Circle())
-                .foregroundStyle(.white)
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(disabled ? .secondary : .primary)
-                Text(instruction)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                if let hint {
-                    Text(hint)
-                        .font(.caption2)
-                        .foregroundStyle(accentColor)
-                }
-            }
-
-            Spacer()
-
-            TextField(inputLabel, text: value)
-                .keyboardType(.numberPad)
-                .multilineTextAlignment(.center)
-                .frame(width: 56, height: 36)
-                .background(Color(.tertiarySystemFill), in: CardSurface.shape(radius: DesignTokens.Radius.inset))
-                .disabled(disabled)
-                .opacity(disabled ? 0.5 : 1)
-        }
-    }
-
-    // MARK: - Damage Result Card
-
-    @ViewBuilder
-    private var damageResultCard: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            HStack {
-                Text("Result")
-                    .font(.subheadline.weight(.semibold))
-                Spacer()
-                Text("\(calculatedDamage) damage")
-                    .font(.title3.weight(.bold))
-                    .foregroundStyle(calculatedDamage > 0 ? Color.red : Color.secondary)
-            }
-
-            HStack(spacing: DesignTokens.Spacing.md) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Before")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                    Text("\(defenderWounds)/\(totalDefenderWounds)")
-                        .font(.subheadline.monospacedDigit())
-                }
-
-                Image(systemName: "arrow.right")
-                    .foregroundStyle(.secondary)
-
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("After")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                    Text("\(woundsAfterDamage)/\(totalDefenderWounds)")
-                        .font(.subheadline.weight(.semibold).monospacedDigit())
-                        .foregroundStyle(isDestroyed ? Color.red : Color.primary)
-                }
-
-                if isDestroyed {
-                    Spacer()
-                    Label("Destroyed", systemImage: "xmark.circle.fill")
-                        .font(.caption.weight(.bold))
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(Color.red, in: Capsule())
-                }
-            }
-        }
-        .padding(DesignTokens.Spacing.sm)
-        .background(
-            (calculatedDamage > 0 ? Color.red : Color.secondary).opacity(0.1),
-            in: CardSurface.shape(radius: DesignTokens.Radius.nested)
+    private func syncCombatSelection() {
+        combatViewModel.syncBattleContext(
+            activePlayerIsOne: activePlayerIsOne,
+            playerOneArmyId: playerOneArmyId,
+            playerTwoArmyId: playerTwoArmyId
         )
-    }
 
-    // MARK: - Action Bar
-
-    @ViewBuilder
-    private var actionBar: some View {
-        HStack(spacing: DesignTokens.Spacing.md) {
-            Button(role: .cancel) {
-                onCancel()
-            } label: {
-                Text("Cancel")
-                    .frame(maxWidth: .infinity)
+        let attackerParts = context.attackerKey.split(separator: ":")
+        if attackerParts.count == 2 {
+            let unitId = String(attackerParts[1])
+            if combatViewModel.attackerUnitId != unitId {
+                combatViewModel.setAttackerUnit(unitId)
             }
-            .buttonStyle(.bordered)
-
-            Button {
-                onApplyDamage(calculatedDamage)
-            } label: {
-                HStack {
-                    Image(systemName: "checkmark.circle.fill")
-                    Text("Apply")
-                }
-                .frame(maxWidth: .infinity)
+            if combatViewModel.attackerWeaponId != context.weaponId {
+                combatViewModel.setAttackerWeapon(context.weaponId)
             }
-            .buttonStyle(.borderedProminent)
-            .tint(calculatedDamage > 0 ? .red : .accentColor)
-            .disabled(calculatedDamage == 0 && (Int(failedSavesEntered) ?? 0) == 0)
         }
+
+        if let defenderKey = context.defenderKey {
+            let defenderParts = defenderKey.split(separator: ":")
+            if defenderParts.count == 2 {
+                let unitId = String(defenderParts[1])
+                if combatViewModel.defenderUnitId != unitId {
+                    combatViewModel.setDefenderUnit(unitId)
+                }
+            }
+        }
+
+        batchViewModel.sync(from: combatViewModel)
     }
 
     // MARK: - Helpers

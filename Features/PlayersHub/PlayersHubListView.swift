@@ -54,10 +54,10 @@ struct PlayersHubListView: View {
                         )
                     }
 
-                    if let primary = viewModel.household?.primaryProfile {
-                        Section(String(localized: "This device")) {
+                    if let defaultProfileId = viewModel.household?.defaultPlayerOneProfileId {
+                        Section {
                             Picker(String(localized: "Default player"), selection: Binding(
-                                get: { primary.id },
+                                get: { defaultProfileId },
                                 set: { id in Task { await viewModel.setPrimaryProfile(id: id) } }
                             )) {
                                 ForEach(viewModel.profiles) { profile in
@@ -65,6 +65,8 @@ struct PlayersHubListView: View {
                                 }
                             }
                             .accessibilityIdentifier("playersHub.defaultPlayerPicker")
+                        } header: {
+                            Text(String(localized: "This device"))
                         } footer: {
                             Text(String(localized: "The default player is pre-selected as Player 1 in Guided Match."))
                         }

@@ -86,6 +86,9 @@ final class ReleaseSurfaceTests: XCTestCase {
         XCTAssertTrue(ReleaseSurface.showsRollEvaluator)
         XCTAssertFalse(ReleaseSurface.showsRulesAssistant)
         XCTAssertTrue(ReleaseSurface.showsMatchHistory)
+        #if DEBUG
+        XCTAssertTrue(ReleaseSurface.showsPlayersHub)
+        #endif
     }
 
     func testCombatResolverEnabledForSpearhead() {
@@ -154,10 +157,6 @@ final class ReleaseSurfaceTests: XCTestCase {
     func testSpearheadDisallowsSimulatedDice() {
         XCTAssertFalse(ReleaseSurface.allowsSimulatedDice(for: .aosSpearhead))
         XCTAssertTrue(ReleaseSurface.allowsSimulatedDice(for: .wh40k11e))
-    }
-
-    func testSpearheadSingleSurfaceBattleShippedInRelease() {
-        XCTAssertTrue(ReleaseSurface.usesSpearheadSingleSurfaceBattle)
     }
 
     func testPlayHomeIncludesAllBundledModesWhenAllPlayModesEnabled() {

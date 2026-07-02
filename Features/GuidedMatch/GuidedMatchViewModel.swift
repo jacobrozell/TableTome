@@ -12,6 +12,9 @@ final class GuidedMatchViewModel: ObservableObject {
     @Published var saveFailureNotice: String?
     @Published var matchState: GuidedMatchState
 
+    /// Transient note when starter box armies could not be auto-assigned to profiles.
+    @Published var starterMatchupProfileNote: String?
+
     private let catalogRepository: any SpearheadCatalogRepository
     let logger: any AppLogger
     var hasLoggedMatchStarted = false
@@ -415,29 +418,6 @@ final class GuidedMatchViewModel: ObservableObject {
             : String(localized: "This match couldn't be saved to History.")
     }
 
-    func applyStarterMatchup(boxSet: BoxSet? = nil) {
-        BattleTrackerStore.reset(gameSystemId: gameSystemId)
-        let context = GameSystemPlayContext.context(for: gameSystemId)
-        let armies = boxSet.map { GuidedMatchFeaturedArmies(config: $0.featuredArmiesConfig()) } ?? featuredArmies
-        mutateMatchState(persist: true, syncCompletions: false) {
-            armies.applyStarterMatchup(to: &$0)
-            $0.attackerIsPlayerOne = true
-            if context.capabilities.deploymentChecklistStyle == .wh40k || context.capabilities.usesPatrolFormatRules {
-                $0.firstTurnIsPlayerOne = true
-            }
-        }
-        applyRecommendedLoadouts()
-        syncAutoCompletions()
-    }
-
-    func applyRecommendedLoadouts() {
-        guard let catalog else { return }
-        mutateMatchState {
-            applyRecommendedLoadout(for: &$0.playerOne, catalog: catalog)
-            applyRecommendedLoadout(for: &$0.playerTwo, catalog: catalog)
-        }
-    }
-
     /// Mid-game battle tracker state for App Store screenshots (`-snapshot_battle_combat`).
     func seedMarketingBattleSnapshot() {
         completeSetupForAutomation()
@@ -475,7 +455,7 @@ final class GuidedMatchViewModel: ObservableObject {
         if matchState.attackerIsPlayerOne == nil {
             setAttacker(isPlayerOne: true)
         }
-        applyRecommendedLoadouts()
+        applyRecommendedLoadouts(household: nil)
 
         let context = GameSystemPlayContext.context(for: gameSystemId)
         if context.capabilities.deploymentChecklistStyle == .wh40k {
@@ -491,19 +471,6 @@ final class GuidedMatchViewModel: ObservableObject {
             DeploymentChecklistStep.allCases.forEach { setDeploymentStep($0, complete: true) }
         }
         syncAutoCompletions()
-    }
-
-    private func applyRecommendedLoadout(for player: inout PlayerArmySelection, catalog: SpearheadCatalog) {
-        guard let army = army(factionId: player.factionId, armyId: player.armyId) else { return }
-        if let enhancement = ArmyRuleOption.recommendedDefault(in: army.enhancements) {
-            player.enhancementId = enhancement.id
-        }
-        if let secondary = ArmyRuleOption.recommendedDefault(in: army.secondaryObjectives) {
-            player.secondaryObjectiveId = secondary.id
-        }
-        if let regiment = ArmyRuleOption.recommendedDefault(in: army.regimentAbilities) {
-            player.regimentAbilityId = regiment.id
-        }
     }
 
     func faction(id: String) -> SpearheadFaction? {
@@ -541,7 +508,7 @@ final class GuidedMatchViewModel: ObservableObject {
     }
 
     /// Reassigns `matchState` so `@Published` emits and setup UI refreshes after in-place edits.
-    private func mutateMatchState(
+    func mutateMatchState(
         persist shouldPersist: Bool = true,
         syncCompletions shouldSyncCompletions: Bool = true,
         _ body: (inout GuidedMatchState) -> Void

@@ -54,6 +54,7 @@ struct StarterMatchupHandoffSection: View {
     let nextStepTitle: String?
     let attackerLabel: String?
     let usesSpearheadCopy: Bool
+    var profileAssignNote: String?
     let onDismiss: () -> Void
 
     var body: some View {
@@ -69,6 +70,13 @@ struct StarterMatchupHandoffSection: View {
                     onDismiss: onDismiss
                 )
                 .listHeroCardRow()
+
+                if let profileAssignNote {
+                    Text(profileAssignNote)
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                        .listHeroCardRow()
+                }
             }
         }
     }

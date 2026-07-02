@@ -34,6 +34,57 @@ final class JSONMatchHistoryRepositoryTests: XCTestCase {
         XCTAssertEqual(spearheadOnly.first?.gameSystemId, "aos-spearhead")
     }
 
+    func testFilterByProfileId() async throws {
+        let jacobId = UUID()
+        let chrisId = UUID()
+        var jacobMatch = sampleRecord(gameSystemId: "aos-spearhead")
+        jacobMatch = MatchRecord(
+            id: jacobMatch.id,
+            gameSystemId: jacobMatch.gameSystemId,
+            gameSystemName: jacobMatch.gameSystemName,
+            createdAt: jacobMatch.createdAt,
+            endedAt: jacobMatch.endedAt,
+            status: jacobMatch.status,
+            players: MatchPlayerSummary(
+                playerOneName: "Jacob",
+                playerTwoName: "Chris",
+                playerOneArmyLabel: "A",
+                playerTwoArmyLabel: "B",
+                playerOneProfileId: jacobId
+            ),
+            setup: jacobMatch.setup,
+            result: jacobMatch.result
+        )
+        var chrisMatch = sampleRecord(gameSystemId: "aos-spearhead")
+        chrisMatch = MatchRecord(
+            id: chrisMatch.id,
+            gameSystemId: chrisMatch.gameSystemId,
+            gameSystemName: chrisMatch.gameSystemName,
+            createdAt: chrisMatch.createdAt,
+            endedAt: chrisMatch.endedAt,
+            status: chrisMatch.status,
+            players: MatchPlayerSummary(
+                playerOneName: "Alex",
+                playerTwoName: "Chris",
+                playerOneArmyLabel: "A",
+                playerTwoArmyLabel: "B",
+                playerTwoProfileId: chrisId
+            ),
+            setup: chrisMatch.setup,
+            result: chrisMatch.result
+        )
+        try await repository.archive(record: jacobMatch, log: [])
+        try await repository.archive(record: chrisMatch, log: [])
+
+        let jacobOnly = try await repository.fetchRecords(limit: nil, gameSystemId: nil, involvingProfileId: jacobId)
+        XCTAssertEqual(jacobOnly.count, 1)
+        XCTAssertEqual(jacobOnly.first?.players.playerOneProfileId, jacobId)
+
+        let chrisOnly = try await repository.fetchRecords(limit: nil, gameSystemId: nil, involvingProfileId: chrisId)
+        XCTAssertEqual(chrisOnly.count, 1)
+        XCTAssertEqual(chrisOnly.first?.players.playerTwoProfileId, chrisId)
+    }
+
     func testDeleteRecord() async throws {
         let record = sampleRecord(gameSystemId: "aos-spearhead")
         try await repository.archive(record: record, log: [])

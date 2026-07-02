@@ -139,7 +139,7 @@ struct MatchStepEnhancementsLegacySection: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             MatchStepRecommendedDefaultsControls(
                 hasBothArmies: viewModel.matchState.hasBothArmies,
-                onApplyRecommended: viewModel.applyRecommendedLoadouts
+                onApplyRecommended: { viewModel.applyRecommendedLoadouts() }
             )
             MatchStepArmyOptionsSection(
                 viewModel: viewModel,

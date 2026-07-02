@@ -1,15 +1,13 @@
 import SwiftUI
 import TabletomeDomain
 
-/// Phase-specific guidance card with context and advance button.
+/// Phase-specific guidance card with context and smart advance control.
 struct SpearheadPhasePlaybook: View {
-    let phase: BattleTurnPhase
-    let round: Int
-    let canAdvance: Bool
-    let nextPhaseTitle: String?
-    let shootableUnitCount: Int
-    let totalUnitCount: Int
+    @ObservedObject var viewModel: SpearheadBattleViewModel
     let onAdvance: () -> Void
+
+    private var phase: BattleTurnPhase { viewModel.trackerState.currentPhase }
+    private var round: Int { viewModel.trackerState.battleRound }
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -66,7 +64,7 @@ struct SpearheadPhasePlaybook: View {
         case .movement:
             return String(localized: "Move each unit up to its Move characteristic. Units in combat can only Retreat.")
         case .shooting:
-            if shootableUnitCount == 0 {
+            if viewModel.shootingEligibleUnits.isEmpty {
                 return String(localized: "None of your units have ranged weapons this turn.")
             }
             return String(localized: "Pick a unit with ranged weapons, choose a target, roll hit dice.")
@@ -83,35 +81,120 @@ struct SpearheadPhasePlaybook: View {
 
     private var phaseHint: String? {
         switch phase {
-        case .shooting where shootableUnitCount > 0:
-            return String(localized: "\(shootableUnitCount) of \(totalUnitCount) units can shoot this phase.")
+        case .shooting where !viewModel.shootingEligibleUnits.isEmpty:
+            let unacted = viewModel.unactedCombatUnitCount
+            if unacted == 0, !viewModel.shootingEligibleUnits.isEmpty {
+                return String(localized: "All shooting units have acted this phase.")
+            }
+            if unacted > 0 {
+                return String(
+                    localized: "\(unacted) of \(viewModel.shootingEligibleUnits.count) units still need to shoot."
+                )
+            }
+            return String(
+                localized: "\(viewModel.shootingEligibleUnits.count) of \(viewModel.yourUnits.count) units can shoot this phase."
+            )
+        case .combat, .anyCombat:
+            let unacted = viewModel.unactedCombatUnitCount
+            if unacted > 0 {
+                return String(localized: "\(unacted) units still need to fight this phase.")
+            }
+            if !viewModel.combatActivationUnits.isEmpty {
+                return String(localized: "All eligible units have fought this phase.")
+            }
+            return nil
         case .hero where round == 1:
             return String(localized: "Round 1: Remember to check deployment abilities.")
+        case .endOfTurn, .endOfAnyTurn:
+            return endOfTurnHint
         default:
             return nil
         }
     }
 
+    private var endOfTurnHint: String? {
+        if viewModel.isBattleComplete {
+            return String(localized: "Battle complete — tap See Results when you're ready.")
+        }
+        if viewModel.canAdvanceBattleRound {
+            return String(localized: "Both turns done — start the next round when scoring is finished.")
+        }
+        if let name = viewModel.nextHandoffPlayerName {
+            return String(localized: "Score below, then pass the phone to \(name).")
+        }
+        return nil
+    }
+
     @ViewBuilder
     private var advanceButton: some View {
-        HStack {
-            Spacer()
-            Button {
-                onAdvance()
-            } label: {
-                HStack(spacing: DesignTokens.Spacing.xs) {
-                    if let next = nextPhaseTitle {
-                        Text("Advance to \(next)")
-                    } else {
-                        Text("End Turn")
-                    }
-                    Image(systemName: "arrow.right")
+        Group {
+            if viewModel.isTurnFlowBlocked {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                    Label(String(localized: "Finish the round opener first"), systemImage: "checklist")
+                        .font(.subheadline.weight(.semibold))
+                    Text(
+                        String(
+                            localized: """
+                            Priority roll, underdog, twist card, and battle tactics must be checked off \
+                            before advancing phases.
+                            """
+                        )
+                    )
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
                 }
-                .font(.subheadline.weight(.medium))
+                .frame(maxWidth: .infinity, alignment: .leading)
+            } else if viewModel.nextPhaseTitle != nil {
+                Button(action: onAdvance) {
+                    HStack(spacing: DesignTokens.Spacing.xs) {
+                        Text("Advance to \(viewModel.nextPhaseTitle ?? "")")
+                        Image(systemName: "arrow.right")
+                    }
+                    .font(.subheadline.weight(.medium))
+                }
+                .buttonStyle(.borderedProminent)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .accessibilityIdentifier("spearheadBattle.advancePhase")
+            } else if viewModel.canPassToNextPlayerThisRound {
+                Button(action: onAdvance) {
+                    HStack(spacing: DesignTokens.Spacing.xs) {
+                        Text(nextPlayerButtonTitle)
+                        Image(systemName: "arrow.left.arrow.right")
+                    }
+                    .font(.subheadline.weight(.medium))
+                }
+                .buttonStyle(.borderedProminent)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .accessibilityIdentifier("spearheadBattle.passToNextPlayer")
+            } else if viewModel.canAdvanceBattleRound {
+                Button(action: onAdvance) {
+                    HStack(spacing: DesignTokens.Spacing.xs) {
+                        Text(
+                            String(
+                                localized: "Start \(viewModel.playContext.playEngine.roundLabel(round: round + 1))"
+                            )
+                        )
+                        Image(systemName: "arrow.up.circle")
+                    }
+                    .font(.subheadline.weight(.medium))
+                }
+                .buttonStyle(.borderedProminent)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .accessibilityIdentifier("spearheadBattle.startNextRound")
+            } else if viewModel.isBattleComplete {
+                Label(String(localized: "Battle complete — compare victory points"), systemImage: "flag.checkered")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .buttonStyle(.borderedProminent)
-            .disabled(!canAdvance)
-            .accessibilityIdentifier("spearheadBattle.advancePhase")
         }
+    }
+
+    private var nextPlayerButtonTitle: String {
+        if let name = viewModel.nextHandoffPlayerName {
+            return String(localized: "Pass to \(name)")
+        }
+        return String(localized: "Next Player's Turn")
     }
 }

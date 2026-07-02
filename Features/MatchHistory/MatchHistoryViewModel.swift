@@ -6,22 +6,30 @@ final class MatchHistoryViewModel: ObservableObject {
     @Published private(set) var records: [MatchRecord] = []
     @Published private(set) var isLoading = false
     @Published private(set) var errorMessage: String?
+    @Published private(set) var householdProfiles: [PlayerProfile] = []
 
     @Published var filterGameSystemId: String? {
         didSet { Task { await load() } }
     }
 
+    @Published var filterProfileId: UUID? {
+        didSet { Task { await load() } }
+    }
+
     private let historyRepository: any MatchHistoryRepository
     private let rulesRepository: any RulesRepository
+    private let profileStore: PlayerProfileStore?
     private let logger: any AppLogger
 
     init(
         historyRepository: any MatchHistoryRepository,
         rulesRepository: any RulesRepository,
+        profileStore: PlayerProfileStore? = nil,
         logger: any AppLogger = DefaultAppLogger.makeForCurrentBuild()
     ) {
         self.historyRepository = historyRepository
         self.rulesRepository = rulesRepository
+        self.profileStore = profileStore
         self.logger = logger
     }
 
@@ -29,13 +37,34 @@ final class MatchHistoryViewModel: ObservableObject {
         isLoading = true
         defer { isLoading = false }
         do {
-            records = try await historyRepository.fetchRecords(limit: nil, gameSystemId: filterGameSystemId)
+            if ReleaseSurface.showsPlayersHub, let profileStore {
+                let household = try await profileStore.loadHousehold()
+                householdProfiles = household.sortedProfiles
+            } else {
+                householdProfiles = []
+            }
+
+            var loaded = try await historyRepository.fetchRecords(
+                limit: nil,
+                gameSystemId: filterGameSystemId,
+                involvingProfileId: nil
+            )
+
+            if let filterProfileId,
+               let profile = householdProfiles.first(where: { $0.id == filterProfileId }) {
+                loaded = PlayerMatchStatsCalculator.records(involving: profile, from: loaded)
+            }
+
+            records = loaded
             errorMessage = nil
             var metadata: [String: String] = [
                 "recordCount": String(records.count)
             ]
             if let filterGameSystemId {
                 metadata["filterGameSystemId"] = filterGameSystemId
+            }
+            if let filterProfileId {
+                metadata["filterProfileId"] = filterProfileId.uuidString
             }
             logger.info(
                 .persistence,

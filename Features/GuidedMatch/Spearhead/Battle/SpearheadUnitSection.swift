@@ -11,12 +11,19 @@ struct SpearheadUnitSection: View {
     let defenderArmy: SpearheadArmy?
     let woundsRemaining: [String: Int]
     let currentPhase: BattleTurnPhase
+    let gameSystemId: GameSystemId
+    let playerOneArmyId: String?
+    let playerTwoArmyId: String?
+    let activePlayerIsOne: Bool
+    let attackerPlayerName: String
+    let defenderPlayerName: String
     @Binding var expandedUnitKey: String?
     @Binding var resolverContext: InlineResolverContext?
+    let unitHasActed: (String) -> Bool
     let isActivePlayer: Bool
     let onSelectWeapon: (String, String, String) -> Void
     let onSetWounds: (String, Int) -> Void
-    let onApplyDamage: (String, Int) -> Void
+    let onApplyDamage: (String, String, Int, CombatBatchLogContext?) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
@@ -33,7 +40,7 @@ struct SpearheadUnitSection: View {
                 .font(.headline)
             Spacer()
             if !relevantUnits.isEmpty && relevantUnits.count != units.count {
-                Text("\(relevantUnits.count) can act")
+                Text(String(localized: "\(relevantUnits.count) can act"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -44,10 +51,32 @@ struct SpearheadUnitSection: View {
     @ViewBuilder
     private var unitList: some View {
         VStack(spacing: DesignTokens.Spacing.xs) {
-            ForEach(sortedUnits, id: \.id) { unit in
-                unitRow(for: unit)
+            if !aliveUnits.isEmpty {
+                ForEach(aliveUnits, id: \.id) { unit in
+                    unitRow(for: unit)
+                }
+            }
+            if !destroyedUnits.isEmpty {
+                destroyedHeader
+                ForEach(destroyedUnits, id: \.id) { unit in
+                    unitRow(for: unit)
+                }
             }
         }
+    }
+
+    @ViewBuilder
+    private var destroyedHeader: some View {
+        HStack(spacing: DesignTokens.Spacing.xs) {
+            Image(systemName: "xmark.circle.fill")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Text(String(localized: "Destroyed (\(destroyedUnits.count))"))
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+        }
+        .padding(.top, DesignTokens.Spacing.sm)
+        .accessibilityAddTraits(.isHeader)
     }
 
     @ViewBuilder
@@ -69,10 +98,17 @@ struct SpearheadUnitSection: View {
             relevance: relevance,
             currentPhase: currentPhase,
             isActivePlayer: isActivePlayer,
+            hasActed: unitHasActed(unitKey),
             resolverContext: resolverContext?.attackerKey == unitKey ? resolverContext : nil,
             opponentUnits: defenderUnits,
             opponentArmy: defenderArmy,
             opponentWoundsRemaining: woundsRemaining,
+            gameSystemId: gameSystemId,
+            playerOneArmyId: playerOneArmyId,
+            playerTwoArmyId: playerTwoArmyId,
+            activePlayerIsOne: activePlayerIsOne,
+            attackerPlayerName: attackerPlayerName,
+            defenderPlayerName: defenderPlayerName,
             onTap: {
                 withAnimation(.easeInOut(duration: 0.2)) {
                     if isExpanded {
@@ -94,9 +130,10 @@ struct SpearheadUnitSection: View {
             onSetWounds: { newValue in
                 onSetWounds(unitKey, newValue)
             },
-            onApplyDamage: { damage in
-                if let defenderKey = resolverContext?.defenderKey {
-                    onApplyDamage(defenderKey, damage)
+            onApplyDamage: { damage, logContext in
+                if let defenderKey = resolverContext?.defenderKey,
+                   let attackerKey = resolverContext?.attackerKey {
+                    onApplyDamage(defenderKey, attackerKey, damage, logContext)
                 }
             },
             onCancelResolver: {
@@ -125,6 +162,14 @@ struct SpearheadUnitSection: View {
             }
             return lhs.name < rhs.name
         }
+    }
+
+    private var aliveUnits: [SpearheadUnit] {
+        sortedUnits.filter { phaseRelevance(for: $0) != .destroyed }
+    }
+
+    private var destroyedUnits: [SpearheadUnit] {
+        sortedUnits.filter { phaseRelevance(for: $0) == .destroyed }
     }
 
     private var relevantUnits: [SpearheadUnit] {

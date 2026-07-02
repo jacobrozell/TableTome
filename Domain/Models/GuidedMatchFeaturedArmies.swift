@@ -19,6 +19,10 @@ public struct GuidedMatchFeaturedArmies: Sendable {
         config.isFeatured(armyId)
     }
 
+    public var featuredConfig: FeaturedArmiesConfig {
+        config
+    }
+
     public func applyStarterMatchup(to state: inout GuidedMatchState) {
         config.applyStarterMatchup(to: &state)
     }

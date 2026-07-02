@@ -1,5 +1,6 @@
 import Foundation
 import TabletomeDomain
+import TabletomeData
 
 @MainActor
 final class PlayerDetailViewModel: ObservableObject {
@@ -129,5 +130,60 @@ final class PlayerDetailViewModel: ObservableObject {
     func ownedArmyIds() -> Set<String> {
         guard let profile else { return [] }
         return OwnedArmyResolver.ownedArmyIds(for: profile)
+    }
+
+    func setExperienceLevel(_ level: PlayerExperienceLevel) async {
+        guard var profile else { return }
+        profile.guidedMatchPreferences.experienceLevel = level
+        await saveProfile(profile)
+    }
+
+    func setDefaultDiceInputMode(_ rawValue: String?) async {
+        guard var profile else { return }
+        profile.guidedMatchPreferences.defaultDiceInputMode = rawValue
+        await saveProfile(profile)
+    }
+
+    func setDefaultRegimentAbility(armyId: String, abilityId: String) async {
+        guard var profile else { return }
+        profile.guidedMatchPreferences.defaultRegimentAbilityByArmyId[armyId] = abilityId
+        await saveProfile(profile)
+    }
+
+    func setDefaultEnhancement(armyId: String, enhancementId: String) async {
+        guard var profile else { return }
+        profile.guidedMatchPreferences.defaultEnhancementByArmyId[armyId] = enhancementId
+        await saveProfile(profile)
+    }
+
+    func resetCoachingTips() async {
+        do {
+            try await profileStore.resetCoachingTips(profileId: profileId)
+            await load()
+        } catch {
+            errorMessage = String(localized: "Could not reset coaching tips.")
+        }
+    }
+
+    func deleteProfile() async -> Bool {
+        do {
+            try await profileStore.deleteProfile(id: profileId)
+            return true
+        } catch PlayerProfileRepositoryError.cannotDeleteLastProfile {
+            errorMessage = String(localized: "Keep at least one player on this device.")
+            return false
+        } catch {
+            errorMessage = String(localized: "Could not delete player.")
+            return false
+        }
+    }
+
+    private func saveProfile(_ profile: PlayerProfile) async {
+        do {
+            try await profileStore.updateProfile(profile)
+            await load()
+        } catch {
+            errorMessage = String(localized: "Could not save preferences.")
+        }
     }
 }

@@ -16,7 +16,8 @@ final class MatchSetupStoreTests: XCTestCase {
             factionId: "stormcast-eternals",
             armyId: "vigilant-brotherhood",
             regimentAbilityId: "strike-where-needed",
-            enhancementId: "hallowed-scrolls"
+            enhancementId: "hallowed-scrolls",
+            profileId: UUID()
         )
         state.playerTwo = PlayerArmySelection(
             playerName: "Friend",
@@ -32,6 +33,7 @@ final class MatchSetupStoreTests: XCTestCase {
         XCTAssertEqual(loaded.playerOne.playerName, "Alex")
         XCTAssertEqual(loaded.playerOne.factionId, "stormcast-eternals")
         XCTAssertEqual(loaded.playerOne.armyId, "vigilant-brotherhood")
+        XCTAssertEqual(loaded.playerOne.profileId, state.playerOne.profileId)
         XCTAssertEqual(loaded.playerTwo.factionId, "skaven")
         XCTAssertEqual(loaded.playerTwo.armyId, "gnawfeast-clawpack")
         XCTAssertEqual(loaded.attackerIsPlayerOne, true)

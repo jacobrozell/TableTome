@@ -9,10 +9,16 @@ struct SpearheadBattleView: View {
     @State private var resolverContext: InlineResolverContext?
     @State private var showsRoundOpener = false
     @State private var showsVictoryScreen = false
+    @State private var showsVictoryPointsSheet = false
+    @State private var damageUndoNotice: DamageUndoNotice?
+    @State private var victoryPlayerOneVP = 0
+    @State private var victoryPlayerTwoVP = 0
+    @State private var dismissedBattleCompleteGuide = false
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     let onMatchStateChange: (() -> Void)?
     let onVictoryComplete: ((Bool, Int, Int) async -> Void)?
@@ -65,8 +71,16 @@ struct SpearheadBattleView: View {
         .onChange(of: viewModel.trackerState.battleRound) { _, _ in
             checkRoundOpener()
         }
+        .onChange(of: viewModel.roundOpenerIsIncomplete) { _, incomplete in
+            if incomplete {
+                showsRoundOpener = true
+            }
+        }
         .fullScreenCover(isPresented: $showsVictoryScreen) {
             victoryScreen
+        }
+        .sheet(isPresented: $showsVictoryPointsSheet) {
+            SpearheadVictoryPointsSheet(viewModel: viewModel)
         }
         .accessibilityIdentifier("spearheadBattle.screen")
     }
@@ -77,6 +91,8 @@ struct SpearheadBattleView: View {
     private var singleColumnLayout: some View {
         ScrollView {
             VStack(spacing: DesignTokens.Spacing.md) {
+                damageUndoBanner
+                battleGuideCard
                 phasePlaybook
                 roundOpenerIfNeeded
                 reinforcementCallBanner
@@ -98,9 +114,13 @@ struct SpearheadBattleView: View {
     private var twoColumnLayout: some View {
         VStack(spacing: 0) {
             stickyHeader
+            damageUndoBanner
+                .padding(.horizontal, DesignTokens.Spacing.md)
+                .padding(.top, DesignTokens.Spacing.sm)
             HStack(spacing: 0) {
                 ScrollView {
                     VStack(spacing: DesignTokens.Spacing.md) {
+                        battleGuideCard
                         phasePlaybook
                         roundOpenerIfNeeded
                         reinforcementCallBanner
@@ -124,6 +144,20 @@ struct SpearheadBattleView: View {
         }
     }
 
+    @ViewBuilder
+    private var damageUndoBanner: some View {
+        BattleTrackerDamageUndoSection(
+            notice: damageUndoNotice,
+            reduceMotion: reduceMotion,
+            onUndo: {
+                if let notice = damageUndoNotice {
+                    viewModel.undoDamage(to: notice.woundKey, previousWounds: notice.previousWounds)
+                }
+            },
+            onDismiss: { damageUndoNotice = nil }
+        )
+    }
+
     // MARK: - Sticky Header
 
     @ViewBuilder
@@ -139,8 +173,38 @@ struct SpearheadBattleView: View {
             activePlayerIsOne: viewModel.trackerState.activePlayerIsOne,
             isRoundOneFirstTurnEditable: viewModel.isRoundOneFirstTurnEditable,
             onSetFirstTurn: viewModel.setFirstTurn,
-            onTapVP: { /* TODO: VP detail sheet */ }
+            onTapVP: { showsVictoryPointsSheet = true }
         )
+    }
+
+    @ViewBuilder
+    private var battleGuideCard: some View {
+        if showsBattleGuide, let step = viewModel.currentGuideStep {
+            BattleGuideCard(step: step) {
+                if step.kind == .battleComplete {
+                    if ReleaseSurface.showsMatchHistory {
+                        presentVictoryScreen()
+                    }
+                    dismissedBattleCompleteGuide = true
+                } else {
+                    viewModel.completeCurrentGuideStep()
+                }
+            }
+            .accessibilityIdentifier("spearheadBattle.guideCard")
+        }
+    }
+
+    private var showsBattleGuide: Bool {
+        guard !dismissedBattleCompleteGuide, viewModel.currentGuideStep != nil else { return false }
+        if let step = viewModel.currentGuideStep {
+            switch step.kind {
+            case .deployment, .scSetup, .wh40kSetup, .cpSetup:
+                return false
+            default:
+                break
+            }
+        }
+        return true
     }
 
     // MARK: - Phase Playbook
@@ -148,13 +212,8 @@ struct SpearheadBattleView: View {
     @ViewBuilder
     private var phasePlaybook: some View {
         SpearheadPhasePlaybook(
-            phase: viewModel.trackerState.currentPhase,
-            round: viewModel.trackerState.battleRound,
-            canAdvance: viewModel.canAdvancePhase,
-            nextPhaseTitle: viewModel.nextPhaseTitle,
-            shootableUnitCount: viewModel.shootingEligibleUnits.count,
-            totalUnitCount: viewModel.yourUnits.count,
-            onAdvance: viewModel.advancePhase
+            viewModel: viewModel,
+            onAdvance: viewModel.advanceTurnOrPhase
         )
     }
 
@@ -163,12 +222,38 @@ struct SpearheadBattleView: View {
     @ViewBuilder
     private var roundOpenerIfNeeded: some View {
         if showsRoundOpener && viewModel.roundOpenerIsIncomplete {
-            SpearheadRoundOpener(
-                round: viewModel.trackerState.battleRound,
-                completedSteps: viewModel.completedRoundOpenerSteps,
-                onCompleteStep: viewModel.completeRoundOpenerStep,
-                onDismiss: { showsRoundOpener = false }
-            )
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                HStack {
+                    Spacer()
+                    Button {
+                        showsRoundOpener = false
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.title3)
+                            .foregroundStyle(.secondary)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(String(localized: "Dismiss round opener"))
+                }
+
+                RoundChecklistCard(
+                    round: viewModel.trackerState.battleRound,
+                    completedSteps: viewModel.trackerState.completedRoundChecklistSteps,
+                    focusedStep: viewModel.focusedRoundOpenerStep,
+                    playerOneName: viewModel.playerOneName,
+                    playerTwoName: viewModel.playerTwoName,
+                    attackerName: viewModel.attackerName,
+                    firstTurnIsPlayerOne: viewModel.firstTurnIsPlayerOne,
+                    onSelectFirstTurn: viewModel.setRoundFirstTurn,
+                    onToggle: { step, complete in
+                        viewModel.setRoundChecklistStep(step, complete: complete)
+                        if !viewModel.roundOpenerIsIncomplete {
+                            showsRoundOpener = false
+                        }
+                    }
+                )
+            }
+            .accessibilityIdentifier("spearheadBattle.roundOpener")
         }
     }
 
@@ -211,8 +296,17 @@ struct SpearheadBattleView: View {
             defenderArmy: viewModel.opponentArmy,
             woundsRemaining: viewModel.trackerState.unitWoundsRemaining,
             currentPhase: viewModel.trackerState.currentPhase,
+            gameSystemId: viewModel.gameSystemId,
+            playerOneArmyId: viewModel.playerOneArmy?.id,
+            playerTwoArmyId: viewModel.playerTwoArmy?.id,
+            activePlayerIsOne: viewModel.trackerState.activePlayerIsOne,
+            attackerPlayerName: viewModel.activePlayerName,
+            defenderPlayerName: viewModel.trackerState.activePlayerIsOne
+                ? viewModel.playerTwoName
+                : viewModel.playerOneName,
             expandedUnitKey: $expandedUnitKey,
             resolverContext: $resolverContext,
+            unitHasActed: viewModel.unitHasActed(unitKey:),
             isActivePlayer: true,
             onSelectWeapon: handleSelectWeapon,
             onSetWounds: viewModel.setUnitWounds,
@@ -232,8 +326,17 @@ struct SpearheadBattleView: View {
             defenderArmy: viewModel.activeArmy,
             woundsRemaining: viewModel.trackerState.unitWoundsRemaining,
             currentPhase: viewModel.trackerState.currentPhase,
+            gameSystemId: viewModel.gameSystemId,
+            playerOneArmyId: viewModel.playerOneArmy?.id,
+            playerTwoArmyId: viewModel.playerTwoArmy?.id,
+            activePlayerIsOne: viewModel.trackerState.activePlayerIsOne,
+            attackerPlayerName: viewModel.activePlayerName,
+            defenderPlayerName: viewModel.trackerState.activePlayerIsOne
+                ? viewModel.playerTwoName
+                : viewModel.playerOneName,
             expandedUnitKey: $expandedUnitKey,
             resolverContext: $resolverContext,
+            unitHasActed: viewModel.unitHasActed(unitKey:),
             isActivePlayer: false,
             onSelectWeapon: handleSelectWeapon,
             onSetWounds: viewModel.setUnitWounds,
@@ -241,33 +344,122 @@ struct SpearheadBattleView: View {
         )
     }
 
-    // MARK: - Victory Screen
-
-    @ViewBuilder
-    private var victoryScreen: some View {
-        Text("Victory Screen Placeholder")
-    }
-
     // MARK: - Actions
 
     private func checkRoundOpener() {
-        if viewModel.roundOpenerIsIncomplete && viewModel.trackerState.battleRound > 1 {
+        if viewModel.roundOpenerIsIncomplete {
             showsRoundOpener = true
         }
     }
 
     private func handleSelectWeapon(armyId: String, unitId: String, weaponId: String) {
         let attackerKey = "\(armyId):\(unitId)"
+        expandedUnitKey = attackerKey
+        let existingDefender = resolverContext?.attackerKey == attackerKey ? resolverContext?.defenderKey : nil
         resolverContext = InlineResolverContext(
             attackerKey: attackerKey,
             weaponId: weaponId,
-            defenderKey: nil
+            defenderKey: existingDefender
         )
     }
 
-    private func handleApplyDamage(defenderKey: String, damage: Int) {
-        viewModel.applyDamage(to: defenderKey, amount: damage)
+    private func handleApplyDamage(
+        defenderKey: String,
+        attackerKey: String,
+        damage: Int,
+        batchLog: CombatBatchLogContext?
+    ) {
+        _ = batchLog
+        let defenderName = viewModel.defenderDisplayName(for: defenderKey)
+
+        if damage > 0, let previous = viewModel.applyDamage(to: defenderKey, amount: damage) {
+            withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) {
+                damageUndoNotice = DamageUndoNotice(
+                    message: String(localized: "Applied \(damage) damage to \(defenderName)."),
+                    woundKey: defenderKey,
+                    previousWounds: previous
+                )
+            }
+        }
+
+        viewModel.markAttackerActed(attackerKey: attackerKey)
         resolverContext = nil
+
+        withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) {
+            if let nextKey = viewModel.nextUnactedCombatUnitKey() {
+                expandedUnitKey = nextKey
+            } else {
+                expandedUnitKey = nil
+            }
+        }
+    }
+}
+
+// MARK: - Victory
+
+extension SpearheadBattleView {
+    var victoryScreen: some View {
+        MatchVictoryScreen(
+            presentation: MatchVictoryPresentation(
+                gameSystemId: viewModel.gameSystemId.rawValue,
+                gameSystemName: GameSystemRulesLabels.displayName(gameSystemId: viewModel.gameSystemId),
+                playerOneName: viewModel.playerOneName,
+                playerTwoName: viewModel.playerTwoName,
+                playerOneArmyLabel: viewModel.playerOneArmyLabel,
+                playerTwoArmyLabel: viewModel.playerTwoArmyLabel,
+                playerOneVictoryPoints: victoryPlayerOneVP,
+                playerTwoVictoryPoints: victoryPlayerTwoVP,
+                startedAt: MatchSessionStore.startedAt(gameSystemId: viewModel.gameSystemId),
+                status: .completed
+            ),
+            mode: .interactive,
+            onDone: {
+                Task { await completeVictory(rematch: false) }
+            },
+            onRematch: {
+                Task { await completeVictory(rematch: true) }
+            },
+            onVictoryPointsChange: { playerOne, playerTwo in
+                victoryPlayerOneVP = playerOne
+                victoryPlayerTwoVP = playerTwo
+                viewModel.setFinalVictoryPoints(playerOne: playerOne, playerTwo: playerTwo)
+            }
+        )
+    }
+
+    func presentVictoryScreen() {
+        victoryPlayerOneVP = viewModel.trackerState.playerOneVictoryPoints
+        victoryPlayerTwoVP = viewModel.trackerState.playerTwoVictoryPoints
+        dismissedBattleCompleteGuide = true
+        showsVictoryScreen = true
+        Task {
+            await onVictoryPresented?(victoryPlayerOneVP, victoryPlayerTwoVP)
+        }
+        TabletomeAnalytics.logger?.info(
+            .guidedMatch,
+            eventName: "battle_tracker_victory_presented",
+            message: "Victory screen presented.",
+            metadata: [
+                "gameSystemId": viewModel.gameSystemId.rawValue,
+                "playerOneVP": String(victoryPlayerOneVP),
+                "playerTwoVP": String(victoryPlayerTwoVP),
+                "battleRound": String(viewModel.trackerState.battleRound),
+                "durationSeconds": TabletomeAnalytics.durationSeconds(
+                    since: MatchSessionStore.startedAt(gameSystemId: viewModel.gameSystemId)
+                ) ?? "0"
+            ]
+        )
+    }
+
+    func completeVictory(rematch: Bool) async {
+        await onVictoryComplete?(rematch, victoryPlayerOneVP, victoryPlayerTwoVP)
+        showsVictoryScreen = false
+        viewModel.reloadFromPersistedStores()
+        onMatchStateChange?()
+        if rematch {
+            dismissedBattleCompleteGuide = false
+            showsRoundOpener = viewModel.roundOpenerIsIncomplete
+        }
     }
 }
 

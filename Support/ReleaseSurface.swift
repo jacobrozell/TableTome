@@ -117,19 +117,17 @@ public enum ReleaseSurface {
 
     /// Household player profiles, owned armies, and per-player history.
     public static var showsPlayersHub: Bool {
+        #if DEBUG
+        true
+        #else
         fullSurfaceEnabled
             || ProcessInfo.processInfo.arguments.contains("-enable_players_hub")
+        #endif
     }
 
     /// Spearhead ships physical-dice-only combat; simulated rolls stay available for other systems.
     public static func allowsSimulatedDice(for gameSystemId: GameSystemId) -> Bool {
         gameSystemId != .aosSpearhead
-    }
-
-    /// Use the new single-surface battle view for Spearhead (replaces tab-based tracker).
-    /// See `ongoing/guided-match-ui-redesign.md`.
-    public static var usesSpearheadSingleSurfaceBattle: Bool {
-        true
     }
 
     // MARK: Game systems

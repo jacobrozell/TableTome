@@ -29,13 +29,18 @@ public extension View {
     /// Groups content in the standard raised surface used across tracker and setup cards.
     func surfaceCard(
         padding: CGFloat = DesignTokens.Spacing.md,
-        radius: CGFloat = DesignTokens.Radius.lg
+        radius: CGFloat = DesignTokens.Radius.card
     ) -> some View {
         modifier(SurfaceCardModifier(padding: padding, radius: radius))
     }
 
+    /// Inset panel inside a primary card — loadout options, realm side chips, phase hints.
+    func nestedCard(padding: CGFloat = DesignTokens.Spacing.sm) -> some View {
+        surfaceCard(padding: padding, radius: DesignTokens.Radius.nested)
+    }
+
     /// Soft accent-tinted card used on Play home banners and new-player guidance.
-    func accentHighlightCard(radius: CGFloat = DesignTokens.Radius.lg) -> some View {
+    func accentHighlightCard(radius: CGFloat = DesignTokens.Radius.card) -> some View {
         padding(DesignTokens.Spacing.md)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background {
@@ -52,12 +57,12 @@ public extension View {
         padding(DesignTokens.Spacing.md)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background {
-                CardSurface.shape(radius: DesignTokens.Radius.lg)
+                CardSurface.shape(radius: DesignTokens.Radius.card)
                     .fill(Color(.secondarySystemBackground))
-                CardSurface.shape(radius: DesignTokens.Radius.lg)
+                CardSurface.shape(radius: DesignTokens.Radius.card)
                     .strokeBorder(Color(.separator).opacity(0.35), lineWidth: 0.5)
             }
-            .clipShape(CardSurface.shape(radius: DesignTokens.Radius.lg))
+            .clipShape(CardSurface.shape(radius: DesignTokens.Radius.card))
     }
 
     /// Embeds a self-drawn card in a `List` row without grouped-list corner clipping.
@@ -233,11 +238,11 @@ struct TipsCard: View {
         .padding(DesignTokens.Spacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background {
-            CardSurface.shape(radius: DesignTokens.Radius.lg)
+            CardSurface.shape(radius: DesignTokens.Radius.card)
                 .fill(Color.yellow.opacity(0.07))
-            CardSurface.shape(radius: DesignTokens.Radius.lg)
+            CardSurface.shape(radius: DesignTokens.Radius.card)
                 .strokeBorder(Color.yellow.opacity(0.30), lineWidth: 0.5)
         }
-        .clipShape(CardSurface.shape(radius: DesignTokens.Radius.lg))
+        .clipShape(CardSurface.shape(radius: DesignTokens.Radius.card))
     }
 }

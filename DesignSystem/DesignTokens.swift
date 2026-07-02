@@ -14,6 +14,13 @@ public enum DesignTokens {
         public static let md: CGFloat = 12
         /// Default corner radius for `surfaceCard` and `accentHighlightCard`.
         public static let lg: CGFloat = 16
+
+        /// Primary Guided Match / tracker cards (`surfaceCard`, `accentHighlightCard`, `GuideStepCard`).
+        public static let card: CGFloat = lg
+        /// Selectable rows and inset panels inside a card (`ArmyRuleOptionCard`, loadout options).
+        public static let nested: CGFloat = md
+        /// Small stat badges and chips inside nested rows.
+        public static let inset: CGFloat = sm
     }
 
     public static let minTouchTarget: CGFloat = 44

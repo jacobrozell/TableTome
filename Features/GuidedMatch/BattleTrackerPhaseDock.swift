@@ -215,7 +215,7 @@ struct BattleTrackerPhaseDock: View {
         .padding(.vertical, compactLandscape ? 2 : DesignTokens.Spacing.xs)
         .background(
             Color(isEnabled ? .secondarySystemGroupedBackground : .tertiarySystemFill),
-            in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
+            in: CardSurface.shape(radius: DesignTokens.Radius.inset)
         )
     }
 }

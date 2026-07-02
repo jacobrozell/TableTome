@@ -232,7 +232,7 @@ struct SpearheadInlineResolver: View {
                     .foregroundStyle(.tertiary)
             }
             .padding(DesignTokens.Spacing.sm)
-            .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+            .background(Color(.tertiarySystemFill), in: CardSurface.shape(radius: DesignTokens.Radius.nested))
         }
         .buttonStyle(.plain)
     }
@@ -299,7 +299,7 @@ struct SpearheadInlineResolver: View {
                     Divider().frame(height: 32)
                     weaponStatCell(label: "Damage", value: damageDisplay)
                 }
-                .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
+                .background(Color(.tertiarySystemFill), in: CardSurface.shape(radius: DesignTokens.Radius.inset))
 
                 if let ability = weapon.ability, !ability.isEmpty {
                     Text(ability)
@@ -308,7 +308,7 @@ struct SpearheadInlineResolver: View {
                 }
             }
             .padding(DesignTokens.Spacing.sm)
-            .background(Color(.secondarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+            .background(Color(.secondarySystemFill), in: CardSurface.shape(radius: DesignTokens.Radius.nested))
         }
     }
 
@@ -360,7 +360,7 @@ struct SpearheadInlineResolver: View {
                 woundBadge(current: defenderWounds, total: totalDefenderWounds)
             }
             .padding(DesignTokens.Spacing.sm)
-            .background(Color(.secondarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+            .background(Color(.secondarySystemFill), in: CardSurface.shape(radius: DesignTokens.Radius.nested))
 
             if let source = wardSource {
                 HStack(spacing: 4) {
@@ -464,7 +464,7 @@ struct SpearheadInlineResolver: View {
                 .keyboardType(.numberPad)
                 .multilineTextAlignment(.center)
                 .frame(width: 56, height: 36)
-                .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
+                .background(Color(.tertiarySystemFill), in: CardSurface.shape(radius: DesignTokens.Radius.inset))
                 .disabled(disabled)
                 .opacity(disabled ? 0.5 : 1)
         }
@@ -519,7 +519,7 @@ struct SpearheadInlineResolver: View {
         .padding(DesignTokens.Spacing.sm)
         .background(
             (calculatedDamage > 0 ? Color.red : Color.secondary).opacity(0.1),
-            in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
+            in: CardSurface.shape(radius: DesignTokens.Radius.nested)
         )
     }
 

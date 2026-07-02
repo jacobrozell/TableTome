@@ -60,11 +60,11 @@ struct SpearheadUnitDetailSheet: View {
 
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 4)
+                    CardSurface.shape(radius: DesignTokens.Radius.inset)
                         .fill(Color(.tertiarySystemFill))
                         .frame(height: 8)
 
-                    RoundedRectangle(cornerRadius: 4)
+                    CardSurface.shape(radius: DesignTokens.Radius.inset)
                         .fill(woundColor)
                         .frame(width: geo.size.width * CGFloat(wounds) / CGFloat(max(totalWounds, 1)), height: 8)
                 }
@@ -158,7 +158,7 @@ struct SpearheadUnitDetailSheet: View {
         .padding(.vertical, DesignTokens.Spacing.sm)
         .background(
             highlight ? Color.purple.opacity(0.1) : Color(.tertiarySystemFill),
-            in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
+            in: CardSurface.shape(radius: DesignTokens.Radius.inset)
         )
     }
 

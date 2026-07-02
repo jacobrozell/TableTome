@@ -6,8 +6,14 @@ struct BattleTrackerSection: View {
     let useSplitSelection: Bool
 
     private var setupComplete: Bool {
-        viewModel.setupProgress.completed == viewModel.setupProgress.total
-            && viewModel.setupProgress.total > 0
+        guard viewModel.matchState.hasBothArmies else { return false }
+        let progress = viewModel.setupProgress
+        guard progress.total > 0 else { return true }
+        return progress.completed == progress.total
+    }
+
+    private var canOpenBattleTracker: Bool {
+        viewModel.matchState.hasBothArmies && setupComplete
     }
 
     var body: some View {
@@ -16,14 +22,10 @@ struct BattleTrackerSection: View {
                 Label(String(localized: "Battle Phase Tracker"), systemImage: "list.bullet.rectangle")
                     .frame(minHeight: DesignTokens.minTouchTarget)
                     .tag(GuidedMatchDestination.battleTracker)
-                    .disabled(!viewModel.matchState.hasBothArmies)
+                    .disabled(!canOpenBattleTracker)
                     .accessibilityIdentifier("guidedMatch.battleTracker")
                     .accessibilityLabel(String(localized: "Battle Phase Tracker"))
-                    .accessibilityHint(
-                        viewModel.matchState.hasBothArmies
-                            ? String(localized: "Opens the guided battle tracker.")
-                            : String(localized: "Choose both player armies first.")
-                    )
+                    .accessibilityHint(battleTrackerAccessibilityHint)
                     .accessibilityAddTraits(.isButton)
             } else {
                 NavigationLink(value: GuidedMatchDestination.battleTracker) {
@@ -44,27 +46,35 @@ struct BattleTrackerSection: View {
                     }
                 }
                 .buttonStyle(.plain)
-                .disabled(!viewModel.matchState.hasBothArmies)
+                .disabled(!canOpenBattleTracker)
                 .accessibilityIdentifier("guidedMatch.battleTracker")
                 .accessibilityLabel(
                     setupComplete
                         ? String(localized: "Start the Battle")
                         : String(localized: "Battle Phase Tracker")
                 )
-                .accessibilityHint(
-                    viewModel.matchState.hasBothArmies
-                        ? String(localized: "Opens the guided battle tracker.")
-                        : String(localized: "Choose both player armies first.")
-                )
+                .accessibilityHint(battleTrackerAccessibilityHint)
             }
         } header: {
             Text(String(localized: "During the Battle"))
         } footer: {
             if !viewModel.matchState.hasBothArmies {
                 Text(String(localized: "Choose both player armies to open the battle tracker."))
-            } else if setupComplete {
+            } else if !setupComplete {
+                Text(String(localized: "Finish the remaining setup steps before opening the battle tracker."))
+            } else {
                 Text(String(localized: "The battle tracker walks you through deployment, each round, and every phase."))
             }
+        }
+    }
+
+    private var battleTrackerAccessibilityHint: String {
+        if !viewModel.matchState.hasBothArmies {
+            String(localized: "Choose both player armies first.")
+        } else if !setupComplete {
+            String(localized: "Finish setup on the Setup tab first.")
+        } else {
+            String(localized: "Opens the guided battle tracker.")
         }
     }
 }

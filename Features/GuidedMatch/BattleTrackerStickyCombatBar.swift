@@ -73,9 +73,9 @@ struct BattleTrackerStickyCombatBar: View {
             .padding(.horizontal, DesignTokens.Spacing.md)
             .padding(.vertical, DesignTokens.Spacing.sm)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+            .background(.regularMaterial, in: CardSurface.shape(radius: DesignTokens.Radius.card))
             .overlay {
-                RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
+                CardSurface.shape(radius: DesignTokens.Radius.card)
                     .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
             }
         }
@@ -114,7 +114,7 @@ struct BattleTrackerDamageUndoBanner: View {
         }
         .padding(DesignTokens.Spacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.accentColor.opacity(0.1), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .background(Color.accentColor.opacity(0.1), in: CardSurface.shape(radius: DesignTokens.Radius.nested))
         .accessibilityIdentifier("battleTracker.damageUndo")
     }
 }

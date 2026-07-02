@@ -40,7 +40,7 @@ struct BattleTrackerCombatResolverSection: View {
                         .surfaceCard()
                         .overlay {
                             if trackerState.currentPhase.isCombatRelated {
-                                RoundedRectangle(cornerRadius: DesignTokens.Radius.lg)
+                                CardSurface.shape(radius: DesignTokens.Radius.card)
                                     .strokeBorder(Color.accentColor.opacity(0.35), lineWidth: 1.5)
                             }
                         }

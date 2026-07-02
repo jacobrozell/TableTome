@@ -273,7 +273,7 @@ struct UnitFocusSheet: View {
             )
         }
         .padding(DesignTokens.Spacing.md)
-        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .background(Color(.secondarySystemGroupedBackground), in: CardSurface.shape(radius: DesignTokens.Radius.nested))
     }
 
     private var statsSection: some View {
@@ -297,7 +297,7 @@ struct UnitFocusSheet: View {
         .font(.caption)
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(DesignTokens.Spacing.md)
-        .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
+        .background(Color(.tertiarySystemFill), in: CardSurface.shape(radius: DesignTokens.Radius.inset))
     }
 
     private func focusStat(label: String, value: String) -> some View {
@@ -388,11 +388,11 @@ struct UnitFocusSheet: View {
         .padding(DesignTokens.Spacing.md)
         .background(
             isPreferred ? Color.accentColor.opacity(0.08) : Color(.tertiarySystemFill),
-            in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
+            in: CardSurface.shape(radius: DesignTokens.Radius.inset)
         )
         .overlay {
             if isPreferred {
-                RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
+                CardSurface.shape(radius: DesignTokens.Radius.inset)
                     .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
             }
         }
@@ -473,7 +473,7 @@ struct UnitFocusSheet: View {
             .accessibilityIdentifier("unitFocus.reportStat.\(unit.id)")
         }
         .padding(DesignTokens.Spacing.md)
-        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .background(Color(.secondarySystemGroupedBackground), in: CardSurface.shape(radius: DesignTokens.Radius.nested))
     }
 
     private func copyStatReport() {

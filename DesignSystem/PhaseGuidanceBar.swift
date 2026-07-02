@@ -75,8 +75,8 @@ struct PhaseGuidanceBar: View {
         }
         .padding(DesignTokens.Spacing.sm)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
-        .accessibilityElement(children: .combine)
+        .background(Color(.tertiarySystemFill), in: CardSurface.shape(radius: DesignTokens.Radius.nested))
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("battleTracker.phaseGuidance.\(phase.id)")
     }
 }

@@ -119,10 +119,10 @@ struct RealmSideCoinFlipCard: View {
             .padding(DesignTokens.Spacing.sm)
             .background(
                 isSelected ? Color.accentColor.opacity(0.15) : Color(.tertiarySystemFill),
-                in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
+                in: CardSurface.shape(radius: DesignTokens.Radius.nested)
             )
             .overlay {
-                RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
+                CardSurface.shape(radius: DesignTokens.Radius.nested)
                     .strokeBorder(
                         isSelected ? Color.accentColor : Color(.separator).opacity(0.35),
                         lineWidth: 2

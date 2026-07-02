@@ -54,7 +54,7 @@ struct SpearheadUnitRow: View {
         .opacity(isDestroyed ? 0.5 : 1.0)
         .overlay {
             if isDefending {
-                RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
+                CardSurface.shape(radius: DesignTokens.Radius.nested)
                     .stroke(Color.orange, lineWidth: 2)
             }
         }
@@ -66,42 +66,44 @@ struct SpearheadUnitRow: View {
 
     @ViewBuilder
     private var compactRow: some View {
-        Button(action: onTap) {
-            HStack(spacing: DesignTokens.Spacing.sm) {
-                Image(systemName: phaseIcon)
-                    .font(.caption)
-                    .foregroundStyle(relevance == .primary ? Color.accentColor : Color.secondary)
-                    .frame(width: 20)
+        HStack(spacing: DesignTokens.Spacing.sm) {
+            Button(action: onTap) {
+                HStack(spacing: DesignTokens.Spacing.sm) {
+                    Image(systemName: phaseIcon)
+                        .font(.caption)
+                        .foregroundStyle(relevance == .primary ? Color.accentColor : Color.secondary)
+                        .frame(width: 20)
 
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(unit.name)
-                        .font(.subheadline.weight(.medium))
-                        .foregroundStyle(isDestroyed ? .secondary : .primary)
-                        .strikethrough(isDestroyed)
-                        .lineLimit(1)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(unit.name)
+                            .font(.subheadline.weight(.medium))
+                            .foregroundStyle(isDestroyed ? .secondary : .primary)
+                            .strikethrough(isDestroyed)
+                            .lineLimit(1)
 
-                    if !isExpanded {
-                        keywordBadges
+                        if !isExpanded {
+                            keywordBadges
+                        }
                     }
+
+                    Spacer()
+
+                    woundIndicator
+
+                    Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
                 }
-
-                Spacer()
-
-                woundIndicator
-
-                if !isDestroyed && isActivePlayer && showsQuickAction {
-                    quickActionButton
-                }
-
-                Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-                    .font(.caption)
-                    .foregroundStyle(.tertiary)
+                .contentShape(Rectangle())
             }
-            .padding(DesignTokens.Spacing.sm)
-            .contentShape(Rectangle())
+            .buttonStyle(.plain)
+            .accessibilityLabel(compactAccessibilityLabel)
+
+            if !isDestroyed && isActivePlayer && showsQuickAction {
+                quickActionButton
+            }
         }
-        .buttonStyle(.plain)
-        .accessibilityLabel(compactAccessibilityLabel)
+        .padding(DesignTokens.Spacing.sm)
     }
 
     @ViewBuilder
@@ -355,7 +357,7 @@ struct SpearheadUnitRow: View {
             .font(.subheadline)
             .frame(maxWidth: .infinity)
             .padding(.vertical, DesignTokens.Spacing.sm)
-            .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
+            .background(Color(.tertiarySystemFill), in: CardSurface.shape(radius: DesignTokens.Radius.inset))
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier("spearheadBattle.unitRow.fullDetails")
@@ -387,7 +389,7 @@ struct SpearheadUnitRow: View {
         }
         .frame(minWidth: 50)
         .padding(.vertical, DesignTokens.Spacing.xs)
-        .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
+        .background(Color(.tertiarySystemFill), in: CardSurface.shape(radius: DesignTokens.Radius.inset))
     }
 
     @ViewBuilder

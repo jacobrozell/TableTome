@@ -9,6 +9,7 @@ final class PlayerDetailViewModel: ObservableObject {
     @Published private(set) var matchRecords: [MatchRecord] = []
     @Published private(set) var catalog: SpearheadCatalog?
     @Published private(set) var boxSets: [BoxSet] = []
+    @Published private(set) var household: HouseholdPlayersState?
     @Published private(set) var isLoading = false
     @Published private(set) var errorMessage: String?
 
@@ -43,6 +44,7 @@ final class PlayerDetailViewModel: ObservableObject {
         defer { isLoading = false }
         do {
             let household = try await profileStore.loadHousehold()
+            self.household = household
             householdPrimaryId = household.defaultPlayerOneProfileId
             profile = household.profile(id: profileId)
             guard let profile else {
@@ -154,6 +156,34 @@ final class PlayerDetailViewModel: ObservableObject {
         guard var profile else { return }
         profile.guidedMatchPreferences.defaultEnhancementByArmyId[armyId] = enhancementId
         await saveProfile(profile)
+    }
+
+    func setPreferredArmy(opponentArmyId: String, armyId: String) async {
+        guard var profile else { return }
+        profile.guidedMatchPreferences.preferredArmyIdByOpponentArmyId[opponentArmyId] = armyId
+        await saveProfile(profile)
+    }
+
+    func opponentArmyOptions(catalog: SpearheadCatalog, household: HouseholdPlayersState) -> [SpearheadArmy] {
+        let ownedByOthers = Set(
+            household.sortedProfiles
+                .filter { $0.id != profileId }
+                .flatMap(\.ownedSpearheadArmyIds)
+        )
+        let savedOpponents = Set(profile?.guidedMatchPreferences.preferredArmyIdByOpponentArmyId.keys.map { $0 } ?? [])
+        let opponentIds = ownedByOthers.union(savedOpponents)
+        return catalog.factions
+            .flatMap(\.armies)
+            .filter { opponentIds.contains($0.id) }
+            .sorted { $0.name < $1.name }
+    }
+
+    func orphanedOwnedArmyIds(catalog: SpearheadCatalog?) -> [String] {
+        guard let catalog, let profile else { return [] }
+        let catalogIds = Set(catalog.factions.flatMap(\.armies).map(\.id))
+        return profile.ownedSpearheadArmyIds
+            .subtracting(catalogIds)
+            .sorted()
     }
 
     func resetCoachingTips() async {

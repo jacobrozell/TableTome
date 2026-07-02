@@ -101,6 +101,25 @@ public enum PlayerMatchStatsCalculator: Sendable {
         }
     }
 
+    /// True when the record is linked to this profile by normalized name only (no archived profile id).
+    public static func isLegacyNameAssociation(for record: MatchRecord, profile: PlayerProfile) -> Bool {
+        let normalizedName = normalize(profile.displayName)
+        guard playerSlot(in: record, profileId: profile.id, normalizedName: normalizedName) != nil else {
+            return false
+        }
+        if record.players.playerOneProfileId == profile.id || record.players.playerTwoProfileId == profile.id {
+            return false
+        }
+        return true
+    }
+
+    public static func legacyAssociatedProfiles(
+        for record: MatchRecord,
+        profiles: [PlayerProfile]
+    ) -> [PlayerProfile] {
+        profiles.filter { isLegacyNameAssociation(for: record, profile: $0) }
+    }
+
     private enum Outcome {
         case win, loss, tie, none
     }

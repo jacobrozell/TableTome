@@ -39,6 +39,9 @@ struct PlayerMatchHistorySection: View {
                         .foregroundStyle(outcomeColor(outcome))
                 }
             }
+            if PlayerMatchStatsCalculator.isLegacyNameAssociation(for: record, profile: profile) {
+                MatchHistoryLegacyBadge(label: String(localized: "Likely your game"))
+            }
             Text("\(record.players.playerOneArmyLabel) vs \(record.players.playerTwoArmyLabel)")
                 .font(.caption)
                 .foregroundStyle(.secondary)

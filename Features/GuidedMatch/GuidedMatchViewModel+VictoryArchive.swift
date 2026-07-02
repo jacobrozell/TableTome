@@ -5,6 +5,7 @@ extension GuidedMatchViewModel {
     /// Spearhead auto-saves to history when the victory screen appears.
     func archiveVictoryIfNeeded(
         repository: any MatchHistoryRepository,
+        profileStore: PlayerProfileStore? = nil,
         playerOneVictoryPoints: Int,
         playerTwoVictoryPoints: Int
     ) async {
@@ -17,6 +18,14 @@ extension GuidedMatchViewModel {
                 playerTwoVictoryPoints: playerTwoVictoryPoints,
                 repository: repository
             )
+            if gameSystemId == .aosSpearhead, let profileStore {
+                try? await profileStore.recordRematchPreferences(
+                    playerOneProfileId: matchState.playerOne.profileId,
+                    playerOneArmyId: matchState.playerOne.armyId,
+                    playerTwoProfileId: matchState.playerTwo.profileId,
+                    playerTwoArmyId: matchState.playerTwo.armyId
+                )
+            }
             hasArchivedCurrentVictory = true
             logger.info(
                 .persistence,

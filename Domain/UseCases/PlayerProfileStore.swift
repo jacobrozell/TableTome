@@ -114,4 +114,28 @@ public struct PlayerProfileStore: Sendable {
         household.profiles[index] = profile
         try await repository.saveHousehold(household)
     }
+
+    public func recordRematchPreferences(
+        playerOneProfileId: UUID?,
+        playerOneArmyId: String,
+        playerTwoProfileId: UUID?,
+        playerTwoArmyId: String
+    ) async throws {
+        var household = try await repository.loadHousehold()
+        let updates = PlayerRematchPreferencesRecorder.preferredArmyUpdates(
+            playerOneProfileId: playerOneProfileId,
+            playerOneArmyId: playerOneArmyId,
+            playerTwoProfileId: playerTwoProfileId,
+            playerTwoArmyId: playerTwoArmyId,
+            in: household
+        )
+        guard !updates.isEmpty else { return }
+        let now = Date()
+        for (profileId, var profile) in updates {
+            guard let index = household.profiles.firstIndex(where: { $0.id == profileId }) else { continue }
+            profile.updatedAt = now
+            household.profiles[index] = profile
+        }
+        try await repository.saveHousehold(household)
+    }
 }

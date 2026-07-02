@@ -217,6 +217,14 @@ final class GuidedMatchViewModel: ObservableObject {
             updated.enhancementId = nil
             updated.secondaryObjectiveId = nil
         }
+        if updated.profileId != matchState.playerOne.profileId, updated.profileId != nil {
+            logger.info(
+                .guidedMatch,
+                eventName: "guided_match_profile_assigned",
+                message: "Guided match profile assigned to player one.",
+                metadata: ["slot": "playerOne"]
+            )
+        }
         mutateMatchState {
             $0.playerOne = updated
         }
@@ -228,6 +236,14 @@ final class GuidedMatchViewModel: ObservableObject {
             updated.regimentAbilityId = nil
             updated.enhancementId = nil
             updated.secondaryObjectiveId = nil
+        }
+        if updated.profileId != matchState.playerTwo.profileId, updated.profileId != nil {
+            logger.info(
+                .guidedMatch,
+                eventName: "guided_match_profile_assigned",
+                message: "Guided match profile assigned to player two.",
+                metadata: ["slot": "playerTwo"]
+            )
         }
         mutateMatchState {
             $0.playerTwo = updated

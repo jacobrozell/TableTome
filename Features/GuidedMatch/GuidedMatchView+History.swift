@@ -21,6 +21,7 @@ extension GuidedMatchView {
         guard gameSystemId == .aosSpearhead else { return }
         await viewModel.archiveVictoryIfNeeded(
             repository: dependencies.matchHistoryRepository,
+            profileStore: ReleaseSurface.showsPlayersHub ? dependencies.playerProfileStore : nil,
             playerOneVictoryPoints: playerOneVP,
             playerTwoVictoryPoints: playerTwoVP
         )
@@ -30,6 +31,7 @@ extension GuidedMatchView {
         if gameSystemId == .aosSpearhead {
             await viewModel.archiveVictoryIfNeeded(
                 repository: dependencies.matchHistoryRepository,
+                profileStore: ReleaseSurface.showsPlayersHub ? dependencies.playerProfileStore : nil,
                 playerOneVictoryPoints: playerOneVP,
                 playerTwoVictoryPoints: playerTwoVP
             )

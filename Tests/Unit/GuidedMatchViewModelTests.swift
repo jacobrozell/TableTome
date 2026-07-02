@@ -134,7 +134,11 @@ final class GuidedMatchViewModelTests: XCTestCase {
         viewModel.completeSetupForAutomation()
 
         XCTAssertNotNil(viewModel.matchState.attackerIsPlayerOne)
-        XCTAssertEqual(viewModel.setupProgress.completed, viewModel.setupProgress.total)
+        XCTAssertEqual(viewModel.setupProgress.total, catalog.matchSteps.count)
+        XCTAssertTrue(viewModel.matchState.completedStepIds.contains("choose-armies"))
+        XCTAssertTrue(viewModel.matchState.completedStepIds.contains("roll-attacker"))
+        XCTAssertFalse(viewModel.matchState.completedStepIds.contains("regiment-abilities"))
+        XCTAssertFalse(viewModel.matchState.completedStepIds.contains("enhancements"))
         let deployment = BattleTrackerStore.load().completedDeploymentSteps
         XCTAssertEqual(
             deployment.count,

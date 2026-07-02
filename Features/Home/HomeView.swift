@@ -68,6 +68,13 @@ struct HomeView: View {
                                     .listHeroCardRow()
                             }
                         }
+
+                        if ReleaseSurface.showsPlayersHub {
+                            Section {
+                                HomePlayersHubCard()
+                                    .listHeroCardRow()
+                            }
+                        }
                     }
 
                     if showsAllGamesList {

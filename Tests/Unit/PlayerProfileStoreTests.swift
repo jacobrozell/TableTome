@@ -403,12 +403,12 @@ final class PlayerLoadoutPreferencesApplicatorTests: XCTestCase {
             playstyle: "",
             unitCount: 1,
             regimentAbilities: [
-                ArmyRuleOption(id: "regiment-a", name: "A"),
-                ArmyRuleOption(id: "regiment-b", name: "B")
+                ArmyRuleOption(id: "regiment-a", name: "A", summary: ""),
+                ArmyRuleOption(id: "regiment-b", name: "B", summary: "")
             ],
             enhancements: [
-                ArmyRuleOption(id: "enhancement-c", name: "C"),
-                ArmyRuleOption(id: "enhancement-d", name: "D")
+                ArmyRuleOption(id: "enhancement-c", name: "C", summary: ""),
+                ArmyRuleOption(id: "enhancement-d", name: "D", summary: "")
             ]
         )
 
@@ -507,6 +507,115 @@ final class PlayerDiceInputResolverTests: XCTestCase {
             PlayerDiceInputResolver.effectiveMode(profile: profile, deviceMode: .simulated),
             .physical
         )
+    }
+}
+
+final class PlayerRematchPreferencesRecorderTests: XCTestCase {
+    func testRecordsPreferredArmyForBothProfiles() {
+        let jacobId = UUID()
+        let chrisId = UUID()
+        let household = HouseholdPlayersState(profiles: [
+            PlayerProfile(id: jacobId, displayName: "Jacob", sortOrder: 0),
+            PlayerProfile(id: chrisId, displayName: "Chris", sortOrder: 1)
+        ])
+        let updates = PlayerRematchPreferencesRecorder.preferredArmyUpdates(
+            playerOneProfileId: jacobId,
+            playerOneArmyId: "gnawfeast-clawpack",
+            playerTwoProfileId: chrisId,
+            playerTwoArmyId: "vigilant-brotherhood",
+            in: household
+        )
+        XCTAssertEqual(updates.count, 2)
+        XCTAssertEqual(
+            updates.first { $0.profileId == jacobId }?.profile
+                .guidedMatchPreferences.preferredArmyIdByOpponentArmyId["vigilant-brotherhood"],
+            "gnawfeast-clawpack"
+        )
+        XCTAssertEqual(
+            updates.first { $0.profileId == chrisId }?.profile
+                .guidedMatchPreferences.preferredArmyIdByOpponentArmyId["gnawfeast-clawpack"],
+            "vigilant-brotherhood"
+        )
+    }
+
+    func testRecordRematchPreferencesPersists() async throws {
+        let tempDirectory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: tempDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tempDirectory) }
+
+        let store = PlayerProfileStore(repository: JSONPlayerProfileRepository(baseDirectory: tempDirectory))
+        let household = try await store.loadHousehold()
+        let jacob = try XCTUnwrap(household.primaryProfile)
+        let chris = try XCTUnwrap(household.sortedProfiles.last)
+
+        try await store.recordRematchPreferences(
+            playerOneProfileId: jacob.id,
+            playerOneArmyId: "army-a",
+            playerTwoProfileId: chris.id,
+            playerTwoArmyId: "army-b"
+        )
+
+        let updated = try await store.loadHousehold()
+        XCTAssertEqual(
+            updated.profile(id: jacob.id)?
+                .guidedMatchPreferences.preferredArmyIdByOpponentArmyId["army-b"],
+            "army-a"
+        )
+    }
+}
+
+final class PlayerMatchLegacyAssociationTests: XCTestCase {
+    func testLegacyNameAssociationWhenNoProfileId() {
+        let profile = PlayerProfile(displayName: "Chris", sortOrder: 0)
+        let record = MatchRecord(
+            gameSystemId: "aos-spearhead",
+            gameSystemName: "Spearhead",
+            createdAt: Date(),
+            endedAt: Date(),
+            status: .completed,
+            players: MatchPlayerSummary(
+                playerOneName: "Jacob",
+                playerTwoName: "Chris",
+                playerOneArmyLabel: "A",
+                playerTwoArmyLabel: "B"
+            ),
+            setup: MatchSetupSummary(),
+            result: MatchResultSummary(
+                playerOneVictoryPoints: 10,
+                playerTwoVictoryPoints: 8,
+                winner: .playerOne,
+                battleRound: 4
+            )
+        )
+        XCTAssertTrue(PlayerMatchStatsCalculator.isLegacyNameAssociation(for: record, profile: profile))
+    }
+
+    func testNotLegacyWhenProfileIdArchived() {
+        let chrisId = UUID()
+        let profile = PlayerProfile(id: chrisId, displayName: "Chris", sortOrder: 0)
+        let record = MatchRecord(
+            gameSystemId: "aos-spearhead",
+            gameSystemName: "Spearhead",
+            createdAt: Date(),
+            endedAt: Date(),
+            status: .completed,
+            players: MatchPlayerSummary(
+                playerOneName: "Jacob",
+                playerTwoName: "Chris",
+                playerOneArmyLabel: "A",
+                playerTwoArmyLabel: "B",
+                playerTwoProfileId: chrisId
+            ),
+            setup: MatchSetupSummary(),
+            result: MatchResultSummary(
+                playerOneVictoryPoints: 10,
+                playerTwoVictoryPoints: 8,
+                winner: .playerOne,
+                battleRound: 4
+            )
+        )
+        XCTAssertFalse(PlayerMatchStatsCalculator.isLegacyNameAssociation(for: record, profile: profile))
     }
 }
 

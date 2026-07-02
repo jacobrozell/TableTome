@@ -4,6 +4,7 @@ import TabletomeDomain
 struct PlayerGuidedMatchPrefsSection: View {
     @ObservedObject var viewModel: PlayerDetailViewModel
     @State private var showsLoadoutDefaults = false
+    @State private var showsPreferredArmies = false
 
     var body: some View {
         if let profile = viewModel.profile {
@@ -56,6 +57,10 @@ struct PlayerGuidedMatchPrefsSection: View {
                     }
                 } footer: {
                     Text(String(localized: "Pre-fill regiment abilities and enhancements when this player starts a match."))
+                }
+
+                if let household = viewModel.household {
+                    preferredArmySection(profile: profile, catalog: catalog, household: household)
                 }
             }
 
@@ -126,6 +131,51 @@ struct PlayerGuidedMatchPrefsSection: View {
     private func dicePreferenceTag(_ raw: String?) -> DicePreferenceTag {
         guard let raw, let mode = DiceInputMode(rawValue: raw) else { return .deviceDefault }
         return mode == .physical ? .physical : .simulated
+    }
+
+    @ViewBuilder
+    private func preferredArmySection(
+        profile: PlayerProfile,
+        catalog: SpearheadCatalog,
+        household: HouseholdPlayersState
+    ) -> some View {
+        let opponents = viewModel.opponentArmyOptions(catalog: catalog, household: household)
+        let ownedArmies = loadoutArmies(profile: profile, catalog: catalog)
+        if !opponents.isEmpty, !ownedArmies.isEmpty {
+            Section {
+                DisclosureGroup(
+                    String(localized: "Rematch shortcuts"),
+                    isExpanded: $showsPreferredArmies
+                ) {
+                    ForEach(opponents, id: \.id) { opponentArmy in
+                        Picker(
+                            String(localized: "When opponent plays \(opponentArmy.name)"),
+                            selection: Binding(
+                                get: {
+                                    profile.guidedMatchPreferences.preferredArmyIdByOpponentArmyId[opponentArmy.id]
+                                        ?? ownedArmies.first?.id
+                                        ?? ""
+                                },
+                                set: { armyId in
+                                    Task {
+                                        await viewModel.setPreferredArmy(
+                                            opponentArmyId: opponentArmy.id,
+                                            armyId: armyId
+                                        )
+                                    }
+                                }
+                            )
+                        ) {
+                            ForEach(ownedArmies, id: \.id) { army in
+                                Text(army.name).tag(army.id)
+                            }
+                        }
+                    }
+                }
+            } footer: {
+                Text(String(localized: "Suggest your army when this opponent picks theirs in Guided Match. Updated automatically after each game."))
+            }
+        }
     }
 }
 

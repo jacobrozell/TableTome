@@ -56,6 +56,37 @@ struct OwnedSpearheadArmiesSection: View {
                     }
                 }
             }
+
+            let orphaned = viewModel.orphanedOwnedArmyIds(catalog: viewModel.catalog)
+            if !orphaned.isEmpty {
+                Section {
+                    ForEach(orphaned, id: \.self) { armyId in
+                        orphanedArmyRow(armyId)
+                    }
+                } header: {
+                    Text(String(localized: "Unavailable in app"))
+                } footer: {
+                    Text(String(localized: "These armies are no longer in the catalog but stay marked as owned."))
+                }
+            }
+        }
+    }
+
+    private func orphanedArmyRow(_ armyId: String) -> some View {
+        HStack {
+            Toggle(isOn: Binding(
+                get: { viewModel.ownedArmyIds().contains(armyId) },
+                set: { _ in Task { await viewModel.toggleOwnedArmy(armyId) } }
+            )) {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                    Text(armyId)
+                        .font(.headline)
+                    Text(String(localized: "Unavailable in app"))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .accessibilityIdentifier("playersHub.ownedArmy.\(armyId)")
         }
     }
 

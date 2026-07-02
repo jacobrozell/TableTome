@@ -73,7 +73,10 @@ struct MatchHistoryListView: View {
                 List {
                     ForEach(viewModel.records) { record in
                         NavigationLink(value: MatchHistoryDetailLink(recordId: record.id)) {
-                            MatchHistoryRow(record: record)
+                            MatchHistoryRow(
+                                record: record,
+                                legacyBadgeLabel: legacyBadgeLabel(for: record)
+                            )
                         }
                         .accessibilityIdentifier("matchHistory.row.\(record.id.uuidString)")
                     }
@@ -180,6 +183,18 @@ struct MatchHistoryListView: View {
         }
         return profile.displayName
     }
+
+    private func legacyBadgeLabel(for record: MatchRecord) -> String? {
+        guard ReleaseSurface.showsPlayersHub, !viewModel.householdProfiles.isEmpty else { return nil }
+        let filtered = viewModel.filterProfileId.flatMap { id in
+            viewModel.householdProfiles.first { $0.id == id }
+        }
+        return MatchHistoryLegacyBadgeLabel.label(
+            for: record,
+            filteredProfile: filtered,
+            householdProfiles: viewModel.householdProfiles
+        )
+    }
 }
 
 private struct MatchHistoryEmptyLaunchActions: View {
@@ -235,6 +250,7 @@ extension MatchHistoryListView {
 
 private struct MatchHistoryRow: View {
     let record: MatchRecord
+    var legacyBadgeLabel: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
@@ -285,6 +301,10 @@ private struct MatchHistoryRow: View {
                     Text(String(localized: "Abandoned"))
                         .font(.caption2.weight(.semibold))
                         .foregroundStyle(.orange)
+                }
+
+                if let legacyBadgeLabel {
+                    MatchHistoryLegacyBadge(label: legacyBadgeLabel)
                 }
             }
         }

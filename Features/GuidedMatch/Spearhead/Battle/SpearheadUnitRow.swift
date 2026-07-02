@@ -20,7 +20,7 @@ struct SpearheadUnitRow: View {
     var opponentGeneralUnitId: String?
     let onTap: () -> Void
     let onSelectWeapon: (String) -> Void
-    let onSelectTarget: (String) -> Void
+    let onSelectTarget: (String?) -> Void
     let onSetWounds: (Int) -> Void
     let onApplyDamage: (Int) -> Void
     let onCancelResolver: () -> Void

@@ -79,6 +79,8 @@ struct SpearheadBattleView: View {
             VStack(spacing: DesignTokens.Spacing.md) {
                 phasePlaybook
                 roundOpenerIfNeeded
+                reinforcementCallBanner
+                reinforcementsSection
                 yourUnitsSection
                 opponentUnitsSection
             }
@@ -101,6 +103,8 @@ struct SpearheadBattleView: View {
                     VStack(spacing: DesignTokens.Spacing.md) {
                         phasePlaybook
                         roundOpenerIfNeeded
+                        reinforcementCallBanner
+                        reinforcementsSection
                         yourUnitsSection
                     }
                     .padding(DesignTokens.Spacing.md)
@@ -168,6 +172,33 @@ struct SpearheadBattleView: View {
         }
     }
 
+    // MARK: - Reinforcements
+
+    @ViewBuilder
+    private var reinforcementCallBanner: some View {
+        if let prompt = viewModel.pendingReinforcementCall {
+            BattleTrackerReinforcementCallBanner(
+                prompt: prompt,
+                onDismiss: { viewModel.clearReinforcementCallPrompt() }
+            )
+        }
+    }
+
+    @ViewBuilder
+    private var reinforcementsSection: some View {
+        if viewModel.showsReinforcementsTracking {
+            SpearheadReinforcementsSection(
+                playerOneName: viewModel.playerOneName,
+                playerTwoName: viewModel.playerTwoName,
+                playerOneArmy: viewModel.playerOneArmy,
+                playerTwoArmy: viewModel.playerTwoArmy,
+                calledUnitKeys: viewModel.trackerState.calledReinforcementUnitKeys,
+                showsCallReminder: viewModel.pendingReinforcementCall != nil,
+                onReinforcementOnTableChanged: viewModel.setReinforcementOnTable
+            )
+        }
+    }
+
     // MARK: - Your Units Section
 
     @ViewBuilder
@@ -176,6 +207,8 @@ struct SpearheadBattleView: View {
             title: String(localized: "Your Units"),
             units: viewModel.yourUnits,
             army: viewModel.activeArmy,
+            defenderUnits: viewModel.opponentUnits,
+            defenderArmy: viewModel.opponentArmy,
             woundsRemaining: viewModel.trackerState.unitWoundsRemaining,
             currentPhase: viewModel.trackerState.currentPhase,
             expandedUnitKey: $expandedUnitKey,
@@ -195,6 +228,8 @@ struct SpearheadBattleView: View {
             title: String(localized: "Opponent Units"),
             units: viewModel.opponentUnits,
             army: viewModel.opponentArmy,
+            defenderUnits: viewModel.yourUnits,
+            defenderArmy: viewModel.activeArmy,
             woundsRemaining: viewModel.trackerState.unitWoundsRemaining,
             currentPhase: viewModel.trackerState.currentPhase,
             expandedUnitKey: $expandedUnitKey,

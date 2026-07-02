@@ -104,32 +104,38 @@ struct CallForReinforcementsCard: View {
         let onTable = calledUnitKeys.contains(key)
         let canToggle = onReinforcementOnTableChanged != nil
 
-        return HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
+        return HStack(alignment: .center, spacing: DesignTokens.Spacing.sm) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                 Text(unit.name)
-                    .font(.subheadline)
+                    .font(.subheadline.weight(.medium))
                 Text(onTable ? String(localized: "On the battlefield") : String(localized: "In reserve"))
                     .font(.caption)
                     .foregroundStyle(onTable ? .green : .orange)
             }
             Spacer(minLength: 0)
             if canToggle {
-                Toggle(
-                    onTable ? String(localized: "On table") : String(localized: "In reserve"),
-                    isOn: Binding(
-                        get: { onTable },
-                        set: { onReinforcementOnTableChanged?(armyId, unit.id, $0) }
-                    )
-                )
-                .labelsHidden()
-                .toggleStyle(.switch)
-                .accessibilityLabel(
-                    String(localized: "\(unit.name), \(onTable ? "on table" : "in reserve")")
-                )
-                .accessibilityIdentifier("battleTracker.reinforcement.\(key)")
+                if onTable {
+                    Button(String(localized: "Return to reserve")) {
+                        onReinforcementOnTableChanged?(armyId, unit.id, false)
+                    }
+                    .font(.caption.weight(.medium))
+                    .buttonStyle(.bordered)
+                    .accessibilityIdentifier("spearheadBattle.reinforcement.return.\(key)")
+                } else {
+                    Button(String(localized: "Deploy")) {
+                        onReinforcementOnTableChanged?(armyId, unit.id, true)
+                    }
+                    .font(.caption.weight(.semibold))
+                    .buttonStyle(.borderedProminent)
+                    .accessibilityIdentifier("spearheadBattle.reinforcement.deploy.\(key)")
+                }
             }
         }
-        .padding(.vertical, DesignTokens.Spacing.xs)
+        .padding(DesignTokens.Spacing.sm)
+        .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .accessibilityLabel(
+            String(localized: "\(unit.name), \(onTable ? "on table" : "in reserve")")
+        )
     }
 
     private func reinforcementUnits(in army: SpearheadArmy?) -> [SpearheadUnit] {

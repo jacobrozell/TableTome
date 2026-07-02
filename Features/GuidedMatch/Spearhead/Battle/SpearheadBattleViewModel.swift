@@ -11,6 +11,7 @@ final class SpearheadBattleViewModel: ObservableObject {
     @Published private(set) var playerTwoName: String = ""
     @Published private(set) var playerOneArmy: SpearheadArmy?
     @Published private(set) var playerTwoArmy: SpearheadArmy?
+    @Published var pendingReinforcementCall: ReinforcementCallPrompt?
 
     let gameSystemId: GameSystemId
     private var matchState: GuidedMatchState
@@ -85,11 +86,11 @@ final class SpearheadBattleViewModel: ObservableObject {
     }
 
     var yourUnits: [SpearheadUnit] {
-        activeArmy?.units ?? []
+        yourBattlefieldUnits
     }
 
     var opponentUnits: [SpearheadUnit] {
-        opponentArmy?.units ?? []
+        opponentBattlefieldUnits
     }
 
     var shootingEligibleUnits: [SpearheadUnit] {
@@ -131,6 +132,7 @@ final class SpearheadBattleViewModel: ObservableObject {
     // MARK: - Actions
 
     func advancePhase() {
+        let previousPhase = trackerState.currentPhase
         let phases = playContext.playEngine.mainPhases()
         guard let index = phases.firstIndex(of: trackerState.currentPhase) else { return }
 
@@ -139,6 +141,10 @@ final class SpearheadBattleViewModel: ObservableObject {
         } else {
             endTurn()
         }
+        clearReinforcementCallPromptIfLeavingMovement(
+            from: previousPhase,
+            to: trackerState.currentPhase
+        )
         persist()
     }
 
@@ -178,8 +184,12 @@ final class SpearheadBattleViewModel: ObservableObject {
     }
 
     func setUnitWounds(key: String, remaining: Int) {
-        trackerState.unitWoundsRemaining[key] = max(0, remaining)
+        let clamped = max(0, remaining)
+        trackerState.unitWoundsRemaining[key] = clamped
         persist()
+        if clamped == 0 {
+            evaluateReinforcementPromptIfNeeded(unitKey: key)
+        }
     }
 
     func applyDamage(to unitKey: String, amount: Int) {
@@ -187,6 +197,9 @@ final class SpearheadBattleViewModel: ObservableObject {
         let newValue = max(0, current - amount)
         trackerState.unitWoundsRemaining[unitKey] = newValue
         persist()
+        if newValue == 0 {
+            evaluateReinforcementPromptIfNeeded(unitKey: unitKey)
+        }
     }
 
     // MARK: - Helpers
@@ -216,6 +229,106 @@ final class SpearheadBattleViewModel: ObservableObject {
 
     private func persist() {
         BattleTrackerStore.save(trackerState, gameSystemId: gameSystemId)
+    }
+
+    var showsReinforcementsTracking: Bool {
+        guard gameSystemId == .aosSpearhead else { return false }
+        let playerOneHas = playerOneArmy.map {
+            !ReinforcementsTracking.reinforcementUnits(in: $0).isEmpty
+        } ?? false
+        let playerTwoHas = playerTwoArmy.map {
+            !ReinforcementsTracking.reinforcementUnits(in: $0).isEmpty
+        } ?? false
+        return playerOneHas || playerTwoHas
+    }
+
+    private var yourBattlefieldUnits: [SpearheadUnit] {
+        battlefieldUnits(in: activeArmy)
+    }
+
+    private var opponentBattlefieldUnits: [SpearheadUnit] {
+        battlefieldUnits(in: opponentArmy)
+    }
+
+    private func battlefieldUnits(in army: SpearheadArmy?) -> [SpearheadUnit] {
+        guard let army else { return [] }
+        return army.units.filter { unit in
+            guard unit.health != nil else { return false }
+            guard ReinforcementsTracking.isReinforcementUnit(unit) else { return true }
+            return ReinforcementsTracking.isCalledOnTable(
+                armyId: army.id,
+                unitId: unit.id,
+                calledUnitKeys: trackerState.calledReinforcementUnitKeys
+            )
+        }
+    }
+
+    func setReinforcementOnTable(armyId: String, unitId: String, onTable: Bool) {
+        let key = UnitWoundTracker.unitKey(armyId: armyId, unitId: unitId)
+        if onTable {
+            trackerState.calledReinforcementUnitKeys.insert(key)
+            if let army = army(withId: armyId),
+               let unit = army.units.first(where: { $0.id == unitId }),
+               unit.health != nil,
+               trackerState.unitWoundsRemaining[key] == nil {
+                trackerState.unitWoundsRemaining[key] = woundCapacity(for: armyId, unit: unit)
+            }
+            pendingReinforcementCall = nil
+        } else {
+            trackerState.calledReinforcementUnitKeys.remove(key)
+        }
+        persist()
+    }
+
+    func clearReinforcementCallPrompt() {
+        pendingReinforcementCall = nil
+    }
+
+    func evaluateReinforcementPromptIfNeeded(unitKey: String) {
+        let parts = unitKey.split(separator: ":")
+        guard parts.count == 2 else { return }
+        evaluateReinforcementCallPrompt(
+            destroyedArmyId: String(parts[0]),
+            unitId: String(parts[1])
+        )
+    }
+
+    func evaluateReinforcementCallPrompt(destroyedArmyId: String, unitId: String) {
+        let unitName = army(withId: destroyedArmyId)?.units.first { $0.id == unitId }?.name ?? unitId
+        pendingReinforcementCall = ReinforcementsTracking.callPrompt(
+            context: ReinforcementCallContext(
+                gameSystemId: gameSystemId,
+                phase: trackerState.currentPhase,
+                activePlayerIsOne: trackerState.activePlayerIsOne,
+                destroyedArmyId: destroyedArmyId,
+                playerOneArmyId: playerOneArmy?.id,
+                playerTwoArmyId: playerTwoArmy?.id,
+                playerOneArmy: playerOneArmy,
+                playerTwoArmy: playerTwoArmy,
+                playerOneName: playerOneName,
+                playerTwoName: playerTwoName,
+                destroyedUnitName: unitName,
+                calledUnitKeys: trackerState.calledReinforcementUnitKeys
+            )
+        )
+    }
+
+    func clearReinforcementCallPromptIfLeavingMovement(
+        from previous: BattleTurnPhase,
+        to phase: BattleTurnPhase
+    ) {
+        guard previous == .movement, phase != .movement else { return }
+        pendingReinforcementCall = nil
+    }
+
+    private func army(withId armyId: String) -> SpearheadArmy? {
+        if playerOneArmy?.id == armyId { return playerOneArmy }
+        if playerTwoArmy?.id == armyId { return playerTwoArmy }
+        return nil
+    }
+
+    private func woundCapacity(for armyId: String, unit: SpearheadUnit) -> Int {
+        UnitWoundCapacity.capacity(for: unit, healthPerModelOverride: nil)
     }
 }
 

@@ -3,6 +3,7 @@ import TabletomeDomain
 
 /// Inline combat resolver that appears below the attacker unit row.
 /// Shows all relevant information without requiring navigation.
+// swiftlint:disable:next type_body_length
 struct SpearheadInlineResolver: View {
     let context: InlineResolverContext
     let attackerUnit: SpearheadUnit
@@ -11,7 +12,7 @@ struct SpearheadInlineResolver: View {
     let defenderWoundsRemaining: [String: Int]
     var defenderEnhancement: ArmyRuleOption?
     var defenderIsGeneral: Bool = false
-    let onSelectTarget: (String) -> Void
+    let onSelectTarget: (String?) -> Void
     let onApplyDamage: (Int) -> Void
     let onCancel: () -> Void
 
@@ -66,6 +67,16 @@ struct SpearheadInlineResolver: View {
     private var modifiedSave: Int { min(7, defenderSave + rend) }
     private var damagePerWound: Int { Int(weapon?.damage ?? "1") ?? 1 }
     private var damageDisplay: String { weapon?.damage ?? "1" }
+
+    private var targetPickerWeaponSummary: String? {
+        guard let weapon else { return nil }
+        var parts: [String] = []
+        if weapon.isRanged, let range = weapon.rangeInches {
+            parts.append("\(range)\"")
+        }
+        parts.append(String(localized: "\(attacksDisplay) attacks"))
+        return "\(weapon.name) · \(parts.joined(separator: " · "))"
+    }
 
     private var wardTarget: Int? {
         // Check defender keywords for ward
@@ -142,14 +153,23 @@ struct SpearheadInlineResolver: View {
     private var targetPicker: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
             HStack {
-                Image(systemName: "target")
-                    .foregroundStyle(Color.accentColor)
-                Text("Select Target")
-                    .font(.headline)
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                    Text("\(attackerUnit.name) → \(String(localized: "Select target"))")
+                        .font(.subheadline.weight(.semibold))
+                    if let targetPickerWeaponSummary {
+                        Text(targetPickerWeaponSummary)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
                 Spacer()
                 Button("Cancel") { onCancel() }
                     .font(.subheadline)
             }
+
+            Text(String(localized: "Select target"))
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
 
             ForEach(aliveDefenders, id: \.id) { unit in
                 targetRow(unit)
@@ -239,7 +259,7 @@ struct SpearheadInlineResolver: View {
             }
             Spacer()
             Button("Change") {
-                onSelectTarget("")
+                onSelectTarget(nil)
             }
             .font(.caption)
             .foregroundStyle(Color.accentColor)

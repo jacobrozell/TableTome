@@ -6,6 +6,9 @@ struct SpearheadUnitSection: View {
     let title: String
     let units: [SpearheadUnit]
     let army: SpearheadArmy?
+    /// Opponent units shown in the inline resolver when a unit in this section attacks.
+    let defenderUnits: [SpearheadUnit]
+    let defenderArmy: SpearheadArmy?
     let woundsRemaining: [String: Int]
     let currentPhase: BattleTurnPhase
     @Binding var expandedUnitKey: String?
@@ -67,8 +70,8 @@ struct SpearheadUnitSection: View {
             currentPhase: currentPhase,
             isActivePlayer: isActivePlayer,
             resolverContext: resolverContext?.attackerKey == unitKey ? resolverContext : nil,
-            opponentUnits: isActivePlayer ? [] : units,
-            opponentArmy: isActivePlayer ? nil : army,
+            opponentUnits: defenderUnits,
+            opponentArmy: defenderArmy,
             opponentWoundsRemaining: woundsRemaining,
             onTap: {
                 withAnimation(.easeInOut(duration: 0.2)) {
@@ -84,7 +87,9 @@ struct SpearheadUnitSection: View {
                 onSelectWeapon(army.id, unit.id, weaponId)
             },
             onSelectTarget: { defenderKey in
-                resolverContext?.defenderKey = defenderKey
+                guard var context = resolverContext else { return }
+                context.defenderKey = defenderKey
+                resolverContext = context
             },
             onSetWounds: { newValue in
                 onSetWounds(unitKey, newValue)

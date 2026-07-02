@@ -15,7 +15,7 @@ struct HomeNewPlayerChooserCard: View {
             Text(
                 String(
                     localized: """
-                    Pick what matches your box. You can change this anytime from Play.
+                    Box says Spearhead on the cover? Tap below to open the Spearhead guide and Guided Match.
                     """
                 )
             )
@@ -43,7 +43,7 @@ struct HomeNewPlayerChooserCard: View {
 
             wh40kChooserRows
 
-            if ReleaseSurface.isGameSystemIdVisible(GameSystemId.aosSpearhead.rawValue) {
+            if ReleaseSurface.isPlayHomeGameSystemVisible(GameSystemId.aosSpearhead.rawValue) {
                 chooserRow(
                     title: String(localized: "I bought an Age of Sigmar starter box"),
                     detail: String(localized: "Box says Spearhead? Start here."),
@@ -54,7 +54,8 @@ struct HomeNewPlayerChooserCard: View {
                 )
             }
 
-            if ReleaseSurface.isGameSystemIdVisible(GameSystemId.scTmg.rawValue) {
+            if ReleaseSurface.showsAllPlayModesOnHome,
+               ReleaseSurface.isGameSystemIdVisible(GameSystemId.scTmg.rawValue) {
                 chooserRow(
                     title: String(localized: "I'm trying StarCraft: The Miniatures Game"),
                     detail: String(localized: "Terran vs Zerg — no prior wargame needed"),
@@ -80,40 +81,42 @@ struct HomeNewPlayerChooserCard: View {
 
     @ViewBuilder
     private var wh40kChooserRows: some View {
-        if ReleaseSurface.isGameSystemIdVisible(GameSystemId.wh40k10eCp.rawValue) {
-            wh40kChooserRow(
-                title: String(localized: "Combat Patrol starter box"),
-                detail: String(localized: "10th Edition — box says Combat Patrol on the cover"),
-                gameSystemId: GameSystemId.wh40k10eCp.rawValue,
-                variant: .combatPatrol,
-                identifier: "home.chooser.wh40k.combatPatrol"
-            )
-        }
+        if ReleaseSurface.showsAllPlayModesOnHome {
+            if ReleaseSurface.isGameSystemIdVisible(GameSystemId.wh40k10eCp.rawValue) {
+                wh40kChooserRow(
+                    title: String(localized: "Combat Patrol starter box"),
+                    detail: String(localized: "10th Edition — box says Combat Patrol on the cover"),
+                    gameSystemId: GameSystemId.wh40k10eCp.rawValue,
+                    variant: .combatPatrol,
+                    identifier: "home.chooser.wh40k.combatPatrol"
+                )
+            }
 
-        if ReleaseSurface.isGameSystemIdVisible(GameSystemId.wh40k11e.rawValue) {
-            wh40kChooserRow(
-                title: String(localized: "Battleforce"),
-                detail: String(localized: "11th Edition single-faction army box"),
-                gameSystemId: GameSystemId.wh40k11e.rawValue,
-                variant: .battleforce,
-                identifier: "home.chooser.wh40k.battleforce"
-            )
+            if ReleaseSurface.isGameSystemIdVisible(GameSystemId.wh40k11e.rawValue) {
+                wh40kChooserRow(
+                    title: String(localized: "Battleforce"),
+                    detail: String(localized: "11th Edition single-faction army box"),
+                    gameSystemId: GameSystemId.wh40k11e.rawValue,
+                    variant: .battleforce,
+                    identifier: "home.chooser.wh40k.battleforce"
+                )
 
-            wh40kChooserRow(
-                title: String(localized: "Warhammer 40,000: Armageddon"),
-                detail: String(localized: "Launch box — Space Marines vs Orks"),
-                gameSystemId: GameSystemId.wh40k11e.rawValue,
-                variant: .armageddon,
-                identifier: "home.chooser.wh40k.armageddon"
-            )
+                wh40kChooserRow(
+                    title: String(localized: "Warhammer 40,000: Armageddon"),
+                    detail: String(localized: "Launch box — Space Marines vs Orks"),
+                    gameSystemId: GameSystemId.wh40k11e.rawValue,
+                    variant: .armageddon,
+                    identifier: "home.chooser.wh40k.armageddon"
+                )
 
-            wh40kChooserRow(
-                title: String(localized: "Full Warhammer 40,000"),
-                detail: String(localized: "1,000+ points, any faction — 11th Edition"),
-                gameSystemId: GameSystemId.wh40k11e.rawValue,
-                variant: .full,
-                identifier: "home.chooser.wh40k.full"
-            )
+                wh40kChooserRow(
+                    title: String(localized: "Full Warhammer 40,000"),
+                    detail: String(localized: "1,000+ points, any faction — 11th Edition"),
+                    gameSystemId: GameSystemId.wh40k11e.rawValue,
+                    variant: .full,
+                    identifier: "home.chooser.wh40k.full"
+                )
+            }
         }
     }
 

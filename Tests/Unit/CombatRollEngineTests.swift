@@ -69,8 +69,8 @@ final class CombatRollEngineTests: XCTestCase {
 
     func testCritAutoWoundStillAllowsSaveWithRend() {
         let saved = AttackRollInput(
-            hitTarget: 3, woundTarget: 4, saveTarget: 6, rend: 2, damage: 1,
-            hitRoll: 6, woundRoll: 1, saveRoll: 4,
+            hitTarget: 3, woundTarget: 4, saveTarget: 4, rend: 1, damage: 1,
+            hitRoll: 6, woundRoll: 1, saveRoll: 5,
             critAutoWound: true
         )
         let savedResult = CombatRollEngine.evaluate(saved)
@@ -79,12 +79,12 @@ final class CombatRollEngineTests: XCTestCase {
         XCTAssertTrue(savedResult.steps.first { $0.id == "save" }?.explanation.contains("Auto-wound") == true)
 
         let failed = AttackRollInput(
-            hitTarget: 3, woundTarget: 4, saveTarget: 6, rend: 2, damage: 1,
-            hitRoll: 6, woundRoll: 1, saveRoll: 3,
+            hitTarget: 3, woundTarget: 4, saveTarget: 4, rend: 1, damage: 1,
+            hitRoll: 6, woundRoll: 1, saveRoll: 4,
             critAutoWound: true
         )
         let failedResult = CombatRollEngine.evaluate(failed)
         XCTAssertEqual(failedResult.damageDealt, 1)
-        XCTAssertTrue(failedResult.steps.first { $0.id == "save" }?.explanation.contains("need 4+") == true)
+        XCTAssertTrue(failedResult.steps.first { $0.id == "save" }?.explanation.contains("need 5+") == true)
     }
 }

@@ -51,31 +51,21 @@ struct CombatResolverPanel: View {
         VStack(alignment: .leading, spacing: panelSpacing) {
             if presentation == .standalone {
                 introSection
-            }
-            if isEmbedded {
-                embeddedContextBar
-                combatSequencePrimerSection
-            }
-            matchupPanels
-            attackProfileBar
-            deployedModelSection
-            hitDiceBannerSection
-            if !isSimulated {
-                batchCombatSection
-            }
-            if isEmbedded {
-                advancedSingleAttackSection
-                wardReminderSection
-                optionsSection
-            } else {
+                matchupPanels
+                attackProfileBar
+                deployedModelSection
+                hitDiceBannerSection
+                if !isSimulated {
+                    batchCombatSection
+                }
                 resultsSection
                 diceSection
                 optionsSection
                 simulatedActionsSection
                 multiAttackSection
-            }
-            if presentation == .standalone {
                 referenceLinksSection
+            } else {
+                embeddedResolverContent
             }
         }
         .onChange(of: viewModel.attackerUnitId) { _, _ in
@@ -114,9 +104,40 @@ struct CombatResolverPanel: View {
         }
         .onAppear {
             guard isEmbedded else { return }
-            showsCombatSequencePrimer = false
+            showsCombatSequencePrimer = !NewPlayerTipsStore.hasDismissedCombatSequencePrimer
             syncBatchCombat()
         }
+    }
+
+    @ViewBuilder
+    private var embeddedResolverContent: some View {
+        if viewModel.canEvaluate {
+            CombatResolverAttackContextCard(
+                viewModel: viewModel,
+                attackerPlayerName: attackerPlayerName,
+                defenderPlayerName: defenderPlayerName,
+                unitWoundsRemaining: unitWoundsRemaining,
+                defenderWoundsRemaining: defenderWoundsRemaining,
+                accessibilityPrefix: accessibilityPrefix
+            )
+            deployedModelSection
+            hitDiceBannerSection
+            combatSequencePrimerSection
+            if !isSimulated {
+                batchCombatSection
+            }
+        } else {
+            CombatResolverSetupGate(
+                hasAttacker: viewModel.selectedAttackerUnit != nil,
+                hasDefender: viewModel.selectedDefenderUnit != nil,
+                hasWeapon: viewModel.selectedAttackerWeapon?.isRollEvaluable == true,
+                accessibilityPrefix: accessibilityPrefix
+            )
+            combatSequencePrimerSection
+        }
+        advancedSingleAttackSection
+        wardReminderSection
+        optionsSection
     }
 
     private func syncBatchCombat() {
@@ -247,7 +268,7 @@ struct CombatResolverPanel: View {
             armyName: viewModel.selectedAttackerArmy?.name ?? "",
             armies: viewModel.armies,
             armyId: $viewModel.attackerArmyId,
-            units: viewModel.selectedAttackerArmy?.units ?? [],
+            units: livingUnits(from: viewModel.selectedAttackerArmy),
             unitId: $viewModel.attackerUnitId,
             weapons: viewModel.evaluableWeapons,
             weaponId: $viewModel.attackerWeaponId,
@@ -256,6 +277,10 @@ struct CombatResolverPanel: View {
             usesCompactStyle: isEmbedded,
             woundsRemaining: attackerWoundsRemaining,
             unitWoundsRemaining: unitWoundsLookup(for: viewModel.attackerArmyId),
+            hideUnitPicker: isEmbedded,
+            unitPickerHint: isEmbedded
+                ? String(localized: "Tap a unit in the attack checklist above to switch attacker.")
+                : nil,
             onArmyChange: viewModel.setAttackerArmy,
             onUnitChange: viewModel.setAttackerUnit,
             onWeaponChange: viewModel.setAttackerWeapon
@@ -270,13 +295,17 @@ struct CombatResolverPanel: View {
             armyName: viewModel.selectedDefenderArmy?.name ?? "",
             armies: opposingArmies(forAttackerId: viewModel.attackerArmyId),
             armyId: $viewModel.defenderArmyId,
-            units: viewModel.selectedDefenderArmy?.units ?? [],
+            units: livingUnits(from: viewModel.selectedDefenderArmy),
             unitId: $viewModel.defenderUnitId,
             weaponId: .constant(""),
             showsArmyPicker: !locksArmies,
             usesCompactStyle: isEmbedded,
             woundsRemaining: defenderWoundsRemaining,
             unitWoundsRemaining: unitWoundsLookup(for: viewModel.defenderArmyId),
+            hideUnitPicker: isEmbedded,
+            unitPickerHint: isEmbedded
+                ? String(localized: "Tap a unit in Army Health, or use Set as defender from a unit card.")
+                : nil,
             onArmyChange: viewModel.setDefenderArmy,
             onUnitChange: viewModel.setDefenderUnit,
             onWeaponChange: { _ in }
@@ -476,6 +505,15 @@ struct CombatResolverPanel: View {
         guard !armyId.isEmpty, !unitWoundsRemaining.isEmpty else { return nil }
         return { unitId in
             unitWoundsRemaining[UnitWoundTracker.unitKey(armyId: armyId, unitId: unitId)]
+        }
+    }
+
+    private func livingUnits(from army: SpearheadArmy?) -> [SpearheadUnit] {
+        guard let army else { return [] }
+        let lookup = unitWoundsLookup(for: army.id)
+        return army.units.filter { unit in
+            guard let lookup else { return true }
+            return (lookup(unit.id) ?? 1) > 0
         }
     }
 }

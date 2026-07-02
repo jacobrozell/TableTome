@@ -30,10 +30,43 @@ public enum TabletomeLayoutContext: Equatable, Sendable {
 }
 
 public enum TabletomeLayout {
+    /// iPhone SE / 8 (667pt) and 13 mini (812pt) portrait heights — extra chrome eats scroll room.
+    public static let compactPhoneHeightThreshold: CGFloat = 812
+
     public enum Idiom: Equatable, Sendable {
         case phone
         case pad
         case other
+    }
+
+    @MainActor
+    public static func prefersCompactGuidedMatchChrome(
+        _ context: TabletomeLayoutContext,
+        idiom: Idiom? = nil,
+        boundsHeight: CGFloat? = nil
+    ) -> Bool {
+        switch context {
+        case .phoneLandscape:
+            true
+        case .phonePortrait:
+            isCompactPhoneHeight(idiom: idiom, boundsHeight: boundsHeight)
+        default:
+            false
+        }
+    }
+
+    @MainActor
+    public static func isCompactPhoneHeight(
+        idiom: Idiom? = nil,
+        boundsHeight: CGFloat? = nil
+    ) -> Bool {
+        #if canImport(UIKit)
+        guard (idiom ?? currentIdiom()) == .phone else { return false }
+        let height = boundsHeight ?? UIScreen.main.bounds.height
+        return height <= compactPhoneHeightThreshold
+        #else
+        return false
+        #endif
     }
 
     @MainActor
@@ -97,6 +130,21 @@ public enum TabletomeLayout {
         }
     }
 
+    /// iPad and Mac (Designed for iPad) with regular horizontal width.
+    @MainActor
+    public static func usesLargeScreenLayout(
+        idiom: Idiom? = nil,
+        horizontalSizeClass: UserInterfaceSizeClass?
+    ) -> Bool {
+        guard horizontalSizeClass == .regular else { return false }
+        switch idiom ?? currentIdiom() {
+        case .pad, .other:
+            return true
+        case .phone:
+            return false
+        }
+    }
+
     @MainActor
     public static func usesSideBySideLayout(
         idiom: Idiom? = nil,
@@ -105,8 +153,7 @@ public enum TabletomeLayout {
         isAccessibilitySize: Bool = false
     ) -> Bool {
         guard !isAccessibilitySize else { return false }
-        guard (idiom ?? currentIdiom()) == .pad else { return false }
-        return horizontalSizeClass == .regular
+        return usesLargeScreenLayout(idiom: idiom, horizontalSizeClass: horizontalSizeClass)
     }
 }
 

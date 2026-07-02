@@ -156,13 +156,23 @@ public enum PhaseContextCoach {
         switch phase {
         case .hero:
             [
+                String(
+                    localized: """
+                    Check your battle tactic cards — each has a command you can use during this turn instead of scoring its tactic later.
+                    """
+                ),
                 String(localized: "Use heroic abilities, spells, and prayers before moving."),
                 String(localized: "Most abilities can only be used once per turn unless noted.")
             ]
         case .movement:
             [
                 String(localized: "Move up to the unit's Move characteristic, staying in coherency."),
-                String(localized: "Running adds distance but usually stops the unit from shooting or charging.")
+                String(localized: "Running adds distance but usually stops the unit from shooting or charging."),
+                String(
+                    localized: """
+                    Retreat (units in combat): roll D3 mortal damage, then move up to Move. Cannot end within an enemy combat range. No shoot or charge this turn.
+                    """
+                )
             ]
         case .shooting:
             [
@@ -186,6 +196,11 @@ public enum PhaseContextCoach {
         case .endOfTurn:
             [
                 String(localized: "Add victory points for objectives you hold and battle tactics you completed."),
+                String(
+                    localized: """
+                    Used a card's command this turn? That card cannot also score +1 VP for its battle tactic.
+                    """
+                ),
                 String(localized: "Use the quick-add buttons below, then pass the phone.")
             ]
         case .deployment:
@@ -233,9 +248,17 @@ public enum PhaseContextCoach {
     private static func spearheadPhaseActionNudge(for phase: BattleTurnPhase) -> String? {
         switch phase {
         case .hero:
-            String(localized: "Hero phase — use abilities and spells, then tap Next when ready.")
+            String(
+                localized: """
+                Hero phase — use spells and heroic abilities. Check battle tactic cards for command abilities you can use this turn.
+                """
+            )
         case .movement:
-            String(localized: "Movement phase — move models up to their Move value. No dice yet.")
+            String(
+                localized: """
+                Movement phase — Normal Move, Run, or Retreat (D3 mortals if leaving combat). Run and Retreat block shooting and charging this turn.
+                """
+            )
         case .shooting:
             String(localized: "Shooting phase — pick a target in range, then roll hit rolls at the table.")
         case .charge:
@@ -243,7 +266,11 @@ public enum PhaseContextCoach {
         case .combat, .anyCombat:
             String(localized: "Fight phase — roll hit rolls for attacking units, then wounds and saves.")
         case .endOfTurn:
-            String(localized: "End phase — score objectives and battle tactics, then pass the phone.")
+            String(
+                localized: """
+                End phase — score objectives and completed battle tactics. Cards used as commands cannot also score their tactic.
+                """
+            )
         case .deployment:
             String(localized: "Deployment — place terrain and objectives before any models.")
         default:

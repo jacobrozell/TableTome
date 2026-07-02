@@ -89,6 +89,22 @@ extension BattlePhaseTrackerView {
             woundKey: key,
             previousWounds: previous
         )
+        if viewModel.trackerState.unitWoundsRemaining[key] == 0 {
+            batchCombatViewModel.resetCounts()
+            if combatViewModel.defenderUnitId == unitId,
+               let defenderArmy = combatViewModel.selectedDefenderArmy {
+                let nextDefender = defenderArmy.units.first { candidate in
+                    guard candidate.id != unitId else { return false }
+                    let candidateKey = UnitWoundTracker.unitKey(armyId: armyId, unitId: candidate.id)
+                    return (viewModel.trackerState.unitWoundsRemaining[candidateKey] ?? 1) > 0
+                }
+                if let nextDefender {
+                    combatViewModel.setDefenderUnit(nextDefender.id)
+                } else {
+                    combatViewModel.setDefenderUnit("")
+                }
+            }
+        }
     }
 
     func handleArmyUnitSelection(

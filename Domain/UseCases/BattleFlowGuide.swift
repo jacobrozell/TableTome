@@ -67,10 +67,14 @@ public enum BattleFlowGuide {
 
         let roundCount = GameSystemPlayContext.context(for: gameSystemId).playEngine.battleRoundCount()
         if trackerState.currentPhase == .endOfTurn {
-            if round >= roundCount {
+            let bothTurnsDone = trackerState.completedTurnsThisRound.count >= 2
+            if round >= roundCount, bothTurnsDone {
                 return battleCompleteStep(roundCount: roundCount)
             }
-            return endOfTurnHandoffStep()
+            if bothTurnsDone, round < roundCount {
+                return startNextRoundGuide(round: round, gameSystemId: gameSystemId)
+            }
+            return endOfTurnHandoffStep(matchState: matchState, trackerState: trackerState)
         }
 
         return turnPhaseGuide(
@@ -270,17 +274,52 @@ public enum BattleFlowGuide {
         )
     }
 
-    private static func endOfTurnHandoffStep() -> BattleFlowGuideStep {
-        BattleFlowGuideStep(
+    private static func endOfTurnHandoffStep(
+        matchState: GuidedMatchState,
+        trackerState: BattleTrackerState
+    ) -> BattleFlowGuideStep {
+        let activeName = trackerState.activePlayerIsOne
+            ? matchState.playerOne.playerName
+            : matchState.playerTwo.playerName
+        let otherName = trackerState.activePlayerIsOne
+            ? matchState.playerTwo.playerName
+            : matchState.playerOne.playerName
+        let instruction = trackerState.completedTurnsThisRound.isEmpty
+            ? String(
+                localized: """
+                Score victory points for \(activeName)'s turn, then pass to \(otherName) for the other turn \
+                this battle round. Turn order for the next round comes from a priority roll — not automatic alternation.
+                """
+            )
+            : String(
+                localized: """
+                Score any remaining points for \(activeName)'s turn, then pass to \(otherName). \
+                This is the second turn of the round.
+                """
+            )
+        return BattleFlowGuideStep(
             kind: .turnPhase(.endOfTurn),
-            title: String(localized: "End of Turn"),
+            title: String(localized: "End of \(activeName)'s Turn"),
+            instruction: instruction,
+            actionLabel: String(localized: "Pass to \(otherName)")
+        )
+    }
+
+    private static func startNextRoundGuide(round: Int, gameSystemId: String) -> BattleFlowGuideStep {
+        let context = GameSystemPlayContext.context(for: gameSystemId)
+        let nextRound = round + 1
+        let nextRoundLabel = context.playEngine.roundLabel(round: nextRound)
+        return BattleFlowGuideStep(
+            kind: .startNextRound(round),
+            title: String(localized: "Round \(round) Complete"),
             instruction: String(
                 localized: """
-                Score victory points and resolve end-of-turn abilities, then pass the turn. \
-                Battle tactic hands refresh at the start of the next battle round — not after each turn.
+                Both players finished this round. Start \(nextRoundLabel), then run the round opener: \
+                priority roll (winner picks first turn), identify the underdog, draw a twist card, refresh battle \
+                tactics, and resolve start-of-round abilities.
                 """
             ),
-            actionLabel: String(localized: "Next Player's Turn")
+            actionLabel: String(localized: "Start \(nextRoundLabel)")
         )
     }
 
@@ -678,7 +717,11 @@ private extension BattleTurnPhase {
         case .command:
             String(localized: "Gain Command points, use Stratagems, and resolve start-of-turn abilities.")
         case .hero:
-            String(localized: "Use heroic abilities and command abilities. Cast spells and use prayers that trigger in the Hero phase.")
+            String(
+                localized: """
+                Use heroic abilities and battle tactic command abilities. Cast spells and use prayers that trigger in the Hero phase.
+                """
+            )
         case .movement:
             String(localized: "Move units that are allowed to move. Run if you need extra distance.")
         case .assault:

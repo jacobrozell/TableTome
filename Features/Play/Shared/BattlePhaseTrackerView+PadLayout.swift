@@ -16,6 +16,10 @@ extension BattlePhaseTrackerView {
             : DesignTokens.battleTrackerControlColumnMaxWidth
     }
 
+    var padSidebarColumnMaxWidth: CGFloat {
+        layoutContext == .padLandscape ? 340 : 380
+    }
+
     var padLayoutSpacing: CGFloat {
         layoutContext == .padLandscape
             ? DesignTokens.battleTrackerLandscapeSectionSpacing
@@ -23,15 +27,33 @@ extension BattlePhaseTrackerView {
     }
 
     var padTabbedTwoColumnLayout: some View {
-        VStack(alignment: .leading, spacing: padLayoutSpacing) {
+        let content = VStack(alignment: .leading, spacing: padLayoutSpacing) {
             tabHintSection
             padTwoColumnTabContent
         }
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: showsBattleTrackerCoach)
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: selectedSectionTab)
-        .frame(maxWidth: DesignTokens.battleTrackerRegularMaxWidth)
-        .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityIdentifier("battleTracker.padTwoColumnLayout")
+
+        return Group {
+            if let maxWidth = padContentMaxWidth {
+                content
+                    .frame(maxWidth: maxWidth, alignment: padContentAlignment)
+                    .frame(maxWidth: .infinity, alignment: padContentAlignment)
+            } else {
+                content
+                    .frame(maxWidth: .infinity, alignment: padContentAlignment)
+            }
+        }
+    }
+
+    /// Embedded iPad battle fills the split detail pane; standalone play centers up to a comfortable max.
+    private var padContentMaxWidth: CGFloat? {
+        isEmbeddedInGuidedMatch ? nil : DesignTokens.battleTrackerRegularMaxWidth
+    }
+
+    private var padContentAlignment: Alignment {
+        isEmbeddedInGuidedMatch ? .leading : .center
     }
 
     @ViewBuilder
@@ -49,44 +71,86 @@ extension BattlePhaseTrackerView {
     }
 
     var padSetupColumns: some View {
-        BattleTrackerPadTwoColumnRow(controlColumnMaxWidth: padControlColumnMaxWidth) {
-            deploymentSection
-            roundOpenerChecklistSection
-        } secondary: {
+        VStack(alignment: .leading, spacing: padLayoutSpacing) {
             if viewModel.playContext.capabilities.showsBattleTacticDecks,
                viewModel.trackerState.battleRound > 1,
                viewModel.roundOpenerIsIncomplete {
                 NewMainTurnReminderBanner(round: viewModel.trackerState.battleRound)
             }
+            deploymentSection
+            roundOpenerChecklistSection
             startOfRoundHelper
         }
     }
 
+    @ViewBuilder
     var padTurnColumns: some View {
-        BattleTrackerPadTwoColumnRow(controlColumnMaxWidth: padControlColumnMaxWidth) {
-            phasePlaybookSection
-            victoryPointsSection
-            phaseActionNudgeSection
-            turnHandoffSection
-            scoringReminderSection
-            heroRoundOneSection
-            roundOpenerSection
-            if !showsSlimTurnTab {
+        if showsSlimTurnTab {
+            padTurnPlaybookLayout
+        } else {
+            BattleTrackerPadTwoColumnRow(
+                controlColumnMaxWidth: padControlColumnMaxWidth,
+                balance: .controlSidebar
+            ) {
                 quickActionsSection
                 BattleTrackerControlPanel(
                     viewModel: viewModel,
                     showsPhaseGuidanceInPicker: !showsPhasePlaybook,
                     showsAdvancePhaseButton: !showsPhasePlaybook
                 )
+            } secondary: {
+                coachSection
+                guideSection
+                battleTacticCommandGuideSection
+                phasePlaybookSection
+                victoryPointsSection
+                phaseActionNudgeSection
+                turnHandoffSection
+                scoringReminderSection
+                heroRoundOneSection
+                roundOpenerSection
+                startOfRoundHelper
+                if !showsDedicatedCombatTab {
+                    shootingPhaseHelper
+                }
+                movementPhaseHelper
             }
-        } secondary: {
-            coachSection
-            guideSection
-            startOfRoundHelper
-            if !showsDedicatedCombatTab {
-                shootingPhaseHelper
+        }
+    }
+
+    /// Phase playbook and combat helpers need horizontal space — avoid squeezing into the control column.
+    private var padTurnPlaybookLayout: some View {
+        VStack(alignment: .leading, spacing: padLayoutSpacing) {
+            if viewModel.playContext.capabilities.showsBattleTacticDecks,
+               viewModel.trackerState.battleRound > 1,
+               viewModel.roundOpenerIsIncomplete {
+                NewMainTurnReminderBanner(round: viewModel.trackerState.battleRound)
             }
-            movementPhaseHelper
+
+            BattleTrackerRoundBar(viewModel: viewModel)
+            phasePlaybookSection
+            battleTacticCommandGuideSection
+            victoryPointsSection
+            phaseActionNudgeSection
+            turnHandoffSection
+            scoringReminderSection
+            heroRoundOneSection
+            roundOpenerSection
+
+            BattleTrackerPadTwoColumnRow(
+                controlColumnMaxWidth: padSidebarColumnMaxWidth,
+                balance: .contentPrimary
+            ) {
+                coachSection
+                guideSection
+                startOfRoundHelper
+                if !showsDedicatedCombatTab {
+                    shootingPhaseHelper
+                }
+                movementPhaseHelper
+            } secondary: {
+                quickActionsSection
+            }
         }
     }
 
@@ -95,23 +159,29 @@ extension BattlePhaseTrackerView {
         if viewModel.playContext.capabilities.showsActivationBar {
             scCombatTabContent
         } else {
-            BattleTrackerPadTwoColumnRow(controlColumnMaxWidth: padControlColumnMaxWidth) {
+            BattleTrackerPadTwoColumnRow(
+                controlColumnMaxWidth: padSidebarColumnMaxWidth,
+                balance: .controlSidebar
+            ) {
                 if showsDedicatedCombatTab {
                     shootingPhaseHelper
                 }
                 combatActivationSection
-                damageUndoSection
                 combatPhaseHelper
                 shootInCombatPhaseHelper
             } secondary: {
                 combatResolverSection(usesLandscapeSplit: true)
-                armyTrackerSection(wideLayout: false)
+                damageUndoSection
+                armyTrackerSection(wideLayout: true)
             }
         }
     }
 
     var padArmyColumns: some View {
-        BattleTrackerPadTwoColumnRow(controlColumnMaxWidth: padControlColumnMaxWidth) {
+        BattleTrackerPadTwoColumnRow(
+            controlColumnMaxWidth: padControlColumnMaxWidth,
+            balance: .contentPrimary
+        ) {
             armyTrackerSection(wideLayout: true, compactSidebar: true)
         } secondary: {
             if viewModel.trackerState.showAllAbilities {
@@ -124,35 +194,69 @@ extension BattlePhaseTrackerView {
     }
 }
 
-/// iPad battle tracker body: fixed control column + scrolling content column.
+enum BattleTrackerPadColumnBalance {
+    /// Narrow control column on the left (setup, legacy turn layout).
+    case controlSidebar
+    /// Primary content column expands; secondary is a narrow sidebar on the right.
+    case contentPrimary
+}
+
+/// iPad battle tracker body: two-column row with configurable column balance.
 struct BattleTrackerPadTwoColumnRow<Primary: View, Secondary: View>: View {
     let controlColumnMaxWidth: CGFloat
+    let balance: BattleTrackerPadColumnBalance
     let primary: Primary
     let secondary: Secondary
 
     init(
         controlColumnMaxWidth: CGFloat,
+        balance: BattleTrackerPadColumnBalance = .controlSidebar,
         @ViewBuilder primary: () -> Primary,
         @ViewBuilder secondary: () -> Secondary
     ) {
         self.controlColumnMaxWidth = controlColumnMaxWidth
+        self.balance = balance
         self.primary = primary()
         self.secondary = secondary()
     }
 
     var body: some View {
         HStack(alignment: .top, spacing: DesignTokens.Spacing.lg) {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-                primary
-            }
-            .frame(minWidth: 0, maxWidth: controlColumnMaxWidth, alignment: .leading)
-
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-                secondary
-            }
-            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-            .layoutPriority(1)
+            primaryColumn
+            secondaryColumn
         }
         .accessibilityElement(children: .contain)
+    }
+
+    @ViewBuilder
+    private var primaryColumn: some View {
+        let column = VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            primary
+        }
+        switch balance {
+        case .controlSidebar:
+            column
+                .frame(minWidth: 0, maxWidth: controlColumnMaxWidth, alignment: .leading)
+        case .contentPrimary:
+            column
+                .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                .layoutPriority(1)
+        }
+    }
+
+    @ViewBuilder
+    private var secondaryColumn: some View {
+        let column = VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            secondary
+        }
+        switch balance {
+        case .controlSidebar:
+            column
+                .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                .layoutPriority(1)
+        case .contentPrimary:
+            column
+                .frame(minWidth: 0, maxWidth: controlColumnMaxWidth, alignment: .leading)
+        }
     }
 }

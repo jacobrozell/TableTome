@@ -12,6 +12,8 @@ extension GuidedMatchView {
                 embeddedBattleTracker(catalog: catalog)
             } else {
                 guidedMatchHubList(catalog: catalog)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .layoutPriority(1)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
@@ -82,7 +84,7 @@ extension GuidedMatchView {
 
     @ViewBuilder
     func guidedMatchHubChrome(catalog: SpearheadCatalog) -> some View {
-        if !usesPhoneLandscapeBattleImmersion {
+        if !hidesGuidedMatchHubChromeWhenEmbedded {
             if isHubChromeCollapsed {
                 GuidedMatchCollapsedHubChrome(summary: hubChromeSummaryLine(catalog: catalog)) {
                     withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) {
@@ -110,7 +112,7 @@ extension GuidedMatchView {
                             setupComplete: setupIsComplete,
                             activeHubTab: hubTab,
                             battleTrackerSummary: battleTrackerSummaryLine(),
-                            compactMode: usesCompactLandscapeStatusBar
+                            compactMode: usesCompactHubStatusBar
                         )
                         .id(hubTrackerTick)
 

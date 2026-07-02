@@ -155,6 +155,10 @@ public enum BatchCombatRollEngine: Sendable {
     }
 
     public static func saveNeededOnDice(saveTarget: Int, rend: Int, saveModifier: Int) -> Int {
-        max(1, saveTarget - rend - saveModifier)
+        CombatRollResolution.saveNeededOnDice(
+            saveTarget: saveTarget,
+            rend: rend,
+            saveModifier: saveModifier
+        )
     }
 }

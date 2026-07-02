@@ -34,10 +34,20 @@ final class PhaseContextCoachTests: XCTestCase {
         XCTAssertNil(PhaseContextCoach.ruleSectionId(for: .scoring, gameSystemId: "aos-spearhead"))
     }
 
-    func testSpearheadFightPhaseActionNudgeMentionsHitRolls() {
+    func testSpearheadHeroPhaseActionNudgeMentionsHitRolls() {
         let nudge = PhaseContextCoach.phaseActionNudge(for: .combat, gameSystemId: "aos-spearhead")
         XCTAssertNotNil(nudge)
         XCTAssertTrue(nudge?.localizedCaseInsensitiveContains("hit") == true)
+    }
+
+    func testSpearheadHeroQuickTipsMentionBattleTacticCommands() {
+        let tips = PhaseContextCoach.quickTips(for: .hero, gameSystemId: "aos-spearhead")
+        XCTAssertTrue(tips.contains { $0.localizedCaseInsensitiveContains("command") })
+    }
+
+    func testSpearheadEndOfTurnQuickTipsMentionCommandTradeoff() {
+        let tips = PhaseContextCoach.quickTips(for: .endOfTurn, gameSystemId: "aos-spearhead")
+        XCTAssertTrue(tips.contains { $0.localizedCaseInsensitiveContains("command") })
     }
 
     func testWh40k11eShootingPhaseActionNudgeMentionsHitRolls() {

@@ -14,16 +14,20 @@ extension BattlePhaseTrackerViewModel {
         case .cpSetup(let setupStep):
             setCombatPatrolDeploymentStep(setupStep, complete: true)
         case .roundOpener(let openerStep):
+            if openerStep == .firstTurnOrPriority, matchState.firstTurnIsPlayerOne == nil {
+                return
+            }
             setRoundChecklistStep(openerStep, complete: true)
         case .turnPhase(let phase):
             if playContext.usesAlternatingActivation {
                 completeAlternatingActivationTurnPhase(phase)
+            } else if phase == .endOfTurn, canAdvanceBattleRound {
+                advanceBattleRound()
             } else {
                 completePhasedRoundTurnPhase(phase)
             }
-        case .startNextRound(let round):
-            setBattleRound(round + 1)
-            setPhase(playContext.playEngine.turnStartPhase())
+        case .startNextRound:
+            advanceBattleRound()
         case .battleComplete:
             break
         }

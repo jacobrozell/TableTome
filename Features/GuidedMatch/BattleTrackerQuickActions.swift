@@ -297,6 +297,6 @@ enum BattleTrackerQuickActions {
         if playContext.capabilities.showsActivationBar {
             return String(localized: "Supply within 3\" of objectives — then pass the phone")
         }
-        return String(localized: "Objectives and battle tactics — then pass the phone")
+        return String(localized: "Objectives, battle tactics, and command abilities — then pass the phone")
     }
 }

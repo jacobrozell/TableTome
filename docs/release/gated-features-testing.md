@@ -9,7 +9,8 @@
 
 | Launch argument | Unlocks |
 |-----------------|---------|
-| `-enable_full_product_surface` | Lists tab, Paints, StarCraft, Rules Q&A, 40k 10e, cross-pillar links |
+| `-enable_full_product_surface` | Lists tab, Paints, StarCraft, Rules Q&A, 40k 10e, cross-pillar links, **all Play home modes** |
+| `-enable_all_play_modes` | 40k 11e + Combat Patrol on Play tab home (Rules/Search unchanged) |
 | `-enable_combat_patrol` | Combat Patrol only (10e engine — SM/Tyranids today) |
 | `-enable_wh40k11e_combat_resolver` | 11e combat resolver (`Wh40k11eCombatRollEngine` — not Combat Patrol) |
 

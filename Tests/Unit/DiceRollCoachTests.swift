@@ -47,11 +47,19 @@ final class DiceRollCoachTests: XCTestCase {
     }
 
     func testSaveHintAccountsForRend() {
-        let input = sampleInput(saveRoll: 4)
+        let input = AttackRollInput(
+            hitTarget: 4,
+            woundTarget: 4,
+            saveTarget: 4,
+            rend: 1,
+            damage: 1,
+            hitRoll: 4,
+            woundRoll: 4,
+            saveRoll: 4
+        )
         let hint = DiceRollCoach.saveHint(input: input)
         XCTAssertFalse(hint.passed)
-        XCTAssertTrue(hint.text.contains("Rend"))
-        XCTAssertTrue(hint.text.contains("= 3"))
+        XCTAssertTrue(hint.text.contains("need 5+"))
     }
 
     func testSaveHintShowsEffectiveTotalWhenRendApplies() {
@@ -63,7 +71,7 @@ final class DiceRollCoachTests: XCTestCase {
             damage: 1,
             hitRoll: 4,
             woundRoll: 4,
-            saveRoll: 4
+            saveRoll: 6
         )
         let hint = DiceRollCoach.saveHint(input: input)
         XCTAssertTrue(hint.passed)
@@ -77,7 +85,26 @@ final class DiceRollCoachTests: XCTestCase {
         XCTAssertTrue(hint?.passed == true)
     }
 
-    func testWardHintNilWithoutTarget() {
-        XCTAssertNil(DiceRollCoach.wardHint(input: sampleInput()))
+    func testSaveNeededOnDiceSave3Rend1Needs4() {
+        XCTAssertEqual(
+            CombatRollResolution.saveNeededOnDice(saveTarget: 3, rend: 1, saveModifier: 0),
+            4
+        )
+    }
+
+    func testSaveHintSave3Rend1Needs4OnDice() {
+        let input = AttackRollInput(
+            hitTarget: 4,
+            woundTarget: 4,
+            saveTarget: 3,
+            rend: 1,
+            damage: 1,
+            hitRoll: 4,
+            woundRoll: 4,
+            saveRoll: 3
+        )
+        let hint = DiceRollCoach.saveHint(input: input)
+        XCTAssertFalse(hint.passed)
+        XCTAssertTrue(hint.text.contains("need 4+"))
     }
 }

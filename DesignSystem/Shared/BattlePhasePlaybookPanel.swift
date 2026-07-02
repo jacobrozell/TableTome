@@ -48,9 +48,34 @@ struct BattlePhasePlaybookPanel: View {
                     .symbolRenderingMode(.hierarchical)
             }
 
-            Text("\(activePlayerName) · \(viewModel.armyName)")
+            Text(viewModel.armyName)
                 .font(.subheadline.weight(.medium))
                 .foregroundStyle(.secondary)
+
+            BattleTrackerPlayerSwitcher(
+                playerOneName: viewModel.playerOneName,
+                playerTwoName: viewModel.playerTwoName,
+                activePlayerIsOne: viewModel.trackerState.activePlayerIsOne,
+                label: BattleTrackerPlayerSwitcher.label(
+                    round: viewModel.trackerState.battleRound,
+                    playerOneVictoryPoints: viewModel.trackerState.playerOneVictoryPoints,
+                    playerTwoVictoryPoints: viewModel.trackerState.playerTwoVictoryPoints,
+                    completedTurnsThisRound: viewModel.trackerState.completedTurnsThisRound.count,
+                    roundOpenerIncomplete: viewModel.roundOpenerIsIncomplete
+                ),
+                onSelect: { viewModel.setActivePlayer(isOne: $0) }
+            )
+
+            if !viewModel.playContext.usesAlternatingActivation,
+               viewModel.trackerState.currentPhase != .deployment {
+                BattleRoundTurnProgressChip(
+                    round: viewModel.trackerState.battleRound,
+                    playerOneName: viewModel.playerOneName,
+                    playerTwoName: viewModel.playerTwoName,
+                    completedTurnPlayerOnes: viewModel.trackerState.completedTurnsThisRound,
+                    activePlayerIsOne: viewModel.trackerState.activePlayerIsOne
+                )
+            }
 
             PhaseGuidanceBar(phase: phase, gameSystemId: gameSystemId)
         }
@@ -148,7 +173,29 @@ struct BattlePhasePlaybookPanel: View {
 
     private var advanceButton: some View {
         Group {
-            if viewModel.nextPhaseTitle != nil {
+            if viewModel.isTurnFlowBlocked {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                    Label(
+                        String(localized: "Finish the round opener first"),
+                        systemImage: "checklist"
+                    )
+                    .font(.subheadline.weight(.semibold))
+                    Text(
+                        String(
+                            localized: """
+                            Roll for priority, pick who goes first, then complete the checklist on the Setup tab \
+                            before advancing phases.
+                            """
+                        )
+                    )
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.vertical, DesignTokens.Spacing.xs)
+                .accessibilityIdentifier("battleTracker.phasePlaybook.roundOpenerBlocked")
+            } else if viewModel.nextPhaseTitle != nil {
                 Button {
                     advancePhaseTrigger += 1
                     onAdvancePhase()
@@ -160,15 +207,72 @@ struct BattlePhasePlaybookPanel: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .accessibilityIdentifier("battleTracker.phasePlaybook.nextPhase")
+            } else if viewModel.canPassToNextPlayerThisRound {
+                Button {
+                    advancePhaseTrigger += 1
+                    viewModel.completePhasedRoundTurnPhase(.endOfTurn)
+                } label: {
+                    Label(nextPlayerButtonTitle, systemImage: "arrow.left.arrow.right.circle.fill")
+                        .font(.subheadline.weight(.semibold))
+                        .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+                        .prominentButtonLabelStyle()
+                }
+                .buttonStyle(.borderedProminent)
+                .accessibilityIdentifier("battleTracker.phasePlaybook.nextPlayer")
+            } else if viewModel.canAdvanceBattleRound {
+                Button {
+                    advancePhaseTrigger += 1
+                    viewModel.advanceBattleRound()
+                } label: {
+                    Label(
+                        String(
+                            localized: "Start \(viewModel.playContext.playEngine.roundLabel(round: viewModel.trackerState.battleRound + 1))"
+                        ),
+                        systemImage: "arrow.up.circle.fill"
+                    )
+                    .font(.subheadline.weight(.semibold))
+                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+                    .prominentButtonLabelStyle()
+                }
+                .buttonStyle(.borderedProminent)
+                .accessibilityIdentifier("battleTracker.phasePlaybook.advanceRound")
+            } else if viewModel.isBattleComplete {
+                Label(String(localized: "Battle complete — compare victory points"), systemImage: "flag.checkered")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.vertical, DesignTokens.Spacing.xs)
+                    .accessibilityIdentifier("battleTracker.phasePlaybook.battleComplete")
             } else {
-                Label(String(localized: "Last phase — pass the phone when you're done"), systemImage: "iphone.and.arrow.forward")
+                Label(endOfTurnHandoffHint, systemImage: "iphone.and.arrow.forward")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.vertical, DesignTokens.Spacing.xs)
                     .accessibilityIdentifier("battleTracker.phasePlaybook.lastPhase")
             }
         }
+    }
+
+    private var nextPlayerButtonTitle: String {
+        if let name = viewModel.nextHandoffPlayerName {
+            return String(localized: "Pass to \(name)")
+        }
+        return String(localized: "Next Player's Turn")
+    }
+
+    private var endOfTurnHandoffHint: String {
+        if viewModel.isBattleComplete {
+            return String(localized: "Battle complete — compare victory points.")
+        }
+        if viewModel.canAdvanceBattleRound {
+            return String(localized: "Both turns done — tap Start Next Round when scoring is finished.")
+        }
+        if let name = viewModel.nextHandoffPlayerName {
+            return String(localized: "Score below, then pass the phone to \(name).")
+        }
+        return String(localized: "Last phase — pass the phone when you're done.")
     }
 
     private var emptyPhaseTitle: String {
@@ -191,15 +295,29 @@ struct BattlePhasePlaybookPanel: View {
     private var emptyPhaseDetail: String {
         switch phase {
         case .endOfTurn, .scoring:
-            String(
-                localized: """
-                Tally victory points on the Setup tab scorecard, then pass the phone to your opponent.
-                """
-            )
+            if viewModel.canPassToNextPlayerThisRound, let name = viewModel.nextHandoffPlayerName {
+                String(
+                    localized: """
+                    Score victory points below, then tap Pass to \(name). Battle tactics refresh at the start of the next battle round.
+                    """
+                )
+            } else if viewModel.canAdvanceBattleRound {
+                String(
+                    localized: """
+                    Both turns are done — score any final points, then tap Start Next Round. Run the round opener checklist (priority roll, underdog, twist).
+                    """
+                )
+            } else {
+                String(
+                    localized: """
+                    Score victory points below. When both players have finished this round, start the next one.
+                    """
+                )
+            }
         case .movement:
             String(
                 localized: """
-                Use the movement picker below if you ran or stayed put. Tap Next when every unit has moved.
+                Normal Move, Run, or Retreat. Retreat: D3 mortal damage, then move — cannot end in enemy combat range. No shoot or charge after Run or Retreat.
                 """
             )
         case .shooting, .assault:

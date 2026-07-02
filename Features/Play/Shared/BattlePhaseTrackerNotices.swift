@@ -131,6 +131,22 @@ extension BattlePhaseTrackerView {
         }
     }
 
+    @ViewBuilder
+    var battleTacticCommandGuideSection: some View {
+        if showsSpearheadBattleChrome, isMidTurnPhase {
+            BattleTacticCommandGuideCard()
+        }
+    }
+
+    private var isMidTurnPhase: Bool {
+        switch viewModel.trackerState.currentPhase {
+        case .hero, .movement, .shooting, .charge, .combat, .anyCombat:
+            true
+        default:
+            false
+        }
+    }
+
     func presentPhaseActionNudgeIfNeeded(from oldPhase: BattleTurnPhase, to phase: BattleTurnPhase) {
         guard oldPhase != phase else { return }
         guard !FirstSessionStore.hasCompletedFirstBattleRound else { return }
@@ -222,17 +238,19 @@ extension BattlePhaseTrackerView {
                         the next Command phase.
                         """
                     )
-                    : String(
-                        localized: """
-                        Score any victory points, then pass the phone. Battle tactics refresh at the start of the \
-                        next battle round.
-                        """
-                    )
+                    : handoffDetailAfterEndOfTurn(activeName: activeName)
             )
         } else if phase == .hero, playerChanged || previousPhase == .endOfTurn {
+            let heroDetail = viewModel.playContext.capabilities.showsBattleTacticDecks
+                ? String(
+                    localized: """
+                    Hero phase — start of their turn. Check battle tactic cards for command abilities to use before end of turn.
+                    """
+                )
+                : String(localized: "Hero phase — start of their turn.")
             notice = TurnHandoffNotice(
                 title: String(localized: "Hand the phone to \(activeName)"),
-                detail: String(localized: "Hero phase — start of their turn.")
+                detail: heroDetail
             )
         } else if phase == .command, viewModel.playContext.capabilities.deploymentChecklistStyle == .wh40k,
                   playerChanged || previousPhase == .endOfTurn {
@@ -252,5 +270,27 @@ extension BattlePhaseTrackerView {
         withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) {
             turnHandoffNotice = notice
         }
+    }
+
+    private func handoffDetailAfterEndOfTurn(activeName: String) -> String {
+        if viewModel.canPassToNextPlayerThisRound, let nextName = viewModel.nextHandoffPlayerName {
+            return String(
+                localized: """
+                Use the quick-add buttons on the scorecard, then tap Pass to \(nextName).
+                """
+            )
+        }
+        if viewModel.canAdvanceBattleRound {
+            return String(
+                localized: """
+                Both turns are done. Finish scoring, then start the next battle round and run the opener checklist.
+                """
+            )
+        }
+        return String(
+            localized: """
+            Score victory points on the scorecard. Battle tactics refresh at the start of the next battle round.
+            """
+        )
     }
 }

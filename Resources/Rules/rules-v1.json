@@ -91,7 +91,7 @@
           "title": "Attack Roll Modifiers",
           "category": "core",
           "order": 2,
-          "content": "Hit and wound roll modifiers are capped at +1 and -1 after summing all bonuses and penalties.\n\nSave rolls add all modifiers, then subtract Rend \u2014 there is no cap on how much can be subtracted from save rolls. Example: Save 6+ vs Rend +2 needs 4+ on the dice (4+2=6).\n\nFast dice rolling: when every attack has the same Hit, Wound, Rend, Damage, and weapon abilities and targets the same unit, roll all hits, then all wounds, then all saves together. Add total damage to the pool once, then run the damage sequence.",
+          "content": "Hit and wound roll modifiers are capped at +1 and -1 after summing all bonuses and penalties.\n\nSave rolls: add save modifiers (capped at +1), subtract the weapon's Rend from the roll, then compare to the Save characteristic. Example: Save 4+ vs Rend 1 needs 5+ on the dice (5−1=4).\n\nFast dice rolling: when every attack has the same Hit, Wound, Rend, Damage, and weapon abilities and targets the same unit, roll all hits, then all wounds, then all saves together. Add total damage to the pool once, then run the damage sequence.",
           "relatedSectionIds": [
             "combat-sequence",
             "weapon-abilities"

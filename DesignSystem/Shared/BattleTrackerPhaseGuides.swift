@@ -89,13 +89,14 @@ struct NewMainTurnReminderBanner: View {
                     ? String(
                         localized: """
                         Round 1: draw a twist card, then each player draws 3 battle tactic cards from the top \
-                        of their shuffled deck (no mulligan). Resolve start-of-round abilities before the first turn.
+                        of their shuffled deck (no mulligan). Each card is a tactic or a command — not both. \
+                        Resolve start-of-round abilities before the first turn.
                         """
                     )
                     : String(
                         localized: """
                         Round \(round): draw a twist card, refresh battle tactic hands, then resolve any \
-                        start-of-round abilities before the first turn.
+                        start-of-round abilities before the first turn. Use command abilities from your cards during the turn.
                         """
                     )
             )
@@ -105,5 +106,57 @@ struct NewMainTurnReminderBanner: View {
         }
         .surfaceCard()
         .accessibilityIdentifier("battleTracker.newMainTurnReminder")
+    }
+}
+
+struct BattleTacticCommandGuideCard: View {
+    @State private var isExpanded = false
+
+    var body: some View {
+        DisclosureGroup(isExpanded: $isExpanded) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                Text(
+                    String(
+                        localized: """
+                        Each battle tactic card has two options: complete the tactic at end of turn for +1 VP, or use the \
+                        printed command ability during your turn. You cannot do both with the same card.
+                        """
+                    )
+                )
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+
+                Text(
+                    String(
+                        localized: """
+                        Hero phase is a good time to read your three cards and decide whether to spend a command before you move or fight.
+                        """
+                    )
+                )
+                .font(.caption)
+                .foregroundStyle(.tertiary)
+                .fixedSize(horizontal: false, vertical: true)
+
+                if !NewPlayerTipsStore.hasDismissedBattleTacticCommandGuide {
+                    Button(String(localized: "Got it")) {
+                        NewPlayerTipsStore.dismissBattleTacticCommandGuide()
+                        isExpanded = false
+                    }
+                    .buttonStyle(.bordered)
+                    .frame(minHeight: DesignTokens.minTouchTarget)
+                    .accessibilityIdentifier("battleTracker.battleTacticCommandGuide.dismiss")
+                }
+            }
+            .padding(.top, DesignTokens.Spacing.sm)
+        } label: {
+            Label(String(localized: "Battle tactic commands"), systemImage: "rectangle.on.rectangle.angled")
+                .font(.subheadline.weight(.semibold))
+        }
+        .surfaceCard()
+        .accessibilityIdentifier("battleTracker.battleTacticCommandGuide")
+        .onAppear {
+            isExpanded = !NewPlayerTipsStore.hasDismissedBattleTacticCommandGuide
+        }
     }
 }

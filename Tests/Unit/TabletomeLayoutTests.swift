@@ -68,6 +68,43 @@ final class TabletomeLayoutTests: XCTestCase {
     }
 
     @MainActor
+    func testCompactPhoneHeightUsesThreshold() {
+        XCTAssertTrue(TabletomeLayout.isCompactPhoneHeight(idiom: .phone, boundsHeight: 667))
+        XCTAssertTrue(TabletomeLayout.isCompactPhoneHeight(idiom: .phone, boundsHeight: 812))
+        XCTAssertFalse(TabletomeLayout.isCompactPhoneHeight(idiom: .phone, boundsHeight: 852))
+        XCTAssertFalse(TabletomeLayout.isCompactPhoneHeight(idiom: .pad, boundsHeight: 667))
+    }
+
+    @MainActor
+    func testPrefersCompactGuidedMatchChrome() {
+        XCTAssertTrue(TabletomeLayout.prefersCompactGuidedMatchChrome(.phoneLandscape))
+        XCTAssertFalse(TabletomeLayout.prefersCompactGuidedMatchChrome(.padPortrait))
+        XCTAssertTrue(
+            TabletomeLayout.prefersCompactGuidedMatchChrome(.phonePortrait, idiom: .phone, boundsHeight: 667)
+        )
+        XCTAssertFalse(
+            TabletomeLayout.prefersCompactGuidedMatchChrome(.phonePortrait, idiom: .phone, boundsHeight: 852)
+        )
+    }
+
+    @MainActor
+    func testUsesLargeScreenLayoutIncludesMacStyleIdiom() {
+        XCTAssertTrue(
+            TabletomeLayout.usesLargeScreenLayout(idiom: .other, horizontalSizeClass: .regular)
+        )
+        XCTAssertFalse(
+            TabletomeLayout.usesLargeScreenLayout(idiom: .other, horizontalSizeClass: .compact)
+        )
+        XCTAssertTrue(
+            TabletomeLayout.usesSideBySideLayout(
+                idiom: .other,
+                horizontalSizeClass: .regular,
+                verticalSizeClass: .regular
+            )
+        )
+    }
+
+    @MainActor
     func testUsesSideBySideLayoutRequiresPadIdiom() {
         XCTAssertFalse(
             TabletomeLayout.usesSideBySideLayout(

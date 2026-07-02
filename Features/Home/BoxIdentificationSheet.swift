@@ -107,11 +107,13 @@ struct BoxIdentificationSheet: View {
         Genre.allCases.filter { genre in
             switch genre {
             case .fantasy:
-                ReleaseSurface.isGameSystemIdVisible(GameSystemId.aosSpearhead.rawValue)
+                ReleaseSurface.isPlayHomeGameSystemVisible(GameSystemId.aosSpearhead.rawValue)
             case .sciFi:
-                ReleaseSurface.isGameSystemIdVisible(GameSystemId.wh40k11e.rawValue)
+                ReleaseSurface.showsAllPlayModesOnHome
+                    && ReleaseSurface.isGameSystemIdVisible(GameSystemId.wh40k11e.rawValue)
             case .starCraft:
-                ReleaseSurface.isGameSystemIdVisible(GameSystemId.scTmg.rawValue)
+                ReleaseSurface.showsAllPlayModesOnHome
+                    && ReleaseSurface.isGameSystemIdVisible(GameSystemId.scTmg.rawValue)
             }
         }
     }

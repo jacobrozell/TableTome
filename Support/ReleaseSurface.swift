@@ -8,6 +8,17 @@ public enum ReleaseSurface {
         ProcessInfo.processInfo.arguments.contains("-enable_full_product_surface")
     }
 
+    /// Play tab home shows only live play modes (Spearhead) unless this is enabled.
+    public static var showsAllPlayModesOnHome: Bool {
+        fullSurfaceEnabled
+            || ProcessInfo.processInfo.arguments.contains("-enable_all_play_modes")
+    }
+
+    /// Live play modes surfaced on Play home for new users (TestFlight focus).
+    private static let livePlayHomeGameSystemIds: Set<String> = [
+        GameSystemId.aosSpearhead.rawValue,
+    ]
+
     /// Combat Patrol (10th Edition rules) — ships in release defaults.
     public static var showsCombatPatrol: Bool {
         manifestAvailableSystemIds.contains(GameSystemId.wh40k10eCp.rawValue)
@@ -79,6 +90,23 @@ public enum ReleaseSurface {
             }
         }
         return manifestAvailableSystemIds.contains(gameSystemId)
+    }
+
+    /// Play tab home list and new-player chooser — Spearhead-only unless `showsAllPlayModesOnHome`.
+    public static func isPlayHomeGameSystemVisible(
+        _ gameSystemId: String,
+        registry: GameSystemRegistry = .bundled(withBoxSetsFrom: .main)
+    ) -> Bool {
+        guard isGameSystemIdVisible(gameSystemId, registry: registry) else { return false }
+        if showsAllPlayModesOnHome { return true }
+        return livePlayHomeGameSystemIds.contains(gameSystemId)
+    }
+
+    public static func isPlayHomeGameSystemVisible(
+        _ system: GameSystem,
+        registry: GameSystemRegistry = .bundled(withBoxSetsFrom: .main)
+    ) -> Bool {
+        isPlayHomeGameSystemVisible(system.id, registry: registry)
     }
 
     public static func showsNewEditionBadge(

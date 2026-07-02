@@ -19,13 +19,13 @@ public enum DesignTokens {
     public static let minTouchTarget: CGFloat = 44
 
     /// Max width for the battle tracker control column on regular size class (flexible below this).
-    public static let battleTrackerControlColumnMaxWidth: CGFloat = 360
+    public static let battleTrackerControlColumnMaxWidth: CGFloat = 420
 
     /// Max width for the full battle tracker two-column layout on iPad portrait.
     public static let battleTrackerRegularMaxWidth: CGFloat = 1_120
 
     /// Control column width in iPad landscape (controls left).
-    public static let battleTrackerLandscapeControlColumnMaxWidth: CGFloat = 300
+    public static let battleTrackerLandscapeControlColumnMaxWidth: CGFloat = 380
 
     /// Tighter section spacing in landscape to preserve vertical space.
     public static let battleTrackerLandscapeSectionSpacing: CGFloat = 16

@@ -83,10 +83,16 @@ class BattlePhaseTrackerViewModel: ObservableObject {
     }
 
     var nextPhaseTitle: String? {
+        guard !isTurnFlowBlocked else { return nil }
         let phases = playContext.playEngine.mainPhases()
         guard let index = phases.firstIndex(of: trackerState.currentPhase),
               index < phases.count - 1 else { return nil }
         return phases[index + 1].title
+    }
+
+    /// Spearhead round opener must finish before turn phases advance (priority roll, twist, etc.).
+    var isTurnFlowBlocked: Bool {
+        playContext.capabilities.showsBattleTacticDecks && roundOpenerIsIncomplete
     }
 
     var specialPhases: [BattleTurnPhase] {
@@ -97,9 +103,26 @@ class BattlePhaseTrackerViewModel: ObservableObject {
 
     func setAttacker(isPlayerOne: Bool?) {
         matchState.attackerIsPlayerOne = isPlayerOne
+        if playContext.capabilities.deploymentChecklistStyle == .wh40k, let isPlayerOne {
+            matchState.firstTurnIsPlayerOne = isPlayerOne
+            if trackerState.battleRound == 1 {
+                setActivePlayer(isOne: isPlayerOne)
+            }
+        }
         MatchSetupStore.save(matchState)
         onMatchStateChange?()
         objectWillChange.send()
+    }
+
+    func setFirstTurn(isPlayerOne: Bool?) {
+        matchState.firstTurnIsPlayerOne = isPlayerOne
+        MatchSetupStore.save(matchState)
+        onMatchStateChange?()
+        if let isPlayerOne, trackerState.battleRound == 1 {
+            setActivePlayer(isOne: isPlayerOne)
+        } else {
+            objectWillChange.send()
+        }
     }
 
     func resetTracker() {
@@ -134,8 +157,18 @@ class BattlePhaseTrackerViewModel: ObservableObject {
         matchState.attackerIsPlayerOne
     }
 
+    var attackerDisplayName: String? {
+        guard let attackerIsPlayerOne = matchState.attackerIsPlayerOne else { return nil }
+        return attackerIsPlayerOne ? playerOneName : playerTwoName
+    }
+
     func persist() {
         BattleTrackerStore.save(trackerState, gameSystemId: gameSystemId)
+    }
+
+    func persistMatchState() {
+        MatchSetupStore.save(matchState, gameSystemId: gameSystemId)
+        onMatchStateChange?()
     }
 
     func isActivePlayerArmy(_ armyId: String) -> Bool {

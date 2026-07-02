@@ -43,9 +43,9 @@ public enum SpearheadRulesGlossary {
             id: "rend",
             term: "Rend",
             definition: """
-            Rend makes saves harder for the defender. Add Rend to the dice you rolled and compare to the save \
-            characteristic — e.g. Save 6+ with Rend +2 needs 4+ on the dice (4+2=6). Negative rend makes saves easier. \
-            Crit (Auto-wound) skips the wound roll only — saves still apply.
+            Rend makes saves harder for the defender. Subtract the weapon's Rend from your save roll, then compare to \
+            your Save characteristic — e.g. Save 4+ with Rend 1 needs 5+ on the dice (5−1=4). Negative rend makes \
+            saves easier. Crit (Auto-wound) skips the wound roll only — saves still apply.
             """
         ),
         RulesGlossaryEntry(

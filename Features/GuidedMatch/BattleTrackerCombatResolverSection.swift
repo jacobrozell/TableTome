@@ -24,20 +24,25 @@ struct BattleTrackerCombatResolverSection: View {
 
     var body: some View {
         if ReleaseSurface.showsRollEvaluator {
-            Group {
-                if usesLandscapeSplitPresentation {
-                    resolverPanel
-                } else {
-                    DisclosureGroup(isExpanded: $showsCombatResolver) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                if usesExpandedPresentation {
+                    resolverHeader
+                }
+                Group {
+                    if usesExpandedPresentation {
                         resolverPanel
-                    } label: {
-                        header
-                    }
-                    .surfaceCard()
-                    .overlay {
-                        if trackerState.currentPhase.isCombatRelated {
-                            RoundedRectangle(cornerRadius: DesignTokens.Radius.lg)
-                                .strokeBorder(Color.accentColor.opacity(0.35), lineWidth: 1.5)
+                    } else {
+                        DisclosureGroup(isExpanded: $showsCombatResolver) {
+                            resolverPanel
+                        } label: {
+                            header
+                        }
+                        .surfaceCard()
+                        .overlay {
+                            if trackerState.currentPhase.isCombatRelated {
+                                RoundedRectangle(cornerRadius: DesignTokens.Radius.lg)
+                                    .strokeBorder(Color.accentColor.opacity(0.35), lineWidth: 1.5)
+                            }
                         }
                     }
                 }
@@ -45,13 +50,46 @@ struct BattleTrackerCombatResolverSection: View {
             .id("combatResolver")
             .accessibilityIdentifier("battleTracker.combatResolver")
             .onAppear {
-                if usesLandscapeSplitPresentation
+                if usesExpandedPresentation
                     || trackerState.currentPhase.isCombatRelated
                     || deploymentIsComplete {
                     showsCombatResolver = true
                 }
             }
         }
+    }
+
+    /// iPad/Mac wide layouts and phone landscape combat split — skip the disclosure wrapper.
+    private var usesExpandedPresentation: Bool {
+        usesLandscapeSplitPresentation
+    }
+
+    private var resolverHeader: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+            HStack(spacing: DesignTokens.Spacing.sm) {
+                Label(String(localized: "Resolve Combat"), systemImage: "dice.fill")
+                    .font(.headline)
+                if trackerState.currentPhase.isCombatRelated {
+                    Text(trackerState.currentPhase.title)
+                        .font(.caption2.weight(.semibold))
+                        .padding(.horizontal, DesignTokens.Spacing.sm)
+                        .padding(.vertical, DesignTokens.Spacing.xs)
+                        .background(Color.accentColor.opacity(0.15), in: Capsule())
+                        .foregroundStyle(Color.accentOnSurface)
+                }
+            }
+            Text(
+                String(
+                    localized: """
+                    \(attackerName) attacks \(defenderName). Roll physical dice at the table, then enter hits → wounds → saves below.
+                    """
+                )
+            )
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+        }
+        .accessibilityIdentifier("battleTracker.combatResolver.header")
     }
 
     private var resolverPanel: some View {
@@ -98,7 +136,9 @@ struct BattleTrackerCombatResolverSection: View {
             }
             Text(
                 String(
-                    localized: "\(attackerName) attacks \(defenderName) — enter hits, wounds, and failed saves."
+                    localized: """
+                    \(attackerName) attacks \(defenderName). Tap a unit above, then enter hits → wounds → saves.
+                    """
                 )
             )
             .font(.caption)

@@ -52,6 +52,11 @@ extension GuidedMatchView {
             && (setupIsComplete || hasResumableBattleSession)
     }
 
+    /// Phone battle tab: hide redundant hub chrome so the tracker scroll area gets vertical space.
+    var hidesGuidedMatchHubChromeWhenEmbedded: Bool {
+        showsEmbeddedBattleTracker && !layoutContext.usesPadSplitNavigation
+    }
+
     var usesPhoneLandscapeBattleImmersion: Bool {
         layoutContext.prefersCollapsedBattleChrome && showsEmbeddedBattleTracker
     }
@@ -60,8 +65,9 @@ extension GuidedMatchView {
         usesPhoneLandscapeBattleImmersion
     }
 
-    var usesCompactLandscapeStatusBar: Bool {
-        usesPhoneLandscapeBattleImmersion
+    var usesCompactHubStatusBar: Bool {
+        hidesGuidedMatchHubChromeWhenEmbedded
+            || TabletomeLayout.prefersCompactGuidedMatchChrome(layoutContext)
     }
 
     func hubChromeSummaryLine(catalog: SpearheadCatalog) -> String {

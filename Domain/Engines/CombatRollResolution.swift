@@ -48,8 +48,13 @@ public enum CombatRollResolution: Sendable {
         input.woundRoll + cappedWoundModifier(input)
     }
 
+    /// Modified save total after save modifiers and subtracting weapon Rend (AoS 4th ed).
     public static func effectiveSave(_ input: AttackRollInput) -> Int {
-        input.saveRoll + input.saveModifier + input.rend
+        input.saveRoll + input.saveModifier - input.rend
+    }
+
+    public static func saveNeededOnDice(saveTarget: Int, rend: Int, saveModifier: Int) -> Int {
+        saveTarget + rend - saveModifier
     }
 
     public static func criticalHit(_ input: AttackRollInput) -> Bool {

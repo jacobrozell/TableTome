@@ -74,6 +74,12 @@ final class NewPlayerTipsStoreTests: XCTestCase {
         XCTAssertTrue(NewPlayerTipsStore.hasDismissedHeroRoundOneNudge)
     }
 
+    func testDismissesBattleTacticCommandGuide() {
+        XCTAssertFalse(NewPlayerTipsStore.hasDismissedBattleTacticCommandGuide)
+        NewPlayerTipsStore.dismissBattleTacticCommandGuide()
+        XCTAssertTrue(NewPlayerTipsStore.hasDismissedBattleTacticCommandGuide)
+    }
+
     func testDismissesWargamePrimer() {
         XCTAssertFalse(NewPlayerTipsStore.hasDismissedWargamePrimer)
         NewPlayerTipsStore.dismissWargamePrimer()

@@ -23,7 +23,7 @@ final class HomeViewModel: ObservableObject {
 
         do {
             let all = try await rulesRepository.availableGameSystems()
-            gameSystems = all.filter { ReleaseSurface.isGameSystemVisible($0) }
+            gameSystems = all.filter { ReleaseSurface.isPlayHomeGameSystemVisible($0) }
         } catch let error as RulesRepositoryError {
             errorMessage = String(localized: "Could not load game guides. Check bundled data and try again.")
             TabletomeAnalytics.logRulesLoadFailed(

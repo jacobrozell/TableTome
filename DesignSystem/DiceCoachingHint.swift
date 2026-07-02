@@ -216,7 +216,9 @@ struct BattleTrackerScoringReminderBanner: View {
             )
         } else {
             String(
-                localized: "Add victory points for objectives and battle tactics before passing the phone."
+                localized: """
+                Add victory points for objectives and completed battle tactics. Cards used as commands cannot also score their tactic.
+                """
             )
         }
     }

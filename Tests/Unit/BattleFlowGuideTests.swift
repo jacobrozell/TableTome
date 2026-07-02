@@ -168,4 +168,33 @@ final class BattleFlowGuideTests: XCTestCase {
 
         XCTAssertTrue(suggested.contains(.identifyUnderdog))
     }
+
+    func testSuggestsFirstTurnWhenPriorityResolved() {
+        let suggested = BattleChecklistCompletionEvaluator.suggestedRoundCompletions(
+            round: 2,
+            playerOneVictoryPoints: 3,
+            playerTwoVictoryPoints: 1,
+            firstTurnIsPlayerOne: true
+        )
+
+        XCTAssertTrue(suggested.contains(.firstTurnOrPriority))
+    }
+
+    func testEndOfTurnAfterBothTurnsSuggestsNextRound() {
+        var tracker = BattleTrackerState()
+        tracker.completedDeploymentSteps = Set(DeploymentChecklistStep.allCases.map(\.rawValue))
+        tracker.completedRoundChecklistSteps = [
+            "round-1": Set(BattleRoundChecklistStep.allCases.map(\.rawValue))
+        ]
+        tracker.battleRound = 1
+        tracker.currentPhase = .endOfTurn
+        tracker.completedTurnsThisRound = [true, false]
+
+        let step = BattleFlowGuide.currentStep(
+            matchState: GuidedMatchState(),
+            trackerState: tracker
+        )
+
+        XCTAssertEqual(step?.kind, .startNextRound(1))
+    }
 }

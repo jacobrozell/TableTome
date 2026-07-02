@@ -61,6 +61,37 @@ extension BattlePhaseTrackerViewModel {
         return p1 < p2
     }
 
+    var scoreLeaderIsPlayerOne: Bool? {
+        let p1 = trackerState.playerOneVictoryPoints
+        let p2 = trackerState.playerTwoVictoryPoints
+        if p1 == p2 { return nil }
+        return p1 > p2
+    }
+
+    var nextHandoffPlayerName: String? {
+        guard canPassToNextPlayerThisRound else { return nil }
+        return trackerState.activePlayerIsOne ? playerTwoName : playerOneName
+    }
+
+    var isBattleComplete: Bool {
+        let maxRound = playContext.playEngine.battleRoundCount()
+        guard trackerState.battleRound >= maxRound else { return false }
+        guard trackerState.currentPhase == .endOfTurn else { return false }
+        return trackerState.completedTurnsThisRound.count >= 2
+    }
+
+    func turnIsComplete(round: Int, playerIsOne: Bool) -> Bool {
+        if round < trackerState.battleRound { return true }
+        guard round == trackerState.battleRound else { return false }
+        return trackerState.completedTurnsThisRound.contains(playerIsOne)
+    }
+
+    func turnIsActive(round: Int, playerIsOne: Bool) -> Bool {
+        round == trackerState.battleRound
+            && trackerState.activePlayerIsOne == playerIsOne
+            && !trackerState.completedTurnsThisRound.contains(playerIsOne)
+    }
+
     func setDeploymentStep(_ step: DeploymentChecklistStep, complete: Bool) {
         if complete {
             trackerState.completedDeploymentSteps.insert(step.rawValue)
@@ -85,23 +116,58 @@ extension BattlePhaseTrackerViewModel {
         let key = BattleRoundChecklist.storageKey(round: trackerState.battleRound)
         var steps = trackerState.completedRoundChecklistSteps[key] ?? []
         if complete {
+            if step == .firstTurnOrPriority, matchState.firstTurnIsPlayerOne == nil {
+                return
+            }
             steps.insert(step.rawValue)
         } else {
             steps.remove(step.rawValue)
         }
         trackerState.completedRoundChecklistSteps[key] = steps
         persist()
+        if complete {
+            beginRoundTurnsIfReady()
+        }
+    }
+
+    func setRoundFirstTurn(isPlayerOne: Bool) {
+        matchState.firstTurnIsPlayerOne = isPlayerOne
+        trackerState.activePlayerIsOne = isPlayerOne
+        persistMatchState()
+        syncAutoCompletions()
+        let key = BattleRoundChecklist.storageKey(round: trackerState.battleRound)
+        var steps = trackerState.completedRoundChecklistSteps[key] ?? []
+        steps.insert(BattleRoundChecklistStep.firstTurnOrPriority.rawValue)
+        trackerState.completedRoundChecklistSteps[key] = steps
+        persist()
+        beginRoundTurnsIfReady()
+    }
+
+    func beginRoundTurnsIfReady() {
+        guard playContext.capabilities.showsBattleTacticDecks else { return }
+        guard !roundOpenerIsIncomplete else { return }
+        guard let firstTurnIsPlayerOne = matchState.firstTurnIsPlayerOne else { return }
+        trackerState.activePlayerIsOne = firstTurnIsPlayerOne
+        let turnStart = playContext.playEngine.turnStartPhase()
+        if trackerState.currentPhase != turnStart {
+            setPhase(turnStart)
+        } else {
+            persist()
+            refreshAbilities()
+        }
     }
 
     func completePhasedRoundTurnPhase(_ phase: BattleTurnPhase) {
         if phase == .endOfTurn {
-            if trackerState.battleRound >= playContext.playEngine.battleRoundCount() {
-                return
+            trackerState.completedTurnsThisRound.insert(trackerState.activePlayerIsOne)
+            if trackerState.completedTurnsThisRound.count < 2 {
+                trackerState.activePlayerIsOne.toggle()
+                trackerState.currentPhase = playContext.playEngine.turnStartPhase()
+                persist()
+                refreshAbilities()
+            } else {
+                persist()
             }
-            trackerState.activePlayerIsOne.toggle()
-            trackerState.currentPhase = playContext.playEngine.turnStartPhase()
-            persist()
-            refreshAbilities()
         } else {
             advancePhase()
         }

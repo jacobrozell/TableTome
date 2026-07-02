@@ -8,8 +8,8 @@ struct BattlePhaseTrackerView: View {
     @StateObject var multiAttackViewModel = MultiAttackEvaluatorViewModel()
     @StateObject var batchCombatViewModel = BatchCombatEvaluatorViewModel()
     @AppStorage("diceInputMode") var diceInputModeRaw = DiceInputMode.physical.rawValue
-    @AppStorage(BattleTrackerChromeStorage.topCollapsedKey) private var isTopChromeCollapsed = false
-    @AppStorage(BattleTrackerChromeStorage.topChromeExpandedInLandscapeKey) private var topChromeExpandedInLandscape = false
+    @AppStorage(BattleTrackerChromeStorage.topCollapsedKey) var isTopChromeCollapsed = false
+    @AppStorage(BattleTrackerChromeStorage.topChromeExpandedInLandscapeKey) var topChromeExpandedInLandscape = false
     @State var showsCombatResolver = false
     @State var showsAdvancedOptions = false
     @State var showsMultiAttack = false
@@ -141,7 +141,7 @@ struct BattlePhaseTrackerView: View {
                     selectedSectionTab = suggestedSectionTab
                 }
             }
-            applyPhoneLandscapeTopChromeDefault()
+            applyCompactTopChromeDefault()
             if AppLaunchArguments.shouldOpenUnitFocus {
                 Task {
                     try? await Task.sleep(for: .milliseconds(1_400))
@@ -160,10 +160,10 @@ struct BattlePhaseTrackerView: View {
             }
         }
         .onChange(of: layoutContext) { _, _ in
-            applyPhoneLandscapeTopChromeDefault()
+            applyCompactTopChromeDefault()
         }
         .onChange(of: isTopChromeCollapsed) { _, collapsed in
-            if layoutContext.prefersCollapsedBattleChrome {
+            if layoutContext.prefersCollapsedBattleChrome || isEmbeddedInGuidedMatch {
                 topChromeExpandedInLandscape = !collapsed
             }
         }
@@ -171,111 +171,6 @@ struct BattlePhaseTrackerView: View {
             await combatViewModel.load()
             syncCombatContext()
         }
-    }
-
-    @ViewBuilder
-    private var compactTopChrome: some View {
-        if supportsBattleTracker {
-            if usesCompactBattleTrackerChrome {
-                phoneCompactTopChrome
-            } else if usesPadTabbedTwoColumnLayout {
-                padTopChrome
-            }
-        }
-    }
-
-    @ViewBuilder
-    private var phoneCompactTopChrome: some View {
-        if isTopChromeCollapsed {
-            BattleTrackerCollapsedTopChrome(
-                gameSystemId: viewModel.gameSystemId,
-                tabs: BattleTrackerSectionTab.visibleTabs(gameSystemId: viewModel.gameSystemId),
-                selection: $selectedSectionTab,
-                round: viewModel.trackerState.battleRound,
-                phaseTitle: viewModel.trackerState.currentPhase.title,
-                playerName: viewModel.trackerState.activePlayerIsOne
-                    ? viewModel.playerOneName
-                    : viewModel.playerTwoName,
-                onExpand: { expandTopChrome() }
-            )
-        } else {
-            HStack(alignment: .center, spacing: DesignTokens.Spacing.xs) {
-                VStack(spacing: layoutContext.prefersCollapsedBattleChrome ? DesignTokens.Spacing.xs : DesignTokens.Spacing.sm) {
-                    BattleTrackerSectionTabBar(
-                        gameSystemId: viewModel.gameSystemId,
-                        selection: $selectedSectionTab
-                    )
-                    if !isEmbeddedInGuidedMatch {
-                        StickyPhaseHeader(
-                            round: viewModel.trackerState.battleRound,
-                            phaseTitle: viewModel.trackerState.currentPhase.title,
-                            playerName: viewModel.trackerState.activePlayerIsOne
-                                ? viewModel.playerOneName
-                                : viewModel.playerTwoName,
-                            gameSystemId: viewModel.gameSystemId
-                        )
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-
-                ChromeCollapseInlineButton(
-                    accessibilityLabel: String(localized: "Hide battle header"),
-                    accessibilityIdentifier: "battleTracker.chromeCollapseInline",
-                    onCollapse: collapseTopChrome
-                )
-            }
-            .barChromeBackground(
-                horizontalPadding: DesignTokens.Spacing.md,
-                verticalPadding: layoutContext.prefersCollapsedBattleChrome ? 2 : DesignTokens.Spacing.xs
-            )
-        }
-    }
-
-    private var padTopChrome: some View {
-        VStack(spacing: DesignTokens.Spacing.sm) {
-            BattleTrackerSectionTabBar(
-                gameSystemId: viewModel.gameSystemId,
-                selection: $selectedSectionTab
-            )
-            StickyPhaseHeader(
-                round: viewModel.trackerState.battleRound,
-                phaseTitle: viewModel.trackerState.currentPhase.title,
-                playerName: viewModel.trackerState.activePlayerIsOne
-                    ? viewModel.playerOneName
-                    : viewModel.playerTwoName,
-                gameSystemId: viewModel.gameSystemId
-            )
-        }
-        .padding(.horizontal, DesignTokens.Spacing.md)
-        .padding(.vertical, DesignTokens.Spacing.xs)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.bar)
-        .accessibilityIdentifier("battleTracker.padTopChrome")
-    }
-
-    private func applyPhoneLandscapeTopChromeDefault() {
-        guard layoutContext.prefersCollapsedBattleChrome, !topChromeExpandedInLandscape else { return }
-        guard !isTopChromeCollapsed else { return }
-        withAnimation(chromeAnimation) {
-            isTopChromeCollapsed = true
-        }
-    }
-
-    private func expandTopChrome() {
-        withAnimation(chromeAnimation) {
-            isTopChromeCollapsed = false
-        }
-    }
-
-    private func collapseTopChrome() {
-        withAnimation(chromeAnimation) {
-            isTopChromeCollapsed = true
-        }
-    }
-
-    /// Battle chrome collapse/expand animation, suppressed under Reduce Motion.
-    private var chromeAnimation: Animation? {
-        reduceMotion ? nil : .easeInOut(duration: 0.2)
     }
 
     @ViewBuilder

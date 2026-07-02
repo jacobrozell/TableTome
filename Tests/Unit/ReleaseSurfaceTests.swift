@@ -134,9 +134,27 @@ final class ReleaseSurfaceTests: XCTestCase {
         let args = ProcessInfo.processInfo.arguments
         XCTAssertFalse(args.contains("-enable_combat_patrol"))
         XCTAssertFalse(args.contains("-enable_full_product_surface"))
+        XCTAssertFalse(args.contains("-enable_all_play_modes"))
         XCTAssertTrue(ReleaseSurface.showsCombatPatrol)
         XCTAssertTrue(ReleaseSurface.isGameSystemIdVisible(GameSystemId.wh40k10eCp.rawValue))
         XCTAssertTrue(ReleaseSurface.showsGuidedMatch(for: GameSystemId.wh40k10eCp.rawValue))
         XCTAssertTrue(ReleaseSurface.showsCombatResolver(for: GameSystemId.wh40k10eCp.rawValue))
+    }
+
+    func testPlayHomeShowsSpearheadOnlyByDefault() {
+        XCTAssertFalse(ReleaseSurface.showsAllPlayModesOnHome)
+        XCTAssertTrue(ReleaseSurface.isPlayHomeGameSystemVisible(GameSystemId.aosSpearhead.rawValue))
+        XCTAssertFalse(ReleaseSurface.isPlayHomeGameSystemVisible(GameSystemId.wh40k11e.rawValue))
+        XCTAssertFalse(ReleaseSurface.isPlayHomeGameSystemVisible(GameSystemId.wh40k10eCp.rawValue))
+    }
+
+    func testPlayHomeIncludesAllBundledModesWhenAllPlayModesEnabled() {
+        guard ProcessInfo.processInfo.arguments.contains("-enable_all_play_modes")
+            || ProcessInfo.processInfo.arguments.contains("-enable_full_product_surface") else {
+            return
+        }
+        XCTAssertTrue(ReleaseSurface.showsAllPlayModesOnHome)
+        XCTAssertTrue(ReleaseSurface.isPlayHomeGameSystemVisible(GameSystemId.wh40k11e.rawValue))
+        XCTAssertTrue(ReleaseSurface.isPlayHomeGameSystemVisible(GameSystemId.wh40k10eCp.rawValue))
     }
 }

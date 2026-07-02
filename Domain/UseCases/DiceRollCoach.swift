@@ -92,17 +92,26 @@ public enum DiceRollCoach: Sendable {
         let effective = CombatRollResolution.effectiveSave(input)
         let passed = CombatRollResolution.saveSucceeded(input)
         let outcome = passed ? String(localized: "Saved") : String(localized: "Failed save")
+        let needed = CombatRollResolution.saveNeededOnDice(
+            saveTarget: input.saveTarget,
+            rend: input.rend,
+            saveModifier: input.saveModifier
+        )
+        let neededNote = needed > 6
+            ? String(localized: "no save on D6")
+            : String(localized: "need \(needed)+ on the dice")
         let text: String
         if input.rend == 0, input.saveModifier == 0 {
             text = String(localized: "Rolled \(input.saveRoll) vs Save \(input.saveTarget)+ — \(outcome).")
         } else {
-            let rendNote = input.rend == 0 ? "" : " (Rend \(input.rend >= 0 ? "+" : "")\(input.rend))"
+            let rendNote = input.rend == 0 ? "" : " − Rend \(input.rend)"
             let saveModNote = input.saveModifier == 0
                 ? ""
-                : " (\(input.saveModifier >= 0 ? "+" : "")\(input.saveModifier) save)"
+                : " +\(input.saveModifier) save"
             text = String(
                 localized: """
-                Rolled \(input.saveRoll)\(saveModNote)\(rendNote) = \(effective) vs Save \(input.saveTarget)+ — \(outcome).
+                Rolled \(input.saveRoll)\(saveModNote)\(rendNote) = \(effective) vs Save \(input.saveTarget)+ — \
+                \(neededNote) — \(outcome).
                 """
             )
         }

@@ -47,7 +47,13 @@ extension BattlePhaseTrackerView {
 
     var turnTabContent: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            if viewModel.playContext.capabilities.showsBattleTacticDecks,
+               viewModel.trackerState.battleRound > 1,
+               viewModel.roundOpenerIsIncomplete {
+                NewMainTurnReminderBanner(round: viewModel.trackerState.battleRound)
+            }
             phasePlaybookSection
+            battleTacticCommandGuideSection
             coachSection
             guideSection
             startOfRoundHelper
@@ -85,10 +91,10 @@ extension BattlePhaseTrackerView {
                         shootingPhaseHelper
                     }
                     combatActivationSection
+                    combatResolverSection()
                     damageUndoSection
                     combatPhaseHelper
                     shootInCombatPhaseHelper
-                    combatResolverSection()
                     armyTrackerSection(wideLayout: false)
                 }
             }
@@ -115,8 +121,18 @@ extension BattlePhaseTrackerView {
 
     @ViewBuilder
     var movementPhaseHelper: some View {
-        if showsSpearheadBattleChrome, viewModel.trackerState.currentPhase == .movement {
-            MovementActionPicker(action: $movementAction)
+        if viewModel.trackerState.currentPhase == .movement {
+            MovementRangeCard(
+                playerName: viewModel.trackerState.activePlayerIsOne
+                    ? viewModel.playerOneName
+                    : viewModel.playerTwoName,
+                army: viewModel.activeArmy,
+                woundsRemaining: viewModel.trackerState.unitWoundsRemaining,
+                armyId: viewModel.activeArmy?.id
+            )
+            if showsSpearheadBattleChrome {
+                MovementActionPicker(action: $movementAction)
+            }
         }
     }
 

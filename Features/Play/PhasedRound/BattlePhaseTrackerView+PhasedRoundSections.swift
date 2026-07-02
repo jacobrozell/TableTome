@@ -5,6 +5,21 @@ extension BattlePhaseTrackerView {
     @ViewBuilder
     var phasedRoundDeploymentSection: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            DeploymentZoneCallout(gameSystemId: viewModel.gameSystemId)
+
+            if viewModel.trackerState.currentPhase == .deployment
+                || viewModel.trackerState.battleRound == 1 {
+                BattleTrackerDeploymentAbilitiesSection(
+                    playerOneName: viewModel.playerOneName,
+                    playerTwoName: viewModel.playerTwoName,
+                    playerOneArmy: viewModel.playerOneArmy,
+                    playerTwoArmy: viewModel.playerTwoArmy,
+                    usedOncePerBattleAbilityIds: viewModel.trackerState.usedOncePerBattleAbilityIds,
+                    ruleSections: ruleSections,
+                    onMarkUsed: viewModel.markUsed
+                )
+            }
+
             if viewModel.playContext.capabilities.deploymentChecklistStyle == .wh40k {
                 Wh40kDeploymentChecklistCard(
                     completedSteps: viewModel.trackerState.completedDeploymentSteps,

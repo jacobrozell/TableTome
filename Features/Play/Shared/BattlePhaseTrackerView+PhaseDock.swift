@@ -20,7 +20,7 @@ extension BattlePhaseTrackerView {
                 scrollToPhaseControls = true
             },
             onAdvancePhase: {
-                viewModel.advancePhase()
+                viewModel.advanceTurnOrPhase()
                 selectedSectionTab = .turn
                 scrollToPhaseControls = true
             },

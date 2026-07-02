@@ -323,6 +323,32 @@ public struct SpearheadUnit: Codable, Sendable, Identifiable, Equatable {
     }
 }
 
+public struct RoundVictoryPoints: Codable, Sendable, Equatable {
+    public var playerOne: Int
+    public var playerTwo: Int
+
+    public init(playerOne: Int = 0, playerTwo: Int = 0) {
+        self.playerOne = playerOne
+        self.playerTwo = playerTwo
+    }
+
+    public func value(forPlayerOne playerIsOne: Bool) -> Int {
+        playerIsOne ? playerOne : playerTwo
+    }
+
+    public mutating func setValue(_ value: Int, forPlayerOne playerIsOne: Bool) {
+        if playerIsOne {
+            playerOne = max(0, value)
+        } else {
+            playerTwo = max(0, value)
+        }
+    }
+
+    public mutating func add(_ delta: Int, forPlayerOne playerIsOne: Bool) {
+        setValue(max(0, value(forPlayerOne: playerIsOne) + delta), forPlayerOne: playerIsOne)
+    }
+}
+
 public struct BattleTrackerState: Codable, Sendable, Equatable {
     public var battleRound: Int
     public var activePlayerIsOne: Bool
@@ -331,6 +357,10 @@ public struct BattleTrackerState: Codable, Sendable, Equatable {
     public var usedOncePerBattleAbilityIds: Set<String>
     public var playerOneVictoryPoints: Int
     public var playerTwoVictoryPoints: Int
+    /// VP scored each battle round (each player's end-of-turn scoring for that round).
+    public var victoryPointsByRound: [Int: RoundVictoryPoints]
+    /// Players who have finished their turn this battle round (`true` = player one).
+    public var completedTurnsThisRound: Set<Bool>
     public var completedRoundChecklistSteps: [String: Set<String>]
     public var unitWoundsRemaining: [String: Int]
     public var unitHealthPerModelOverrides: [String: Int]
@@ -360,6 +390,8 @@ public struct BattleTrackerState: Codable, Sendable, Equatable {
         usedOncePerBattleAbilityIds: Set<String> = [],
         playerOneVictoryPoints: Int = 0,
         playerTwoVictoryPoints: Int = 0,
+        victoryPointsByRound: [Int: RoundVictoryPoints] = [:],
+        completedTurnsThisRound: Set<Bool> = [],
         completedRoundChecklistSteps: [String: Set<String>] = [:],
         unitWoundsRemaining: [String: Int] = [:],
         unitHealthPerModelOverrides: [String: Int] = [:],
@@ -380,6 +412,8 @@ public struct BattleTrackerState: Codable, Sendable, Equatable {
         self.usedOncePerBattleAbilityIds = usedOncePerBattleAbilityIds
         self.playerOneVictoryPoints = playerOneVictoryPoints
         self.playerTwoVictoryPoints = playerTwoVictoryPoints
+        self.victoryPointsByRound = victoryPointsByRound
+        self.completedTurnsThisRound = completedTurnsThisRound
         self.completedRoundChecklistSteps = completedRoundChecklistSteps
         self.unitWoundsRemaining = unitWoundsRemaining
         self.unitHealthPerModelOverrides = unitHealthPerModelOverrides
@@ -403,6 +437,8 @@ public struct BattleTrackerState: Codable, Sendable, Equatable {
         usedOncePerBattleAbilityIds = try container.decodeIfPresent(Set<String>.self, forKey: .usedOncePerBattleAbilityIds) ?? []
         playerOneVictoryPoints = try container.decodeIfPresent(Int.self, forKey: .playerOneVictoryPoints) ?? 0
         playerTwoVictoryPoints = try container.decodeIfPresent(Int.self, forKey: .playerTwoVictoryPoints) ?? 0
+        victoryPointsByRound = try container.decodeIfPresent([Int: RoundVictoryPoints].self, forKey: .victoryPointsByRound) ?? [:]
+        completedTurnsThisRound = try container.decodeIfPresent(Set<Bool>.self, forKey: .completedTurnsThisRound) ?? []
         completedRoundChecklistSteps = try container.decodeIfPresent([String: Set<String>].self, forKey: .completedRoundChecklistSteps) ?? [:]
         unitWoundsRemaining = try container.decodeIfPresent([String: Int].self, forKey: .unitWoundsRemaining) ?? [:]
         unitHealthPerModelOverrides = try container.decodeIfPresent(
@@ -421,6 +457,13 @@ public struct BattleTrackerState: Codable, Sendable, Equatable {
             [String: Set<String>].self,
             forKey: .unitsActedThisPhase
         ) ?? [:]
+        if victoryPointsByRound.isEmpty,
+           playerOneVictoryPoints > 0 || playerTwoVictoryPoints > 0 {
+            victoryPointsByRound[1] = RoundVictoryPoints(
+                playerOne: playerOneVictoryPoints,
+                playerTwo: playerTwoVictoryPoints
+            )
+        }
     }
 }
 

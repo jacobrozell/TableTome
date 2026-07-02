@@ -251,13 +251,20 @@ public enum CombatRollEngine: Sendable {
             ? String(localized: "Auto-wound skipped the wound roll — defender still saves. ")
             : ""
         let saved = effective >= input.saveTarget
-        if input.rend != 0 {
+        if input.rend != 0 || input.saveModifier != 0 {
             let modifierTerm = input.saveModifier == 0 ? "" : " + modifier \(input.saveModifier)"
-            let needed = max(1, input.saveTarget - input.rend - input.saveModifier)
-            let rendLabel = input.rend >= 0 ? "+\(input.rend)" : "\(input.rend)"
+            let needed = CombatRollResolution.saveNeededOnDice(
+                saveTarget: input.saveTarget,
+                rend: input.rend,
+                saveModifier: input.saveModifier
+            )
+            let neededLabel = needed > 6
+                ? String(localized: "no save on D6")
+                : String(localized: "need \(needed)+ on the dice")
+            let rendTerm = input.rend == 0 ? "" : " − Rend \(input.rend)"
             return autoWoundPrefix + """
-            Rolled \(input.saveRoll)\(modifierTerm) + Rend \(rendLabel) = \(effective) vs Save \(input.saveTarget)+ — \
-            need \(needed)+ on the dice — \(saved ? "saved" : "failed save").
+            Rolled \(input.saveRoll)\(modifierTerm)\(rendTerm) = \(effective) vs Save \(input.saveTarget)+ — \
+            \(neededLabel) — \(saved ? "saved" : "failed save").
             """
         }
         let modNote = input.saveModifier == 0 ? "" : " (modifier \(input.saveModifier >= 0 ? "+" : "")\(input.saveModifier))"

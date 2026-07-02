@@ -68,12 +68,16 @@ final class BatchCombatRollEngineTests: XCTestCase {
 
     func testSaveNeededOnDiceWithRend() {
         XCTAssertEqual(
-            BatchCombatRollEngine.saveNeededOnDice(saveTarget: 6, rend: 2, saveModifier: 0),
+            BatchCombatRollEngine.saveNeededOnDice(saveTarget: 4, rend: 1, saveModifier: 0),
+            5
+        )
+        XCTAssertEqual(
+            BatchCombatRollEngine.saveNeededOnDice(saveTarget: 3, rend: 1, saveModifier: 0),
             4
         )
         XCTAssertEqual(
-            BatchCombatRollEngine.saveNeededOnDice(saveTarget: 6, rend: 2, saveModifier: -1),
-            5
+            BatchCombatRollEngine.saveNeededOnDice(saveTarget: 4, rend: 1, saveModifier: 1),
+            4
         )
     }
 }

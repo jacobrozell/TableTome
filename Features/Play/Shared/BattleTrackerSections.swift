@@ -294,15 +294,37 @@ struct BattleTrackerControlPanel: View {
             )
             .accessibilityIdentifier("battleTracker.round")
 
-            Picker(String(localized: "Active Player"), selection: Binding(
-                get: { viewModel.trackerState.activePlayerIsOne },
-                set: { viewModel.setActivePlayer(isOne: $0) }
-            )) {
-                Text(viewModel.playerOneName).tag(true)
-                Text(viewModel.playerTwoName).tag(false)
+            if viewModel.canAdvanceBattleRound {
+                Button {
+                    viewModel.advanceBattleRound()
+                } label: {
+                    Label(
+                        String(
+                            localized: "Start \(viewModel.playContext.playEngine.roundLabel(round: viewModel.trackerState.battleRound + 1))"
+                        ),
+                        systemImage: "arrow.up.circle.fill"
+                    )
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .prominentButtonLabelStyle()
+                }
+                .buttonStyle(.borderedProminent)
+                .frame(minHeight: DesignTokens.minTouchTarget)
+                .accessibilityIdentifier("battleTracker.advanceRound")
             }
-            .pickerStyle(.segmented)
-            .accessibilityIdentifier("battleTracker.activePlayer")
+
+            BattleTrackerPlayerSwitcher(
+                playerOneName: viewModel.playerOneName,
+                playerTwoName: viewModel.playerTwoName,
+                activePlayerIsOne: viewModel.trackerState.activePlayerIsOne,
+                label: BattleTrackerPlayerSwitcher.label(
+                    round: viewModel.trackerState.battleRound,
+                    playerOneVictoryPoints: viewModel.trackerState.playerOneVictoryPoints,
+                    playerTwoVictoryPoints: viewModel.trackerState.playerTwoVictoryPoints,
+                    completedTurnsThisRound: viewModel.trackerState.completedTurnsThisRound.count,
+                    roundOpenerIncomplete: viewModel.roundOpenerIsIncomplete
+                ),
+                onSelect: { viewModel.setActivePlayer(isOne: $0) }
+            )
 
             AttackerDefenderPickerCard(
                 playerOneName: viewModel.playerOneName,
@@ -311,6 +333,16 @@ struct BattleTrackerControlPanel: View {
                 onSelect: viewModel.setAttacker,
                 accessibilityPrefix: "battleTracker"
             )
+
+            if viewModel.playContext.capabilities.usesPatrolFormatRules,
+               viewModel.trackerState.battleRound == 1 {
+                FirstTurnPickerCard(
+                    playerOneName: viewModel.playerOneName,
+                    playerTwoName: viewModel.playerTwoName,
+                    firstTurnIsPlayerOne: viewModel.matchState.firstTurnIsPlayerOne,
+                    onSelect: viewModel.setFirstTurn
+                )
+            }
 
             Text(viewModel.armyName)
                 .font(.subheadline)
@@ -371,7 +403,7 @@ private struct BattleTrackerPhaseControls: View {
 
             if showsAdvancePhaseButton {
                 Button {
-                    viewModel.advancePhase()
+                    viewModel.advanceTurnOrPhase()
                 } label: {
                     Label(String(localized: "Next Phase"), systemImage: "arrow.right.circle.fill")
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -451,6 +483,11 @@ struct BattleTrackerRoundOpenerSection: View {
                     round: viewModel.trackerState.battleRound,
                     completedSteps: viewModel.trackerState.completedRoundChecklistSteps,
                     focusedStep: viewModel.focusedRoundOpenerStep,
+                    playerOneName: viewModel.playerOneName,
+                    playerTwoName: viewModel.playerTwoName,
+                    attackerName: viewModel.attackerDisplayName,
+                    firstTurnIsPlayerOne: viewModel.matchState.firstTurnIsPlayerOne,
+                    onSelectFirstTurn: { viewModel.setRoundFirstTurn(isPlayerOne: $0) },
                     onToggle: viewModel.setRoundChecklistStep
                 )
             }
@@ -512,26 +549,53 @@ struct BattleTrackerVictoryPointsSection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            if !viewModel.playContext.usesAlternatingActivation, viewModel.trackerState.currentPhase != .deployment {
+                BattleRoundTurnProgressChip(
+                    round: viewModel.trackerState.battleRound,
+                    playerOneName: viewModel.playerOneName,
+                    playerTwoName: viewModel.playerTwoName,
+                    completedTurnPlayerOnes: viewModel.trackerState.completedTurnsThisRound,
+                    activePlayerIsOne: viewModel.trackerState.activePlayerIsOne
+                )
+            }
+
             VictoryPointsCard(
                 playerOneName: viewModel.playerOneName,
                 playerTwoName: viewModel.playerTwoName,
                 playerOneVP: viewModel.trackerState.playerOneVictoryPoints,
                 playerTwoVP: viewModel.trackerState.playerTwoVictoryPoints,
+                battleRound: viewModel.trackerState.battleRound,
+                maxBattleRounds: viewModel.playContext.playEngine.battleRoundCount(),
+                victoryPointsByRound: viewModel.trackerState.victoryPointsByRound,
+                activePlayerIsOne: viewModel.trackerState.activePlayerIsOne,
+                completedTurnPlayerOnes: viewModel.trackerState.completedTurnsThisRound,
+                scoreLeaderIsPlayerOne: viewModel.scoreLeaderIsPlayerOne,
                 highlightsScoring: viewModel.trackerState.currentPhase == (viewModel.playContext.capabilities.showsActivationBar ? .scoring : .endOfTurn),
                 gameSystemId: viewModel.gameSystemId,
                 onAdjust: { viewModel.adjustVictoryPoints(playerIsOne: $0, delta: $1, reason: $2) },
-                onQuickAdd: { viewModel.adjustVictoryPoints(playerIsOne: $0, delta: $1, reason: $2) }
+                onQuickAdd: { viewModel.adjustVictoryPoints(playerIsOne: $0, delta: $1, reason: $2) },
+                onSetRoundVictoryPoints: { viewModel.setRoundVictoryPoints(playerIsOne: $1, round: $0, value: $2) },
+                turnIsComplete: { viewModel.turnIsComplete(round: $0, playerIsOne: $1) },
+                turnIsActive: { viewModel.turnIsActive(round: $0, playerIsOne: $1) }
             )
             if let underdogIsPlayerOne = viewModel.underdogIsPlayerOne,
                viewModel.playContext.capabilities.showsBattleTacticDecks {
                 let name = underdogIsPlayerOne ? viewModel.playerOneName : viewModel.playerTwoName
-                Label(String(localized: "Underdog: \(name)"), systemImage: "arrow.down.circle.fill")
-                    .font(.caption.weight(.medium))
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, DesignTokens.Spacing.sm)
-                    .padding(.vertical, DesignTokens.Spacing.xs)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
+                HStack(spacing: DesignTokens.Spacing.sm) {
+                    Image(systemName: "arrow.down.circle.fill")
+                        .foregroundStyle(.orange)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(String(localized: "Underdog this round"))
+                            .font(.caption.weight(.semibold))
+                        Text(name)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer(minLength: 0)
+                }
+                .padding(.horizontal, DesignTokens.Spacing.sm)
+                .padding(.vertical, DesignTokens.Spacing.sm)
+                .background(Color.orange.opacity(0.08), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
             }
         }
     }

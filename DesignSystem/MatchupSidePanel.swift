@@ -16,6 +16,8 @@ struct MatchupSidePanel: View {
     var usesCompactStyle: Bool = false
     var woundsRemaining: Int?
     var unitWoundsRemaining: ((String) -> Int?)?
+    var hideUnitPicker: Bool = false
+    var unitPickerHint: String?
     let onArmyChange: (String) -> Void
     let onUnitChange: (String) -> Void
     let onWeaponChange: (String) -> Void
@@ -96,15 +98,27 @@ struct MatchupSidePanel: View {
                 }
             }
 
-            if units.count > 1 {
+            if hideUnitPicker, let hint = unitPickerHint {
+                Text(hint)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            } else if selectableUnits.count > 1 {
                 unitChangePicker
             }
         }
     }
 
+    private var selectableUnits: [SpearheadUnit] {
+        units.filter { unit in
+            guard let remaining = unitWoundsRemaining?(unit.id) else { return true }
+            return remaining > 0
+        }
+    }
+
     private var unitChangePicker: some View {
         Picker(selection: $unitId) {
-            ForEach(units) { unit in
+            ForEach(selectableUnits) { unit in
                 Text(unitPickerLabel(for: unit)).tag(unit.id)
             }
         } label: {

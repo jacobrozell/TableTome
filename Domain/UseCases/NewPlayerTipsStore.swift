@@ -8,6 +8,7 @@ public enum NewPlayerTipsStore: Sendable {
     private static let guidedMatchSetupExpandedKey = "\(prefix)_guided_match_setup_expanded"
     private static let physicalDiceResolverHintKey = "\(prefix)_physical_dice_resolver_hint"
     private static let heroRoundOneNudgeKey = "\(prefix)_hero_round_one_nudge"
+    private static let battleTacticCommandGuideKey = "\(prefix)_battle_tactic_command_guide"
 
     private static let wargamePrimerKey = "\(prefix)_wargame_primer"
 
@@ -67,6 +68,14 @@ public enum NewPlayerTipsStore: Sendable {
         UserDefaults.standard.set(true, forKey: heroRoundOneNudgeKey)
     }
 
+    public static var hasDismissedBattleTacticCommandGuide: Bool {
+        UserDefaults.standard.bool(forKey: battleTacticCommandGuideKey)
+    }
+
+    public static func dismissBattleTacticCommandGuide() {
+        UserDefaults.standard.set(true, forKey: battleTacticCommandGuideKey)
+    }
+
     public static func resetAll() {
         UserDefaults.standard.removeObject(forKey: battleTrackerCoachKey)
         UserDefaults.standard.removeObject(forKey: combatSequencePrimerKey)
@@ -74,6 +83,7 @@ public enum NewPlayerTipsStore: Sendable {
         UserDefaults.standard.removeObject(forKey: guidedMatchSetupExpandedKey)
         UserDefaults.standard.removeObject(forKey: physicalDiceResolverHintKey)
         UserDefaults.standard.removeObject(forKey: heroRoundOneNudgeKey)
+        UserDefaults.standard.removeObject(forKey: battleTacticCommandGuideKey)
         UserDefaults.standard.removeObject(forKey: wargamePrimerKey)
     }
 }

@@ -12,7 +12,8 @@ See [docs/game-modes/PRODUCT_SCOPE.md](../docs/game-modes/PRODUCT_SCOPE.md). Pla
 
 | Argument | Effect |
 |----------|--------|
-| `-enable_full_product_surface` | Lists tab, Paints, StarCraft, Rules Q&A, legacy `wh40k-10e` stub visibility, cross-pillar links |
+| `-enable_full_product_surface` | Lists tab, Paints, StarCraft, Rules Q&A, legacy `wh40k-10e` stub visibility, cross-pillar links, **all Play home modes** |
+| `-enable_all_play_modes` | 40k 11e + Combat Patrol on **Play tab home** (Rules/Search unchanged) |
 | `-enable_combat_patrol` | No-op when CP already in release defaults; kept for older test schemes |
 
 ## Gates (1.0.0 Release defaults)
@@ -22,7 +23,7 @@ See [docs/game-modes/PRODUCT_SCOPE.md](../docs/game-modes/PRODUCT_SCOPE.md). Pla
 | Models tab (Collection) | ✅ | ✅ |
 | Paints (in Models) | ✅ | ✅ |
 | Lists tab (Muster) | ❌ | ✅ |
-| Play tab | ✅ | ✅ |
+| Play tab | ✅ (Spearhead-only home) | ✅ all modes |
 | Rules reference | ✅ | ✅ |
 | Rules Q&A assistant | ❌ | ✅ |
 | Match history | ✅ | ✅ |

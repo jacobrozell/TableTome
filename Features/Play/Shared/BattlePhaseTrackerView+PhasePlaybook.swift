@@ -49,7 +49,7 @@ extension BattlePhaseTrackerView {
                 showsEmbeddedCombatTools: ReleaseSurface.showsCombatResolver(for: viewModel.gameSystemId),
                 onResolveAttack: handleResolveAttack,
                 onAdvancePhase: {
-                    viewModel.advancePhase()
+                    viewModel.advanceTurnOrPhase()
                     scrollToPhaseControls = true
                 }
             )

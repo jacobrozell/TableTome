@@ -10,6 +10,7 @@ struct HomeView: View {
 
     private var showsAllGamesList: Bool {
         _ = firstSessionRevision
+        guard viewModel.gameSystems.count > 1 else { return false }
         if PlayContinuationResolver.current(activeGameSystemId: router.activeGameSystemId) != nil {
             return true
         }

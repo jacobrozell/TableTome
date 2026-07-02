@@ -171,6 +171,7 @@ struct MatchStepDetailView: View {
             attackerPicker
         case "regiment-abilities", "force-disposition":
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                regimentAbilityCoachingCallout
                 armyOptionsSection(
                     title: viewModel.gameSystemId == .wh40k11e
                         ? String(localized: "Force Dispositions")
@@ -243,6 +244,42 @@ struct MatchStepDetailView: View {
         default:
             EmptyView()
         }
+    }
+
+    private var regimentAbilityCoachingCallout: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            Label(
+                viewModel.gameSystemId == .wh40k11e
+                    ? String(localized: "What is a force disposition?")
+                    : String(localized: "What is a regiment ability?"),
+                systemImage: "questionmark.circle"
+            )
+            .font(.subheadline.weight(.semibold))
+
+            Text(regimentCoachingBody)
+                .font(.callout)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .surfaceCard()
+        .accessibilityIdentifier("guidedMatch.regimentCoaching")
+    }
+
+    private var regimentCoachingBody: String {
+        if viewModel.gameSystemId == .wh40k11e {
+            return String(
+                localized: """
+                This is not a list-building “regiment” of units. Each Combat Patrol card lists force dispositions — \
+                pick one army-wide rule for this battle before you deploy.
+                """
+            )
+        }
+        return String(
+            localized: """
+            This is not a unit group on the table. Each Spearhead army sheet lists two regiment abilities — \
+            pick one pre-battle rule for your whole army before deployment.
+            """
+        )
     }
 
     private var spearheadBattleTacticsSection: some View {

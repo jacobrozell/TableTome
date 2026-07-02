@@ -119,7 +119,8 @@ struct HeroPhaseRoundOneBanner: View {
             title: String(localized: "Hero phase — round 1"),
             detail: String(
                 localized: """
-                Cast spells, use prayers, and heroic abilities before moving. The attacker picks who takes the first turn this round.
+                Cast spells, use prayers, and heroic abilities before moving. Check your battle tactic cards — you can use a \
+                command ability during this turn instead of scoring that card's tactic at the end.
                 """
             ),
             onDismiss: onDismiss,

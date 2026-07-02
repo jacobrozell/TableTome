@@ -109,8 +109,12 @@ struct NewRosterSheet: View {
             Form {
                 if let starterBoxGuidance {
                     Section {
-                        starterBoxBanner(starterBoxGuidance)
-                            .listHeroCardRow()
+                        NewRosterStarterBoxBanner(
+                            guidance: starterBoxGuidance,
+                            onOpenGuidedMatch: openGuidedMatch,
+                            onDismiss: { showsStarterBoxBanner = false }
+                        )
+                        .listHeroCardRow()
                     }
                 }
 
@@ -196,7 +200,14 @@ struct NewRosterSheet: View {
                 } header: {
                     Text(String(localized: "List"))
                 } footer: {
-                    listSectionFooter
+                    NewRosterListSectionFooter(
+                        errorMessage: errorMessage,
+                        customPointsValidationMessage: customPointsValidationMessage,
+                        battleSizeHint: battleSizeHint,
+                        skipToPlayLabel: skipToPlayLabel,
+                        skipToPlayAccessibilityHint: skipToPlayAccessibilityHint,
+                        onSkipToPlay: skipToPlay
+                    )
                 }
 
                 if !faction.isEmpty {
@@ -205,7 +216,11 @@ struct NewRosterSheet: View {
                             Picker(String(localized: "Collection army"), selection: $linkedArmyId) {
                                 Text(String(localized: "None")).tag(UUID?.none)
                                 ForEach(matchingArmies) { army in
-                                    newRosterArmyRow(army).tag(Optional(army.id))
+                                    NewRosterArmyRow(
+                                        army: army,
+                                        overrides: configs.first?.factionOverrides ?? []
+                                    )
+                                    .tag(Optional(army.id))
                                 }
                             }
                             .formNavigationPickerStyle()
@@ -250,29 +265,6 @@ struct NewRosterSheet: View {
                 }
             }
             .onAppear(perform: applyInitialValues)
-        }
-    }
-
-    @ViewBuilder
-    private var listSectionFooter: some View {
-        if let errorMessage {
-            FormValidationFooter(message: errorMessage)
-        } else if let customPointsValidationMessage {
-            FormValidationFooter(message: customPointsValidationMessage)
-        } else {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                Text(FormHints.uniqueName)
-                Text(battleSizeHint)
-                Button(skipToPlayLabel) {
-                    skipToPlay()
-                }
-                .font(.caption.weight(.semibold))
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                .accessibilityIdentifier("musterNewRoster.skipToPlay")
-                .accessibilityLabel(skipToPlayLabel)
-                .accessibilityHint(skipToPlayAccessibilityHint)
-            }
         }
     }
 
@@ -322,54 +314,6 @@ struct NewRosterSheet: View {
                 localized: "Battle size sets the point limit for this list."
             )
         }
-    }
-
-    @ViewBuilder
-    private func newRosterArmyRow(_ army: Army) -> some View {
-        let pres = army.presentation(overrides: configs.first?.factionOverrides ?? [])
-        HStack(spacing: 10) {
-            CrestBadge(text: pres.crest, colorHex: pres.colorHex, imageFileName: pres.imageFileName)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(army.name)
-                    .lineLimit(1)
-                Text(army.faction)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-        }
-    }
-
-    @ViewBuilder
-    private func starterBoxBanner(_ guidance: NewRosterPrefillResolver.StarterBoxGuidance) -> some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            Label(String(localized: "Starter box player?"), systemImage: "flag.checkered")
-                .font(.headline)
-                .foregroundStyle(Color.accentOnSurface)
-
-            Text(guidance.message)
-                .font(.callout)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
-
-            HStack(spacing: DesignTokens.Spacing.sm) {
-                Button(guidance.buttonTitle) {
-                    openGuidedMatch(gameSystemId: guidance.gameSystemId)
-                }
-                .buttonStyle(.borderedProminent)
-                .frame(minHeight: DesignTokens.minTouchTarget)
-                .accessibilityIdentifier("musterNewRoster.openGuidedMatch")
-
-                Button(String(localized: "Build a list anyway")) {
-                    showsStarterBoxBanner = false
-                }
-                .buttonStyle(.bordered)
-                .frame(minHeight: DesignTokens.minTouchTarget)
-                .accessibilityIdentifier("musterNewRoster.dismissStarterBanner")
-            }
-        }
-        .accentHighlightCard()
-        .accessibilityElement(children: .contain)
-        .accessibilityIdentifier("musterNewRoster.starterBoxBanner")
     }
 
     private func battleSizeLabel(_ size: BattleSize) -> Text {

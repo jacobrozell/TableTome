@@ -7,15 +7,9 @@ struct GameSystemDetailView: View {
     @EnvironmentObject private var dependencies: AppDependencies
     @Environment(AppRouter.self) private var router
     @State private var gameSystem: GameSystem?
-    @State private var featuredArmyRows: [FeaturedArmyRow] = []
+    @State private var featuredArmyRows: [GameGuideFeaturedArmyRow] = []
     @State private var errorMessage: String?
     @State private var dismissedWrongGuideAlert = false
-
-    private struct FeaturedArmyRow: Identifiable {
-        let factionName: String
-        let army: SpearheadArmy
-        var id: String { army.id }
-    }
 
     private var playContext: GameSystemPlayContext {
         GameSystemPlayContext.context(for: gameSystemId)
@@ -45,235 +39,21 @@ struct GameSystemDetailView: View {
     var body: some View {
         Group {
             if let gameSystem {
-                List {
-                    if let wrongGuideAlert {
-                        Section {
-                            WrongGuideBanner(
-                                alert: wrongGuideAlert,
-                                onOpenSuggestedGuide: {
-                                    router.openGameGuide(
-                                        gameSystemId: wrongGuideAlert.suggestedGameSystemId
-                                    )
-                                },
-                                onDismiss: {
-                                    dismissedWrongGuideAlert = true
-                                }
-                            )
-                            .listHeroCardRow()
+                GameSystemDetailContent(
+                    gameSystemId: gameSystemId,
+                    gameSystem: gameSystem,
+                    playContext: playContext,
+                    featuredArmyRows: featuredArmyRows,
+                    wrongGuideAlert: wrongGuideAlert,
+                    showsStartHereCard: showsStartHereCard,
+                    showsWhatYouNeedCard: showsWhatYouNeedCard,
+                    onOpenSuggestedGuide: {
+                        if let wrongGuideAlert {
+                            router.openGameGuide(gameSystemId: wrongGuideAlert.suggestedGameSystemId)
                         }
-                    }
-
-                    if showsStartHereCard {
-                        Section {
-                            GameGuideStartHereCard(gameSystem: gameSystem)
-                                .listHeroCardRow()
-                        }
-                    }
-
-                    if showsWhatYouNeedCard {
-                        Section {
-                            GameGuideWhatYouNeedCard(gameSystemId: gameSystemId)
-                                .listHeroCardRow()
-                        }
-                    }
-
-                    if playContext.capabilities.deploymentChecklistStyle == .wh40k, !featuredArmyRows.isEmpty {
-                        Section {
-                            ForEach(featuredArmyRows) { row in
-                                NavigationLink(value: ArmyRosterLink(gameSystemId: gameSystemId, armyId: row.army.id)) {
-                                    starterArmyRow(factionName: row.factionName, army: row.army)
-                                }
-                                .accessibilityIdentifier("guide.armyRoster.\(row.army.id)")
-                            }
-                        } header: {
-                            Text(String(localized: "Starter Set Armies"))
-                        } footer: {
-                            Text(String(localized: "Datasheets, abilities, and battle tools for the Armageddon launch box armies."))
-                        }
-                    }
-
-                    if playContext.capabilities.showsBattleTacticDecks || playContext.capabilities.showsActivationBar || playContext.capabilities.usesPatrolFormatRules,
-                       !featuredArmyRows.isEmpty {
-                        Section {
-                            ForEach(featuredArmyRows) { row in
-                                NavigationLink(value: ArmyRosterLink(gameSystemId: gameSystemId, armyId: row.army.id)) {
-                                    starterArmyRow(factionName: row.factionName, army: row.army)
-                                }
-                                .accessibilityIdentifier("guide.armyRoster.\(row.army.id)")
-                            }
-                        } header: {
-                            Text(starterArmiesSectionTitle)
-                        } footer: {
-                            Text(starterArmiesSectionFooter)
-                        }
-                    }
-
-                    Section {
-                        if !showsStartHereCard {
-                            NavigationLink(value: GettingStartedLink(gameSystemId: gameSystemId)) {
-                                guideRow(
-                                    title: String(localized: "Getting Started"),
-                                    symbol: "map",
-                                    detail: gettingStartedDetail
-                                )
-                            }
-                            .accessibilityIdentifier("guide.gettingStarted.\(gameSystemId)")
-
-                            if playContext.capabilities.usesPatrolFormatRules {
-                                NavigationLink(value: CombatPatrolSampleTurnLink()) {
-                                    guideRow(
-                                        title: String(localized: "Preview a Turn"),
-                                        symbol: "play.circle",
-                                        detail: String(localized: "~2 minutes — each battle phase, dice, and scoring")
-                                    )
-                                }
-                                .accessibilityIdentifier("guide.combatPatrolSampleTurn.\(gameSystemId)")
-                            }
-
-                            if !gameSystem.editionMigrationSteps.isEmpty {
-                                NavigationLink(value: EditionMigrationLink(gameSystemId: gameSystemId)) {
-                                    guideRow(
-                                        title: editionMigrationLinkTitle,
-                                        symbol: playContext.capabilities.showsActivationBar ? "gamecontroller" : "arrow.triangle.2.circlepath",
-                                        detail: editionMigrationLinkDetail
-                                    )
-                                }
-                                .accessibilityIdentifier("guide.whatsNew.\(gameSystemId)")
-                            }
-
-                            if ReleaseSurface.showsGuidedMatch(for: gameSystemId), !showsStartHereCard {
-                                NavigationLink(value: GuidedMatchLink(gameSystemId: GameSystemId(resolving: gameSystemId))) {
-                                    guideRow(
-                                        title: String(localized: "Guided Match"),
-                                        symbol: "flag.checkered",
-                                        detail: guidedMatchDetail
-                                    )
-                                }
-                                .accessibilityIdentifier("guide.guidedMatch.\(gameSystemId)")
-                            }
-                        }
-
-                        if !gameSystem.ruleSections.isEmpty, !playContext.capabilities.showsActivationBar {
-                            NavigationLink(value: GameSystemRulesReferenceLink(gameSystemId: gameSystemId)) {
-                                guideRow(
-                                    title: GameSystemRulesLabels.rulesReferenceLinkTitle(gameSystemId: gameSystemId),
-                                    symbol: "doc.text.fill",
-                                    detail: String(localized: "Search phases, combat, terrain, and glossary")
-                                )
-                            }
-                            .accessibilityIdentifier("guide.rulesReference.\(gameSystemId)")
-                        }
-
-                        if ReleaseSurface.showsCombatResolver(for: gameSystemId) {
-                            NavigationLink(value: CombatResolverLink(gameSystemId: gameSystemId)) {
-                                guideRow(
-                                    title: String(localized: "Combat Resolver"),
-                                    symbol: "dice.fill",
-                                    detail: GameSystemPlayContext.context(for: gameSystemId).capabilities.usesPatrolFormatRules
-                                        ? String(localized: "Resolve hit, wound, and save rolls at the table")
-                                        : String(localized: "Practice attack dice math between games")
-                                )
-                            }
-                            .accessibilityIdentifier("guide.combatResolver.\(gameSystemId)")
-                        }
-                    } header: {
-                        Text(showsStartHereCard ? String(localized: "More") : String(localized: "Play"))
-                    } footer: {
-                        if showsStartHereCard {
-                            Text(String(localized: "Use Start here above for your first path. These links are for rules lookup and optional tools."))
-                        } else if playContext.capabilities.showsBattleTacticDecks {
-                            Text(String(localized: "New to a term? Open AoS Glossary under Table Reference."))
-                        } else if playContext.capabilities.deploymentChecklistStyle == .wh40k {
-                            Text(
-                                String(
-                                    localized: """
-                                    Use Guided Match for the Armageddon starter matchup, or browse all factions \
-                                    in army selection.
-                                    """
-                                )
-                            )
-                        } else if playContext.capabilities.usesPatrolFormatRules {
-                            Text(
-                                String(
-                                    localized: """
-                                    Start with Getting Started, then open Missions Reference before your first game. \
-                                    Guided Match walks through setup and includes a starter matchup.
-                                    """
-                                )
-                            )
-                        } else if playContext.capabilities.showsActivationBar {
-                            Text(String(localized: "Start with Use Starter Matchup for the 2-Player Founders Edition."))
-                        }
-                    }
-
-                    if playContext.capabilities.showsBattleTacticDecks {
-                        Section(String(localized: "Table Reference")) {
-                            NavigationLink(value: BattleTacticsReferenceLink(gameSystemId: gameSystemId)) {
-                                Label(String(localized: "Card Decks Guide"), systemImage: "rectangle.stack")
-                                    .frame(minHeight: DesignTokens.minTouchTarget)
-                            }
-                            .accessibilityHint(String(localized: "Twist cards vs battle tactic cards — which deck is which"))
-                            NavigationLink(value: RulesGlossaryBrowseLink(gameSystemId: gameSystemId)) {
-                                Label(
-                                    GameSystemRulesLabels.glossaryTitle(gameSystemId: gameSystemId),
-                                    systemImage: "book.fill"
-                                )
-                                    .frame(minHeight: DesignTokens.minTouchTarget)
-                            }
-                        }
-                    }
-
-                    if playContext.capabilities.deploymentChecklistStyle == .wh40k || playContext.capabilities.showsActivationBar {
-                        Section(String(localized: "Table Reference")) {
-                            NavigationLink(value: RulesGlossaryBrowseLink(gameSystemId: gameSystemId)) {
-                                Label(
-                                    GameSystemRulesLabels.glossaryTitle(gameSystemId: gameSystemId),
-                                    systemImage: "book.fill"
-                                )
-                                    .frame(minHeight: DesignTokens.minTouchTarget)
-                            }
-                            if playContext.capabilities.showsActivationBar {
-                                NavigationLink(value: GameSystemRulesReferenceLink(gameSystemId: gameSystemId)) {
-                                    Label(
-                                        GameSystemRulesLabels.rulesReferenceLinkTitle(gameSystemId: gameSystemId),
-                                        systemImage: "doc.text.fill"
-                                    )
-                                        .frame(minHeight: DesignTokens.minTouchTarget)
-                                }
-                            }
-                        }
-                    }
-
-                    if playContext.capabilities.usesPatrolFormatRules {
-                        Section(String(localized: "Table Reference")) {
-                            NavigationLink(value: CombatPatrolMissionsLink(gameSystemId: gameSystemId)) {
-                                Label(String(localized: "Missions Reference"), systemImage: "map")
-                                    .frame(minHeight: DesignTokens.minTouchTarget)
-                            }
-                            .accessibilityHint(String(localized: "Six Combat Patrol missions, securing rules, and scoring"))
-                            NavigationLink(value: RulesGlossaryBrowseLink(gameSystemId: gameSystemId)) {
-                                Label(
-                                    GameSystemRulesLabels.glossaryTitle(gameSystemId: gameSystemId),
-                                    systemImage: "book.fill"
-                                )
-                                    .frame(minHeight: DesignTokens.minTouchTarget)
-                            }
-                        }
-                    }
-
-                    if let links = gameSystem.externalLinks, !links.isEmpty {
-                        Section(String(localized: "Official Resources")) {
-                            ForEach(links) { link in
-                                Link(destination: link.url) {
-                                    Label(link.title, systemImage: "arrow.up.right.square")
-                                        .frame(minHeight: DesignTokens.minTouchTarget)
-                                }
-                            }
-                        }
-                    }
-                }
-                .floatingCardListStyle()
-                .tabBarScrollInset()
+                    },
+                    onDismissWrongGuideAlert: { dismissedWrongGuideAlert = true }
+                )
             } else if let errorMessage {
                 EmptyStateView(
                     title: String(localized: "Game guide unavailable"),
@@ -313,100 +93,6 @@ struct GameSystemDetailView: View {
         return gameSystem?.name ?? String(localized: "Game Guide")
     }
 
-    private var gettingStartedDetail: String {
-        if playContext.capabilities.usesPatrolFormatRules {
-            return String(localized: "Pick a patrol box, a mission, and play five rounds")
-        }
-        if playContext.capabilities.deploymentChecklistStyle == .wh40k {
-            return String(localized: "What you need, army building, and how a battle works")
-        }
-        if playContext.capabilities.showsActivationBar {
-            return String(localized: "Minerals, supply, reserves, and five battle rounds")
-        }
-        return String(localized: "Five-minute read — what you need and how a battle works")
-    }
-
-    private var guidedMatchDetail: String {
-        if playContext.capabilities.showsActivationBar {
-            return String(localized: "Raynor vs Kerrigan starter — activations, Pass, and supply tracking")
-        }
-        return String(localized: "Interactive setup and battle tracker — start with Use Starter Matchup")
-    }
-
-    private var starterArmiesSectionTitle: String {
-        playContext.capabilities.showsActivationBar
-            ? String(localized: "Founders Edition Armies")
-            : String(localized: "Starter Set Armies")
-    }
-
-    private var starterArmiesSectionFooter: String {
-        if playContext.capabilities.showsActivationBar {
-            return String(localized: "Rosters and battle tools for the Terran vs Zerg starter matchup.")
-        }
-        if playContext.capabilities.usesPatrolFormatRules {
-            return String(localized: "Rosters and setup tools for Combat Patrol starter armies.")
-        }
-        return String(localized: "Unit profiles, abilities, and battle tools for the starter armies in your box.")
-    }
-
-    private var editionMigrationLinkTitle: String {
-        playContext.capabilities.showsActivationBar
-            ? String(localized: "RTS → Tabletop")
-            : String(localized: "What's New in 11th Edition")
-    }
-
-    private var editionMigrationLinkDetail: String {
-        playContext.capabilities.showsActivationBar
-            ? String(localized: "Supply, fog of war, and activations for SC II veterans")
-            : String(localized: "Upgrading from 10th — key rule changes at the table")
-    }
-
-    private func starterArmyRow(factionName: String, army: SpearheadArmy) -> some View {
-        HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
-            Image(systemName: "shield.lefthalf.filled")
-                .font(.title3)
-                .foregroundStyle(Color.accentOnSurface)
-                .symbolRenderingMode(.hierarchical)
-                .frame(width: DesignTokens.minTouchTarget, height: DesignTokens.minTouchTarget)
-                .accessibilityHidden(true)
-
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                Text(factionName)
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Color.accentOnSurface)
-                Text(army.name)
-                    .font(.headline)
-                Text(army.general)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-        }
-        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-        .contentShape(Rectangle())
-    }
-
-    private func guideRow(title: String, symbol: String, detail: String) -> some View {
-        HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
-            Image(systemName: symbol)
-                .font(.title3)
-                .foregroundStyle(Color.accentOnSurface)
-                .symbolRenderingMode(.hierarchical)
-                .frame(width: DesignTokens.minTouchTarget, height: DesignTokens.minTouchTarget)
-                .accessibilityHidden(true)
-
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                Text(title)
-                    .font(.headline)
-                Text(detail)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-        }
-        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-        .contentShape(Rectangle())
-    }
-
     private func load() async {
         do {
             gameSystem = try await dependencies.rulesRepository.gameSystem(id: gameSystemId)
@@ -421,7 +107,7 @@ struct GameSystemDetailView: View {
             featuredArmyRows = catalog.factions.flatMap { faction in
                 faction.armies
                     .filter { featuredArmyIds.contains($0.id) }
-                    .map { FeaturedArmyRow(factionName: faction.name, army: $0) }
+                    .map { GameGuideFeaturedArmyRow(factionName: faction.name, army: $0) }
             }
         } catch {
             errorMessage = String(localized: "This game guide could not be loaded.")

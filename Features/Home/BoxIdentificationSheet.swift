@@ -121,7 +121,20 @@ struct BoxIdentificationSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                currentStepContent
+                BoxIdentificationStepContent(
+                    step: step,
+                    sciFiBoxKind: sciFiBoxKind,
+                    isCombatPatrolBox: isCombatPatrolBox,
+                    recommendedGameSystemId: recommendedGameSystemId,
+                    sciFiStarterFormat: sciFiStarterFormat,
+                    visibleGenres: visibleGenres,
+                    onSelectGenre: selectGenre,
+                    onSelectSciFiSize: selectSciFiSize,
+                    onSelectStarterFormat: selectStarterFormat,
+                    onSelectCombatPatrol: selectCombatPatrol,
+                    onSelectDifferentFormat: selectDifferentFormat,
+                    onOpenGuide: openRecommendedGuide
+                )
             }
             .navigationTitle(String(localized: "Which box do I have?"))
             .navigationBarTitleDisplayMode(.inline)
@@ -138,158 +151,44 @@ struct BoxIdentificationSheet: View {
         }
     }
 
-    @ViewBuilder
-    private var currentStepContent: some View {
-        switch step {
-        case 0:
-            genreStep
-        case 1:
-            sciFiSizeStep
-        case 2:
-            if sciFiBoxKind == .starter {
-                if ReleaseSurface.showsCombatPatrol, isCombatPatrolBox == nil {
-                    combatPatrolStep
-                } else {
-                    starterFormatStep
-                }
-            } else {
-                resultStep
-            }
-        default:
-            resultStep
-        }
+    private func selectGenre(_ option: Genre) {
+        genre = option
+        sciFiBoxKind = nil
+        isCombatPatrolBox = nil
+        sciFiStarterFormat = nil
+        step = option == .sciFi ? 1 : 3
     }
 
-    private var genreStep: some View {
-        Section {
-            ForEach(visibleGenres) { option in
-                Button {
-                    genre = option
-                    sciFiBoxKind = nil
-                    isCombatPatrolBox = nil
-                    sciFiStarterFormat = nil
-                    step = option == .sciFi ? 1 : 3
-                } label: {
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                        Text(option.label)
-                            .font(.headline)
-                            .foregroundStyle(.primary)
-                        Text(option.detail)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                            .multilineTextAlignment(.leading)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.vertical, DesignTokens.Spacing.xs)
-                }
-            }
-        } header: {
-            Text(String(localized: "What kind of game is on the box?"))
-        } footer: {
-            Text(String(localized: "Look at the logo and faction name — we will suggest the right Play option."))
-        }
+    private func selectSciFiSize(_ kind: SciFiBoxKind) {
+        sciFiBoxKind = kind
+        isCombatPatrolBox = kind == .full ? false : nil
+        sciFiStarterFormat = nil
+        step = kind == .full ? 3 : 2
     }
 
-    private var sciFiSizeStep: some View {
-        Section {
-            ForEach(SciFiBoxKind.allCases) { kind in
-                Button {
-                    sciFiBoxKind = kind
-                    isCombatPatrolBox = kind == .full ? false : nil
-                    sciFiStarterFormat = kind == .full ? nil : nil
-                    if kind == .starter, ReleaseSurface.showsCombatPatrol {
-                        step = 2
-                    } else if kind == .starter {
-                        step = 2
-                    } else {
-                        step = 3
-                    }
-                } label: {
-                    Text(kind.label)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-            }
-        } header: {
-            Text(String(localized: "What size box?"))
-        }
+    private func selectStarterFormat(_ format: SciFiStarterFormat) {
+        sciFiStarterFormat = format
+        step = 3
     }
 
-    private var starterFormatStep: some View {
-        Section {
-            ForEach(SciFiStarterFormat.allCases) { format in
-                Button {
-                    sciFiStarterFormat = format
-                    step = 3
-                } label: {
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                        Text(format.label)
-                            .font(.headline)
-                            .foregroundStyle(.primary)
-                        Text(format.detail)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                            .multilineTextAlignment(.leading)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.vertical, DesignTokens.Spacing.xs)
-                }
-            }
-        } header: {
-            Text(String(localized: "Which 40k starter box?"))
-        } footer: {
-            Text(
-                String(
-                    localized: """
-                    Combat Patrol is a different format — go back if your box says Combat Patrol on the cover.
-                    """
-                )
-            )
-        }
+    private func selectCombatPatrol() {
+        isCombatPatrolBox = true
+        sciFiStarterFormat = nil
+        step = 3
     }
 
-    private var combatPatrolStep: some View {
-        Section {
-            Button(String(localized: "Yes — Combat Patrol on the cover")) {
-                isCombatPatrolBox = true
-                sciFiStarterFormat = nil
-                step = 3
-            }
-            Button(String(localized: "No — different starter format")) {
-                isCombatPatrolBox = false
-                step = 2
-            }
-        } header: {
-            Text(String(localized: "Does the box say Combat Patrol?"))
-        } footer: {
-            Text(String(localized: "Combat Patrol is a 10th Edition starter format — small two-player box with missions inside."))
-        }
+    private func selectDifferentFormat() {
+        isCombatPatrolBox = false
+        step = 2
     }
 
-    @ViewBuilder
-    private var resultStep: some View {
-        if let recommendedGameSystemId {
-            Section {
-                recommendationRow(for: recommendedGameSystemId)
-                Button {
-                    openRecommendedGuide(recommendedGameSystemId)
-                } label: {
-                    Label(String(localized: "Open this guide"), systemImage: "play.circle.fill")
-                }
-                .accessibilityIdentifier("boxIdentification.openGuide")
-            } header: {
-                Text(String(localized: "We suggest"))
-            } footer: {
-                Text(String(localized: "You can change this anytime from the chooser on Play."))
-            }
-        }
-    }
-
-    private func openRecommendedGuide(_ gameSystemId: String) {
+    private func openRecommendedGuide() {
+        guard let recommendedGameSystemId else { return }
         FirstSessionStore.recordOnboardingChoice(
-            gameSystemId: gameSystemId,
-            wh40kVariant: recommendedWh40kVariant(for: gameSystemId)?.rawValue
+            gameSystemId: recommendedGameSystemId,
+            wh40kVariant: recommendedWh40kVariant(for: recommendedGameSystemId)?.rawValue
         )
-        router.openGameGuide(gameSystemId: gameSystemId)
+        router.openGameGuide(gameSystemId: recommendedGameSystemId)
         dismiss()
     }
 
@@ -336,62 +235,6 @@ struct BoxIdentificationSheet: View {
             sciFiStarterFormat = nil
         default:
             break
-        }
-    }
-
-    private func recommendationRow(for gameSystemId: String) -> some View {
-        let (title, detail) = recommendationCopy(for: gameSystemId)
-        return VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-            Text(title)
-                .font(.headline)
-            Text(detail)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
-        }
-        .accessibilityElement(children: .combine)
-    }
-
-    private func recommendationCopy(for gameSystemId: String) -> (String, String) {
-        switch gameSystemId {
-        case GameSystemId.aosSpearhead.rawValue:
-            return (
-                String(localized: "Age of Sigmar: Spearhead"),
-                String(localized: "Fast fantasy battles — look for Spearhead on the box.")
-            )
-        case GameSystemId.wh40k10eCp.rawValue:
-            return (
-                String(localized: "Warhammer 40,000: Combat Patrol"),
-                String(localized: "10th Edition patrol rules — look for Combat Patrol on the box.")
-            )
-        case GameSystemId.wh40k11e.rawValue:
-            if sciFiStarterFormat == .armageddon {
-                return (
-                    String(localized: "Warhammer 40,000: Armageddon"),
-                    String(localized: "11th Edition launch box — tap Use Starter Matchup for both armies.")
-                )
-            }
-            if sciFiStarterFormat == .battleforce {
-                return (
-                    String(localized: "Warhammer 40,000 — Battleforce"),
-                    String(
-                        localized: """
-                        Pick your Battleforce army in Guided Match — Astra Militarum, Tyranids, Chaos Space Marines, or Necrons.
-                        """
-                    )
-                )
-            }
-            return (
-                String(localized: "Warhammer 40,000"),
-                String(localized: "11th Edition matched play — Armageddon, Battleforces, or your own lists.")
-            )
-        case GameSystemId.scTmg.rawValue:
-            return (
-                String(localized: "StarCraft: The Miniatures Game"),
-                String(localized: "Terran vs Zerg on the tabletop — no prior wargame needed.")
-            )
-        default:
-            return (gameSystemId, String(localized: "Open the guide to get started."))
         }
     }
 }

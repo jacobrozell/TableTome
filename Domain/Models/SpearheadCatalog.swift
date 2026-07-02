@@ -220,6 +220,7 @@ public struct PlayerArmySelection: Codable, Sendable, Equatable {
     public var regimentAbilityId: String?
     public var enhancementId: String?
     public var secondaryObjectiveId: String?
+    public var profileId: UUID?
 
     public init(
         playerName: String,
@@ -227,7 +228,8 @@ public struct PlayerArmySelection: Codable, Sendable, Equatable {
         armyId: String = "",
         regimentAbilityId: String? = nil,
         enhancementId: String? = nil,
-        secondaryObjectiveId: String? = nil
+        secondaryObjectiveId: String? = nil,
+        profileId: UUID? = nil
     ) {
         self.playerName = playerName
         self.factionId = factionId
@@ -235,6 +237,7 @@ public struct PlayerArmySelection: Codable, Sendable, Equatable {
         self.regimentAbilityId = regimentAbilityId
         self.enhancementId = enhancementId
         self.secondaryObjectiveId = secondaryObjectiveId
+        self.profileId = profileId
     }
 
     public init(from decoder: Decoder) throws {
@@ -245,6 +248,7 @@ public struct PlayerArmySelection: Codable, Sendable, Equatable {
         regimentAbilityId = try container.decodeIfPresent(String.self, forKey: .regimentAbilityId)
         enhancementId = try container.decodeIfPresent(String.self, forKey: .enhancementId)
         secondaryObjectiveId = try container.decodeIfPresent(String.self, forKey: .secondaryObjectiveId)
+        profileId = try container.decodeIfPresent(UUID.self, forKey: .profileId)
     }
 }
 

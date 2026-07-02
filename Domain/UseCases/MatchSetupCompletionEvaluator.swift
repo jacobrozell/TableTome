@@ -32,7 +32,7 @@ public enum MatchSetupCompletionEvaluator {
         if state.attackerIsPlayerOne != nil {
             completed.insert("roll-attacker")
 
-            // Spearhead: regiment + enhancement picks must be confirmed on the setup steps —
+            // Spearhead: pre-battle loadout must be confirmed on the setup step —
             // starter matchup only pre-selects defaults; do not skip the physical card picks.
             if gameSystemId != GameSystemId.aosSpearhead.rawValue {
                 if regimentAbilitiesSatisfied(state: state, catalog: catalog) {

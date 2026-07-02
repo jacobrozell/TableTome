@@ -38,13 +38,6 @@ extension GuidedMatchView {
         gameSystemId != .aosSpearhead || !viewModel.matchState.hasBothArmies
     }
 
-    /// Regiment + enhancement must be confirmed on setup steps — starter matchup only pre-selects.
-    var needsPreBattleLoadoutReview: Bool {
-        guard gameSystemId == .aosSpearhead, viewModel.matchState.hasBothArmies else { return false }
-        let completed = viewModel.matchState.completedStepIds
-        return !completed.contains("regiment-abilities") || !completed.contains("enhancements")
-    }
-
     var spearheadAttackerLabel: String? {
         guard gameSystemId == .aosSpearhead,
               let attackerIsPlayerOne = viewModel.matchState.attackerIsPlayerOne else {
@@ -75,6 +68,8 @@ extension GuidedMatchView {
         hubTab = .setup
         if usesPadSplitNavigation {
             selectedDestination = .step(stepId)
+        } else {
+            guidedMatchNavigationPath.append(GuidedMatchDestination.step(stepId))
         }
     }
 

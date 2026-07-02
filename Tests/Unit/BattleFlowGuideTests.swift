@@ -55,15 +55,15 @@ final class MatchSetupCompletionEvaluatorTests: XCTestCase {
     }
 
     func testAutoCompletesRegimentAfterRollOffForNonSpearheadGameSystems() async throws {
-        let catalog = try await loadCatalog()
+        let catalog = try await loadWh40kCatalog()
         var state = GuidedMatchState()
         state.attackerIsPlayerOne = true
-        state.playerOne.factionId = "stormcast-eternals"
-        state.playerOne.armyId = "vigilant-brotherhood"
-        state.playerOne.regimentAbilityId = "strike-where-needed"
-        state.playerTwo.factionId = "skaven"
-        state.playerTwo.armyId = "gnawfeast-clawpack"
-        state.playerTwo.regimentAbilityId = "too-quick-to-hit"
+        state.playerOne.factionId = "space-marines"
+        state.playerOne.armyId = "operation-imperator"
+        state.playerOne.regimentAbilityId = "disposition-take-and-hold"
+        state.playerTwo.factionId = "orks"
+        state.playerTwo.armyId = "waaagh-armageddon"
+        state.playerTwo.regimentAbilityId = "disposition-purge-the-foe"
 
         let completed = MatchSetupCompletionEvaluator.autoCompletedStepIds(
             state: state,
@@ -73,7 +73,7 @@ final class MatchSetupCompletionEvaluatorTests: XCTestCase {
         )
 
         XCTAssertTrue(completed.contains("roll-attacker"))
-        XCTAssertTrue(completed.contains("regiment-abilities"))
+        XCTAssertTrue(completed.contains("force-disposition"))
     }
 
     func testSpearheadDoesNotAutoCompleteRegimentOrEnhancementsAfterRollOff() async throws {
@@ -96,8 +96,7 @@ final class MatchSetupCompletionEvaluatorTests: XCTestCase {
         )
 
         XCTAssertTrue(completed.contains("roll-attacker"))
-        XCTAssertFalse(completed.contains("regiment-abilities"))
-        XCTAssertFalse(completed.contains("enhancements"))
+        XCTAssertFalse(completed.contains(SpearheadSetupStepId.preBattleLoadout))
     }
 
     func testAutoCompletesRealmWhenDeploymentFinished() async throws {
@@ -117,6 +116,12 @@ final class MatchSetupCompletionEvaluatorTests: XCTestCase {
         try await BundledSpearheadCatalogRepository(
             bundle: Bundle(for: MatchSetupCompletionEvaluatorTests.self)
         ).loadCatalog()
+    }
+
+    private func loadWh40kCatalog() async throws -> SpearheadCatalog {
+        try await BundledPlayCatalogRepository(
+            bundle: Bundle(for: MatchSetupCompletionEvaluatorTests.self)
+        ).loadCatalog(for: GameSystemId.wh40k11e.rawValue)
     }
 }
 

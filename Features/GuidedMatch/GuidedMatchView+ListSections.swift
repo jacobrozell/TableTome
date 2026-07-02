@@ -140,16 +140,7 @@ extension GuidedMatchView {
 
     @ViewBuilder
     var preBattleLoadoutReviewSectionView: some View {
-        if needsPreBattleLoadoutReview {
-            PreBattleLoadoutReviewSection(
-                viewModel: viewModel,
-                ruleSections: ruleSections,
-                usesPadSplitNavigation: usesPadSplitNavigation,
-                showsLoadoutSheet: $showsLoadoutSheet,
-                onOpenRegimentStep: { openSpearheadSetupStep("regiment-abilities") },
-                onOpenEnhancementStep: { openSpearheadSetupStep("enhancements") }
-            )
-        }
+        EmptyView()
     }
 
     func continueSetupSection(catalog: SpearheadCatalog, useSplitSelection: Bool) -> some View {

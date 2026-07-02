@@ -22,10 +22,8 @@ struct SpearheadMatchStepRouter: View {
             SpearheadChooseArmiesStep(viewModel: viewModel)
         case "roll-attacker":
             SpearheadRollAttackerStep(viewModel: viewModel)
-        case "regiment-abilities":
-            SpearheadRegimentAbilitiesStep(viewModel: viewModel, parts: parts)
-        case "enhancements":
-            SpearheadEnhancementsStep(viewModel: viewModel, parts: parts)
+        case "pre-battle-loadout":
+            SpearheadPreBattleLoadoutStep(viewModel: viewModel, parts: parts, ruleSections: ruleSections)
         case "realm-battlefield":
             SpearheadRealmBattlefieldStep(viewModel: viewModel, ruleSections: ruleSections)
         case "fight-battle":

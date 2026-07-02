@@ -11,9 +11,19 @@ public enum MatchSetupStore: Sendable {
 
     public static func load(gameSystemId: String = GameSystemId.default.rawValue) -> GuidedMatchState {
         let key = stateKey(for: gameSystemId)
+        guard var state = loadPersistedState(forKey: key) else {
+            return GuidedMatchState()
+        }
+        if gameSystemId == GameSystemId.aosSpearhead.rawValue {
+            SpearheadSetupStepId.migrateLegacyCompletedStepIds(&state.completedStepIds)
+        }
+        return state
+    }
+
+    private static func loadPersistedState(forKey key: String) -> GuidedMatchState? {
         guard let data = UserDefaults.standard.data(forKey: key),
               let state = try? JSONDecoder().decode(GuidedMatchState.self, from: data) else {
-            return GuidedMatchState()
+            return nil
         }
         return state
     }

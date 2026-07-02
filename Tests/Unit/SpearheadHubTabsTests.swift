@@ -37,9 +37,9 @@ final class SpearheadHubTabsTests: XCTestCase {
             SpearheadHubTabs.padDetailDestination(
                 hasBothArmies: true,
                 setupComplete: false,
-                nextIncompleteStepId: "regiment-abilities"
+                nextIncompleteStepId: SpearheadSetupStepId.preBattleLoadout
             ),
-            .step("regiment-abilities")
+            .step(SpearheadSetupStepId.preBattleLoadout)
         )
     }
 

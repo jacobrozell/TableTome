@@ -30,7 +30,9 @@ struct GuidedMatchView: View {
     @State var dismissedSetupCompleteHandoff = false
     @State var showsStarterMatchupHandoff = false
     @State var dismissedStarterMatchupHandoff = false
-    @State var showsLoadoutSheet = false
+    @State var guidedMatchNavigationPath = NavigationPath()
+    @State var padDetailNavigationPath = NavigationPath()
+    @State var showsMatchHistory = false
     @AppStorage(BattleTrackerChromeStorage.guidedMatchHubCollapsedKey) var isHubChromeCollapsed = false
     @AppStorage(SpearheadStarterBoxStorage.selectedBoxIdKey) var selectedSpearheadBoxId = SpearheadStarterBoxStorage.defaultBoxId
     @State var splitColumnVisibility: NavigationSplitViewVisibility = .all
@@ -80,6 +82,11 @@ struct GuidedMatchView: View {
             toolbar: { matchSyncToolbar }
         ))
         .sheet(isPresented: $showsMatchSync) { matchSyncSheet }
+        .sheet(isPresented: $showsMatchHistory) {
+            NavigationStack {
+                MatchHistoryListView(viewModel: dependencies.makeMatchHistoryViewModel())
+            }
+        }
         .confirmationDialog(
             String(localized: "Reset Match"),
             isPresented: $showsResetConfirmation,

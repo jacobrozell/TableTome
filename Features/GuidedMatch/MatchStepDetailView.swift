@@ -61,7 +61,7 @@ struct MatchStepDetailView: View {
 
                 stepSpecificContent
 
-                if let relatedSection {
+                if let relatedSection, ReleaseSurface.showsRulesAssistant {
                     ReferenceLinksGroup {
                         NavigationLink(value: RuleSectionLink(
                             gameSystemId: viewModel.gameSystemId.rawValue,
@@ -141,14 +141,9 @@ struct MatchStepDetailView: View {
             )
         }
         if usesManualConfirmation {
-            if step.id == "regiment-abilities" {
+            if step.id == SpearheadSetupStepId.preBattleLoadout {
                 return String(
-                    localized: "Pick one regiment ability per player (or keep our suggestions), then tap Mark step complete."
-                )
-            }
-            if step.id == "enhancements" {
-                return String(
-                    localized: "Pick one enhancement for each general (or keep our suggestions), then tap Mark step complete."
+                    localized: "Open Set Loadout, pick one regiment ability and one enhancement per player (or keep our suggestions), then tap Mark step complete."
                 )
             }
             return String(localized: "Tap below when you've finished this step.")
@@ -162,7 +157,7 @@ struct MatchStepDetailView: View {
             return true
         }
         if viewModel.gameSystemId == .aosSpearhead,
-           ["regiment-abilities", "enhancements"].contains(step.id) {
+           step.id == SpearheadSetupStepId.preBattleLoadout {
             return true
         }
         return false

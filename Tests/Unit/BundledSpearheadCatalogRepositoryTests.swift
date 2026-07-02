@@ -11,7 +11,7 @@ final class BundledSpearheadCatalogRepositoryTests: XCTestCase {
         let catalog = try await repository.loadCatalog()
         XCTAssertEqual(catalog.schemaVersion, 1)
         XCTAssertFalse(catalog.factions.isEmpty)
-        XCTAssertEqual(catalog.matchSteps.count, 6)
+        XCTAssertEqual(catalog.matchSteps.count, 5)
     }
 
     func testVigilantBrotherhoodAndGnawfeastExist() async throws {

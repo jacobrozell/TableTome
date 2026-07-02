@@ -3524,30 +3524,20 @@
       "relatedRuleSectionId": "spearhead-overview"
     },
     {
-      "id": "regiment-abilities",
+      "id": "pre-battle-loadout",
       "order": 3,
-      "title": "Regiment ability (pick one army rule)",
-      "summary": "Attacker picks first, then defender — one army-wide rule each.",
-      "body": "Each Spearhead army sheet lists two regiment abilities. This is not a unit group on the table — pick one pre-battle rule for your whole army. The attacker picks first, then the defender.",
+      "title": "Pre-battle loadout",
+      "summary": "Pick regiment ability and enhancement for each army from your box.",
+      "body": "Spearhead has physical pre-battle picks before deployment. Each army sheet lists two regiment abilities — pick one army-wide rule for your whole army. Each army also has four enhancement cards — pick one for your general only. Attacker picks first, then defender. Shuffle each player's battle tactic deck from their army box (not the shared twist deck).",
       "tips": [
-        "Some abilities counter specific opponents \u2014 study the enemy army before choosing.",
-        "Passive abilities are reliable; once-per-battle abilities can be game-swinging."
-      ]
-    },
-    {
-      "id": "enhancements",
-      "order": 4,
-      "title": "Pick general enhancements",
-      "summary": "Attacker picks first — one upgrade card for your general only.",
-      "body": "Each army has four enhancement cards for its general. The attacker picks one, then the defender. Enhancements upgrade your general only — protect them accordingly.",
-      "tips": [
+        "Regiment abilities are not a unit group on the table — they are pre-battle army rules.",
         "Ward enhancements help fragile generals survive longer.",
-        "Offensive enhancements can turn your general into a linchpin \u2014 but losing them hurts."
+        "Some regiment abilities counter specific opponents — study the enemy army before choosing."
       ]
     },
     {
       "id": "realm-battlefield",
-      "order": 5,
+      "order": 4,
       "title": "Set Up the Battlefield",
       "summary": "Defender chooses board and side; terrain, objectives, deploy armies.",
       "body": "Deployment is the last step before round 1. The defender chooses which Spearhead battlefield you are using \u2014 Fire and Jade (Aqshy or Ghyran), Sand and Bone (Ossia or Dolorum), or City of Ash (Ashen Bastion or Shattered Crossroads) \u2014 and which side of that board to fight on. Each side has its own deployment map and twist deck, so match the deck to the side you pick.\n\nNext, set up terrain: two large and two small features, spread across the board without blocking deployment zones or objectives. Objectives are already printed on the board \u2014 the whole circle counts when contesting, not just the centre symbol.\n\nDeploy armies within the shaded zones on the deployment map, defender first then alternating. Before the first turn, resolve any once-per-battle deployment abilities on your army sheets (for example, Skaven hiding a unit in the tunnels below).",
@@ -3561,7 +3551,7 @@
     },
     {
       "id": "fight-battle",
-      "order": 6,
+      "order": 5,
       "title": "Fight the Battle",
       "summary": "Play 4 battle rounds \u2014 score victory points to win.",
       "body": "Deploy armies, then play exactly four battle rounds (~60\u201390 minutes). Each round: priority roll, identify underdog, draw twist card, draw battle tactic cards, then alternate turns. Score VP for objectives and completed battle tactics.",

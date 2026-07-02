@@ -200,6 +200,7 @@ struct UnitFocusSheet: View {
                     .navigationBarTitleDisplayMode(.inline)
             }
             .accessibilityIdentifier("unitFocus.sheet")
+            .glossaryEntryNavigation()
         }
     }
 

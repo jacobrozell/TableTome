@@ -59,6 +59,7 @@ struct SpearheadLoadoutSheet: View {
                     }
                 }
             }
+            .glossaryEntryNavigation()
         }
         .accessibilityIdentifier("spearhead.loadoutSheet")
     }

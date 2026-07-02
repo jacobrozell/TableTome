@@ -3,7 +3,7 @@ import TabletomeDomain
 
 extension View {
     /// Register Play-tab deep links once on the `NavigationStack` root (`HomeView`, Rules tab).
-    /// Pair with `glossaryEntryNavigation()` for glossary bottom sheets. Do not apply again on pushed screens.
+    /// Pair with `glossaryEntryNavigation()` on that root; nested shells (e.g. Guided Match) register their own.
     func playNavigationDestinations() -> some View {
         modifier(PlayNavigationDestinationsModifier())
     }

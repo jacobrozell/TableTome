@@ -149,6 +149,7 @@ struct GuidedMatchView: View {
             )
         }
         .accessibilityIdentifier("guidedMatch.screen")
+        .glossaryEntryNavigation()
         .onReceive(NotificationCenter.default.publisher(for: .matchSyncStateDidChange)) { _ in
             viewModel.reloadFromStore()
             hubTrackerTick += 1

@@ -112,16 +112,19 @@ struct UnitFocusPresentationModifier<Presented: View>: ViewModifier {
     @Binding var selection: UnitFocusSelection?
     let usesFullScreen: Bool
     @ViewBuilder let presented: () -> Presented
+    @EnvironmentObject private var glossaryNavigation: GlossaryNavigationState
 
     func body(content: Content) -> some View {
         if usesFullScreen {
             content.fullScreenCover(item: $selection) { _ in
                 presented()
+                    .environmentObject(glossaryNavigation)
                     .presentationBackground(Color(.systemGroupedBackground))
             }
         } else {
             content.sheet(item: $selection) { _ in
                 presented()
+                    .environmentObject(glossaryNavigation)
                     .presentationDetents([.large])
                     .presentationDragIndicator(.visible)
                     .presentationBackground(Color(.systemGroupedBackground))

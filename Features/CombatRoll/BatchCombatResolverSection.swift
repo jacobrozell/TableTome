@@ -34,17 +34,31 @@ struct BatchCombatResolverSection: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
             Text(String(localized: "Enter table results"))
                 .font(.headline)
-            Text(
-                String(
-                    localized: """
-                    After rolling hit dice at the table, enter each count below. \
-                    Work top to bottom — hits, then wounds, then failed saves.
-                    """
+            if batchViewModel.hitDiceCount > 0 {
+                Text(
+                    String(
+                        localized: """
+                        Step 1: Roll \(batchViewModel.hitDiceCount) hit dice at the table. \
+                        Then enter how many scored a hit below — work top to bottom through wounds and saves.
+                        """
+                    )
                 )
-            )
-            .font(.subheadline)
-            .foregroundStyle(.secondary)
-            .fixedSize(horizontal: false, vertical: true)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            } else {
+                Text(
+                    String(
+                        localized: """
+                        After rolling hit dice at the table, enter each count below. \
+                        Work top to bottom — hits, then wounds, then failed saves.
+                        """
+                    )
+                )
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            }
         }
     }
 
@@ -298,18 +312,15 @@ struct BatchCombatResolverSection: View {
     private var saveReference: some View {
         Group {
             if batchViewModel.successfulWounds > 0, !batchViewModel.mortalDamage {
-                let rendNote = batchViewModel.rend == 0
-                    ? ""
-                    : String(localized: " (Rend \(rendLabel) subtracts from each roll)")
                 HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
                     Image(systemName: "shield.lefthalf.filled")
                         .foregroundStyle(Color.accentColor)
                     Text(
-                        String(
-                            localized: """
-                            Save \(batchViewModel.saveTarget)+ vs \(penetrationLabel) \(penetrationValue)\(rendNote) — roll \
-                            \(batchViewModel.saveNeededOnDice)+ or higher on each save dice.
-                            """
+                        BatchCombatSaveHint.saveReferenceLine(
+                            saveTarget: batchViewModel.saveTarget,
+                            rend: batchViewModel.rend,
+                            saveNeededOnDice: batchViewModel.saveNeededOnDice,
+                            usesWh40kRules: usesWh40kRules
                         )
                     )
                     .font(.caption)
@@ -332,21 +343,6 @@ struct BatchCombatResolverSection: View {
 
     private var usesWh40kRules: Bool {
         CombatRollEngineRouter.usesWh40kRules(gameSystemId: combatViewModel.gameSystemId)
-    }
-
-    private var penetrationLabel: String {
-        usesWh40kRules ? String(localized: "AP") : String(localized: "Rend")
-    }
-
-    private var penetrationValue: String {
-        if usesWh40kRules {
-            return "\(batchViewModel.rend)"
-        }
-        return rendLabel
-    }
-
-    private var rendLabel: String {
-        batchViewModel.rend >= 0 ? "+\(batchViewModel.rend)" : "\(batchViewModel.rend)"
     }
 
     private func outcomeSection(_ evaluation: BatchCombatRollEvaluation) -> some View {

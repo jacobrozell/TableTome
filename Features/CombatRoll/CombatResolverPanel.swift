@@ -427,6 +427,9 @@ struct CombatResolverPanel: View {
             viewModel: viewModel,
             showsAdvancedOptions: $showsAdvancedOptions,
             diceInputModeRaw: $diceInputModeRaw,
+            showsDiceInputMode: ReleaseSurface.allowsSimulatedDice(
+                for: GameSystemId(resolving: viewModel.gameSystemId)
+            ),
             isEmbedded: isEmbedded,
             accessibilityPrefix: accessibilityPrefix
         )

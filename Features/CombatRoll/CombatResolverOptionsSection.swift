@@ -5,6 +5,7 @@ struct CombatResolverOptionsSection: View {
     @ObservedObject var viewModel: UnitMatchupEvaluatorViewModel
     @Binding var showsAdvancedOptions: Bool
     @Binding var diceInputModeRaw: String
+    let showsDiceInputMode: Bool
     let isEmbedded: Bool
     let accessibilityPrefix: String
 
@@ -16,10 +17,12 @@ struct CombatResolverOptionsSection: View {
     var body: some View {
         DisclosureGroup(isExpanded: $showsAdvancedOptions) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                DiceInputModePicker(mode: Binding(
-                    get: { diceInputMode },
-                    set: { diceInputMode = $0 }
-                ))
+                if showsDiceInputMode {
+                    DiceInputModePicker(mode: Binding(
+                        get: { diceInputMode },
+                        set: { diceInputMode = $0 }
+                    ))
+                }
 
                 if !viewModel.resolverMatchupBuffs.isEmpty {
                     if !viewModel.resolverAttackerBuffs.isEmpty {

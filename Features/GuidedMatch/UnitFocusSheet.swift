@@ -24,6 +24,7 @@ struct UnitFocusSheet: View {
     let hasHealthOverride: Bool
     let isActivePlayerUnit: Bool
     let preferredWeaponId: String?
+    var defenderUnit: SpearheadUnit?
     let onWoundsChange: (Int) -> Void
     let onSetHealthPerModelOverride: (Int) -> Void
     let onClearHealthOverride: () -> Void
@@ -46,6 +47,7 @@ struct UnitFocusSheet: View {
         hasHealthOverride: Bool,
         isActivePlayerUnit: Bool,
         preferredWeaponId: String?,
+        defenderUnit: SpearheadUnit? = nil,
         onWoundsChange: @escaping (Int) -> Void,
         onSetHealthPerModelOverride: @escaping (Int) -> Void,
         onClearHealthOverride: @escaping () -> Void,
@@ -63,6 +65,7 @@ struct UnitFocusSheet: View {
         self.hasHealthOverride = hasHealthOverride
         self.isActivePlayerUnit = isActivePlayerUnit
         self.preferredWeaponId = preferredWeaponId
+        self.defenderUnit = defenderUnit
         self.onWoundsChange = onWoundsChange
         self.onSetHealthPerModelOverride = onSetHealthPerModelOverride
         self.onClearHealthOverride = onClearHealthOverride
@@ -82,6 +85,7 @@ struct UnitFocusSheet: View {
         hasHealthOverride: Bool,
         isActivePlayerUnit: Bool,
         preferredWeaponId: String?,
+        defenderUnit: SpearheadUnit? = nil,
         onWoundsChange: @escaping (Int) -> Void,
         onSetHealthPerModelOverride: @escaping (Int) -> Void,
         onClearHealthOverride: @escaping () -> Void,
@@ -100,6 +104,7 @@ struct UnitFocusSheet: View {
             hasHealthOverride: hasHealthOverride,
             isActivePlayerUnit: isActivePlayerUnit,
             preferredWeaponId: preferredWeaponId,
+            defenderUnit: defenderUnit,
             onWoundsChange: onWoundsChange,
             onSetHealthPerModelOverride: onSetHealthPerModelOverride,
             onClearHealthOverride: onClearHealthOverride,
@@ -347,13 +352,19 @@ struct UnitFocusSheet: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     if let ability = weapon.ability, !ability.isEmpty {
-                        Text(ability)
-                            .font(.caption2)
-                            .foregroundStyle(.tertiary)
-                            .fixedSize(horizontal: false, vertical: true)
+                        weaponAbilityRow(weapon: weapon, ability: ability)
                     }
                 }
                 Spacer(minLength: 0)
+            }
+
+            if canResolve, let defenderUnit,
+               let line = AntiKeywordCoaching.coachingLine(weapon: weapon, defender: defenderUnit) {
+                AntiKeywordCoachingHint(
+                    line: line,
+                    glossaryEntryIds: AntiKeywordCoaching.glossaryEntryIds(for: weapon),
+                    gameSystemId: gameSystemId.rawValue
+                )
             }
 
             if canResolve {
@@ -382,6 +393,25 @@ struct UnitFocusSheet: View {
             if isPreferred {
                 RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
                     .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
+            }
+        }
+    }
+
+    private func weaponAbilityRow(weapon: SpearheadWeapon, ability: String) -> some View {
+        Group {
+            if weapon.hasAntiKeywordAbility {
+                HStack(spacing: DesignTokens.Spacing.xs) {
+                    ForEach(AntiKeywordCoaching.glossaryEntryIds(for: weapon), id: \.self) { entryId in
+                        if let entry = SpearheadRulesGlossary.entries.first(where: { $0.id == entryId }) {
+                            GlossaryChip(entry: entry, gameSystemId: gameSystemId.rawValue)
+                        }
+                    }
+                }
+            } else {
+                Text(ability)
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
     }

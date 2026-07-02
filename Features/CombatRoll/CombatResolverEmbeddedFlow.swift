@@ -19,8 +19,8 @@ struct CombatResolverSetupGate: View {
             Text(
                 String(
                     localized: """
-                    Roll physical dice at the table, then enter how many hits, wounds, and saves failed. \
-                    The app calculates damage for you.
+                    Roll physical dice at the table. Your weapon profile shows Attacks — roll that many hit dice, \
+                    then enter how many hit below.
                     """
                 )
             )
@@ -37,17 +37,17 @@ struct CombatResolverSetupGate: View {
                     setupRow(
                         done: hasAttacker,
                         title: String(localized: "Pick attacking unit"),
-                        detail: String(localized: "Tap a unit in the attack checklist above.")
+                        detail: String(localized: "Tap a unit in the attack checklist — opens Unit Focus, then Resolve.")
                     )
                     setupRow(
                         done: hasDefender,
                         title: String(localized: "Choose defending unit"),
-                        detail: String(localized: "Tap a unit in Army Health, or Set as defender on a unit card.")
+                        detail: String(localized: "Tap a living unit in Army Health, or Set as defender in Unit Focus.")
                     )
                     setupRow(
                         done: hasWeapon,
                         title: String(localized: "Select weapon profile"),
-                        detail: String(localized: "Pick which weapon this unit is using for the attack.")
+                        detail: String(localized: "If the unit has multiple weapons, pick which one is attacking.")
                     )
                 }
                 .padding(DesignTokens.Spacing.md)
@@ -93,6 +93,8 @@ struct CombatResolverAttackContextCard: View {
     var defenderWoundsRemaining: Int?
     var accessibilityPrefix: String = "battleTracker.combatResolver"
 
+    @Environment(\.battleTrackerIsEmbeddedInGuidedMatch) private var isEmbeddedInGuidedMatch
+
     private var weapon: SpearheadWeapon? { viewModel.selectedAttackerWeapon }
     private var attacker: SpearheadUnit? { viewModel.selectedAttackerUnit }
     private var defender: SpearheadUnit? { viewModel.selectedDefenderUnit }
@@ -106,7 +108,10 @@ struct CombatResolverAttackContextCard: View {
             matchupHeader
             if let weapon, let defender, defender.save != nil {
                 weaponPicker
-                statStrip(weapon: weapon, save: defender.save ?? 4)
+                statStrip(weapon: weapon, save: defender.save ?? 4, wardTarget: viewModel.activeWardTarget)
+                saveCoachingLine(weapon: weapon, save: defender.save ?? 4)
+                wardCoachingSection(wardTarget: viewModel.activeWardTarget)
+                antiKeywordCoachingSection(weapon: weapon, defender: defender)
             }
             defenderPickerIfNeeded
         }
@@ -219,21 +224,52 @@ struct CombatResolverAttackContextCard: View {
         .accessibilityIdentifier("\(accessibilityPrefix).weapon.\(candidate.id)")
     }
 
-    private func statStrip(weapon: SpearheadWeapon, save: Int) -> some View {
+    private func statStrip(weapon: SpearheadWeapon, save: Int, wardTarget: Int?) -> some View {
         let profile = WarscrollStatSummary.weaponCombatProfile(weapon, gameSystemId: viewModel.gameSystemId)
         let penetrationLabel = usesWh40kRules ? String(localized: "AP") : String(localized: "Rend")
         let rend = weapon.rend
         let rendText = rend >= 0 ? "+\(rend)" : "\(rend)"
 
-        return HStack(spacing: DesignTokens.Spacing.sm) {
+        return VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
             statChip(label: profile)
-            statChip(label: String(localized: "Dmg \(viewModel.damage)"))
-            statChip(label: String(localized: "Save \(save)+"))
-            if rend != 0 {
-                statChip(label: "\(penetrationLabel) \(rendText)")
+            HStack(spacing: DesignTokens.Spacing.sm) {
+                statChip(label: String(localized: "Dmg \(viewModel.damage)"))
+                statChip(label: String(localized: "Save \(save)+"))
+                if rend != 0 {
+                    statChip(label: "\(penetrationLabel) \(rendText)")
+                }
+                if let wardTarget, !usesWh40kRules {
+                    statChip(label: String(localized: "Ward \(wardTarget)+"))
+                }
             }
         }
         .font(.caption2.weight(.semibold))
+    }
+
+    @ViewBuilder
+    private func wardCoachingSection(wardTarget: Int?) -> some View {
+        if !usesWh40kRules, let wardTarget {
+            HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
+                Text(
+                    String(
+                        localized: """
+                        After a failed save, roll Ward \(wardTarget)+ — on \(wardTarget) or higher, ignore that wound.
+                        """
+                    )
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+                if let wardEntry = SpearheadRulesGlossary.entries.first(where: { $0.id == "ward" }) {
+                    GlossaryChip(
+                        entry: wardEntry,
+                        gameSystemId: viewModel.gameSystemId,
+                        ruleSections: []
+                    )
+                }
+            }
+            .accessibilityIdentifier("\(accessibilityPrefix).wardCoaching")
+        }
     }
 
     private func statChip(label: String) -> some View {
@@ -244,20 +280,54 @@ struct CombatResolverAttackContextCard: View {
     }
 
     @ViewBuilder
+    private func antiKeywordCoachingSection(weapon: SpearheadWeapon, defender: SpearheadUnit) -> some View {
+        if !usesWh40kRules,
+           let line = AntiKeywordCoaching.coachingLine(weapon: weapon, defender: defender) {
+            AntiKeywordCoachingHint(
+                line: line,
+                glossaryEntryIds: AntiKeywordCoaching.glossaryEntryIds(for: weapon),
+                gameSystemId: viewModel.gameSystemId
+            )
+        }
+    }
+
+    @ViewBuilder
+    private func saveCoachingLine(weapon: SpearheadWeapon, save: Int) -> some View {
+        if !usesWh40kRules, weapon.rend != 0 {
+            let needed = CombatRollResolution.saveNeededOnDice(
+                saveTarget: save,
+                rend: weapon.rend,
+                saveModifier: 0
+            )
+            Text(
+                String(
+                    localized: "Rend \(weapon.rend >= 0 ? "+\(weapon.rend)" : "\(weapon.rend)") — Save \(save)+ needs \(needed)+ on each save dice."
+                )
+            )
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+            .accessibilityIdentifier("\(accessibilityPrefix).saveCoaching")
+        }
+    }
+
+    @ViewBuilder
     private var defenderPickerIfNeeded: some View {
-        let units = livingDefenders
-        if units.count > 1 {
-            Picker(String(localized: "Defending unit"), selection: $viewModel.defenderUnitId) {
-                ForEach(units) { unit in
-                    Text(unit.name).tag(unit.id)
+        if !isEmbeddedInGuidedMatch {
+            let units = livingDefenders
+            if units.count > 1 {
+                Picker(String(localized: "Defending unit"), selection: $viewModel.defenderUnitId) {
+                    ForEach(units) { unit in
+                        Text(unit.name).tag(unit.id)
+                    }
                 }
+                .pickerStyle(.menu)
+                .font(.caption.weight(.semibold))
+                .onChange(of: viewModel.defenderUnitId) { _, newValue in
+                    viewModel.setDefenderUnit(newValue)
+                }
+                .accessibilityIdentifier("\(accessibilityPrefix).defenderPicker")
             }
-            .pickerStyle(.menu)
-            .font(.caption.weight(.semibold))
-            .onChange(of: viewModel.defenderUnitId) { _, newValue in
-                viewModel.setDefenderUnit(newValue)
-            }
-            .accessibilityIdentifier("\(accessibilityPrefix).defenderPicker")
         }
     }
 

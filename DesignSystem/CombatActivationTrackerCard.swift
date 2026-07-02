@@ -21,7 +21,7 @@ struct CombatActivationTrackerCard: View {
             return String(localized: "Every unit has had its turn. Move to the next phase when you're ready.")
         }
         return String(
-            localized: "Tap a unit to roll its attacks, then mark it done. \(remaining) still to go."
+            localized: "Tap a unit to open its warscroll and resolve attacks, then mark it done. \(remaining) still to go."
         )
     }
 
@@ -68,7 +68,7 @@ struct CombatActivationTrackerCard: View {
             .buttonStyle(.plain)
             .disabled(onSelectUnit == nil)
             .accessibilityIdentifier("battleTracker.combatActivation.resolve.\(unit.id)")
-            .accessibilityHint(onSelectUnit == nil ? "" : String(localized: "Opens the dice resolver for this unit"))
+            .accessibilityHint(onSelectUnit == nil ? "" : String(localized: "Opens unit details and combat tools for this unit"))
 
             toggleButton(unit: unit, acted: acted)
         }

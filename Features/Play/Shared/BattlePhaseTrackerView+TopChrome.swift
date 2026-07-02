@@ -113,7 +113,6 @@ extension BattlePhaseTrackerView {
     func applyCompactTopChromeDefault() {
         let prefersCollapsedByDefault = layoutContext.prefersCollapsedBattleChrome
             || (isEmbeddedInGuidedMatch && usesCompactBattleTrackerChrome)
-            || (isEmbeddedInGuidedMatch && layoutContext.usesPadSplitNavigation)
         guard prefersCollapsedByDefault, !topChromeExpandedInLandscape else { return }
         guard !isTopChromeCollapsed else { return }
         withAnimation(chromeAnimation) {

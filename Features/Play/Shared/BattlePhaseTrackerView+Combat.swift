@@ -143,6 +143,21 @@ extension BattlePhaseTrackerView {
 
     func handleResolveAttack(_ ability: TriggeredAbility) {
         guard ReleaseSurface.showsCombatResolver(for: viewModel.gameSystemId) else { return }
+        if let armyId = viewModel.activeArmy?.id,
+           let unitId = viewModel.unitId(matchingSource: ability.source, in: viewModel.activeArmy) {
+            let weaponId = viewModel.activeArmy?
+                .units
+                .first(where: { $0.id == unitId })?
+                .weapons
+                .first?
+                .id
+            handleArmyUnitSelection(
+                armyId: armyId,
+                unitId: unitId,
+                preferredWeaponId: weaponId
+            )
+            return
+        }
         if let unitId = viewModel.unitId(matchingSource: ability.source, in: viewModel.activeArmy) {
             combatViewModel.prefillAttackerUnit(unitId: unitId)
         }

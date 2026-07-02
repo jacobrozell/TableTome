@@ -26,6 +26,7 @@ extension BattlePhaseTrackerView {
                 hasHealthOverride: hasOverride,
                 isActivePlayerUnit: viewModel.isActivePlayerArmy(army.id),
                 preferredWeaponId: selection.preferredWeaponId,
+                defenderUnit: combatViewModel.selectedDefenderUnit,
                 onWoundsChange: { viewModel.setUnitWounds(key: woundKey, remaining: $0) },
                 onSetHealthPerModelOverride: {
                     viewModel.setUnitHealthPerModelOverride(
@@ -121,6 +122,8 @@ struct UnitFocusPresentationModifier<Presented: View>: ViewModifier {
         } else {
             content.sheet(item: $selection) { _ in
                 presented()
+                    .presentationDetents([.large])
+                    .presentationDragIndicator(.visible)
                     .presentationBackground(Color(.systemGroupedBackground))
             }
         }

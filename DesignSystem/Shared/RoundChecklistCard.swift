@@ -98,7 +98,7 @@ struct RoundChecklistCard: View {
 
     @ViewBuilder
     private func firstTurnPickerSection(isComplete: Bool) -> some View {
-        if let playerOneName, let playerTwoName, let onSelectFirstTurn, !isComplete {
+        if let playerOneName, let playerTwoName, let onSelectFirstTurn, round == 1 || !isComplete {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 if round == 1, let attackerName {
                     Text(String(localized: "\(attackerName) (attacker) chooses who goes first this round."))

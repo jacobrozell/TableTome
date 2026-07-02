@@ -487,7 +487,13 @@ struct BattleTrackerRoundOpenerSection: View {
                     playerTwoName: viewModel.playerTwoName,
                     attackerName: viewModel.attackerDisplayName,
                     firstTurnIsPlayerOne: viewModel.matchState.firstTurnIsPlayerOne,
-                    onSelectFirstTurn: { viewModel.setRoundFirstTurn(isPlayerOne: $0) },
+                    onSelectFirstTurn: { playerIsOne in
+                        if viewModel.trackerState.battleRound == 1 {
+                            viewModel.correctRoundOneFirstTurn(isPlayerOne: playerIsOne)
+                        } else {
+                            viewModel.setRoundFirstTurn(isPlayerOne: playerIsOne)
+                        }
+                    },
                     onToggle: viewModel.setRoundChecklistStep
                 )
             }
@@ -572,12 +578,14 @@ struct BattleTrackerVictoryPointsSection: View {
                 scoreLeaderIsPlayerOne: viewModel.scoreLeaderIsPlayerOne,
                 highlightsScoring: viewModel.trackerState.currentPhase == (viewModel.playContext.capabilities.showsActivationBar ? .scoring : .endOfTurn),
                 gameSystemId: viewModel.gameSystemId,
+                defaultsExpandedPerTurnBreakdown: viewModel.gameSystemId == .aosSpearhead,
                 onAdjust: { viewModel.adjustVictoryPoints(playerIsOne: $0, delta: $1, reason: $2) },
                 onQuickAdd: { viewModel.adjustVictoryPoints(playerIsOne: $0, delta: $1, reason: $2) },
                 onSetRoundVictoryPoints: { viewModel.setRoundVictoryPoints(playerIsOne: $1, round: $0, value: $2) },
                 turnIsComplete: { viewModel.turnIsComplete(round: $0, playerIsOne: $1) },
                 turnIsActive: { viewModel.turnIsActive(round: $0, playerIsOne: $1) }
             )
+            .frame(maxWidth: .infinity, alignment: .leading)
             if let underdogIsPlayerOne = viewModel.underdogIsPlayerOne,
                viewModel.playContext.capabilities.showsBattleTacticDecks {
                 let name = underdogIsPlayerOne ? viewModel.playerOneName : viewModel.playerTwoName

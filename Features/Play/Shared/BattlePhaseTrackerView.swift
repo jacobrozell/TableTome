@@ -46,6 +46,7 @@ struct BattlePhaseTrackerView: View {
 
     let onMatchStateChange: (() -> Void)?
     let onVictoryComplete: ((Bool, Int, Int) async -> Void)?
+    let onVictoryPresented: ((Int, Int) async -> Void)?
 
     init(
         gameSystemId: GameSystemId = .default,
@@ -53,10 +54,12 @@ struct BattlePhaseTrackerView: View {
         catalog: SpearheadCatalog,
         ruleSections: [RuleSection] = [],
         onMatchStateChange: (() -> Void)? = nil,
-        onVictoryComplete: ((Bool, Int, Int) async -> Void)? = nil
+        onVictoryComplete: ((Bool, Int, Int) async -> Void)? = nil,
+        onVictoryPresented: ((Int, Int) async -> Void)? = nil
     ) {
         self.onMatchStateChange = onMatchStateChange
         self.onVictoryComplete = onVictoryComplete
+        self.onVictoryPresented = onVictoryPresented
         _viewModel = StateObject(
             wrappedValue: BattleTrackerViewModelFactory.make(
                 gameSystemId: gameSystemId,
@@ -78,6 +81,14 @@ struct BattlePhaseTrackerView: View {
 
     var body: some View {
         applyCombatEvaluationSync(to: trackerScreen)
+            .onAppear {
+                enforcePhysicalDiceIfNeeded()
+            }
+    }
+
+    private func enforcePhysicalDiceIfNeeded() {
+        guard !ReleaseSurface.allowsSimulatedDice(for: viewModel.gameSystemId) else { return }
+        diceInputModeRaw = DiceInputMode.physical.rawValue
     }
 
     @ViewBuilder
@@ -98,6 +109,7 @@ struct BattlePhaseTrackerView: View {
                         }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                .safeAreaPadding(.top, 0)
             } else {
                 scroll
                     .safeAreaInset(edge: .top, spacing: 0) {
@@ -142,6 +154,7 @@ struct BattlePhaseTrackerView: View {
                 }
             }
             applyCompactTopChromeDefault()
+            expandEmbeddedPadBattleChromeIfNeeded()
             if AppLaunchArguments.shouldOpenUnitFocus {
                 Task {
                     try? await Task.sleep(for: .milliseconds(1_400))
@@ -356,6 +369,7 @@ struct BattlePhaseTrackerView: View {
                 usesWideLayout: wideLayout,
                 usesCompactSidebar: compactSidebar,
                 gameSystemId: viewModel.gameSystemId,
+                calledReinforcementUnitKeys: viewModel.trackerState.calledReinforcementUnitKeys,
                 onChange: viewModel.setUnitWounds(key:remaining:),
                 onSelectUnit: { armyId, unitId in
                     handleArmyUnitSelection(armyId: armyId, unitId: unitId)
@@ -433,6 +447,13 @@ struct BattlePhaseTrackerView: View {
     var showsSpearheadBattleChrome: Bool {
         viewModel.playContext.capabilities.showsBattleTacticDecks
     }
+
+    /// iPad Guided Match split: show section tabs expanded on first open (avoid collapsed header + dead zone).
+    func expandEmbeddedPadBattleChromeIfNeeded() {
+        guard isEmbeddedInGuidedMatch, layoutContext.usesPadSplitNavigation else { return }
+        guard isTopChromeCollapsed else { return }
+        isTopChromeCollapsed = false
+    }
 }
 
 private struct BattleTrackerScreenChrome: ViewModifier {
@@ -462,11 +483,13 @@ private struct BattleTrackerScreenChrome: ViewModifier {
                     )
                 }
             }
-            ToolbarItem(placement: .topBarTrailing) {
-                Button(String(localized: "Reset")) {
-                    onReset()
+            if !isEmbeddedInGuidedMatch {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(String(localized: "Reset")) {
+                        onReset()
+                    }
+                    .accessibilityIdentifier("battleTracker.reset")
                 }
-                .accessibilityIdentifier("battleTracker.reset")
             }
         }
     }

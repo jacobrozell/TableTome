@@ -8,7 +8,9 @@ final class BattlePhaseTrackerFirstTurnTests: XCTestCase {
         gameSystemId: GameSystemId = .wh40k10eCp,
         firstTurnIsPlayerOne: Bool = true,
         activePlayerIsOne: Bool = true,
-        phase: BattleTurnPhase? = nil
+        phase: BattleTurnPhase? = nil,
+        playerOneVP: Int = 0,
+        playerTwoVP: Int = 0
     ) -> BattlePhaseTrackerViewModel {
         let context = GameSystemPlayContext.context(for: gameSystemId)
         var match = GuidedMatchState()
@@ -18,7 +20,9 @@ final class BattlePhaseTrackerFirstTurnTests: XCTestCase {
         var tracker = BattleTrackerState(
             battleRound: 1,
             activePlayerIsOne: activePlayerIsOne,
-            currentPhase: phase ?? context.playEngine.turnStartPhase()
+            currentPhase: phase ?? context.playEngine.turnStartPhase(),
+            playerOneVictoryPoints: playerOneVP,
+            playerTwoVictoryPoints: playerTwoVP
         )
         return BattlePhaseTrackerViewModel(
             gameSystemId: gameSystemId,
@@ -59,5 +63,40 @@ final class BattlePhaseTrackerFirstTurnTests: XCTestCase {
 
         XCTAssertFalse(viewModel.trackerState.activePlayerIsOne)
         XCTAssertEqual(viewModel.matchState.firstTurnIsPlayerOne, false)
+    }
+
+    func testSpearheadCorrectRoundOneFirstTurnResetsPhaseEvenWithVictoryPoints() {
+        let viewModel = makeViewModel(
+            gameSystemId: .aosSpearhead,
+            firstTurnIsPlayerOne: true,
+            activePlayerIsOne: true,
+            phase: .movement,
+            playerOneVP: 2,
+            playerTwoVP: 1
+        )
+        viewModel.trackerState.completedTurnsThisRound = [true]
+
+        viewModel.correctRoundOneFirstTurn(isPlayerOne: false)
+
+        XCTAssertFalse(viewModel.matchState.firstTurnIsPlayerOne ?? true)
+        XCTAssertTrue(viewModel.trackerState.completedTurnsThisRound.isEmpty)
+        XCTAssertEqual(
+            viewModel.trackerState.currentPhase,
+            viewModel.playContext.playEngine.turnStartPhase()
+        )
+    }
+
+    func testSpearheadSetActivePlayerDoesNotChangeFirstTurnAfterOpener() {
+        let viewModel = makeViewModel(
+            gameSystemId: .aosSpearhead,
+            firstTurnIsPlayerOne: true,
+            activePlayerIsOne: true
+        )
+        viewModel.matchState.firstTurnIsPlayerOne = true
+
+        viewModel.setActivePlayer(isOne: false)
+
+        XCTAssertFalse(viewModel.trackerState.activePlayerIsOne)
+        XCTAssertEqual(viewModel.matchState.firstTurnIsPlayerOne, true)
     }
 }

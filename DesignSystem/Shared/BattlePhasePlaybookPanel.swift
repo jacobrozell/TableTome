@@ -52,6 +52,21 @@ struct BattlePhasePlaybookPanel: View {
                 .font(.subheadline.weight(.medium))
                 .foregroundStyle(.secondary)
 
+            if viewModel.gameSystemId == .aosSpearhead, viewModel.trackerState.battleRound == 1 {
+                SpearheadRoundOneFirstTurnCard(
+                    playerOneName: viewModel.playerOneName,
+                    playerTwoName: viewModel.playerTwoName,
+                    attackerName: viewModel.attackerDisplayName,
+                    firstTurnIsPlayerOne: viewModel.matchState.firstTurnIsPlayerOne,
+                    onSelect: { viewModel.correctRoundOneFirstTurn(isPlayerOne: $0) }
+                )
+            } else if viewModel.gameSystemId == .aosSpearhead, viewModel.trackerState.battleRound > 1 {
+                SpearheadRoundTwoPlusOpenerCard(
+                    battleRound: viewModel.trackerState.battleRound,
+                    underdogPlayerName: underdogPlayerName
+                )
+            }
+
             BattleTrackerPlayerSwitcher(
                 playerOneName: viewModel.playerOneName,
                 playerTwoName: viewModel.playerTwoName,
@@ -88,6 +103,11 @@ struct BattlePhasePlaybookPanel: View {
         return "\(String(localized: "In")) \(phase.title)"
     }
 
+    private var underdogPlayerName: String? {
+        guard let underdogIsPlayerOne = viewModel.underdogIsPlayerOne else { return nil }
+        return underdogIsPlayerOne ? viewModel.playerOneName : viewModel.playerTwoName
+    }
+
     @ViewBuilder
     private var abilityList: some View {
         let abilities = viewModel.activeAbilities
@@ -95,13 +115,25 @@ struct BattlePhasePlaybookPanel: View {
         let stratagems = phaseStratagems
 
         if abilities.isEmpty, armyOptions.isEmpty, stratagems.isEmpty, !viewModel.trackerState.showAllAbilities {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                if phase == .movement, gameSystemId == .aosSpearhead {
+                    MovementRangeCard(
+                        playerName: activePlayerName,
+                        army: viewModel.activeArmy,
+                        woundsRemaining: viewModel.trackerState.unitWoundsRemaining,
+                        armyId: viewModel.activeArmy?.id
+                    )
+                }
                 Text(emptyPhaseTitle)
                     .font(.subheadline.weight(.semibold))
                 Text(emptyPhaseDetail)
                     .font(.callout)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
+                if phase == .movement, gameSystemId == .aosSpearhead,
+                   let retreatEntry = SpearheadRulesGlossary.entries.first(where: { $0.id == "retreat" }) {
+                    GlossaryChip(entry: retreatEntry, gameSystemId: gameSystemId.rawValue, ruleSections: ruleSections)
+                }
             }
             .padding(DesignTokens.Spacing.sm)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -183,7 +215,7 @@ struct BattlePhasePlaybookPanel: View {
                     Text(
                         String(
                             localized: """
-                            Roll for priority, pick who goes first, then complete the checklist on the Setup tab \
+                            Roll for priority, pick who goes first on this tab, then finish the opener checklist \
                             before advancing phases.
                             """
                         )
@@ -317,7 +349,8 @@ struct BattlePhasePlaybookPanel: View {
         case .movement:
             String(
                 localized: """
-                Normal Move, Run, or Retreat. Retreat: D3 mortal damage, then move — cannot end in enemy combat range. No shoot or charge after Run or Retreat.
+                Normal Move, Run, or Retreat. Retreat: roll D3 mortal wounds on the retreating unit, then move up to Move — \
+                cannot end in enemy combat range. No shoot or charge after Run or Retreat this turn.
                 """
             )
         case .shooting, .assault:

@@ -11,6 +11,10 @@ extension BattlePhaseTrackerView {
             .modifier(TrackerNoticeDismissalsModifier(view: self))
     }
 
+    private var trimsEmbeddedPadScrollTopInset: Bool {
+        isEmbeddedInGuidedMatch && usesPadTabbedTwoColumnLayout
+    }
+
     private var trackerScrollContent: some View {
         ScrollView(.vertical) {
             Group {
@@ -27,11 +31,33 @@ extension BattlePhaseTrackerView {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .modifier(BattleTrackerContentWidth(layoutContext: layoutContext))
-            .padding(trackerContentPadding)
+            .padding(trackerScrollEdgeInsets)
         }
         .scrollBounceBehavior(.basedOnSize, axes: .vertical)
         .tabBarScrollInset()
         .modifier(BattleTrackerPhaseDockScrollInset(isEnabled: usesCompactBattleTrackerChrome))
+        .modifier(EmbeddedPadScrollTopInsetModifier(isEnabled: trimsEmbeddedPadScrollTopInset))
+    }
+
+    private var trackerScrollEdgeInsets: EdgeInsets {
+        let horizontal = trackerContentPadding
+        let vertical = trackerContentPadding
+        if trimsEmbeddedPadScrollTopInset {
+            return EdgeInsets(top: 0, leading: horizontal, bottom: vertical, trailing: horizontal)
+        }
+        return EdgeInsets(top: vertical, leading: horizontal, bottom: vertical, trailing: horizontal)
+    }
+
+    private struct EmbeddedPadScrollTopInsetModifier: ViewModifier {
+        let isEnabled: Bool
+
+        func body(content: Content) -> some View {
+            if isEnabled {
+                content.contentMargins(.top, 0, for: .scrollContent)
+            } else {
+                content
+            }
+        }
     }
 
     private struct BattleTrackerPhaseDockScrollInset: ViewModifier {
@@ -127,6 +153,13 @@ extension BattlePhaseTrackerView {
                 .onChange(of: view.phaseActionNudge) { _, notice in
                     scheduleDismiss(notice, seconds: 8) {
                         if view.phaseActionNudge == notice { view.phaseActionNudge = nil }
+                    }
+                }
+                .onChange(of: view.viewModel.pendingReinforcementCall) { _, prompt in
+                    scheduleDismiss(prompt, seconds: 12) {
+                        if view.viewModel.pendingReinforcementCall == prompt {
+                            view.viewModel.clearReinforcementCallPrompt()
+                        }
                     }
                 }
                 .onChange(of: view.scoringReminderNotice) { _, notice in

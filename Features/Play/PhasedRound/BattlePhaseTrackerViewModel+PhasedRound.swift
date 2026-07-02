@@ -131,10 +131,14 @@ extension BattlePhaseTrackerViewModel {
     }
 
     func setRoundFirstTurn(isPlayerOne: Bool) {
-        matchState.firstTurnIsPlayerOne = isPlayerOne
-        trackerState.activePlayerIsOne = isPlayerOne
-        persistMatchState()
-        syncAutoCompletions()
+        if trackerState.battleRound == 1, gameSystemId == .aosSpearhead {
+            correctRoundOneFirstTurn(isPlayerOne: isPlayerOne)
+        } else {
+            matchState.firstTurnIsPlayerOne = isPlayerOne
+            trackerState.activePlayerIsOne = isPlayerOne
+            persistMatchState()
+            syncAutoCompletions()
+        }
         let key = BattleRoundChecklist.storageKey(round: trackerState.battleRound)
         var steps = trackerState.completedRoundChecklistSteps[key] ?? []
         steps.insert(BattleRoundChecklistStep.firstTurnOrPriority.rawValue)

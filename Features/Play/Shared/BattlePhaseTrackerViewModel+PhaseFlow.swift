@@ -7,6 +7,7 @@ extension BattlePhaseTrackerViewModel {
         trackerState.currentPhase = phase
         if previous != phase {
             trackerEngine.afterPhaseChange(from: previous, trackerState: &trackerState)
+            clearReinforcementCallPromptIfLeavingMovement(from: previous, to: phase)
         }
         persist()
         refreshAbilities()
@@ -57,7 +58,18 @@ extension BattlePhaseTrackerViewModel {
         if playContext.capabilities.showsBattleTacticDecks,
            roundOpenerIsIncomplete,
            focusedRoundOpenerStep == .firstTurnOrPriority {
-            setRoundFirstTurn(isPlayerOne: isOne)
+            if trackerState.battleRound == 1 {
+                correctRoundOneFirstTurn(isPlayerOne: isOne)
+            } else {
+                setRoundFirstTurn(isPlayerOne: isOne)
+            }
+            return
+        }
+        if gameSystemId == .aosSpearhead, trackerState.battleRound == 1 {
+            trackerState.activePlayerIsOne = isOne
+            persist()
+            refreshAbilities()
+            recordActivePlayerChanged()
             return
         }
         trackerState.activePlayerIsOne = isOne
@@ -69,6 +81,28 @@ extension BattlePhaseTrackerViewModel {
         recordActivePlayerChanged()
     }
 
+    /// Round 1 Spearhead — fix first turn without End of Turn or consuming a completed turn slot.
+    func correctRoundOneFirstTurn(isPlayerOne: Bool) {
+        guard trackerState.battleRound == 1 else { return }
+
+        let firstTurnChanged = matchState.firstTurnIsPlayerOne != isPlayerOne
+        matchState.firstTurnIsPlayerOne = isPlayerOne
+        trackerState.activePlayerIsOne = isPlayerOne
+        persistMatchState()
+        syncAutoCompletions()
+
+        if firstTurnChanged {
+            trackerState.completedTurnsThisRound = []
+            let turnStart = playContext.playEngine.turnStartPhase()
+            if trackerState.currentPhase != turnStart {
+                trackerState.currentPhase = turnStart
+            }
+        }
+
+        persist()
+        refreshAbilities()
+    }
+
     private func applyRoundOneFirstTurnChoice(isPlayerOne: Bool) {
         let firstTurnChanged = matchState.firstTurnIsPlayerOne != isPlayerOne
         matchState.firstTurnIsPlayerOne = isPlayerOne
@@ -76,13 +110,13 @@ extension BattlePhaseTrackerViewModel {
         guard shouldResetTurnStartAfterFirstTurnCorrection() else { return }
         if firstTurnChanged || trackerState.currentPhase != playContext.playEngine.turnStartPhase() {
             trackerState.currentPhase = playContext.playEngine.turnStartPhase()
+            persist()
         }
     }
 
     private func shouldResetTurnStartAfterFirstTurnCorrection() -> Bool {
         trackerState.battleRound == 1
-            && trackerState.playerOneVictoryPoints == 0
-            && trackerState.playerTwoVictoryPoints == 0
+            && trackerState.completedTurnsThisRound.isEmpty
     }
 
     var canPassToNextPlayerThisRound: Bool {

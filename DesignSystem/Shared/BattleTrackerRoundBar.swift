@@ -55,8 +55,26 @@ struct BattleTrackerRoundBar: View {
                     activePlayerIsOne: viewModel.trackerState.activePlayerIsOne
                 )
             }
+
+            if !viewModel.canPassToNextPlayerThisRound,
+               !viewModel.canAdvanceBattleRound,
+               viewModel.trackerState.currentPhase == .endOfTurn {
+                Text(roundAdvanceHint)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
         }
         .surfaceCard()
         .accessibilityIdentifier("battleTracker.roundBar")
+    }
+
+    private var roundAdvanceHint: String {
+        if viewModel.trackerState.completedTurnsThisRound.count < 2 {
+            return String(
+                localized: "Both players must finish End of Turn before starting the next battle round."
+            )
+        }
+        return String(localized: "Finish scoring, then use Start next round when both turns are done.")
     }
 }

@@ -32,13 +32,17 @@ public enum MatchSetupCompletionEvaluator {
         if state.attackerIsPlayerOne != nil {
             completed.insert("roll-attacker")
 
-            if regimentAbilitiesSatisfied(state: state, catalog: catalog) {
-                completed.insert("regiment-abilities")
-                completed.insert("force-disposition")
-            }
+            // Spearhead: regiment + enhancement picks must be confirmed on the setup steps —
+            // starter matchup only pre-selects defaults; do not skip the physical card picks.
+            if gameSystemId != GameSystemId.aosSpearhead.rawValue {
+                if regimentAbilitiesSatisfied(state: state, catalog: catalog) {
+                    completed.insert("regiment-abilities")
+                    completed.insert("force-disposition")
+                }
 
-            if enhancementsSatisfied(state: state, catalog: catalog) {
-                completed.insert("enhancements")
+                if enhancementsSatisfied(state: state, catalog: catalog) {
+                    completed.insert("enhancements")
+                }
             }
         }
 

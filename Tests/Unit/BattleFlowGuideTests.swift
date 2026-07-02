@@ -54,7 +54,7 @@ final class MatchSetupCompletionEvaluatorTests: XCTestCase {
         XCTAssertFalse(completed.contains("roll-attacker"))
     }
 
-    func testAutoCompletesRegimentAfterRollOff() async throws {
+    func testAutoCompletesRegimentAfterRollOffForNonSpearheadGameSystems() async throws {
         let catalog = try await loadCatalog()
         var state = GuidedMatchState()
         state.attackerIsPlayerOne = true
@@ -68,11 +68,36 @@ final class MatchSetupCompletionEvaluatorTests: XCTestCase {
         let completed = MatchSetupCompletionEvaluator.autoCompletedStepIds(
             state: state,
             catalog: catalog,
-            deploymentSteps: []
+            deploymentSteps: [],
+            gameSystemId: GameSystemId.wh40k11e.rawValue
         )
 
         XCTAssertTrue(completed.contains("roll-attacker"))
         XCTAssertTrue(completed.contains("regiment-abilities"))
+    }
+
+    func testSpearheadDoesNotAutoCompleteRegimentOrEnhancementsAfterRollOff() async throws {
+        let catalog = try await loadCatalog()
+        var state = GuidedMatchState()
+        state.attackerIsPlayerOne = true
+        state.playerOne.factionId = "stormcast-eternals"
+        state.playerOne.armyId = "vigilant-brotherhood"
+        state.playerOne.regimentAbilityId = "strike-where-needed"
+        state.playerOne.enhancementId = "hallowed-scrolls"
+        state.playerTwo.factionId = "skaven"
+        state.playerTwo.armyId = "gnawfeast-clawpack"
+        state.playerTwo.regimentAbilityId = "too-quick-to-hit"
+        state.playerTwo.enhancementId = "lead-seething-horde"
+
+        let completed = MatchSetupCompletionEvaluator.autoCompletedStepIds(
+            state: state,
+            catalog: catalog,
+            deploymentSteps: []
+        )
+
+        XCTAssertTrue(completed.contains("roll-attacker"))
+        XCTAssertFalse(completed.contains("regiment-abilities"))
+        XCTAssertFalse(completed.contains("enhancements"))
     }
 
     func testAutoCompletesRealmWhenDeploymentFinished() async throws {

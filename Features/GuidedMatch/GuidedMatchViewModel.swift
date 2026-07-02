@@ -15,6 +15,7 @@ final class GuidedMatchViewModel: ObservableObject {
     private let catalogRepository: any SpearheadCatalogRepository
     let logger: any AppLogger
     var hasLoggedMatchStarted = false
+    var hasArchivedCurrentVictory = false
 
     init(
         gameSystemId: GameSystemId = .default,
@@ -291,6 +292,7 @@ final class GuidedMatchViewModel: ObservableObject {
         BattleTrackerStore.reset(gameSystemId: gameSystemId)
         MatchSessionStore.clear(gameSystemId: gameSystemId)
         MatchLogRecorder.discard(gameSystemId: gameSystemId)
+        clearVictoryArchiveState()
     }
 
     func rematchPreservingArmies() {
@@ -303,6 +305,7 @@ final class GuidedMatchViewModel: ObservableObject {
         BattleTrackerStore.reset(gameSystemId: gameSystemId)
         MatchSessionStore.markStartedIfNeeded(gameSystemId: gameSystemId)
         MatchLogRecorder.ensureSession(gameSystemId: gameSystemId)
+        clearVictoryArchiveState()
     }
 
     func archiveCurrentMatch(
@@ -406,17 +409,18 @@ final class GuidedMatchViewModel: ObservableObject {
         }
     }
 
-    private func matchSaveFailureMessage(status: MatchArchiveStatus) -> String {
+    func matchSaveFailureMessage(status: MatchArchiveStatus) -> String {
         status == .completed
             ? String(localized: "This match couldn't be saved to History — the final scores weren't recorded.")
             : String(localized: "This match couldn't be saved to History.")
     }
 
-    func applyStarterMatchup() {
+    func applyStarterMatchup(boxSet: BoxSet? = nil) {
         BattleTrackerStore.reset(gameSystemId: gameSystemId)
         let context = GameSystemPlayContext.context(for: gameSystemId)
+        let armies = boxSet.map { GuidedMatchFeaturedArmies(config: $0.featuredArmiesConfig()) } ?? featuredArmies
         mutateMatchState(persist: true, syncCompletions: false) {
-            featuredArmies.applyStarterMatchup(to: &$0)
+            armies.applyStarterMatchup(to: &$0)
             $0.attackerIsPlayerOne = true
             if context.capabilities.deploymentChecklistStyle == .wh40k || context.capabilities.usesPatrolFormatRules {
                 $0.firstTurnIsPlayerOne = true

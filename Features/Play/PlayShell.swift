@@ -9,6 +9,7 @@ struct PlayShell: View {
     let ruleSections: [RuleSection]
     let onMatchStateChange: (() -> Void)?
     let onVictoryComplete: ((Bool, Int, Int) async -> Void)?
+    let onVictoryPresented: ((Int, Int) async -> Void)?
 
     init(
         gameSystemId: GameSystemId = .default,
@@ -16,7 +17,8 @@ struct PlayShell: View {
         catalog: SpearheadCatalog,
         ruleSections: [RuleSection] = [],
         onMatchStateChange: (() -> Void)? = nil,
-        onVictoryComplete: ((Bool, Int, Int) async -> Void)? = nil
+        onVictoryComplete: ((Bool, Int, Int) async -> Void)? = nil,
+        onVictoryPresented: ((Int, Int) async -> Void)? = nil
     ) {
         self.gameSystemId = gameSystemId
         self.matchState = matchState
@@ -24,6 +26,7 @@ struct PlayShell: View {
         self.ruleSections = ruleSections
         self.onMatchStateChange = onMatchStateChange
         self.onVictoryComplete = onVictoryComplete
+        self.onVictoryPresented = onVictoryPresented
     }
 
     private var playEngineId: PlayEngineId {
@@ -39,26 +42,40 @@ struct PlayShell: View {
                 catalog: catalog,
                 ruleSections: ruleSections,
                 onMatchStateChange: onMatchStateChange,
-                onVictoryComplete: onVictoryComplete
+                onVictoryComplete: onVictoryComplete,
+                onVictoryPresented: onVictoryPresented
             )
         case .phasedRound:
-            PhasedRoundTrackerView(
-                gameSystemId: gameSystemId,
-                matchState: matchState,
-                catalog: catalog,
-                ruleSections: ruleSections,
-                onMatchStateChange: onMatchStateChange,
-                onVictoryComplete: onVictoryComplete
-            )
+            if gameSystemId.isSpearhead && ReleaseSurface.usesSpearheadSingleSurfaceBattle {
+                SpearheadBattleView(
+                    gameSystemId: gameSystemId,
+                    matchState: matchState,
+                    catalog: catalog,
+                    ruleSections: ruleSections,
+                    onMatchStateChange: onMatchStateChange,
+                    onVictoryComplete: onVictoryComplete,
+                    onVictoryPresented: onVictoryPresented
+                )
+            } else {
+                PhasedRoundTrackerView(
+                    gameSystemId: gameSystemId,
+                    matchState: matchState,
+                    catalog: catalog,
+                    ruleSections: ruleSections,
+                    onMatchStateChange: onMatchStateChange,
+                    onVictoryComplete: onVictoryComplete,
+                    onVictoryPresented: onVictoryPresented
+                )
+            }
         case .gridSportDrive, .commandCardPool, .heroSkirmish, .rulesOnly:
-            // Future engines — reuse phased-round tracker until dedicated shells ship.
             PhasedRoundTrackerView(
                 gameSystemId: gameSystemId,
                 matchState: matchState,
                 catalog: catalog,
                 ruleSections: ruleSections,
                 onMatchStateChange: onMatchStateChange,
-                onVictoryComplete: onVictoryComplete
+                onVictoryComplete: onVictoryComplete,
+                onVictoryPresented: onVictoryPresented
             )
         }
     }

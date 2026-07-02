@@ -9,6 +9,7 @@ struct PhasedRoundTrackerView: View {
     let ruleSections: [RuleSection]
     let onMatchStateChange: (() -> Void)?
     let onVictoryComplete: ((Bool, Int, Int) async -> Void)?
+    let onVictoryPresented: ((Int, Int) async -> Void)?
 
     init(
         gameSystemId: GameSystemId = .default,
@@ -16,7 +17,8 @@ struct PhasedRoundTrackerView: View {
         catalog: SpearheadCatalog,
         ruleSections: [RuleSection] = [],
         onMatchStateChange: (() -> Void)? = nil,
-        onVictoryComplete: ((Bool, Int, Int) async -> Void)? = nil
+        onVictoryComplete: ((Bool, Int, Int) async -> Void)? = nil,
+        onVictoryPresented: ((Int, Int) async -> Void)? = nil
     ) {
         self.gameSystemId = gameSystemId
         self.matchState = matchState
@@ -24,6 +26,7 @@ struct PhasedRoundTrackerView: View {
         self.ruleSections = ruleSections
         self.onMatchStateChange = onMatchStateChange
         self.onVictoryComplete = onVictoryComplete
+        self.onVictoryPresented = onVictoryPresented
     }
 
     var body: some View {
@@ -33,7 +36,8 @@ struct PhasedRoundTrackerView: View {
             catalog: catalog,
             ruleSections: ruleSections,
             onMatchStateChange: onMatchStateChange,
-            onVictoryComplete: onVictoryComplete
+            onVictoryComplete: onVictoryComplete,
+            onVictoryPresented: onVictoryPresented
         )
         .environment(\.battleTrackerPlayEngineId, .phasedRound)
     }

@@ -37,6 +37,9 @@ extension BattlePhaseTrackerView {
         victoryPlayerTwoVP = viewModel.trackerState.playerTwoVictoryPoints
         dismissedBattleCompleteGuide = true
         showsVictoryScreen = true
+        Task {
+            await onVictoryPresented?(victoryPlayerOneVP, victoryPlayerTwoVP)
+        }
         TabletomeAnalytics.logger?.info(
             .guidedMatch,
             eventName: "battle_tracker_victory_presented",

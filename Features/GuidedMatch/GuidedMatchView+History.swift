@@ -15,14 +15,32 @@ extension GuidedMatchView {
         }
     }
 
-    func handleVictoryComplete(rematch: Bool, playerOneVP: Int, playerTwoVP: Int) async {
-        await viewModel.finishMatch(
+    func handleVictoryPresented(playerOneVP: Int, playerTwoVP: Int) async {
+        guard gameSystemId == .aosSpearhead else { return }
+        await viewModel.archiveVictoryIfNeeded(
             repository: dependencies.matchHistoryRepository,
-            rematch: rematch,
             playerOneVictoryPoints: playerOneVP,
-            playerTwoVictoryPoints: playerTwoVP,
-            status: .completed
+            playerTwoVictoryPoints: playerTwoVP
         )
+    }
+
+    func handleVictoryComplete(rematch: Bool, playerOneVP: Int, playerTwoVP: Int) async {
+        if gameSystemId == .aosSpearhead {
+            await viewModel.archiveVictoryIfNeeded(
+                repository: dependencies.matchHistoryRepository,
+                playerOneVictoryPoints: playerOneVP,
+                playerTwoVictoryPoints: playerTwoVP
+            )
+            viewModel.finishAfterVictoryPresented(rematch: rematch)
+        } else {
+            await viewModel.finishMatch(
+                repository: dependencies.matchHistoryRepository,
+                rematch: rematch,
+                playerOneVictoryPoints: playerOneVP,
+                playerTwoVictoryPoints: playerTwoVP,
+                status: .completed
+            )
+        }
         viewModel.reloadFromStore()
     }
 

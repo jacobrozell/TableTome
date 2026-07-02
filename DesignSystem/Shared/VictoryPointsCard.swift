@@ -14,11 +14,14 @@ struct VictoryPointsCard: View {
     var scoreLeaderIsPlayerOne: Bool?
     var highlightsScoring: Bool = false
     var gameSystemId: GameSystemId = .default
+    var defaultsExpandedPerTurnBreakdown: Bool = false
     let onAdjust: (Bool, Int, MatchVictoryPointsReason) -> Void
     let onQuickAdd: (Bool, Int, MatchVictoryPointsReason) -> Void
     var onSetRoundVictoryPoints: ((Int, Bool, Int) -> Void)?
     var turnIsComplete: ((Int, Bool) -> Bool)?
     var turnIsActive: ((Int, Bool) -> Bool)?
+
+    @State private var showsPerTurnDetails: Bool
 
     init(
         playerOneName: String,
@@ -33,6 +36,7 @@ struct VictoryPointsCard: View {
         scoreLeaderIsPlayerOne: Bool? = nil,
         highlightsScoring: Bool = false,
         gameSystemId: GameSystemId = .default,
+        defaultsExpandedPerTurnBreakdown: Bool = false,
         onAdjust: @escaping (Bool, Int, MatchVictoryPointsReason) -> Void,
         onQuickAdd: @escaping (Bool, Int, MatchVictoryPointsReason) -> Void,
         onSetRoundVictoryPoints: ((Int, Bool, Int) -> Void)? = nil,
@@ -51,11 +55,13 @@ struct VictoryPointsCard: View {
         self.scoreLeaderIsPlayerOne = scoreLeaderIsPlayerOne
         self.highlightsScoring = highlightsScoring
         self.gameSystemId = gameSystemId
+        self.defaultsExpandedPerTurnBreakdown = defaultsExpandedPerTurnBreakdown
         self.onAdjust = onAdjust
         self.onQuickAdd = onQuickAdd
         self.onSetRoundVictoryPoints = onSetRoundVictoryPoints
         self.turnIsComplete = turnIsComplete
         self.turnIsActive = turnIsActive
+        _showsPerTurnDetails = State(initialValue: defaultsExpandedPerTurnBreakdown)
     }
 
     init(
@@ -71,6 +77,7 @@ struct VictoryPointsCard: View {
         scoreLeaderIsPlayerOne: Bool? = nil,
         highlightsScoring: Bool = false,
         gameSystemId: String,
+        defaultsExpandedPerTurnBreakdown: Bool = false,
         onAdjust: @escaping (Bool, Int, MatchVictoryPointsReason) -> Void,
         onQuickAdd: @escaping (Bool, Int, MatchVictoryPointsReason) -> Void,
         onSetRoundVictoryPoints: ((Int, Bool, Int) -> Void)? = nil,
@@ -90,6 +97,7 @@ struct VictoryPointsCard: View {
             scoreLeaderIsPlayerOne: scoreLeaderIsPlayerOne,
             highlightsScoring: highlightsScoring,
             gameSystemId: GameSystemId(resolving: gameSystemId),
+            defaultsExpandedPerTurnBreakdown: defaultsExpandedPerTurnBreakdown,
             onAdjust: onAdjust,
             onQuickAdd: onQuickAdd,
             onSetRoundVictoryPoints: onSetRoundVictoryPoints,
@@ -139,7 +147,7 @@ struct VictoryPointsCard: View {
             }
 
             if showsPerTurnBreakdown {
-                perTurnBreakdown
+                perTurnBreakdownSection
             }
         }
         .surfaceCard()
@@ -184,14 +192,31 @@ struct VictoryPointsCard: View {
         }
     }
 
+    private var perTurnBreakdownSection: some View {
+        DisclosureGroup(isExpanded: $showsPerTurnDetails) {
+            perTurnBreakdown
+        } label: {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                SectionHeader(title: String(localized: "Score by turn"), systemImage: "list.number")
+                Text(
+                    String(
+                        localized: "Use the steppers on each row to match what you scored that round at the table."
+                    )
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+
     private var perTurnBreakdown: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            SectionHeader(title: String(localized: "Score by turn"), systemImage: "list.number")
-
             ForEach(visibleRounds, id: \.self) { round in
                 turnRows(for: round)
             }
         }
+        .padding(.top, DesignTokens.Spacing.xs)
     }
 
     private func turnRows(for round: Int) -> some View {

@@ -39,7 +39,8 @@ extension GuidedMatchView {
                     catalog: catalog,
                     ruleSections: ruleSections,
                     onMatchStateChange: { viewModel.reloadFromStore() },
-                    onVictoryComplete: handleVictoryComplete
+                    onVictoryComplete: handleVictoryComplete,
+                    onVictoryPresented: handleVictoryPresented
                 )
                 .environment(\.battleTrackerIsEmbeddedInGuidedMatch, true)
             } else {
@@ -77,7 +78,8 @@ extension GuidedMatchView {
                 viewModel.reloadFromStore()
                 hubTrackerTick += 1
             },
-            onVictoryComplete: handleVictoryComplete
+            onVictoryComplete: handleVictoryComplete,
+            onVictoryPresented: handleVictoryPresented
         )
         .environment(\.battleTrackerIsEmbeddedInGuidedMatch, true)
         .frame(maxWidth: .infinity, maxHeight: .infinity)

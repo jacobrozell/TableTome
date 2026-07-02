@@ -4,10 +4,7 @@ import TabletomeDomain
 struct PreBattleLoadoutReviewSection: View {
     @ObservedObject var viewModel: GuidedMatchViewModel
     let ruleSections: [RuleSection]
-    let usesPadSplitNavigation: Bool
     @Binding var showsLoadoutSheet: Bool
-    let onOpenRegimentStep: () -> Void
-    let onOpenEnhancementStep: () -> Void
 
     var body: some View {
         Section {
@@ -22,29 +19,9 @@ struct PreBattleLoadoutReviewSection: View {
                 playerTwoRegiment: viewModel.regimentAbility(for: viewModel.matchState.playerTwo),
                 playerOneEnhancement: viewModel.enhancement(for: viewModel.matchState.playerOne),
                 playerTwoEnhancement: viewModel.enhancement(for: viewModel.matchState.playerTwo),
-                onOpenRegimentStep: onOpenRegimentStep,
-                onOpenEnhancementStep: onOpenEnhancementStep
+                onOpenLoadout: { showsLoadoutSheet = true }
             )
             .listHeroCardRow()
-
-            Button {
-                showsLoadoutSheet = true
-            } label: {
-                Label(String(localized: "Set Loadout"), systemImage: "tray.and.arrow.down.fill")
-            }
-            .accessibilityIdentifier("guidedMatch.preBattleLoadout.openSheet")
-
-            if !usesPadSplitNavigation {
-                NavigationLink(value: GuidedMatchDestination.step("regiment-abilities")) {
-                    Label(String(localized: "Open regiment abilities step"), systemImage: "checklist")
-                }
-                .accessibilityIdentifier("guidedMatch.preBattleLoadout.regimentLink")
-
-                NavigationLink(value: GuidedMatchDestination.step("enhancements")) {
-                    Label(String(localized: "Open enhancements step"), systemImage: "sparkles")
-                }
-                .accessibilityIdentifier("guidedMatch.preBattleLoadout.enhancementsLink")
-            }
         } header: {
             Text(String(localized: "Pre-battle picks"))
         } footer: {

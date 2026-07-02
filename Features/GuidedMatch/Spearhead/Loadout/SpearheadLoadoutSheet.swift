@@ -10,14 +10,6 @@ struct SpearheadLoadoutSheet: View {
     @Environment(\.dismiss) private var dismiss
     @State private var currentPlayerIsOne = true
 
-    private var currentPlayer: PlayerArmySelection {
-        currentPlayerIsOne ? viewModel.matchState.playerOne : viewModel.matchState.playerTwo
-    }
-
-    private var currentArmy: SpearheadArmy? {
-        viewModel.army(factionId: currentPlayer.factionId, armyId: currentPlayer.armyId)
-    }
-
     private var playerOneComplete: Bool {
         viewModel.matchState.playerOne.regimentAbilityId != nil &&
         viewModel.matchState.playerOne.enhancementId != nil
@@ -36,16 +28,26 @@ struct SpearheadLoadoutSheet: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-                    playerToggle
-                    progressIndicator
-
-                    if let army = currentArmy {
-                        regimentSection(army: army)
-                        enhancementSection(army: army)
-                    } else {
-                        noArmyMessage
-                    }
-
+                    SpearheadLoadoutPlayerToggle(
+                        viewModel: viewModel,
+                        currentPlayerIsOne: $currentPlayerIsOne,
+                        playerOneComplete: playerOneComplete,
+                        playerTwoComplete: playerTwoComplete
+                    )
+                    SpearheadLoadoutProgressIndicator(
+                        viewModel: viewModel,
+                        currentPlayerIsOne: currentPlayerIsOne
+                    )
+                    SpearheadLoadoutRegimentPicker(
+                        viewModel: viewModel,
+                        ruleSections: ruleSections,
+                        currentPlayerIsOne: currentPlayerIsOne
+                    )
+                    SpearheadLoadoutEnhancementPicker(
+                        viewModel: viewModel,
+                        ruleSections: ruleSections,
+                        currentPlayerIsOne: currentPlayerIsOne
+                    )
                     confirmSection
                 }
                 .padding(DesignTokens.Spacing.md)
@@ -62,120 +64,6 @@ struct SpearheadLoadoutSheet: View {
             .glossaryEntryNavigation()
         }
         .accessibilityIdentifier("spearhead.loadoutSheet")
-    }
-
-    // MARK: - Player Toggle
-
-    @ViewBuilder
-    private var playerToggle: some View {
-        Picker("Player", selection: $currentPlayerIsOne) {
-            HStack {
-                Text(viewModel.matchState.playerOne.playerName)
-                if playerOneComplete {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(.green)
-                }
-            }
-            .tag(true)
-
-            HStack {
-                Text(viewModel.matchState.playerTwo.playerName)
-                if playerTwoComplete {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(.green)
-                }
-            }
-            .tag(false)
-        }
-        .pickerStyle(.segmented)
-        .accessibilityIdentifier("loadout.playerPicker")
-    }
-
-    @ViewBuilder
-    private var progressIndicator: some View {
-        HStack(spacing: DesignTokens.Spacing.sm) {
-            progressBadge(
-                title: "Regiment",
-                isComplete: currentPlayerIsOne
-                    ? viewModel.matchState.playerOne.regimentAbilityId != nil
-                    : viewModel.matchState.playerTwo.regimentAbilityId != nil
-            )
-            progressBadge(
-                title: "Enhancement",
-                isComplete: currentPlayerIsOne
-                    ? viewModel.matchState.playerOne.enhancementId != nil
-                    : viewModel.matchState.playerTwo.enhancementId != nil
-            )
-        }
-    }
-
-    @ViewBuilder
-    private func progressBadge(title: String, isComplete: Bool) -> some View {
-        HStack(spacing: 4) {
-            Image(systemName: isComplete ? "checkmark.circle.fill" : "circle")
-                .foregroundStyle(isComplete ? .green : .secondary)
-            Text(title)
-                .font(.caption)
-        }
-        .padding(.horizontal, DesignTokens.Spacing.sm)
-        .padding(.vertical, 4)
-        .background(Color(.tertiarySystemFill), in: Capsule())
-    }
-
-    // MARK: - Regiment Section
-
-    @ViewBuilder
-    private func regimentSection(army: SpearheadArmy) -> some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            sectionHeader(
-                title: "Regiment Ability",
-                subtitle: "Affects your entire army",
-                icon: "flag.fill"
-            )
-
-            let selectedId = currentPlayerIsOne
-                ? viewModel.matchState.playerOne.regimentAbilityId
-                : viewModel.matchState.playerTwo.regimentAbilityId
-
-            ForEach(army.regimentAbilities) { option in
-                LoadoutOptionCard(
-                    option: option,
-                    isSelected: selectedId == option.id,
-                    gameSystemId: viewModel.gameSystemId.rawValue,
-                    ruleSections: ruleSections
-                ) {
-                    viewModel.setRegimentAbility(playerIsOne: currentPlayerIsOne, abilityId: option.id)
-                }
-            }
-        }
-    }
-
-    // MARK: - Enhancement Section
-
-    @ViewBuilder
-    private func enhancementSection(army: SpearheadArmy) -> some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            sectionHeader(
-                title: "Enhancement",
-                subtitle: "For your general only",
-                icon: "sparkles"
-            )
-
-            let selectedId = currentPlayerIsOne
-                ? viewModel.matchState.playerOne.enhancementId
-                : viewModel.matchState.playerTwo.enhancementId
-
-            ForEach(army.enhancements) { option in
-                LoadoutOptionCard(
-                    option: option,
-                    isSelected: selectedId == option.id,
-                    gameSystemId: viewModel.gameSystemId.rawValue,
-                    ruleSections: ruleSections
-                ) {
-                    viewModel.setEnhancement(playerIsOne: currentPlayerIsOne, enhancementId: option.id)
-                }
-            }
-        }
     }
 
     // MARK: - Confirm Section
@@ -213,7 +101,7 @@ struct SpearheadLoadoutSheet: View {
                 .padding()
                 .background(bothComplete ? Color.green : Color.accentColor)
                 .foregroundStyle(.white)
-                .clipShape(RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+                .clipShape(CardSurface.shape(radius: DesignTokens.Radius.nested))
             }
             .disabled(!playerOneComplete && currentPlayerIsOne)
             .disabled(!playerTwoComplete && !currentPlayerIsOne && !bothComplete)
@@ -271,32 +159,6 @@ struct SpearheadLoadoutSheet: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
-
-    // MARK: - Helpers
-
-    @ViewBuilder
-    private func sectionHeader(title: String, subtitle: String, icon: String) -> some View {
-        HStack(spacing: DesignTokens.Spacing.sm) {
-            Image(systemName: icon)
-                .foregroundStyle(Color.accentColor)
-            VStack(alignment: .leading, spacing: 0) {
-                Text(title)
-                    .font(.headline)
-                Text(subtitle)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-        }
-    }
-
-    @ViewBuilder
-    private var noArmyMessage: some View {
-        Text("Select an army first")
-            .font(.callout)
-            .foregroundStyle(.secondary)
-            .frame(maxWidth: .infinity)
-            .surfaceCard()
-    }
 }
 
 // MARK: - Loadout Option Card
@@ -344,10 +206,10 @@ struct LoadoutOptionCard: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
                 isSelected ? Color.green.opacity(0.1) : Color(.tertiarySystemFill).opacity(0.5),
-                in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
+                in: CardSurface.shape(radius: DesignTokens.Radius.nested)
             )
             .overlay(
-                RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
+                CardSurface.shape(radius: DesignTokens.Radius.nested)
                     .strokeBorder(isSelected ? Color.green : Color.clear, lineWidth: 2)
             )
         }

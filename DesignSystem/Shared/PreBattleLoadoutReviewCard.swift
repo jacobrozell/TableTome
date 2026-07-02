@@ -9,8 +9,7 @@ struct PreBattleLoadoutReviewCard: View {
     let playerTwoRegiment: ArmyRuleOption?
     let playerOneEnhancement: ArmyRuleOption?
     let playerTwoEnhancement: ArmyRuleOption?
-    let onOpenRegimentStep: () -> Void
-    let onOpenEnhancementStep: () -> Void
+    let onOpenLoadout: () -> Void
 
     private var loadoutReady: Bool {
         playerOneRegiment != nil && playerTwoRegiment != nil
@@ -27,8 +26,7 @@ struct PreBattleLoadoutReviewCard: View {
                 String(
                     localized: """
                     Spearhead has physical pre-battle picks: one regiment ability and one enhancement per army. \
-                    The enhancements step also covers secondary objectives and battle tactics. \
-                    Open each step below, choose from your army sheet (or keep our suggestions), then mark complete.
+                    Open loadout, choose from your army sheet (or keep our suggestions), then mark each setup step complete.
                     """
                 )
             )
@@ -47,21 +45,12 @@ struct PreBattleLoadoutReviewCard: View {
                 enhancement: playerTwoEnhancement
             )
 
-            VStack(spacing: DesignTokens.Spacing.sm) {
-                Button(String(localized: "Pick regiment abilities")) {
-                    onOpenRegimentStep()
-                }
-                .buttonStyle(.borderedProminent)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .accessibilityIdentifier("guidedMatch.preBattleLoadout.regiment")
-
-                Button(String(localized: "Pick enhancements")) {
-                    onOpenEnhancementStep()
-                }
-                .buttonStyle(.bordered)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .accessibilityIdentifier("guidedMatch.preBattleLoadout.enhancements")
+            Button(String(localized: "Set Loadout")) {
+                onOpenLoadout()
             }
+            .buttonStyle(.borderedProminent)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .accessibilityIdentifier("guidedMatch.preBattleLoadout.openSheet")
         }
         .accentHighlightCard()
         .accessibilityIdentifier("guidedMatch.preBattleLoadout")
@@ -95,6 +84,8 @@ struct PreBattleLoadoutReviewCard: View {
             .font(.caption)
             .foregroundStyle(enhancement == nil ? .orange : .secondary)
         }
+        .padding(DesignTokens.Spacing.sm)
         .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(.tertiarySystemFill).opacity(0.55), in: CardSurface.shape(radius: DesignTokens.Radius.nested))
     }
 }

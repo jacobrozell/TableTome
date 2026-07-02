@@ -255,19 +255,14 @@ struct GuidedMatchStepParts {
                     .foregroundStyle(.secondary)
                 } else {
                     ForEach(armyOptions) { option in
-                        Button {
+                        SelectableArmyRuleOptionRow(
+                            option: option,
+                            isSelected: selectedId == option.id,
+                            gameSystemId: viewModel.gameSystemId.rawValue,
+                            ruleSections: ruleSections
+                        ) {
                             onSelect(playerIsOne, option.id)
-                        } label: {
-                            ArmyRuleOptionCard(
-                                option: option,
-                                isSelected: selectedId == option.id,
-                                gameSystemId: viewModel.gameSystemId.rawValue,
-                                ruleSections: ruleSections
-                            )
                         }
-                        .buttonStyle(.plain)
-                        .accessibilityAddTraits(selectedId == option.id ? .isSelected : [])
-                        .accessibilityIdentifier("guidedMatch.option.\(option.id)")
                     }
                 }
             }

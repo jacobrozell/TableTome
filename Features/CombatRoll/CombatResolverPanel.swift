@@ -54,15 +54,47 @@ struct CombatResolverPanel: View {
                 matchupPanels
                 attackProfileBar
                 deployedModelSection
-                hitDiceBannerSection
+                CombatResolverHitDiceBannerSection(
+                    viewModel: viewModel,
+                    accessibilityPrefix: accessibilityPrefix,
+                    onSyncMultiAttack: onSyncMultiAttack
+                )
                 if !isSimulated {
-                    batchCombatSection
+                    CombatResolverBatchCombatSection(
+                        batchViewModel: batchViewModel,
+                        combatViewModel: viewModel,
+                        accessibilityPrefix: accessibilityPrefix,
+                        defenderWoundsRemaining: defenderWoundsRemaining,
+                        onApplyDamage: onApplyDamage
+                    )
                 }
-                resultsSection
-                diceSection
+                CombatResolverPanelResultsSection(
+                    viewModel: viewModel,
+                    isEmbedded: isEmbedded,
+                    accessibilityPrefix: accessibilityPrefix,
+                    defenderWoundsRemaining: defenderWoundsRemaining,
+                    onApplyDamage: onApplyDamage
+                )
+                CombatResolverPanelDiceSection(
+                    viewModel: viewModel,
+                    isEmbedded: isEmbedded,
+                    isSimulated: isSimulated,
+                    accessibilityPrefix: accessibilityPrefix
+                )
                 optionsSection
-                simulatedActionsSection
-                multiAttackSection
+                CombatResolverSimulatedActionsSection(
+                    viewModel: viewModel,
+                    isSimulated: isSimulated,
+                    accessibilityPrefix: accessibilityPrefix
+                )
+                CombatResolverMultiAttackSection(
+                    viewModel: viewModel,
+                    multiAttackViewModel: multiAttackViewModel,
+                    showsMultiAttack: $showsMultiAttack,
+                    ruleSections: ruleSections,
+                    isEmbedded: isEmbedded,
+                    isSimulated: isSimulated
+                )
                 referenceLinksSection
             } else {
                 embeddedResolverContent
@@ -121,10 +153,23 @@ struct CombatResolverPanel: View {
                 accessibilityPrefix: accessibilityPrefix
             )
             deployedModelSection
-            hitDiceBannerSection
-            combatSequencePrimerSection
+            CombatResolverHitDiceBannerSection(
+                viewModel: viewModel,
+                accessibilityPrefix: accessibilityPrefix,
+                onSyncMultiAttack: onSyncMultiAttack
+            )
+            CombatResolverCombatSequencePrimerSection(
+                isExpanded: $showsCombatSequencePrimer,
+                gameSystemId: viewModel.gameSystemId
+            )
             if !isSimulated {
-                batchCombatSection
+                CombatResolverBatchCombatSection(
+                    batchViewModel: batchViewModel,
+                    combatViewModel: viewModel,
+                    accessibilityPrefix: accessibilityPrefix,
+                    defenderWoundsRemaining: defenderWoundsRemaining,
+                    onApplyDamage: onApplyDamage
+                )
             }
         } else {
             CombatResolverSetupGate(
@@ -133,43 +178,30 @@ struct CombatResolverPanel: View {
                 hasWeapon: viewModel.selectedAttackerWeapon?.isRollEvaluable == true,
                 accessibilityPrefix: accessibilityPrefix
             )
-            combatSequencePrimerSection
+            CombatResolverCombatSequencePrimerSection(
+                isExpanded: $showsCombatSequencePrimer,
+                gameSystemId: viewModel.gameSystemId
+            )
         }
-        advancedSingleAttackSection
+        CombatResolverAdvancedSingleAttackSection(
+            viewModel: viewModel,
+            multiAttackViewModel: multiAttackViewModel,
+            showsAdvancedSingleAttack: $showsAdvancedSingleAttack,
+            showsMultiAttack: $showsMultiAttack,
+            ruleSections: ruleSections,
+            panelSpacing: panelSpacing,
+            isEmbedded: isEmbedded,
+            isSimulated: isSimulated,
+            accessibilityPrefix: accessibilityPrefix,
+            defenderWoundsRemaining: defenderWoundsRemaining,
+            onApplyDamage: onApplyDamage
+        )
         wardReminderSection
         optionsSection
     }
 
     private func syncBatchCombat() {
         batchViewModel.sync(from: viewModel)
-    }
-
-    @ViewBuilder
-    private var batchCombatSection: some View {
-        BatchCombatResolverSection(
-            batchViewModel: batchViewModel,
-            combatViewModel: viewModel,
-            accessibilityPrefix: accessibilityPrefix,
-            defenderName: viewModel.selectedDefenderUnit?.name,
-            defenderWoundsRemaining: defenderWoundsRemaining,
-            onApplyDamage: onApplyDamage
-        )
-    }
-
-    @ViewBuilder
-    private var advancedSingleAttackSection: some View {
-        DisclosureGroup(isExpanded: $showsAdvancedSingleAttack) {
-            VStack(alignment: .leading, spacing: panelSpacing) {
-                diceSection
-                resultsSection
-                simulatedActionsSection
-                multiAttackSection
-            }
-            .padding(.top, DesignTokens.Spacing.sm)
-        } label: {
-            Text(String(localized: "Single attack & coaching"))
-                .font(.subheadline.weight(.semibold))
-        }
     }
 
     @ViewBuilder
@@ -198,18 +230,6 @@ struct CombatResolverPanel: View {
                 String(localized: "\(attackerPlayerName) attacks \(defenderPlayerName)")
             )
         }
-    }
-
-    @ViewBuilder
-    private var combatSequencePrimerSection: some View {
-        CombatSequencePrimer(
-            isExpanded: $showsCombatSequencePrimer,
-            gameSystemId: viewModel.gameSystemId,
-            showsDismissButton: !NewPlayerTipsStore.hasDismissedCombatSequencePrimer,
-            onDismiss: {
-                NewPlayerTipsStore.dismissCombatSequencePrimer()
-            }
-        )
     }
 
     private var introSection: some View {
@@ -370,58 +390,6 @@ struct CombatResolverPanel: View {
         }
     }
 
-    @ViewBuilder
-    private var hitDiceBannerSection: some View {
-        if viewModel.selectedAttackerWeapon?.hasCritAutoWound == true,
-           !CombatRollEngineRouter.usesWh40kRules(gameSystemId: viewModel.gameSystemId) {
-            CritAutoWoundCoachingHint()
-        }
-        if viewModel.attackerUsesVariableAttacks {
-            VariableAttacksRollCard(
-                expression: viewModel.selectedAttackerWeapon?.attacks ?? "D6",
-                modelCount: viewModel.attackerDeployedModelCount,
-                perModelTotals: viewModel.variableAttackPerModelTotals,
-                resolvedAttackCount: $viewModel.resolvedVariableAttackCount,
-                breakdown: viewModel.variableAttackRollBreakdown,
-                onRollAll: {
-                    viewModel.rollVariableAttacks()
-                    onSyncMultiAttack()
-                },
-                onRollNextModel: {
-                    viewModel.rollVariableAttacksForNextModel()
-                    onSyncMultiAttack()
-                },
-                accessibilityPrefix: accessibilityPrefix
-            )
-        }
-        if let plan = viewModel.attackerHitDicePlan {
-            CombatRollCountBanner(
-                plan: plan,
-                accessibilityPrefix: accessibilityPrefix
-            )
-        }
-    }
-
-    @ViewBuilder
-    private var resultsSection: some View {
-        CombatResolverResultsSection(
-            viewModel: viewModel,
-            isEmbedded: isEmbedded,
-            accessibilityPrefix: accessibilityPrefix,
-            defenderWoundsRemaining: defenderWoundsRemaining,
-            onApplyDamage: onApplyDamage
-        )
-    }
-
-    private var diceSection: some View {
-        CombatResolverDiceSection(
-            viewModel: viewModel,
-            isEmbedded: isEmbedded,
-            isSimulated: isSimulated,
-            accessibilityPrefix: accessibilityPrefix
-        )
-    }
-
     private var optionsSection: some View {
         CombatResolverOptionsSection(
             viewModel: viewModel,
@@ -432,35 +400,6 @@ struct CombatResolverPanel: View {
             ),
             isEmbedded: isEmbedded,
             accessibilityPrefix: accessibilityPrefix
-        )
-    }
-
-    @ViewBuilder
-    private var simulatedActionsSection: some View {
-        if isSimulated {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                SimulatedDiceHint()
-                SimulatedRollSummaryView(rolls: viewModel.lastRolls)
-                PrimaryButton(
-                    title: String(localized: "Roll Attack"),
-                    accessibilityId: "\(accessibilityPrefix).roll.attack"
-                ) {
-                    viewModel.rollAttack()
-                }
-            }
-            .surfaceCard()
-        }
-    }
-
-    @ViewBuilder
-    private var multiAttackSection: some View {
-        CombatResolverMultiAttackSection(
-            viewModel: viewModel,
-            multiAttackViewModel: multiAttackViewModel,
-            showsMultiAttack: $showsMultiAttack,
-            ruleSections: ruleSections,
-            isEmbedded: isEmbedded,
-            isSimulated: isSimulated
         )
     }
 

@@ -21,6 +21,8 @@ public struct MatchPlayerSummary: Codable, Sendable, Equatable {
     public var playerTwoFactionId: String
     public var playerOneArmyId: String
     public var playerTwoArmyId: String
+    public var playerOneProfileId: UUID?
+    public var playerTwoProfileId: UUID?
 
     public init(
         playerOneName: String,
@@ -30,7 +32,9 @@ public struct MatchPlayerSummary: Codable, Sendable, Equatable {
         playerOneFactionId: String = "",
         playerTwoFactionId: String = "",
         playerOneArmyId: String = "",
-        playerTwoArmyId: String = ""
+        playerTwoArmyId: String = "",
+        playerOneProfileId: UUID? = nil,
+        playerTwoProfileId: UUID? = nil
     ) {
         self.playerOneName = playerOneName
         self.playerTwoName = playerTwoName
@@ -40,6 +44,22 @@ public struct MatchPlayerSummary: Codable, Sendable, Equatable {
         self.playerTwoFactionId = playerTwoFactionId
         self.playerOneArmyId = playerOneArmyId
         self.playerTwoArmyId = playerTwoArmyId
+        self.playerOneProfileId = playerOneProfileId
+        self.playerTwoProfileId = playerTwoProfileId
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        playerOneName = try container.decode(String.self, forKey: .playerOneName)
+        playerTwoName = try container.decode(String.self, forKey: .playerTwoName)
+        playerOneArmyLabel = try container.decode(String.self, forKey: .playerOneArmyLabel)
+        playerTwoArmyLabel = try container.decode(String.self, forKey: .playerTwoArmyLabel)
+        playerOneFactionId = try container.decodeIfPresent(String.self, forKey: .playerOneFactionId) ?? ""
+        playerTwoFactionId = try container.decodeIfPresent(String.self, forKey: .playerTwoFactionId) ?? ""
+        playerOneArmyId = try container.decodeIfPresent(String.self, forKey: .playerOneArmyId) ?? ""
+        playerTwoArmyId = try container.decodeIfPresent(String.self, forKey: .playerTwoArmyId) ?? ""
+        playerOneProfileId = try container.decodeIfPresent(UUID.self, forKey: .playerOneProfileId)
+        playerTwoProfileId = try container.decodeIfPresent(UUID.self, forKey: .playerTwoProfileId)
     }
 }
 
@@ -79,7 +99,7 @@ public struct MatchResultSummary: Codable, Sendable, Equatable {
 }
 
 public struct MatchRecord: Codable, Sendable, Identifiable, Equatable {
-    public static let currentSchemaVersion = 1
+    public static let currentSchemaVersion = 2
 
     public let id: UUID
     public let gameSystemId: String

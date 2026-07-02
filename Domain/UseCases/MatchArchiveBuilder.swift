@@ -60,7 +60,9 @@ public enum MatchArchiveBuilder: Sendable {
                 playerOneFactionId: input.matchState.playerOne.factionId,
                 playerTwoFactionId: input.matchState.playerTwo.factionId,
                 playerOneArmyId: input.matchState.playerOne.armyId,
-                playerTwoArmyId: input.matchState.playerTwo.armyId
+                playerTwoArmyId: input.matchState.playerTwo.armyId,
+                playerOneProfileId: input.matchState.playerOne.profileId,
+                playerTwoProfileId: input.matchState.playerTwo.profileId
             ),
             setup: MatchSetupSummary(
                 attackerIsPlayerOne: input.matchState.attackerIsPlayerOne,

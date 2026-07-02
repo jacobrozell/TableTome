@@ -28,10 +28,16 @@ public actor JSONMatchHistoryRepository: MatchHistoryRepository {
         self.decoder = decoder
     }
 
-    public func fetchRecords(limit: Int?, gameSystemId: String?) async throws -> [MatchRecord] {
+    public func fetchRecords(limit: Int?, gameSystemId: String?, involvingProfileId: UUID?) async throws -> [MatchRecord] {
         var records = try loadIndex()
         if let gameSystemId {
             records = records.filter { $0.gameSystemId == gameSystemId }
+        }
+        if let involvingProfileId {
+            records = records.filter { record in
+                record.players.playerOneProfileId == involvingProfileId
+                    || record.players.playerTwoProfileId == involvingProfileId
+            }
         }
         records.sort { $0.endedAt > $1.endedAt }
         if let limit {

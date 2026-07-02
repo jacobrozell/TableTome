@@ -9,12 +9,21 @@ struct ArmySelectionView: View {
     let ruleSections: [RuleSection]
     var gameSystemId: GameSystemId = .default
     var dismissesOnSave: Bool = true
+    var profiles: [PlayerProfile] = []
+    var primaryProfileId: UUID?
+    var profileSlotLabel: String = ""
     let onSave: (PlayerArmySelection) -> Void
 
     @State private var playerName: String
+    @State private var selectedProfileId: UUID?
     @State private var selectedFactionId: String
     @State private var selectedArmyId: String
+    @State private var showsAllCatalogArmies = false
     @Environment(\.dismiss) private var dismiss
+
+    private var enablesProfilePicker: Bool {
+        ReleaseSurface.showsPlayersHub && !profiles.isEmpty
+    }
 
     init(
         title: String,
@@ -24,6 +33,9 @@ struct ArmySelectionView: View {
         ruleSections: [RuleSection] = [],
         gameSystemId: GameSystemId = .default,
         dismissesOnSave: Bool = true,
+        profiles: [PlayerProfile] = [],
+        primaryProfileId: UUID? = nil,
+        profileSlotLabel: String = "",
         onSave: @escaping (PlayerArmySelection) -> Void
     ) {
         self.title = title
@@ -33,8 +45,12 @@ struct ArmySelectionView: View {
         self.ruleSections = ruleSections
         self.gameSystemId = gameSystemId
         self.dismissesOnSave = dismissesOnSave
+        self.profiles = profiles
+        self.primaryProfileId = primaryProfileId
+        self.profileSlotLabel = profileSlotLabel
         self.onSave = onSave
         _playerName = State(initialValue: selection.playerName)
+        _selectedProfileId = State(initialValue: selection.profileId)
         _selectedFactionId = State(initialValue: selection.factionId)
         _selectedArmyId = State(initialValue: selection.armyId)
     }
@@ -47,6 +63,9 @@ struct ArmySelectionView: View {
         ruleSections: [RuleSection] = [],
         gameSystemId: String,
         dismissesOnSave: Bool = true,
+        profiles: [PlayerProfile] = [],
+        primaryProfileId: UUID? = nil,
+        profileSlotLabel: String = "",
         onSave: @escaping (PlayerArmySelection) -> Void
     ) {
         self.init(
@@ -57,6 +76,9 @@ struct ArmySelectionView: View {
             ruleSections: ruleSections,
             gameSystemId: GameSystemId(resolving: gameSystemId),
             dismissesOnSave: dismissesOnSave,
+            profiles: profiles,
+            primaryProfileId: primaryProfileId,
+            profileSlotLabel: profileSlotLabel,
             onSave: onSave
         )
     }
@@ -69,21 +91,61 @@ struct ArmySelectionView: View {
         factions.first { $0.id == selectedFactionId }
     }
 
+    private var selectedProfile: PlayerProfile? {
+        guard let selectedProfileId else { return nil }
+        return profiles.first { $0.id == selectedProfileId }
+    }
+
+    private var ownedArmyIds: Set<String> {
+        guard let selectedProfile else { return [] }
+        return OwnedArmyResolver.ownedArmyIds(for: selectedProfile)
+    }
+
     private var sortedArmies: [SpearheadArmy] {
-        selectedFaction?.armies.sorted { lhs, rhs in
+        let base = selectedFaction?.armies.sorted { lhs, rhs in
             let leftFeatured = featuredArmies.isFeatured(lhs.id)
             let rightFeatured = featuredArmies.isFeatured(rhs.id)
             if leftFeatured != rightFeatured { return leftFeatured && !rightFeatured }
             return lhs.name < rhs.name
         } ?? []
+        guard enablesProfilePicker, !ownedArmyIds.isEmpty, !showsAllCatalogArmies else { return base }
+        let filtered = OwnedArmyResolver.filtersArmies(base, ownedIds: ownedArmyIds)
+        return filtered.owned
+    }
+
+    private var hiddenCatalogArmies: [SpearheadArmy] {
+        guard enablesProfilePicker, !ownedArmyIds.isEmpty, let faction = selectedFaction else { return [] }
+        let base = faction.armies.sorted { $0.name < $1.name }
+        return OwnedArmyResolver.filtersArmies(base, ownedIds: ownedArmyIds).other
     }
 
     var body: some View {
         Form {
-            Section(String(localized: "Player Name")) {
-                TextField(String(localized: "Name"), text: $playerName)
-                    .textInputAutocapitalization(.words)
-                    .accessibilityIdentifier("guidedMatch.playerNameField")
+            if enablesProfilePicker {
+                PlayerProfilePicker(
+                    profiles: profiles,
+                    primaryProfileId: primaryProfileId,
+                    selectedProfileId: $selectedProfileId,
+                    guestName: $playerName,
+                    slotLabel: profileSlotLabel.isEmpty ? String(localized: "Player") : profileSlotLabel
+                )
+                .onChange(of: selectedProfileId) { _, newValue in
+                    if let newValue, let profile = profiles.first(where: { $0.id == newValue }) {
+                        playerName = profile.displayName
+                        showsAllCatalogArmies = false
+                        if let armyId = profile.ownedSpearheadArmyIds.first,
+                           let faction = factions.first(where: { $0.armies.contains(where: { $0.id == armyId }) }) {
+                            selectedFactionId = faction.id
+                            selectedArmyId = armyId
+                        }
+                    }
+                }
+            } else {
+                Section(String(localized: "Player Name")) {
+                    TextField(String(localized: "Name"), text: $playerName)
+                        .textInputAutocapitalization(.words)
+                        .accessibilityIdentifier("guidedMatch.playerNameField")
+                }
             }
 
             Section(String(localized: "Faction")) {
@@ -107,40 +169,28 @@ struct ArmySelectionView: View {
             }
 
             if let faction = selectedFaction, !sortedArmies.isEmpty {
+                armyListSection(
+                    armies: sortedArmies,
+                    faction: faction,
+                    header: ownedArmyIds.isEmpty || showsAllCatalogArmies
+                        ? armiesSectionHeader(for: faction)
+                        : String(localized: "Your armies")
+                )
+            }
+
+            if enablesProfilePicker, !hiddenCatalogArmies.isEmpty {
                 Section {
-                    ForEach(sortedArmies) { army in
-                        Button {
-                            selectedArmyId = army.id
-                        } label: {
-                            ArmyOptionRow(
-                                army: army,
-                                isSelected: army.id == selectedArmyId,
-                                featuredArmies: featuredArmies,
-                                gameSystemId: gameSystemId
-                            )
+                    DisclosureGroup(String(localized: "All Spearhead armies"), isExpanded: $showsAllCatalogArmies) {
+                        ForEach(hiddenCatalogArmies) { army in
+                            armyButton(army)
                         }
-                        .buttonStyle(.plain)
-                        .accessibilityAddTraits(army.id == selectedArmyId ? .isSelected : [])
-                        .accessibilityIdentifier("guidedMatch.army.\(army.id)")
                     }
-                } header: {
-                    Text(armiesSectionHeader(for: faction))
                 } footer: {
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                        if gameSystemId != .scTmg {
-                            Text(
-                                String(
-                                    localized: """
-                                    Badges show how much rules help is built in: army list, full setup options, or \
-                                    in-battle ability reminders.
-                                    """
-                                )
-                            )
-                        }
-                        if let army = sortedArmies.first(where: { $0.id == selectedArmyId }) {
-                            Text(army.playstyle)
-                        }
-                    }
+                    Text(String(localized: "Mark armies you own in Players to see them here first."))
+                }
+            } else if enablesProfilePicker, ownedArmyIds.isEmpty, selectedFaction != nil {
+                Section {} footer: {
+                    Text(String(localized: "Mark armies you own in Players to filter this list."))
                 }
             }
 
@@ -204,6 +254,7 @@ struct ArmySelectionView: View {
                     if updated.playerName.isEmpty {
                         updated.playerName = title
                     }
+                    updated.profileId = selectedProfileId
                     updated.factionId = selectedFactionId
                     updated.armyId = selectedArmyId
                     updated.regimentAbilityId = nil

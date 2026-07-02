@@ -184,6 +184,37 @@ struct SettingsView: View {
                 }
             }
 
+            if ReleaseSurface.showsPlayersHub {
+                Section {
+                    NavigationLink {
+                        PlayersHubListView(viewModel: dependencies.makePlayersHubListViewModel())
+                            .navigationDestination(for: PlayerDetailLink.self) { link in
+                                PlayerDetailView(viewModel: dependencies.makePlayerDetailViewModel(profileId: link.profileId))
+                                    .navigationDestination(for: MatchHistoryDetailLink.self) { detailLink in
+                                        MatchHistoryDetailView(
+                                            recordId: detailLink.recordId,
+                                            viewModel: dependencies.makeMatchHistoryViewModel()
+                                        )
+                                    }
+                            }
+                    } label: {
+                        Label(String(localized: "Players"), systemImage: "person.2")
+                            .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                    }
+                    .accessibilityIdentifier("settings.playersHub")
+                } header: {
+                    Text(String(localized: "Players"))
+                } footer: {
+                    Text(
+                        String(
+                            localized: """
+                            Profiles stay on this device. Match history links when you pick a player in Guided Match.
+                            """
+                        )
+                    )
+                }
+            }
+
             Section(String(localized: "App Tour")) {
                 Button {
                     showsOnboarding = true

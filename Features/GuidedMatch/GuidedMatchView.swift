@@ -12,11 +12,11 @@ struct GuidedMatchView: View {
     var gameSystemId: GameSystemId { viewModel.gameSystemId }
     var featuredArmies: GuidedMatchFeaturedArmies { viewModel.featuredArmies }
 
-
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.accessibilityReduceMotion) var reduceMotion
+    @Environment(\.dismiss) var dismiss
     @Environment(TabBarChrome.self) var tabBarChrome
     @State var selectedDestination: GuidedMatchDestination?
     @State var showsAllSetupSteps = NewPlayerTipsStore.hasExpandedGuidedMatchSetup
@@ -30,7 +30,9 @@ struct GuidedMatchView: View {
     @State var dismissedSetupCompleteHandoff = false
     @State var showsStarterMatchupHandoff = false
     @State var dismissedStarterMatchupHandoff = false
+    @State var showsLoadoutSheet = false
     @AppStorage(BattleTrackerChromeStorage.guidedMatchHubCollapsedKey) var isHubChromeCollapsed = false
+    @AppStorage(SpearheadStarterBoxStorage.selectedBoxIdKey) var selectedSpearheadBoxId = SpearheadStarterBoxStorage.defaultBoxId
     @State var splitColumnVisibility: NavigationSplitViewVisibility = .all
 
     let initialHubTab: GuidedMatchHubTab?
@@ -71,13 +73,12 @@ struct GuidedMatchView: View {
                     .asyncContentShell()
             }
         }
-        .navigationTitle(
-            usesPhoneLandscapeBattleImmersion
-                ? ""
-                : GameSystemRulesLabels.guidedMatchTitle(gameSystemId: gameSystemId)
-        )
-        .navigationBarTitleDisplayMode(guidedMatchNavigationTitleDisplayMode)
-        .toolbar { matchSyncToolbar }
+        .modifier(GuidedMatchNavigationChrome(
+            usesPadSplitNavigation: usesPadSplitNavigation,
+            title: guidedMatchNavigationTitle,
+            displayMode: guidedMatchNavigationTitleDisplayMode,
+            toolbar: { matchSyncToolbar }
+        ))
         .sheet(isPresented: $showsMatchSync) { matchSyncSheet }
         .confirmationDialog(
             String(localized: "Reset Match"),
@@ -165,9 +166,16 @@ struct GuidedMatchView: View {
         layoutContext.usesPadSplitNavigation && !dynamicTypeSize.needsLayoutAdaptation
     }
 
+    var guidedMatchNavigationTitle: String {
+        if usesPhoneLandscapeBattleImmersion {
+            return ""
+        }
+        return GameSystemRulesLabels.guidedMatchTitle(gameSystemId: gameSystemId)
+    }
+
     /// Large titles collapse when the embedded battle tracker scrolls and draw over hub chrome on phone.
     var guidedMatchNavigationTitleDisplayMode: NavigationBarItem.TitleDisplayMode {
-        if layoutContext.isCompactHeight || layoutContext == .phonePortrait {
+        if usesPadSplitNavigation || layoutContext.isCompactHeight || layoutContext == .phonePortrait {
             return .inline
         }
         return .large
@@ -215,6 +223,25 @@ struct PlayerArmyRow: View {
 }
 
 // swiftlint:enable type_body_length
+
+private struct GuidedMatchNavigationChrome<Toolbar: ToolbarContent>: ViewModifier {
+    let usesPadSplitNavigation: Bool
+    let title: String
+    let displayMode: NavigationBarItem.TitleDisplayMode
+    @ToolbarContentBuilder let toolbar: () -> Toolbar
+
+    func body(content: Content) -> some View {
+        if usesPadSplitNavigation {
+            content
+                .toolbar(.hidden, for: .navigationBar)
+        } else {
+            content
+                .navigationTitle(title)
+                .navigationBarTitleDisplayMode(displayMode)
+                .toolbar(content: toolbar)
+        }
+    }
+}
 
 struct GuidedMatchDetailWidth: ViewModifier {
     let destination: GuidedMatchDestination?

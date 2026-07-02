@@ -24,6 +24,28 @@ enum GuidedMatchHubTab: String, CaseIterable, Identifiable {
         }
     }
 
+    /// Spearhead drops the Armies hub tab once both players have lists — reset to change box.
+    static func visibleTabs(
+        gameSystemId: GameSystemId,
+        hasBothArmies: Bool
+    ) -> [GuidedMatchHubTab] {
+        if gameSystemId == .aosSpearhead {
+            return hasBothArmies ? [.setup, .battle] : [.armies]
+        }
+        return allCases
+    }
+
+    static func suggested(
+        gameSystemId: GameSystemId,
+        hasBothArmies: Bool,
+        setupComplete: Bool
+    ) -> GuidedMatchHubTab {
+        if gameSystemId == .aosSpearhead, hasBothArmies {
+            return setupComplete ? .battle : .setup
+        }
+        return suggested(hasBothArmies: hasBothArmies, setupComplete: setupComplete)
+    }
+
     static func suggested(
         hasBothArmies: Bool,
         setupComplete: Bool
@@ -36,6 +58,7 @@ enum GuidedMatchHubTab: String, CaseIterable, Identifiable {
 
 struct GuidedMatchHubTabBar: View {
     @Binding var selection: GuidedMatchHubTab
+    let visibleTabs: [GuidedMatchHubTab]
     let hasBothArmies: Bool
     let setupComplete: Bool
     var locksArmiesTab: Bool = false
@@ -47,7 +70,7 @@ struct GuidedMatchHubTabBar: View {
             if dynamicTypeSize.needsLayoutAdaptation {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: DesignTokens.Spacing.sm) {
-                        ForEach(GuidedMatchHubTab.allCases) { tab in
+                        ForEach(visibleTabs) { tab in
                             hubTabButton(tab)
                         }
                     }
@@ -55,7 +78,7 @@ struct GuidedMatchHubTabBar: View {
                 }
             } else {
                 Picker(String(localized: "Guided match section"), selection: $selection) {
-                    ForEach(GuidedMatchHubTab.allCases) { tab in
+                    ForEach(visibleTabs) { tab in
                         Label(tab.title, systemImage: tab.systemImage)
                             .tag(tab)
                             .disabled(isDisabled(tab))
@@ -66,6 +89,11 @@ struct GuidedMatchHubTabBar: View {
             }
         }
         .accessibilityIdentifier("guidedMatch.hubTabs")
+        .onChange(of: visibleTabs) { _, tabs in
+            if !tabs.contains(selection), let first = tabs.first {
+                selection = first
+            }
+        }
     }
 
     private func hubTabButton(_ tab: GuidedMatchHubTab) -> some View {

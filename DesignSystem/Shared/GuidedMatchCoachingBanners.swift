@@ -5,6 +5,8 @@ import TabletomeDomain
 struct StarterMatchupHandoffBanner: View {
     let matchupSummary: String
     let nextStepTitle: String?
+    var attackerLabel: String?
+    var usesSpearheadCopy: Bool = false
     let onDismiss: () -> Void
 
     var body: some View {
@@ -17,21 +19,14 @@ struct StarterMatchupHandoffBanner: View {
                 .font(.subheadline.weight(.medium))
                 .fixedSize(horizontal: false, vertical: true)
 
-            Text(
-                String(
-                    localized: """
-                    We filled both armies, regiment abilities, enhancements, and defaulted the attacker. \
-                    Change anything on the Setup tab — your next step is below.
-                    """
-                )
-            )
-            .font(.callout)
-            .foregroundStyle(.secondary)
-            .fixedSize(horizontal: false, vertical: true)
+            Text(bodyCopy)
+                .font(.callout)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
 
             if let nextStepTitle {
                 Text(String(localized: "Next: \(nextStepTitle)"))
-                    .font(.callout)
+                    .font(.callout.weight(.semibold))
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -45,6 +40,24 @@ struct StarterMatchupHandoffBanner: View {
         }
         .accentHighlightCard()
         .accessibilityIdentifier("guidedMatch.starterMatchupHandoff")
+    }
+
+    private var bodyCopy: String {
+        if usesSpearheadCopy, let attackerLabel {
+            return String(
+                localized: """
+                We picked suggested regiment abilities and enhancements — confirm those cards on Setup before deployment. \
+                \(attackerLabel) is the attacker; defender picks board side on step 5. \
+                Grab the cardboard realm map from your box when you reach Set Up the Battlefield.
+                """
+            )
+        }
+        return String(
+            localized: """
+            Both armies are loaded with suggested regiment abilities and enhancements — \
+            you still need to pick or confirm those cards on the Setup tab before deployment.
+            """
+        )
     }
 }
 

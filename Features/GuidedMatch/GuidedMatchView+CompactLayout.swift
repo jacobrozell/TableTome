@@ -130,6 +130,7 @@ extension GuidedMatchView {
                     if !showsEmbeddedBattleTracker {
                         GuidedMatchHubTabBar(
                             selection: $hubTab,
+                            visibleTabs: visibleHubTabs,
                             hasBothArmies: viewModel.matchState.hasBothArmies,
                             setupComplete: setupIsComplete,
                             locksArmiesTab: hasResumableBattleSession
@@ -151,30 +152,62 @@ extension GuidedMatchView {
         List {
             switch hubTab {
             case .armies:
-                matchupSection
-                playersSection(catalog: catalog, useSplitSelection: false)
+                if gameSystemId == .aosSpearhead {
+                    SpearheadGuidedMatchContent.armiesTab(
+                        showsArmyPicker: showsSpearheadArmyPicker,
+                        matchup: { matchupSection },
+                        players: { playersSection(catalog: catalog, useSplitSelection: false) }
+                    )
+                } else if showsSpearheadArmyPicker {
+                    matchupSection
+                    playersSection(catalog: catalog, useSplitSelection: false)
+                }
             case .setup:
-                if !usesCompactSetupLayout {
-                    sampleTurnSection
-                }
-                setupProgressSection
-                rollPromptSection
-                continueSetupSection(catalog: catalog, useSplitSelection: false)
-                setupCompleteHandoffSection
-                if usesCompactSetupLayout {
-                    collapsedMatchSetupSection(catalog: catalog, useSplitSelection: false)
+                if gameSystemId == .aosSpearhead {
+                    SpearheadGuidedMatchContent.setupTab(
+                        sampleTurn: { sampleTurnSection },
+                        setupProgress: { setupProgressSection },
+                        rollPrompt: { rollPromptSection },
+                        preBattleLoadout: { preBattleLoadoutReviewSection },
+                        continueSetup: { continueSetupSection(catalog: catalog, useSplitSelection: false) },
+                        setupCompleteHandoff: { setupCompleteHandoffSection },
+                        matchSteps: {
+                            if usesCompactSetupLayout {
+                                collapsedMatchSetupSection(catalog: catalog, useSplitSelection: false)
+                            } else {
+                                matchSetupSection(catalog: catalog, useSplitSelection: false)
+                            }
+                        },
+                        usesCompactSetupLayout: usesCompactSetupLayout
+                    )
                 } else {
-                    matchSetupSection(catalog: catalog, useSplitSelection: false)
-                }
-            case .battle:
-                if setupIsComplete {
-                    battleTrackerSection(catalog: catalog, useSplitSelection: false)
-                    if usesCompactSetupLayout {
+                    if !usesCompactSetupLayout {
                         sampleTurnSection
                     }
-                } else {
-                    setupIncompleteBattleSection(catalog: catalog)
+                    setupProgressSection
+                    rollPromptSection
+                    preBattleLoadoutReviewSection
+                    continueSetupSection(catalog: catalog, useSplitSelection: false)
+                    setupCompleteHandoffSection
+                    if usesCompactSetupLayout {
+                        collapsedMatchSetupSection(catalog: catalog, useSplitSelection: false)
+                    } else {
+                        matchSetupSection(catalog: catalog, useSplitSelection: false)
+                    }
                 }
+            case .battle:
+                SpearheadGuidedMatchContent.battleTab(
+                    setupComplete: setupIsComplete,
+                    whenReady: {
+                        battleTrackerSection(catalog: catalog, useSplitSelection: false)
+                        if usesCompactSetupLayout {
+                            sampleTurnSection
+                        }
+                    },
+                    whenIncomplete: {
+                        setupIncompleteBattleSection(catalog: catalog)
+                    }
+                )
             }
             resetSection
         }

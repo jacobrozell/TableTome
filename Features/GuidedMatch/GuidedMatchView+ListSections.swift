@@ -29,7 +29,9 @@ extension GuidedMatchView {
 
     @ViewBuilder
     func guidedMatchSections(catalog: SpearheadCatalog, useSplitSelection: Bool) -> some View {
-        if usesCompactSetupLayout {
+        if useSplitSelection, selectedDestination == .battleTracker, setupIsComplete {
+            padBattleActiveSidebar(catalog: catalog)
+        } else if usesCompactSetupLayout {
             compactGuidedMatchSections(catalog: catalog, useSplitSelection: useSplitSelection)
         } else {
             expandedGuidedMatchSections(catalog: catalog, useSplitSelection: useSplitSelection)
@@ -38,30 +40,72 @@ extension GuidedMatchView {
 
     @ViewBuilder
     func compactGuidedMatchSections(catalog: SpearheadCatalog, useSplitSelection: Bool) -> some View {
-        matchupSection
-        starterMatchupHandoffSection
-        playersSection(catalog: catalog, useSplitSelection: useSplitSelection)
-        setupProgressSection
-        rollPromptSection
-        continueSetupSection(catalog: catalog, useSplitSelection: useSplitSelection)
-        setupCompleteHandoffSection
-        battleTrackerSection(catalog: catalog, useSplitSelection: useSplitSelection)
-        sampleTurnSection
-        collapsedMatchSetupSection(catalog: catalog, useSplitSelection: useSplitSelection)
+        if gameSystemId == .aosSpearhead {
+            SpearheadGuidedMatchContent.sidebarFlow(
+                showsArmyPicker: showsSpearheadArmyPicker,
+                usesCompactSetupLayout: true,
+                matchup: { matchupSection },
+                players: { playersSection(catalog: catalog, useSplitSelection: useSplitSelection) },
+                starterHandoff: { starterMatchupHandoffSection },
+                setupProgress: { setupProgressSection },
+                rollPrompt: { rollPromptSection },
+                preBattleLoadout: { preBattleLoadoutReviewSection },
+                continueSetup: { continueSetupSection(catalog: catalog, useSplitSelection: useSplitSelection) },
+                setupCompleteHandoff: { setupCompleteHandoffSection },
+                battleTracker: { battleTrackerSection(catalog: catalog, useSplitSelection: useSplitSelection) },
+                sampleTurn: { sampleTurnSection },
+                matchSteps: { collapsedMatchSetupSection(catalog: catalog, useSplitSelection: useSplitSelection) }
+            )
+        } else {
+            if showsSpearheadArmyPicker {
+                matchupSection
+                playersSection(catalog: catalog, useSplitSelection: useSplitSelection)
+            }
+            starterMatchupHandoffSection
+            setupProgressSection
+            rollPromptSection
+            preBattleLoadoutReviewSection
+            continueSetupSection(catalog: catalog, useSplitSelection: useSplitSelection)
+            setupCompleteHandoffSection
+            battleTrackerSection(catalog: catalog, useSplitSelection: useSplitSelection)
+            sampleTurnSection
+            collapsedMatchSetupSection(catalog: catalog, useSplitSelection: useSplitSelection)
+        }
         resetSection
     }
 
     @ViewBuilder
     func expandedGuidedMatchSections(catalog: SpearheadCatalog, useSplitSelection: Bool) -> some View {
-        matchupSection
-        starterMatchupHandoffSection
-        setupProgressSection
-        rollPromptSection
-        continueSetupSection(catalog: catalog, useSplitSelection: useSplitSelection)
-        setupCompleteHandoffSection
-        playersSection(catalog: catalog, useSplitSelection: useSplitSelection)
-        battleTrackerSection(catalog: catalog, useSplitSelection: useSplitSelection)
-        matchSetupSection(catalog: catalog, useSplitSelection: useSplitSelection)
+        if gameSystemId == .aosSpearhead {
+            SpearheadGuidedMatchContent.sidebarFlow(
+                showsArmyPicker: showsSpearheadArmyPicker,
+                usesCompactSetupLayout: false,
+                matchup: { matchupSection },
+                players: { playersSection(catalog: catalog, useSplitSelection: useSplitSelection) },
+                starterHandoff: { starterMatchupHandoffSection },
+                setupProgress: { setupProgressSection },
+                rollPrompt: { rollPromptSection },
+                preBattleLoadout: { preBattleLoadoutReviewSection },
+                continueSetup: { continueSetupSection(catalog: catalog, useSplitSelection: useSplitSelection) },
+                setupCompleteHandoff: { setupCompleteHandoffSection },
+                battleTracker: { battleTrackerSection(catalog: catalog, useSplitSelection: useSplitSelection) },
+                sampleTurn: { EmptyView() },
+                matchSteps: { matchSetupSection(catalog: catalog, useSplitSelection: useSplitSelection) }
+            )
+        } else {
+            if showsSpearheadArmyPicker {
+                matchupSection
+                playersSection(catalog: catalog, useSplitSelection: useSplitSelection)
+            }
+            starterMatchupHandoffSection
+            setupProgressSection
+            rollPromptSection
+            preBattleLoadoutReviewSection
+            continueSetupSection(catalog: catalog, useSplitSelection: useSplitSelection)
+            setupCompleteHandoffSection
+            battleTrackerSection(catalog: catalog, useSplitSelection: useSplitSelection)
+            matchSetupSection(catalog: catalog, useSplitSelection: useSplitSelection)
+        }
         resetSection
     }
 
@@ -73,7 +117,7 @@ extension GuidedMatchView {
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                         Label(String(localized: "Preview a Spearhead Turn"), systemImage: "play.circle")
                             .font(.headline)
-                        Text(String(localized: "Two-minute tour — movement, shooting, dice, and scoring"))
+                        Text(String(localized: "Optional — two-minute tour of movement, shooting, dice, and scoring"))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -179,6 +223,33 @@ extension GuidedMatchView {
 
     @ViewBuilder
     var matchupSection: some View {
+        if gameSystemId == .aosSpearhead, showsSpearheadArmyPicker {
+            SpearheadStarterBoxSection(
+                boxSets: spearheadBoxSets,
+                selectedBoxId: $selectedSpearheadBoxId,
+                onUseStarterMatchup: { useStarterMatchup() }
+            )
+        } else if showsSpearheadArmyPicker {
+            legacyMatchupSection
+        }
+
+        if let summary = viewModel.matchupSummary {
+            Section(String(localized: "Today's Match")) {
+                Label {
+                    Text(summary)
+                        .font(.subheadline.weight(.medium))
+                        .fixedSize(horizontal: false, vertical: true)
+                } icon: {
+                    Image(systemName: "person.2.fill")
+                        .foregroundStyle(.secondary)
+                }
+                .accessibilityIdentifier("guidedMatch.matchupSummary")
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var legacyMatchupSection: some View {
         Section {
             Button {
                 useStarterMatchup()
@@ -220,20 +291,10 @@ extension GuidedMatchView {
         } header: {
             Text(String(localized: "Starter Set"))
         }
+    }
 
-        if let summary = viewModel.matchupSummary {
-            Section(String(localized: "Today's Match")) {
-                Label {
-                    Text(summary)
-                        .font(.subheadline.weight(.medium))
-                        .fixedSize(horizontal: false, vertical: true)
-                } icon: {
-                    Image(systemName: "person.2.fill")
-                        .foregroundStyle(.secondary)
-                }
-                .accessibilityIdentifier("guidedMatch.matchupSummary")
-            }
-        }
+    var spearheadBoxSets: [BoxSet] {
+        BoxSetCatalogLoader.load(for: .aosSpearhead)?.boxSets ?? []
     }
 
     @ViewBuilder
@@ -299,6 +360,66 @@ extension GuidedMatchView {
                     String(
                         localized: "Confirm who won the roll-off — change the picker if your table decided differently."
                     )
+                )
+            }
+        }
+    }
+
+    @ViewBuilder
+    var preBattleLoadoutReviewSection: some View {
+        if needsPreBattleLoadoutReview {
+            Section {
+                PreBattleLoadoutReviewCard(
+                    playerOneName: viewModel.matchState.playerOne.playerName.isEmpty
+                        ? String(localized: "Player 1")
+                        : viewModel.matchState.playerOne.playerName,
+                    playerTwoName: viewModel.matchState.playerTwo.playerName.isEmpty
+                        ? String(localized: "Player 2")
+                        : viewModel.matchState.playerTwo.playerName,
+                    playerOneRegiment: viewModel.regimentAbility(for: viewModel.matchState.playerOne),
+                    playerTwoRegiment: viewModel.regimentAbility(for: viewModel.matchState.playerTwo),
+                    playerOneEnhancement: viewModel.enhancement(for: viewModel.matchState.playerOne),
+                    playerTwoEnhancement: viewModel.enhancement(for: viewModel.matchState.playerTwo),
+                    onOpenRegimentStep: { openSpearheadSetupStep("regiment-abilities") },
+                    onOpenEnhancementStep: { openSpearheadSetupStep("enhancements") }
+                )
+                .listHeroCardRow()
+
+                Button {
+                    showsLoadoutSheet = true
+                } label: {
+                    Label(String(localized: "Set Loadout"), systemImage: "tray.and.arrow.down.fill")
+                }
+                .accessibilityIdentifier("guidedMatch.preBattleLoadout.openSheet")
+
+                if !usesPadSplitNavigation {
+                    NavigationLink(value: GuidedMatchDestination.step("regiment-abilities")) {
+                        Label(String(localized: "Open regiment abilities step"), systemImage: "checklist")
+                    }
+                    .accessibilityIdentifier("guidedMatch.preBattleLoadout.regimentLink")
+
+                    NavigationLink(value: GuidedMatchDestination.step("enhancements")) {
+                        Label(String(localized: "Open enhancements step"), systemImage: "sparkles")
+                    }
+                    .accessibilityIdentifier("guidedMatch.preBattleLoadout.enhancementsLink")
+                }
+            } header: {
+                Text(String(localized: "Pre-battle picks"))
+            } footer: {
+                Text(
+                    String(
+                        localized: "These are physical cards in your box — do not skip them. Mark each setup step complete when done."
+                    )
+                )
+            }
+            .sheet(isPresented: $showsLoadoutSheet) {
+                SpearheadLoadoutSheet(
+                    viewModel: viewModel,
+                    ruleSections: ruleSections,
+                    onConfirm: {
+                        viewModel.setStepComplete("regiment-abilities", complete: true)
+                        viewModel.setStepComplete("enhancements", complete: true)
+                    }
                 )
             }
         }
@@ -427,35 +548,6 @@ extension GuidedMatchView {
         .accessibilityIdentifier("guidedMatch.inlineSetup.\(step.id)")
         .accessibilityLabel(step.title)
         .accessibilityHint(step.summary)
-    }
-
-    @ViewBuilder
-    var starterMatchupHandoffSection: some View {
-        if showsStarterMatchupHandoff,
-           !dismissedStarterMatchupHandoff,
-           let summary = viewModel.matchupSummary {
-            Section {
-                StarterMatchupHandoffBanner(
-                    matchupSummary: summary,
-                    nextStepTitle: viewModel.nextIncompleteStep?.title
-                ) {
-                    dismissedStarterMatchupHandoff = true
-                    showsStarterMatchupHandoff = false
-                }
-                .listHeroCardRow()
-            }
-        }
-    }
-
-    func useStarterMatchup(navigateToSetup: Bool = true) {
-        viewModel.applyStarterMatchup()
-        showsStarterMatchupHandoff = true
-        dismissedStarterMatchupHandoff = false
-        if usesPadSplitNavigation {
-            selectedDestination = .battleTracker
-        } else if navigateToSetup {
-            hubTab = .setup
-        }
     }
 
     @ViewBuilder

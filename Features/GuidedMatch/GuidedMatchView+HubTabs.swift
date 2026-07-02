@@ -9,11 +9,73 @@ extension GuidedMatchView {
         return progress.completed == progress.total
     }
 
+    var visibleHubTabs: [GuidedMatchHubTab] {
+        if gameSystemId == .aosSpearhead {
+            return SpearheadHubTabs.visibleTabs(hasBothArmies: viewModel.matchState.hasBothArmies)
+        }
+        return GuidedMatchHubTab.visibleTabs(
+            gameSystemId: gameSystemId,
+            hasBothArmies: viewModel.matchState.hasBothArmies
+        )
+    }
+
     var suggestedHubTab: GuidedMatchHubTab {
-        GuidedMatchHubTab.suggested(
+        if gameSystemId == .aosSpearhead {
+            return SpearheadHubTabs.suggested(
+                hasBothArmies: viewModel.matchState.hasBothArmies,
+                setupComplete: setupIsComplete
+            )
+        }
+        return GuidedMatchHubTab.suggested(
+            gameSystemId: gameSystemId,
             hasBothArmies: viewModel.matchState.hasBothArmies,
             setupComplete: setupIsComplete
         )
+    }
+
+    /// Spearhead hides army picker once starter matchup or manual pick is done.
+    var showsSpearheadArmyPicker: Bool {
+        gameSystemId != .aosSpearhead || !viewModel.matchState.hasBothArmies
+    }
+
+    /// Regiment + enhancement must be confirmed on setup steps — starter matchup only pre-selects.
+    var needsPreBattleLoadoutReview: Bool {
+        guard gameSystemId == .aosSpearhead, viewModel.matchState.hasBothArmies else { return false }
+        let completed = viewModel.matchState.completedStepIds
+        return !completed.contains("regiment-abilities") || !completed.contains("enhancements")
+    }
+
+    var spearheadAttackerLabel: String? {
+        guard gameSystemId == .aosSpearhead,
+              let attackerIsPlayerOne = viewModel.matchState.attackerIsPlayerOne else {
+            return nil
+        }
+        let selection = attackerIsPlayerOne
+            ? viewModel.matchState.playerOne
+            : viewModel.matchState.playerTwo
+        let fallback = attackerIsPlayerOne
+            ? String(localized: "Player 1")
+            : String(localized: "Player 2")
+        return selection.playerName.isEmpty ? fallback : selection.playerName
+    }
+
+    /// iPad split detail default after armies are chosen — next setup step for Spearhead, battle tracker otherwise.
+    var spearheadPadDetailDestination: GuidedMatchDestination? {
+        if gameSystemId == .aosSpearhead {
+            return SpearheadHubTabs.padDetailDestination(
+                hasBothArmies: viewModel.matchState.hasBothArmies,
+                setupComplete: setupIsComplete,
+                nextIncompleteStepId: viewModel.nextIncompleteStep?.id
+            )
+        }
+        return .battleTracker
+    }
+
+    func openSpearheadSetupStep(_ stepId: String) {
+        hubTab = .setup
+        if usesPadSplitNavigation {
+            selectedDestination = .step(stepId)
+        }
     }
 
     func playerSummary(
@@ -25,6 +87,9 @@ extension GuidedMatchView {
         guard let faction = catalog.factions.first(where: { $0.id == selection.factionId }),
               let army = faction.armies.first(where: { $0.id == selection.armyId }) else {
             return name
+        }
+        if gameSystemId == .aosSpearhead {
+            return "\(name) · \(faction.name) · \(army.name)"
         }
         return "\(name) · \(army.name)"
     }

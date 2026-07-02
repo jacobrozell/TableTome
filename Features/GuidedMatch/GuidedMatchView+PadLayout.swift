@@ -8,11 +8,15 @@ extension GuidedMatchView {
     @ViewBuilder
     func regularLayout(catalog: SpearheadCatalog) -> some View {
         NavigationSplitView(columnVisibility: $splitColumnVisibility) {
-            List(selection: $selectedDestination) {
-                guidedMatchSections(catalog: catalog, useSplitSelection: true)
+            NavigationStack {
+                List(selection: $selectedDestination) {
+                    guidedMatchSections(catalog: catalog, useSplitSelection: true)
+                }
+                .listStyle(.sidebar)
+                .navigationTitle(guidedMatchNavigationTitle)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar { padSidebarToolbar }
             }
-            .listStyle(.sidebar)
-            .navigationTitle(GameSystemRulesLabels.guidedMatchTitle(gameSystemId: gameSystemId))
             .navigationSplitViewColumnWidth(
                 min: isPadLandscape ? 220 : 240,
                 ideal: isPadLandscape ? 280 : 320,
@@ -23,11 +27,63 @@ extension GuidedMatchView {
                 .modifier(GuidedMatchDetailWidth(destination: selectedDestination))
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
+        .onAppear {
+            applySpearheadPadInitialDestinationIfNeeded()
+        }
         .onChange(of: viewModel.matchState.hasBothArmies) { _, hasBoth in
             guard hasBoth, usesPadSplitNavigation, selectedDestination == nil else { return }
             guard !AppLaunchArguments.shouldSnapshotGuidedMatchArmies else { return }
-            selectedDestination = .battleTracker
+            selectedDestination = spearheadPadDetailDestination
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .toolbar(.hidden, for: .navigationBar)
+    }
+
+    func applySpearheadPadInitialDestinationIfNeeded() {
+        guard gameSystemId == .aosSpearhead,
+              viewModel.matchState.hasBothArmies,
+              selectedDestination == nil,
+              !AppLaunchArguments.shouldSnapshotGuidedMatchArmies else { return }
+        selectedDestination = spearheadPadDetailDestination
+    }
+
+    /// iPad sidebar while battle tracker fills the detail pane — drop finished setup chrome.
+    @ViewBuilder
+    func padBattleActiveSidebar(catalog: SpearheadCatalog) -> some View {
+        Section {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                Text(
+                    playerSummary(
+                        selection: viewModel.matchState.playerOne,
+                        catalog: catalog,
+                        fallback: String(localized: "Player 1")
+                    )
+                )
+                .font(.caption.weight(.semibold))
+                .fixedSize(horizontal: false, vertical: true)
+                Text(
+                    playerSummary(
+                        selection: viewModel.matchState.playerTwo,
+                        catalog: catalog,
+                        fallback: String(localized: "Player 2")
+                    )
+                )
+                .font(.caption.weight(.semibold))
+                .fixedSize(horizontal: false, vertical: true)
+                if let battleSummary = battleTrackerSummaryLine() {
+                    Text(battleSummary)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            .padding(.vertical, DesignTokens.Spacing.xs)
+        } header: {
+            Text(String(localized: "At the table"))
+        }
+
+        battleTrackerSection(catalog: catalog, useSplitSelection: true)
+        resetSection
     }
 
     @ViewBuilder
@@ -63,7 +119,6 @@ extension GuidedMatchView {
             .padding(DesignTokens.Spacing.md)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .navigationTitle(String(localized: "Guided Match"))
     }
 
     @ViewBuilder
@@ -71,7 +126,7 @@ extension GuidedMatchView {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Button(String(localized: "Use Starter Matchup")) {
                 useStarterMatchup(navigateToSetup: false)
-                selectedDestination = .battleTracker
+                selectedDestination = spearheadPadDetailDestination ?? .battleTracker
             }
             .buttonStyle(.borderedProminent)
             .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
@@ -196,6 +251,14 @@ extension GuidedMatchView {
                 """
             )
         default:
+            if gameSystemId == .aosSpearhead, viewModel.matchState.hasBothArmies {
+                return String(
+                    localized: """
+                    Starter matchup loads both armies. Pick your next setup step in the sidebar — \
+                    realm board and deployment are step 5.
+                    """
+                )
+            }
             return String(
                 localized: """
                 New to tabletop battles? Tap Use Starter Matchup to load both armies, or pick each player below.

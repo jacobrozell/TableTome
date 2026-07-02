@@ -6,6 +6,9 @@ extension MatchStepDetailView {
     var compactInlineBattlefieldContent: some View {
         switch step.id {
         case "realm-battlefield":
+            DeploymentZoneCallout(gameSystemId: viewModel.gameSystemId)
+            SpearheadDeploymentGotchasSection(viewModel: viewModel)
+            SpearheadDeploymentAbilitiesSection(viewModel: viewModel, ruleSections: ruleSections)
             RealmSideCoinFlipCard(compactMode: true)
             DeploymentChecklistCard(
                 completedSteps: viewModel.deploymentCompletedSteps,

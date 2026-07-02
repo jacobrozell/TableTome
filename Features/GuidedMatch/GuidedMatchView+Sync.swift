@@ -17,6 +17,20 @@ extension GuidedMatchView {
     }
 
     @ToolbarContentBuilder
+    var padSidebarToolbar: some ToolbarContent {
+        ToolbarItem(placement: .topBarLeading) {
+            Button {
+                dismiss()
+            } label: {
+                Image(systemName: "chevron.backward")
+            }
+            .accessibilityLabel(String(localized: "Back"))
+            .accessibilityIdentifier("guidedMatch.back")
+        }
+        matchSyncToolbar
+    }
+
+    @ToolbarContentBuilder
     var matchSyncToolbar: some ToolbarContent {
         matchHistoryToolbarItems
         if shouldShowMatchSyncToolbar {

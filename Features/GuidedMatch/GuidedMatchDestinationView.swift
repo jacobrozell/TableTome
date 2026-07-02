@@ -6,8 +6,13 @@ struct GuidedMatchDestinationView: View {
     var opensBattleTab: Bool = false
 
     @EnvironmentObject private var dependencies: AppDependencies
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @State private var ruleSections: [RuleSection]?
     @State private var errorMessage: String?
+
+    private var hidesOuterNavigationBar: Bool {
+        horizontalSizeClass == .regular
+    }
 
     var body: some View {
         Group {
@@ -30,7 +35,10 @@ struct GuidedMatchDestinationView: View {
                     .accessibilityIdentifier("guidedMatch.loading")
             }
         }
-        .navigationTitle(String(localized: "Guided Match"))
+        .navigationTitle(hidesOuterNavigationBar ? "" : GameSystemRulesLabels.guidedMatchTitle(gameSystemId: gameSystemId))
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar(hidesOuterNavigationBar ? .hidden : .visible, for: .navigationBar)
+        .toolbarBackground(hidesOuterNavigationBar ? .hidden : .automatic, for: .navigationBar)
         .task { await load() }
     }
 

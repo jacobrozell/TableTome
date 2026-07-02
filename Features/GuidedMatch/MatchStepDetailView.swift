@@ -152,18 +152,49 @@ struct MatchStepDetailView: View {
             )
         }
         if usesManualConfirmation {
+            if step.id == "regiment-abilities" {
+                return String(
+                    localized: "Pick one regiment ability per player (or keep our suggestions), then tap Mark step complete."
+                )
+            }
+            if step.id == "enhancements" {
+                return String(
+                    localized: "Pick one enhancement for each general (or keep our suggestions), then tap Mark step complete."
+                )
+            }
             return String(localized: "Tap below when you've finished this step.")
         }
         return String(localized: "Complete the actions above — this step checks off automatically.")
     }
 
     private var usesManualConfirmation: Bool {
-        viewModel.gameSystemId == .scTmg
-            && ["battle-format", "mission-setup", "confirm-lists"].contains(step.id)
+        if viewModel.gameSystemId == .scTmg,
+           ["battle-format", "mission-setup", "confirm-lists"].contains(step.id) {
+            return true
+        }
+        if viewModel.gameSystemId == .aosSpearhead,
+           ["regiment-abilities", "enhancements"].contains(step.id) {
+            return true
+        }
+        return false
     }
 
     @ViewBuilder
     var stepSpecificContent: some View {
+        if viewModel.gameSystemId == .aosSpearhead {
+            SpearheadMatchStepRouter(
+                step: step,
+                viewModel: viewModel,
+                ruleSections: ruleSections,
+                usesSideBySideColumns: usesSideBySideColumns
+            )
+        } else {
+            legacyStepSpecificContent
+        }
+    }
+
+    @ViewBuilder
+    var legacyStepSpecificContent: some View {
         switch step.id {
         case "choose-armies":
             matchupCard
@@ -175,7 +206,7 @@ struct MatchStepDetailView: View {
                 armyOptionsSection(
                     title: viewModel.gameSystemId == .wh40k11e
                         ? String(localized: "Force Dispositions")
-                        : String(localized: "Regiment Abilities"),
+                        : String(localized: "Regiment ability (pick one army rule)"),
                     playerOneKeyPath: \.regimentAbilityId,
                     playerTwoKeyPath: \.regimentAbilityId,
                     options: { army in army.regimentAbilities },
@@ -228,7 +259,9 @@ struct MatchStepDetailView: View {
         case "roll-first-turn":
             combatPatrolFirstTurnSection
         case "realm-battlefield":
-            deploymentSetupSection
+            if viewModel.gameSystemId != .aosSpearhead {
+                deploymentSetupSection
+            }
         case "deploy-battlefield":
             wh40kDeploymentSetupSection
         case "battlefield-setup":
@@ -240,7 +273,11 @@ struct MatchStepDetailView: View {
                 scTmgManualConfirmSection
             }
         case "fight-battle":
-            battleStartLinks
+            if viewModel.gameSystemId == .wh40k11e || viewModel.gameSystemId == .scTmg || viewModel.gameSystemId == .wh40k10eCp {
+                EmptyView()
+            } else if viewModel.gameSystemId != .aosSpearhead {
+                battleStartLinks
+            }
         default:
             EmptyView()
         }

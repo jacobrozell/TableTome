@@ -85,6 +85,14 @@ enum OnboardingContent {
     ]
 
     static var pages: [OnboardingPage] {
+        if visibleGameHighlights.count == 1,
+           visibleGameHighlights.first?.id == OnboardingCompletion.spearheadGameSystemId {
+            return spearheadOnlyPages
+        }
+        return standardPages
+    }
+
+    private static var standardPages: [OnboardingPage] {
         [
             OnboardingPage(
                 id: 0,
@@ -116,6 +124,47 @@ enum OnboardingContent {
                 title: String(localized: "How the app is organized"),
                 subtitle: String(localized: "Optional quick tour"),
                 body: tabOrganizationPageBody
+            )
+        ]
+    }
+
+    private static var spearheadOnlyPages: [OnboardingPage] {
+        [
+            OnboardingPage(
+                id: 0,
+                symbol: "shield.lefthalf.filled",
+                title: String(localized: "Spearhead at the table"),
+                subtitle: String(localized: "Built for your starter box"),
+                body: String(
+                    localized: """
+                    Move miniatures, roll physical dice, score objectives — about 60–90 minutes, two players. \
+                    Tabletome walks you through setup and every battle round offline.
+                    """
+                )
+            ),
+            OnboardingPage(
+                id: 1,
+                symbol: "flag.2.crossed.fill",
+                title: String(localized: "Start Guided Match"),
+                subtitle: String(localized: "Skaventide and other Spearhead boxes"),
+                body: String(
+                    localized: """
+                    Tap Start below to load a starter matchup, pick regiment abilities and enhancements, \
+                    then track four battle rounds on your phone. Preview a turn first if you want a quick look.
+                    """
+                )
+            ),
+            OnboardingPage(
+                id: 2,
+                symbol: "play.circle.fill",
+                title: String(localized: "Play tab is home"),
+                subtitle: String(localized: "Optional quick tour"),
+                body: String(
+                    localized: """
+                    Play holds Guided Match and the game guide. Rules looks up terms. Models is optional until after \
+                    your first game.
+                    """
+                )
             )
         ]
     }

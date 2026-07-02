@@ -3,7 +3,7 @@
 **Status:** Active — implementation backlog  
 **Last updated:** 2026-07-01  
 **Audience:** Jacob and anyone who bought a Spearhead box, has never played a wargame, and wants the phone to feel like a friend at the table — not a rules encyclopedia.  
-**Scope:** Age of Sigmar Spearhead only. Other game modes stay gated (`ReleaseSurface.showsAllPlayModesOnHome`) until this plan ships.
+**Scope:** Age of Sigmar Spearhead only for **v1.0.0**. All other game modes (40k Combat Patrol, Star Crusade, etc.) gated via `ReleaseSurface.showsAllPlayModesOnHome` — ship post-1.0.
 
 **Related docs**
 
@@ -11,6 +11,7 @@
 - [`specs/features/BattleTableFlowSpec.md`](../specs/features/BattleTableFlowSpec.md) — unit focus + batch combat
 - [`FutureIdeas/NewPlayerUXAudit.md`](../FutureIdeas/NewPlayerUXAudit.md) — shipped P0–P2 checklist
 - [`guided-match-setup-friction.md`](guided-match-setup-friction.md) — hub/setup UX (shipped 2026-06-28)
+- [`specs/features/PlayersHubSpec.md`](../specs/features/PlayersHubSpec.md) — household player profiles, owned armies, history (draft)
 - [`beginner-ui-polish-plan.md`](beginner-ui-polish-plan.md) — visual tier system (shipped)
 - [`specs/PlayEngineArchitectureSpec.md`](../specs/PlayEngineArchitectureSpec.md) — engine split (future)
 
@@ -613,8 +614,10 @@ Ensure **battle-tracker overlay JSON** exists for:
 2. Resolve one shooting attack end-to-end with physical dice
 3. Score VP on Turn tab — confirm wording matches what you did at table
 4. Complete 4 rounds → victory screen
-5. Repeat on iPad landscape
+5. Repeat on iPad landscape **and Mac (Designed for iPad)** — note layout issues in §19.15
 6. VoiceOver: complete step 5 deployment checklist
+7. First-turn correction: change who goes first on round 1 **without** advancing a turn (§19.4)
+8. Advance from round 1 → 2 via round opener + End of Turn — confirm round bar updates (§19.13)
 
 ### 14.3 “Stuck machine” audit
 
@@ -626,19 +629,22 @@ For each setup step and battle tab, ask: **If I tap nothing for 30 seconds, is t
 
 ### P0 — Spearhead module foundation (2–3 weeks)
 
-- [ ] `SpearheadGuidedMatchContent` router in `GuidedMatchView`
-- [ ] Extract 6 step views from `MatchStepDetailView` into `Spearhead/Steps/`
-- [ ] `SpearheadHubTabs` — simplified tab model after starter matchup
-- [ ] Spearhead-only onboarding path (3 screens max)
-- [ ] Copy audit on all 6 catalog step bodies + tips
+- [x] `SpearheadGuidedMatchContent` router in compact Guided Match hub (Setup + Armies tabs)
+- [x] Extract 6 step views from `MatchStepDetailView` into `Spearhead/Steps/`
+- [x] `SpearheadGuidedMatchContent` sidebar flow for iPad + expanded phone lists
+- [x] `SpearheadHubTabs` — simplified tab model after starter matchup
+- [x] Spearhead-only onboarding path (3 screens max)
+- [x] Catalog copy audit on all 6 setup step bodies + tips (2026-07-01)
+- [ ] Top-level `GuidedMatchView` body router (phone tab list already wired)
 
 ### P1 — Battle table flawless (2–3 weeks)
 
 - [ ] `SpearheadPhasePlaybook` — move phase strings out of shared switches
 - [ ] Combat resolver copy audit (rend/ward, no 40k terms)
-- [ ] Unit Focus as default entry for attack checklist tap
+- [x] Unit Focus as default entry for attack checklist tap
 - [ ] VP + battle tactic coaching card for round 1
 - [ ] Priority / twist / tactic “first time” expandable cards
+- [ ] **Jacob playtest 2026-07-01 backlog** (§19) — P1 items marked 🔴 there
 
 ### P2 — Content & trust (ongoing)
 
@@ -646,6 +652,7 @@ For each setup step and battle tab, ask: **If I tap nothing for 30 seconds, is t
 - [ ] Coverage badges honest everywhere
 - [ ] GW PDF links per army with “what’s not in app yet”
 - [ ] Wound override / battletome note (Phase D trust — BattleTableFlowSpec)
+- [x] Glossary + gotchas for **Anti-Wizard**, **Anti-Priest**, and similar weapon/ability keywords (§19.14)
 
 ### P3 — Delight & retention
 
@@ -656,9 +663,9 @@ For each setup step and battle tab, ask: **If I tap nothing for 30 seconds, is t
 
 ---
 
-## 16. Explicit non-goals (defer)
+## 16. Explicit non-goals (defer to post-1.0)
 
-- Full AoS matched play / open lists
+- **All non-Spearhead game modes** — 40k Combat Patrol, Star Crusade, full AoS matched play, open lists (gated in 1.0.0)
 - StarCraft / 40k Guided Match tailoring (frozen legacy until `-enable_all_play_modes`)
 - Rules Q&A assistant
 - Online multiplayer beyond Nearby sync
@@ -666,18 +673,204 @@ For each setup step and battle tab, ask: **If I tap nothing for 30 seconds, is t
 
 ---
 
-## 17. Open questions for Jacob
+## 17. Decisions locked (2026-07-01)
 
-1. **Default starter pair** — always Skaventide box armies, or rotate by onboarding “which box” question?
-2. **Hub tabs after starter** — drop Armies tab entirely, or keep for rematch army change?
-3. **Preview a Turn** — require before first Battle, or optional forever?
-4. **Simulated dice** — hide completely for Spearhead release, or keep in Advanced?
-5. **Match history** — prompt save after game 1, or silent auto-save?
+1. **1.0.0 = Spearhead only** — 40k Combat Patrol, Star Crusade, full AoS, and all other game modes gated until post-1.0.
+2. **Starter box** — Ask which box when applying starter matchup; **default Skaventide** (`skaventide` in box-set JSON).
+3. **Hub tabs after starter** — **Drop Armies tab** once both armies are set; Setup + Battle only. Reset match to change box/armies.
+4. **Preview a Turn** — **Optional forever** — never gate Battle on it.
+5. **Simulated dice** — **Hide completely** for Spearhead; physical dice only in combat resolver.
+6. **Match history** — **Silent auto-save** when the victory screen appears (Spearhead); Done/Rematch only resets or starts rematch.
 
 ---
 
-## 18. Definition of done (v1.0 Spearhead)
+## 19. Jacob playtest backlog — verified 2026-07-01
 
+Real-table session notes, checked against Spearhead rules + current codebase.  
+**Legend:** ✅ shipped (may still need discoverability) · 🟡 partial · 🔴 gap or bug · 📖 rules answer
+
+### 19.1 Deployment zones — 6" or 9"?
+
+📖 **Neither as a universal deployment depth.** Spearhead deploys inside the **shaded zones on your chosen realm-side map** (defender picks board + side; twist deck matches that side).  
+6" / 9" show up elsewhere (e.g. reserves arriving near table edge, coherency) — not “how deep is my deploy zone.”
+
+| Status | Where today | Gap |
+|--------|-------------|-----|
+| ✅ | `DeploymentZoneCallout` on Guided Match **realm-battlefield** step | — |
+| ✅ | Deployment abilities preview on setup step 5 | Mark-used still battle-only |
+| 🟡 | `realm-battlefield` step body in catalog | Copy pass still open |
+
+### 19.2 Deployment abilities per army (deployment phase)
+
+| Status | Where today | Gap |
+|--------|-------------|-----|
+| ✅ | Deployment abilities on Guided Match step 5 + battle tracker | **Lurking Vermintide** callout on step 5 when Skaven in match |
+
+### 19.3 Switch who goes first — must not ruin round 1
+
+📖 Round 1: roll off / pick first turn. Rounds 2–4: **priority roll each round** (winner picks first turn) — separate from **underdog** (fewer VP → refresh battle tactics).
+
+| Status | Where today | Gap |
+|--------|-------------|-----|
+| ✅ | `SpearheadRoundOneFirstTurnCard` on Turn tab playbook (round 1) | — |
+| ✅ | `correctRoundOneFirstTurn` — resets phase + clears completed turns without End of Turn | — |
+| ✅ | Round 1 first-turn picker stays visible in `RoundChecklistCard` after step marked | — |
+| 🟡 | `BattleTrackerPlayerSwitcher` on Turn tab = active player only (Spearhead round 1) | — |
+
+### 19.4 “Must have at least one regiment” — what is a regiment?
+
+📖 **Not in Tabletome** — that string is GW list-builder language. In Spearhead, **regiment ability** = pick **one of two army-wide pre-battle rules** on your army sheet (not a group of models).
+
+| Status | Where today | Gap |
+|--------|-------------|-----|
+| ✅ | `MatchStepDetailView` regiment coaching callout | — |
+| ✅ | Setup step title: **Regiment ability (pick one army rule)** | Glossary chips elsewhere |
+| 🟡 | Glossary `regiment-ability` | No banner if user skips step |
+
+### 19.5 Combat resolver — how many dice / enter hits → get answer
+
+📖 Intended flow: roll N hit dice at table → type **successful hits** → wounds → failed saves → ward → apply damage.
+
+| Status | Where today | Gap |
+|--------|-------------|-----|
+| 🟡 | Batch steps + hit banner | Single-path copy in batch header |
+| ✅ | Attack context **Rend → save dice** + **Ward** chip/coaching when defender has ward | Quick mode still open |
+| ✅ | Batch save hint | — |
+| ✅ | `CombatRollSaveHintTests` — Save 3+ / Rend +1 → 4+ regression | — |
+
+### 19.6 Ward and Rend — confusing
+
+📖 **Rend +1** on a **Save 3+** target → need **4+ on each save dice** (rend subtracts from save roll). **Ward** is a separate roll after a failed save (e.g. Ward 5+ on dice).
+
+| Status | Where today | Gap |
+|--------|-------------|-----|
+| ✅ | Engine + batch hints + attack context rend/ward lines | — |
+| ✅ | `CombatRollSaveHintTests` | — |
+
+### 19.7 Switching units in combat resolver
+
+| Status | Where today | Gap |
+|--------|-------------|-----|
+| 🟡 | Embedded hint: tap attack checklist / Army Health | ✅ Defender dropdown hidden in embedded GM — use Army Health |
+| ✅ P1 | — | Attack checklist + Army Health primary; sticky context header on context card |
+
+### 19.8 When unit dies — remove from UI
+
+| Status | Where today | Gap |
+|--------|-------------|-----|
+| 🟡 | Army greys/hide toggle | Side panels in embedded GM still open |
+| ✅ | Shooting eligible units omit destroyed | Combat pickers mostly filter |
+
+### 19.9 Movement — show move distance per unit
+
+| Status | Where today | Gap |
+|--------|-------------|-----|
+| ✅ | `MovementRangeCard` on Turn tab + in Movement phase playbook empty state | — |
+| ✅ P2 | Move on Army Health rows (`moveLabel`) | — |
+
+### 19.10 Battle tactic reminder at start of new round
+
+| Status | Where today | Gap |
+|--------|-------------|-----|
+| ✅ | Round opener checklist pinned top of **Turn** tab when incomplete | Blocking banner still optional |
+| ✅ | `BattleTrackerRoundBar` on phone Turn tab (Spearhead) | — |
+
+### 19.11 Advance round — need obvious control
+
+📖 After **both players finish End of Turn** in a round, tap **Start next round** → round opener for rounds 2–4.
+
+| Status | Where today | Gap |
+|--------|-------------|-----|
+| ✅ | `BattleTrackerRoundBar` on Turn tab (phone + iPad) | — |
+| ✅ | Hint when End of Turn but cannot advance yet | — |
+
+### 19.12 Victory points by turn — show and edit
+
+| Status | Where today | Gap |
+|--------|-------------|-----|
+| ✅ | `VictoryPointsCard` **Score by turn** breakdown + `onSetRoundVictoryPoints` | Section may be below fold; not obvious scores are editable per round |
+| ✅ P2 | Move on `ArmyUnitHealthRow`; VP disclosure default-open for Spearhead | Stronger stepper affordance still open |
+
+### 19.13 Rounds 2–4 first turn — roll off vs underdog?
+
+📖 **Priority roll** picks first turn each round. **Underdog** (trailing VP) affects **battle tactic refresh**, not who moves first.
+
+| Status | Where today | Gap |
+|--------|-------------|-----|
+| ✅ | `PriorityRollCallout` + `BattleFlowGuide` round opener copy | Discoverability |
+| 🟡 | Underdog shown on VP card when VP differ | User unsure rounds advance — see §19.11 |
+| ✅ P1 | `SpearheadRoundTwoPlusOpenerCard` in phase playbook (rounds 2–4) | — |
+
+### 19.14 Anti-Wizard and similar keywords — missed at table
+
+📖 e.g. Prosecutors **Anti-Wizard, Anti-Priest** on warscroll — affects how hits/wounds apply vs WIZARD/PRIEST units.
+
+| Status | Where today | Gap |
+|--------|-------------|-----|
+| ✅ | `AntiKeywordCoaching` + glossary `anti-wizard` / `anti-priest` | — |
+| ✅ P2 | Gotchas `judgement-blade-anti`, `enemy-anti-wizard`; hints on combat resolver + Unit Focus | — |
+
+### 19.15 iPad / Mac layout — “UI bad”
+
+Screenshot from session not in repo — treat as **open**.
+
+| Status | Where today | Gap |
+|--------|-------------|-----|
+| ✅ | Embedded GM: resolver + army two-column combat; VP hoisted when scoring; nav chrome trimmed | Mac Designed for iPad pass still open |
+| ✅ | iPad nav chrome consolidated; embedded battle header expands on open; Unit Focus `.large` detent on pad | — |
+
+### 19.16 Save 3+ with Rend +1 — math check
+
+📖 **Correct: need 4+ on save dice**, not 2+. Formula: `saveTarget + rend - saveModifier` (`CombatRollResolution.saveNeededOnDice`).
+
+| Status | Action |
+|--------|--------|
+| ✅ Engine + tests | If playtest saw 2+, file UI copy bug with weapon profile screenshot |
+| ✅ P1 | `BatchCombatSaveHint` + `CombatRollSaveHintTests` snapshot | — |
+
+### 19.17 Retreat rules
+
+📖 In combat: **D3 mortal damage**, then move up to Move; cannot end in enemy combat range; **no Shoot or Charge** that turn.
+
+| Status | Where today | Gap |
+|--------|-------------|-----|
+| ✅ | Rules JSON + glossary + Movement phase coach + playbook empty-state chip | — |
+| ✅ P2 | **Retreat** in `MovementActionPicker` (menu at AX sizes) | — |
+
+### 19.18 Pre-battle picks silently skipped (regiment + enhancements)
+
+📖 Starter matchup pre-filled regiment ability and enhancement IDs via `applyRecommendedLoadouts()`. `MatchSetupCompletionEvaluator` then auto-marked those setup steps complete — players never opened the steps or picked physical cards.
+
+| Status | Fix (2026-07-01) |
+|--------|------------------|
+| ✅ | Spearhead no longer auto-completes `regiment-abilities` or `enhancements` when IDs are pre-set |
+| ✅ | Manual **Mark step complete** on those setup steps |
+| ✅ | **Before you deploy** card on Setup tab with links to regiment + enhancement steps |
+| 🟡 | Secondary objectives still pre-selected on enhancements step — confirm when marking complete |
+
+### 19.19 Call for Reinforcements — missed at table
+
+📖 When an enemy unit is destroyed during your Movement phase, you may bring one **Reinforcements** keyword unit onto a battlefield edge.
+
+| Status | Where today | Gap |
+|--------|-------------|-----|
+| ✅ | Per-unit **In reserve / On table** toggles persisted in battle state |
+| ✅ | Banner + highlighted card when enemy destroyed during Movement |
+| ✅ | Army tracker hides **Reinforcements** units until marked on table |
+
+### Priority rollup (from this session)
+
+| Priority | Items |
+|----------|--------|
+| **P0** | ~~§19.3 first-turn toggle~~ ✅ · §15 module split (build green; hub router + copy audit remain) |
+| **P1** | Combat resolver single-path copy (§19.5); embedded GM panel collapse (§19.7); iPad/Mac layout pass (§19.15); regiment deployment gotchas (§19.2) |
+| **P2** | ~~§19.9 move on unit rows~~ ✅ · ~~§19.12 VP by turn default expand~~ ✅ · ~~§19.14 Anti-Wizard~~ ✅ · ~~§19.17 retreat nudge~~ ✅ |
+
+---
+
+## 18. Definition of done (v1.0.0 — Spearhead only)
+
+- [ ] All other game modes gated (`ReleaseSurface.showsAllPlayModesOnHome = false`)
 - [ ] Jacob completes full 4-round Spearhead game on TestFlight without Google
 - [ ] P0 + P1 checklist complete
 - [ ] Manual playtest script passed on iPhone + iPad

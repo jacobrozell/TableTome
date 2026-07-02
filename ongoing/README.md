@@ -16,6 +16,7 @@ Plans and projects **in implementation** — approved, specced, and actively bei
 | Plan | Doc | Status | Notes |
 |------|-----|--------|-------|
 | **Spearhead flawless Guided Match** | [`spearhead-flawless-guided-match-plan.md`](spearhead-flawless-guided-match-plan.md) | **Active — P0** | Master plan: Spearhead-owned GM module, setup + battle + combat for new players |
+| Players Hub | [`specs/features/PlayersHubSpec.md`](../specs/features/PlayersHubSpec.md) | **Draft spec** | Jacob/Chris profiles, owned Spearhead armies, per-player history + GM prefs; Play + Settings entry |
 | Combat Patrol catalog | [`combat-patrol-catalog-expansion.md`](combat-patrol-catalog-expansion.md) | **In progress** | 6/23 patrols in picker; P1 rosters added, unit JSON next |
 | New player first launch | [`FutureIdeas/NewPlayerFirstLaunchPlan.md`](../FutureIdeas/NewPlayerFirstLaunchPlan.md) | **Complete** | P0–P2 checklist done |
 | WH40k 11e launch | [`docs/game-modes/wh40k-11e/launch-plan.md`](../docs/game-modes/wh40k-11e/launch-plan.md) | In progress | Phase 1 rules shipped; Phase 2 guided match in flight |

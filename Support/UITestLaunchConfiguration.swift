@@ -10,7 +10,13 @@ enum UITestLaunchConfiguration {
     static let onboardingChoice = "-onboarding_choice"
 
     @MainActor
+    private static var didApplyLaunchConfiguration = false
+
+    @MainActor
     static func applyIfNeeded(modelContext: ModelContext) {
+        guard !didApplyLaunchConfiguration else { return }
+        didApplyLaunchConfiguration = true
+
         let args = ProcessInfo.processInfo.arguments
 
         if args.contains(resetUserDefaults) {

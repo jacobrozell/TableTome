@@ -9,7 +9,6 @@ struct RootTabView: View {
     @EnvironmentObject private var dependencies: AppDependencies
     @Environment(TabBarChrome.self) private var tabBarChrome
     @State private var showsOnboarding = false
-    @State private var pendingOnboardingCompletion: OnboardingCompletion?
     @State private var firstSessionRevision = 0
 
     private var emphasizePlayTab: Bool {
@@ -95,11 +94,6 @@ struct RootTabView: View {
                 }
             }
             AppearancePreferenceStorage.migrateFromHobbyConfigurationIfNeeded(modelContext)
-        }
-        .onChange(of: showsOnboarding) { _, isShowing in
-            guard !isShowing, let completion = pendingOnboardingCompletion else { return }
-            pendingOnboardingCompletion = nil
-            applyOnboardingNavigation(completion)
         }
         .onChange(of: router.selectedTab) { oldTab, newTab in
             guard oldTab != newTab else { return }
@@ -206,10 +200,12 @@ struct RootTabView: View {
     }
 
     private func handleOnboardingCompletion(_ completion: OnboardingCompletion) {
-        pendingOnboardingCompletion = completion
         showsOnboarding = false
         HobbyConfig.markAppTourCompleted(modelContext)
         logOnboardingCompleted(completion)
+        DeferredPlayNavigation.afterOnboardingDismiss {
+            applyOnboardingNavigation(completion)
+        }
     }
 
     private func applyOnboardingNavigation(_ completion: OnboardingCompletion) {

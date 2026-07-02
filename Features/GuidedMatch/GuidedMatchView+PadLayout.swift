@@ -82,8 +82,8 @@ extension GuidedMatchView {
             Text(String(localized: "At the table"))
         }
 
-        battleTrackerSection(catalog: catalog, useSplitSelection: true)
-        resetSection
+        battleTrackerSection(useSplitSelection: true)
+        resetSectionView
     }
 
     @ViewBuilder

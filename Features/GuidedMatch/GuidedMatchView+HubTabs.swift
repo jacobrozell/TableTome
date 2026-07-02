@@ -159,12 +159,12 @@ extension GuidedMatchView {
         GameSystemPlayContext.context(for: gameSystemId)
     }
 
-    private var playerOneRollLabel: String {
+    var playerOneRollLabel: String {
         let name = viewModel.matchState.playerOne.playerName
         return name.isEmpty ? String(localized: "Player 1") : name
     }
 
-    private var playerTwoRollLabel: String {
+    var playerTwoRollLabel: String {
         let name = viewModel.matchState.playerTwo.playerName
         return name.isEmpty ? String(localized: "Player 2") : name
     }
@@ -176,20 +176,7 @@ extension GuidedMatchView {
         return String(localized: "Who is the attacker?")
     }
 
-    @ViewBuilder
-    var inlineRollPickerCard: some View {
-        AttackerDefenderPickerCard(
-            playerOneName: playerOneRollLabel,
-            playerTwoName: playerTwoRollLabel,
-            attackerIsPlayerOne: viewModel.matchState.attackerIsPlayerOne,
-            onSelect: viewModel.setAttacker,
-            title: inlineRollPickerTitle,
-            decidedCaption: inlineRollDecidedCaption(isPlayerOne:),
-            accessibilityPrefix: "guidedMatch.inlineRoll"
-        )
-    }
-
-    private func inlineRollDecidedCaption(isPlayerOne: Bool) -> String {
+    func inlineRollDecidedCaption(isPlayerOne: Bool) -> String {
         let roller = isPlayerOne ? playerOneRollLabel : playerTwoRollLabel
         if playContext.capabilities.deploymentChecklistStyle == .wh40k {
             return String(

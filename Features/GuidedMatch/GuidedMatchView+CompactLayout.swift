@@ -155,53 +155,63 @@ extension GuidedMatchView {
                 if gameSystemId == .aosSpearhead {
                     SpearheadGuidedMatchContent.armiesTab(
                         showsArmyPicker: showsSpearheadArmyPicker,
-                        matchup: { matchupSection },
+                        matchup: { matchupSectionView },
                         players: { playersSection(catalog: catalog, useSplitSelection: false) }
                     )
                 } else if showsSpearheadArmyPicker {
-                    matchupSection
+                    matchupSectionView
                     playersSection(catalog: catalog, useSplitSelection: false)
                 }
             case .setup:
                 if gameSystemId == .aosSpearhead {
                     SpearheadGuidedMatchContent.setupTab(
-                        sampleTurn: { sampleTurnSection },
-                        setupProgress: { setupProgressSection },
-                        rollPrompt: { rollPromptSection },
-                        preBattleLoadout: { preBattleLoadoutReviewSection },
+                        sampleTurn: { SampleTurnSection(gameSystemId: gameSystemId) },
+                        setupProgress: { setupProgressSectionView },
+                        rollPrompt: { rollPromptSectionView },
+                        preBattleLoadout: { preBattleLoadoutReviewSectionView },
                         continueSetup: { continueSetupSection(catalog: catalog, useSplitSelection: false) },
-                        setupCompleteHandoff: { setupCompleteHandoffSection },
+                        setupCompleteHandoff: { setupCompleteHandoffSectionView },
                         matchSteps: {
                             if usesCompactSetupLayout {
-                                collapsedMatchSetupSection(catalog: catalog, useSplitSelection: false)
+                                CollapsedMatchSetupSection(
+                                    viewModel: viewModel,
+                                    gameSystemId: gameSystemId,
+                                    useSplitSelection: false,
+                                    showsAllSetupSteps: $showsAllSetupSteps
+                                )
                             } else {
-                                matchSetupSection(catalog: catalog, useSplitSelection: false)
+                                matchSetupSection(useSplitSelection: false)
                             }
                         },
                         usesCompactSetupLayout: usesCompactSetupLayout
                     )
                 } else {
                     if !usesCompactSetupLayout {
-                        sampleTurnSection
+                        SampleTurnSection(gameSystemId: gameSystemId)
                     }
-                    setupProgressSection
-                    rollPromptSection
-                    preBattleLoadoutReviewSection
+                    setupProgressSectionView
+                    rollPromptSectionView
+                    preBattleLoadoutReviewSectionView
                     continueSetupSection(catalog: catalog, useSplitSelection: false)
-                    setupCompleteHandoffSection
+                    setupCompleteHandoffSectionView
                     if usesCompactSetupLayout {
-                        collapsedMatchSetupSection(catalog: catalog, useSplitSelection: false)
+                        CollapsedMatchSetupSection(
+                            viewModel: viewModel,
+                            gameSystemId: gameSystemId,
+                            useSplitSelection: false,
+                            showsAllSetupSteps: $showsAllSetupSteps
+                        )
                     } else {
-                        matchSetupSection(catalog: catalog, useSplitSelection: false)
+                        matchSetupSection(useSplitSelection: false)
                     }
                 }
             case .battle:
                 SpearheadGuidedMatchContent.battleTab(
                     setupComplete: setupIsComplete,
                     whenReady: {
-                        battleTrackerSection(catalog: catalog, useSplitSelection: false)
+                        battleTrackerSection(useSplitSelection: false)
                         if usesCompactSetupLayout {
-                            sampleTurnSection
+                            SampleTurnSection(gameSystemId: gameSystemId)
                         }
                     },
                     whenIncomplete: {
@@ -209,7 +219,7 @@ extension GuidedMatchView {
                     }
                 )
             }
-            resetSection
+            resetSectionView
         }
         .listStyle(.insetGrouped)
         .tabBarScrollInset(

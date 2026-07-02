@@ -6,7 +6,9 @@ extension GuidedMatchView {
     var matchHistoryToolbarItems: some ToolbarContent {
         if ReleaseSurface.showsMatchHistory, showsMatchHistoryToolbar {
             ToolbarItem(placement: .topBarLeading) {
-                NavigationLink(value: MatchHistoryLink()) {
+                Button {
+                    showsMatchHistory = true
+                } label: {
                     Label(String(localized: "History"), systemImage: "clock.arrow.circlepath")
                 }
                 .accessibilityIdentifier("guidedMatch.history")

@@ -20,11 +20,20 @@ extension GuidedMatchView {
     var padSidebarToolbar: some ToolbarContent {
         ToolbarItem(placement: .topBarLeading) {
             Button {
-                dismiss()
+                if selectedDestination != nil {
+                    selectedDestination = nil
+                    padDetailNavigationPath = NavigationPath()
+                } else {
+                    dismiss()
+                }
             } label: {
                 Image(systemName: "chevron.backward")
             }
-            .accessibilityLabel(String(localized: "Back"))
+            .accessibilityLabel(
+                selectedDestination != nil
+                    ? String(localized: "Back to match overview")
+                    : String(localized: "Back")
+            )
             .accessibilityIdentifier("guidedMatch.back")
         }
         matchSyncToolbar

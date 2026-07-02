@@ -36,15 +36,19 @@ struct PlayersSection: View {
     let useSplitSelection: Bool
     @Binding var showsOwnListsSection: Bool
 
+    private var showsPlayerRows: Bool {
+        showsOwnListsSection || viewModel.matchState.hasBothArmies
+    }
+
     var body: some View {
         Section {
-            DisclosureGroup(
-                isExpanded: Binding(
-                    get: { showsOwnListsSection || viewModel.matchState.hasBothArmies },
-                    set: { showsOwnListsSection = $0 }
-                )
-            ) {
-                if useSplitSelection {
+            if useSplitSelection {
+                DisclosureGroup(
+                    isExpanded: Binding(
+                        get: { showsOwnListsSection || viewModel.matchState.hasBothArmies },
+                        set: { showsOwnListsSection = $0 }
+                    )
+                ) {
                     PlayerSidebarRow(
                         label: String(localized: "Player 1"),
                         selection: viewModel.matchState.playerOne,
@@ -57,34 +61,17 @@ struct PlayersSection: View {
                         catalog: catalog,
                         destination: .playerTwo
                     )
-                } else {
-                    NavigationLink(value: GuidedMatchDestination.playerOne) {
-                        PlayerArmyRow(
-                            label: String(localized: "Player 1"),
-                            selection: viewModel.matchState.playerOne,
-                            catalog: catalog
-                        )
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .contentShape(Rectangle())
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityIdentifier("guidedMatch.playerOne")
-
-                    NavigationLink(value: GuidedMatchDestination.playerTwo) {
-                        PlayerArmyRow(
-                            label: String(localized: "Player 2"),
-                            selection: viewModel.matchState.playerTwo,
-                            catalog: catalog
-                        )
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .contentShape(Rectangle())
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityIdentifier("guidedMatch.playerTwo")
+                } label: {
+                    Text(String(localized: "We brought our own lists"))
+                        .font(.subheadline.weight(.semibold))
                 }
-            } label: {
-                Text(String(localized: "We brought our own lists"))
-                    .font(.subheadline.weight(.semibold))
+            } else {
+                ownListsToggleRow
+
+                if showsPlayerRows {
+                    playerOneLink
+                    playerTwoLink
+                }
             }
         } footer: {
             if !viewModel.matchState.hasBothArmies {
@@ -102,4 +89,60 @@ struct PlayersSection: View {
             }
         }
     }
+
+    private var ownListsToggleRow: some View {
+        Button {
+            withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) {
+                showsOwnListsSection.toggle()
+            }
+        } label: {
+            HStack {
+                Text(String(localized: "We brought our own lists"))
+                    .font(.subheadline.weight(.semibold))
+                Spacer()
+                Image(systemName: showsPlayerRows ? "chevron.up" : "chevron.down")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+            }
+            .frame(minHeight: DesignTokens.minTouchTarget)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("guidedMatch.ownLists.toggle")
+        .accessibilityHint(
+            showsPlayerRows
+                ? String(localized: "Hides manual army picker rows.")
+                : String(localized: "Shows army picker rows for each player.")
+        )
+    }
+
+    private var playerOneLink: some View {
+        NavigationLink(value: GuidedMatchDestination.playerOne) {
+            PlayerArmyRow(
+                label: String(localized: "Player 1"),
+                selection: viewModel.matchState.playerOne,
+                catalog: catalog
+            )
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("guidedMatch.playerOne")
+    }
+
+    private var playerTwoLink: some View {
+        NavigationLink(value: GuidedMatchDestination.playerTwo) {
+            PlayerArmyRow(
+                label: String(localized: "Player 2"),
+                selection: viewModel.matchState.playerTwo,
+                catalog: catalog
+            )
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("guidedMatch.playerTwo")
+    }
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 }

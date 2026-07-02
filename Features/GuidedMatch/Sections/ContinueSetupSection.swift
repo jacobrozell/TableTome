@@ -15,12 +15,30 @@ struct InlineSetupSection: View {
     @Binding var selectedDestination: GuidedMatchDestination?
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+        Group {
+            inlineSetupSummaryRow
+            inlineSetupContentRow
+            inlineSetupRulesLinkRow
+            inlineSetupGuideLinkRow
+        }
+    }
+
+    @ViewBuilder
+    private var inlineSetupSummaryRow: some View {
+        Text(step.summary)
+            .font(.callout)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+            .listRowInsets(GuideStepCard.listRowInsets)
+            .listRowBackground(Color.clear)
+            .listRowSeparator(.hidden)
+            .accessibilityIdentifier("guidedMatch.inlineSetup.\(step.id).summary")
+    }
+
+    @ViewBuilder
+    private var inlineSetupContentRow: some View {
+        Group {
             if step.id == "roll-attacker" {
-                Text(step.summary)
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
                 InlineRollPickerCard(
                     playerOneName: playerOneRollLabel,
                     playerTwoName: playerTwoRollLabel,
@@ -30,11 +48,6 @@ struct InlineSetupSection: View {
                     decidedCaption: inlineRollDecidedCaption
                 )
             } else {
-                Text(step.summary)
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-
                 MatchStepDetailView(
                     step: step,
                     stepNumber: stepNumber,
@@ -43,37 +56,51 @@ struct InlineSetupSection: View {
                     presentation: .inlineHub
                 )
             }
-
-            SetupStepRulesLink(
-                gameSystemId: gameSystemId.rawValue,
-                stepTitle: step.title,
-                relatedRuleSectionId: step.relatedRuleSectionId
-            )
-
-            if useSplitSelection {
-                Button(String(localized: "Read full step guide")) {
-                    selectedDestination = .step(step.id)
-                }
-                .buttonStyle(.bordered)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .accessibilityIdentifier("guidedMatch.stepGuide.\(step.id)")
-            } else {
-                NavigationLink(value: GuidedMatchDestination.step(step.id)) {
-                    Label(String(localized: "Read full step guide"), systemImage: "doc.text")
-                        .font(.subheadline.weight(.medium))
-                        .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-                .accessibilityIdentifier("guidedMatch.stepGuide.\(step.id)")
-            }
         }
         .listRowInsets(GuideStepCard.listRowInsets)
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
-        .accessibilityIdentifier("guidedMatch.inlineSetup.\(step.id)")
-        .accessibilityLabel(step.title)
-        .accessibilityHint(step.summary)
+        .accessibilityIdentifier("guidedMatch.inlineSetup.\(step.id).content")
+    }
+
+    @ViewBuilder
+    private var inlineSetupRulesLinkRow: some View {
+        SetupStepRulesLink(
+            gameSystemId: gameSystemId.rawValue,
+            stepTitle: step.title,
+            relatedRuleSectionId: step.relatedRuleSectionId
+        )
+        .listRowInsets(GuideStepCard.listRowInsets)
+        .listRowBackground(Color.clear)
+        .listRowSeparator(.hidden)
+        .accessibilityIdentifier("guidedMatch.inlineSetup.\(step.id).rules")
+    }
+
+    @ViewBuilder
+    private var inlineSetupGuideLinkRow: some View {
+        if useSplitSelection {
+            Button(String(localized: "Read full step guide")) {
+                selectedDestination = .step(step.id)
+            }
+            .buttonStyle(.bordered)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .listRowInsets(GuideStepCard.listRowInsets)
+            .listRowBackground(Color.clear)
+            .listRowSeparator(.hidden)
+            .accessibilityIdentifier("guidedMatch.stepGuide.\(step.id)")
+        } else {
+            NavigationLink(value: GuidedMatchDestination.step(step.id)) {
+                Label(String(localized: "Read full step guide"), systemImage: "doc.text")
+                    .font(.subheadline.weight(.medium))
+                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .listRowInsets(GuideStepCard.listRowInsets)
+            .listRowBackground(Color.clear)
+            .listRowSeparator(.hidden)
+            .accessibilityIdentifier("guidedMatch.stepGuide.\(step.id)")
+        }
     }
 }
 

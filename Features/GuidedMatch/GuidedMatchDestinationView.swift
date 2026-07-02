@@ -26,9 +26,11 @@ struct GuidedMatchDestinationView: View {
                 EmptyStateView(
                     title: String(localized: "Guided Match unavailable"),
                     message: errorMessage,
-                    systemImage: "exclamationmark.triangle"
+                    systemImage: "exclamationmark.triangle",
+                    actionTitle: String(localized: "Try again"),
+                    action: { Task { await load() } }
                 )
-                .asyncContentShell()
+                .adaptiveEmptyStateLayout()
             } else {
                 ProgressView(String(localized: "Loading match setup…"))
                     .asyncContentShell()
@@ -43,9 +45,15 @@ struct GuidedMatchDestinationView: View {
     }
 
     private func load() async {
+        guard ReleaseSurface.showsGuidedMatch(for: gameSystemId) else {
+            errorMessage = String(localized: "Guided Match is not available for this game mode yet.")
+            return
+        }
+
         do {
             let gameSystem = try await dependencies.rulesRepository.gameSystem(id: gameSystemId.rawValue)
             ruleSections = gameSystem.ruleSections
+            FirstSessionStore.recordGuidedMatchOpened()
             dependencies.logger.info(
                 .guidedMatch,
                 eventName: "guided_match_opened",

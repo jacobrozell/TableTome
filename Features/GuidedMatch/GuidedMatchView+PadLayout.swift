@@ -23,9 +23,15 @@ extension GuidedMatchView {
                 max: isPadLandscape ? 320 : 360
             )
         } detail: {
-            guidedMatchDetail(catalog: catalog)
-                .modifier(GuidedMatchDetailWidth(destination: selectedDestination))
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            NavigationStack(path: $padDetailNavigationPath) {
+                guidedMatchDetail(catalog: catalog)
+                    .modifier(GuidedMatchDetailWidth(destination: selectedDestination))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    .playNavigationDestinations()
+            }
+        }
+        .onChange(of: selectedDestination) { _, _ in
+            padDetailNavigationPath = NavigationPath()
         }
         .onAppear {
             applySpearheadPadInitialDestinationIfNeeded()

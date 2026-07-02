@@ -5,18 +5,17 @@ import TabletomeData
 extension GuidedMatchView {
     @ViewBuilder
     func compactLayout(catalog: SpearheadCatalog) -> some View {
-        VStack(spacing: 0) {
-            guidedMatchHubChrome(catalog: catalog)
-
-            if showsEmbeddedBattleTracker {
-                embeddedBattleTracker(catalog: catalog)
-            } else {
-                guidedMatchHubList(catalog: catalog)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .layoutPriority(1)
-            }
+        NavigationStack(path: $guidedMatchNavigationPath) {
+            compactLayoutBody(catalog: catalog)
+                .navigationDestination(for: GuidedMatchDestination.self) { destination in
+                    guidedMatchScreen(
+                        destination: destination,
+                        catalog: catalog,
+                        dismissesArmySelectionOnSave: true
+                    )
+                }
+                .playNavigationDestinations()
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .onChange(of: hidesTabBarInLandscapeBattle) { _, hidden in
             tabBarChrome.isHidden = hidden
         }
@@ -25,13 +24,6 @@ extension GuidedMatchView {
         }
         .onDisappear {
             tabBarChrome.isHidden = false
-        }
-        .navigationDestination(for: GuidedMatchDestination.self) { destination in
-            guidedMatchScreen(
-                destination: destination,
-                catalog: catalog,
-                dismissesArmySelectionOnSave: true
-            )
         }
         .onAppear {
             applyInitialHubTabIfNeeded()
@@ -53,13 +45,22 @@ extension GuidedMatchView {
                 logBattleTrackerOpened(source: "hub_tab")
             }
         }
-        .onChange(of: viewModel.matchState.completedStepIds) { _, _ in
-            guard !AppLaunchArguments.shouldSnapshotGuidedMatchArmies else { return }
-            if setupIsComplete, hubTab == .setup {
-                hubTab = .battle
-                logBattleTrackerOpened(source: "setup_complete")
+    }
+
+    @ViewBuilder
+    private func compactLayoutBody(catalog: SpearheadCatalog) -> some View {
+        VStack(spacing: 0) {
+            guidedMatchHubChrome(catalog: catalog)
+
+            if showsEmbeddedBattleTracker {
+                embeddedBattleTracker(catalog: catalog)
+            } else {
+                guidedMatchHubList(catalog: catalog)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .layoutPriority(1)
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
 
     func logBattleTrackerOpened(source: String) {

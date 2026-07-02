@@ -19,6 +19,7 @@ struct SampleTurnSection: View {
                     .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
                     .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
                 .accessibilityIdentifier("guidedMatch.sampleTurn")
             }
         case .wh40k11e:
@@ -34,6 +35,7 @@ struct SampleTurnSection: View {
                     .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
                     .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
                 .accessibilityIdentifier("guidedMatch.wh40k11eSampleTurn")
             }
         case .wh40k10eCp:
@@ -49,6 +51,7 @@ struct SampleTurnSection: View {
                     .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
                     .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
                 .accessibilityIdentifier("guidedMatch.combatPatrolSampleTurn")
             }
         default:

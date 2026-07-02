@@ -68,7 +68,7 @@ private struct LegacyMatchupSection: View {
                         .font(.subheadline.weight(.semibold))
                         .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
                         .prominentButtonLabelStyle()
-                        .background(Color.accentColor, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
+                        .background(Color.accentColor, in: CardSurface.shape(radius: DesignTokens.Radius.nested))
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }

@@ -51,29 +51,57 @@ struct CollapsedMatchSetupSection: View {
 
     var body: some View {
         Section {
-            DisclosureGroup(isExpanded: $showsAllSetupSteps) {
-                MatchSetupRowsSection(viewModel: viewModel, useSplitSelection: useSplitSelection)
-            } label: {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                    Text(String(localized: "All Setup Steps"))
-                        .font(.headline)
-                    Text(
-                        GuidedMatchSetupStepsCaption.text(
-                            gameSystemId: gameSystemId,
-                            stepCount: viewModel.sortedMatchSteps.count
-                        )
-                    )
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+            if useSplitSelection {
+                DisclosureGroup(isExpanded: $showsAllSetupSteps) {
+                    MatchSetupRowsSection(viewModel: viewModel, useSplitSelection: useSplitSelection)
+                } label: {
+                    allSetupStepsLabel
+                }
+            } else {
+                Button {
+                    withAnimation {
+                        showsAllSetupSteps.toggle()
+                    }
+                } label: {
+                    HStack {
+                        allSetupStepsLabel
+                        Spacer()
+                        Image(systemName: showsAllSetupSteps ? "chevron.up" : "chevron.down")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(minHeight: DesignTokens.minTouchTarget)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("guidedMatch.allSetupSteps.toggle")
+
+                if showsAllSetupSteps {
+                    MatchSetupRowsSection(viewModel: viewModel, useSplitSelection: useSplitSelection)
                 }
             }
-            .onChange(of: showsAllSetupSteps) { _, expanded in
-                guard expanded else { return }
-                NewPlayerTipsStore.markGuidedMatchSetupExpanded()
-            }
-            .accessibilityIdentifier("guidedMatch.allSetupSteps")
         } footer: {
             Text(String(localized: "Up Next above shows your next step. Expand to browse every setup step."))
+        }
+        .onChange(of: showsAllSetupSteps) { _, expanded in
+            guard expanded else { return }
+            NewPlayerTipsStore.markGuidedMatchSetupExpanded()
+        }
+        .accessibilityIdentifier("guidedMatch.allSetupSteps")
+    }
+
+    private var allSetupStepsLabel: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+            Text(String(localized: "All Setup Steps"))
+                .font(.headline)
+            Text(
+                GuidedMatchSetupStepsCaption.text(
+                    gameSystemId: gameSystemId,
+                    stepCount: viewModel.sortedMatchSteps.count
+                )
+            )
+            .font(.caption)
+            .foregroundStyle(.secondary)
         }
     }
 }
@@ -90,6 +118,8 @@ struct MatchSetupSection: View {
         } footer: {
             if !viewModel.matchState.hasBothArmies {
                 Text(String(localized: "Choose both armies above to unlock setup steps."))
+            } else if viewModel.sortedMatchSteps.contains(where: { !viewModel.matchState.completedStepIds.contains($0.id) }) {
+                Text(String(localized: "Tap a step to open its guide. Up Next above highlights your next step."))
             }
         }
     }

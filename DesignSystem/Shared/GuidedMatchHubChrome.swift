@@ -64,42 +64,74 @@ struct GuidedMatchHubTabBar: View {
     var locksArmiesTab: Bool = false
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @State private var lockedTabAttempt: GuidedMatchHubTab?
 
     var body: some View {
-        Group {
-            if dynamicTypeSize.needsLayoutAdaptation {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: DesignTokens.Spacing.sm) {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+            Group {
+                if dynamicTypeSize.needsLayoutAdaptation {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: DesignTokens.Spacing.sm) {
+                            ForEach(visibleTabs) { tab in
+                                hubTabButton(tab)
+                            }
+                        }
+                        .padding(.horizontal, DesignTokens.Spacing.xs)
+                    }
+                } else {
+                    Picker(String(localized: "Guided match section"), selection: selectionBinding) {
                         ForEach(visibleTabs) { tab in
-                            hubTabButton(tab)
+                            Label(tab.title, systemImage: tab.systemImage)
+                                .tag(tab)
                         }
                     }
-                    .padding(.horizontal, DesignTokens.Spacing.xs)
+                    .pickerStyle(.segmented)
                 }
-            } else {
-                Picker(String(localized: "Guided match section"), selection: $selection) {
-                    ForEach(visibleTabs) { tab in
-                        Label(tab.title, systemImage: tab.systemImage)
-                            .tag(tab)
-                            .disabled(isDisabled(tab))
-                            .accessibilityHint(accessibilityHint(for: tab))
-                    }
-                }
-                .pickerStyle(.segmented)
+            }
+            .accessibilityIdentifier("guidedMatch.hubTabs")
+
+            if let lockedTabAttempt {
+                Text(lockedTabMessage(for: lockedTabAttempt))
+                    .font(.caption)
+                    .foregroundStyle(.orange)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier("guidedMatch.hubTabs.lockedNotice")
             }
         }
-        .accessibilityIdentifier("guidedMatch.hubTabs")
         .onChange(of: visibleTabs) { _, tabs in
             if !tabs.contains(selection), let first = tabs.first {
                 selection = first
             }
+            lockedTabAttempt = nil
         }
+        .onChange(of: selection) { _, _ in
+            lockedTabAttempt = nil
+        }
+    }
+
+    private var selectionBinding: Binding<GuidedMatchHubTab> {
+        Binding(
+            get: { selection },
+            set: { newTab in
+                if isDisabled(newTab) {
+                    lockedTabAttempt = newTab
+                } else {
+                    lockedTabAttempt = nil
+                    selection = newTab
+                }
+            }
+        )
     }
 
     private func hubTabButton(_ tab: GuidedMatchHubTab) -> some View {
         let isSelected = selection == tab
         return Button {
-            selection = tab
+            if isDisabled(tab) {
+                lockedTabAttempt = tab
+            } else {
+                lockedTabAttempt = nil
+                selection = tab
+            }
         } label: {
             Label(tab.title, systemImage: tab.systemImage)
                 .font(.caption.weight(.semibold))
@@ -110,10 +142,24 @@ struct GuidedMatchHubTabBar: View {
                 .clipShape(Capsule())
         }
         .buttonStyle(.plain)
-        .disabled(isDisabled(tab))
         .accessibilityAddTraits(isSelected ? .isSelected : [])
         .accessibilityHint(accessibilityHint(for: tab))
         .accessibilityIdentifier("guidedMatch.hubTab.\(tab.rawValue)")
+    }
+
+    private func lockedTabMessage(for tab: GuidedMatchHubTab) -> String {
+        switch tab {
+        case .armies:
+            String(localized: "Army selection is locked while a battle is in progress. Reset the match to change armies.")
+        case .setup:
+            String(localized: "Choose both armies first — use Starter Matchup or pick each player below.")
+        case .battle:
+            if !hasBothArmies {
+                String(localized: "Choose both armies before opening the battle tracker.")
+            } else {
+                String(localized: "Finish the remaining setup steps on the Setup tab first.")
+            }
+        }
     }
 
     private func accessibilityHint(for tab: GuidedMatchHubTab) -> String {

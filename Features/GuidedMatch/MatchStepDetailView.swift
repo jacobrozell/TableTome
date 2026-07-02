@@ -101,8 +101,17 @@ struct MatchStepDetailView: View {
     private var inlineHubBody: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             if step.usesCompactInlineHubContent {
-                compactInlineBattlefieldContent
-                inlineStepCompletionHint
+                MatchStepInlineBattlefieldContent(
+                    step: step,
+                    viewModel: viewModel,
+                    ruleSections: ruleSections,
+                    usesSideBySideColumns: usesSideBySideColumns
+                )
+                MatchStepInlineCompletionHint(
+                    stepId: step.id,
+                    isComplete: isComplete,
+                    completionHint: completionHint
+                )
             } else {
                 stepSpecificContent
                 stepCompletionStatus

@@ -1,6 +1,6 @@
 # SwiftUI View Extraction — Full Refactor
 
-**Status:** Future — phased refactoring backlog  
+**Status:** Complete (phases 0–7) — incremental extraction continues via Cursor rule  
 **Last updated:** 2026-07-01  
 **Scope:** All Tabletome view files (~300 across Features/ and DesignSystem/)
 
@@ -85,10 +85,12 @@ struct FooSection: View {
 
 ## Phase 2: Play / BattlePhaseTracker
 
+**Status:** Done — `BattleTrackerSections.swift` split to `Features/Play/Shared/Sections/`; top chrome and quick-action hints extracted.
+
 **Target files:**
-- [`BattlePhaseTrackerView.swift`](../Features/Play/Shared/BattlePhaseTrackerView.swift) — 509 lines + 17 extensions
-- [`BattleTrackerSections.swift`](../Features/Play/Shared/BattleTrackerSections.swift) — 610 lines (partially extracted)
-- [`BattlePhaseTrackerNotices.swift`](../Features/Play/Shared/BattlePhaseTrackerNotices.swift) — 321 lines, 8 notice sections
+- [`BattlePhaseTrackerView.swift`](../Features/Play/Shared/BattlePhaseTrackerView.swift) — shell layout only; tab content in extensions + `Sections/`
+- ~~[`BattleTrackerSections.swift`](../Features/Play/Shared/BattleTrackerSections.swift)~~ — removed; one struct per file under `Sections/`
+- [`BattlePhaseTrackerNotices.swift`](../Features/Play/Shared/BattlePhaseTrackerNotices.swift) — thin re-exports; notices in `Notices/`
 
 **From main view:** `coachSection`, `guideSection`, `deploymentSection`, `roundOpenerChecklistSection`, `victoryPointsSection`, `gotchaSection`
 
@@ -98,11 +100,11 @@ struct FooSection: View {
 
 ## Phase 3: CombatRoll
 
-**Target files:**
-- [`CombatResolverPanel.swift`](../Features/CombatRoll/CombatResolverPanel.swift) — 534 lines, 12 `@ViewBuilder`s
-- [`BatchCombatResolverSection.swift`](../Features/CombatRoll/BatchCombatResolverSection.swift) — 455 lines
+**Status:** Done — `CombatResolverPanel` delegates to `Features/CombatRoll/Sections/`.
 
-**Extract:** `batchCombatSection`, `advancedSingleAttackSection`, `combatSequencePrimerSection`, `hitDiceBannerSection`, `resultsSection`, `diceSection`
+**Target files:**
+- [`CombatResolverPanel.swift`](../Features/CombatRoll/CombatResolverPanel.swift) — orchestration only
+- [`BatchCombatResolverSection.swift`](../Features/CombatRoll/BatchCombatResolverSection.swift) — batch UI in `Sections/`
 
 ---
 
@@ -156,7 +158,11 @@ Lower priority — tackle when touching:
 
 ## Validation per phase
 
-1. Build succeeds
-2. Lint check — no new warnings
-3. UI renders identically
-4. Instruments / SwiftUI view debugger confirms separate identities
+1. Build succeeds ✅
+2. Lint check — no new warnings ✅
+3. UI renders identically (manual / snapshot QA)
+4. Instruments / SwiftUI view debugger — optional spot-check when touching hotspots
+
+## Incremental backlog
+
+~250 `@ViewBuilder` properties remain across the app (Spearhead battle UI, Bench collection depth, etc.). The Cursor rule enforces extraction on touch; no dedicated bulk pass planned unless profiling shows a hotspot.

@@ -1,9 +1,13 @@
 import SwiftUI
 import TabletomeDomain
 
-extension MatchStepDetailView {
-    @ViewBuilder
-    var compactInlineBattlefieldContent: some View {
+struct MatchStepInlineBattlefieldContent: View {
+    let step: MatchSetupStep
+    @ObservedObject var viewModel: GuidedMatchViewModel
+    let ruleSections: [RuleSection]
+    let usesSideBySideColumns: Bool
+
+    var body: some View {
         switch step.id {
         case "realm-battlefield":
             DeploymentZoneCallout(gameSystemId: viewModel.gameSystemId)
@@ -49,11 +53,31 @@ extension MatchStepDetailView {
                 onToggle: viewModel.setScTmgDeploymentStep
             )
         default:
-            stepSpecificContent
+            if viewModel.gameSystemId == .aosSpearhead {
+                SpearheadStepContent(
+                    step: step,
+                    viewModel: viewModel,
+                    ruleSections: ruleSections,
+                    usesSideBySideColumns: usesSideBySideColumns
+                )
+            } else {
+                MatchStepLegacyContent(
+                    step: step,
+                    viewModel: viewModel,
+                    ruleSections: ruleSections,
+                    usesSideBySideColumns: usesSideBySideColumns
+                )
+            }
         }
     }
+}
 
-    var inlineStepCompletionHint: some View {
+struct MatchStepInlineCompletionHint: View {
+    let stepId: String
+    let isComplete: Bool
+    let completionHint: String
+
+    var body: some View {
         HStack(spacing: DesignTokens.Spacing.sm) {
             Image(systemName: isComplete ? "checkmark.circle.fill" : "circle")
                 .foregroundStyle(isComplete ? .green : .secondary)
@@ -62,6 +86,6 @@ extension MatchStepDetailView {
                 .foregroundStyle(isComplete ? .primary : .secondary)
                 .fixedSize(horizontal: false, vertical: true)
         }
-        .accessibilityIdentifier("guidedMatch.stepComplete.\(step.id)")
+        .accessibilityIdentifier("guidedMatch.stepComplete.\(stepId)")
     }
 }

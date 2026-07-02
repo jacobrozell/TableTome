@@ -88,8 +88,10 @@ struct RootTabView: View {
             if OnboardingStore.shouldPresentOnLaunch, !showsOnboarding {
                 showsOnboarding = true
             } else {
-                MarketingSnapshotBootstrap.applyNavigationIfNeeded(router: router)
-                MarketingSnapshotBootstrap.reinforceTabSelectionIfNeeded(router: router)
+                DeferredPlayNavigation.afterLaunchShellReady {
+                    MarketingSnapshotBootstrap.applyNavigationIfNeeded(router: router)
+                    MarketingSnapshotBootstrap.reinforceTabSelectionIfNeeded(router: router)
+                }
             }
             AppearancePreferenceStorage.migrateFromHobbyConfigurationIfNeeded(modelContext)
         }
@@ -205,11 +207,13 @@ struct RootTabView: View {
         case .exploreApp:
             break
         case .openGuidedMatch(let gameSystemId):
-            FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
-            router.openGuidedMatch(gameSystemId: gameSystemId)
+            DeferredPlayNavigation.afterOnboardingDismiss {
+                router.openGuidedMatch(gameSystemId: gameSystemId)
+            }
         case .openGameGuide(let gameSystemId):
-            FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
-            router.openGameGuide(gameSystemId: gameSystemId)
+            DeferredPlayNavigation.afterOnboardingDismiss {
+                router.openGameGuide(gameSystemId: gameSystemId)
+            }
         }
     }
 

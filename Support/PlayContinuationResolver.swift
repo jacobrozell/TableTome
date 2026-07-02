@@ -27,7 +27,11 @@ enum PlayContinuationResolver {
             return resume
         }
         if let choice = FirstSessionStore.onboardingChoice,
+           !FirstSessionStore.hasOpenedGuidedMatch,
            !FirstSessionStore.hasOpenedGameGuide {
+            if ReleaseSurface.showsGuidedMatch(for: choice) {
+                return startGuidedMatch(for: choice)
+            }
             return openGuide(for: choice)
         }
         return nil
@@ -176,6 +180,19 @@ enum PlayContinuationResolver {
         )
     }
 
+    private static func startGuidedMatch(for gameSystemId: String) -> PlayContinuation {
+        let resolvedId = GameSystemId(resolving: gameSystemId)
+        let gameName = GameSystemRulesLabels.displayName(gameSystemId: resolvedId)
+        return PlayContinuation(
+            gameSystemId: gameSystemId,
+            destination: .guidedMatch,
+            title: String(localized: "Start your first match"),
+            message: startGuidedMatchMessage(for: gameSystemId, gameName: gameName),
+            buttonTitle: startGuidedMatchButtonTitle(for: resolvedId),
+            opensBattleTab: false
+        )
+    }
+
     private static func displayName(for selection: PlayerArmySelection, fallback: String) -> String {
         selection.playerName.isEmpty ? fallback : selection.playerName
     }
@@ -185,7 +202,7 @@ enum PlayContinuationResolver {
         case GameSystemId.aosSpearhead.rawValue:
             return String(
                 localized: """
-                You picked Age of Sigmar Spearhead. Open the guide for setup steps, then run Guided Match at the table.
+                Open the Spearhead guide for a quick overview, or jump straight into Guided Match at the table.
                 """
             )
         case GameSystemId.wh40k10eCp.rawValue:
@@ -240,6 +257,54 @@ enum PlayContinuationResolver {
             return String(localized: "Resume Warhammer 40,000 match")
         case .scTmg:
             return String(localized: "Resume StarCraft match")
+        }
+    }
+
+    private static func startGuidedMatchMessage(for gameSystemId: String, gameName: String) -> String {
+        switch gameSystemId {
+        case GameSystemId.aosSpearhead.rawValue:
+            return String(
+                localized: """
+                Tap below to open Guided Match. Use Starter Matchup to load both armies from your box, then follow setup step by step.
+                """
+            )
+        case GameSystemId.wh40k10eCp.rawValue:
+            return String(
+                localized: """
+                Tap below to open \(gameName) Guided Match — choose armies, run setup, then track your battle at the table.
+                """
+            )
+        case GameSystemId.wh40k11e.rawValue:
+            return String(
+                localized: """
+                Tap below to open \(gameName) Guided Match — setup steps and a battle tracker for your first game.
+                """
+            )
+        case GameSystemId.scTmg.rawValue:
+            return String(
+                localized: """
+                Tap below to open \(gameName) Guided Match — starter matchup, setup, and turn tracking.
+                """
+            )
+        default:
+            return String(
+                localized: """
+                Tap below to open Guided Match for \(gameName).
+                """
+            )
+        }
+    }
+
+    private static func startGuidedMatchButtonTitle(for gameSystemId: GameSystemId) -> String {
+        switch gameSystemId {
+        case .aosSpearhead:
+            return String(localized: "Start Spearhead match")
+        case .wh40k10eCp:
+            return String(localized: "Start Combat Patrol match")
+        case .wh40k11e:
+            return String(localized: "Start Warhammer 40,000 match")
+        case .scTmg:
+            return String(localized: "Start StarCraft match")
         }
     }
 }

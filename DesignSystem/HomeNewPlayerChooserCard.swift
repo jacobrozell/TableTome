@@ -15,7 +15,7 @@ struct HomeNewPlayerChooserCard: View {
             Text(
                 String(
                     localized: """
-                    Box says Spearhead on the cover? Tap below to open the Spearhead guide and Guided Match.
+                    Box says Spearhead on the cover? Start Guided Match below — or open the game guide first.
                     """
                 )
             )
@@ -44,14 +44,19 @@ struct HomeNewPlayerChooserCard: View {
             wh40kChooserRows
 
             if ReleaseSurface.isPlayHomeGameSystemVisible(GameSystemId.aosSpearhead.rawValue) {
-                chooserRow(
-                    title: String(localized: "I bought an Age of Sigmar starter box"),
-                    detail: String(localized: "Box says Spearhead? Start here."),
-                    accessibilityLabel: String(localized: "Age of Sigmar starter box"),
-                    accessibilityHint: String(localized: "Box says Spearhead? Start here."),
-                    gameSystemId: GameSystemId.aosSpearhead.rawValue,
-                    identifier: "home.chooser.spearhead"
-                )
+                if ReleaseSurface.showsAllPlayModesOnHome {
+                    chooserRow(
+                        title: String(localized: "I bought an Age of Sigmar starter box"),
+                        detail: String(localized: "Box says Spearhead? Start Guided Match."),
+                        accessibilityLabel: String(localized: "Age of Sigmar starter box"),
+                        accessibilityHint: String(localized: "Opens Spearhead Guided Match."),
+                        gameSystemId: GameSystemId.aosSpearhead.rawValue,
+                        identifier: "home.chooser.spearhead",
+                        opensGuidedMatch: true
+                    )
+                } else {
+                    spearheadQuickStartSection
+                }
             }
 
             if ReleaseSurface.showsAllPlayModesOnHome,
@@ -77,6 +82,53 @@ struct HomeNewPlayerChooserCard: View {
         .sheet(isPresented: $showsBoxHelper) {
             BoxIdentificationSheet()
         }
+    }
+
+    @ViewBuilder
+    private var spearheadQuickStartSection: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
+                BoxProductThumbnail(
+                    style: BoxProductThumbnailStyle(
+                        gameSystemId: GameSystemId.aosSpearhead.rawValue,
+                        chooserIdentifier: "home.chooser.spearhead"
+                    )
+                )
+
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                    Text(String(localized: "Age of Sigmar: Spearhead"))
+                        .font(.subheadline.weight(.semibold))
+                    Text(String(localized: "Starter-box battles — realm board and battle tactics in your set."))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+
+            Button {
+                startSpearheadGuidedMatch()
+            } label: {
+                Label(String(localized: "Start Guided Match"), systemImage: "flag.checkered")
+                    .font(.subheadline.weight(.semibold))
+                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+                    .prominentButtonLabelStyle()
+                    .background(Color.accentColor, in: CardSurface.shape(radius: DesignTokens.Radius.nested))
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("home.chooser.spearhead.startGuidedMatch")
+
+            Button {
+                openSpearheadGameGuide()
+            } label: {
+                Label(String(localized: "Open game guide first"), systemImage: "book")
+                    .font(.subheadline.weight(.medium))
+                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+            }
+            .buttonStyle(.bordered)
+            .accessibilityIdentifier("home.chooser.spearhead.openGuide")
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("home.chooser.spearhead")
     }
 
     @ViewBuilder
@@ -173,10 +225,15 @@ struct HomeNewPlayerChooserCard: View {
         accessibilityLabel: String,
         accessibilityHint: String,
         gameSystemId: String,
-        identifier: String
+        identifier: String,
+        opensGuidedMatch: Bool = false
     ) -> some View {
         Button {
-            openGameGuide(gameSystemId: gameSystemId)
+            if opensGuidedMatch {
+                startGuidedMatch(gameSystemId: gameSystemId)
+            } else {
+                openGameGuide(gameSystemId: gameSystemId)
+            }
         } label: {
             HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
                 BoxProductThumbnail(
@@ -224,6 +281,19 @@ struct HomeNewPlayerChooserCard: View {
             The Models tab is optional — track painted armies whenever you're ready.
             """
         )
+    }
+
+    private func startSpearheadGuidedMatch() {
+        startGuidedMatch(gameSystemId: GameSystemId.aosSpearhead.rawValue)
+    }
+
+    private func openSpearheadGameGuide() {
+        openGameGuide(gameSystemId: GameSystemId.aosSpearhead.rawValue)
+    }
+
+    private func startGuidedMatch(gameSystemId: String) {
+        FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
+        router.openGuidedMatch(gameSystemId: gameSystemId)
     }
 
     private func openGameGuide(gameSystemId: String) {

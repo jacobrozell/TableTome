@@ -25,6 +25,7 @@ struct HomeContinueCard: View {
                 Text(setupProgressCaption)
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(Color.accentOnSurface)
+                    .fixedSize(horizontal: false, vertical: true)
             }
 
             continuationButton
@@ -81,14 +82,9 @@ struct HomeContinueCard: View {
         let matchState = MatchSetupStore.load(gameSystemId: gameSystemId)
         do {
             let catalog = try await dependencies.catalogRepository(for: gameSystemId).loadCatalog()
-            let steps = catalog.matchSteps.sorted { $0.order < $1.order }
-            let completed = steps.filter { matchState.completedStepIds.contains($0.id) }.count
-            guard !steps.isEmpty, completed < steps.count else {
-                setupProgressCaption = nil
-                return
-            }
-            setupProgressCaption = String(
-                localized: "Setup: \(completed) of \(steps.count) complete"
+            setupProgressCaption = GuidedMatchSetupProgressCaption.summary(
+                matchState: matchState,
+                steps: catalog.matchSteps
             )
         } catch {
             setupProgressCaption = nil

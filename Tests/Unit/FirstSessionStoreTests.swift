@@ -33,6 +33,14 @@ final class FirstSessionStoreTests: XCTestCase {
         XCTAssertFalse(FirstSessionStore.shouldShowContinueCard())
     }
 
+    func testContinueCardClearsAfterSpearheadGuidedMatchOpened() {
+        FirstSessionStore.recordOnboardingChoice(gameSystemId: GameSystemId.aosSpearhead.rawValue)
+        XCTAssertTrue(FirstSessionStore.shouldShowContinueCard())
+
+        FirstSessionStore.recordGuidedMatchOpened()
+        XCTAssertFalse(FirstSessionStore.shouldShowContinueCard())
+    }
+
     func testContinueCardReturnsAfterGuideWhenMatchInProgress() {
         let gameSystemId = "wh40k-10e-cp"
 

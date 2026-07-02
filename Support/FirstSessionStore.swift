@@ -10,6 +10,7 @@ enum FirstSessionStore: Sendable {
     private static let choiceKey = "first_session_onboarding_choice"
     private static let wh40kVariantKey = "first_session_wh40k_variant"
     private static let hasOpenedGuideKey = "first_session_has_opened_game_guide"
+    private static let hasOpenedGuidedMatchKey = "first_session_has_opened_guided_match"
     private static let collectionVisitsKey = "first_session_collection_visits"
     private static let listsVisitsKey = "first_session_lists_visits"
     private static let setupCompleteKey = "first_session_setup_complete"
@@ -44,6 +45,11 @@ enum FirstSessionStore: Sendable {
         set { UserDefaults.standard.set(newValue, forKey: hasOpenedGuideKey) }
     }
 
+    static var hasOpenedGuidedMatch: Bool {
+        get { UserDefaults.standard.bool(forKey: hasOpenedGuidedMatchKey) }
+        set { UserDefaults.standard.set(newValue, forKey: hasOpenedGuidedMatchKey) }
+    }
+
     static func recordOnboardingChoice(gameSystemId: String, wh40kVariant: String? = nil) {
         onboardingChoice = gameSystemId
         if let wh40kVariant {
@@ -56,6 +62,11 @@ enum FirstSessionStore: Sendable {
 
     static func recordGameGuideOpened() {
         hasOpenedGameGuide = true
+        notifyChange()
+    }
+
+    static func recordGuidedMatchOpened() {
+        hasOpenedGuidedMatch = true
         notifyChange()
     }
 
@@ -162,6 +173,7 @@ enum FirstSessionStore: Sendable {
         UserDefaults.standard.removeObject(forKey: choiceKey)
         UserDefaults.standard.removeObject(forKey: wh40kVariantKey)
         UserDefaults.standard.removeObject(forKey: hasOpenedGuideKey)
+        UserDefaults.standard.removeObject(forKey: hasOpenedGuidedMatchKey)
         UserDefaults.standard.removeObject(forKey: collectionVisitsKey)
         UserDefaults.standard.removeObject(forKey: listsVisitsKey)
         UserDefaults.standard.removeObject(forKey: setupCompleteKey)

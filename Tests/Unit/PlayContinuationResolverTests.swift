@@ -32,13 +32,31 @@ final class PlayContinuationResolverTests: XCTestCase {
         }
     }
 
-    func testOpenGuideWhenChoiceRecordedAndGuideNotOpened() {
+    func testStartGuidedMatchWhenSpearheadChoiceRecordedAndMatchNotOpened() {
         FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
 
         let continuation = PlayContinuationResolver.current()
 
-        XCTAssertEqual(continuation?.destination, .gameGuide)
+        XCTAssertEqual(continuation?.destination, .guidedMatch)
         XCTAssertEqual(continuation?.gameSystemId, gameSystemId)
+        XCTAssertEqual(continuation?.buttonTitle, String(localized: "Start Spearhead match"))
+    }
+
+    func testStartGuidedMatchClearsAfterGuidedMatchOpened() {
+        FirstSessionStore.recordOnboardingChoice(gameSystemId: gameSystemId)
+        FirstSessionStore.recordGuidedMatchOpened()
+
+        XCTAssertNil(PlayContinuationResolver.current())
+    }
+
+    func testOpenGuideWhenChoiceRecordedAndGuideNotOpenedForNonGuidedMatchGame() {
+        let combatPatrolId = GameSystemId.wh40k10eCp.rawValue
+        FirstSessionStore.recordOnboardingChoice(gameSystemId: combatPatrolId)
+
+        let continuation = PlayContinuationResolver.current()
+
+        XCTAssertEqual(continuation?.destination, .gameGuide)
+        XCTAssertEqual(continuation?.gameSystemId, combatPatrolId)
     }
 
     func testResumeGuidedMatchTakesPriorityOverOpenGuide() {

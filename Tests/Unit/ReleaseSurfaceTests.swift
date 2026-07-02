@@ -148,6 +148,11 @@ final class ReleaseSurfaceTests: XCTestCase {
         XCTAssertFalse(ReleaseSurface.isPlayHomeGameSystemVisible(GameSystemId.wh40k10eCp.rawValue))
     }
 
+    func testSpearheadDisallowsSimulatedDice() {
+        XCTAssertFalse(ReleaseSurface.allowsSimulatedDice(for: .aosSpearhead))
+        XCTAssertTrue(ReleaseSurface.allowsSimulatedDice(for: .wh40k11e))
+    }
+
     func testPlayHomeIncludesAllBundledModesWhenAllPlayModesEnabled() {
         guard ProcessInfo.processInfo.arguments.contains("-enable_all_play_modes")
             || ProcessInfo.processInfo.arguments.contains("-enable_full_product_surface") else {

@@ -64,6 +64,18 @@ public enum ReleaseSurface {
     public static var showsRulesAssistant: Bool { fullSurfaceEnabled }
     public static var showsMatchHistory: Bool { true }
 
+    /// Spearhead ships physical-dice-only combat; simulated rolls stay available for other systems.
+    public static func allowsSimulatedDice(for gameSystemId: GameSystemId) -> Bool {
+        gameSystemId != .aosSpearhead
+    }
+
+    /// Use the new single-surface battle view for Spearhead (replaces tab-based tracker).
+    /// See `ongoing/guided-match-ui-redesign.md`.
+    public static var usesSpearheadSingleSurfaceBattle: Bool {
+        fullSurfaceEnabled
+            || ProcessInfo.processInfo.arguments.contains("-enable_single_surface_battle")
+    }
+
     // MARK: Game systems
 
     public static func isGameSystemIdVisible(

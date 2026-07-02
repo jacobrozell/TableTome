@@ -72,8 +72,8 @@ struct ArmyDetailView: View {
         return allArmies.filter { $0.id != army.id }
     }
 
-    private var otherArmyNames: [String] {
-        otherArmies.map(\.name)
+    private var showAdvanceTip: Bool {
+        !isEditing && visibleUnits.contains { canAdvance($0) }
     }
 
     private var armyTitleDisplayMode: NavigationBarItem.TitleDisplayMode {
@@ -82,8 +82,29 @@ struct ArmyDetailView: View {
 
     var body: some View {
         Group {
-            if let army { unitList(army: army) }
-            else {
+            if let army {
+                ArmyDetailUnitList(
+                    army: army,
+                    pres: army.presentation(overrides: overrides),
+                    isEditing: isEditing,
+                    percent: percent,
+                    padSidebar: usesPadSidebarList,
+                    visibleUnits: visibleUnits,
+                    pipeline: pipeline,
+                    showSpearhead: usesSpearhead,
+                    showAdvanceTip: showAdvanceTip,
+                    hasOtherArmies: !otherArmies.isEmpty,
+                    batchSelection: $batchSelection,
+                    selectedUnitId: $selectedUnitId,
+                    canAdvance: canAdvance,
+                    onSelectUnit: onSelectUnit,
+                    onAddUnit: { showAddUnit = true },
+                    onAdvance: advanceUnit,
+                    onDuplicate: duplicateUnit,
+                    onDelete: { unitToDelete = $0 },
+                    onMove: beginMoveUnit
+                )
+            } else {
                 ContentUnavailableView {
                     Label(String(localized: "Army not found"), systemImage: "shield")
                 } description: {
@@ -94,7 +115,14 @@ struct ArmyDetailView: View {
         .navigationTitle(army?.name ?? String(localized: "Army"))
         .navigationBarTitleDisplayMode(armyTitleDisplayMode)
         .toolbar { armyToolbar }
-        .safeAreaInset(edge: .bottom) { batchActionBar }
+        .safeAreaInset(edge: .bottom) {
+            ArmyDetailBatchActionBar(
+                isEditing: isEditing,
+                selectionCount: batchSelection.count,
+                onAdvance: advanceBatchSelection,
+                onDelete: { confirmBatchDelete = true }
+            )
+        }
         .sheet(isPresented: $showAddUnit) {
             if let army {
                 AddUnitSheet(pipeline: pipeline) { name, qty, source, state, trackPerModel, memberStates in
@@ -188,194 +216,6 @@ struct ArmyDetailView: View {
         .environment(\.editMode, .constant(isEditing ? .active : .inactive))
     }
 
-    @ViewBuilder
-    private func unitList(army: Army) -> some View {
-        let pres = army.presentation(overrides: overrides)
-        if isEditing {
-            editModeList(army: army, pres: pres)
-        } else {
-            browseModeList(army: army, pres: pres)
-        }
-    }
-
-    @ViewBuilder
-    private func browseModeList(army: Army, pres: FactionPresentation) -> some View {
-        List {
-            armyHeaderSection(army: army, pres: pres)
-            unitsSection(army: army, padSidebar: usesPadSidebarList)
-        }
-        .listStyle(.insetGrouped)
-        .tabBarScrollInset()
-    }
-
-    @ViewBuilder
-    private func editModeList(army: Army, pres: FactionPresentation) -> some View {
-        List(selection: $batchSelection) {
-            armyHeaderSection(army: army, pres: pres)
-            Section(String(localized: "Units")) {
-                if visibleUnits.isEmpty {
-                    ContentUnavailableView {
-                        Label(String(localized: "No units"), systemImage: "figure.stand")
-                    } description: {
-                        Text(String(localized: "Add a unit or adjust filters."))
-                    }
-                    .listRowBackground(Color.clear)
-                } else {
-                    ForEach(visibleUnits) { unit in
-                        unitRow(unit)
-                            .tag(unit.id)
-                    }
-                }
-            }
-        }
-        .listStyle(.insetGrouped)
-        .tabBarScrollInset()
-    }
-
-    @ViewBuilder
-    private func armyHeaderSection(army: Army, pres: FactionPresentation) -> some View {
-        Section {
-            VStack(alignment: .leading, spacing: 10) {
-                HStack(spacing: 6) {
-                    Image(systemName: HobbyGameSymbol.systemImage(for: army.game))
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(Color.accentOnSurface)
-                        .symbolRenderingMode(.hierarchical)
-                        .accessibilityHidden(true)
-                    Text("\(SupportedGames.displayName(for: army.game)) · \(army.faction)\(army.customPipeline?.isEmpty == false ? String(localized: " · custom pipeline") : "")")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                HStack {
-                    CrestBadge(text: pres.crest, colorHex: pres.colorHex, imageFileName: pres.imageFileName)
-                    Spacer()
-                    Text(String(localized: "\(percent)% complete"))
-                        .font(.subheadline.monospacedDigit())
-                        .foregroundStyle(.secondary)
-                }
-                ProgressMeter(segments: Pipeline.segments(of: visibleUnits, pipeline), height: 8)
-            }
-            .padding(.vertical, 4)
-        }
-    }
-
-    @ViewBuilder
-    private func unitsSection(army: Army, padSidebar: Bool) -> some View {
-        let showAdvanceTip = !isEditing && visibleUnits.contains { canAdvance($0) }
-        Section {
-            if visibleUnits.isEmpty {
-                ContentUnavailableView {
-                    Label(String(localized: "No units yet"), systemImage: "figure.stand")
-                } description: {
-                    Text(String(localized: "Add what's on your sprue — name the unit and pick a starting state."))
-                } actions: {
-                    Button(String(localized: "Add unit"), systemImage: "plus") { showAddUnit = true }
-                        .buttonStyle(.borderedProminent)
-                        .accessibilityIdentifier("addUnit")
-                }
-                .listRowBackground(Color.clear)
-                PipelineBeginnerLegend(pipeline: pipeline)
-                    .listRowBackground(Color.clear)
-            } else {
-                ForEach(visibleUnits) { unit in
-                    let row = unitRow(unit)
-                    Group {
-                        if padSidebar {
-                            Button {
-                                selectedUnitId = unit.id
-                                onSelectUnit(unit.id)
-                            } label: { row }
-                            .buttonStyle(.plain)
-                            .accessibilityIdentifier("unit-\(unit.name)")
-                        } else {
-                            NavigationLink(value: CollectionRoute.unit(unit.id)) { row }
-                                .navigationLinkIndicatorVisibility(.hidden)
-                                .accessibilityIdentifier("unit-\(unit.name)")
-                        }
-                    }
-                    .listSidebarSelection(isSelected: unit.id == selectedUnitId, enabled: padSidebar)
-                }
-            }
-        } header: {
-            Text(String(localized: "Units"))
-                .popoverTip(showAdvanceTip ? SwipeAdvanceTip() : nil, arrowEdge: .top)
-        }
-    }
-
-    @ViewBuilder
-    private func unitRow(_ unit: ArmyUnit) -> some View {
-        UnitRow(unit: unit, pipeline: pipeline, showSpearhead: usesSpearhead)
-            .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                if !isEditing, canAdvance(unit) {
-                    Button(String(localized: "Advance")) {
-                        ArmyStore.advance(unit, pipeline: pipeline, in: context)
-                        advanceTrigger.toggle()
-                        SwipeAdvanceTip().invalidate(reason: .actionPerformed)
-                    }
-                    .tint(.accentColor)
-                    .accessibilityLabel(String(localized: "Advance painting state"))
-                }
-            }
-            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                if !isEditing {
-                    Button(String(localized: "Duplicate")) { duplicateUnit(unit) }
-                    .accessibilityLabel(String(localized: "Duplicate unit"))
-                    Button(String(localized: "Delete"), role: .destructive) { unitToDelete = unit }
-                        .accessibilityLabel(String(localized: "Delete unit"))
-                }
-            }
-            .contextMenu {
-                if !isEditing {
-                    if canAdvance(unit) {
-                        Button(String(localized: "Advance"), systemImage: "arrow.right.circle") {
-                            ArmyStore.advance(unit, pipeline: pipeline, in: context)
-                            advanceTrigger.toggle()
-                            SwipeAdvanceTip().invalidate(reason: .actionPerformed)
-                        }
-                    }
-                    Button(String(localized: "Duplicate"), systemImage: "plus.square.on.square") { duplicateUnit(unit) }
-                    if !otherArmyNames.isEmpty {
-                        Button(String(localized: "Move to…"), systemImage: "arrow.right.arrow.left") {
-                            unitToMove = unit
-                            showMoveUnit = true
-                        }
-                    }
-                    Button(String(localized: "Delete"), systemImage: "trash", role: .destructive) {
-                        unitToDelete = unit
-                    }
-                }
-            }
-    }
-
-    @ViewBuilder
-    private var batchActionBar: some View {
-        if isEditing, !batchSelection.isEmpty {
-            HStack(spacing: 12) {
-                Text(String(localized: "\(batchSelection.count) selected"))
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                Spacer()
-                Button(String(localized: "Advance")) {
-                    let n = ArmyStore.advance(selectedUnits, pipeline: pipeline, in: context)
-                    if n > 0 {
-                        banner.show(String(localized: "Advanced \(n) unit\(n == 1 ? "" : "s")"))
-                    } else {
-                        banner.show(String(localized: "Nothing to advance"))
-                    }
-                    if n > 0 { advanceTrigger.toggle() }
-                    batchSelection.removeAll()
-                }
-                .buttonStyle(.borderedProminent)
-                Button(String(localized: "Delete"), role: .destructive) { confirmBatchDelete = true }
-                    .buttonStyle(.bordered)
-            }
-            .padding(.horizontal)
-            .padding(.vertical, 10)
-            .background(.bar)
-        }
-    }
-
     @ToolbarContentBuilder private var armyToolbar: some ToolbarContent {
         ToolbarItem(placement: .topBarTrailing) {
             if isEditing {
@@ -432,6 +272,28 @@ struct ArmyDetailView: View {
             .accessibilityLabel(String(localized: "Army actions"))
             .disabled(isEditing)
         }
+    }
+
+    private func advanceUnit(_ unit: ArmyUnit) {
+        ArmyStore.advance(unit, pipeline: pipeline, in: context)
+        advanceTrigger.toggle()
+        SwipeAdvanceTip().invalidate(reason: .actionPerformed)
+    }
+
+    private func advanceBatchSelection() {
+        let n = ArmyStore.advance(selectedUnits, pipeline: pipeline, in: context)
+        if n > 0 {
+            banner.show(String(localized: "Advanced \(n) unit\(n == 1 ? "" : "s")"))
+        } else {
+            banner.show(String(localized: "Nothing to advance"))
+        }
+        if n > 0 { advanceTrigger.toggle() }
+        batchSelection.removeAll()
+    }
+
+    private func beginMoveUnit(_ unit: ArmyUnit) {
+        unitToMove = unit
+        showMoveUnit = true
     }
 
     private func deleteBatchSelection() {

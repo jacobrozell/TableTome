@@ -32,48 +32,30 @@ extension BattlePhaseTrackerView {
     }
 
     @ViewBuilder
-    var roundOneMilestoneSection: some View {
-        if !MarketingSnapshotBootstrap.suppressesCoachingUI,
-           FirstSessionStore.shouldShowRoundOneMilestone(isEmbeddedInGuidedMatch: isEmbeddedInGuidedMatch) {
-            RoundOneMilestoneBanner {
-                FirstSessionStore.markRoundOneMilestoneSeen()
-            }
-        }
-    }
-
-    @ViewBuilder
-    var modelsMilestoneSection: some View {
-        if !MarketingSnapshotBootstrap.suppressesCoachingUI,
-           !isEmbeddedInGuidedMatch,
-           FirstSessionStore.shouldShowModelsNudge() {
-            NewPlayerMilestoneBanner {
-                FirstSessionStore.markModelsNudgeSeen()
-            }
-        }
-    }
-
-    @ViewBuilder
     var tabHintSection: some View {
-        roundOneMilestoneSection
-        modelsMilestoneSection
-        if !MarketingSnapshotBootstrap.suppressesCoachingUI, showsTabHint {
-            BattleTrackerTabHintBanner(suggestedTab: suggestedSectionTab, gameSystemId: viewModel.gameSystemId) {
-                withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) {
-                    if suggestedSectionTab == .combat {
-                        focusCombatResolverSection()
-                    } else {
-                        selectedSectionTab = suggestedSectionTab
-                    }
+        BattleTrackerTabHintSection(
+            isEmbeddedInGuidedMatch: isEmbeddedInGuidedMatch,
+            showsTabHint: showsTabHint,
+            suggestedTab: suggestedSectionTab,
+            gameSystemId: viewModel.gameSystemId,
+            reduceMotion: reduceMotion,
+            onSelectSuggestedTab: {
+                if suggestedSectionTab == .combat {
+                    focusCombatResolverSection()
+                } else {
+                    selectedSectionTab = suggestedSectionTab
                 }
             }
-        }
+        )
     }
 
     @ViewBuilder
     var quickActionsSection: some View {
-        if supportsBattleTracker, !quickActions.isEmpty {
-            BattleTrackerQuickActionsList(actions: quickActions, onSelect: handleQuickAction)
-        }
+        BattleTrackerQuickActionsSection(
+            supportsBattleTracker: supportsBattleTracker,
+            actions: quickActions,
+            onSelect: handleQuickAction
+        )
     }
 
     func handleQuickAction(_ action: BattleTrackerQuickAction) {

@@ -3,7 +3,7 @@
 **Status:** Active — implementation backlog  
 **Last updated:** 2026-07-01  
 **Audience:** Jacob and anyone who bought a Spearhead box, has never played a wargame, and wants the phone to feel like a friend at the table — not a rules encyclopedia.  
-**Scope:** Age of Sigmar Spearhead only for **v1.0.0**. All other game modes (40k Combat Patrol, Star Crusade, etc.) gated via `ReleaseSurface.showsAllPlayModesOnHome` — ship post-1.0.
+**Scope:** Age of Sigmar Spearhead only for **v1.0.0**. All other game modes gated via `ReleaseSurface` — ship post-1.0. See [`docs/release/1.0.0-release-surface.md`](../docs/release/1.0.0-release-surface.md).
 
 **Related docs**
 
@@ -870,7 +870,7 @@ Screenshot from session not in repo — treat as **open**.
 
 ## 18. Definition of done (v1.0.0 — Spearhead only)
 
-- [ ] All other game modes gated (`ReleaseSurface.showsAllPlayModesOnHome = false`)
+- [x] All other game modes gated (`liveReleaseGameSystemIds` = Spearhead only; see `1.0.0-release-surface.md`)
 - [ ] Jacob completes full 4-round Spearhead game on TestFlight without Google
 - [ ] P0 + P1 checklist complete
 - [ ] Manual playtest script passed on iPhone + iPad

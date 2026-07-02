@@ -2,20 +2,23 @@
 
 What the build exposes today vs planned. Updated when release surface changes.
 
-**Current release:** 1.0.0 TestFlight — see [docs/release/status.md](release/status.md).
+**Current release:** 1.0.0 — **Spearhead / AoS only** for play, rules, and guided match. See [docs/release/1.0.0-release-surface.md](release/1.0.0-release-surface.md).
 
 | Feature | Status | Release | Notes |
 |---------|--------|---------|-------|
-| Game system home | **shipped** | 1.0.0 | Spearhead + 40k 11e + Combat Patrol (10e rules) |
+| Game system home (Play) | **shipped** | 1.0.0 | Spearhead only |
 | Spearhead Getting Started walkthrough | **shipped** | 1.0.0 | 5-step GW-aligned flow |
 | Spearhead Guided Match | **shipped** | 1.0.0 | Army picker + match setup |
-| 40k 11e Guided Match | **shipped** | 1.0.0 | Armageddon + four 11e Battleforces (roster-level) |
-| Battle phase tracker | **shipped** | 1.0.0 | Phase-filtered unit ability reminders |
-| Rules reference browser | **shipped** | 1.0.0 | Filter, search, related links |
-| Models (Collection) | **shipped** | 1.0.0 | Miniature tracking |
-| Roll evaluator | **shipped** | 1.0.0 | Spearhead (AoS) + 40k 11e + Combat Patrol 10e |
-| 40k 11e combat resolver | **shipped** | 1.0.0 | 11e Guided Match + standalone resolver |
-| Combat Patrol (10e rules) | **shipped** | 1.0.0 | `wh40k-10e-cp` — not 11e; not full 10e matched play |
+| Battle phase tracker | **shipped** | 1.0.0 | Spearhead phase playbook |
+| Rules reference browser | **shipped** | 1.0.0 | Spearhead rules + glossary only |
+| Models (Collection) | **shipped** | 1.0.0 | Miniature tracking (not game-system gated) |
+| Paints inventory | **shipped** | 1.0.0 | Models tab segment |
+| Roll evaluator / combat resolver | **shipped** | 1.0.0 | Spearhead (AoS) only in release |
+| Match history | **shipped** | 1.0.0 | Spearhead matches |
+| Settings & legal links | **shipped** | 1.0.0 | Spearhead guide shortcut |
+| 40k 11e Guided Match | gated | post-1.0 | `-enable_full_product_surface` |
+| 40k 11e combat resolver | gated | post-1.0 | With 40k visibility |
+| Combat Patrol (10e rules) | gated | post-1.0 | `-enable_full_product_surface` or `-enable_combat_patrol` |
 | Match history | **shipped** | 1.0.0 | Local match log |
 | Settings & legal links | **shipped** | 1.0.0 | GitHub Pages docs |
 | Paints inventory | **shipped** | 1.0.0 (build 11) | Models tab segment; catalog swatches + autocomplete |

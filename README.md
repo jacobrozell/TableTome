@@ -4,7 +4,7 @@ Offline-first iOS reference and rules companion for Warhammer tabletop games —
 
 **Status:** TestFlight 1.0.0 (build 11) · **Branch:** `release/1.0.0` · [Release status](docs/release/status.md)
 
-**Shipped in 1.0:** Age of Sigmar **Spearhead**, Warhammer 40,000 **11th Edition**, **Combat Patrol (10th Edition rules)**, and **Paints inventory**. Gated until post-1.0: Army Lists/Muster, StarCraft TMG, Rules Q&A — see [release surface spec](specs/ReleaseSurfaceSpec.md).
+**Shipped in 1.0:** Age of Sigmar **Spearhead** (play, guided match, rules) plus **Models** (collection + paints). 40k, Combat Patrol, StarCraft, Lists, and Rules Q&A are bundled but gated — see [1.0.0 release surface](docs/release/1.0.0-release-surface.md) and [release surface spec](specs/ReleaseSurfaceSpec.md).
 
 **Agents:** start at [`AGENTS.md`](AGENTS.md)
 
@@ -14,11 +14,11 @@ Offline-first iOS reference and rules companion for Warhammer tabletop games —
 
 | Feature | Notes |
 |---------|-------|
-| **Game system home** | Spearhead, 40k 11e, Combat Patrol |
-| **Guided Match** | Army picker, match setup, battle phase tracker with ability reminders |
-| **Roll evaluator** | Spearhead (AoS) + 40k 11e + Combat Patrol combat resolver |
-| **Rules reference** | Offline browser with filter, search, related links |
-| **Models (Collection)** | Miniature tracking |
+| **Game system home** | Spearhead only (1.0.0) |
+| **Guided Match** | Spearhead — army picker, setup, battle tracker |
+| **Roll evaluator** | Spearhead (AoS) combat resolver |
+| **Rules reference** | Spearhead rules + glossary (offline) |
+| **Models (Collection)** | Miniature tracking + paints |
 | **Match history** | Local match log |
 | **Getting Started** | GW-aligned walkthroughs per game system |
 | **Settings & legal** | GitHub Pages privacy/support/accessibility |

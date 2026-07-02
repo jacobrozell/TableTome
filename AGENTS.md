@@ -2,7 +2,21 @@
 
 Start here for Cursor agents and automated contributors. Human onboarding: [`CONTRIBUTING.md`](CONTRIBUTING.md) + [`docs/development/setup.md`](docs/development/setup.md).
 
-**Last updated:** 2026-06-29
+**Last updated:** 2026-07-01
+
+---
+
+## 1.0.0 release surface (read first)
+
+**Shipped:** Spearhead / AoS only for play, guided match, rules, settings guides. **Models is not game-system gated.**
+
+| Doc | Purpose |
+|-----|---------|
+| [`docs/release/1.0.0-release-surface.md`](docs/release/1.0.0-release-surface.md) | Verbose agent map — APIs, files, launch args |
+| [`specs/ReleaseSurfaceSpec.md`](specs/ReleaseSurfaceSpec.md) | Spec + verification table |
+| [`Support/ReleaseSurface.swift`](Support/ReleaseSurface.swift) | Code (with inline agent comments) |
+
+Dogfood other modes: `-enable_full_product_surface` in Run scheme.
 
 ---
 

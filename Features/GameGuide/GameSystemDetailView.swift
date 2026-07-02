@@ -58,9 +58,11 @@ struct GameSystemDetailView: View {
                 EmptyStateView(
                     title: String(localized: "Game guide unavailable"),
                     message: errorMessage,
-                    systemImage: "exclamationmark.triangle"
+                    systemImage: "exclamationmark.triangle",
+                    actionTitle: String(localized: "Try again"),
+                    action: { Task { await load() } }
                 )
-                .asyncContentShell()
+                .adaptiveEmptyStateLayout()
             } else {
                 ProgressView(String(localized: "Loading game guide…"))
                     .asyncContentShell()
@@ -94,11 +96,22 @@ struct GameSystemDetailView: View {
     }
 
     private func load() async {
+        errorMessage = nil
+        gameSystem = nil
+        featuredArmyRows = []
+
+        guard ReleaseSurface.isGameSystemIdVisible(gameSystemId) else {
+            errorMessage = String(localized: "This game guide is not available in this version.")
+            return
+        }
+
         do {
             gameSystem = try await dependencies.rulesRepository.gameSystem(id: gameSystemId)
-            guard let featuredArmyIds = dependencies.gameSystemRegistry.featuredArmies(
+            let featuredArmyIds = dependencies.gameSystemRegistry.featuredArmies(
                 for: GameSystemId(resolving: gameSystemId)
-            )?.armyIds else {
+            )?.armyIds ?? []
+            if featuredArmyIds.isEmpty {
+                featuredArmyRows = []
                 return
             }
             let catalog = try await dependencies.catalogRepository(

@@ -2,7 +2,7 @@
 
 Task-oriented lookup: **where to change code** and which spec governs behavior.
 
-**Last updated:** 2026-06-29
+**Last updated:** 2026-07-01
 
 ---
 
@@ -22,11 +22,17 @@ Task-oriented lookup: **where to change code** and which spec governs behavior.
 
 ## Release surface & flags
 
-| Task | Code | Spec |
-|------|------|------|
+| Task | Code | Spec / doc |
+|------|------|------------|
+| **1.0.0 what ships** | `Support/ReleaseSurface.swift` → `liveReleaseGameSystemIds` | [`docs/release/1.0.0-release-surface.md`](../release/1.0.0-release-surface.md) |
 | Hide/show tabs and features | `Support/ReleaseSurface.swift` | `ReleaseSurfaceSpec.md` |
+| Play home game list | `isPlayHomeGameSystemVisible` | `Features/Home/HomeViewModel.swift` |
+| Rules tab systems | `isGameSystemVisible` | `Features/RulesReference/RulesReferenceViewModel.swift` |
+| Guided Match gate | `showsGuidedMatch` | `Features/GuidedMatch/GuidedMatchDestinationView.swift` |
+| Settings guide links | `isGameSystemIdVisible` | `Features/Settings/SettingsView.swift` |
+| Release surface unit tests | `Tests/Unit/ReleaseSurfaceTests.swift` | `ReleaseSurfaceSpec.md` Verification |
 | Firebase on/off | `Support/FeatureFlags/`, `App/Bootstrap/FirebaseBootstrap.swift` | `firebase-analytics.md` |
-| Full product (Lists, Paints, TMG) | Launch arg `-enable_full_product_surface` | `ReleaseSurfaceSpec.md` |
+| Dogfood all modes | Launch arg `-enable_full_product_surface` | `docs/development/setup.md` |
 
 ---
 

@@ -2,6 +2,57 @@ import Foundation
 import TabletomeDomain
 import TabletomeData
 
+// MARK: - Release surface (1.0.0 = Spearhead / AoS only)
+//
+// **Canonical spec:** `specs/ReleaseSurfaceSpec.md`
+// **Agent deep-dive:** `docs/release/1.0.0-release-surface.md`
+// **Tests:** `Tests/Unit/ReleaseSurfaceTests.swift`
+//
+// Single source of truth for “is feature X reachable in this build?”
+//
+// ## v1.0.0 product scope (default Release / TestFlight / App Store)
+//
+// | Area | Shipped | Gated (post-1.0 or launch arg) |
+// |------|---------|--------------------------------|
+// | Play home + Guided Match | `aos-spearhead` only | 40k 11e, Combat Patrol, StarCraft |
+// | Rules tab | Spearhead rules only | Other game-system rule sets |
+// | Settings “New here?” guides | Spearhead guide only | 40k / CP / SC guide buttons |
+// | Models (Bench) | ✅ Collection + Paints | **Not** game-system gated |
+// | Lists (Muster) | ❌ | `-enable_full_product_surface` |
+// | Rules Q&A search tab | ❌ | `-enable_full_product_surface` |
+//
+// Bundled JSON/manifest still contains 40k + SC data for dogfood; UI must not surface it
+// without the right gate. Do not delete dormant content — hide via this enum.
+//
+// ## Where gates are enforced (grep `ReleaseSurface.` when adding UI)
+//
+// | Consumer | API | File |
+// |----------|-----|------|
+// | Play tab game list | `isPlayHomeGameSystemVisible` | `Features/Home/HomeViewModel.swift` |
+// | New-player chooser | `isPlayHomeGameSystemVisible`, `showsAllPlayModesOnHome` | `DesignSystem/HomeNewPlayerChooserCard.swift` |
+// | Onboarding game picks | `isGameSystemIdVisible` | `Features/Onboarding/OnboardingContent.swift` |
+// | Rules browser picker | `isGameSystemVisible` | `Features/RulesReference/RulesReferenceViewModel.swift` |
+// | Guided Match entry | `showsGuidedMatch` | `Features/GameGuide/*`, `GuidedMatchDestinationView.swift` |
+// | Game guide load | `isGameSystemIdVisible` | `Features/GameGuide/GameSystemDetailView.swift` |
+// | Settings guide links | `isGameSystemIdVisible` | `Features/Settings/SettingsView.swift` |
+// | App search index | `isGameSystemVisible` | `App/AppDependencies.swift` |
+// | Match history filters | `showsGuidedMatch` | `Features/MatchHistory/MatchHistoryListView.swift` |
+//
+// ## Launch arguments (Edit Scheme → Run → Arguments Passed On Launch)
+//
+// | Argument | Effect |
+// |----------|--------|
+// | `-enable_full_product_surface` | All game modes, Lists tab, Rules Q&A, StarCraft, cross-pillar links |
+// | `-enable_all_play_modes` | 40k + CP on Play home only (Rules still Spearhead-only unless full surface) |
+// | `-enable_combat_patrol` | Combat Patrol visibility (also needs full surface or this arg for CP-specific paths) |
+//
+// ## Adding a new game system
+//
+// 1. Register in `Domain/Registry/GameSystemId+Bundled.swift`
+// 2. Add manifest entry in `Resources/Rules/game-systems-manifest-v1.json`
+// 3. Decide release vs gated: update `liveReleaseGameSystemIds` and spec — do not wire UI directly.
+// 4. Playbook: `docs/development/playbooks/add-game-system.md`
+
 public enum ReleaseSurface {
     /// Unlock gated features for CI, dogfood, and internal builds.
     private static var fullSurfaceEnabled: Bool {
@@ -14,14 +65,14 @@ public enum ReleaseSurface {
             || ProcessInfo.processInfo.arguments.contains("-enable_all_play_modes")
     }
 
-    /// Live play modes surfaced on Play home for new users (TestFlight focus).
-    private static let livePlayHomeGameSystemIds: Set<String> = [
+    /// v1.0.0 shipped game systems — Spearhead only (play home, rules, settings, guided match).
+    private static let liveReleaseGameSystemIds: Set<String> = [
         GameSystemId.aosSpearhead.rawValue,
     ]
 
-    /// Combat Patrol (10th Edition rules) — ships in release defaults.
+    /// Combat Patrol (10th Edition rules) — internal / post-1.0 unless explicitly enabled.
     public static var showsCombatPatrol: Bool {
-        manifestAvailableSystemIds.contains(GameSystemId.wh40k10eCp.rawValue)
+        fullSurfaceEnabled
             || ProcessInfo.processInfo.arguments.contains("-enable_combat_patrol")
     }
 
@@ -72,8 +123,7 @@ public enum ReleaseSurface {
     /// Use the new single-surface battle view for Spearhead (replaces tab-based tracker).
     /// See `ongoing/guided-match-ui-redesign.md`.
     public static var usesSpearheadSingleSurfaceBattle: Bool {
-        fullSurfaceEnabled
-            || ProcessInfo.processInfo.arguments.contains("-enable_single_surface_battle")
+        true
     }
 
     // MARK: Game systems
@@ -101,7 +151,7 @@ public enum ReleaseSurface {
                 return true
             }
         }
-        return manifestAvailableSystemIds.contains(gameSystemId)
+        return liveReleaseGameSystemIds.contains(gameSystemId)
     }
 
     /// Play tab home list and new-player chooser — Spearhead-only unless `showsAllPlayModesOnHome`.
@@ -111,7 +161,7 @@ public enum ReleaseSurface {
     ) -> Bool {
         guard isGameSystemIdVisible(gameSystemId, registry: registry) else { return false }
         if showsAllPlayModesOnHome { return true }
-        return livePlayHomeGameSystemIds.contains(gameSystemId)
+        return liveReleaseGameSystemIds.contains(gameSystemId)
     }
 
     public static func isPlayHomeGameSystemVisible(
@@ -147,7 +197,9 @@ public enum ReleaseSurface {
         registry: GameSystemRegistry = .bundled(withBoxSetsFrom: .main)
     ) -> Bool {
         guard isGameSystemIdVisible(gameSystemId, registry: registry) else { return false }
-        return registry.capabilities(for: gameSystemId)?.showsGuidedMatch == true
+        guard registry.capabilities(for: gameSystemId)?.showsGuidedMatch == true else { return false }
+        if fullSurfaceEnabled { return true }
+        return gameSystemId == GameSystemId.aosSpearhead.rawValue
     }
 
     public static func showsCombatResolver(

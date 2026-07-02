@@ -3,15 +3,15 @@
 **Status:** Future work · **Target:** complete before each gated feature ships to production  
 **Context:** [1.0.0 TestFlight status](status.md) · [Release surface gates](../../specs/ReleaseSurfaceSpec.md)
 
-1.0.0 TestFlight validates the **default release surface** (Spearhead + 40k 11e + Combat Patrol + **Paints**). Everything still behind `-enable_full_product_surface` or a separate launch arg needs a defined test pass before ungating.
+1.0.0 validates the **default release surface: Spearhead / AoS only** for play, guided match, rules, and settings game guides. **Models (Collection + Paints) is not game-system gated.** Everything else needs launch args or post-1.0 ungating — see [1.0.0 release surface](1.0.0-release-surface.md).
 
 ## How to test gated features today
 
 | Launch argument | Unlocks |
 |-----------------|---------|
 | `-enable_full_product_surface` | Lists tab, Paints, StarCraft, Rules Q&A, 40k 10e, cross-pillar links, **all Play home modes** |
-| `-enable_all_play_modes` | 40k 11e + Combat Patrol on Play tab home (Rules/Search unchanged) |
-| `-enable_combat_patrol` | Combat Patrol only (10e engine — SM/Tyranids today) |
+| `-enable_all_play_modes` | 40k 11e + Combat Patrol on Play tab home |
+| `-enable_combat_patrol` | Combat Patrol visibility (`showsCombatPatrol`) |
 | `-enable_wh40k11e_combat_resolver` | 11e combat resolver (`Wh40k11eCombatRollEngine` — not Combat Patrol) |
 
 **Simulator / Xcode:** Edit Scheme → Run → Arguments Passed On Launch.
@@ -28,11 +28,11 @@
 | Lists (Muster) | Partial | ❌ | ❌ | ❌ | Polish + QA pass |
 | Play from roster | ❌ | ❌ | ❌ | ❌ | Depends on Muster |
 | Paint status in match | ❌ | ❌ | ❌ | ❌ | Depends on Paints |
-| Combat Patrol (10e CP) | ✅ Strong | Partial | ❌ | ❌ | All armies + polish |
+| Combat Patrol (10e CP) | ✅ Strong | ❌ | ❌ | ❌ | Ungate after Spearhead 1.0 ships |
 | StarCraft TMG | ✅ Strong | ❌ | ❌ | ❌ | End-to-end Play QA |
 | Rules Q&A assistant | Partial | ❌ | ❌ | ❌ | Quality + licensing review |
 | 40k 10e (coming soon) | N/A | ❌ | ❌ | ❌ | Content not ready |
-| 40k 11e combat resolver | Partial | Partial | ❌ | ❌ | Ongoing QA (shipped in 1.0.0) |
+| 40k 11e combat resolver | Partial | ❌ | ❌ | ❌ | Ungate with 40k 11e |
 | Nearby match sync | ✅ Strong | N/A | ❌ | ❌ | Manual two-device QA before App Store |
 
 **Legend:** ✅ = meaningful automated coverage exists; Partial = domain only, not surface/integration; ❌ = not done for ungate sign-off.
@@ -114,7 +114,7 @@
 
 ## 3. Combat Patrol (40k 10e CP)
 
-**Gate:** **Shipped** in release defaults (`ReleaseSurface.showsCombatPatrol` = true). `-enable_combat_patrol` is optional for legacy test schemes.
+**Gate:** `ReleaseSurface.showsCombatPatrol` (default `false` in 1.0.0). Enable with `-enable_full_product_surface` or `-enable_combat_patrol`.
 
 ### Existing automated coverage
 
@@ -123,11 +123,11 @@
 - `Tests/Unit/Wh40k10eCombatRollEngineTests.swift`
 - `Tests/Unit/AppSearchEngineTests.swift` — CP search index
 - `Tests/Unit/BundledRulesRepositoryTests.swift` — CP guide + rule sections
-- `Tests/Unit/ReleaseSurfaceTests.swift` — CP visible without launch args; three-system release set
+- `Tests/Unit/ReleaseSurfaceTests.swift` — CP hidden without launch args; release set = Spearhead only
 
 ### Still needed (manual QA sign-off)
 
-**Manual QA** (release defaults — no launch args)
+**Manual QA** (with `-enable_full_product_surface` or `-enable_combat_patrol`)
 - [ ] Getting Started + Guided Match (SM vs Tyranids starter)
 - [ ] Combat resolver in battle tracker (10e engine)
 - [ ] Rules reference CP categories and missions
@@ -223,15 +223,15 @@
 
 ## 7. 40k 11e combat resolver
 
-**Status:** **Shipped in 1.0.0** · **Engine:** `Wh40k11eCombatRollEngine` (not `Wh40k10eCombatRollEngine`)
+**Status:** Gated with 40k 11e (post-1.0) · **Engine:** `Wh40k11eCombatRollEngine` (not `Wh40k10eCombatRollEngine`)
 
-Combat Patrol (10e) and 11th Edition are separate game systems with separate roll engines. Enabled in release defaults via `ReleaseSurface.showsCombatResolver(for: "wh40k-11e")`.
+Combat Patrol (10e) and 11th Edition are separate game systems with separate roll engines. Reachable when `ReleaseSurface.isGameSystemIdVisible("wh40k-11e")` is true.
 
 ### Existing automated coverage
 
 - `Wh40k11eCombatRollEngine.swift`, `Wh40k11eCombatRollResolution.swift`
 - `Wh40k11eCombatRollEngineTests.swift`, `CombatRollEngineRouter.rulesEdition`
-- `ReleaseSurfaceTests.testCombatResolverEnabledForWh40k11eInRelease`
+- `ReleaseSurfaceTests.testCombatResolverDisabledForWh40k11eInRelease`
 - `GameSystemRegistryTests.testWh40k11eUsesDedicated11eCombatRollEngine`
 
 ### Ongoing QA (not a release gate)

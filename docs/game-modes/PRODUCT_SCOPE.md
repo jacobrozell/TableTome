@@ -10,10 +10,10 @@ This is the intended support matrix for play modes. **Edition** and **format** a
 
 | Franchise | Mode | `GameSystemId` | Rules | Release today |
 |-----------|------|----------------|-------|---------------|
-| **Age of Sigmar** | Spearhead | `aos-spearhead` | AoS 4e Spearhead (starter boxes) | ✅ Shipped |
+| **Age of Sigmar** | Spearhead | `aos-spearhead` | AoS 4e Spearhead (starter boxes) | ✅ **1.0.0 shipped** |
 | **Age of Sigmar** | Full / standard | — (future) | Battletomes, matched play | 📋 Planned |
-| **Warhammer 40,000** | Full 11th Edition | `wh40k-11e` | 11e core — Armageddon, Battleforces, matched play | ✅ Shipped |
-| **Warhammer 40,000** | Combat Patrol | `wh40k-10e-cp` | **10th Edition** patrol format (box-set missions) | ✅ Shipped |
+| **Warhammer 40,000** | Full 11th Edition | `wh40k-11e` | 11e core — Armageddon, Battleforces, matched play | 🔒 Gated (post-1.0) |
+| **Warhammer 40,000** | Combat Patrol | `wh40k-10e-cp` | **10th Edition** patrol format (box-set missions) | 🔒 Gated (post-1.0) |
 | **StarCraft** | The Miniatures Game | `sc-tmg` | SC TMG Founders Edition | 🔒 Gated (post-1.0) |
 
 ---
@@ -48,7 +48,7 @@ flowchart TD
 ## Implementation notes
 
 - **Separate roll engines:** `Wh40k10eCombatRollEngine` (CP) vs `Wh40k11eCombatRollEngine` (11e). Never merge.
-- **Release surface:** [`specs/ReleaseSurfaceSpec.md`](../../specs/ReleaseSurfaceSpec.md) — `wh40k-10e-cp` in release defaults; bare `wh40k-10e` stays hidden.
+- **Release surface:** [`specs/ReleaseSurfaceSpec.md`](../../specs/ReleaseSurfaceSpec.md) — **1.0.0 = Spearhead only** for play/rules; 40k + CP gated until post-1.0 (`-enable_full_product_surface` for dogfood).
 - **UI copy:** Always pair “Combat Patrol” with “10th Edition” where beginners choose a mode.
 
 ## Related docs

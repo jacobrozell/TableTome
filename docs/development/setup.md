@@ -80,8 +80,9 @@ Set in **Edit Scheme → Run → Arguments Passed On Launch**.
 
 | Argument | Effect |
 |----------|--------|
-| `-enable_full_product_surface` | Lists tab, Paints, StarCraft TMG, Rules Q&A, full 10e home row |
-| `-enable_combat_patrol` | Legacy no-op when CP already in release defaults |
+| `-enable_full_product_surface` | All play modes, Lists tab, StarCraft TMG, Rules Q&A, 40k + CP visibility |
+| `-enable_all_play_modes` | 40k 11e + Combat Patrol on Play home only |
+| `-enable_combat_patrol` | Combat Patrol visibility (`showsCombatPatrol`) |
 
 ### Onboarding & navigation shortcuts
 

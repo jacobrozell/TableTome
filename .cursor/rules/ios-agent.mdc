@@ -22,6 +22,7 @@ globs:
 | Add analytics event | `docs/development/playbooks/add-analytics-event.md` |
 | Firebase / PII | `Support/Logging/AnalyticsMetadataKeys.swift` |
 | Release gating | `Support/ReleaseSurface.swift` + `specs/ReleaseSurfaceSpec.md` |
+| **1.0.0 agent map** | `docs/release/1.0.0-release-surface.md` |
 
 ## Architecture
 

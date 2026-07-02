@@ -6,9 +6,9 @@
 
 ## When this applies
 
-Moving a feature from **gated** (launch arg only) to **release defaults** — e.g. Lists tab, Paints, StarCraft TMG, Rules Q&A.
+Moving a feature from **gated** (launch arg only) to **release defaults** — e.g. 40k 11e, Combat Patrol, Lists tab, StarCraft TMG, Rules Q&A.
 
-Combat Patrol already ships in 1.0; use this playbook for remaining gated items.
+**1.0.0 ships Spearhead only** for play/rules — see [`1.0.0-release-surface.md`](../../release/1.0.0-release-surface.md) before ungating any game mode.
 
 ---
 

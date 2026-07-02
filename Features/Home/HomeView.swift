@@ -99,6 +99,15 @@ struct HomeView: View {
         .playNavigationDestinations()
         .glossaryEntryNavigation()
         .toolbar {
+            if ReleaseSurface.showsPlayersHub {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink(value: PlayersHubLink()) {
+                        Label(String(localized: "Players"), systemImage: "person.2")
+                    }
+                    .accessibilityIdentifier("home.playersHub")
+                    .accessibilityHint(String(localized: "Household players, owned armies, and match stats"))
+                }
+            }
             if ReleaseSurface.showsMatchHistory, showsMatchHistoryToolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink(value: MatchHistoryLink()) {

@@ -10,13 +10,15 @@ final class AppDependencies: ObservableObject {
     let gameSystemRegistry: GameSystemRegistry
     let playCatalogRepository: any PlayCatalogRepository
     let matchHistoryRepository: any MatchHistoryRepository
+    let playerProfileRepository: any PlayerProfileRepository
 
     init(
         logger: any AppLogger = DefaultAppLogger.makeForCurrentBuild(),
         rulesRepository: any RulesRepository = BundledRulesRepository(),
         gameSystemRegistry: GameSystemRegistry = .bundled(withBoxSetsFrom: .main),
         playCatalogRepository: (any PlayCatalogRepository)? = nil,
-        matchHistoryRepository: any MatchHistoryRepository = JSONMatchHistoryRepository()
+        matchHistoryRepository: any MatchHistoryRepository = JSONMatchHistoryRepository(),
+        playerProfileRepository: any PlayerProfileRepository = JSONPlayerProfileRepository()
     ) {
         self.logger = logger
         TabletomeAnalytics.register(logger)
@@ -38,6 +40,11 @@ final class AppDependencies: ObservableObject {
         self.playCatalogRepository = playCatalogRepository
             ?? BundledPlayCatalogRepository(registry: gameSystemRegistry)
         self.matchHistoryRepository = matchHistoryRepository
+        self.playerProfileRepository = playerProfileRepository
+    }
+
+    var playerProfileStore: PlayerProfileStore {
+        PlayerProfileStore(repository: playerProfileRepository)
     }
 
     func makeHomeViewModel() -> HomeViewModel {
@@ -91,6 +98,24 @@ final class AppDependencies: ObservableObject {
         MatchHistoryViewModel(
             historyRepository: matchHistoryRepository,
             rulesRepository: rulesRepository,
+            logger: logger
+        )
+    }
+
+    func makePlayersHubListViewModel() -> PlayersHubListViewModel {
+        PlayersHubListViewModel(
+            profileStore: playerProfileStore,
+            matchHistoryRepository: matchHistoryRepository,
+            logger: logger
+        )
+    }
+
+    func makePlayerDetailViewModel(profileId: UUID) -> PlayerDetailViewModel {
+        PlayerDetailViewModel(
+            profileId: profileId,
+            profileStore: playerProfileStore,
+            matchHistoryRepository: matchHistoryRepository,
+            catalogRepository: catalogRepository(for: .aosSpearhead),
             logger: logger
         )
     }

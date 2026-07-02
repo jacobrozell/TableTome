@@ -115,6 +115,12 @@ public enum ReleaseSurface {
     public static var showsRulesAssistant: Bool { fullSurfaceEnabled }
     public static var showsMatchHistory: Bool { true }
 
+    /// Household player profiles, owned armies, and per-player history.
+    public static var showsPlayersHub: Bool {
+        fullSurfaceEnabled
+            || ProcessInfo.processInfo.arguments.contains("-enable_players_hub")
+    }
+
     /// Spearhead ships physical-dice-only combat; simulated rolls stay available for other systems.
     public static func allowsSimulatedDice(for gameSystemId: GameSystemId) -> Bool {
         gameSystemId != .aosSpearhead

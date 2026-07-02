@@ -38,6 +38,18 @@ private struct PlayNavigationDestinationsModifier: ViewModifier {
             .navigationDestination(for: MatchHistoryLink.self) { _ in
                 MatchHistoryListView(viewModel: dependencies.makeMatchHistoryViewModel())
             }
+            .navigationDestination(for: PlayersHubLink.self) { _ in
+                PlayersHubListView(viewModel: dependencies.makePlayersHubListViewModel())
+                    .navigationDestination(for: PlayerDetailLink.self) { link in
+                        PlayerDetailView(viewModel: dependencies.makePlayerDetailViewModel(profileId: link.profileId))
+                            .navigationDestination(for: MatchHistoryDetailLink.self) { detailLink in
+                                MatchHistoryDetailView(
+                                    recordId: detailLink.recordId,
+                                    viewModel: dependencies.makeMatchHistoryViewModel()
+                                )
+                            }
+                    }
+            }
             .navigationDestination(for: GuideStepLink.self) { link in
                 GuideStepDestinationView(gameSystemId: link.gameSystemId, stepId: link.stepId)
             }

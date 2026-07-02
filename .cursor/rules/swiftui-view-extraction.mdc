@@ -1,0 +1,51 @@
+---
+description: SwiftUI view extraction — separate View structs for invalidation boundaries
+globs:
+  - "**/*.swift"
+---
+
+# SwiftUI view extraction
+
+When writing or modifying SwiftUI views in Tabletome:
+
+## New code
+
+- **Never** add `@ViewBuilder var someSection: some View` computed properties to existing views
+- **Always** create a separate `struct SomeSection: View` with explicit inputs
+- Pass data as `let` properties, `@Binding` for mutable state, closures for actions
+
+## When touching existing files
+
+If a file has `@ViewBuilder` computed properties or functions that build view trees:
+
+1. Extract each into a dedicated `View` struct
+2. Place in a `Sections/` subfolder or alongside the parent view
+3. Update call sites to instantiate the new struct
+
+## Pattern
+
+```swift
+// AVOID — shares parent invalidation boundary
+extension ParentView {
+    @ViewBuilder var fooSection: some View {
+        Section { ... }
+    }
+}
+
+// PREFER — own invalidation boundary
+struct FooSection: View {
+    let data: FooData
+    @Binding var selection: String?
+    let onTap: () -> Void
+
+    var body: some View {
+        Section { ... }
+    }
+}
+```
+
+## Reference
+
+[`SpearheadStarterBoxSection`](../Features/GuidedMatch/Spearhead/SpearheadStarterBoxSection.swift) — canonical example.
+
+Plan: [`ongoing/swiftui-view-extraction-plan.md`](../ongoing/swiftui-view-extraction-plan.md)

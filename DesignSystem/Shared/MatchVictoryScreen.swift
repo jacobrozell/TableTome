@@ -89,7 +89,6 @@ public struct MatchVictoryScreen: View {
     @State private var playerTwoVP: Int
     @State private var showsAdjustScore = false
     @State private var celebrateScale: CGFloat = 1
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     public init(
@@ -151,11 +150,36 @@ public struct MatchVictoryScreen: View {
 
     private var victoryContent: some View {
         VStack(spacing: DesignTokens.Spacing.lg) {
-            headerMeta
-            headline
-            scoreboard
+            MatchVictoryHeaderMetaSection(
+                gameSystemName: presentation.gameSystemName,
+                status: presentation.status,
+                durationLabel: presentation.durationLabel
+            )
+            MatchVictoryHeadlineSection(
+                mode: mode,
+                headlineTitle: headlineTitle,
+                headlineSymbol: headlineSymbol,
+                headlineSymbolColor: headlineSymbolColor,
+                celebrateScale: celebrateScale,
+                isDraw: isDraw,
+                winnerName: winnerName,
+                voiceOverSummary: voiceOverSummary
+            )
+            MatchVictoryScoreboardSection(
+                playerOneName: presentation.playerOneName,
+                playerTwoName: presentation.playerTwoName,
+                playerOneArmyLabel: presentation.playerOneArmyLabel,
+                playerTwoArmyLabel: presentation.playerTwoArmyLabel,
+                playerOneVP: playerOneVP,
+                playerTwoVP: playerTwoVP,
+                winner: winner
+            )
             if mode == .interactive {
-                interactiveActions
+                MatchVictoryInteractiveActionsSection(
+                    onAdjustScore: { showsAdjustScore = true },
+                    onRematch: { onRematch?() },
+                    onDone: { onDone?() }
+                )
             }
         }
         .padding(DesignTokens.Spacing.md)
@@ -168,148 +192,6 @@ public struct MatchVictoryScreen: View {
         }
         .clipShape(RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
         .padding(.horizontal, mode == .readOnly ? DesignTokens.Spacing.md : 0)
-    }
-
-    private var headerMeta: some View {
-        HStack {
-            Text(presentation.gameSystemName)
-                .font(.caption.weight(.semibold))
-                .padding(.horizontal, DesignTokens.Spacing.sm)
-                .padding(.vertical, DesignTokens.Spacing.xs)
-                .background(Color.accentColor.opacity(0.15), in: Capsule())
-
-            if presentation.status == .abandoned {
-                Text(String(localized: "Abandoned"))
-                    .font(.caption2.weight(.semibold))
-                    .foregroundStyle(.orange)
-                    .padding(.horizontal, DesignTokens.Spacing.sm)
-                    .padding(.vertical, DesignTokens.Spacing.xs)
-                    .background(Color.orange.opacity(0.12), in: Capsule())
-            }
-
-            Spacer()
-            Text(presentation.durationLabel)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-        }
-    }
-
-    private var headline: some View {
-        VStack(spacing: DesignTokens.Spacing.sm) {
-            Image(systemName: headlineSymbol)
-                .font(mode == .readOnly ? .title : .largeTitle)
-                .symbolRenderingMode(.hierarchical)
-                .foregroundStyle(headlineSymbolColor)
-                .scaleEffect(celebrateScale)
-                .accessibilityHidden(true)
-
-            Text(headlineTitle)
-                .font(mode == .readOnly ? .title.bold() : .largeTitle.bold())
-                .multilineTextAlignment(.center)
-                .foregroundStyle(headlineSymbolColor)
-
-            if isDraw {
-                Text(String(localized: "Tied on victory points"))
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-            } else if let winnerName = winnerName {
-                Text(winnerName)
-                    .font(.title2.weight(.semibold))
-                    .multilineTextAlignment(.center)
-            }
-        }
-        .frame(maxWidth: .infinity)
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel(voiceOverSummary)
-    }
-
-    @ViewBuilder
-    private var scoreboard: some View {
-        if dynamicTypeSize.needsLayoutAdaptation {
-            VStack(spacing: DesignTokens.Spacing.md) {
-                playerColumn(isPlayerOne: true)
-                playerColumn(isPlayerOne: false)
-            }
-        } else {
-            HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
-                playerColumn(isPlayerOne: true)
-                playerColumn(isPlayerOne: false)
-            }
-        }
-    }
-
-    private func playerColumn(isPlayerOne: Bool) -> some View {
-        let isWinner = (isPlayerOne && winner == .playerOne) || (!isPlayerOne && winner == .playerTwo)
-        let highlightTie = isDraw
-        let name = isPlayerOne ? presentation.playerOneName : presentation.playerTwoName
-        let army = isPlayerOne ? presentation.playerOneArmyLabel : presentation.playerTwoArmyLabel
-        let vp = isPlayerOne ? playerOneVP : playerTwoVP
-
-        return VStack(spacing: DesignTokens.Spacing.sm) {
-            Text(name.uppercased())
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(isWinner || highlightTie ? Color.primary : .secondary)
-
-            Text(army)
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
-
-            Text("\(vp)")
-                .font(isWinner || highlightTie ? .largeTitle.bold() : .title2)
-                .foregroundStyle(isWinner || highlightTie ? Color.primary : .secondary)
-                .accessibilityLabel(
-                    String(localized: "\(vp) victory points")
-                )
-
-            if isWinner {
-                Label(String(localized: "Winner"), systemImage: "star.fill")
-                    .font(.caption.weight(.bold))
-                    .foregroundStyle(Color.accentColor)
-            }
-        }
-        .frame(maxWidth: .infinity)
-        .padding(DesignTokens.Spacing.md)
-        .background(
-            (isWinner || highlightTie ? Color.accentColor.opacity(0.12) : Color(.secondarySystemBackground)),
-            in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
-        )
-        .overlay {
-            if isWinner || highlightTie {
-                RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
-                    .strokeBorder(Color.accentColor, lineWidth: 2)
-            }
-        }
-        .accessibilityIdentifier(
-            isPlayerOne ? "matchVictory.winner.playerOne" : "matchVictory.winner.playerTwo"
-        )
-    }
-
-    @ViewBuilder
-    private var interactiveActions: some View {
-        Button(String(localized: "Adjust score")) {
-            showsAdjustScore = true
-        }
-        .font(.callout.weight(.semibold))
-        .frame(minHeight: DesignTokens.minTouchTarget)
-        .accessibilityIdentifier("matchVictory.adjustScore")
-
-        HStack(spacing: DesignTokens.Spacing.md) {
-            Button(String(localized: "Rematch")) {
-                onRematch?()
-            }
-            .buttonStyle(.bordered)
-            .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-            .accessibilityIdentifier("matchVictory.rematch")
-
-            PrimaryButton(
-                title: String(localized: "Done"),
-                accessibilityId: "matchVictory.done"
-            ) {
-                onDone?()
-            }
-        }
     }
 
     private var adjustScoreSheet: some View {

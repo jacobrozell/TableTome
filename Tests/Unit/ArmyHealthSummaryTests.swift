@@ -104,4 +104,74 @@ final class ArmyHealthSummaryTests: XCTestCase {
         XCTAssertEqual(summary.visibleUnits(hidingDestroyed: true).count, 1)
         XCTAssertEqual(summary.fractionRemaining, 0.25, accuracy: 0.001)
     }
+
+    func testSummaryExcludesReinforcementUnitsNotOnTable() {
+        let reserve = SpearheadUnit(
+            id: "liberators",
+            name: "Liberators",
+            health: 2,
+            keywords: ["Reinforcements"],
+            modelCount: 5
+        )
+        let deployed = SpearheadUnit(
+            id: "lord-vigilant",
+            name: "Lord-Vigilant",
+            health: 6
+        )
+        let army = SpearheadArmy(
+            id: "vigilant-brotherhood",
+            name: "Vigilant Brotherhood",
+            general: "Test",
+            tagline: "Test",
+            playstyle: "Test",
+            unitCount: 2,
+            units: [reserve, deployed]
+        )
+
+        let hidden = ArmyHealthCatalog.summary(
+            army: army,
+            playerName: "Alex",
+            woundsRemaining: [:],
+            calledReinforcementUnitKeys: []
+        )
+        let visible = ArmyHealthCatalog.summary(
+            army: army,
+            playerName: "Alex",
+            woundsRemaining: [:],
+            calledReinforcementUnitKeys: [
+                UnitWoundTracker.unitKey(armyId: army.id, unitId: reserve.id)
+            ]
+        )
+
+        XCTAssertEqual(hidden?.trackableUnitCount, 1)
+        XCTAssertEqual(hidden?.units.first?.unitId, deployed.id)
+        XCTAssertEqual(visible?.trackableUnitCount, 2)
+    }
+
+    func testSummaryIncludesMoveLabelWhenPresent() {
+        let unit = SpearheadUnit(
+            id: "liberators",
+            name: "Liberators",
+            move: "5",
+            health: 2,
+            modelCount: 5
+        )
+        let army = SpearheadArmy(
+            id: "vigilant-brotherhood",
+            name: "Vigilant Brotherhood",
+            general: "Test",
+            tagline: "Test",
+            playstyle: "Test",
+            unitCount: 1,
+            units: [unit]
+        )
+
+        let summary = ArmyHealthCatalog.summary(
+            army: army,
+            playerName: "Alex",
+            woundsRemaining: [:]
+        )
+
+        XCTAssertEqual(summary?.units.first?.moveLabel, "5")
+    }
 }

@@ -45,8 +45,23 @@ extension BattlePhaseTrackerView {
         }
     }
 
+    var showsScoringContext: Bool {
+        let phase = viewModel.trackerState.currentPhase
+        if phase == .endOfTurn { return true }
+        return viewModel.playContext.capabilities.showsActivationBar && phase == .scoring
+    }
+
     var turnTabContent: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            if showsSpearheadBattleChrome {
+                BattleTrackerRoundBar(viewModel: viewModel)
+            }
+            if showsScoringContext {
+                victoryPointsSection
+            }
+            if viewModel.roundOpenerIsIncomplete {
+                roundOpenerChecklistSection
+            }
             if viewModel.playContext.capabilities.showsBattleTacticDecks,
                viewModel.trackerState.battleRound > 1,
                viewModel.roundOpenerIsIncomplete {
@@ -62,10 +77,13 @@ extension BattlePhaseTrackerView {
                 combatActivationSection
             }
             phaseActionNudgeSection
+            reinforcementCallBannerSection
             turnHandoffSection
             scoringReminderSection
             heroRoundOneSection
-            victoryPointsSection
+            if !showsScoringContext {
+                victoryPointsSection
+            }
             roundOpenerSection
             if !showsSlimTurnTab {
                 quickActionsSection
@@ -122,6 +140,9 @@ extension BattlePhaseTrackerView {
     @ViewBuilder
     var movementPhaseHelper: some View {
         if viewModel.trackerState.currentPhase == .movement {
+            if showsSpearheadBattleChrome {
+                callForReinforcementsCard
+            }
             MovementRangeCard(
                 playerName: viewModel.trackerState.activePlayerIsOne
                     ? viewModel.playerOneName
@@ -131,7 +152,10 @@ extension BattlePhaseTrackerView {
                 armyId: viewModel.activeArmy?.id
             )
             if showsSpearheadBattleChrome {
-                MovementActionPicker(action: $movementAction)
+                MovementActionPicker(
+                    action: $movementAction,
+                    gameSystemId: viewModel.gameSystemId.rawValue
+                )
             }
         }
     }

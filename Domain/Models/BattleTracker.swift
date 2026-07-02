@@ -381,6 +381,8 @@ public struct BattleTrackerState: Codable, Sendable, Equatable {
     /// Units that have already attacked this activation context.
     /// Keyed by `round-activePlayer-phase` so the set scopes itself to the current phase.
     public var unitsActedThisPhase: [String: Set<String>]
+    /// Reinforcements-keyword units that have been called onto the battlefield (`armyId:unitId`).
+    public var calledReinforcementUnitKeys: Set<String>
 
     public init(
         battleRound: Int = 1,
@@ -403,7 +405,8 @@ public struct BattleTrackerState: Codable, Sendable, Equatable {
         securedObjectiveIds: Set<String> = [],
         usedStratagemIds: Set<String> = [],
         intelRecoveredObjectiveIds: Set<String> = [],
-        unitsActedThisPhase: [String: Set<String>] = [:]
+        unitsActedThisPhase: [String: Set<String>] = [:],
+        calledReinforcementUnitKeys: Set<String> = []
     ) {
         self.battleRound = battleRound
         self.activePlayerIsOne = activePlayerIsOne
@@ -426,6 +429,7 @@ public struct BattleTrackerState: Codable, Sendable, Equatable {
         self.usedStratagemIds = usedStratagemIds
         self.intelRecoveredObjectiveIds = intelRecoveredObjectiveIds
         self.unitsActedThisPhase = unitsActedThisPhase
+        self.calledReinforcementUnitKeys = calledReinforcementUnitKeys
     }
 
     public init(from decoder: Decoder) throws {
@@ -457,6 +461,10 @@ public struct BattleTrackerState: Codable, Sendable, Equatable {
             [String: Set<String>].self,
             forKey: .unitsActedThisPhase
         ) ?? [:]
+        calledReinforcementUnitKeys = try container.decodeIfPresent(
+            Set<String>.self,
+            forKey: .calledReinforcementUnitKeys
+        ) ?? []
         if victoryPointsByRound.isEmpty,
            playerOneVictoryPoints > 0 || playerTwoVictoryPoints > 0 {
             victoryPointsByRound[1] = RoundVictoryPoints(

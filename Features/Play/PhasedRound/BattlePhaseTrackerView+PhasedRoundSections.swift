@@ -7,6 +7,10 @@ extension BattlePhaseTrackerView {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             DeploymentZoneCallout(gameSystemId: viewModel.gameSystemId)
 
+            if viewModel.playContext.capabilities.showsBattleTacticDecks {
+                callForReinforcementsCard
+            }
+
             if viewModel.trackerState.currentPhase == .deployment
                 || viewModel.trackerState.battleRound == 1 {
                 BattleTrackerDeploymentAbilitiesSection(

@@ -7,6 +7,9 @@ extension BattlePhaseTrackerViewModel {
         trackerState.unitWoundsRemaining[key] = remaining
         persist()
         logWoundChange(key: key, previous: previous, remaining: remaining)
+        if remaining == 0, let (armyId, unitId) = parseUnitKey(key) {
+            evaluateReinforcementCallPrompt(destroyedArmyId: armyId, unitId: unitId)
+        }
     }
 
     func applyDamageToUnit(armyId: String, unitId: String, damage: Int) -> Int? {
@@ -23,6 +26,9 @@ extension BattlePhaseTrackerViewModel {
             woundsRemaining: remaining,
             source: "combat"
         )
+        if remaining == 0 {
+            evaluateReinforcementCallPrompt(destroyedArmyId: armyId, unitId: unitId)
+        }
         return current
     }
 

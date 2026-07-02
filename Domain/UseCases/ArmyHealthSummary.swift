@@ -5,6 +5,7 @@ public struct ArmyUnitHealth: Sendable, Equatable, Identifiable {
     public let unitName: String
     public let woundsRemaining: Int
     public let woundCapacity: Int
+    public let moveLabel: String?
 
     public var id: String { unitId }
 
@@ -17,11 +18,18 @@ public struct ArmyUnitHealth: Sendable, Equatable, Identifiable {
         return Double(woundsRemaining) / Double(woundCapacity)
     }
 
-    public init(unitId: String, unitName: String, woundsRemaining: Int, woundCapacity: Int) {
+    public init(
+        unitId: String,
+        unitName: String,
+        woundsRemaining: Int,
+        woundCapacity: Int,
+        moveLabel: String? = nil
+    ) {
         self.unitId = unitId
         self.unitName = unitName
         self.woundsRemaining = woundsRemaining
         self.woundCapacity = woundCapacity
+        self.moveLabel = moveLabel
     }
 }
 
@@ -73,10 +81,16 @@ public enum ArmyHealthCatalog {
         army: SpearheadArmy,
         playerName: String,
         woundsRemaining: [String: Int],
-        healthPerModelOverrides: [String: Int] = [:]
+        healthPerModelOverrides: [String: Int] = [:],
+        calledReinforcementUnitKeys: Set<String> = []
     ) -> ArmyHealthSummary? {
         let units = army.units
             .filter { $0.health != nil }
+            .filter { unit in
+                guard ReinforcementsTracking.isReinforcementUnit(unit) else { return true }
+                let key = UnitWoundTracker.unitKey(armyId: army.id, unitId: unit.id)
+                return calledReinforcementUnitKeys.contains(key)
+            }
             .map { unit -> ArmyUnitHealth in
                 let key = UnitWoundTracker.unitKey(armyId: army.id, unitId: unit.id)
                 let capacity = UnitWoundCapacity.capacity(
@@ -88,7 +102,8 @@ public enum ArmyHealthCatalog {
                     unitId: unit.id,
                     unitName: unit.name,
                     woundsRemaining: remaining,
-                    woundCapacity: capacity
+                    woundCapacity: capacity,
+                    moveLabel: unit.move
                 )
             }
             .sorted { lhs, rhs in

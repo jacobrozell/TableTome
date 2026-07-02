@@ -17,7 +17,15 @@ extension BattlePhaseTrackerView {
     }
 
     var padSidebarColumnMaxWidth: CGFloat {
-        layoutContext == .padLandscape ? 340 : 380
+        if isEmbeddedInGuidedMatch {
+            return layoutContext == .padLandscape ? 320 : 300
+        }
+        return layoutContext == .padLandscape ? 340 : 380
+    }
+
+    /// Embedded GM detail pane is narrow — keep army/combat tools in a sidebar, resolver primary.
+    var padEmbeddedCombatSidebarMaxWidth: CGFloat {
+        layoutContext == .padLandscape ? 320 : 300
     }
 
     var padLayoutSpacing: CGFloat {
@@ -99,12 +107,18 @@ extension BattlePhaseTrackerView {
                     showsAdvancePhaseButton: !showsPhasePlaybook
                 )
             } secondary: {
+                if showsScoringContext {
+                    victoryPointsSection
+                }
                 coachSection
                 guideSection
                 battleTacticCommandGuideSection
                 phasePlaybookSection
-                victoryPointsSection
+                if !showsScoringContext {
+                    victoryPointsSection
+                }
                 phaseActionNudgeSection
+                reinforcementCallBannerSection
                 turnHandoffSection
                 scoringReminderSection
                 heroRoundOneSection
@@ -128,10 +142,16 @@ extension BattlePhaseTrackerView {
             }
 
             BattleTrackerRoundBar(viewModel: viewModel)
+            if showsScoringContext {
+                victoryPointsSection
+            }
             phasePlaybookSection
             battleTacticCommandGuideSection
-            victoryPointsSection
+            if !showsScoringContext {
+                victoryPointsSection
+            }
             phaseActionNudgeSection
+            reinforcementCallBannerSection
             turnHandoffSection
             scoringReminderSection
             heroRoundOneSection
@@ -158,23 +178,50 @@ extension BattlePhaseTrackerView {
     var padCombatColumns: some View {
         if viewModel.playContext.capabilities.showsActivationBar {
             scCombatTabContent
+        } else if isEmbeddedInGuidedMatch {
+            embeddedPadCombatLayout
         } else {
             BattleTrackerPadTwoColumnRow(
                 controlColumnMaxWidth: padSidebarColumnMaxWidth,
-                balance: .controlSidebar
+                balance: .contentPrimary
             ) {
+                combatResolverSection(usesLandscapeSplit: true)
+                damageUndoSection
+            } secondary: {
                 if showsDedicatedCombatTab {
                     shootingPhaseHelper
                 }
                 combatActivationSection
                 combatPhaseHelper
                 shootInCombatPhaseHelper
-            } secondary: {
-                combatResolverSection(usesLandscapeSplit: true)
-                damageUndoSection
-                armyTrackerSection(wideLayout: true)
+                armyTrackerSection(wideLayout: true, compactSidebar: true)
             }
         }
+    }
+
+    /// Resolver fills the detail pane; attack checklist and army health stay in a trailing sidebar.
+    private var embeddedPadCombatLayout: some View {
+        HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                combatResolverSection(usesLandscapeSplit: true)
+                damageUndoSection
+            }
+            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+            .layoutPriority(1)
+
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                if showsDedicatedCombatTab {
+                    shootingPhaseHelper
+                }
+                combatActivationSection
+                combatPhaseHelper
+                shootInCombatPhaseHelper
+                armyTrackerSection(wideLayout: true, compactSidebar: true)
+            }
+            .frame(minWidth: 0, maxWidth: padEmbeddedCombatSidebarMaxWidth, alignment: .leading)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityIdentifier("battleTracker.embeddedPadCombatLayout")
     }
 
     var padArmyColumns: some View {

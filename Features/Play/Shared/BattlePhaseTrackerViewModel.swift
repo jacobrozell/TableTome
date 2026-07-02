@@ -22,6 +22,7 @@ class BattlePhaseTrackerViewModel: ObservableObject {
     @Published var playerOneSecondary: ArmyRuleOption?
     @Published var playerTwoSecondary: ArmyRuleOption?
     @Published var activeGotchas: [SpearheadGotcha] = []
+    @Published var pendingReinforcementCall: ReinforcementCallPrompt?
 
     var matchState: GuidedMatchState
     let catalog: SpearheadCatalog
@@ -72,13 +73,25 @@ class BattlePhaseTrackerViewModel: ObservableObject {
 
     var shootingEligibleUnits: [SpearheadUnit] {
         guard let army = activeArmy else { return [] }
-        return army.units.filter(\.canShoot)
+        return army.units.filter { unit in
+            guard unit.canShoot else { return false }
+            let key = UnitWoundTracker.unitKey(armyId: army.id, unitId: unit.id)
+            if let remaining = trackerState.unitWoundsRemaining[key] {
+                return remaining > 0
+            }
+            return true
+        }
     }
 
     var shootInCombatEligibleUnits: [SpearheadUnit] {
         guard let army = activeArmy else { return [] }
         return army.units.filter { unit in
-            unit.weapons.contains { $0.hasShootInCombat && $0.isRanged }
+            guard unit.weapons.contains(where: { $0.hasShootInCombat && $0.isRanged }) else { return false }
+            let key = UnitWoundTracker.unitKey(armyId: army.id, unitId: unit.id)
+            if let remaining = trackerState.unitWoundsRemaining[key] {
+                return remaining > 0
+            }
+            return true
         }
     }
 

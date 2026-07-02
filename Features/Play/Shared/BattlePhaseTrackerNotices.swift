@@ -29,6 +29,31 @@ struct PhaseActionNudgeNotice: Equatable {
 
 extension BattlePhaseTrackerView {
     @ViewBuilder
+    var reinforcementCallBannerSection: some View {
+        if let prompt = viewModel.pendingReinforcementCall {
+            BattleTrackerReinforcementCallBanner(
+                prompt: prompt,
+                onDismiss: { viewModel.clearReinforcementCallPrompt() }
+            )
+            .transition(.opacity.combined(with: .move(edge: .top)))
+        }
+    }
+
+    var callForReinforcementsCard: some View {
+        CallForReinforcementsCard(
+            playerOneName: viewModel.playerOneName,
+            playerTwoName: viewModel.playerTwoName,
+            playerOneArmy: viewModel.playerOneArmy,
+            playerTwoArmy: viewModel.playerTwoArmy,
+            calledUnitKeys: viewModel.trackerState.calledReinforcementUnitKeys,
+            showsCallReminder: viewModel.pendingReinforcementCall != nil,
+            onReinforcementOnTableChanged: { armyId, unitId, onTable in
+                viewModel.setReinforcementOnTable(armyId: armyId, unitId: unitId, onTable: onTable)
+            }
+        )
+    }
+
+    @ViewBuilder
     var phaseActionNudgeSection: some View {
         if let notice = phaseActionNudge {
             BattleTrackerPhaseActionBanner(

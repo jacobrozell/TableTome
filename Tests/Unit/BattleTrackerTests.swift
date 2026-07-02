@@ -97,6 +97,7 @@ final class BattleTrackerTests: XCTestCase {
         state.completedRoundChecklistSteps = ["round-2": ["drawTwistCard"]]
         state.unitWoundsRemaining = ["vigilant-brotherhood:liberators": 7]
         state.unitHealthPerModelOverrides = ["gnawfeast-clawpack:rat-ogors": 4]
+        state.calledReinforcementUnitKeys = ["vigilant-brotherhood:liberators"]
 
         BattleTrackerStore.save(state)
         let loaded = BattleTrackerStore.load()
@@ -109,6 +110,7 @@ final class BattleTrackerTests: XCTestCase {
         XCTAssertEqual(loaded.completedRoundChecklistSteps["round-2"], ["drawTwistCard"])
         XCTAssertEqual(loaded.unitWoundsRemaining["vigilant-brotherhood:liberators"], 7)
         XCTAssertEqual(loaded.unitHealthPerModelOverrides["gnawfeast-clawpack:rat-ogors"], 4)
+        XCTAssertTrue(loaded.calledReinforcementUnitKeys.contains("vigilant-brotherhood:liberators"))
     }
 
     func testCombatPatrolTrackerStoreRoundTrip() {

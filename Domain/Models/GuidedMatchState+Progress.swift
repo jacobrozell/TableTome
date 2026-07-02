@@ -24,5 +24,6 @@ public extension BattleTrackerState {
             || playerTwoVictoryPoints > 0
             || !unitWoundsRemaining.isEmpty
             || !usedOncePerBattleAbilityIds.isEmpty
+            || !calledReinforcementUnitKeys.isEmpty
     }
 }

@@ -57,8 +57,9 @@ public enum DeploymentChecklistStep: String, CaseIterable, Codable, Sendable, Id
             String(
                 localized: """
                 Before the first turn, check each army for once-per-battle deployment abilities — \
-                for example, Skaven can hide a unit in the tunnels below, and some armies can set up \
-                reinforcements from a battlefield edge.
+                for example, Skaven can hide a unit in the tunnels below. \
+                Units with the Reinforcements keyword stay off the board until Call for Reinforcements \
+                (usually when an enemy unit is destroyed in your Movement phase).
                 """
             )
         }

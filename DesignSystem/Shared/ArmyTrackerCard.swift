@@ -12,6 +12,7 @@ struct ArmyTrackerCard: View {
     var usesWideLayout: Bool = false
     var usesCompactSidebar: Bool = false
     var gameSystemId: GameSystemId = .default
+    var calledReinforcementUnitKeys: Set<String> = []
     let onChange: (String, Int) -> Void
     var onSelectUnit: ((String, String) -> Void)?
 
@@ -90,7 +91,8 @@ struct ArmyTrackerCard: View {
                army: army,
                playerName: playerName,
                woundsRemaining: woundsRemaining,
-               healthPerModelOverrides: healthPerModelOverrides
+               healthPerModelOverrides: healthPerModelOverrides,
+               calledReinforcementUnitKeys: calledReinforcementUnitKeys
            ) {
             ArmyHealthPanel(
                 summary: summary,
@@ -271,6 +273,11 @@ struct ArmyUnitHealthRow: View {
                         Text(String(localized: "\(unit.woundsRemaining)/\(unit.woundCapacity) wounds"))
                             .font(.caption2)
                             .foregroundStyle(.secondary)
+                        if let moveLabel = unit.moveLabel, !moveLabel.isEmpty, !unit.isDestroyed {
+                            Text(formattedMoveLabel(moveLabel))
+                                .font(.caption2.weight(.medium))
+                                .foregroundStyle(Color.accentOnSurface)
+                        }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -313,5 +320,12 @@ struct ArmyUnitHealthRow: View {
 
     private var unitFocusAccessibilityHint: String {
         playContext.unitFocusAccessibilityHint
+    }
+
+    private func formattedMoveLabel(_ move: String) -> String {
+        if move.contains("\"") || move.contains("inch") {
+            return String(localized: "Move \(move)")
+        }
+        return String(localized: "Move \(move)\"")
     }
 }

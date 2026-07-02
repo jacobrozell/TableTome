@@ -33,13 +33,13 @@ extension BattlePhaseTrackerView {
             ScrollView {
                 VStack(alignment: .leading, spacing: compactLayoutSpacing) {
                     if showsDedicatedCombatTab {
-                        shootingPhaseHelper
+                        shootingPhaseHelperView()
                     }
                     combatActivationSection
-                    damageUndoSection
-                    combatPhaseHelper
-                    shootInCombatPhaseHelper
-                    combatResolverSection(usesLandscapeSplit: true)
+                    damageUndoSectionView()
+                    combatPhaseHelperView()
+                    shootInCombatPhaseHelperView()
+                    combatResolverSectionView(usesLandscapeSplit: true)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }

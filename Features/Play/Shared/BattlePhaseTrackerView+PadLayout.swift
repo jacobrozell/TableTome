@@ -23,7 +23,6 @@ extension BattlePhaseTrackerView {
         return layoutContext == .padLandscape ? 340 : 380
     }
 
-    /// Embedded GM detail pane is narrow — keep army/combat tools in a sidebar, resolver primary.
     var padEmbeddedCombatSidebarMaxWidth: CGFloat {
         layoutContext == .padLandscape ? 320 : 300
     }
@@ -35,27 +34,18 @@ extension BattlePhaseTrackerView {
     }
 
     var padTabbedTwoColumnLayout: some View {
-        let content = VStack(alignment: .leading, spacing: padLayoutSpacing) {
-            tabHintSection
-            padTwoColumnTabContent
-        }
-        .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: showsBattleTrackerCoach)
-        .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: selectedSectionTab)
-        .accessibilityIdentifier("battleTracker.padTwoColumnLayout")
-
-        return Group {
-            if let maxWidth = padContentMaxWidth {
-                content
-                    .frame(maxWidth: maxWidth, alignment: padContentAlignment)
-                    .frame(maxWidth: .infinity, alignment: padContentAlignment)
-            } else {
-                content
-                    .frame(maxWidth: .infinity, alignment: padContentAlignment)
-            }
-        }
+        BattleTrackerPadTabbedLayout(
+            spacing: padLayoutSpacing,
+            reduceMotion: reduceMotion,
+            showsBattleTrackerCoach: showsBattleTrackerCoach,
+            selectedSectionTab: selectedSectionTab,
+            maxContentWidth: padContentMaxWidth,
+            contentAlignment: padContentAlignment,
+            tabHint: { tabHintSection },
+            tabContent: { padTabContentView() }
+        )
     }
 
-    /// Embedded iPad battle fills the split detail pane; standalone play centers up to a comfortable max.
     private var padContentMaxWidth: CGFloat? {
         isEmbeddedInGuidedMatch ? nil : DesignTokens.battleTrackerRegularMaxWidth
     }
@@ -64,191 +54,233 @@ extension BattlePhaseTrackerView {
         isEmbeddedInGuidedMatch ? .leading : .center
     }
 
-    @ViewBuilder
-    var padTwoColumnTabContent: some View {
-        switch selectedSectionTab {
-        case .setup:
-            padSetupColumns
-        case .turn:
-            padTurnColumns
-        case .combat:
-            padCombatColumns
-        case .army:
-            padArmyColumns
-        }
+    private func padTabContentView() -> some View {
+        BattleTrackerPadTabContent(
+            selectedSectionTab: selectedSectionTab,
+            setup: { padSetupColumnsView() },
+            turn: { padTurnColumnsView() },
+            combat: { padCombatColumnsView() },
+            army: { padArmyColumnsView() }
+        )
     }
 
-    var padSetupColumns: some View {
-        VStack(alignment: .leading, spacing: padLayoutSpacing) {
-            if viewModel.playContext.capabilities.showsBattleTacticDecks,
-               viewModel.trackerState.battleRound > 1,
-               viewModel.roundOpenerIsIncomplete {
-                NewMainTurnReminderBanner(round: viewModel.trackerState.battleRound)
-            }
-            deploymentSection
-            roundOpenerChecklistSection
-            startOfRoundHelper
-        }
+    private func padSetupColumnsView() -> some View {
+        BattleTrackerPadSetupColumns(
+            spacing: padLayoutSpacing,
+            showsBattleTacticDecks: viewModel.playContext.capabilities.showsBattleTacticDecks,
+            battleRound: viewModel.trackerState.battleRound,
+            roundOpenerIsIncomplete: viewModel.roundOpenerIsIncomplete,
+            viewModel: viewModel,
+            deployment: { deploymentSectionView() },
+            startOfRound: { startOfRoundHelperView() }
+        )
     }
 
-    @ViewBuilder
-    var padTurnColumns: some View {
-        if showsSlimTurnTab {
-            padTurnPlaybookLayout
-        } else {
-            BattleTrackerPadTwoColumnRow(
-                controlColumnMaxWidth: padControlColumnMaxWidth,
-                balance: .controlSidebar
-            ) {
-                quickActionsSection
-                BattleTrackerControlPanel(
-                    viewModel: viewModel,
-                    showsPhaseGuidanceInPicker: !showsPhasePlaybook,
-                    showsAdvancePhaseButton: !showsPhasePlaybook
-                )
-            } secondary: {
-                if showsScoringContext {
-                    victoryPointsSection
-                }
-                coachSection
-                guideSection
-                battleTacticCommandGuideSection
-                phasePlaybookSection
-                if !showsScoringContext {
-                    victoryPointsSection
-                }
-                phaseActionNudgeSection
-                reinforcementCallBannerSection
-                turnHandoffSection
-                scoringReminderSection
-                heroRoundOneSection
-                roundOpenerSection
-                startOfRoundHelper
-                if !showsDedicatedCombatTab {
-                    shootingPhaseHelper
-                }
-                movementPhaseHelper
-            }
-        }
-    }
-
-    /// Phase playbook and combat helpers need horizontal space — avoid squeezing into the control column.
-    private var padTurnPlaybookLayout: some View {
-        VStack(alignment: .leading, spacing: padLayoutSpacing) {
-            if viewModel.playContext.capabilities.showsBattleTacticDecks,
-               viewModel.trackerState.battleRound > 1,
-               viewModel.roundOpenerIsIncomplete {
-                NewMainTurnReminderBanner(round: viewModel.trackerState.battleRound)
-            }
-
-            BattleTrackerRoundBar(viewModel: viewModel)
-            if showsScoringContext {
-                victoryPointsSection
-            }
-            phasePlaybookSection
-            battleTacticCommandGuideSection
-            if !showsScoringContext {
-                victoryPointsSection
-            }
-            phaseActionNudgeSection
-            reinforcementCallBannerSection
-            turnHandoffSection
-            scoringReminderSection
-            heroRoundOneSection
-            roundOpenerSection
-
-            BattleTrackerPadTwoColumnRow(
-                controlColumnMaxWidth: padSidebarColumnMaxWidth,
-                balance: .contentPrimary
-            ) {
-                coachSection
-                guideSection
-                startOfRoundHelper
-                if !showsDedicatedCombatTab {
-                    shootingPhaseHelper
-                }
-                movementPhaseHelper
-            } secondary: {
-                quickActionsSection
-            }
-        }
-    }
-
-    @ViewBuilder
-    var padCombatColumns: some View {
-        if viewModel.playContext.capabilities.showsActivationBar {
-            scCombatTabContent
-        } else if isEmbeddedInGuidedMatch {
-            embeddedPadCombatLayout
-        } else {
-            BattleTrackerPadTwoColumnRow(
-                controlColumnMaxWidth: padSidebarColumnMaxWidth,
-                balance: .contentPrimary
-            ) {
-                combatResolverSection(usesLandscapeSplit: true)
-                damageUndoSection
-            } secondary: {
-                if showsDedicatedCombatTab {
-                    shootingPhaseHelper
-                }
-                combatActivationSection
-                combatPhaseHelper
-                shootInCombatPhaseHelper
-                armyTrackerSection(wideLayout: true, compactSidebar: true)
-            }
-        }
-    }
-
-    /// Resolver fills the detail pane; attack checklist and army health stay in a trailing sidebar.
-    private var embeddedPadCombatLayout: some View {
-        HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-                combatResolverSection(usesLandscapeSplit: true)
-                damageUndoSection
-            }
-            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-            .layoutPriority(1)
-
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-                if showsDedicatedCombatTab {
-                    shootingPhaseHelper
-                }
-                combatActivationSection
-                combatPhaseHelper
-                shootInCombatPhaseHelper
-                armyTrackerSection(wideLayout: true, compactSidebar: true)
-            }
-            .frame(minWidth: 0, maxWidth: padEmbeddedCombatSidebarMaxWidth, alignment: .leading)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .accessibilityIdentifier("battleTracker.embeddedPadCombatLayout")
-    }
-
-    var padArmyColumns: some View {
-        BattleTrackerPadTwoColumnRow(
+    private func padTurnColumnsView() -> some View {
+        let inputs = sharedTurnTabInputs()
+        return BattleTrackerPadTurnColumns(
+            showsSlimTurnTab: showsSlimTurnTab,
+            spacing: padLayoutSpacing,
             controlColumnMaxWidth: padControlColumnMaxWidth,
-            balance: .contentPrimary
-        ) {
-            armyTrackerSection(wideLayout: true, compactSidebar: true)
-        } secondary: {
-            if viewModel.trackerState.showAllAbilities {
-                trackerContent
-            } else {
-                passiveAbilitiesSection
-            }
-            secondarySections
-        }
+            sidebarColumnMaxWidth: padSidebarColumnMaxWidth,
+            showsSpearheadBattleChrome: showsSpearheadBattleChrome,
+            showsScoringContext: showsScoringContext,
+            showsVictoryPointsOnTurnTab: showsVictoryPointsOnTurnTab,
+            showsDedicatedCombatTab: showsDedicatedCombatTab,
+            showsPhasePlaybook: showsPhasePlaybook,
+            viewModel: viewModel,
+            showsCoach: inputs.showsCoach,
+            gameSystemId: viewModel.gameSystemId,
+            reduceMotion: reduceMotion,
+            onDismissCoach: {
+                NewPlayerTipsStore.markBattleTrackerCoachSeen()
+                showsBattleTrackerCoach = false
+            },
+            guideStep: inputs.guideStep,
+            showsGuide: inputs.showsGuide,
+            onCompleteGuideStep: { viewModel.completeCurrentGuideStep() },
+            onBattleCompleteGuide: {
+                if ReleaseSurface.showsMatchHistory {
+                    presentVictoryScreen()
+                }
+                dismissedBattleCompleteGuide = true
+            },
+            showsStartOfRoundHelper: inputs.showsStartOfRoundHelper,
+            startOfRoundAbilities: inputs.startOfRoundAbilities,
+            showsShootingHelper: inputs.showsShootingHelper,
+            shootingUnits: inputs.shootingUnits,
+            armyName: inputs.armyName,
+            onSelectShootingUnit: { unitId in
+                guard let armyId = viewModel.activeArmy?.id else { return }
+                let shootingWeaponId = viewModel.activeArmy?
+                    .units
+                    .first(where: { $0.id == unitId })?
+                    .shootingWeapons
+                    .first?
+                    .id
+                handleArmyUnitSelection(
+                    armyId: armyId,
+                    unitId: unitId,
+                    preferredWeaponId: shootingWeaponId
+                )
+            },
+            phaseActionNudge: inputs.phaseActionNudge,
+            onDismissPhaseActionNudge: { phaseActionNudge = nil },
+            reinforcementPrompt: inputs.reinforcementPrompt,
+            onDismissReinforcementPrompt: { viewModel.clearReinforcementCallPrompt() },
+            turnHandoffNotice: inputs.turnHandoffNotice,
+            onDismissTurnHandoff: { turnHandoffNotice = nil },
+            scoringReminderNotice: inputs.scoringReminderNotice,
+            onJumpToScoring: {
+                selectedSectionTab = .turn
+                scrollToVictoryPoints = true
+            },
+            onDismissScoringReminder: { scoringReminderNotice = nil },
+            showsHeroRoundOneNotice: inputs.showsHeroRoundOneNotice,
+            onDismissHeroRoundOne: {
+                NewPlayerTipsStore.dismissHeroRoundOneNudge()
+                withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) {
+                    showsHeroRoundOneNotice = false
+                }
+            },
+            roundOpenerNotice: inputs.roundOpenerNotice,
+            onJumpToRoundChecklist: { scrollToRoundChecklist = true },
+            onDismissRoundOpener: { roundOpenerNotice = nil },
+            showsBattleTacticGuide: inputs.showsBattleTacticGuide,
+            currentPhase: inputs.currentPhase,
+            isMovementPhase: inputs.isMovementPhase,
+            activePlayerName: inputs.activePlayerName,
+            activeArmy: inputs.activeArmy,
+            unitWoundsRemaining: inputs.unitWoundsRemaining,
+            movementAction: $movementAction,
+            playerOneName: inputs.playerOneName,
+            playerTwoName: inputs.playerTwoName,
+            playerOneArmy: inputs.playerOneArmy,
+            playerTwoArmy: inputs.playerTwoArmy,
+            calledUnitKeys: inputs.calledUnitKeys,
+            showsCallReminder: inputs.showsCallReminder,
+            onReinforcementOnTableChanged: { armyId, unitId, onTable in
+                viewModel.setReinforcementOnTable(armyId: armyId, unitId: unitId, onTable: onTable)
+            },
+            quickActions: { quickActionsSection },
+            phasePlaybook: { phasePlaybookSection }
+        )
+    }
+
+    private func padCombatColumnsView() -> some View {
+        BattleTrackerPadCombatColumns(
+            showsActivationBar: viewModel.playContext.capabilities.showsActivationBar,
+            isEmbeddedInGuidedMatch: isEmbeddedInGuidedMatch,
+            sidebarColumnMaxWidth: padSidebarColumnMaxWidth,
+            embeddedSidebarMaxWidth: padEmbeddedCombatSidebarMaxWidth,
+            showsDedicatedCombatTab: showsDedicatedCombatTab,
+            showsCombatResolver: showsCombatResolverSection,
+            showsSpearheadBattleChrome: showsSpearheadBattleChrome,
+            isCombatPhase: isCombatRelatedPhase,
+            showsShootingHelper: showsShootingPhaseHelperSection,
+            shootingUnits: viewModel.shootingEligibleUnits,
+            armyName: viewModel.armyName,
+            gameSystemId: viewModel.gameSystemId,
+            onSelectShootingUnit: { unitId in
+                guard let armyId = viewModel.activeArmy?.id else { return }
+                let shootingWeaponId = viewModel.activeArmy?
+                    .units
+                    .first(where: { $0.id == unitId })?
+                    .shootingWeapons
+                    .first?
+                    .id
+                handleArmyUnitSelection(
+                    armyId: armyId,
+                    unitId: unitId,
+                    preferredWeaponId: shootingWeaponId
+                )
+            },
+            showsShootInCombatHelper: showsShootInCombatPhaseHelperSection,
+            shootInCombatUnits: viewModel.shootInCombatEligibleUnits,
+            onSelectShootInCombatUnit: { unitId, weaponId in
+                guard let armyId = viewModel.activeArmy?.id else { return }
+                handleArmyUnitSelection(
+                    armyId: armyId,
+                    unitId: unitId,
+                    preferredWeaponId: weaponId
+                )
+            },
+            damageUndoNotice: damageUndoNotice,
+            reduceMotion: reduceMotion,
+            onUndoDamage: {
+                if let notice = damageUndoNotice {
+                    viewModel.setUnitWounds(key: notice.woundKey, remaining: notice.previousWounds)
+                }
+            },
+            onDismissDamageUndo: { damageUndoNotice = nil },
+            combatViewModel: combatViewModel,
+            multiAttackViewModel: multiAttackViewModel,
+            batchCombatViewModel: batchCombatViewModel,
+            showsCombatResolverPanel: $showsCombatResolver,
+            diceInputModeRaw: $diceInputModeRaw,
+            showsAdvancedOptions: $showsAdvancedOptions,
+            showsMultiAttack: $showsMultiAttack,
+            showsAdvancedSingleAttack: $showsAdvancedSingleAttack,
+            trackerState: viewModel.trackerState,
+            attackerName: combatAttackerName,
+            defenderName: combatDefenderName,
+            deploymentIsComplete: deploymentIsComplete,
+            defenderWoundsRemaining: defenderWoundsRemaining,
+            unitWoundsRemaining: viewModel.trackerState.unitWoundsRemaining,
+            ruleSections: ruleSections,
+            onSyncMultiAttack: syncMultiAttack,
+            onApplyDamage: applyCombatDamage,
+            showsArmyTracker: showsArmyTrackerSection,
+            playerOneName: viewModel.playerOneName,
+            playerTwoName: viewModel.playerTwoName,
+            playerOneArmy: viewModel.playerOneArmy,
+            playerTwoArmy: viewModel.playerTwoArmy,
+            healthPerModelOverrides: viewModel.trackerState.unitHealthPerModelOverrides,
+            activePlayerIsOne: viewModel.trackerState.activePlayerIsOne,
+            calledReinforcementUnitKeys: viewModel.trackerState.calledReinforcementUnitKeys,
+            onUnitWoundsChange: viewModel.setUnitWounds(key:remaining:),
+            onSelectArmyUnit: { armyId, unitId in
+                handleArmyUnitSelection(armyId: armyId, unitId: unitId)
+            },
+            combatActivation: { combatActivationSection }
+        )
+    }
+
+    private func padArmyColumnsView() -> some View {
+        BattleTrackerPadArmyColumns(
+            controlColumnMaxWidth: padControlColumnMaxWidth,
+            viewModel: viewModel,
+            showsArmyTracker: showsArmyTrackerSection,
+            playerOneName: viewModel.playerOneName,
+            playerTwoName: viewModel.playerTwoName,
+            playerOneArmy: viewModel.playerOneArmy,
+            playerTwoArmy: viewModel.playerTwoArmy,
+            unitWoundsRemaining: viewModel.trackerState.unitWoundsRemaining,
+            healthPerModelOverrides: viewModel.trackerState.unitHealthPerModelOverrides,
+            activePlayerIsOne: viewModel.trackerState.activePlayerIsOne,
+            gameSystemId: viewModel.gameSystemId,
+            calledReinforcementUnitKeys: viewModel.trackerState.calledReinforcementUnitKeys,
+            onUnitWoundsChange: viewModel.setUnitWounds(key:remaining:),
+            onSelectArmyUnit: { armyId, unitId in
+                handleArmyUnitSelection(armyId: armyId, unitId: unitId)
+            },
+            ruleSections: ruleSections,
+            supportsBattleTracker: supportsBattleTracker,
+            showsActivationBar: viewModel.playContext.capabilities.showsActivationBar,
+            usesGuidedBattleTracker: viewModel.playContext.usesGuidedBattleTracker,
+            showsEmbeddedCombatTools: ReleaseSurface.showsCombatResolver(for: viewModel.gameSystemId),
+            onResolveAttack: handleResolveAttack,
+            secondarySections: { secondarySections },
+            passiveAbilities: { passiveAbilitiesSection }
+        )
     }
 }
 
 enum BattleTrackerPadColumnBalance {
-    /// Narrow control column on the left (setup, legacy turn layout).
     case controlSidebar
-    /// Primary content column expands; secondary is a narrow sidebar on the right.
     case contentPrimary
 }
 
-/// iPad battle tracker body: two-column row with configurable column balance.
 struct BattleTrackerPadTwoColumnRow<Primary: View, Secondary: View>: View {
     let controlColumnMaxWidth: CGFloat
     let balance: BattleTrackerPadColumnBalance

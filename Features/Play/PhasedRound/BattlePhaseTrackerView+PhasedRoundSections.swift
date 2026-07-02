@@ -8,7 +8,7 @@ extension BattlePhaseTrackerView {
             DeploymentZoneCallout(gameSystemId: viewModel.gameSystemId)
 
             if viewModel.playContext.capabilities.showsBattleTacticDecks {
-                callForReinforcementsCard
+                callForReinforcementsSectionView()
             }
 
             if viewModel.trackerState.currentPhase == .deployment
@@ -71,7 +71,7 @@ extension BattlePhaseTrackerView {
         )
         if viewModel.playContext.capabilities.showsBattleTacticDecks
             || viewModel.playContext.capabilities.usesPatrolFormatRules {
-            gotchaSection
+            gotchaSectionView()
         }
     }
 }

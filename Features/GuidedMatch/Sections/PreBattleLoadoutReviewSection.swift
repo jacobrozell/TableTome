@@ -36,8 +36,7 @@ struct PreBattleLoadoutReviewSection: View {
                 viewModel: viewModel,
                 ruleSections: ruleSections,
                 onConfirm: {
-                    viewModel.setStepComplete("regiment-abilities", complete: true)
-                    viewModel.setStepComplete("enhancements", complete: true)
+                    viewModel.setStepComplete(SpearheadSetupStepId.preBattleLoadout, complete: true)
                 }
             )
         }

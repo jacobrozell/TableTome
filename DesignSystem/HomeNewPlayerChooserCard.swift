@@ -76,7 +76,6 @@ struct HomeNewPlayerChooserCard: View {
             .foregroundStyle(.tertiary)
             .fixedSize(horizontal: false, vertical: true)
         }
-        .accentHighlightCard()
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("home.newPlayerChooser")
         .sheet(isPresented: $showsBoxHelper) {
@@ -112,9 +111,8 @@ struct HomeNewPlayerChooserCard: View {
                     .font(.subheadline.weight(.semibold))
                     .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
                     .prominentButtonLabelStyle()
-                    .background(Color.accentColor, in: CardSurface.shape(radius: DesignTokens.Radius.nested))
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.borderedProminent)
             .accessibilityIdentifier("home.chooser.spearhead.startGuidedMatch")
 
             Button {

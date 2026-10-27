@@ -2,11 +2,6 @@ import Foundation
 import TabletomeDomain
 
 extension GuidedMatchViewModel {
-    var setupIsComplete: Bool {
-        let progress = setupProgress
-        return progress.total > 0 && progress.completed >= progress.total
-    }
-
     func logMatchStartedIfNeeded() {
         guard setupIsComplete, !hasLoggedMatchStarted else { return }
         hasLoggedMatchStarted = true

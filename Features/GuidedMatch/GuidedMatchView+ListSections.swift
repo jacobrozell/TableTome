@@ -7,7 +7,8 @@ extension GuidedMatchView {
 
     @ViewBuilder
     func guidedMatchSections(catalog: SpearheadCatalog, useSplitSelection: Bool) -> some View {
-        if useSplitSelection, selectedDestination == .battleTracker, setupIsComplete {
+        if useSplitSelection, selectedDestination == .battleTracker,
+           setupIsComplete || hasResumableBattleSession {
             padBattleActiveSidebar(catalog: catalog)
         } else if usesCompactSetupLayout {
             compactGuidedMatchSections(catalog: catalog, useSplitSelection: useSplitSelection)
@@ -140,7 +141,15 @@ extension GuidedMatchView {
 
     @ViewBuilder
     var preBattleLoadoutReviewSectionView: some View {
-        EmptyView()
+        if gameSystemId == .aosSpearhead,
+           viewModel.matchState.hasBothArmies,
+           !viewModel.matchState.completedStepIds.contains(SpearheadSetupStepId.preBattleLoadout) {
+            PreBattleLoadoutReviewSection(
+                viewModel: viewModel,
+                ruleSections: ruleSections,
+                showsLoadoutSheet: $showsPreBattleLoadoutSheet
+            )
+        }
     }
 
     func continueSetupSection(catalog: SpearheadCatalog, useSplitSelection: Bool) -> some View {
@@ -187,6 +196,8 @@ extension GuidedMatchView {
             viewModel: viewModel,
             catalog: catalog,
             useSplitSelection: useSplitSelection,
+            householdProfiles: householdPlayers?.sortedProfiles ?? [],
+            primaryProfileId: householdPlayers?.defaultPlayerOneProfileId,
             showsOwnListsSection: $showsOwnListsSection
         )
     }

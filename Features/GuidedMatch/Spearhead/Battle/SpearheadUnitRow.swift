@@ -31,6 +31,7 @@ struct SpearheadUnitRow: View {
     let onSetWounds: (Int) -> Void
     let onApplyDamage: (Int, CombatBatchLogContext?) -> Void
     let onCancelResolver: () -> Void
+    let onOpenUnitFocus: () -> Void
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
@@ -124,6 +125,18 @@ struct SpearheadUnitRow: View {
 
             if !isDestroyed && isActivePlayer && showsQuickAction {
                 quickActionButton
+            }
+
+            if !isDestroyed {
+                Button(action: onOpenUnitFocus) {
+                    Image(systemName: "info.circle")
+                        .font(.body)
+                        .foregroundStyle(Color.accentColor)
+                        .frame(width: DesignTokens.minTouchTarget, height: DesignTokens.minTouchTarget)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(String(localized: "Unit focus for \(unit.name)"))
+                .accessibilityIdentifier("spearheadBattle.unitRow.focus.\(unitKey)")
             }
         }
         .padding(DesignTokens.Spacing.sm)
@@ -321,8 +334,6 @@ struct SpearheadUnitRow: View {
 
     // MARK: - Expanded Content
 
-    @State private var showsFullDetailSheet = false
-
     @ViewBuilder
     private var expandedContent: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -337,18 +348,25 @@ struct SpearheadUnitRow: View {
                 abilitiesList
             }
 
-            fullDetailsButton
+            unitFocusButton
         }
         .padding(DesignTokens.Spacing.sm)
-        .sheet(isPresented: $showsFullDetailSheet) {
-            SpearheadUnitDetailSheet(
-                unit: unit,
-                unitKey: unitKey,
-                wounds: wounds,
-                totalWounds: totalWounds,
-                onSetWounds: onSetWounds
-            )
+    }
+
+    @ViewBuilder
+    private var unitFocusButton: some View {
+        Button(action: onOpenUnitFocus) {
+            HStack {
+                Image(systemName: "doc.text.magnifyingglass")
+                Text(String(localized: "Unit Focus"))
+            }
+            .font(.subheadline)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, DesignTokens.Spacing.sm)
+            .background(Color(.tertiarySystemFill), in: CardSurface.shape(radius: DesignTokens.Radius.inset))
         }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("spearheadBattle.unitRow.unitFocus")
     }
 
     @ViewBuilder
@@ -366,24 +384,6 @@ struct SpearheadUnitRow: View {
                 }
             }
         }
-    }
-
-    @ViewBuilder
-    private var fullDetailsButton: some View {
-        Button {
-            showsFullDetailSheet = true
-        } label: {
-            HStack {
-                Image(systemName: "doc.text.magnifyingglass")
-                Text("View Full Details")
-            }
-            .font(.subheadline)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, DesignTokens.Spacing.sm)
-            .background(Color(.tertiarySystemFill), in: CardSurface.shape(radius: DesignTokens.Radius.inset))
-        }
-        .buttonStyle(.plain)
-        .accessibilityIdentifier("spearheadBattle.unitRow.fullDetails")
     }
 
     @ViewBuilder
@@ -551,5 +551,55 @@ struct SpearheadUnitRow: View {
             )
             .padding(DesignTokens.Spacing.sm)
         }
+    }
+}
+
+private struct FlowLayout: Layout {
+    var spacing: CGFloat = 8
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        layout(proposal: proposal, subviews: subviews).size
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        let result = layout(proposal: proposal, subviews: subviews)
+        for (index, subview) in subviews.enumerated() {
+            subview.place(
+                at: CGPoint(
+                    x: bounds.minX + result.positions[index].x,
+                    y: bounds.minY + result.positions[index].y
+                ),
+                proposal: .unspecified
+            )
+        }
+    }
+
+    private func layout(
+        proposal: ProposedViewSize,
+        subviews: Subviews
+    ) -> (size: CGSize, positions: [CGPoint]) {
+        let maxWidth = proposal.width ?? .infinity
+        var positions: [CGPoint] = []
+        var currentX: CGFloat = 0
+        var currentY: CGFloat = 0
+        var lineHeight: CGFloat = 0
+        var totalHeight: CGFloat = 0
+
+        for subview in subviews {
+            let size = subview.sizeThatFits(.unspecified)
+
+            if currentX + size.width > maxWidth, currentX > 0 {
+                currentX = 0
+                currentY += lineHeight + spacing
+                lineHeight = 0
+            }
+
+            positions.append(CGPoint(x: currentX, y: currentY))
+            currentX += size.width + spacing
+            lineHeight = max(lineHeight, size.height)
+            totalHeight = currentY + lineHeight
+        }
+
+        return (CGSize(width: maxWidth, height: totalHeight), positions)
     }
 }

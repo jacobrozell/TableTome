@@ -136,7 +136,7 @@ Files with aggressive truncation — **relax or remove** at accessibility sizes:
 | `PhaseChip.swift` | `lineLimit(1)` + `minimumScaleFactor(0.8)` |
 | `ArmyTrackerCard.swift` | `lineLimit(1)` unit names in compact sidebar |
 | `VictoryPointsCard.swift` | Two-column HStack in narrow column |
-| `BattleTrackerStickyCombatBar.swift` | `lineLimit(1)` on names + phase |
+| `SpearheadStickyHeader.swift` | `lineLimit(1)` on names + phase |
 | `CombatResolverPanel.swift` | `lineLimit(1)` on embedded bar |
 
 ### 4.3 Touch target audit
@@ -163,7 +163,7 @@ Per agent rules (label + hint + identifier on every interactive control):
 
 - `PrimaryButton.swift` — add hints
 - `VictoryPointsCard.swift` — quick-add buttons
-- `BattleTrackerStickyCombatBar.swift` — Undo/Dismiss
+- `SpearheadStickyHeader.swift` — VP summary tap target
 - `DiceCoachingHint.swift` — banner actions
 
 ---
@@ -324,7 +324,7 @@ Loader only — no work.
 | `PhaseChipRow` | Horizontal scroll (not grid) | Larger chip min width; allow 2-line labels |
 | `VictoryPointsCard` | Full width, stacked players | Single column at AX2+ |
 | `ArmyTrackerCard` | Collapsed disclosure — not sidebar | Multi-line unit names |
-| `BattleTrackerStickyCombatBar` | Full width | Stack name + phase vertically |
+| `SpearheadStickyHeader` | Full width | Stack name + phase vertically |
 | `CombatResolverPanel` | Keep stacked (not side-by-side) | Expand disclosure by default |
 
 #### `BattleTrackerLandscapeLayout.swift`

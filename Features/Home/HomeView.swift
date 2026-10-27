@@ -7,9 +7,17 @@ struct HomeView: View {
     @Environment(AppRouter.self) private var router
     @State private var showsMatchHistoryToolbar = false
     @State private var firstSessionRevision = 0
+    /// Keeps the Play hero section stable while `learnPath` pushes Guided Match — swapping cards mid-push pops the stack.
+    @State private var frozenHeroPresentation: HeroPresentation?
+
+    private enum HeroPresentation: Equatable {
+        case continuation(PlayContinuation)
+        case chooser
+    }
 
     private var showsAllGamesList: Bool {
         _ = firstSessionRevision
+        guard router.learnPath.isEmpty else { return false }
         guard viewModel.gameSystems.count > 1 else { return false }
         if PlayContinuationResolver.current(activeGameSystemId: router.activeGameSystemId) != nil {
             return true
@@ -18,7 +26,8 @@ struct HomeView: View {
     }
 
     private var allGamesSectionHeader: String {
-        if PlayContinuationResolver.current(activeGameSystemId: router.activeGameSystemId) != nil {
+        if router.learnPath.isEmpty,
+           PlayContinuationResolver.current(activeGameSystemId: router.activeGameSystemId) != nil {
             String(localized: "Or pick a different game")
         } else {
             String(localized: "All games")
@@ -26,11 +35,22 @@ struct HomeView: View {
     }
 
     private var allGamesSectionFooter: String? {
-        if PlayContinuationResolver.current(activeGameSystemId: router.activeGameSystemId) != nil {
+        if router.learnPath.isEmpty,
+           PlayContinuationResolver.current(activeGameSystemId: router.activeGameSystemId) != nil {
             String(localized: "Your in-progress match stays saved — you can resume anytime from Play.")
         } else {
             String(localized: "Not sure which to pick? Start with the chooser above.")
         }
+    }
+
+    private var heroPresentation: HeroPresentation? {
+        if !router.learnPath.isEmpty {
+            return frozenHeroPresentation
+        }
+        if let continuation = PlayContinuationResolver.current(activeGameSystemId: router.activeGameSystemId) {
+            return .continuation(continuation)
+        }
+        return .chooser
     }
 
     init(viewModel: HomeViewModel) {
@@ -55,24 +75,20 @@ struct HomeView: View {
             } else {
                 List {
                     if !viewModel.gameSystems.isEmpty {
-                        if let continuation = PlayContinuationResolver.current(
-                            activeGameSystemId: router.activeGameSystemId
-                        ) {
+                        if let heroPresentation {
                             Section {
-                                HomeContinueCard(continuation: continuation)
-                                    .listHeroCardRow()
-                            }
-                        } else {
-                            Section {
-                                HomeNewPlayerChooserCard()
-                                    .listHeroCardRow()
+                                switch heroPresentation {
+                                case .continuation(let continuation):
+                                    HomeContinueCard(continuation: continuation)
+                                case .chooser:
+                                    HomeNewPlayerChooserCard()
+                                }
                             }
                         }
 
                         if ReleaseSurface.showsPlayersHub {
                             Section {
                                 HomePlayersHubCard()
-                                    .listHeroCardRow()
                             }
                         }
                     }
@@ -94,7 +110,7 @@ struct HomeView: View {
                         }
                     }
                 }
-                .floatingCardListStyle()
+                .listStyle(.insetGrouped)
                 .tabBarScrollInset()
                 .accessibilityIdentifier("home.gameSystemList")
             }
@@ -146,6 +162,19 @@ struct HomeView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: .firstSessionStoreDidChange)) { _ in
             firstSessionRevision += 1
+        }
+        .onChange(of: router.learnPath.count) { _, count in
+            if count > 0, frozenHeroPresentation == nil {
+                if let continuation = PlayContinuationResolver.current(
+                    activeGameSystemId: router.activeGameSystemId
+                ) {
+                    frozenHeroPresentation = .continuation(continuation)
+                } else {
+                    frozenHeroPresentation = .chooser
+                }
+            } else if count == 0 {
+                frozenHeroPresentation = nil
+            }
         }
         .refreshable { await viewModel.load() }
     }

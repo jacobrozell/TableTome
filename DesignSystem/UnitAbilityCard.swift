@@ -146,11 +146,11 @@ struct UnitAbilityCard: View {
                     .font(.caption2)
             }
         }
-        .foregroundStyle(.white)
+        .foregroundStyle(Color.accentOnSurface)
         .padding(.horizontal, DesignTokens.Spacing.md)
         .padding(.vertical, DesignTokens.Spacing.sm)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.brown.gradient, in: UnevenRoundedRectangle(topLeadingRadius: DesignTokens.Radius.md, topTrailingRadius: DesignTokens.Radius.md))
+        .background(Color.accentColor.opacity(0.12), in: UnevenRoundedRectangle(topLeadingRadius: DesignTokens.Radius.md, topTrailingRadius: DesignTokens.Radius.md))
     }
 
     private var displayPhase: BattleTurnPhase {

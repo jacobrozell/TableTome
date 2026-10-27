@@ -37,30 +37,44 @@ struct PlayShell: View {
     }
 
     var body: some View {
-        switch playEngineId {
-        case .alternatingActivation:
-            AlternatingActivationTrackerView(
-                gameSystemId: gameSystemId,
-                matchState: matchState,
-                catalog: catalog,
-                ruleSections: ruleSections,
-                householdProfiles: householdProfiles,
-                onMatchStateChange: onMatchStateChange,
-                onVictoryComplete: onVictoryComplete,
-                onVictoryPresented: onVictoryPresented
-            )
-        case .phasedRound:
-            if gameSystemId.isSpearhead {
-                SpearheadBattleView(
+        Group {
+            switch playEngineId {
+            case .alternatingActivation:
+                AlternatingActivationTrackerView(
                     gameSystemId: gameSystemId,
                     matchState: matchState,
                     catalog: catalog,
                     ruleSections: ruleSections,
+                    householdProfiles: householdProfiles,
                     onMatchStateChange: onMatchStateChange,
                     onVictoryComplete: onVictoryComplete,
                     onVictoryPresented: onVictoryPresented
                 )
-            } else {
+            case .phasedRound:
+                if gameSystemId.isSpearhead {
+                    SpearheadBattleView(
+                        gameSystemId: gameSystemId,
+                        matchState: matchState,
+                        catalog: catalog,
+                        ruleSections: ruleSections,
+                        householdProfiles: householdProfiles,
+                        onMatchStateChange: onMatchStateChange,
+                        onVictoryComplete: onVictoryComplete,
+                        onVictoryPresented: onVictoryPresented
+                    )
+                } else {
+                    PhasedRoundTrackerView(
+                        gameSystemId: gameSystemId,
+                        matchState: matchState,
+                        catalog: catalog,
+                        ruleSections: ruleSections,
+                        householdProfiles: householdProfiles,
+                        onMatchStateChange: onMatchStateChange,
+                        onVictoryComplete: onVictoryComplete,
+                        onVictoryPresented: onVictoryPresented
+                    )
+                }
+            case .gridSportDrive, .commandCardPool, .heroSkirmish, .rulesOnly:
                 PhasedRoundTrackerView(
                     gameSystemId: gameSystemId,
                     matchState: matchState,
@@ -72,17 +86,7 @@ struct PlayShell: View {
                     onVictoryPresented: onVictoryPresented
                 )
             }
-        case .gridSportDrive, .commandCardPool, .heroSkirmish, .rulesOnly:
-            PhasedRoundTrackerView(
-                gameSystemId: gameSystemId,
-                matchState: matchState,
-                catalog: catalog,
-                ruleSections: ruleSections,
-                householdProfiles: householdProfiles,
-                onMatchStateChange: onMatchStateChange,
-                onVictoryComplete: onVictoryComplete,
-                onVictoryPresented: onVictoryPresented
-            )
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
 }

@@ -13,7 +13,6 @@ struct GettingStartedView: View {
             if gameSystem.id == "wh40k-10e-cp" {
                 Section {
                     combatPatrolFirstGameSection
-                        .listHeroCardRow()
                 }
 
                 Section {
@@ -35,7 +34,6 @@ struct GettingStartedView: View {
             if gameSystem.id == "wh40k-11e" {
                 Section {
                     Wh40k11eWhatYouNeedCard()
-                        .listHeroCardRow()
                 }
 
                 Section {
@@ -57,7 +55,6 @@ struct GettingStartedView: View {
             if gameSystem.id == "aos-spearhead" {
                 Section {
                     WhatYouNeedCard()
-                        .listHeroCardRow()
                 }
 
                 Section {
@@ -79,7 +76,6 @@ struct GettingStartedView: View {
             if gameSystem.id == GameSystemId.scTmg.rawValue {
                 Section {
                     ScWhatYouNeedCard()
-                        .listHeroCardRow()
                 }
             }
 
@@ -97,10 +93,7 @@ struct GettingStartedView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .contentShape(Rectangle())
                     }
-                    .buttonStyle(.plain)
-                    .listRowInsets(GuideStepCard.listRowInsets)
-                    .listRowBackground(Color.clear)
-                    .listRowSeparator(.hidden)
+                    .accessibilityIdentifier("guide.step.\(step.id)")
                 }
             } footer: {
                 Text(
@@ -131,7 +124,7 @@ struct GettingStartedView: View {
                 }
             }
         }
-        .floatingCardListStyle()
+        .listStyle(.insetGrouped)
         .readableContentWidth()
         .navigationTitle(String(localized: "Getting Started"))
         .accessibilityIdentifier("guide.stepList")

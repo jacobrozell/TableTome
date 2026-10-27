@@ -8,22 +8,20 @@ final class AppRouterNavigationTests: XCTestCase {
         super.tearDown()
     }
 
-    func testOpenGuidedMatchSetsTabPathAndActiveGameSystem() async {
+    func testOpenGuidedMatchSetsTabPathAndActiveGameSystem() {
         let router = AppRouter()
 
         router.openGuidedMatch(gameSystemId: "aos-spearhead")
-        try? await Task.sleep(for: .milliseconds(50))
 
         XCTAssertEqual(router.selectedTab, .learn)
         XCTAssertEqual(router.activeGameSystemId, "aos-spearhead")
         XCTAssertEqual(router.learnPath.count, 1)
     }
 
-    func testOpenGameGuideSetsTabPathAndActiveGameSystem() async {
+    func testOpenGameGuideSetsTabPathAndActiveGameSystem() {
         let router = AppRouter()
 
         router.openGameGuide(gameSystemId: "wh40k-11e")
-        try? await Task.sleep(for: .milliseconds(50))
 
         XCTAssertEqual(router.selectedTab, .learn)
         XCTAssertEqual(router.activeGameSystemId, "wh40k-11e")

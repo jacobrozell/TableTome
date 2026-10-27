@@ -4,7 +4,7 @@ import TabletomeData
 
 // swiftlint:disable file_length type_body_length
 struct GuidedMatchView: View {
-    @StateObject var viewModel: GuidedMatchViewModel
+    @ObservedObject var viewModel: GuidedMatchViewModel
     @StateObject var matchSyncService = NearbyMatchSyncService()
     @EnvironmentObject var dependencies: AppDependencies
     let ruleSections: [RuleSection]
@@ -17,6 +17,7 @@ struct GuidedMatchView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.accessibilityReduceMotion) var reduceMotion
     @Environment(\.dismiss) var dismiss
+    @Environment(AppRouter.self) var router
     @Environment(TabBarChrome.self) var tabBarChrome
     @State var selectedDestination: GuidedMatchDestination?
     @State var showsAllSetupSteps = NewPlayerTipsStore.hasExpandedGuidedMatchSetup
@@ -30,9 +31,10 @@ struct GuidedMatchView: View {
     @State var dismissedSetupCompleteHandoff = false
     @State var showsStarterMatchupHandoff = false
     @State var dismissedStarterMatchupHandoff = false
-    @State var guidedMatchNavigationPath = NavigationPath()
     @State var padDetailNavigationPath = NavigationPath()
+    @State private var didRecordGuidedMatchOpened = false
     @State var showsMatchHistory = false
+    @State var showsPreBattleLoadoutSheet = false
     @State var householdPlayers: HouseholdPlayersState?
     @AppStorage(BattleTrackerChromeStorage.guidedMatchHubCollapsedKey) var isHubChromeCollapsed = false
     @AppStorage(SpearheadStarterBoxStorage.selectedBoxIdKey) var selectedSpearheadBoxId = SpearheadStarterBoxStorage.defaultBoxId
@@ -48,32 +50,68 @@ struct GuidedMatchView: View {
         ruleSections: [RuleSection] = [],
         initialHubTab: GuidedMatchHubTab? = nil
     ) {
-        _viewModel = StateObject(wrappedValue: viewModel)
+        self.viewModel = viewModel
         self.ruleSections = ruleSections
         self.initialHubTab = initialHubTab
         if let initialHubTab {
             _hubTab = State(initialValue: initialHubTab)
+        } else {
+            _hubTab = State(
+                initialValue: Self.resolvedInitialHubTab(
+                    gameSystemId: viewModel.gameSystemId,
+                    hasBothArmies: viewModel.matchState.hasBothArmies
+                )
+            )
         }
     }
 
+    private static func resolvedInitialHubTab(
+        gameSystemId: GameSystemId,
+        hasBothArmies: Bool
+    ) -> GuidedMatchHubTab {
+        if gameSystemId == .aosSpearhead {
+            return SpearheadHubTabs.suggested(hasBothArmies: hasBothArmies, setupComplete: false)
+        }
+        return GuidedMatchHubTab.suggested(
+            gameSystemId: gameSystemId,
+            hasBothArmies: hasBothArmies,
+            setupComplete: false
+        )
+    }
+
     var body: some View {
-        Group {
-            if let catalog = viewModel.catalog {
-                if usesPadSplitNavigation {
+        ZStack {
+            if usesPadSplitNavigation {
+                if let catalog = viewModel.catalog {
                     regularLayout(catalog: catalog)
                 } else {
-                    compactLayout(catalog: catalog)
+                    Color(.systemBackground)
                 }
-            } else if let errorMessage = viewModel.errorMessage {
+            } else {
+                compactLayout(catalog: viewModel.catalog)
+            }
+
+            if usesPadSplitNavigation, viewModel.catalog == nil {
+                if let errorMessage = viewModel.errorMessage {
+                    EmptyStateView(
+                        title: String(localized: "Unavailable"),
+                        message: errorMessage,
+                        systemImage: "exclamationmark.triangle"
+                    )
+                    .adaptiveEmptyStateLayout()
+                    .asyncContentShell()
+                } else {
+                    ProgressView(String(localized: "Loading guided match…"))
+                        .asyncContentShell()
+                }
+            } else if !usesPadSplitNavigation, let errorMessage = viewModel.errorMessage {
                 EmptyStateView(
                     title: String(localized: "Unavailable"),
                     message: errorMessage,
                     systemImage: "exclamationmark.triangle"
                 )
+                .adaptiveEmptyStateLayout()
                 .asyncContentShell()
-            } else {
-                ProgressView(String(localized: "Loading guided match…"))
-                    .asyncContentShell()
             }
         }
         .modifier(GuidedMatchNavigationChrome(
@@ -117,11 +155,16 @@ struct GuidedMatchView: View {
         }
         .task {
             await viewModel.load()
+            applySpearheadPadInitialDestinationIfNeeded()
             if ReleaseSurface.showsPlayersHub {
                 if let household = try? await dependencies.playerProfileStore.loadHousehold() {
                     householdPlayers = household
                     viewModel.applyHouseholdDefaultsIfNeeded(household)
                 }
+            }
+            if !didRecordGuidedMatchOpened, viewModel.catalog != nil {
+                didRecordGuidedMatchOpened = true
+                FirstSessionStore.recordGuidedMatchOpened()
             }
             if AppLaunchArguments.shouldSnapshotGuidedMatchArmies {
                 if !viewModel.matchState.hasBothArmies {
@@ -155,6 +198,7 @@ struct GuidedMatchView: View {
                     selectedDestination = .battleTracker
                 }
             }
+            applyGuidedMatchHubTabPolicyAfterLoad()
         }
         .task {
             configureMatchSyncAnalytics()
@@ -164,7 +208,9 @@ struct GuidedMatchView: View {
         }
         .accessibilityIdentifier("guidedMatch.screen")
         .glossaryEntryNavigation()
-        .onReceive(NotificationCenter.default.publisher(for: .matchSyncStateDidChange)) { _ in
+        .onReceive(NotificationCenter.default.publisher(for: .matchSyncStateDidChange)) { notification in
+            let shouldBroadcast = notification.userInfo?[MatchSyncNotifications.shouldBroadcastToPeersKey] as? Bool ?? true
+            guard !shouldBroadcast else { return }
             viewModel.reloadFromStore()
             hubTrackerTick += 1
         }
@@ -183,6 +229,9 @@ struct GuidedMatchView: View {
 
     var guidedMatchNavigationTitle: String {
         if usesPhoneLandscapeBattleImmersion {
+            return ""
+        }
+        if !usesPadSplitNavigation, !isHubChromeCollapsed {
             return ""
         }
         return GameSystemRulesLabels.guidedMatchTitle(gameSystemId: gameSystemId)
@@ -205,24 +254,50 @@ struct PlayerArmyRow: View {
     let label: String
     let selection: PlayerArmySelection
     let catalog: SpearheadCatalog
+    var profile: PlayerProfile?
+    var isPrimaryProfile: Bool = false
 
     private var hasArmySelected: Bool {
         !selection.factionId.isEmpty && !selection.armyId.isEmpty
     }
 
+    private var displayName: String {
+        selection.playerName.isEmpty ? label : selection.playerName
+    }
+
     var body: some View {
         HStack(spacing: DesignTokens.Spacing.md) {
-            Image(systemName: hasArmySelected ? "checkmark.circle.fill" : "circle")
-                .foregroundStyle(hasArmySelected ? Color.accentColor : Color(.tertiaryLabel))
-                .accessibilityHidden(true)
+            if let profile {
+                PlayerAvatarView(
+                    name: profile.displayName,
+                    accentColorName: profile.accentColorName,
+                    size: 40
+                )
+            } else {
+                PlayerAvatarView(name: displayName, size: 40)
+            }
+
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                Text(selection.playerName.isEmpty ? label : selection.playerName)
-                    .font(.headline)
+                HStack(spacing: DesignTokens.Spacing.sm) {
+                    Text(displayName)
+                        .font(.headline)
+                    if isPrimaryProfile {
+                        PlayerBadge(title: String(localized: "Me"), style: .accent)
+                    }
+                    if hasArmySelected {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.caption)
+                            .foregroundStyle(Color.accentColor)
+                            .accessibilityHidden(true)
+                    }
+                }
                 Text(armySubtitle)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
+
+            Spacer(minLength: 0)
         }
         .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
         .contentShape(Rectangle())

@@ -23,6 +23,42 @@ final class GuidedMatchViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.setupProgress.total, catalog.matchSteps.count)
         XCTAssertGreaterThan(viewModel.setupProgressFraction, 0)
         XCTAssertLessThan(viewModel.setupProgressFraction, 1)
+        XCTAssertFalse(viewModel.setupIsComplete)
+    }
+
+    func testSetupIsCompleteFalseBeforeCatalogLoads() async {
+        let viewModel = GuidedMatchViewModel(
+            catalogRepository: StubSpearheadCatalogRepository(
+                catalog: SpearheadCatalog(schemaVersion: 1, factions: [], matchSteps: [], missions: [])
+            ),
+            initialState: GuidedMatchState(
+                playerOne: PlayerArmySelection(playerName: "P1", factionId: "a", armyId: "1"),
+                playerTwo: PlayerArmySelection(playerName: "P2", factionId: "b", armyId: "2")
+            )
+        )
+
+        XCTAssertNil(viewModel.catalog)
+        XCTAssertFalse(viewModel.setupIsComplete)
+    }
+
+    func testSetupIsCompleteTrueWhenAllStepsDone() async throws {
+        let catalog = try await BundledSpearheadCatalogRepository(
+            bundle: Bundle(for: GuidedMatchViewModelTests.self)
+        ).loadCatalog()
+
+        var state = GuidedMatchState(
+            playerOne: PlayerArmySelection(playerName: "P1", factionId: "a", armyId: "1"),
+            playerTwo: PlayerArmySelection(playerName: "P2", factionId: "b", armyId: "2")
+        )
+        state.completedStepIds = Set(catalog.matchSteps.map(\.id))
+
+        let viewModel = GuidedMatchViewModel(
+            catalogRepository: StubSpearheadCatalogRepository(catalog: catalog),
+            initialState: state
+        )
+        await viewModel.load()
+
+        XCTAssertTrue(viewModel.setupIsComplete)
     }
 
     func testPlayerFacingCoverageTitles() {
@@ -137,8 +173,10 @@ final class GuidedMatchViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.setupProgress.total, catalog.matchSteps.count)
         XCTAssertTrue(viewModel.matchState.completedStepIds.contains("choose-armies"))
         XCTAssertTrue(viewModel.matchState.completedStepIds.contains("roll-attacker"))
-        XCTAssertFalse(viewModel.matchState.completedStepIds.contains("regiment-abilities"))
-        XCTAssertFalse(viewModel.matchState.completedStepIds.contains("enhancements"))
+        XCTAssertTrue(viewModel.matchState.completedStepIds.contains("pre-battle-loadout"))
+        XCTAssertTrue(viewModel.matchState.completedStepIds.contains("realm-battlefield"))
+        XCTAssertTrue(viewModel.matchState.completedStepIds.contains("fight-battle"))
+        XCTAssertTrue(viewModel.setupIsComplete)
         let deployment = BattleTrackerStore.load().completedDeploymentSteps
         XCTAssertEqual(
             deployment.count,

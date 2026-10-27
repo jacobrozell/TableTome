@@ -54,6 +54,14 @@ final class GuidedMatchViewModel: ObservableObject {
         return Double(progress.completed) / Double(progress.total)
     }
 
+    /// True only after the catalog loads and every setup step is marked complete.
+    var setupIsComplete: Bool {
+        guard matchState.hasBothArmies, catalog != nil else { return false }
+        let progress = setupProgress
+        guard progress.total > 0 else { return false }
+        return progress.completed == progress.total
+    }
+
     var matchupSummary: String? {
         guard matchState.hasBothArmies, let catalog else { return nil }
         let p1 = armyLabel(for: matchState.playerOne, in: catalog)
@@ -485,6 +493,11 @@ final class GuidedMatchViewModel: ObservableObject {
             }
         } else {
             DeploymentChecklistStep.allCases.forEach { setDeploymentStep($0, complete: true) }
+        }
+        syncAutoCompletions()
+        guard let catalog else { return }
+        mutateMatchState {
+            $0.completedStepIds.formUnion(catalog.matchSteps.map(\.id))
         }
         syncAutoCompletions()
     }

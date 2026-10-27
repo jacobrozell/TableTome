@@ -1,7 +1,7 @@
 # Guided Match UI Redesign — Single-Surface Battle
 
 **Status:** In Progress — Phase 1 complete  
-**Last updated:** 2026-07-01  
+**Last updated:** 2026-07-02  
 **Related:** [`spearhead-flawless-guided-match-plan.md`](spearhead-flawless-guided-match-plan.md)
 
 ---
@@ -597,39 +597,32 @@ var body: some View {
 - [ ] iPad layout works naturally
 - [ ] VoiceOver pass complete
 - [ ] Dynamic Type AX3 pass complete
-- [ ] Unit tests for `SpearheadBattleViewModel`
+- [x] Unit tests for `SpearheadBattleViewModel` (`SpearheadBattleViewModelPhaseFlowTests`)
 - [ ] Snapshot tests for resolver states
 
 ---
 
 ## Progress
 
-### Completed (2026-07-01)
+### Completed (2026-07-01 through 2026-07-02)
 
-- [x] Create `SpearheadBattleView.swift` with sticky header + placeholder sections
-- [x] Create `SpearheadBattleViewModel.swift` wrapping existing tracker VM
-- [x] Create `SpearheadStickyHeader.swift` — round/phase/VP header
-- [x] Create `SpearheadPhasePlaybook.swift` — phase guidance card
-- [x] Create `SpearheadUnitSection.swift` — phase-aware unit list
-- [x] Create `SpearheadUnitRow.swift` with expand/collapse
-- [x] Create `SpearheadInlineResolver.swift` — combat resolver (inline)
-- [x] Create `SpearheadRoundOpener.swift` — round start checklist
-- [x] Wire up router in `PlayShell.swift` with feature flag
-- [x] Add `ReleaseSurface.usesSpearheadSingleSurfaceBattle` flag
-- [x] Build passes
+- [x] `SpearheadBattleView` — single-surface battle (sticky header, phase playbook, units, inline resolver)
+- [x] `SpearheadBattleViewModel` + `SpearheadBattleViewModel+PhaseFlow` — turn/round flow aligned with tab tracker
+- [x] Shared `RoundChecklistCard` for round opener (replaces custom `SpearheadRoundOpener`)
+- [x] `PlayShell` routes Spearhead to `SpearheadBattleView` (no feature flag)
+- [x] Batch combat resolver, target picker, damage undo, victory screen, VP sheet
+- [x] Round 2+ opener card, hero round 1 nudge, start-of-round abilities banner
+- [x] Movement retreat nudge, pile-in guide, shooting / shoot-in-combat helpers
+- [x] Unit Focus sheet from unit row; profile-aware coaching tips
+- [x] Battle tactic command guide on single-surface path
+- [x] `SpearheadBattleViewModel` phase-flow + wound-tracking tests
+- [x] Removed dead `BattleTrackerStickyCombatBar`, `SpearheadRoundOpener`, `SpearheadUnitDetailSheet`
 
 ### Next Steps
 
-1. [ ] Test with real match data (run with `-enable_single_surface_battle`)
-2. [ ] Connect inline resolver to `BatchCombatEvaluatorViewModel` for damage calculation
-3. [ ] Add wound tracking integration with existing `BattleTrackerStore`
-4. [ ] Implement target picker in resolver (currently placeholder)
-5. [ ] Add Anti-Wizard/Anti-Priest context banners
-6. [ ] Add retreat warning banner
-7. [ ] Add reinforcement prompt when enemy destroyed
-8. [ ] iPad two-column layout refinements
-9. [ ] VoiceOver pass
-10. [ ] Dynamic Type AX3 pass
+1. [ ] Jacob playtest — full 4-round game on TestFlight
+2. [ ] VoiceOver + Dynamic Type AX3 pass
+3. [ ] iPad/Mac layout refinements
 
 ---
 

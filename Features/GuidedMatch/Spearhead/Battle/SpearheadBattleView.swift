@@ -5,8 +5,8 @@ import TabletomeDomain
 /// See `ongoing/guided-match-ui-redesign.md` for design rationale.
 struct SpearheadBattleView: View {
     @StateObject var viewModel: SpearheadBattleViewModel
-    @State private var expandedUnitKey: String?
-    @State private var resolverContext: InlineResolverContext?
+    @State var expandedUnitKey: String?
+    @State var resolverContext: InlineResolverContext?
     @State private var showsRoundOpener = false
     @State private var showsVictoryScreen = false
     @State private var showsVictoryPointsSheet = false
@@ -14,6 +14,9 @@ struct SpearheadBattleView: View {
     @State private var victoryPlayerOneVP = 0
     @State private var victoryPlayerTwoVP = 0
     @State private var dismissedBattleCompleteGuide = false
+    @State private var showsHeroRoundOneNotice = false
+    @State var unitFocusSelection: UnitFocusSelection?
+    @State var movementAction: MovementAction = .normal
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
@@ -23,12 +26,14 @@ struct SpearheadBattleView: View {
     let onMatchStateChange: (() -> Void)?
     let onVictoryComplete: ((Bool, Int, Int) async -> Void)?
     let onVictoryPresented: ((Int, Int) async -> Void)?
+    var householdProfiles: [PlayerProfile] = []
 
     init(
         gameSystemId: GameSystemId,
         matchState: GuidedMatchState,
         catalog: SpearheadCatalog,
         ruleSections: [RuleSection] = [],
+        householdProfiles: [PlayerProfile] = [],
         onMatchStateChange: (() -> Void)? = nil,
         onVictoryComplete: ((Bool, Int, Int) async -> Void)? = nil,
         onVictoryPresented: ((Int, Int) async -> Void)? = nil
@@ -36,6 +41,7 @@ struct SpearheadBattleView: View {
         self.onMatchStateChange = onMatchStateChange
         self.onVictoryComplete = onVictoryComplete
         self.onVictoryPresented = onVictoryPresented
+        self.householdProfiles = householdProfiles
         _viewModel = StateObject(
             wrappedValue: SpearheadBattleViewModel(
                 gameSystemId: gameSystemId,
@@ -53,23 +59,30 @@ struct SpearheadBattleView: View {
         )
     }
 
-    private var usesTwoColumnLayout: Bool {
+    var usesTwoColumnLayout: Bool {
         layoutContext.usesPadSplitNavigation && !dynamicTypeSize.needsLayoutAdaptation
     }
 
+    var usesPhoneLandscapeLayout: Bool {
+        layoutContext == .phoneLandscape && !dynamicTypeSize.needsLayoutAdaptation
+    }
+
     var body: some View {
-        Group {
-            if usesTwoColumnLayout {
-                twoColumnLayout
-            } else {
-                singleColumnLayout
-            }
-        }
+        battleLayout
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .onAppear {
             checkRoundOpener()
+            presentHeroRoundOneNudgeIfNeeded()
         }
         .onChange(of: viewModel.trackerState.battleRound) { _, _ in
             checkRoundOpener()
+        }
+        .onChange(of: viewModel.trackerState.currentPhase) { _, phase in
+            if phase == .hero {
+                presentHeroRoundOneNudgeIfNeeded()
+            } else {
+                showsHeroRoundOneNotice = false
+            }
         }
         .onChange(of: viewModel.roundOpenerIsIncomplete) { _, incomplete in
             if incomplete {
@@ -82,7 +95,26 @@ struct SpearheadBattleView: View {
         .sheet(isPresented: $showsVictoryPointsSheet) {
             SpearheadVictoryPointsSheet(viewModel: viewModel)
         }
+        .modifier(
+            UnitFocusPresentationModifier(
+                selection: $unitFocusSelection,
+                usesFullScreen: usesUnitFocusFullScreenPresentation
+            ) {
+                unitFocusSheet
+            }
+        )
         .accessibilityIdentifier("spearheadBattle.screen")
+    }
+
+    @ViewBuilder
+    private var battleLayout: some View {
+        if usesTwoColumnLayout {
+            twoColumnLayout
+        } else if usesPhoneLandscapeLayout {
+            phoneLandscapeLayout
+        } else {
+            singleColumnLayout
+        }
     }
 
     // MARK: - Single Column (iPhone)
@@ -91,20 +123,66 @@ struct SpearheadBattleView: View {
     private var singleColumnLayout: some View {
         ScrollView {
             VStack(spacing: DesignTokens.Spacing.md) {
-                damageUndoBanner
-                battleGuideCard
-                phasePlaybook
-                roundOpenerIfNeeded
-                reinforcementCallBanner
-                reinforcementsSection
-                yourUnitsSection
-                opponentUnitsSection
+                battleScrollSections(includeOpponentUnits: true)
             }
             .padding(.horizontal, DesignTokens.Spacing.md)
             .padding(.bottom, DesignTokens.Spacing.xl)
         }
         .safeAreaInset(edge: .top, spacing: 0) {
             stickyHeader
+        }
+    }
+
+    // MARK: - Phone Landscape
+
+    @ViewBuilder
+    private var phoneLandscapeLayout: some View {
+        VStack(spacing: 0) {
+            stickyHeader(compactLandscape: true)
+            HStack(alignment: .top, spacing: 0) {
+                ScrollView {
+                    VStack(spacing: DesignTokens.phoneLandscapeSectionSpacing) {
+                        battleScrollSections(includeOpponentUnits: false)
+                    }
+                    .padding(.horizontal, DesignTokens.phoneLandscapeHorizontalPadding)
+                    .padding(.bottom, DesignTokens.Spacing.md)
+                }
+                .frame(maxWidth: .infinity)
+                .accessibilityIdentifier("spearheadBattle.phoneLandscape.yourColumn")
+
+                Divider()
+
+                ScrollView {
+                    VStack(spacing: DesignTokens.phoneLandscapeSectionSpacing) {
+                        opponentUnitsSection
+                    }
+                    .padding(.horizontal, DesignTokens.phoneLandscapeHorizontalPadding)
+                    .padding(.vertical, DesignTokens.Spacing.sm)
+                }
+                .frame(maxWidth: .infinity)
+                .accessibilityIdentifier("spearheadBattle.phoneLandscape.opponentColumn")
+            }
+            .accessibilityElement(children: .contain)
+            .accessibilityIdentifier("spearheadBattle.phoneLandscape")
+        }
+    }
+
+    @ViewBuilder
+    private func battleScrollSections(includeOpponentUnits: Bool) -> some View {
+        damageUndoBanner
+        battleGuideCard
+        phasePlaybook
+        battleTacticCommandGuideSection
+        phaseHelpers
+        roundTwoPlusOpenerCard
+        heroRoundOneNotice
+        startOfRoundHelper
+        roundOpenerIfNeeded
+        reinforcementCallBanner
+        reinforcementsSection
+        yourUnitsSection
+        if includeOpponentUnits {
+            opponentUnitsSection
         }
     }
 
@@ -122,6 +200,11 @@ struct SpearheadBattleView: View {
                     VStack(spacing: DesignTokens.Spacing.md) {
                         battleGuideCard
                         phasePlaybook
+                        battleTacticCommandGuideSection
+                        phaseHelpers
+                        roundTwoPlusOpenerCard
+                        heroRoundOneNotice
+                        startOfRoundHelper
                         roundOpenerIfNeeded
                         reinforcementCallBanner
                         reinforcementsSection
@@ -142,6 +225,7 @@ struct SpearheadBattleView: View {
                 .frame(maxWidth: .infinity)
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
 
     @ViewBuilder
@@ -172,6 +256,25 @@ struct SpearheadBattleView: View {
             playerTwoName: viewModel.playerTwoName,
             activePlayerIsOne: viewModel.trackerState.activePlayerIsOne,
             isRoundOneFirstTurnEditable: viewModel.isRoundOneFirstTurnEditable,
+            compactLandscape: usesPhoneLandscapeLayout,
+            onSetFirstTurn: viewModel.setFirstTurn,
+            onTapVP: { showsVictoryPointsSheet = true }
+        )
+    }
+
+    @ViewBuilder
+    private func stickyHeader(compactLandscape: Bool) -> some View {
+        SpearheadStickyHeader(
+            round: viewModel.trackerState.battleRound,
+            phase: viewModel.trackerState.currentPhase,
+            activePlayerName: viewModel.activePlayerName,
+            playerOneVP: viewModel.trackerState.playerOneVictoryPoints,
+            playerTwoVP: viewModel.trackerState.playerTwoVictoryPoints,
+            playerOneName: viewModel.playerOneName,
+            playerTwoName: viewModel.playerTwoName,
+            activePlayerIsOne: viewModel.trackerState.activePlayerIsOne,
+            isRoundOneFirstTurnEditable: viewModel.isRoundOneFirstTurnEditable,
+            compactLandscape: compactLandscape,
             onSetFirstTurn: viewModel.setFirstTurn,
             onTapVP: { showsVictoryPointsSheet = true }
         )
@@ -214,6 +317,41 @@ struct SpearheadBattleView: View {
         SpearheadPhasePlaybook(
             viewModel: viewModel,
             onAdvance: viewModel.advanceTurnOrPhase
+        )
+    }
+
+    // MARK: - Round coaching
+
+    @ViewBuilder
+    private var roundTwoPlusOpenerCard: some View {
+        if viewModel.trackerState.battleRound > 1, viewModel.roundOpenerIsIncomplete {
+            SpearheadRoundTwoPlusOpenerCard(
+                battleRound: viewModel.trackerState.battleRound,
+                underdogPlayerName: viewModel.underdogPlayerName
+            )
+            .accessibilityIdentifier("spearheadBattle.roundTwoPlusOpener")
+        }
+    }
+
+    @ViewBuilder
+    private var heroRoundOneNotice: some View {
+        BattleTrackerHeroRoundOneSection(
+            isVisible: showsHeroRoundOneNotice,
+            onDismiss: {
+                NewPlayerTipsStore.dismissHeroRoundOneNudge()
+                withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) {
+                    showsHeroRoundOneNotice = false
+                }
+            }
+        )
+    }
+
+    @ViewBuilder
+    private var startOfRoundHelper: some View {
+        BattleTrackerStartOfRoundHelperSection(
+            isVisible: viewModel.needsStartOfRoundAbilitiesPrompt
+                && !viewModel.startOfRoundAbilities.isEmpty,
+            abilities: viewModel.startOfRoundAbilities
         )
     }
 
@@ -310,7 +448,10 @@ struct SpearheadBattleView: View {
             isActivePlayer: true,
             onSelectWeapon: handleSelectWeapon,
             onSetWounds: viewModel.setUnitWounds,
-            onApplyDamage: handleApplyDamage
+            onApplyDamage: handleApplyDamage,
+            onOpenUnitFocus: { armyId, unitId in
+                presentUnitFocus(armyId: armyId, unitId: unitId)
+            }
         )
     }
 
@@ -340,7 +481,10 @@ struct SpearheadBattleView: View {
             isActivePlayer: false,
             onSelectWeapon: handleSelectWeapon,
             onSetWounds: viewModel.setUnitWounds,
-            onApplyDamage: handleApplyDamage
+            onApplyDamage: handleApplyDamage,
+            onOpenUnitFocus: { armyId, unitId in
+                presentUnitFocus(armyId: armyId, unitId: unitId)
+            }
         )
     }
 
@@ -352,7 +496,21 @@ struct SpearheadBattleView: View {
         }
     }
 
-    private func handleSelectWeapon(armyId: String, unitId: String, weaponId: String) {
+    private func presentHeroRoundOneNudgeIfNeeded() {
+        guard !MarketingSnapshotBootstrap.suppressesCoachingUI else { return }
+        guard viewModel.trackerState.battleRound == 1 else { return }
+        guard viewModel.trackerState.currentPhase == .hero else { return }
+        guard PlayerCoachingPolicy.shouldShowTip(
+            tipKey: .heroRoundOneNudge,
+            profile: activePlayerProfile,
+            globallyDismissed: NewPlayerTipsStore.hasDismissedHeroRoundOneNudge
+        ) else { return }
+        withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) {
+            showsHeroRoundOneNotice = true
+        }
+    }
+
+    func handleSelectWeapon(armyId: String, unitId: String, weaponId: String) {
         let attackerKey = "\(armyId):\(unitId)"
         expandedUnitKey = attackerKey
         let existingDefender = resolverContext?.attackerKey == attackerKey ? resolverContext?.defenderKey : nil
@@ -469,8 +627,4 @@ struct InlineResolverContext: Equatable {
     let attackerKey: String
     let weaponId: String
     var defenderKey: String?
-    var hitsEntered: Int?
-    var woundsEntered: Int?
-    var failedSavesEntered: Int?
-    var wardedOff: Int?
 }

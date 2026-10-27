@@ -69,7 +69,8 @@ private struct AdaptiveEmptyStateLayout: ViewModifier {
 extension View {
     /// Centers loading spinners and error empty states inside navigation stacks.
     func asyncContentShell() -> some View {
-        frame(maxWidth: .infinity, maxHeight: .infinity)
+        frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            .background(Color(.systemBackground))
     }
 
     /// Menu-style form pickers often fail to open from sheets (especially inside `NavigationSplitView`).

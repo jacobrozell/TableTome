@@ -24,6 +24,7 @@ struct SpearheadUnitSection: View {
     let onSelectWeapon: (String, String, String) -> Void
     let onSetWounds: (String, Int) -> Void
     let onApplyDamage: (String, String, Int, CombatBatchLogContext?) -> Void
+    let onOpenUnitFocus: (String, String) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
@@ -138,6 +139,10 @@ struct SpearheadUnitSection: View {
             },
             onCancelResolver: {
                 resolverContext = nil
+            },
+            onOpenUnitFocus: {
+                guard let army else { return }
+                onOpenUnitFocus(army.id, unit.id)
             }
         )
     }

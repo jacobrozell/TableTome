@@ -58,7 +58,7 @@ public extension View {
     ) -> some View {
         padding(.horizontal, horizontalPadding)
             .padding(.vertical, verticalPadding)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
             .background(.bar, ignoresSafeAreaEdges: .horizontal)
     }
 

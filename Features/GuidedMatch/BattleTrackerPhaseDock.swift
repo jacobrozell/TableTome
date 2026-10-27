@@ -104,10 +104,7 @@ struct BattleTrackerPhaseDock: View {
         .fixedSize(horizontal: false, vertical: true)
         .padding(.horizontal, DesignTokens.Spacing.sm)
         .padding(.vertical, compactLandscape ? DesignTokens.Spacing.xs : DesignTokens.Spacing.sm)
-        .background {
-            Color(.systemBackground)
-                .shadow(color: Color.black.opacity(0.12), radius: 6, y: -2)
-        }
+        .background(.bar)
         .overlay(alignment: .top) {
             Divider()
         }

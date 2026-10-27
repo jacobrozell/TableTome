@@ -23,6 +23,7 @@ final class SpearheadBattleViewModel: ObservableObject {
         gameSystemId: GameSystemId,
         matchState: GuidedMatchState,
         catalog: SpearheadCatalog,
+        initialState: BattleTrackerState? = nil,
         onMatchStateChange: (() -> Void)? = nil
     ) {
         self.gameSystemId = gameSystemId
@@ -33,9 +34,15 @@ final class SpearheadBattleViewModel: ObservableObject {
         let context = GameSystemPlayContext(gameSystemId: gameSystemId)
         self.playContext = context
         self.trackerEngine = BattleTrackerEngineFactory.engine(for: context)
-        self.trackerState = BattleTrackerStore.load(gameSystemId: gameSystemId)
+        self.trackerState = initialState ?? BattleTrackerStore.load(gameSystemId: gameSystemId)
 
-        bootstrapState()
+        if initialState == nil {
+            bootstrapState()
+        } else {
+            syncPlayerNames()
+            syncArmies()
+            syncAutoCompletions()
+        }
     }
 
     private func bootstrapState() {
@@ -96,6 +103,13 @@ final class SpearheadBattleViewModel: ObservableObject {
     var shootingEligibleUnits: [SpearheadUnit] {
         yourUnits.filter { unit in
             guard unit.canShoot else { return false }
+            return unitIsAlive(unit, in: activeArmy)
+        }
+    }
+
+    var shootInCombatEligibleUnits: [SpearheadUnit] {
+        yourUnits.filter { unit in
+            guard unit.weapons.contains(where: { $0.hasShootInCombat && $0.isRanged }) else { return false }
             return unitIsAlive(unit, in: activeArmy)
         }
     }
@@ -399,14 +413,18 @@ final class SpearheadBattleViewModel: ObservableObject {
         pendingReinforcementCall = nil
     }
 
-    private func army(withId armyId: String) -> SpearheadArmy? {
+    func army(withId armyId: String) -> SpearheadArmy? {
         if playerOneArmy?.id == armyId { return playerOneArmy }
         if playerTwoArmy?.id == armyId { return playerTwoArmy }
         return nil
     }
 
-    private func woundCapacity(for armyId: String, unit: SpearheadUnit) -> Int {
-        UnitWoundCapacity.capacity(for: unit, healthPerModelOverride: nil)
+    func woundCapacity(for armyId: String, unit: SpearheadUnit) -> Int {
+        let key = UnitWoundTracker.unitKey(armyId: armyId, unitId: unit.id)
+        return UnitWoundCapacity.capacity(
+            for: unit,
+            healthPerModelOverride: trackerState.unitHealthPerModelOverrides[key]
+        )
     }
 }
 

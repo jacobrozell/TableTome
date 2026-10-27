@@ -9,6 +9,30 @@ struct PlayerMatchHistorySection: View {
     var body: some View {
         Section {
             if stats.gamesPlayed > 0 {
+                HStack(spacing: DesignTokens.Spacing.sm) {
+                    matchStatChip(
+                        value: "\(stats.wins)",
+                        label: String(localized: "Wins"),
+                        color: .green
+                    )
+                    matchStatChip(
+                        value: "\(stats.losses)",
+                        label: String(localized: "Losses"),
+                        color: .red
+                    )
+                    if stats.ties > 0 {
+                        matchStatChip(
+                            value: "\(stats.ties)",
+                            label: String(localized: "Draws"),
+                            color: .secondary
+                        )
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.vertical, DesignTokens.Spacing.xs)
+            }
+
+            if stats.gamesPlayed > 0 {
                 LabeledContent(String(localized: "Record"), value: stats.recordLabel)
             }
             if records.isEmpty {
@@ -24,6 +48,22 @@ struct PlayerMatchHistorySection: View {
         } header: {
             Text(String(localized: "Match History"))
         }
+    }
+
+    private func matchStatChip(value: String, label: String, color: Color) -> some View {
+        VStack(spacing: 2) {
+            Text(value)
+                .font(.title3.weight(.bold))
+                .monospacedDigit()
+                .foregroundStyle(color)
+            Text(label)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+        }
+        .frame(minWidth: 56)
+        .padding(.horizontal, DesignTokens.Spacing.sm)
+        .padding(.vertical, DesignTokens.Spacing.xs)
+        .background(color.opacity(0.1), in: CardSurface.shape(radius: DesignTokens.Radius.inset))
     }
 
     private func playerMatchRow(_ record: MatchRecord) -> some View {

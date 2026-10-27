@@ -3,10 +3,7 @@ import TabletomeDomain
 
 extension GuidedMatchView {
     var setupIsComplete: Bool {
-        guard viewModel.matchState.hasBothArmies else { return false }
-        let progress = viewModel.setupProgress
-        guard progress.total > 0 else { return true }
-        return progress.completed == progress.total
+        viewModel.setupIsComplete
     }
 
     var visibleHubTabs: [GuidedMatchHubTab] {
@@ -36,6 +33,28 @@ extension GuidedMatchView {
     /// Spearhead hides army picker once starter matchup or manual pick is done.
     var showsSpearheadArmyPicker: Bool {
         gameSystemId != .aosSpearhead || !viewModel.matchState.hasBothArmies
+    }
+
+    func syncHubTabWithVisibleTabs() {
+        let tabs = visibleHubTabs
+        if !tabs.contains(hubTab), let first = tabs.first {
+            hubTab = first
+        } else if hubTab == .armies, gameSystemId == .aosSpearhead, !showsSpearheadArmyPicker {
+            hubTab = suggestedHubTab
+        }
+    }
+
+    /// Single hub-tab pass after catalog + household defaults — avoids multiple `hubTab` writes per frame.
+    func applyGuidedMatchHubTabPolicyAfterLoad() {
+        if !hasAppliedInitialHubTab {
+            hasAppliedInitialHubTab = true
+            hubTab = initialHubTab ?? suggestedHubTab
+        }
+        syncHubTabWithVisibleTabs()
+        if hasResumableBattleSession, visibleHubTabs.contains(.battle) {
+            hubTab = .battle
+            logBattleTrackerOpened(source: "resume")
+        }
     }
 
     var spearheadAttackerLabel: String? {
@@ -69,7 +88,7 @@ extension GuidedMatchView {
         if usesPadSplitNavigation {
             selectedDestination = .step(stepId)
         } else {
-            guidedMatchNavigationPath.append(GuidedMatchDestination.step(stepId))
+            router.learnPath.append(GuidedMatchDestination.step(stepId))
         }
     }
 

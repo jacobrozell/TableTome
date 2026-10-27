@@ -38,7 +38,6 @@ struct WrongGuideBanner: View {
             .buttonStyle(.borderedProminent)
             .accessibilityIdentifier("guide.wrongGuide.openSuggested")
         }
-        .accentHighlightCard()
         .accessibilityIdentifier("guide.wrongGuideBanner")
     }
 }

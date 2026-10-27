@@ -19,7 +19,6 @@
 | `-enable_full_product_surface` | All play modes, Lists tab, StarCraft, Rules Q&A, legacy `wh40k-10e` stub visibility, cross-pillar links |
 | `-enable_all_play_modes` | 40k 11e + Combat Patrol on **Play tab home** only |
 | `-enable_combat_patrol` | Combat Patrol visibility (`showsCombatPatrol`) |
-| `-enable_single_surface_battle` | Spearhead single-surface battle experiment |
 
 ## Gates (1.0.0 Release defaults)
 

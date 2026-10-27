@@ -27,7 +27,7 @@ extension GuidedMatchView {
                 guidedMatchDetail(catalog: catalog)
                     .modifier(GuidedMatchDetailWidth(destination: selectedDestination))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                    .playNavigationDestinations()
+                    .guidedMatchNestedNavigationDestinations()
             }
         }
         .onChange(of: selectedDestination) { _, _ in
@@ -39,7 +39,11 @@ extension GuidedMatchView {
         .onChange(of: viewModel.matchState.hasBothArmies) { _, hasBoth in
             guard hasBoth, usesPadSplitNavigation, selectedDestination == nil else { return }
             guard !AppLaunchArguments.shouldSnapshotGuidedMatchArmies else { return }
-            selectedDestination = spearheadPadDetailDestination
+            applySpearheadPadInitialDestinationIfNeeded()
+        }
+        .onChange(of: viewModel.catalog != nil) { _, catalogLoaded in
+            guard catalogLoaded else { return }
+            applySpearheadPadInitialDestinationIfNeeded()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .toolbar(.hidden, for: .navigationBar)
@@ -48,6 +52,7 @@ extension GuidedMatchView {
     func applySpearheadPadInitialDestinationIfNeeded() {
         guard gameSystemId == .aosSpearhead,
               viewModel.matchState.hasBothArmies,
+              viewModel.catalog != nil,
               selectedDestination == nil,
               !AppLaunchArguments.shouldSnapshotGuidedMatchArmies else { return }
         selectedDestination = spearheadPadDetailDestination

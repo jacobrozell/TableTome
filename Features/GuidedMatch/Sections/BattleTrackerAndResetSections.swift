@@ -6,10 +6,7 @@ struct BattleTrackerSection: View {
     let useSplitSelection: Bool
 
     private var setupComplete: Bool {
-        guard viewModel.matchState.hasBothArmies else { return false }
-        let progress = viewModel.setupProgress
-        guard progress.total > 0 else { return true }
-        return progress.completed == progress.total
+        viewModel.setupIsComplete
     }
 
     private var canOpenBattleTracker: Bool {

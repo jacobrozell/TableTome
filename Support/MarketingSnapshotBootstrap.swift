@@ -93,7 +93,10 @@ enum MarketingSnapshotBootstrap {
         if let gameSystemId = openGameGuideGameSystemId {
             router.openGameGuide(gameSystemId: gameSystemId)
         } else if AppLaunchArguments.shouldOpenGuidedMatch {
-            router.openGuidedMatch(gameSystemId: OnboardingCompletion.defaultGameSystemId)
+            router.openGuidedMatch(
+                gameSystemId: OnboardingCompletion.defaultGameSystemId,
+                opensBattleTab: AppLaunchArguments.shouldOpenBattleTracker
+            )
         } else if let query = openRulesSearchQuery {
             router.openRulesSearch(
                 gameSystemId: OnboardingCompletion.spearheadGameSystemId,

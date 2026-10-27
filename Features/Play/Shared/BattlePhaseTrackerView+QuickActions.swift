@@ -11,6 +11,14 @@ extension BattlePhaseTrackerView {
         )
     }
 
+    func syncSectionTabWithVisibleTabs() {
+        let tabs = BattleTrackerSectionTab.visibleTabs(gameSystemId: viewModel.gameSystemId)
+        let clamped = BattleTrackerSectionTab.clampedSelection(selectedSectionTab, visibleTabs: tabs)
+        if clamped != selectedSectionTab {
+            selectedSectionTab = clamped
+        }
+    }
+
     var showsTabHint: Bool {
         supportsBattleTracker && selectedSectionTab != suggestedSectionTab
     }

@@ -6,41 +6,72 @@ struct GuidedMatchDestinationView: View {
     var opensBattleTab: Bool = false
 
     @EnvironmentObject private var dependencies: AppDependencies
+
+    var body: some View {
+        GuidedMatchDestinationContent(
+            gameSystemId: gameSystemId,
+            opensBattleTab: opensBattleTab,
+            dependencies: dependencies
+        )
+    }
+}
+
+/// Owns a stable `GuidedMatchViewModel` for the lifetime of this navigation destination.
+private struct GuidedMatchDestinationContent: View {
+    let gameSystemId: GameSystemId
+    let opensBattleTab: Bool
+    let dependencies: AppDependencies
+
+    @StateObject private var viewModel: GuidedMatchViewModel
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @State private var ruleSections: [RuleSection]?
     @State private var errorMessage: String?
+
+    init(gameSystemId: GameSystemId, opensBattleTab: Bool, dependencies: AppDependencies) {
+        self.gameSystemId = gameSystemId
+        self.opensBattleTab = opensBattleTab
+        self.dependencies = dependencies
+        _viewModel = StateObject(
+            wrappedValue: dependencies.makeGuidedMatchViewModel(gameSystemId: gameSystemId)
+        )
+    }
 
     private var hidesOuterNavigationBar: Bool {
         horizontalSizeClass == .regular
     }
 
     var body: some View {
-        Group {
-            if let ruleSections {
-                GuidedMatchView(
-                    viewModel: dependencies.makeGuidedMatchViewModel(gameSystemId: gameSystemId),
-                    ruleSections: ruleSections,
-                    initialHubTab: opensBattleTab ? .battle : nil
-                )
-            } else if let errorMessage {
-                EmptyStateView(
-                    title: String(localized: "Guided Match unavailable"),
-                    message: errorMessage,
-                    systemImage: "exclamationmark.triangle",
-                    actionTitle: String(localized: "Try again"),
-                    action: { Task { await load() } }
-                )
-                .adaptiveEmptyStateLayout()
-            } else {
-                ProgressView(String(localized: "Loading match setup…"))
-                    .asyncContentShell()
-                    .accessibilityIdentifier("guidedMatch.loading")
+        ZStack {
+            GuidedMatchView(
+                viewModel: viewModel,
+                ruleSections: ruleSections ?? [],
+                initialHubTab: opensBattleTab ? .battle : nil
+            )
+
+            if ruleSections == nil {
+                Color(.systemBackground)
+                    .ignoresSafeArea()
+
+                if let errorMessage {
+                    EmptyStateView(
+                        title: String(localized: "Guided Match unavailable"),
+                        message: errorMessage,
+                        systemImage: "exclamationmark.triangle",
+                        actionTitle: String(localized: "Try again"),
+                        action: { Task { await load() } }
+                    )
+                    .adaptiveEmptyStateLayout()
+                } else {
+                    ProgressView(String(localized: "Loading match setup…"))
+                        .asyncContentShell()
+                        .accessibilityIdentifier("guidedMatch.loading")
+                }
             }
         }
-        .navigationTitle(hidesOuterNavigationBar ? "" : GameSystemRulesLabels.guidedMatchTitle(gameSystemId: gameSystemId))
-        .navigationBarTitleDisplayMode(.inline)
         .toolbar(hidesOuterNavigationBar ? .hidden : .visible, for: .navigationBar)
         .toolbarBackground(hidesOuterNavigationBar ? .hidden : .automatic, for: .navigationBar)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .background(Color(.systemBackground))
         .task { await load() }
     }
 
@@ -53,7 +84,6 @@ struct GuidedMatchDestinationView: View {
         do {
             let gameSystem = try await dependencies.rulesRepository.gameSystem(id: gameSystemId.rawValue)
             ruleSections = gameSystem.ruleSections
-            FirstSessionStore.recordGuidedMatchOpened()
             dependencies.logger.info(
                 .guidedMatch,
                 eventName: "guided_match_opened",

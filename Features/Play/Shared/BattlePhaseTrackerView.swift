@@ -162,6 +162,7 @@ struct BattlePhaseTrackerView: View {
                     selectedSectionTab = suggestedSectionTab
                 }
             }
+            syncSectionTabWithVisibleTabs()
             applyCompactTopChromeDefault()
             expandEmbeddedPadBattleChromeIfNeeded()
             if AppLaunchArguments.shouldOpenUnitFocus {

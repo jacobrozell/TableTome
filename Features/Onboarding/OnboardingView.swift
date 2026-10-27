@@ -37,18 +37,7 @@ struct OnboardingView: View {
                 footer
                     .padding(.horizontal, horizontalPadding)
                     .padding(.vertical, 12)
-                    .background {
-                        LinearGradient(
-                            colors: [
-                                Color(.systemBackground).opacity(0),
-                                Color(.systemBackground),
-                                Color(.systemBackground)
-                            ],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                        .ignoresSafeArea(edges: .bottom)
-                    }
+                    .background(.bar)
             }
         }
         .interactiveDismissDisabled(mode == .firstLaunch)
@@ -83,7 +72,7 @@ struct OnboardingView: View {
     private func headerText(alignment: TextAlignment) -> some View {
         VStack(spacing: 8) {
             Text(String(localized: "What box do you have?"))
-                .font(.system(wideLayout ? .title : .largeTitle, design: .serif).weight(.bold))
+                .font(wideLayout ? .title.weight(.bold) : .largeTitle.weight(.bold))
                 .multilineTextAlignment(alignment)
                 .accessibilityAddTraits(.isHeader)
 

@@ -4,38 +4,43 @@ import TabletomeData
 
 extension GuidedMatchView {
     @ViewBuilder
-    func compactLayout(catalog: SpearheadCatalog) -> some View {
-        NavigationStack(path: $guidedMatchNavigationPath) {
-            compactLayoutBody(catalog: catalog)
-                .navigationDestination(for: GuidedMatchDestination.self) { destination in
+    func compactLayout(catalog: SpearheadCatalog?) -> some View {
+        compactLayoutBody(catalog: catalog)
+            .navigationDestination(for: GuidedMatchDestination.self) { destination in
+                if let catalog {
                     guidedMatchScreen(
                         destination: destination,
                         catalog: catalog,
                         dismissesArmySelectionOnSave: true,
                         household: householdPlayers
                     )
+                } else {
+                    ProgressView()
                 }
-                .playNavigationDestinations()
-        }
+            }
+            .guidedMatchNestedNavigationDestinations()
         .onChange(of: hidesTabBarInLandscapeBattle) { _, hidden in
             tabBarChrome.isHidden = hidden
         }
-        .onChange(of: layoutContext) { _, _ in
+        .onChange(of: layoutContext) { oldContext, newContext in
             tabBarChrome.isHidden = hidesTabBarInLandscapeBattle
+            if newContext == .phoneLandscape,
+               oldContext != .phoneLandscape,
+               !showsEmbeddedBattleTracker {
+                isHubChromeCollapsed = true
+            }
         }
         .onDisappear {
             tabBarChrome.isHidden = false
         }
         .onAppear {
-            applyInitialHubTabIfNeeded()
             tabBarChrome.isHidden = hidesTabBarInLandscapeBattle
-            if hasResumableBattleSession, hubTab == .armies {
-                hubTab = .battle
-                logBattleTrackerOpened(source: "resume")
-            }
         }
         .onChange(of: viewModel.matchState.hasBothArmies) { _, _ in
-            guard hasAppliedInitialHubTab, !hasResumableBattleSession else { return }
+            guard hasAppliedInitialHubTab else { return }
+            syncHubTabWithVisibleTabs()
+            guard !hasResumableBattleSession else { return }
+            guard !AppLaunchArguments.shouldOpenBattleTracker else { return }
             hubTab = suggestedHubTab
         }
         .onChange(of: hubTab) { _, newTab in
@@ -49,14 +54,23 @@ extension GuidedMatchView {
     }
 
     @ViewBuilder
-    private func compactLayoutBody(catalog: SpearheadCatalog) -> some View {
+    private func compactLayoutBody(catalog: SpearheadCatalog?) -> some View {
         VStack(spacing: 0) {
-            guidedMatchHubChrome(catalog: catalog)
+            if let catalog {
+                guidedMatchHubChrome(catalog: catalog)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .layoutPriority(2)
 
-            if showsEmbeddedBattleTracker {
-                embeddedBattleTracker(catalog: catalog)
+                if showsEmbeddedBattleTracker {
+                    embeddedBattleTracker(catalog: catalog)
+                        .layoutPriority(1)
+                } else {
+                    guidedMatchHubList(catalog: catalog)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .layoutPriority(1)
+                }
             } else {
-                guidedMatchHubList(catalog: catalog)
+                ProgressView(String(localized: "Loading guided match…"))
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .layoutPriority(1)
             }
@@ -78,12 +92,6 @@ extension GuidedMatchView {
         )
     }
 
-    func applyInitialHubTabIfNeeded() {
-        guard !hasAppliedInitialHubTab else { return }
-        hasAppliedInitialHubTab = true
-        hubTab = initialHubTab ?? suggestedHubTab
-    }
-
     @ViewBuilder
     func guidedMatchHubChrome(catalog: SpearheadCatalog) -> some View {
         if !hidesGuidedMatchHubChromeWhenEmbedded {
@@ -94,8 +102,8 @@ extension GuidedMatchView {
                     }
                 }
             } else {
-                VStack(spacing: DesignTokens.Spacing.sm) {
-                    HStack(alignment: .center, spacing: DesignTokens.Spacing.xs) {
+                VStack(spacing: 0) {
+                    HStack(alignment: .top, spacing: DesignTokens.Spacing.xs) {
                         GuidedMatchStatusBar(
                             playerOneSummary: playerSummary(
                                 selection: viewModel.matchState.playerOne,
@@ -117,6 +125,7 @@ extension GuidedMatchView {
                             compactMode: usesCompactHubStatusBar
                         )
                         .id(hubTrackerTick)
+                        .frame(maxWidth: .infinity, alignment: .leading)
 
                         ChromeCollapseInlineButton(
                             accessibilityLabel: String(localized: "Hide match summary"),
@@ -128,6 +137,7 @@ extension GuidedMatchView {
                             }
                         )
                     }
+                    .barChromeBackground()
 
                     if !showsEmbeddedBattleTracker {
                         GuidedMatchHubTabBar(
@@ -137,9 +147,12 @@ extension GuidedMatchView {
                             setupComplete: setupIsComplete,
                             locksArmiesTab: hasResumableBattleSession
                         )
+                        .padding(.horizontal, DesignTokens.Spacing.md)
+                        .padding(.vertical, DesignTokens.Spacing.sm)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(.bar)
                     }
                 }
-                .barChromeBackground()
                 .overlay(alignment: .bottom) {
                     if showsEmbeddedBattleTracker {
                         Divider()
@@ -163,6 +176,15 @@ extension GuidedMatchView {
                 } else if showsSpearheadArmyPicker {
                     matchupSectionView
                     playersSection(catalog: catalog, useSplitSelection: false)
+                } else {
+                    Section {
+                        Label(
+                            String(localized: "Armies are set — open Setup to continue pre-battle steps."),
+                            systemImage: "checkmark.circle.fill"
+                        )
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                    }
                 }
             case .setup:
                 if gameSystemId == .aosSpearhead {
@@ -227,7 +249,6 @@ extension GuidedMatchView {
         .tabBarScrollInset(
             additionalBottom: hubTab == .setup ? DesignTokens.guidedMatchSetupScrollExtraInset : 0
         )
-        .readableContentWidth()
     }
 
     @ViewBuilder

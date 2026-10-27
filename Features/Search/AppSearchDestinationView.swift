@@ -73,12 +73,7 @@ struct AppSearchDestinationView: View {
         if let army = armies.first(where: { $0.id == result.referenceId }) {
             ArmyRosterView(army: army, ruleSections: ruleSections, gameSystemId: gameSystemId)
         } else if result.referenceId == "guidedMatch" {
-            GuidedMatchView(
-                viewModel: dependencies.makeGuidedMatchViewModel(
-                    gameSystemId: GameSystemId(resolving: gameSystemId)
-                ),
-                ruleSections: ruleSections
-            )
+            GuidedMatchDestinationView(gameSystemId: GameSystemId(resolving: gameSystemId))
         } else if result.referenceId == "combatResolver", ReleaseSurface.showsCombatResolver(for: gameSystemId) {
             UnitMatchupEvaluatorView(
                 ruleSections: ruleSections,

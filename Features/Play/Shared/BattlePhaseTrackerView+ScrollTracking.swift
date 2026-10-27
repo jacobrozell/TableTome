@@ -113,7 +113,9 @@ extension BattlePhaseTrackerView {
                 guard round > oldRound else { return }
                 presentRoundOpenerNudgeIfNeeded()
             }
-            .onReceive(NotificationCenter.default.publisher(for: .matchSyncStateDidChange)) { _ in
+            .onReceive(NotificationCenter.default.publisher(for: .matchSyncStateDidChange)) { notification in
+                let shouldBroadcast = notification.userInfo?[MatchSyncNotifications.shouldBroadcastToPeersKey] as? Bool ?? true
+                guard !shouldBroadcast else { return }
                 viewModel.reloadFromPersistedStores()
                 onMatchStateChange?()
                 syncCombatContext()

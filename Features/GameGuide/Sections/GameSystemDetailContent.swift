@@ -21,21 +21,18 @@ struct GameSystemDetailContent: View {
                         onOpenSuggestedGuide: onOpenSuggestedGuide,
                         onDismiss: onDismissWrongGuideAlert
                     )
-                    .listHeroCardRow()
                 }
             }
 
             if showsStartHereCard {
                 Section {
                     GameGuideStartHereCard(gameSystem: gameSystem)
-                        .listHeroCardRow()
                 }
             }
 
             if showsWhatYouNeedCard {
                 Section {
                     GameGuideWhatYouNeedCard(gameSystemId: gameSystemId)
-                        .listHeroCardRow()
                 }
             }
 
@@ -86,7 +83,7 @@ struct GameSystemDetailContent: View {
                 GameGuideExternalResourcesSection(links: links)
             }
         }
-        .floatingCardListStyle()
+        .listStyle(.insetGrouped)
         .tabBarScrollInset()
     }
 

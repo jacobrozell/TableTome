@@ -43,7 +43,6 @@ struct GameGuideStartHereShell<Tracks: View, Footer: View>: View {
 
             footer()
         }
-        .accentHighlightCard()
     }
 }
 

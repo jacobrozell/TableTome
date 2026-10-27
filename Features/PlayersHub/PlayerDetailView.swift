@@ -21,19 +21,18 @@ struct PlayerDetailView: View {
                     .asyncContentShell()
             } else if let profile = viewModel.profile {
                 Form {
-                    Section {
-                        HStack(spacing: DesignTokens.Spacing.md) {
-                            PlayerAvatarView(
-                                name: profile.displayName,
-                                accentColorName: profile.accentColorName,
-                                size: 56
-                            )
-                            TextField(String(localized: "Display name"), text: $editingName)
-                                .textInputAutocapitalization(.words)
-                                .onSubmit {
-                                    Task { await viewModel.updateDisplayName(editingName) }
-                                }
-                        }
+                    PlayerDetailHeroSection(
+                        profile: profile,
+                        stats: viewModel.stats,
+                        isPrimary: viewModel.isPrimaryPlayer()
+                    )
+
+                    Section(String(localized: "Display name")) {
+                        TextField(String(localized: "Name"), text: $editingName)
+                            .textInputAutocapitalization(.words)
+                            .onSubmit {
+                                Task { await viewModel.updateDisplayName(editingName) }
+                            }
                     }
 
                     Section {

@@ -67,6 +67,14 @@ enum BattleTrackerSectionTab: String, CaseIterable, Identifiable {
         }
         return [.setup, .turn, .army]
     }
+
+    /// Keeps selection on a tab that is actually visible for the active game system.
+    static func clampedSelection(
+        _ selection: BattleTrackerSectionTab,
+        visibleTabs: [BattleTrackerSectionTab]
+    ) -> BattleTrackerSectionTab {
+        visibleTabs.contains(selection) ? selection : (visibleTabs.first ?? selection)
+    }
 }
 
 extension BattleTrackerSectionTab {
@@ -145,5 +153,18 @@ struct BattleTrackerSectionTabBar: View {
             }
         }
         .accessibilityIdentifier("battleTracker.sectionTabs")
+        .onAppear {
+            syncSelectionWithVisibleTabs()
+        }
+        .onChange(of: tabs.map(\.id)) { _, _ in
+            syncSelectionWithVisibleTabs()
+        }
+    }
+
+    private func syncSelectionWithVisibleTabs() {
+        let clamped = BattleTrackerSectionTab.clampedSelection(selection, visibleTabs: tabs)
+        if clamped != selection {
+            selection = clamped
+        }
     }
 }

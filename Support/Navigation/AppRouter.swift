@@ -69,9 +69,7 @@ final class AppRouter {
             gameSystemId: GameSystemId(resolving: gameSystemId),
             opensBattleTab: opensBattleTab
         )
-        Task { @MainActor in
-            learnPath = NavigationPath([link])
-        }
+        learnPath = NavigationPath([link])
     }
 
     func openGameGuide(gameSystemId: String) {
@@ -84,9 +82,7 @@ final class AppRouter {
         )
         AnalyticsFeatureUsage.recordGameGuideOpened(gameSystemId: gameSystemId)
         selectedTab = .learn
-        Task { @MainActor in
-            learnPath = NavigationPath([gameSystemId])
-        }
+        learnPath = NavigationPath([gameSystemId])
     }
 
     func openRulesSearch(gameSystemId: String, query: String) {

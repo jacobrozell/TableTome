@@ -12,6 +12,15 @@ enum SpearheadGuidedMatchContent {
         if showsArmyPicker {
             matchup()
             players()
+        } else {
+            Section {
+                Label(
+                    String(localized: "Armies are set — open Setup to continue pre-battle steps."),
+                    systemImage: "checkmark.circle.fill"
+                )
+                .font(.callout)
+                .foregroundStyle(.secondary)
+            }
         }
     }
 
@@ -84,6 +93,15 @@ enum SpearheadGuidedMatchContent {
         if showsArmyPicker {
             matchup()
             players()
+        } else {
+            Section {
+                Label(
+                    String(localized: "Armies are set — pick a setup step below."),
+                    systemImage: "checkmark.circle.fill"
+                )
+                .font(.callout)
+                .foregroundStyle(.secondary)
+            }
         }
         starterHandoff()
         setupProgress()

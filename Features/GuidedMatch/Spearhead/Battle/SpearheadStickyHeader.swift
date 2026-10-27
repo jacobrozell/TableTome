@@ -12,6 +12,7 @@ struct SpearheadStickyHeader: View {
     let playerTwoName: String
     let activePlayerIsOne: Bool
     let isRoundOneFirstTurnEditable: Bool
+    var compactLandscape: Bool = false
     let onSetFirstTurn: (Bool) -> Void
     let onTapVP: () -> Void
 
@@ -19,20 +20,55 @@ struct SpearheadStickyHeader: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack(spacing: DesignTokens.Spacing.sm) {
-                roundPhaseLabel
-                Spacer()
-                vpSummary
+            if compactLandscape {
+                compactLandscapeBody
+            } else {
+                standardBody
             }
-            .padding(.horizontal, DesignTokens.Spacing.md)
-            .padding(.vertical, DesignTokens.Spacing.sm)
-            .background(.bar)
-
             Divider()
         }
         .accessibilityElement(children: .combine)
         .accessibilityLabel(accessibilityLabel)
         .accessibilityIdentifier("spearheadBattle.stickyHeader")
+    }
+
+    @ViewBuilder
+    private var standardBody: some View {
+        HStack(spacing: DesignTokens.Spacing.sm) {
+            roundPhaseLabel
+            Spacer(minLength: 0)
+            vpSummary
+        }
+        .padding(.horizontal, DesignTokens.Spacing.md)
+        .padding(.vertical, DesignTokens.Spacing.sm)
+        .frame(minHeight: DesignTokens.minTouchTarget)
+        .background(.bar)
+    }
+
+    @ViewBuilder
+    private var compactLandscapeBody: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+            HStack(spacing: DesignTokens.Spacing.sm) {
+                Text("Round \(round) · \(phase.title)")
+                    .font(.caption.weight(.semibold))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.85)
+                Spacer(minLength: 0)
+                vpSummary
+            }
+            if isRoundOneFirstTurnEditable {
+                firstTurnPicker
+            } else {
+                Text(activePlayerName)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+            }
+        }
+        .padding(.horizontal, DesignTokens.phoneLandscapeHorizontalPadding)
+        .padding(.vertical, DesignTokens.Spacing.xs)
+        .frame(minHeight: DesignTokens.phoneLandscapeStickyBarHeight, alignment: .leading)
+        .background(.bar)
     }
 
     @ViewBuilder
@@ -118,10 +154,10 @@ struct SpearheadStickyHeader: View {
             }
         }
         .padding(.horizontal, DesignTokens.Spacing.sm)
-        .padding(.vertical, DesignTokens.Spacing.xs)
+        .padding(.vertical, 3)
         .background(
             isActive ? Color.accentColor.opacity(0.15) : Color(.tertiarySystemFill),
-            in: Capsule()
+            in: RoundedRectangle(cornerRadius: DesignTokens.Radius.nested, style: .continuous)
         )
         .foregroundStyle(isActive ? Color.accentOnSurface : Color.primary)
     }

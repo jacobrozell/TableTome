@@ -5,10 +5,18 @@ struct PlayerSidebarRow: View {
     let label: String
     let selection: PlayerArmySelection
     let catalog: SpearheadCatalog
+    var profile: PlayerProfile?
+    var isPrimaryProfile: Bool = false
     let destination: GuidedMatchDestination
 
     var body: some View {
-        PlayerArmyRow(label: label, selection: selection, catalog: catalog)
+        PlayerArmyRow(
+            label: label,
+            selection: selection,
+            catalog: catalog,
+            profile: profile,
+            isPrimaryProfile: isPrimaryProfile
+        )
             .tag(destination)
             .accessibilityIdentifier(destination == .playerOne ? "guidedMatch.playerOne" : "guidedMatch.playerTwo")
             .accessibilityLabel(playerSidebarAccessibilityLabel)
@@ -34,7 +42,14 @@ struct PlayersSection: View {
     @ObservedObject var viewModel: GuidedMatchViewModel
     let catalog: SpearheadCatalog
     let useSplitSelection: Bool
+    var householdProfiles: [PlayerProfile] = []
+    var primaryProfileId: UUID?
     @Binding var showsOwnListsSection: Bool
+
+    private func profile(for selection: PlayerArmySelection) -> PlayerProfile? {
+        guard let profileId = selection.profileId else { return nil }
+        return householdProfiles.first { $0.id == profileId }
+    }
 
     private var showsPlayerRows: Bool {
         showsOwnListsSection || viewModel.matchState.hasBothArmies
@@ -53,12 +68,16 @@ struct PlayersSection: View {
                         label: String(localized: "Player 1"),
                         selection: viewModel.matchState.playerOne,
                         catalog: catalog,
+                        profile: profile(for: viewModel.matchState.playerOne),
+                        isPrimaryProfile: viewModel.matchState.playerOne.profileId == primaryProfileId,
                         destination: .playerOne
                     )
                     PlayerSidebarRow(
                         label: String(localized: "Player 2"),
                         selection: viewModel.matchState.playerTwo,
                         catalog: catalog,
+                        profile: profile(for: viewModel.matchState.playerTwo),
+                        isPrimaryProfile: viewModel.matchState.playerTwo.profileId == primaryProfileId,
                         destination: .playerTwo
                     )
                 } label: {
@@ -121,7 +140,9 @@ struct PlayersSection: View {
             PlayerArmyRow(
                 label: String(localized: "Player 1"),
                 selection: viewModel.matchState.playerOne,
-                catalog: catalog
+                catalog: catalog,
+                profile: profile(for: viewModel.matchState.playerOne),
+                isPrimaryProfile: viewModel.matchState.playerOne.profileId == primaryProfileId
             )
             .frame(maxWidth: .infinity, alignment: .leading)
             .contentShape(Rectangle())
@@ -135,7 +156,9 @@ struct PlayersSection: View {
             PlayerArmyRow(
                 label: String(localized: "Player 2"),
                 selection: viewModel.matchState.playerTwo,
-                catalog: catalog
+                catalog: catalog,
+                profile: profile(for: viewModel.matchState.playerTwo),
+                isPrimaryProfile: viewModel.matchState.playerTwo.profileId == primaryProfileId
             )
             .frame(maxWidth: .infinity, alignment: .leading)
             .contentShape(Rectangle())

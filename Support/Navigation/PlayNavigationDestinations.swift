@@ -7,6 +7,12 @@ extension View {
     func playNavigationDestinations() -> some View {
         modifier(PlayNavigationDestinationsModifier())
     }
+
+    /// Destinations reachable from inside Guided Match without re-registering `GuidedMatchLink`
+    /// (avoids nested-stack navigation thrash and accidental pops of the outer Play stack).
+    func guidedMatchNestedNavigationDestinations() -> some View {
+        modifier(GuidedMatchNestedNavigationDestinationsModifier())
+    }
 }
 
 private struct PlayNavigationDestinationsModifier: ViewModifier {
@@ -82,6 +88,35 @@ private struct PlayNavigationDestinationsModifier: ViewModifier {
             }
             .navigationDestination(for: AppSearchResultLink.self) { link in
                 AppSearchResultDestinationView(link: link)
+            }
+    }
+}
+
+private struct GuidedMatchNestedNavigationDestinationsModifier: ViewModifier {
+    @EnvironmentObject private var dependencies: AppDependencies
+
+    func body(content: Content) -> some View {
+        content
+            .navigationDestination(for: SampleTurnLink.self) { _ in
+                SampleTurnWalkthroughView()
+            }
+            .navigationDestination(for: CombatPatrolSampleTurnLink.self) { _ in
+                CombatPatrolSampleTurnWalkthroughView()
+            }
+            .navigationDestination(for: Wh40k11eSampleTurnLink.self) { _ in
+                Wh40k11eSampleTurnWalkthroughView()
+            }
+            .navigationDestination(for: RuleSectionLink.self) { link in
+                RuleSectionDestinationView(gameSystemId: link.gameSystemId, sectionId: link.sectionId)
+            }
+            .navigationDestination(for: BattleTacticsReferenceLink.self) { link in
+                BattleTacticsReferenceDestinationView(gameSystemId: link.gameSystemId)
+            }
+            .navigationDestination(for: ArmyRosterLink.self) { link in
+                ArmyRosterDestinationView(gameSystemId: link.gameSystemId, armyId: link.armyId)
+            }
+            .navigationDestination(for: CombatResolverLink.self) { link in
+                CombatResolverDestinationView(link: link)
             }
     }
 }

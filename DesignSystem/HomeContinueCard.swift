@@ -30,7 +30,6 @@ struct HomeContinueCard: View {
 
             continuationButton
         }
-        .accentHighlightCard()
         .accessibilityIdentifier("home.continueCard")
         .task(id: continuation.gameSystemId) {
             await loadSetupProgressCaption()

@@ -104,6 +104,11 @@ struct GuidedMatchHubTabBar: View {
             }
             lockedTabAttempt = nil
         }
+        .onAppear {
+            if !visibleTabs.contains(selection), let first = visibleTabs.first {
+                selection = first
+            }
+        }
         .onChange(of: selection) { _, _ in
             lockedTabAttempt = nil
         }

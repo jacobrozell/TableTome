@@ -76,6 +76,7 @@ struct RootTabView: View {
             OnboardingView(mode: .firstLaunch, onFinished: handleOnboardingCompletion)
         }
         .task {
+            UITestLaunchConfiguration.applyIfNeeded(modelContext: modelContext)
             AppBootstrapper.bootstrap(using: dependencies.logger)
             ClientEnvironmentMonitor.startReportingChanges(using: dependencies.logger)
             dependencies.logger.info(
@@ -132,11 +133,10 @@ struct RootTabView: View {
             : String(localized: "Play")
     }
 
-    @ViewBuilder
     private var playTab: some View {
         @Bindable var router = router
 
-        let stack = NavigationStack(path: $router.learnPath) {
+        return NavigationStack(path: $router.learnPath) {
             HomeView(viewModel: dependencies.makeHomeViewModel())
         }
         .tabItem {
@@ -148,12 +148,8 @@ struct RootTabView: View {
             )
         }
         .tag(AppTab.learn)
-
-        if emphasizePlayTab {
-            stack.badge(String(localized: "Start"))
-        } else {
-            stack
-        }
+        // Keep one stable tab root — toggling `if/else` around `.badge` recreates the stack and pops Guided Match.
+        .badge(emphasizePlayTab ? Text(String(localized: "Start")) : nil)
     }
 
     private var rulesTab: some View {

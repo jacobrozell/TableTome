@@ -24,13 +24,19 @@ struct PlayersHubListView: View {
                     actionTitle: String(localized: "Retry"),
                     action: { Task { await viewModel.load() } }
                 )
+                .adaptiveEmptyStateLayout()
                 .asyncContentShell()
             } else {
                 List {
                     Section {
                         ForEach(viewModel.profiles) { profile in
                             NavigationLink(value: PlayerDetailLink(profileId: profile.id)) {
-                                playerRow(profile)
+                                PlayerSummaryRow(
+                                    profile: profile,
+                                    isPrimary: viewModel.isPrimary(profile),
+                                    stats: viewModel.stats(for: profile.id),
+                                    showsChevron: false
+                                )
                             }
                             .accessibilityIdentifier("playersHub.row.\(profile.id.uuidString)")
                         }
@@ -72,7 +78,7 @@ struct PlayersHubListView: View {
                         }
                     }
                 }
-                .floatingCardListStyle()
+                .listStyle(.insetGrouped)
                 .tabBarScrollInset()
             }
         }
@@ -89,14 +95,15 @@ struct PlayersHubListView: View {
                 .accessibilityIdentifier("playersHub.addPlayer")
             }
         }
-        .alert(String(localized: "Add Player"), isPresented: $showsAddPlayer) {
-            TextField(String(localized: "Name"), text: $newPlayerName)
-            Button(String(localized: "Cancel"), role: .cancel) {}
-            Button(String(localized: "Add")) {
-                let name = newPlayerName.trimmingCharacters(in: .whitespacesAndNewlines)
-                guard !name.isEmpty else { return }
-                Task { await viewModel.createProfile(name: name) }
-            }
+        .sheet(isPresented: $showsAddPlayer) {
+            AddPlayerSheet(
+                name: $newPlayerName,
+                onCancel: { showsAddPlayer = false },
+                onAdd: { name in
+                    showsAddPlayer = false
+                    Task { await viewModel.createProfile(name: name) }
+                }
+            )
         }
         .alert(String(localized: "Cannot Delete"), isPresented: Binding(
             get: { deleteBlockedMessage != nil },
@@ -108,46 +115,5 @@ struct PlayersHubListView: View {
         }
         .task { await viewModel.load() }
         .refreshable { await viewModel.load() }
-    }
-
-    private func playerRow(_ profile: PlayerProfile) -> some View {
-        let stats = viewModel.stats(for: profile.id)
-        return HStack(spacing: DesignTokens.Spacing.md) {
-            PlayerAvatarView(name: profile.displayName, accentColorName: profile.accentColorName)
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                HStack(spacing: DesignTokens.Spacing.sm) {
-                    Text(profile.displayName)
-                        .font(.headline)
-                    if viewModel.isPrimary(profile) {
-                        Text(String(localized: "Me"))
-                            .font(.caption2.weight(.semibold))
-                            .padding(.horizontal, DesignTokens.Spacing.sm)
-                            .padding(.vertical, 2)
-                            .background(Color.accentColor.opacity(0.15), in: Capsule())
-                    }
-                }
-                Text(
-                    String(
-                        localized: "\(profile.ownedSpearheadArmyIds.count) armies"
-                    )
-                )
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                if stats.gamesPlayed > 0 {
-                    Text(statsSummary(stats, profile: profile))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
-        }
-        .padding(.vertical, DesignTokens.Spacing.xs)
-    }
-
-    private func statsSummary(_ stats: PlayerMatchStats, profile: PlayerProfile) -> String {
-        var parts = [stats.recordLabel]
-        if let opponent = stats.lastOpponentName {
-            parts.append(String(localized: "last: vs \(opponent)"))
-        }
-        return parts.joined(separator: " · ")
     }
 }

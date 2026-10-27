@@ -42,4 +42,10 @@ final class BattleTrackerSectionTabTests: XCTestCase {
         )
         XCTAssertEqual(tab, .turn)
     }
+
+    func testClampedSelectionFallsBackWhenCombatTabHidden() {
+        let visible = BattleTrackerSectionTab.visibleTabs(gameSystemId: .wh40k11e)
+        let clamped = BattleTrackerSectionTab.clampedSelection(.combat, visibleTabs: visible)
+        XCTAssertEqual(clamped, .setup)
+    }
 }

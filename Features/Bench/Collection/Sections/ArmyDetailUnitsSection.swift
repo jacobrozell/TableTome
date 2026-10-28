@@ -23,15 +23,15 @@ struct ArmyDetailUnitsSection: View {
     var body: some View {
         Section {
             if visibleUnits.isEmpty {
-                ContentUnavailableView {
-                    Label(String(localized: "No units yet"), systemImage: "figure.stand")
-                } description: {
-                    Text(String(localized: "Add what's on your sprue — name the unit and pick a starting state."))
-                } actions: {
-                    Button(String(localized: "Add unit"), systemImage: "plus") { onAddUnit() }
-                        .buttonStyle(.borderedProminent)
-                        .accessibilityIdentifier("addUnit")
-                }
+                TTEmptyState(
+                    title: String(localized: "No units yet"),
+                    message: String(
+                        localized: "Add what's on your sprue. Name the unit and pick a starting stage."
+                    ),
+                    systemImage: "plus.square.dashed",
+                    primary: (String(localized: "Add Unit"), onAddUnit),
+                    primaryAccessibilityIdentifier: "addUnit"
+                )
                 .listRowBackground(Color.clear)
                 PipelineBeginnerLegend(pipeline: pipeline)
                     .listRowBackground(Color.clear)

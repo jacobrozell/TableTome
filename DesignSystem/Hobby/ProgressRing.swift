@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Circular completion indicator for army browse rows.
+/// Circular completion indicator for collection progress.
 struct ProgressRing: View {
     let percent: Int
     var diameter: CGFloat = 36
@@ -14,20 +14,37 @@ struct ProgressRing: View {
         return min(scaledLarge, 120)
     }
 
+    private var progress: CGFloat {
+        CGFloat(min(max(percent, 0), 100)) / 100
+    }
+
     var body: some View {
-        Gauge(value: Double(percent), in: 0...100) {
-            EmptyView()
-        } currentValueLabel: {
-            Text("\(percent)")
-                .font(.caption2.weight(.semibold).monospacedDigit())
-                .minimumScaleFactor(0.7)
+        ZStack {
+            Circle()
+                .stroke(TTColor.sunken, lineWidth: 8)
+            Circle()
+                .trim(from: 0, to: progress)
+                .stroke(
+                    TTColor.brandFill,
+                    style: StrokeStyle(lineWidth: 8, lineCap: .round)
+                )
+                .rotationEffect(.degrees(-90))
+            Text("\(percent)%")
+                .font(TTFont.numericLarge)
+                .foregroundStyle(TTColor.inkPrimary)
+                .minimumScaleFactor(0.35)
                 .lineLimit(1)
         }
-        .gaugeStyle(.accessoryCircularCapacity)
         .frame(width: size, height: size)
         .fixedSize()
         .layoutPriority(-1)
-        .animation(reduceMotion ? nil : .default, value: percent)
-        .accessibilityLabel("\(percent) percent complete")
+        .animation(TTMotion.standard(reduceMotion: reduceMotion), value: percent)
+        .accessibilityLabel(String(localized: "\(percent) percent complete"))
+    }
+}
+
+#Preview("ProgressRing") {
+    TTPreviewMatrix {
+        ProgressRing(percent: 62, diameter: 88)
     }
 }

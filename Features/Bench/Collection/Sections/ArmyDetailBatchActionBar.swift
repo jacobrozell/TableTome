@@ -8,19 +8,21 @@ struct ArmyDetailBatchActionBar: View {
 
     var body: some View {
         if isEditing, selectionCount > 0 {
-            HStack(spacing: 12) {
+            HStack(spacing: DesignTokens.Spacing.sm) {
                 Text(String(localized: "\(selectionCount) selected"))
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                Spacer()
+                    .font(TTFont.subheadline)
+                    .foregroundStyle(TTColor.inkSecondary)
+                Spacer(minLength: DesignTokens.Spacing.sm)
                 Button(String(localized: "Advance")) { onAdvance() }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(TTSecondaryButtonStyle(fullWidth: false))
+                    .accessibilityHint(String(localized: "Moves the selected units to the next painting stage"))
+                    .accessibilityIdentifier("army.batch.advance")
                 Button(String(localized: "Delete"), role: .destructive) { onDelete() }
-                    .buttonStyle(.bordered)
+                    .buttonStyle(TTDestructiveButtonStyle(fullWidth: false))
+                    .accessibilityHint(String(localized: "Removes the selected units"))
+                    .accessibilityIdentifier("army.batch.delete")
             }
-            .padding(.horizontal)
-            .padding(.vertical, 10)
-            .background(.bar)
+            .barChromeBackground()
         }
     }
 }

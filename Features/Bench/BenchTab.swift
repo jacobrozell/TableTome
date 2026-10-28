@@ -6,7 +6,7 @@ struct BenchTab: View {
   @Environment(AppRouter.self) private var router
   @State private var section: BenchSection = .collection
 
-  enum BenchSection: String, CaseIterable, Identifiable {
+  enum BenchSection: String, CaseIterable, Identifiable, Hashable {
     case collection
     case paints
 
@@ -37,18 +37,7 @@ struct BenchTab: View {
   var body: some View {
     VStack(spacing: 0) {
       if visibleSections.count > 1 {
-        Picker(String(localized: "Models section"), selection: $section) {
-          ForEach(visibleSections) { item in
-            Label(item.label, systemImage: item.icon).tag(item)
-              .accessibilityIdentifier("bench.section.\(item.rawValue)")
-          }
-        }
-        .pickerStyle(.segmented)
-        .padding(.horizontal, DesignTokens.Spacing.md)
-        .padding(.vertical, DesignTokens.Spacing.sm)
-        .background(Color(.systemGroupedBackground))
-        .accessibilityIdentifier("bench.sectionPicker")
-        .accessibilityHint(String(localized: "Switch between your armies and paint inventory"))
+        sectionPicker
       }
 
       Group {
@@ -70,6 +59,43 @@ struct BenchTab: View {
       }
     }
     .accessibilityIdentifier("bench.root")
+  }
+
+  /// Visual control is `TTSegmentedControl`. Clear buttons sit on top so the
+  /// existing segment identifiers stay hittable for UI tests.
+  private var sectionPicker: some View {
+    ZStack {
+      TTSegmentedControl(
+        selection: $section,
+        options: visibleSections,
+        title: { $0.label },
+        systemImage: { $0.icon }
+      )
+      .accessibilityHidden(true)
+      .allowsHitTesting(false)
+
+      HStack(spacing: DesignTokens.Spacing.xxs) {
+        ForEach(visibleSections) { item in
+          Button {
+            section = item
+          } label: {
+            Text(item.label)
+              .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+          }
+          .buttonStyle(.plain)
+          .foregroundStyle(.clear)
+          .accessibilityIdentifier("bench.section.\(item.rawValue)")
+          .accessibilityLabel(item.label)
+          .accessibilityAddTraits(section == item ? .isSelected : [])
+        }
+      }
+    }
+    .padding(.horizontal, DesignTokens.Spacing.md)
+    .padding(.vertical, DesignTokens.Spacing.sm)
+    .background(TTColor.canvas)
+    .accessibilityElement(children: .contain)
+    .accessibilityIdentifier("bench.sectionPicker")
+    .accessibilityHint(String(localized: "Switch between your armies and paint inventory"))
   }
 
   private func syncSectionFromRouter() {

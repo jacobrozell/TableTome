@@ -229,10 +229,10 @@ Legend: ⬜ not started · 🟨 in progress · ✅ merged · ⏸ blocked. **Deps
 | RR-01 | Rules home (browse) | SC-01, SH-03 | [09](09-rules-reference.md) | 🟨 |
 | RR-02 | Rule section detail (readable typography) | RR-01 | [09](09-rules-reference.md) | 🟨 |
 | RR-03 | Glossary sheet + inline glossary chips | RR-02 | [09](09-rules-reference.md) | 🟨 |
-| MD-01 | Models: collection home | DS-10, SH-03 | [10](10-models-collection.md) | ⬜ |
-| MD-02 | Models: army detail | MD-01 | [10](10-models-collection.md) | ⬜ |
-| MD-03 | Models: unit detail + photo | MD-02 | [10](10-models-collection.md) | ⬜ |
-| MD-04 | Models: sheets (add army / unit, filters, intro) | MD-01 | [10](10-models-collection.md) | ⬜ |
+| MD-01 | Models: collection home | DS-10, SH-03 | [10](10-models-collection.md) | 🟨 |
+| MD-02 | Models: army detail | MD-01 | [10](10-models-collection.md) | 🟨 |
+| MD-03 | Models: unit detail + photo | MD-02 | [10](10-models-collection.md) | 🟨 |
+| MD-04 | Models: sheets (add army / unit, filters, intro) | MD-01 | [10](10-models-collection.md) | 🟨 |
 | ST-01 | Settings | SH-03 | [11](11-settings.md) | 🟨 |
 | ST-02 | About / legal / app info | ST-01 | [11](11-settings.md) | 🟨 |
 

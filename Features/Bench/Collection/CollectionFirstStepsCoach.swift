@@ -1,45 +1,57 @@
 import SwiftUI
 
 /// Dismissible coach card after the collection intro — guides the first add flow.
+/// Uses the same brand card as `TTNotice`. The notice component cannot host a
+/// numbered list or the existing dismiss identifier, so the card is composed here.
 struct CollectionFirstStepsCoach: View {
     let hasArmies: Bool
     let onDismiss: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            Label(String(localized: "First steps"), systemImage: "figure.walk")
-                .font(.headline)
-                .foregroundStyle(Color.accentOnSurface)
-
-            Text(message)
-                .font(.callout)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
-
-            Button(String(localized: "Got it")) { onDismiss() }
-                .buttonStyle(.bordered)
-                .frame(minHeight: DesignTokens.minTouchTarget)
+            HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
+                Image(systemName: "figure.walk")
+                    .foregroundStyle(TTColor.brand)
+                    .accessibilityHidden(true)
+                Text(String(localized: "First steps"))
+                    .font(TTFont.headline)
+                    .foregroundStyle(TTColor.inkPrimary)
+                Spacer(minLength: 0)
+                Button(action: onDismiss) {
+                    Image(systemName: "xmark")
+                        .frame(width: 44, height: 44)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(String(localized: "Dismiss"))
                 .accessibilityIdentifier("collectionFirstStepsDismiss")
+            }
+
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                ForEach(Array(steps.enumerated()), id: \.offset) { index, step in
+                    Text("\(index + 1). \(step)")
+                        .font(TTFont.callout)
+                        .foregroundStyle(TTColor.inkSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
         }
-        .accentHighlightCard()
+        .accentHighlightCard(tone: .brand)
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("collection.firstStepsCoach")
     }
 
-    private var message: String {
+    private var steps: [String] {
         if hasArmies {
-            return String(
-                localized: """
-                Open an army and tap Add unit. Name what's on your sprue — try \"Intercessors (5)\" for a \
-                five-model squad. Swipe right later to mark painting progress.
-                """
-            )
+            return [
+                String(localized: "Open an army and tap Add Unit."),
+                String(localized: "Name what's on your sprue."),
+                String(localized: "Swipe right to mark painting progress.")
+            ]
         }
-        return String(
-            localized: """
-            Tap New army and pick the faction on your box lid. You can load sample data anytime from Settings \
-            if you want to explore first.
-            """
-        )
+        return [
+            String(localized: "Add an army and pick your faction."),
+            String(localized: "Name the units on your sprue."),
+            String(localized: "Load sample data from Settings to explore.")
+        ]
     }
 }

@@ -38,7 +38,17 @@ struct AddUnitSheet: View {
                         focus: $nameFocused
                     )
                     .accessibilityIdentifier("unitName")
-                    QuantityStepper(label: String(localized: "Quantity"), value: $qty)
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                        Text(String(localized: "Quantity"))
+                            .font(TTFont.subheadline)
+                            .foregroundStyle(TTColor.inkSecondary)
+                        TTCounter(
+                            value: $qty,
+                            range: 1...9999,
+                            label: String(localized: "Quantity"),
+                            size: .regular
+                        )
+                    }
                     if !name.trimmingCharacters(in: .whitespaces).isEmpty {
                         ModelCountSummary(name: name, qty: qty)
                     }
@@ -96,6 +106,8 @@ struct AddUnitSheet: View {
                     }
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(TTColor.canvas.ignoresSafeArea())
             .formEditorScreenChrome()
             .navigationTitle(String(localized: "Add unit"))
             .navigationBarTitleDisplayMode(.inline)
@@ -105,6 +117,7 @@ struct AddUnitSheet: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(String(localized: "Add")) { onAdd(name, qty, source, state, trackPerModel, memberStates); dismiss() }
+                    .fontWeight(.semibold)
                     .accessibilityIdentifier("addUnitConfirm")
                     .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
@@ -128,6 +141,7 @@ struct AddUnitSheet: View {
                 syncMemberStates()
             }
         }
+        .presentationBackground(TTColor.canvas)
     }
 
     private var memberStateSummary: String {

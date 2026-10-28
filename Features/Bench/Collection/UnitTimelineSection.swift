@@ -30,8 +30,10 @@ struct UnitTimelineSection: View {
                 }
                 .listRowBackground(Color.clear)
             } else {
-                ForEach(events) { event in
-                    timelineRow(event)
+                VStack(alignment: .leading, spacing: 0) {
+                    ForEach(Array(events.enumerated()), id: \.element.id) { index, event in
+                        timelineRow(event, isLast: index == events.count - 1)
+                    }
                 }
             }
         } header: {
@@ -47,48 +49,79 @@ struct UnitTimelineSection: View {
                 Text(String(localized: "Photos from matching stages appear beside the closest event."))
             }
         }
+        .listRowBackground(TTColor.surface)
     }
 
     @ViewBuilder
-    private func timelineRow(_ event: StageEvent) -> some View {
-        if dynamicTypeSize.isAccessibilitySize {
-            VStack(alignment: .leading, spacing: 8) {
-                timelineDetails(event)
-                if let thumb = photoNear(event) {
-                    UnitPhotoThumb(photo: thumb)
+    private func timelineRow(_ event: StageEvent, isLast: Bool) -> some View {
+        let hex = pipeline.first { $0.key == event.stageKey }?.hex ?? ""
+        HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
+            timelineIcon(hex: hex)
+
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                if dynamicTypeSize.needsLayoutAdaptation {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                        timelineDetails(event)
+                        if let thumb = photoNear(event) {
+                            UnitPhotoThumb(photo: thumb)
+                        }
+                    }
+                } else {
+                    HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
+                        timelineDetails(event)
+                        Spacer(minLength: 0)
+                        if let thumb = photoNear(event) {
+                            UnitPhotoThumb(photo: thumb)
+                        }
+                    }
                 }
             }
-            .accessibilityElement(children: .combine)
-        } else {
-            HStack(alignment: .top, spacing: 10) {
-                timelineDetails(event)
-                Spacer(minLength: 0)
-                if let thumb = photoNear(event) {
-                    UnitPhotoThumb(photo: thumb)
-                }
-            }
-            .accessibilityElement(children: .combine)
+            .padding(.bottom, isLast ? 0 : DesignTokens.Spacing.md)
         }
+        .background(alignment: .topLeading) {
+            if !isLast {
+                Rectangle()
+                    .fill(TTColor.stroke)
+                    .frame(width: 2)
+                    .padding(.leading, 13)
+                    .padding(.top, 28)
+            }
+        }
+        .accessibilityElement(children: .combine)
+    }
+
+    private func timelineIcon(hex: String) -> some View {
+        Circle()
+            .fill(hex.isEmpty ? TTColor.sunken : Color(hex: hex))
+            .frame(width: 28, height: 28)
+            .overlay {
+                Image(systemName: "paintbrush.pointed.fill")
+                    .font(TTFont.caption)
+                    .foregroundStyle(hex.isEmpty ? TTColor.inkSecondary : Color(hex: hex).legibleForeground)
+            }
+            .accessibilityHidden(true)
     }
 
     @ViewBuilder
     private func timelineDetails(_ event: StageEvent) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack(spacing: 6) {
-                StateChip(state: event.stageKey, pipeline: pipeline)
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xxs) {
+            HStack(spacing: DesignTokens.Spacing.xs) {
+                Text(event.stageKey.isEmpty ? "—" : event.stageKey)
+                    .font(TTFont.subheadline)
+                    .foregroundStyle(TTColor.inkPrimary)
                 if let index = event.memberIndex {
                     Text("#\(index + 1)")
-                        .font(.caption2.monospaced())
-                        .foregroundStyle(.secondary)
+                        .font(TTFont.caption)
+                        .foregroundStyle(TTColor.inkTertiary)
                 }
             }
             Text(event.occurredAt.formatted(date: .abbreviated, time: .shortened))
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(TTFont.caption)
+                .foregroundStyle(TTColor.inkTertiary)
             if let previous = event.previousStageKey, previous != event.stageKey {
                 Text(String(localized: "from \(previous)"))
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
+                    .font(TTFont.caption)
+                    .foregroundStyle(TTColor.inkTertiary)
             }
         }
     }

@@ -10,17 +10,26 @@ struct ArmyStatsHeader: View {
     let armyCount: Int
     let pipeline: [PipelineStage]
     var scoped: Bool = false
+    var showsProgress: Bool = true
 
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     private var statColumns: [GridItem] {
         if dynamicTypeSize >= .accessibility5 {
-            [GridItem(.flexible())]
-        } else if dynamicTypeSize.isAccessibilitySize {
-            [GridItem(.flexible(), spacing: 8), GridItem(.flexible(), spacing: 8)]
-        } else {
-            [GridItem(.adaptive(minimum: 108), spacing: 8)]
+            return [GridItem(.flexible())]
         }
+        if dynamicTypeSize.needsLayoutAdaptation {
+            return [
+                GridItem(.flexible(), spacing: DesignTokens.Spacing.sm),
+                GridItem(.flexible(), spacing: DesignTokens.Spacing.sm)
+            ]
+        }
+        let count = horizontalSizeClass == .regular ? 4 : 3
+        return Array(
+            repeating: GridItem(.flexible(), spacing: DesignTokens.Spacing.sm),
+            count: count
+        )
     }
 
     private func label(_ base: String) -> String {
@@ -30,8 +39,8 @@ struct ArmyStatsHeader: View {
     var body: some View {
         let stats = CollectionStats.snapshot(units: units, pipeline: pipeline)
 
-        VStack(spacing: 12) {
-            LazyVGrid(columns: statColumns, spacing: 8) {
+        VStack(spacing: DesignTokens.Spacing.sm) {
+            LazyVGrid(columns: statColumns, spacing: DesignTokens.Spacing.sm) {
                 StatTile(value: stats.unitEntries, label: label(String(localized: "Unit entries")))
                 StatTile(value: stats.models, label: label(String(localized: "Models (est.)")), accent: true)
                 StatTile(value: stats.based, label: label(CollectionStats.basedStage(in: pipeline)?.key ?? String(localized: "Based")))
@@ -41,28 +50,30 @@ struct ArmyStatsHeader: View {
                 StatTile(value: armyCount, label: label(String(localized: "Armies")))
             }
 
-            VStack(alignment: .leading, spacing: 4) {
-                HStack(alignment: .firstTextBaseline) {
-                    Text(
-                        scoped
-                            ? String(localized: "Filtered progress (by model count)")
-                            : String(localized: "Collection progress (by model count)")
-                    )
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(2)
-                        .fixedSize(horizontal: false, vertical: true)
-                    Spacer(minLength: 8)
-                    Text("\(stats.overallPercent)%")
-                        .font(.caption.weight(.semibold))
-                        .monospacedDigit()
-                        .fixedSize()
+            if showsProgress {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                    HStack(alignment: .firstTextBaseline) {
+                        Text(
+                            scoped
+                                ? String(localized: "Filtered progress (by model count)")
+                                : String(localized: "Collection progress (by model count)")
+                        )
+                            .font(TTFont.caption)
+                            .foregroundStyle(TTColor.inkSecondary)
+                            .lineLimit(2)
+                            .fixedSize(horizontal: false, vertical: true)
+                        Spacer(minLength: DesignTokens.Spacing.sm)
+                        Text("\(stats.overallPercent)%")
+                            .font(TTFont.numericSmall)
+                            .foregroundStyle(TTColor.inkPrimary)
+                            .fixedSize()
+                    }
+                    ProgressMeter(segments: stats.segments, height: 10)
+                    ProgressLegend(segments: stats.segments)
                 }
-                ProgressMeter(segments: stats.segments)
-                ProgressLegend(segments: stats.segments)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel(String(localized: "Collection progress \(stats.overallPercent) percent"))
             }
-            .accessibilityElement(children: .combine)
-            .accessibilityLabel(String(localized: "Collection progress \(stats.overallPercent) percent"))
         }
     }
 }
@@ -92,7 +103,7 @@ private struct FlowText: View {
             ForEach(segments) { seg in
                 HStack(spacing: 4) {
                     RoundedRectangle(cornerRadius: 2).fill(Color(hex: seg.hex)).frame(width: 8, height: 8)
-                    Text(seg.key).font(.caption2).foregroundStyle(.secondary)
+                    Text(seg.key).font(.caption2).foregroundStyle(TTColor.inkSecondary)
                 }
             }
         }

@@ -17,21 +17,25 @@ struct StatTile: View {
         VStack(spacing: 4) {
             Text("\(value)")
                 .font(TTFont.numericMedium)
-                .foregroundStyle(accent ? Color(hex: palette.gold) : .primary)
+                .foregroundStyle(accent ? Color(hex: palette.gold) : TTColor.inkPrimary)
                 .minimumScaleFactor(dynamicTypeSize.needsLayoutAdaptation ? 1 : 0.85)
                 .lineLimit(1)
             Text(label)
                 .font(.caption2)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(TTColor.inkSecondary)
                 .multilineTextAlignment(.center)
                 .lineLimit(dynamicTypeSize.isAccessibilitySize ? 4 : 3)
                 .minimumScaleFactor(dynamicTypeSize.needsLayoutAdaptation ? 1 : 0.85)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity, minHeight: minTileHeight)
-        .padding(.horizontal, 6)
-        .padding(.vertical, 10)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 10))
+        .padding(.horizontal, DesignTokens.Spacing.xs)
+        .padding(.vertical, DesignTokens.Spacing.sm)
+        .background(TTColor.raised, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous)
+                .strokeBorder(TTColor.stroke, lineWidth: 1)
+        }
         .accessibilityElement(children: .combine)
         .accessibilityLabel(accessibilitySummary)
     }

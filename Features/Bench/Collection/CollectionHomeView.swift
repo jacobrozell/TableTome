@@ -10,7 +10,6 @@ import UIKit
 @MainActor
 struct CollectionHomeView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.modelContext) private var context
     @Environment(BannerCenter.self) private var banner
     @Environment(UndoService.self) private var undo
@@ -79,6 +78,7 @@ struct CollectionHomeView: View {
             if armies.isEmpty { emptyState }
             else { listContent }
         }
+        .ttScreenBackground()
         .navigationTitle(String(localized: "Models"))
         .searchable(text: $search, prompt: String(localized: "Armies, factions, units…"))
         .toolbar { toolbarContent }
@@ -133,17 +133,15 @@ struct CollectionHomeView: View {
     @ViewBuilder private var listContent: some View {
         let vis = visible
         if vis.isEmpty {
-            ContentUnavailableView {
-                Label(String(localized: "No matching armies"), systemImage: "line.3.horizontal.decrease.circle")
-            } description: {
-                Text(String(localized: "Nothing matches your current search or filters."))
-            } actions: {
-                Button(String(localized: "Clear filters")) { clearFilters() }.buttonStyle(.borderedProminent)
-                if !search.isEmpty, filterCount == 0 {
-                    Button(String(localized: "Clear search")) { search = ""; router.collectionSearch = "" }
-                        .buttonStyle(.bordered)
-                }
-            }
+            TTEmptyState(
+                title: String(localized: "No matching armies"),
+                message: String(localized: "Nothing matches your current search or filters."),
+                systemImage: "line.3.horizontal.decrease.circle",
+                primary: (String(localized: "Clear Filters"), { clearFilters() }),
+                secondary: search.isEmpty
+                    ? nil
+                    : (String(localized: "Clear Search"), { search = ""; router.collectionSearch = "" })
+            )
             .adaptiveEmptyStateLayout()
         } else {
             armyList
@@ -155,52 +153,28 @@ struct CollectionHomeView: View {
         if usesPadSidebarList {
             List { armyListSections(vis: vis, padSidebar: true) }
                 .listStyle(.sidebar)
+                .scrollContentBackground(.hidden)
+                .background(TTColor.canvas.ignoresSafeArea())
                 .tabBarScrollInset()
         } else {
             List { armyListSections(vis: vis, padSidebar: false) }
-                .listStyle(.insetGrouped)
+                .ttGroupedList()
                 .tabBarScrollInset()
         }
     }
 
     @ViewBuilder
     private func armyListSections(vis: [VisibleArmy], padSidebar: Bool) -> some View {
-        if ReleaseSurface.showsMusterTab, !armies.isEmpty {
+        if filterCount > 0 {
             Section {
-                Button {
-                    router.tab = .muster
-                } label: {
-                    HStack(spacing: 10) {
-                        Image(systemName: "flag.fill")
-                            .font(.title3)
-                            .foregroundStyle(Color.accentOnSurface)
-                            .symbolRenderingMode(.hierarchical)
-                            .frame(width: 28)
-                            .accessibilityHidden(true)
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(String(localized: "Build an army list on Lists"))
-                                .font(.subheadline.weight(.medium))
-                            Text(
-                                String(
-                                    localized: "Link a list to track which roster units you own."
-                                )
-                            )
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .fixedSize(horizontal: false, vertical: true)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                }
-                .buttonStyle(.plain)
-                .accessibilityHint(
-                    String(localized: "Opens the Lists tab to count points and link this collection.")
-                )
+                filterBadgeRow
+                    .listRowBackground(Color.clear)
             }
         }
         if !vis.isEmpty {
             Section {
-                collectionSummary(vis: vis)
+                overviewHero(vis: vis)
+                    .listHeroCardRow()
             }
         }
         if showsFirstStepsCoach {
@@ -209,37 +183,47 @@ struct CollectionHomeView: View {
                     cfg.hasDismissedCollectionFirstStepsCoach = true
                     try? context.save()
                 }
-                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                .listRowInsets(
+                    EdgeInsets(
+                        top: DesignTokens.Spacing.sm,
+                        leading: DesignTokens.Spacing.md,
+                        bottom: DesignTokens.Spacing.sm,
+                        trailing: DesignTokens.Spacing.md
+                    )
+                )
                 .listRowBackground(Color.clear)
             }
         }
-        if scoped {
+        if ReleaseSurface.showsMusterTab, !armies.isEmpty {
             Section {
-                if dynamicTypeSize.isAccessibilitySize {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Label(filterBannerText, systemImage: "line.3.horizontal.decrease.circle")
-                            .font(.subheadline)
-                            .fixedSize(horizontal: false, vertical: true)
-                        Button(String(localized: "Clear")) { clearFilters() }
-                            .font(.subheadline)
-                    }
-                } else {
-                    HStack {
-                        Label(filterBannerText, systemImage: "line.3.horizontal.decrease.circle")
-                            .font(.subheadline)
-                        Spacer()
-                        Button(String(localized: "Clear")) { clearFilters() }.font(.subheadline)
-                    }
+                Button {
+                    router.tab = .muster
+                } label: {
+                    TTRow(
+                        title: String(localized: "Build an army list on Lists"),
+                        subtitle: String(localized: "Link a list to track which roster units you own."),
+                        systemImage: "flag.fill"
+                    )
                 }
+                .buttonStyle(.plain)
+                .accessibilityHint(
+                    String(localized: "Opens the Lists tab to count points and link this collection.")
+                )
             }
         }
         Section {
             ForEach(vis) { va in
                 let pipeline = Pipeline.forArmy(va.army, global: globalPipeline)
                 let pct = Int((Pipeline.progress(of: va.units, pipeline) * 100).rounded())
-                let row = ArmyRow(army: va.army, overrides: overrides,
-                                  visibleUnitCount: va.units.count,
-                                  percentComplete: pct, scoped: scoped)
+                let segments = Pipeline.segments(of: va.units, pipeline)
+                let row = ArmyRow(
+                    army: va.army,
+                    overrides: overrides,
+                    visibleUnitCount: va.units.count,
+                    percentComplete: pct,
+                    segments: segments,
+                    scoped: scoped
+                )
                 Group {
                     if padSidebar {
                         Button {
@@ -269,32 +253,44 @@ struct CollectionHomeView: View {
         }
     }
 
-    @ViewBuilder
-    private func collectionSummary(vis: [VisibleArmy]) -> some View {
-        let unitCount = vis.reduce(0) { $0 + $1.units.count }
-        let prefix = scoped ? String(localized: "Showing ") : ""
-        let text = String(localized: "\(prefix)\(vis.count) armies · \(unitCount) units")
-        Text(text)
-            .font(.caption)
-            .foregroundStyle(.secondary)
-            .accessibilityLabel(text)
+    private func overviewHero(vis: [VisibleArmy]) -> some View {
+        let units = vis.flatMap(\.units)
+        let pipeline = Pipeline.resolve(globalPipeline)
+        let percent = Int((Pipeline.progress(of: units, pipeline) * 100).rounded())
+        return CollectionOverviewHero(
+            percent: percent,
+            armyCount: vis.count,
+            unitCount: units.count,
+            segments: Pipeline.segments(of: units, pipeline),
+            scoped: scoped
+        )
     }
 
-    private var filterBannerText: String {
-        var parts: [String] = []
-        if filterCount > 0 {
-            parts.append(String(localized: "\(filterCount) filter\(filterCount == 1 ? "" : "s")"))
+    private var filterBadgeRow: some View {
+        HStack(spacing: DesignTokens.Spacing.sm) {
+            Button {
+                showFilters = true
+            } label: {
+                TTBadge(
+                    filterCount == 1
+                        ? String(localized: "1 filter")
+                        : String(localized: "\(filterCount) filters"),
+                    tone: .brand,
+                    systemImage: "line.3.horizontal.decrease"
+                )
+            }
+            .buttonStyle(.plain)
+            .accessibilityHint(String(localized: "Opens filters"))
+            .accessibilityIdentifier("collection.filters.active")
+            Spacer(minLength: DesignTokens.Spacing.sm)
+            Button(String(localized: "Clear")) { clearFilters() }
+                .buttonStyle(.ttTertiary)
+                .accessibilityIdentifier("collection.filters.clear")
         }
-        if !search.isEmpty { parts.append(String(localized: "search")) }
-        return parts.isEmpty
-            ? String(localized: "Filters active")
-            : parts.joined(separator: " · ")
     }
 
     @ToolbarContentBuilder private var toolbarContent: some ToolbarContent {
-        ToolbarItemGroup(placement: .topBarLeading) {
-            Button(String(localized: "New army"), systemImage: "plus") { showAddArmy = true }
-                .accessibilityIdentifier("newArmy")
+        ToolbarItem(placement: .topBarLeading) {
             Button(String(localized: "Undo"), systemImage: "arrow.uturn.backward") {
                 if let msg = undo.undo(in: context) { banner.show(msg) }
             }
@@ -313,21 +309,32 @@ struct CollectionHomeView: View {
             .labelStyle(.iconOnly)
         }
         ToolbarItem(placement: .topBarTrailing) {
-            Button(String(localized: "Filters"), systemImage: filterCount > 0 || scoped
-                   ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle") {
-                showFilters = true
+            Menu {
+                Button(String(localized: "Filters"), systemImage: filterCount > 0 || scoped
+                       ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle") {
+                    showFilters = true
+                }
+                .accessibilityLabel(
+                    filterCount > 0
+                        ? String(localized: "Filters, \(filterCount) active")
+                        : String(localized: "Filters")
+                )
+                .accessibilityIdentifier("collection.toolbar.filters")
+                Button(String(localized: "Data"), systemImage: "gearshape") { showSettings = true }
+                    .accessibilityIdentifier("settings")
+                    .accessibilityLabel(String(localized: "Collection data settings"))
+                    .accessibilityHint(String(localized: "Import, export, sample data, and painting pipeline"))
+            } label: {
+                Image(systemName: "ellipsis.circle")
             }
-            .accessibilityLabel(
-                filterCount > 0
-                    ? String(localized: "Filters, \(filterCount) active")
-                    : String(localized: "Filters")
-            )
+            .accessibilityLabel(String(localized: "More"))
+            .accessibilityHint(String(localized: "Filters and collection settings"))
+            .accessibilityIdentifier("collection.toolbar.more")
         }
         ToolbarItem(placement: .topBarTrailing) {
-            Button(String(localized: "Data"), systemImage: "gearshape") { showSettings = true }
-                .accessibilityIdentifier("settings")
-                .accessibilityLabel(String(localized: "Collection data settings"))
-                .accessibilityHint(String(localized: "Import, export, sample data, and painting pipeline"))
+            Button(String(localized: "New army"), systemImage: "plus") { showAddArmy = true }
+                .accessibilityIdentifier("newArmy")
+                .accessibilityLabel(String(localized: "Add Army"))
         }
     }
 
@@ -341,36 +348,20 @@ struct CollectionHomeView: View {
                     }
                     .padding(.horizontal)
                 }
-                ContentUnavailableView {
-                    Label(String(localized: "No armies yet"), systemImage: "shield")
-                } description: {
-                    VStack(spacing: 8) {
-                        Text(
-                            String(
-                                localized: """
-                                Optional until after your first game. An army is the faction you're building — \
-                                Space Marines, Stormcast, and so on.
-                                """
-                            )
-                        )
-                        if FirstSessionStore.shouldPromoteSampleData(hasSeenCollectionIntro: cfg.hasSeenCollectionIntro) {
-                            Text(String(localized: "Load sample data to explore, or add your own army."))
-                                .font(.callout)
-                        } else {
-                            Text(String(localized: "Tap New army when you're ready to track models."))
-                                .font(.callout)
-                        }
-                    }
-                } actions: {
-                    if FirstSessionStore.shouldPromoteSampleData(hasSeenCollectionIntro: cfg.hasSeenCollectionIntro) {
-                        Button(String(localized: "Load sample data")) { loadSample() }
-                            .buttonStyle(.borderedProminent)
-                            .accessibilityIdentifier("loadSampleData")
-                    }
-                    Button(String(localized: "New army")) { showAddArmy = true }
-                        .accessibilityIdentifier("newArmyEmpty")
+                TTEmptyState(
+                    title: String(localized: "Track your miniatures"),
+                    message: String(
+                        localized: "Add an army to follow building and painting progress. Optional, and not needed for battles."
+                    ),
+                    systemImage: "shield.lefthalf.filled",
+                    primary: (String(localized: "Add Army"), { showAddArmy = true }),
+                    primaryAccessibilityIdentifier: "newArmyEmpty"
+                )
+                if FirstSessionStore.shouldPromoteSampleData(hasSeenCollectionIntro: cfg.hasSeenCollectionIntro) {
+                    Button(String(localized: "Load Sample Collection")) { loadSample() }
+                        .buttonStyle(.ttTertiary)
+                        .accessibilityIdentifier("loadSampleData")
                 }
-                .adaptiveEmptyStateLayout()
             }
             .padding(.vertical)
         }

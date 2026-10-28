@@ -110,15 +110,27 @@ struct UnitDetailView: View {
     private func unitForm(_ unit: ArmyUnit) -> some View {
         @Bindable var unit = unit
         Form {
+            UnitPhotoSection(unit: unit, pipeline: pipeline)
+
             unitSummarySection(unit)
 
             Section {
                 TextField(String(localized: "Name"), text: $unit.name)
                     .textInputAutocapitalization(.words)
-                QuantityStepper(label: String(localized: "Quantity"), value: Binding(
-                    get: { unit.qty },
-                    set: { ArmyStore.setQty(unit, $0, in: context) }
-                ))
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                    Text(String(localized: "Quantity"))
+                        .font(TTFont.subheadline)
+                        .foregroundStyle(TTColor.inkSecondary)
+                    TTCounter(
+                        value: Binding(
+                            get: { unit.qty },
+                            set: { ArmyStore.setQty(unit, $0, in: context) }
+                        ),
+                        range: 1...9999,
+                        label: String(localized: "Quantity"),
+                        size: .regular
+                    )
+                }
                 if !unit.name.trimmingCharacters(in: .whitespaces).isEmpty {
                     ModelCountSummary(name: unit.name, qty: unit.qty)
                 }
@@ -138,34 +150,23 @@ struct UnitDetailView: View {
                     Text(FormHints.source)
                 }
             }
+            .listRowBackground(TTColor.surface)
 
             Section {
-                LabeledContent {
-                    StateChip(state: unit.state, pipeline: pipeline)
-                } label: {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                     Text(String(localized: "Current state"))
+                        .font(TTFont.subheadline)
+                        .foregroundStyle(TTColor.inkSecondary)
+                    stageStepper(unit)
                 }
-                Picker(String(localized: "State"), selection: Binding(
-                    get: { unit.state },
-                    set: { ArmyStore.setState(unit, $0, in: context) }
-                )) {
-                    ForEach(pipeline) { stage in
-                        PipelineStagePickerRow(stage: stage).tag(stage.key)
-                    }
-                }
-                .formNavigationPickerStyle()
-                .labelsHidden()
-                .accessibilityLabel(String(localized: "Painting state"))
-                .accessibilityValue(unit.state)
                 if canAdvance {
                     Button {
                         ArmyStore.advance(unit, pipeline: pipeline, in: context)
                         advanceTrigger.toggle()
                     } label: {
                         Label(String(localized: "Advance one stage"), systemImage: "arrow.right.circle.fill")
-                            .prominentButtonLabelStyle()
                     }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.ttSecondary)
                 }
                 FormNotesField(title: String(localized: "Notes"), text: $unit.notes)
             } header: {
@@ -173,8 +174,7 @@ struct UnitDetailView: View {
             } footer: {
                 Text(FormHints.notesTags)
             }
-
-            UnitPhotoSection(unit: unit, pipeline: pipeline)
+            .listRowBackground(TTColor.surface)
 
             UnitTimelineSection(unit: unit, pipeline: pipeline)
 
@@ -189,8 +189,8 @@ struct UnitDetailView: View {
                     ))
                     if unit.hasSquadMembers {
                         Text(Members.stateSummary(of: unit))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .font(TTFont.caption)
+                            .foregroundStyle(TTColor.inkSecondary)
                         ForEach(unit.sortedSquadMembers) { member in
                             SquadMemberRow(unit: unit, member: member, pipeline: pipeline)
                         }
@@ -204,13 +204,65 @@ struct UnitDetailView: View {
                             : FormHints.trackPerModelOff
                     )
                 }
+                .listRowBackground(TTColor.surface)
             }
 
             Section {
                 Button(String(localized: "Delete unit"), role: .destructive) { confirmDelete = true }
+                    .buttonStyle(.ttDestructive)
+            }
+            .listRowBackground(Color.clear)
+        }
+        .scrollContentBackground(.hidden)
+        .background(TTColor.canvas.ignoresSafeArea())
+        .listRowSeparatorTint(TTColor.stroke)
+        .tabBarScrollInset()
+    }
+
+    private func stageStepper(_ unit: ArmyUnit) -> some View {
+        let currentIndex = pipeline.firstIndex { $0.key == unit.state } ?? -1
+        return ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: DesignTokens.Spacing.xs) {
+                ForEach(Array(pipeline.enumerated()), id: \.element.id) { index, stage in
+                    let isCurrent = stage.key == unit.state
+                    let isPast = currentIndex >= 0 && index < currentIndex
+                    Button {
+                        ArmyStore.setState(unit, stage.key, in: context)
+                    } label: {
+                        Text(stage.key)
+                            .font(TTFont.caption.weight(.semibold))
+                            .foregroundStyle(stageChipForeground(isCurrent: isCurrent, isPast: isPast, hex: stage.hex))
+                            .padding(.horizontal, DesignTokens.Spacing.sm)
+                            .frame(minHeight: DesignTokens.minTouchTarget)
+                            .background(
+                                stageChipBackground(isCurrent: isCurrent, isPast: isPast, hex: stage.hex),
+                                in: Capsule()
+                            )
+                            .overlay {
+                                if isCurrent {
+                                    Capsule().strokeBorder(TTColor.brand, lineWidth: 2)
+                                }
+                            }
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(stage.key)
+                    .accessibilityHint(String(localized: "Sets the painting stage"))
+                    .accessibilityAddTraits(isCurrent ? .isSelected : [])
+                }
             }
         }
-        .tabBarScrollInset()
+    }
+
+    private func stageChipForeground(isCurrent: Bool, isPast: Bool, hex: String) -> Color {
+        if isCurrent { return TTColor.brand }
+        if isPast { return Color(hex: hex).legibleForeground }
+        return TTColor.inkSecondary
+    }
+
+    private func stageChipBackground(isCurrent: Bool, isPast: Bool, hex: String) -> Color {
+        if isPast { return Color(hex: hex) }
+        if isCurrent { return TTColor.brandSoft }
+        return TTColor.sunken
     }
 
     @ViewBuilder
@@ -218,27 +270,21 @@ struct UnitDetailView: View {
         if let army {
             let pres = army.presentation(overrides: overrides)
             Section {
-                VStack(alignment: .leading, spacing: 10) {
-                    HStack(alignment: .center, spacing: 12) {
-                        CrestBadge(text: pres.crest, colorHex: pres.colorHex, imageFileName: pres.imageFileName)
-                        VStack(alignment: .leading, spacing: 3) {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                    HStack(alignment: .center, spacing: DesignTokens.Spacing.sm) {
+                        CrestTile(text: pres.crest, colorHex: pres.colorHex, imageFileName: pres.imageFileName)
+                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xxs) {
                             Text(army.name)
-                                .font(.subheadline.weight(.semibold))
-                            HStack(spacing: 5) {
-                                Image(systemName: HobbyGameSymbol.systemImage(for: army.game))
-                                    .font(.caption2.weight(.semibold))
-                                    .foregroundStyle(Color.accentOnSurface)
-                                    .symbolRenderingMode(.hierarchical)
-                                    .accessibilityHidden(true)
-                                Text("\(SupportedGames.displayName(for: army.game)) · \(army.faction)")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                    .lineLimit(2)
-                                    .fixedSize(horizontal: false, vertical: true)
-                            }
+                                .font(TTFont.headline)
+                                .foregroundStyle(TTColor.inkPrimary)
+                            Text("\(SupportedGames.displayName(for: army.game)) · \(army.faction)")
+                                .font(TTFont.subheadline)
+                                .foregroundStyle(TTColor.inkSecondary)
+                                .lineLimit(2)
+                                .fixedSize(horizontal: false, vertical: true)
                         }
                         Spacer(minLength: 0)
-                        StateChip(state: unit.state, pipeline: pipeline)
+                        StageCapsule(state: unit.state, pipeline: pipeline)
                     }
                     if unit.modelCount > 1 || unit.hasSquadMembers {
                         ProgressMeter(
@@ -247,8 +293,9 @@ struct UnitDetailView: View {
                         )
                     }
                 }
-                .padding(.vertical, 4)
+                .padding(.vertical, DesignTokens.Spacing.xs)
             }
+            .listRowBackground(TTColor.surface)
         }
     }
 

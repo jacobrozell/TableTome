@@ -28,11 +28,11 @@ struct ArmyDetailEditModeList: View {
             )
             Section(String(localized: "Units")) {
                 if visibleUnits.isEmpty {
-                    ContentUnavailableView {
-                        Label(String(localized: "No units"), systemImage: "figure.stand")
-                    } description: {
-                        Text(String(localized: "Add a unit or adjust filters."))
-                    }
+                    TTEmptyState(
+                        title: String(localized: "No units"),
+                        message: String(localized: "Add a unit or adjust filters."),
+                        systemImage: "plus.square.dashed"
+                    )
                     .listRowBackground(Color.clear)
                 } else {
                     ForEach(visibleUnits) { unit in
@@ -53,7 +53,7 @@ struct ArmyDetailEditModeList: View {
                 }
             }
         }
-        .listStyle(.insetGrouped)
+        .ttGroupedList()
         .tabBarScrollInset()
     }
 }

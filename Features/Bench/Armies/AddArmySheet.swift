@@ -21,6 +21,7 @@ struct AddArmySheet: View {
     @State private var starterUnitSeeds: [StarterBoxCollectionPrefillResolver.UnitSeed] = []
     @State private var addStarterBoxUnits = true
     @State private var starterToggleOverriddenKeys: Set<String> = []
+    @State private var factionQuery = ""
 
     private var sessionPrefill: CollectionArmyPrefillResolver.Prefill? {
         CollectionArmyPrefillResolver.prefill(
@@ -65,10 +66,9 @@ struct AddArmySheet: View {
                 Section {
                     Picker(String(localized: "Game"), selection: $game) {
                         ForEach(SupportedGames.all, id: \.self) { g in
-                            HStack(spacing: 8) {
+                            HStack(spacing: DesignTokens.Spacing.sm) {
                                 Image(systemName: HobbyGameSymbol.systemImage(for: g))
-                                    .foregroundStyle(Color.accentOnSurface)
-                                    .symbolRenderingMode(.hierarchical)
+                                    .foregroundStyle(TTColor.brand)
                                     .frame(width: 20)
                                     .accessibilityHidden(true)
                                 Text(SupportedGames.displayName(for: g))
@@ -81,49 +81,59 @@ struct AddArmySheet: View {
                     .onChange(of: game) { _, _ in
                         guard !suppressGameChangeFactionReset else { return }
                         faction = ""
+                        factionQuery = ""
                     }
                     if game == customGameSentinel {
                         TextField(String(localized: "Custom game"), text: $customGame)
                             .textInputAutocapitalization(.words)
                     }
 
-                    Picker(String(localized: "Faction"), selection: $faction) {
-                        Text(String(localized: "Choose…")).tag("")
-                        ForEach(suggestedFactions + otherFactions, id: \.self) { f in
-                            HStack(spacing: 8) {
-                                Circle()
-                                    .fill(Color(hex: FactionResolver.resolve(faction: f, game: game, overrides: []).colorHex))
-                                    .frame(width: 8, height: 8)
-                                    .accessibilityHidden(true)
-                                Text(f)
-                            }
-                            .tag(f)
+                    TextField(String(localized: "Search factions"), text: $factionQuery)
+                        .textInputAutocapitalization(.words)
+                        .accessibilityLabel(String(localized: "Search factions"))
+                        .accessibilityIdentifier("addArmy.factionSearch")
+
+                    if factionResults.isEmpty {
+                        Text(String(localized: "No factions match that search."))
+                            .font(TTFont.subheadline)
+                            .foregroundStyle(TTColor.inkSecondary)
+                    } else {
+                        ForEach(factionResults, id: \.self) { name in
+                            factionChoice(name)
                         }
-                        Text(String(localized: "Custom…")).tag(customSentinel)
                     }
-                    .formNavigationPickerStyle()
-                    .onChange(of: faction) { _, _ in updateDefaultName() }
+                    Button {
+                        faction = customSentinel
+                    } label: {
+                        HStack {
+                            Text(String(localized: "Custom…"))
+                                .font(TTFont.headline)
+                                .foregroundStyle(TTColor.inkPrimary)
+                            Spacer(minLength: 0)
+                            if faction == customSentinel {
+                                Image(systemName: "checkmark")
+                                    .foregroundStyle(TTColor.brand)
+                                    .accessibilityHidden(true)
+                            }
+                        }
+                        .frame(minHeight: DesignTokens.minTouchTarget)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityAddTraits(faction == customSentinel ? .isSelected : [])
                     if faction == customSentinel {
                         TextField(String(localized: "Custom faction"), text: $customFaction)
                             .textInputAutocapitalization(.words)
-                    }
-                    if !faction.isEmpty {
-                        HStack(spacing: 12) {
-                            CrestBadge(
+                        HStack(spacing: DesignTokens.Spacing.sm) {
+                            CrestTile(
                                 text: factionPreview.crest,
                                 colorHex: factionPreview.colorHex,
                                 imageFileName: factionPreview.imageFileName
                             )
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(String(localized: "Preview"))
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                Text(displayFaction)
-                                    .font(.subheadline.weight(.medium))
-                            }
+                            Text(displayFaction)
+                                .font(TTFont.headline)
+                                .foregroundStyle(TTColor.inkPrimary)
                             Spacer(minLength: 0)
                         }
-                        .padding(.vertical, 4)
                     }
                 } header: {
                     Text(String(localized: "Game & faction"))
@@ -136,23 +146,29 @@ struct AddArmySheet: View {
                         )
                     }
                 }
+                .listRowBackground(TTColor.surface)
 
                 if !starterUnitSeeds.isEmpty {
                     Section {
+                        TTNotice(
+                            title: String(localized: "Add your Spearhead box contents?"),
+                            message: String(
+                                localized: "Adds \(starterUnitSeeds.count) units from your box. You can rename or remove them anytime."
+                            ),
+                            systemImage: "shippingbox",
+                            tone: .brand,
+                            action: addStarterBoxUnits
+                                ? nil
+                                : (String(localized: "Add Box Contents"), { addStarterBoxUnits = true })
+                        )
+                        .listRowBackground(Color.clear)
                         Toggle(String(localized: "Add models from your starter box"), isOn: $addStarterBoxUnits)
                             .accessibilityIdentifier("addStarterBoxUnits")
                             .onChange(of: addStarterBoxUnits) { _, _ in
                                 starterToggleOverriddenKeys.insert(starterSeedKey)
                             }
-                    } footer: {
-                        Text(
-                            String(
-                                localized: """
-                                Adds \(starterUnitSeeds.count) units from your box. You can rename or remove them anytime.
-                                """
-                            )
-                        )
                     }
+                    .listRowBackground(TTColor.surface)
                 }
 
                 Section {
@@ -167,7 +183,10 @@ struct AddArmySheet: View {
                         Text(FormHints.uniqueName)
                     }
                 }
+                .listRowBackground(TTColor.surface)
             }
+            .scrollContentBackground(.hidden)
+            .background(TTColor.canvas.ignoresSafeArea())
             .formEditorScreenChrome()
             .navigationTitle(String(localized: "New army"))
             .navigationBarTitleDisplayMode(.inline)
@@ -186,6 +205,7 @@ struct AddArmySheet: View {
                             error = true
                         }
                     }
+                    .fontWeight(.semibold)
                     .accessibilityIdentifier("addArmyConfirm")
                     .disabled(
                         name.trimmingCharacters(in: .whitespaces).isEmpty
@@ -203,6 +223,40 @@ struct AddArmySheet: View {
                 nameFocused = true
             }
         }
+        .presentationBackground(TTColor.canvas)
+    }
+
+    private var factionResults: [String] {
+        let query = factionQuery.trimmingCharacters(in: .whitespaces).lowercased()
+        let ordered = suggestedFactions + otherFactions
+        guard !query.isEmpty else { return ordered }
+        return ordered.filter { $0.lowercased().contains(query) }
+    }
+
+    private func factionChoice(_ name: String) -> some View {
+        let pres = FactionResolver.resolve(faction: name, game: resolvedGame, overrides: [])
+        let selected = faction == name
+        return Button {
+            faction = name
+            updateDefaultName()
+        } label: {
+            HStack(spacing: DesignTokens.Spacing.sm) {
+                CrestTile(text: pres.crest, colorHex: pres.colorHex, imageFileName: pres.imageFileName)
+                Text(name)
+                    .font(TTFont.headline)
+                    .foregroundStyle(TTColor.inkPrimary)
+                Spacer(minLength: DesignTokens.Spacing.sm)
+                if selected {
+                    Image(systemName: "checkmark")
+                        .foregroundStyle(TTColor.brand)
+                        .accessibilityHidden(true)
+                }
+            }
+            .frame(minHeight: DesignTokens.minTouchTarget)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(String(localized: "Faction \(name)"))
+        .accessibilityAddTraits(selected ? .isSelected : [])
     }
 
     private func applySessionPrefillIfNeeded() {

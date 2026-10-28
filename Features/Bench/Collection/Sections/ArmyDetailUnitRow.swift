@@ -21,7 +21,7 @@ struct ArmyDetailUnitRow: View {
                     Button(String(localized: "Advance")) {
                         onAdvance()
                     }
-                    .tint(.accentColor)
+                    .tint(TTColor.success)
                     .accessibilityLabel(String(localized: "Advance painting state"))
                 }
             }

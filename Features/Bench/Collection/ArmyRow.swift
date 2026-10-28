@@ -2,12 +2,31 @@ import SwiftUI
 import TabletomeHobbyData
 import TabletomeDomain
 
+/// Faction crest at a fixed size, keeping custom image support.
+struct CrestTile: View {
+    let text: String
+    let colorHex: String
+    var imageFileName: String? = nil
+    var side: CGFloat = 44
+
+    var body: some View {
+        CrestBadge(text: text, colorHex: colorHex, imageFileName: imageFileName)
+            .frame(width: side, height: side)
+            .clipShape(RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous)
+                    .strokeBorder(TTColor.stroke, lineWidth: 1)
+            }
+    }
+}
+
 /// Browse row for one army in the collection list.
 struct ArmyRow: View {
     let army: Army
     let overrides: [FactionPresetOverride]
     let visibleUnitCount: Int
     let percentComplete: Int
+    let segments: [ProgressSegment]
     let scoped: Bool
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
@@ -17,9 +36,13 @@ struct ArmyRow: View {
         army.presentation(overrides: overrides)
     }
 
-    /// Stack crest/progress above text in the iPad sidebar column or at large Dynamic Type.
+    /// Stack crest above text in the iPad sidebar column or at large Dynamic Type.
     private var usesStackedLayout: Bool {
-        dynamicTypeSize.isAccessibilitySize || AdaptiveLayout.usesSidebarListStyle(horizontalSizeClass)
+        dynamicTypeSize.needsLayoutAdaptation || AdaptiveLayout.usesSidebarListStyle(horizontalSizeClass)
+    }
+
+    private var hasCustomPipeline: Bool {
+        army.customPipeline?.isEmpty == false
     }
 
     var body: some View {
@@ -30,7 +53,7 @@ struct ArmyRow: View {
                 horizontalRow
             }
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, DesignTokens.Spacing.xs)
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
         .accessibilityLabel(
@@ -42,93 +65,68 @@ struct ArmyRow: View {
     }
 
     private var horizontalRow: some View {
-        HStack(alignment: .center, spacing: 12) {
+        HStack(alignment: .center, spacing: DesignTokens.Spacing.sm) {
             crest
             textBlock
-            ProgressRing(percent: percentComplete, diameter: 32)
+            disclosure
         }
     }
 
     private var stackedRow: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(alignment: .center, spacing: 12) {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            HStack(alignment: .center, spacing: DesignTokens.Spacing.sm) {
                 crest
                 Spacer(minLength: 0)
-                ProgressRing(percent: percentComplete, diameter: 32)
+                disclosure
             }
             textBlock
         }
     }
 
     private var crest: some View {
-        CrestBadge(text: presentation.crest, colorHex: presentation.colorHex, imageFileName: presentation.imageFileName)
-            .fixedSize()
+        CrestTile(
+            text: presentation.crest,
+            colorHex: presentation.colorHex,
+            imageFileName: presentation.imageFileName,
+            side: 44
+        )
+    }
+
+    private var disclosure: some View {
+        Image(systemName: "chevron.right")
+            .font(TTFont.caption)
+            .foregroundStyle(TTColor.inkTertiary)
+            .accessibilityHidden(true)
     }
 
     private var textBlock: some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xxs) {
             Text(army.name)
-                .font(.headline)
-                .lineLimit(dynamicTypeSize.isAccessibilitySize ? 3 : 2)
+                .font(TTFont.headline)
+                .foregroundStyle(TTColor.inkPrimary)
+                .lineLimit(dynamicTypeSize.needsLayoutAdaptation ? 3 : 2)
                 .fixedSize(horizontal: false, vertical: true)
-            metadataBlock
+            Text(countLabel)
+                .font(TTFont.subheadline)
+                .foregroundStyle(TTColor.inkSecondary)
+            if hasCustomPipeline {
+                TTBadge(String(localized: "Custom stages"))
+            }
+            HStack(spacing: DesignTokens.Spacing.sm) {
+                ProgressMeter(segments: segments, height: 6)
+                    .frame(maxWidth: .infinity)
+                Text("\(percentComplete)%")
+                    .font(TTFont.numericSmall)
+                    .foregroundStyle(TTColor.inkSecondary)
+                    .fixedSize()
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    @ViewBuilder
-    private var metadataBlock: some View {
-        if dynamicTypeSize.isAccessibilitySize {
-            VStack(alignment: .leading, spacing: 2) {
-                gameFactionLine
-                Text(countLabel)
-                if army.customPipeline?.isEmpty == false {
-                    Text(String(localized: "custom pipeline"))
-                }
-            }
-            .font(.subheadline)
-            .foregroundStyle(.secondary)
-            .fixedSize(horizontal: false, vertical: true)
-        } else {
-            gameFactionLine
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .lineLimit(2)
-                .truncationMode(.tail)
-                .fixedSize(horizontal: false, vertical: true)
-            Text(subtitleTail)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .lineLimit(2)
-                .truncationMode(.tail)
-                .fixedSize(horizontal: false, vertical: true)
-        }
-    }
-
-    private var gameFactionLine: some View {
-        HStack(spacing: 5) {
-            Image(systemName: HobbyGameSymbol.systemImage(for: army.game))
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(Color.accentOnSurface)
-                .symbolRenderingMode(.hierarchical)
-                .accessibilityHidden(true)
-            Text("\(SupportedGames.displayName(for: army.game)) · \(army.faction)")
-                .lineLimit(2)
-                .fixedSize(horizontal: false, vertical: true)
-        }
     }
 
     private var countLabel: String {
         scoped
             ? String(localized: "\(visibleUnitCount) visible")
             : String(localized: "\(visibleUnitCount) units")
-    }
-
-    private var subtitleTail: String {
-        var parts = [countLabel]
-        if army.customPipeline?.isEmpty == false {
-            parts.append(String(localized: "custom pipeline"))
-        }
-        return parts.joined(separator: " · ")
     }
 }

@@ -3,6 +3,67 @@ import SwiftData
 import TabletomeHobbyData
 import TabletomeDomain
 
+/// Collection-wide progress hero used at the top of the Models list and on the overview screen.
+struct CollectionOverviewHero: View {
+    let percent: Int
+    let armyCount: Int
+    let unitCount: Int
+    let segments: [ProgressSegment]
+    let scoped: Bool
+
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    private var countsLine: String {
+        let prefix = scoped ? String(localized: "Showing ") : ""
+        return String(localized: "\(prefix)\(armyCount) armies · \(unitCount) units")
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            Text(String(localized: "Your collection"))
+                .ttEyebrow()
+
+            if dynamicTypeSize.needsLayoutAdaptation {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                    ProgressRing(percent: percent, diameter: 88)
+                    paintedLabel
+                }
+            } else {
+                HStack(alignment: .center, spacing: DesignTokens.Spacing.md) {
+                    ProgressRing(percent: percent, diameter: 88)
+                    paintedLabel
+                    Spacer(minLength: 0)
+                }
+            }
+
+            ProgressMeter(segments: segments, height: 10)
+            ProgressLegend(segments: segments)
+        }
+        .surfaceCard()
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilityProgressLabel)
+    }
+
+    private var paintedLabel: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xxs) {
+            Text(String(localized: "painted"))
+                .font(TTFont.subheadline)
+                .foregroundStyle(TTColor.inkSecondary)
+            Text(countsLine)
+                .font(TTFont.subheadline)
+                .foregroundStyle(TTColor.inkSecondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    private var accessibilityProgressLabel: String {
+        let progress = scoped
+            ? String(localized: "Filtered progress, \(percent) percent painted")
+            : String(localized: "Collection progress, \(percent) percent painted")
+        return "\(progress). \(countsLine)"
+    }
+}
+
 /// Collection-wide stats and progress (opened from toolbar).
 @MainActor
 struct CollectionOverviewView: View {
@@ -26,46 +87,25 @@ struct CollectionOverviewView: View {
         Int((Pipeline.progress(of: scopedUnits, resolvedGlobal) * 100).rounded())
     }
 
-    private var progressTitle: String {
-        scoped
-            ? String(localized: "Filtered progress")
-            : String(localized: "Collection progress")
-    }
-
-    private var accessibilityProgressLabel: String {
-        scoped
-            ? String(localized: "Filtered progress, \(overall) percent")
-            : String(localized: "Collection progress, \(overall) percent")
-    }
-
     var body: some View {
         ScrollView {
-            VStack(spacing: 20) {
-                VStack(spacing: 8) {
-                    ProgressRing(percent: overall, diameter: 88)
-                    Text(progressTitle)
-                        .font(.headline)
-                        .multilineTextAlignment(.center)
-                        .lineLimit(2)
-                        .fixedSize(horizontal: false, vertical: true)
-                    Text(String(localized: "\(overall)% complete"))
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-                .padding(.top, 8)
-                .accessibilityElement(children: .combine)
-                .accessibilityLabel(accessibilityProgressLabel)
+            VStack(spacing: DesignTokens.Spacing.lg) {
+                CollectionOverviewHero(
+                    percent: overall,
+                    armyCount: scoped ? visible.count : armies.count,
+                    unitCount: scopedUnits.count,
+                    segments: Pipeline.segments(of: scopedUnits, resolvedGlobal),
+                    scoped: scoped
+                )
 
-                VStack(alignment: .leading, spacing: 6) {
-                    ProgressMeter(segments: Pipeline.segments(of: scopedUnits, resolvedGlobal), height: 10)
-                    ProgressLegend(segments: Pipeline.segments(of: scopedUnits, resolvedGlobal))
-                }
-                .padding(.horizontal)
-
-                ArmyStatsHeader(units: scopedUnits,
-                                armyCount: scoped ? visible.count : armies.count,
-                                pipeline: resolvedGlobal, scoped: scoped)
-                    .surfaceCard()
+                ArmyStatsHeader(
+                    units: scopedUnits,
+                    armyCount: scoped ? visible.count : armies.count,
+                    pipeline: resolvedGlobal,
+                    scoped: scoped,
+                    showsProgress: false
+                )
+                .surfaceCard()
 
                 if scoped {
                     Button(String(localized: "Advance visible units"), systemImage: "arrow.right.to.line") {
@@ -76,18 +116,19 @@ struct CollectionOverviewView: View {
                             banner.show(String(localized: "Nothing to advance"))
                         }
                     }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.ttPrimary)
 
                     Button(String(localized: "Clear filters"), systemImage: "line.3.horizontal.decrease.circle") {
                         ArmyFilter.clearFilters(cfg)
                         try? context.save()
                     }
-                    .buttonStyle(.bordered)
+                    .buttonStyle(.ttSecondary)
                 }
             }
-            .padding()
+            .padding(DesignTokens.Spacing.md)
             .readableContentWidth()
         }
+        .background(TTColor.canvas.ignoresSafeArea())
         .tabBarScrollInset()
         .navigationTitle(String(localized: "Overview"))
         .navigationBarTitleDisplayMode(.inline)

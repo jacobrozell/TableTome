@@ -67,6 +67,8 @@ struct RenameArmySheet: View {
                     }
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(TTColor.canvas.ignoresSafeArea())
             .formEditorScreenChrome()
             .navigationTitle(String(localized: "Rename army"))
             .navigationBarTitleDisplayMode(.inline)
@@ -83,5 +85,6 @@ struct RenameArmySheet: View {
             }
             .onAppear { nameFocused = true }
         }
+        .presentationBackground(TTColor.canvas)
     }
 }

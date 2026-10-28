@@ -49,7 +49,7 @@ struct ArmyDetailBrowseModeList: View {
                 onMove: onMove
             )
         }
-        .listStyle(.insetGrouped)
+        .ttGroupedList()
         .tabBarScrollInset()
     }
 }

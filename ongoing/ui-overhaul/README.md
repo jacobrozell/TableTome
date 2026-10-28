@@ -224,8 +224,8 @@ Legend: ⬜ not started · 🟨 in progress · ✅ merged · ⏸ blocked. **Deps
 | UF-02 | Combat resolver visual pass | DS-07 | [07](07-unit-focus-and-combat.md) | ⬜ |
 | UF-03 | Dice entry + results presentation | UF-02 | [07](07-unit-focus-and-combat.md) | ⬜ |
 | VH-01 | Victory screen | BT-02 | [08](08-victory-and-history.md) | ⬜ |
-| VH-02 | Match history list | DS-07 | [08](08-victory-and-history.md) | ⬜ |
-| VH-03 | Match detail + timeline | VH-02 | [08](08-victory-and-history.md) | ⬜ |
+| VH-02 | Match history list | DS-07 | [08](08-victory-and-history.md) | 🟨 |
+| VH-03 | Match detail + timeline | VH-02 | [08](08-victory-and-history.md) | 🟨 |
 | RR-01 | Rules home (browse) | SC-01, SH-03 | [09](09-rules-reference.md) | ⬜ |
 | RR-02 | Rule section detail (readable typography) | RR-01 | [09](09-rules-reference.md) | ⬜ |
 | RR-03 | Glossary sheet + inline glossary chips | RR-02 | [09](09-rules-reference.md) | ⬜ |

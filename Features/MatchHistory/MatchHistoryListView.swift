@@ -11,6 +11,7 @@ struct MatchHistoryListView: View {
     @StateObject private var viewModel: MatchHistoryViewModel
     @Environment(AppRouter.self) private var router
     @State private var filters: [(id: String?, label: String)] = []
+    @State private var recordPendingDelete: MatchRecord?
 
     init(viewModel: MatchHistoryViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -32,67 +33,71 @@ struct MatchHistoryListView: View {
                 .asyncContentShell()
             } else if viewModel.records.isEmpty {
                 if viewModel.filterGameSystemId != nil || viewModel.filterProfileId != nil {
-                    ContentUnavailableView {
-                        Label(String(localized: "No Matches for Filter"), systemImage: "line.3.horizontal.decrease.circle")
-                    } description: {
-                        Text(String(localized: "Try another filter or clear the current selection."))
-                    } actions: {
-                        Button(String(localized: "Show All")) {
-                            viewModel.filterGameSystemId = nil
-                            viewModel.filterProfileId = nil
-                        }
+                    centeredEmpty {
+                        TTEmptyState(
+                            title: String(localized: "No Matches for Filter"),
+                            message: String(localized: "Try another filter or clear the current selection."),
+                            systemImage: "line.3.horizontal.decrease.circle",
+                            primary: (String(localized: "Show All"), clearFilters),
+                            primaryAccessibilityIdentifier: "matchHistory.filter.showAll"
+                        )
                     }
                 } else {
-                    ContentUnavailableView {
-                        Label(String(localized: "No Matches Yet"), systemImage: "clock.arrow.circlepath")
-                    } description: {
-                        Text(
-                            String(
-                                localized: """
-                                Finished guided matches are saved here with scores and a turn-by-turn log. \
-                                Complete a game in Guided Match to see your first entry.
-                                """
+                    centeredEmpty {
+                        VStack(spacing: DesignTokens.Spacing.sm) {
+                            TTEmptyState(
+                                title: String(localized: "No battles yet"),
+                                message: String(localized: "Finished battles show up here with scores and a turn-by-turn log."),
+                                systemImage: "clock.arrow.circlepath",
+                                primary: primaryLaunchOption.map { option in
+                                    (String(localized: "Start a Battle"), { openGuidedMatch(gameSystemId: option.gameSystemId) })
+                                },
+                                primaryAccessibilityIdentifier: primaryLaunchIdentifier
                             )
-                        )
-                    } actions: {
-                        MatchHistoryEmptyLaunchActions(
-                            options: shippedGuidedMatchOptions,
-                            activeGameSystemId: activeGameGuidedMatchGameSystemId,
-                            onLaunch: { gameSystemId in
-                                router.openGuidedMatch(
-                                    gameSystemId: gameSystemId,
-                                    opensBattleTab: PlayContinuationResolver.shouldOpenBattleTab(
-                                        gameSystemId: gameSystemId
-                                    )
+                            if !secondaryLaunchOptions.isEmpty {
+                                MatchHistoryEmptyLaunchActions(
+                                    options: secondaryLaunchOptions,
+                                    onLaunch: openGuidedMatch
                                 )
                             }
-                        )
+                        }
                     }
                 }
             } else {
                 List {
-                    ForEach(viewModel.records) { record in
-                        NavigationLink(value: MatchHistoryDetailLink(recordId: record.id)) {
-                            MatchHistoryRow(
-                                record: record,
-                                legacyBadgeLabel: legacyBadgeLabel(for: record)
-                            )
-                        }
-                        .accessibilityIdentifier("matchHistory.row.\(record.id.uuidString)")
-                    }
-                    .onDelete { indexSet in
-                        Task {
-                            for index in indexSet {
-                                await viewModel.delete(record: viewModel.records[index])
+                    ForEach(monthSections) { section in
+                        Section {
+                            ForEach(section.records) { record in
+                                NavigationLink(value: MatchHistoryDetailLink(recordId: record.id)) {
+                                    MatchHistoryRow(
+                                        record: record,
+                                        legacyBadgeLabel: legacyBadgeLabel(for: record)
+                                    )
+                                }
+                                .accessibilityIdentifier("matchHistory.row.\(record.id.uuidString)")
+                                .ttListRow()
+                                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                    Button(String(localized: "Delete"), role: .destructive) {
+                                        recordPendingDelete = record
+                                    }
+                                    .accessibilityIdentifier("matchHistory.delete.\(record.id.uuidString)")
+                                    .accessibilityHint(String(localized: "Asks you to confirm before deleting this battle."))
+                                }
                             }
+                        } header: {
+                            TTSectionHeader(section.title)
+                                .textCase(nil)
                         }
                     }
                 }
-                .listStyle(.insetGrouped)
+                .ttGroupedList()
+                .textCase(nil)
                 .tabBarScrollInset()
             }
         }
-        .navigationTitle(String(localized: "Match History"))
+        .ttScreenBackground()
+        .navigationTitle(String(localized: "History"))
+        .navigationBarTitleDisplayMode(.large)
         .navigationDestination(for: MatchHistoryDetailLink.self) { link in
             MatchHistoryDetailView(recordId: link.recordId, viewModel: viewModel)
         }
@@ -102,7 +107,7 @@ struct MatchHistoryListView: View {
                     playerFilterMenu
                 }
             }
-            if filters.count > 2 {
+            if showsGameFilter {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
                         Picker(String(localized: "Filter"), selection: $viewModel.filterGameSystemId) {
@@ -111,26 +116,54 @@ struct MatchHistoryListView: View {
                             }
                         }
                     } label: {
-                        Label {
-                            Text(String(localized: "Filter"))
-                        } icon: {
-                            Image(systemName: viewModel.filterGameSystemId == nil
-                                ? "line.3.horizontal.decrease.circle"
-                                : "line.3.horizontal.decrease.circle.fill")
-                        }
+                        Label(String(localized: "Filter"), systemImage: "line.3.horizontal.decrease.circle")
                     }
-                    .accessibilityIdentifier(
-                        "matchHistory.filter.\(viewModel.filterGameSystemId ?? "all")"
-                    )
+                    .accessibilityIdentifier("matchHistory.filter.\(viewModel.filterGameSystemId ?? "all")")
+                    .accessibilityValue(selectedFilterLabel)
                 }
             }
         }
         .accessibilityIdentifier("matchHistory.screen")
+        .confirmationDialog(
+            String(localized: "Delete this battle?"),
+            isPresented: Binding(
+                get: { recordPendingDelete != nil },
+                set: { if !$0 { recordPendingDelete = nil } }
+            ),
+            titleVisibility: .visible
+        ) {
+            Button(String(localized: "Delete"), role: .destructive) {
+                guard let record = recordPendingDelete else { return }
+                recordPendingDelete = nil
+                Task { await viewModel.delete(record: record) }
+            }
+            Button(String(localized: "Cancel"), role: .cancel) {}
+        } message: {
+            Text(String(localized: "This removes the score and the turn-by-turn log from this device."))
+        }
         .task {
             filters = await viewModel.availableFilters()
             await viewModel.load()
         }
         .refreshable { await viewModel.load() }
+    }
+
+    private var monthSections: [HistoryMonthSection] {
+        viewModel.sections.enumerated().map { index, section in
+            HistoryMonthSection(
+                title: section.title,
+                records: section.records,
+                id: "\(index)-\(section.title)"
+            )
+        }
+    }
+
+    private var showsGameFilter: Bool {
+        ReleaseSurface.singleVisibleGameSystemId() == nil && filters.count > 2
+    }
+
+    private var selectedFilterLabel: String {
+        filters.first { $0.id == viewModel.filterGameSystemId }?.label ?? String(localized: "All")
     }
 
     private var shippedGuidedMatchOptions: [GuidedMatchLaunchOption] {
@@ -151,6 +184,56 @@ struct MatchHistoryListView: View {
             return activeId
         }
         return OnboardingCompletion.spearheadGameSystemId
+    }
+
+    private var primaryLaunchOption: GuidedMatchLaunchOption? {
+        let options = shippedGuidedMatchOptions
+        if let single = ReleaseSurface.singleVisibleGameSystemId(),
+           let match = options.first(where: { $0.gameSystemId == single }) {
+            return match
+        }
+        if let active = options.first(where: { $0.gameSystemId == activeGameGuidedMatchGameSystemId }) {
+            return active
+        }
+        return options.first
+    }
+
+    private var secondaryLaunchOptions: [GuidedMatchLaunchOption] {
+        guard let primary = primaryLaunchOption else { return [] }
+        return shippedGuidedMatchOptions.filter { $0.gameSystemId != primary.gameSystemId }
+    }
+
+    private var primaryLaunchIdentifier: String {
+        if let gameSystemId = primaryLaunchOption?.gameSystemId {
+            return "matchHistory.openGuidedMatch.\(gameSystemId)"
+        }
+        return "matchHistory.openGuidedMatch"
+    }
+
+    private func openGuidedMatch(gameSystemId: String) {
+        router.openGuidedMatch(
+            gameSystemId: gameSystemId,
+            opensBattleTab: PlayContinuationResolver.shouldOpenBattleTab(gameSystemId: gameSystemId)
+        )
+    }
+
+    private func clearFilters() {
+        viewModel.filterGameSystemId = nil
+        viewModel.filterProfileId = nil
+    }
+
+    private func centeredEmpty<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        let built = content()
+        return GeometryReader { proxy in
+            ScrollView {
+                built
+                    .padding(.horizontal, DesignTokens.Spacing.lg)
+                    .padding(.vertical, DesignTokens.Spacing.lg)
+                    .readableContentWidth()
+                    .frame(maxWidth: .infinity, minHeight: proxy.size.height, alignment: .center)
+            }
+            .tabBarScrollInset()
+        }
     }
 
     @ViewBuilder
@@ -197,49 +280,6 @@ struct MatchHistoryListView: View {
     }
 }
 
-private struct MatchHistoryEmptyLaunchActions: View {
-    let options: [MatchHistoryListView.GuidedMatchLaunchOption]
-    let activeGameSystemId: String
-    let onLaunch: (String) -> Void
-
-    var body: some View {
-        VStack(spacing: DesignTokens.Spacing.sm) {
-            ForEach(options) { option in
-                MatchHistoryLaunchButton(
-                    label: option.label,
-                    gameSystemId: option.gameSystemId,
-                    isPrimary: option.gameSystemId == activeGameSystemId,
-                    onLaunch: onLaunch
-                )
-            }
-        }
-    }
-}
-
-private struct MatchHistoryLaunchButton: View {
-    let label: String
-    let gameSystemId: String
-    let isPrimary: Bool
-    let onLaunch: (String) -> Void
-
-    var body: some View {
-        Group {
-            if isPrimary {
-                Button(label) {
-                    onLaunch(gameSystemId)
-                }
-                .buttonStyle(.borderedProminent)
-            } else {
-                Button(label) {
-                    onLaunch(gameSystemId)
-                }
-                .buttonStyle(.bordered)
-            }
-        }
-        .accessibilityIdentifier("matchHistory.openGuidedMatch.\(gameSystemId)")
-    }
-}
-
 extension MatchHistoryListView {
     struct GuidedMatchLaunchOption: Identifiable {
         let gameSystemId: String
@@ -248,89 +288,25 @@ extension MatchHistoryListView {
     }
 }
 
-private struct MatchHistoryRow: View {
-    let record: MatchRecord
-    var legacyBadgeLabel: String?
+private struct HistoryMonthSection: Identifiable {
+    let title: String
+    let records: [MatchRecord]
+    let id: String
+}
+
+private struct MatchHistoryEmptyLaunchActions: View {
+    let options: [MatchHistoryListView.GuidedMatchLaunchOption]
+    let onLaunch: (String) -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-            HStack {
-                Text(record.gameSystemName)
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(Color.accentOnSurface)
-                Spacer()
-                VStack(alignment: .trailing, spacing: 0) {
-                    Text(MatchHistoryDisplayFormatter.relativeDateLabel(for: record.endedAt))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    if Calendar.current.isDateInToday(record.endedAt) {
-                        Text(record.endedAt, style: .time)
-                            .font(.caption2)
-                            .foregroundStyle(.tertiary)
-                    }
+        VStack(spacing: DesignTokens.Spacing.xs) {
+            ForEach(options) { option in
+                Button(option.label) {
+                    onLaunch(option.gameSystemId)
                 }
-            }
-
-            Text("\(record.players.playerOneName) vs \(record.players.playerTwoName)")
-                .font(.headline)
-
-            Text("\(record.players.playerOneArmyLabel) vs \(record.players.playerTwoArmyLabel)")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .lineLimit(2)
-
-            HStack(spacing: DesignTokens.Spacing.sm) {
-                Text(
-                    "\(record.result.playerOneVictoryPoints) – \(record.result.playerTwoVictoryPoints) VP"
-                )
-                .font(.callout.weight(.semibold))
-
-                if let winnerName = record.winnerPlayerName {
-                    Text(winnerName)
-                        .font(.caption.weight(.bold))
-                        .padding(.horizontal, DesignTokens.Spacing.sm)
-                        .padding(.vertical, 2)
-                        .background(Color.accentColor.opacity(0.15), in: Capsule())
-                } else if record.result.winner == .tie {
-                    Text(String(localized: "Draw"))
-                        .font(.caption.weight(.bold))
-                        .foregroundStyle(.secondary)
-                }
-
-                if record.status == .abandoned {
-                    Text(String(localized: "Abandoned"))
-                        .font(.caption2.weight(.semibold))
-                        .foregroundStyle(.orange)
-                }
-
-                if let legacyBadgeLabel {
-                    MatchHistoryLegacyBadge(label: legacyBadgeLabel)
-                }
+                .buttonStyle(.ttTertiary)
+                .accessibilityIdentifier("matchHistory.openGuidedMatch.\(option.gameSystemId)")
             }
         }
-        .padding(.vertical, DesignTokens.Spacing.xs)
-        .contentShape(Rectangle())
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(voiceOverSummary)
-    }
-
-    private var voiceOverSummary: String {
-        let players = "\(record.players.playerOneName) vs \(record.players.playerTwoName)"
-        let armies = "\(record.players.playerOneArmyLabel) vs \(record.players.playerTwoArmyLabel)"
-        let score = "\(record.result.playerOneVictoryPoints) to \(record.result.playerTwoVictoryPoints) victory points"
-        let date = MatchHistoryDisplayFormatter.relativeDateLabel(for: record.endedAt)
-
-        var outcome: String
-        if record.status == .abandoned {
-            outcome = String(localized: "Abandoned")
-        } else if record.result.winner == .tie {
-            outcome = String(localized: "Draw")
-        } else if let winnerName = record.winnerPlayerName {
-            outcome = String(localized: "\(winnerName) won")
-        } else {
-            outcome = String(localized: "No winner recorded")
-        }
-
-        return "\(record.gameSystemName), \(date). \(players). \(armies). \(score). \(outcome)."
     }
 }

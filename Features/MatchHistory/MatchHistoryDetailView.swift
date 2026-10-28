@@ -13,24 +13,32 @@ struct MatchHistoryDetailView: View {
         Group {
             if let record {
                 ScrollView {
-                    VStack(spacing: DesignTokens.Spacing.lg) {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                         MatchVictoryScreen(
                             presentation: MatchVictoryPresentation(record: record),
                             mode: .readOnly
                         )
 
-                        summarySection(record: record)
+                        summaryCard(record: record)
                         MatchLogTimelineView(events: logEvents)
                     }
+                    .readableContentWidth()
+                    .padding(.top, DesignTokens.Spacing.md)
                     .padding(.bottom, DesignTokens.Spacing.lg)
                 }
-                .background(Color(.systemGroupedBackground))
+                .ttScreenBackground()
             } else if didFinishLoading {
-                ContentUnavailableView {
-                    Label(String(localized: "Match Not Found"), systemImage: "exclamationmark.triangle")
-                } description: {
-                    Text(String(localized: "This match may have been deleted."))
+                ScrollView {
+                    TTEmptyState(
+                        title: String(localized: "Match Not Found"),
+                        message: String(localized: "This match may have been deleted."),
+                        systemImage: "exclamationmark.triangle"
+                    )
+                    .padding(DesignTokens.Spacing.lg)
+                    .readableContentWidth()
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .ttScreenBackground()
             } else {
                 ProgressView(String(localized: "Loading match…"))
                     .asyncContentShell()
@@ -63,44 +71,30 @@ struct MatchHistoryDetailView: View {
         }
     }
 
-    @ViewBuilder
-    private func summarySection(record: MatchRecord) -> some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            SectionHeader(title: String(localized: "Summary"), systemImage: "list.bullet.rectangle")
-                .padding(.horizontal, DesignTokens.Spacing.md)
-
+    private func summaryCard(record: MatchRecord) -> some View {
+        TTCard {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                summaryRow(
-                    title: String(localized: "Battle round"),
+                TTKeyValueRow(
+                    String(localized: "Battle rounds"),
                     value: "\(record.result.battleRound)"
                 )
                 if let missionId = record.setup.missionId {
-                    summaryRow(
-                        title: String(localized: "Mission"),
+                    TTKeyValueRow(
+                        String(localized: "Mission"),
                         value: humanizeIdentifier(missionId)
                     )
                 }
-                summaryRow(
-                    title: String(localized: "Played"),
+                TTKeyValueRow(
+                    String(localized: "Played"),
                     value: record.endedAt.formatted(date: .complete, time: .shortened)
                 )
+                TTKeyValueRow(
+                    String(localized: "Duration"),
+                    value: MatchDurationFormatter.label(for: record.duration)
+                )
             }
-            .padding(DesignTokens.Spacing.md)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
-            .padding(.horizontal, DesignTokens.Spacing.md)
         }
-    }
-
-    private func summaryRow(title: String, value: String) -> some View {
-        HStack(alignment: .top) {
-            Text(title)
-                .foregroundStyle(.secondary)
-            Spacer()
-            Text(value)
-                .multilineTextAlignment(.trailing)
-        }
-        .font(.subheadline)
+        .padding(.horizontal, DesignTokens.Spacing.md)
     }
 
     private func humanizeIdentifier(_ value: String) -> String {

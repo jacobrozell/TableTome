@@ -132,4 +132,44 @@ final class MatchHistoryViewModel: ObservableObject {
         }
         return filters
     }
+
+    /// Newest first: "This Month", "Last Month", then "Month Year".
+    var sections: [(title: String, records: [MatchRecord])] {
+        Self.sections(from: records)
+    }
+
+    static func sections(
+        from records: [MatchRecord],
+        now: Date = Date(),
+        calendar: Calendar = .current
+    ) -> [(title: String, records: [MatchRecord])] {
+        let sorted = records.sorted { $0.endedAt > $1.endedAt }
+        var titles: [String] = []
+        var grouped: [String: [MatchRecord]] = [:]
+        for record in sorted {
+            let title = sectionTitle(for: record.endedAt, now: now, calendar: calendar)
+            if grouped[title] == nil {
+                titles.append(title)
+                grouped[title] = []
+            }
+            grouped[title]?.append(record)
+        }
+        return titles.map { (title: $0, records: grouped[$0] ?? []) }
+    }
+
+    private static func sectionTitle(for date: Date, now: Date, calendar: Calendar) -> String {
+        let month = calendar.dateComponents([.year, .month], from: date)
+        let thisMonth = calendar.dateComponents([.year, .month], from: now)
+        if month.year == thisMonth.year, month.month == thisMonth.month {
+            return String(localized: "This Month")
+        }
+        let thisStart = calendar.date(from: thisMonth) ?? now
+        if let lastStart = calendar.date(byAdding: .month, value: -1, to: thisStart) {
+            let lastMonth = calendar.dateComponents([.year, .month], from: lastStart)
+            if month.year == lastMonth.year, month.month == lastMonth.month {
+                return String(localized: "Last Month")
+            }
+        }
+        return date.formatted(.dateTime.month(.wide).year())
+    }
 }

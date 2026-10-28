@@ -11,21 +11,21 @@ struct AttackerDefenderPickerCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            SectionHeader(title: title, systemImage: "flag.fill")
+            Text(title)
+                .font(TTFont.headline)
+                .foregroundStyle(TTColor.inkPrimary)
 
-            Picker(String(localized: "Attacker"), selection: attackerBinding) {
-                Text(String(localized: "Not decided")).tag(Optional<Bool>.none)
-                Text(playerOneName).tag(Optional(true))
-                Text(playerTwoName).tag(Optional(false))
+            HStack(spacing: DesignTokens.Spacing.sm) {
+                playerButton(isPlayerOne: true, name: playerOneName)
+                playerButton(isPlayerOne: false, name: playerTwoName)
             }
-            .pickerStyle(.segmented)
             .accessibilityIdentifier("\(accessibilityPrefix).attackerPicker")
 
             if let isPlayerOne = attackerIsPlayerOne {
                 let caption = decidedCaption?(isPlayerOne) ?? defaultCaption(isPlayerOne: isPlayerOne)
                 Text(caption)
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
+                    .font(TTFont.footnote)
+                    .foregroundStyle(TTColor.inkSecondary)
             }
         }
         .surfaceCard()
@@ -39,10 +39,17 @@ struct AttackerDefenderPickerCard: View {
         )
     }
 
-    private var attackerBinding: Binding<Bool?> {
-        Binding(
-            get: { attackerIsPlayerOne },
-            set: { onSelect($0) }
-        )
+    @ViewBuilder
+    private func playerButton(isPlayerOne: Bool, name: String) -> some View {
+        let selected = attackerIsPlayerOne == isPlayerOne
+        let label = isPlayerOne ? "1  \(name)" : "2  \(name)"
+        if selected {
+            Button(label) { onSelect(isPlayerOne) }
+                .buttonStyle(.ttPlayer(isPlayerOne: isPlayerOne))
+                .accessibilityAddTraits(.isSelected)
+        } else {
+            Button(label) { onSelect(isPlayerOne) }
+                .buttonStyle(.ttSecondary)
+        }
     }
 }

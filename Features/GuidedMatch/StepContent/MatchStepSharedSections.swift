@@ -1,42 +1,6 @@
 import SwiftUI
 import TabletomeDomain
 
-struct MatchStepCompletionStatus: View {
-    let step: MatchSetupStep
-    let isComplete: Bool
-    let completionHint: String
-    let usesManualConfirmation: Bool
-    let onMarkComplete: () -> Void
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            HStack(spacing: DesignTokens.Spacing.sm) {
-                Image(systemName: isComplete ? "checkmark.circle.fill" : "circle")
-                    .foregroundStyle(isComplete ? .green : .secondary)
-                    .accessibilityHidden(true)
-                Text(completionHint)
-                    .font(.subheadline)
-                    .foregroundStyle(isComplete ? .primary : .secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .accessibilityElement(children: .combine)
-            .accessibilityValue(isComplete ? String(localized: "Complete") : String(localized: "Incomplete"))
-
-            if usesManualConfirmation, !isComplete {
-                Button(String(localized: "Mark step complete")) {
-                    onMarkComplete()
-                }
-                .buttonStyle(.borderedProminent)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .accessibilityIdentifier("guidedMatch.markComplete.\(step.id)")
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .surfaceCard()
-        .accessibilityIdentifier("guidedMatch.stepComplete.\(step.id)")
-    }
-}
-
 struct MatchStepRecommendedDefaultsControls: View {
     let hasBothArmies: Bool
     let onApplyRecommended: () -> Void
@@ -47,7 +11,7 @@ struct MatchStepRecommendedDefaultsControls: View {
                 Button(String(localized: "Use recommended defaults")) {
                     onApplyRecommended()
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.ttSecondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .accessibilityIdentifier("guidedMatch.applyRecommendedDefaults")
 

@@ -17,19 +17,16 @@ struct SetupStepRulesLink: View {
                     query: stepTitle
                 )
             } label: {
-                Label(String(localized: "Look this up in Rules Search"), systemImage: "magnifyingglass")
-                    .font(.subheadline.weight(.medium))
-                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                    .contentShape(Rectangle())
+                TTRow(
+                    title: String(localized: "Look this up in Rules Search"),
+                    systemImage: "magnifyingglass"
+                )
             }
             .buttonStyle(.plain)
             .accessibilityIdentifier("guidedMatch.setupRulesSearch.\(stepTitle)")
         } else if let relatedRuleSectionId {
             NavigationLink(value: RuleSectionLink(gameSystemId: gameSystemId, sectionId: relatedRuleSectionId)) {
-                Label(String(localized: "Look up in Rules"), systemImage: "doc.text")
-                    .font(.subheadline.weight(.medium))
-                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                    .contentShape(Rectangle())
+                TTRow(title: String(localized: "Look up in Rules"), systemImage: "doc.text")
             }
             .buttonStyle(.plain)
             .accessibilityIdentifier("guidedMatch.setupRulesSection.\(relatedRuleSectionId)")
@@ -40,10 +37,7 @@ struct SetupStepRulesLink: View {
             )
         } else {
             NavigationLink(value: RulesReferenceBrowseLink(gameSystemId: gameSystemId)) {
-                Label(String(localized: "Look up in Rules"), systemImage: "doc.text")
-                    .font(.subheadline.weight(.medium))
-                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                    .contentShape(Rectangle())
+                TTRow(title: String(localized: "Look up in Rules"), systemImage: "doc.text")
             }
             .buttonStyle(.plain)
             .accessibilityIdentifier("guidedMatch.setupRulesBrowse.\(stepTitle)")

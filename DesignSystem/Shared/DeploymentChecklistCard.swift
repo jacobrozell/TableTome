@@ -69,16 +69,66 @@ struct DeploymentChecklistCard: View {
 
     private func checklistRow(step: DeploymentChecklistStep) -> some View {
         let isComplete = DeploymentChecklist.isComplete(step: step, completedSteps: completedSteps)
-        let isFocused = focusedStep == step
-        return ChecklistStepRow(
+        return DeploymentCheckRow(
             isComplete: isComplete,
-            isFocused: isFocused,
             title: step.title,
             detail: step.detail,
-            showsDetail: isFocused || !isComplete,
             accessibilityIdentifier: "deployment.check.\(step.id)",
             doneAccessibilityIdentifier: "deployment.done.\(step.id)",
-            onDone: isComplete ? nil : { onToggle(step, true) }
+            onToggle: { onToggle(step, !isComplete) }
         )
+    }
+}
+
+private struct DeploymentCheckRow: View {
+    let isComplete: Bool
+    let title: String
+    let detail: String
+    let accessibilityIdentifier: String
+    let doneAccessibilityIdentifier: String
+    let onToggle: () -> Void
+
+    @State private var showsDetail = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+            HStack(spacing: DesignTokens.Spacing.sm) {
+                Button(action: onToggle) {
+                    ZStack {
+                        Circle()
+                            .strokeBorder(isComplete ? TTColor.success : TTColor.stroke, lineWidth: 2)
+                            .frame(width: 28, height: 28)
+                        if isComplete {
+                            Circle().fill(TTColor.success).frame(width: 28, height: 28)
+                            Image(systemName: "checkmark")
+                                .font(TTFont.caption.weight(.bold))
+                                .foregroundStyle(TTColor.inkOnPlayer)
+                        }
+                    }
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier(doneAccessibilityIdentifier)
+                Text(title)
+                    .font(TTFont.subheadline.weight(.semibold))
+                    .foregroundStyle(TTColor.inkPrimary)
+                Spacer(minLength: 0)
+                Button {
+                    showsDetail.toggle()
+                } label: {
+                    Image(systemName: "info.circle")
+                        .foregroundStyle(TTColor.inkSecondary)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(String(localized: "Details"))
+            }
+            if showsDetail {
+                Text(detail)
+                    .font(TTFont.footnote)
+                    .foregroundStyle(TTColor.inkSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .frame(minHeight: 44)
+        .accessibilityIdentifier(accessibilityIdentifier)
     }
 }

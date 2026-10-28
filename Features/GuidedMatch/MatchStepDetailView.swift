@@ -26,6 +26,13 @@ struct MatchStepDetailView: View {
         )
     }
 
+    private var stepParagraphs: [String] {
+        step.body
+            .components(separatedBy: "\n\n")
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+    }
+
     var isComplete: Bool {
         viewModel.matchState.completedStepIds.contains(step.id)
     }
@@ -47,9 +54,25 @@ struct MatchStepDetailView: View {
     private var detailBody: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-                Text(step.body)
-                    .font(.body)
-                    .fixedSize(horizontal: false, vertical: true)
+                Text(String(localized: "SETUP · STEP \(stepNumber) OF \(viewModel.sortedMatchSteps.count)"))
+                    .ttEyebrow()
+                Text(step.title)
+                    .font(TTFont.title)
+                    .foregroundStyle(TTColor.inkPrimary)
+                if isComplete {
+                    TTBadge(
+                        String(localized: "Step complete"),
+                        tone: .success,
+                        systemImage: "checkmark"
+                    )
+                    .accessibilityIdentifier("guidedMatch.stepComplete.\(step.id)")
+                }
+                ForEach(stepParagraphs, id: \.self) { paragraph in
+                    Text(paragraph)
+                        .font(TTFont.body)
+                        .foregroundStyle(TTColor.inkPrimary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
 
                 GlossaryChipsRow(text: step.body, gameSystemId: viewModel.gameSystemId.rawValue, ruleSections: ruleSections)
 
@@ -60,6 +83,14 @@ struct MatchStepDetailView: View {
                 )
 
                 stepSpecificContent
+
+                if usesManualConfirmation, !isComplete {
+                    Button(String(localized: "Mark step complete")) {
+                        viewModel.setStepComplete(step.id, complete: true)
+                    }
+                    .buttonStyle(.ttSecondary)
+                    .accessibilityIdentifier("guidedMatch.markComplete.\(step.id)")
+                }
 
                 if let relatedSection, ReleaseSurface.showsRulesAssistant {
                     ReferenceLinksGroup {
@@ -77,14 +108,12 @@ struct MatchStepDetailView: View {
                 if !step.tips.isEmpty {
                     TipsCard(tips: step.tips)
                 }
-
-                stepCompletionStatus
             }
             .readableContentWidth()
             .padding(DesignTokens.Spacing.md)
         }
         .tabBarScrollInset()
-        .navigationTitle(step.title)
+        .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(id: "guidedMatch.stepDone.\(step.id)", placement: .confirmationAction) {
@@ -107,48 +136,19 @@ struct MatchStepDetailView: View {
                     ruleSections: ruleSections,
                     usesSideBySideColumns: usesSideBySideColumns
                 )
-                MatchStepInlineCompletionHint(
-                    stepId: step.id,
-                    isComplete: isComplete,
-                    completionHint: completionHint
-                )
             } else {
                 stepSpecificContent
-                stepCompletionStatus
+                if usesManualConfirmation, !isComplete {
+                    Button(String(localized: "Mark step complete")) {
+                        viewModel.setStepComplete(step.id, complete: true)
+                    }
+                    .buttonStyle(.ttSecondary)
+                    .accessibilityIdentifier("guidedMatch.markComplete.\(step.id)")
+                }
             }
         }
         .fixedSize(horizontal: false, vertical: true)
         .accessibilityIdentifier("guidedMatch.stepInline.\(step.id)")
-    }
-
-    private var stepCompletionStatus: some View {
-        MatchStepCompletionStatus(
-            step: step,
-            isComplete: isComplete,
-            completionHint: completionHint,
-            usesManualConfirmation: usesManualConfirmation,
-            onMarkComplete: { viewModel.setStepComplete(step.id, complete: true) }
-        )
-    }
-
-    var completionHint: String {
-        if isComplete {
-            return String(localized: "Step complete")
-        }
-        if step.id == "pick-enhancement" {
-            return String(
-                localized: "Tap Use recommended defaults, or pick one Enhancement and one Secondary for each player."
-            )
-        }
-        if usesManualConfirmation {
-            if step.id == SpearheadSetupStepId.preBattleLoadout {
-                return String(
-                    localized: "Open Set Loadout, pick one regiment ability and one enhancement per player (or keep our suggestions), then tap Mark step complete."
-                )
-            }
-            return String(localized: "Tap below when you've finished this step.")
-        }
-        return String(localized: "Complete the actions above — this step checks off automatically.")
     }
 
     private var usesManualConfirmation: Bool {

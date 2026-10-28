@@ -9,23 +9,22 @@ struct LoadoutSummaryCard: View {
     var secondaryObjective: ArmyRuleOption? = nil
     var battleTacticDeckName: String? = nil
     var isAttacker: Bool = false
+    var isPlayerOne: Bool = true
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            HStack {
+            HStack(spacing: DesignTokens.Spacing.sm) {
+                TTPlayerToken(isPlayerOne: isPlayerOne, size: 28)
                 Text(playerName)
-                    .font(.headline)
+                    .font(TTFont.headline)
+                    .foregroundStyle(TTColor.inkPrimary)
                 if isAttacker {
-                    Text(String(localized: "Attacker"))
-                        .font(.caption.weight(.semibold))
-                        .padding(.horizontal, DesignTokens.Spacing.sm)
-                        .padding(.vertical, 2)
-                        .background(Color.accentColor.opacity(0.15), in: Capsule())
+                    TTBadge(String(localized: "Attacker"), tone: .brand)
                 }
             }
             Text(armyName)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .font(TTFont.callout)
+                .foregroundStyle(TTColor.inkSecondary)
 
             if regimentAbility != nil || enhancement != nil || secondaryObjective != nil || battleTacticDeckName != nil {
                 Divider()
@@ -60,17 +59,7 @@ struct LoadoutSummaryCard: View {
     }
 
     private func loadoutRow(title: String, option: ArmyRuleOption) -> some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-            Text(title)
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.secondary)
-            Text(option.name)
-                .font(.subheadline.bold())
-            Text(option.summary)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
-        }
+        TTKeyValueRow(title, value: option.name)
     }
 
     private func battleTacticDeckRow(deckName: String) -> some View {

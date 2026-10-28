@@ -119,6 +119,7 @@ struct GuidedMatchStepParts {
                     playerLoadoutCard(
                         player: viewModel.matchState.playerOne,
                         isAttacker: viewModel.matchState.attackerIsPlayerOne == true,
+                        isPlayerOne: true,
                         showRegiment: showRegiment,
                         showEnhancement: showEnhancement,
                         showSecondary: showSecondary
@@ -126,6 +127,7 @@ struct GuidedMatchStepParts {
                     playerLoadoutCard(
                         player: viewModel.matchState.playerTwo,
                         isAttacker: viewModel.matchState.attackerIsPlayerOne == false,
+                        isPlayerOne: false,
                         showRegiment: showRegiment,
                         showEnhancement: showEnhancement,
                         showSecondary: showSecondary
@@ -135,6 +137,7 @@ struct GuidedMatchStepParts {
                 playerLoadoutCard(
                     player: viewModel.matchState.playerOne,
                     isAttacker: viewModel.matchState.attackerIsPlayerOne == true,
+                    isPlayerOne: true,
                     showRegiment: showRegiment,
                     showEnhancement: showEnhancement,
                     showSecondary: showSecondary
@@ -142,6 +145,7 @@ struct GuidedMatchStepParts {
                 playerLoadoutCard(
                     player: viewModel.matchState.playerTwo,
                     isAttacker: viewModel.matchState.attackerIsPlayerOne == false,
+                    isPlayerOne: false,
                     showRegiment: showRegiment,
                     showEnhancement: showEnhancement,
                     showSecondary: showSecondary
@@ -205,6 +209,7 @@ struct GuidedMatchStepParts {
     private func playerLoadoutCard(
         player: PlayerArmySelection,
         isAttacker: Bool,
+        isPlayerOne: Bool,
         showRegiment: Bool,
         showEnhancement: Bool,
         showSecondary: Bool
@@ -216,7 +221,8 @@ struct GuidedMatchStepParts {
             enhancement: showEnhancement ? viewModel.enhancement(for: player) : nil,
             secondaryObjective: showSecondary ? viewModel.secondaryObjective(for: player) : nil,
             battleTacticDeckName: viewModel.battleTacticDeckName(for: player),
-            isAttacker: isAttacker
+            isAttacker: isAttacker,
+            isPlayerOne: isPlayerOne
         )
     }
 
@@ -230,16 +236,13 @@ struct GuidedMatchStepParts {
         onSelect: @escaping (Bool, String) -> Void
     ) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            HStack {
+            HStack(spacing: DesignTokens.Spacing.sm) {
+                TTPlayerToken(isPlayerOne: playerIsOne, size: 28)
                 Text(player.playerName)
-                    .font(.headline)
+                    .font(TTFont.headline)
+                    .foregroundStyle(TTColor.inkPrimary)
                 if isAttacker {
-                    Text(String(localized: "Attacker — picks first"))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .padding(.horizontal, DesignTokens.Spacing.xs)
-                        .padding(.vertical, 2)
-                        .background(Color.accentColor.opacity(0.12), in: Capsule())
+                    TTBadge(String(localized: "Attacker"), tone: .brand)
                 }
             }
 

@@ -203,27 +203,14 @@ struct TipsCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            HStack(spacing: DesignTokens.Spacing.xs) {
-                Image(systemName: "lightbulb.fill")
-                    .foregroundStyle(TTColor.warning)
-                    .accessibilityHidden(true)
-                SectionHeader(title: String(localized: "Tips"))
-            }
             ForEach(tips, id: \.self) { tip in
-                Text(tip)
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
+                TTNotice(
+                    title: String(localized: "Tip"),
+                    message: tip,
+                    systemImage: "lightbulb.fill",
+                    tone: .warning
+                )
             }
         }
-        .padding(DesignTokens.Spacing.md)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background {
-            CardSurface.shape(radius: DesignTokens.Radius.card)
-                .fill(TTTone.warning.soft)
-            CardSurface.shape(radius: DesignTokens.Radius.card)
-                .strokeBorder(TTColor.warning.opacity(0.35), lineWidth: 1)
-        }
-        .clipShape(CardSurface.shape(radius: DesignTokens.Radius.card))
     }
 }

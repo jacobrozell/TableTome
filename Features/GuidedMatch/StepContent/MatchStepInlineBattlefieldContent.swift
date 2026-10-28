@@ -71,21 +71,3 @@ struct MatchStepInlineBattlefieldContent: View {
         }
     }
 }
-
-struct MatchStepInlineCompletionHint: View {
-    let stepId: String
-    let isComplete: Bool
-    let completionHint: String
-
-    var body: some View {
-        HStack(spacing: DesignTokens.Spacing.sm) {
-            Image(systemName: isComplete ? "checkmark.circle.fill" : "circle")
-                .foregroundStyle(isComplete ? .green : .secondary)
-            Text(completionHint)
-                .font(.subheadline)
-                .foregroundStyle(isComplete ? .primary : .secondary)
-                .fixedSize(horizontal: false, vertical: true)
-        }
-        .accessibilityIdentifier("guidedMatch.stepComplete.\(stepId)")
-    }
-}

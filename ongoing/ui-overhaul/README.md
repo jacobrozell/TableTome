@@ -172,10 +172,10 @@ Legend: ⬜ not started · 🟨 in progress · ✅ merged · ⏸ blocked. **Deps
 |----|-------|------|------|--------|
 | DS-01 | Theme colors (`TTColor`) + asset catalog accent update | — | [01](01-design-system.md) | 🟨 |
 | DS-02 | Typography tokens (`TTFont`) | DS-01 | [01](01-design-system.md) | 🟨 |
-| DS-03 | Spacing / radius / elevation tokens (extend `DesignTokens`) | DS-01 | [01](01-design-system.md) | ⬜ |
+| DS-03 | Spacing / radius / elevation tokens (extend `DesignTokens`) | DS-01 | [01](01-design-system.md) | ✅ |
 | DS-04 | Re-skin existing surface modifiers (`surfaceCard`, `accentHighlightCard`, …) | DS-01..03 | [01](01-design-system.md) | ⬜ |
 | DS-05 | Button styles + `PrimaryButton` re-skin | DS-01..03 | [01](01-design-system.md) | ⬜ |
-| DS-06 | Motion + haptics (`TTMotion`, `TTHaptics`) | — | [01](01-design-system.md) | ⬜ |
+| DS-06 | Motion + haptics (`TTMotion`, `TTHaptics`) | — | [01](01-design-system.md) | 🟨 |
 | DS-07 | Core components (badge, section header, row, icon tile, counter, stat strip, weapon table, progress bar, notice, empty state, player token) | DS-04, DS-05, DS-06 | [01](01-design-system.md) | ⬜ |
 | DS-08 | Preview matrix + component gallery (debug-only screen) | DS-07 | [01](01-design-system.md) | ⬜ |
 | DS-09 | `hardcoded_colors` ratchet metric | DS-01 | [01](01-design-system.md) | ⬜ |

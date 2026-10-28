@@ -293,7 +293,7 @@ private struct TTElevationModifier: ViewModifier {
 ```
 
 ### Acceptance (DS-03)
-- [ ] New tokens compile. No existing token value changed.
+- [x] New tokens compile. No existing token value changed.
 
 ---
 
@@ -461,7 +461,7 @@ public extension View {
 ```
 
 ### Acceptance (DS-06)
-- [ ] Files compile. Used first in DS-07 `TTCounter`.
+- [x] Files compile. First use is DS-07 `TTCounter`, still open.
 
 ---
 

@@ -45,6 +45,7 @@ Unit ability content is loaded from optional per-army detail files. See `Spearhe
 - Changing a player's army clears their regiment/enhancement picks
 - Match setup steps disabled until both armies are chosen (except step 1)
 - Step completion tracked per step id
+- On iPhone, finishing setup stays on the Setup stage until Start Battle. iPad still opens the battle tracker when setup is complete.
 - Reset match clears all state
 - Battle tracker state persisted in UserDefaults (`battle_tracker_state_aos_spearhead`)
 - Phase picker filters abilities; "Show all" lists every ability for learning

@@ -64,6 +64,17 @@ extension GuidedMatchView {
                 if showsEmbeddedBattleTracker {
                     embeddedBattleTracker(catalog: catalog)
                         .layoutPriority(1)
+                } else if hubTab == .setup, gameSystemId == .aosSpearhead {
+                    SetupAccordion(
+                        viewModel: viewModel,
+                        ruleSections: ruleSections,
+                        onStartBattle: {
+                            hubTab = .battle
+                            logBattleTrackerOpened(source: "setup_cta")
+                        }
+                    )
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .layoutPriority(1)
                 } else {
                     guidedMatchHubList(catalog: catalog)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)

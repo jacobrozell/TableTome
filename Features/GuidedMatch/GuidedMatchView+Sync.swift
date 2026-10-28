@@ -51,6 +51,12 @@ extension GuidedMatchView {
                     }
                     .accessibilityIdentifier("guidedMatch.sync")
                 }
+                if gameSystemId == .aosSpearhead {
+                    NavigationLink(value: SampleTurnLink()) {
+                        Label(String(localized: "Preview a Turn"), systemImage: "play.circle")
+                    }
+                    .accessibilityIdentifier("guidedMatch.sampleTurn")
+                }
                 if ReleaseSurface.showsMatchHistory, showsMatchHistoryToolbar {
                     Button {
                         showsMatchHistory = true

@@ -199,7 +199,7 @@ Legend: ⬜ not started · 🟨 in progress · ✅ merged · ⏸ blocked. **Deps
 | PH-01 | Play home: hero card + journey + recent | SC-01, SH-03 | [03](03-onboarding-and-play-home.md) | 🟨 |
 | PH-02 | "Which box do I have?" sheet | PH-01 | [03](03-onboarding-and-play-home.md) | 🟨 |
 | GG-01 | Spearhead guide hub (GameSystemDetailView) | PH-01 | [04](04-spearhead-guide.md) | ⬜ |
-| GG-02 | Getting Started list + step detail | GG-01 | [04](04-spearhead-guide.md) | ⬜ |
+| GG-02 | Getting Started list + step detail | GG-01 | [04](04-spearhead-guide.md) | 🟨 |
 | GG-03 | Sample turn walkthrough (paged) | GG-01 | [04](04-spearhead-guide.md) | ⬜ |
 | GG-04 | Army roster + warscroll reference | DS-07 | [04](04-spearhead-guide.md) | ⬜ |
 | GM-01 | Guided Match container: stepper header replaces hub segmented control | SH-03 | [05](05-guided-match-setup.md) | ⬜ |

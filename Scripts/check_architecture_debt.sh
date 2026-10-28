@@ -60,7 +60,7 @@ run_metric "switch_gameSystemId"   21  "raw 'switch gameSystemId' blocks" \
   'switch[[:space:]].*gameSystemId' "$SRC"
 
 # Phase 1/3 target: no raw id string-literal comparisons.
-run_metric "raw_id_literals"       46  "raw game-system id string literals" \
+run_metric "raw_id_literals"       40  "raw game-system id string literals" \
   '"(aos-spearhead|sc-tmg|wh40k-11e|wh40k-10e-cp|wh40k-10e)"' "Domain Features DesignSystem"
 
 # Phase 3 target: delete BattleRules god facade + identity probes.
@@ -71,7 +71,7 @@ run_metric "battlerules_or_probes" 0 "BattleRules / is<System> identity probes" 
 # PlayCapabilities+Grouped.swift is the sanctioned shim that maps these flags
 # to closed enums — it is excluded so new *feature* usage is still caught.
 # UI overhaul: theme tokens only (ongoing/ui-overhaul/README.md rule G1).
-run_metric "hardcoded_colors"     128  "hard-coded SwiftUI/UIKit colors outside DesignSystem/Theme" \
+run_metric "hardcoded_colors"     126  "hard-coded SwiftUI/UIKit colors outside DesignSystem/Theme" \
   'Color\.(red|orange|green|blue|yellow|purple|pink|gray|mint|teal)\b|foregroundStyle\(\.(red|orange|green|blue|yellow|purple|pink|gray)\)|Color\(\.(secondarySystemBackground|tertiarySystemFill|systemBackground|secondarySystemGroupedBackground|systemGroupedBackground|secondarySystemFill|tertiarySystemBackground|quaternarySystemFill)\)' \
   "Features DesignSystem Support App" \
   '^(Features/(Bench|Muster)|DesignSystem/(Hobby|Theme))/'

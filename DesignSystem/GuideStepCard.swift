@@ -40,16 +40,17 @@ public struct GuideStepCard: View {
         HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
             ZStack {
                 Circle()
-                    .fill(isComplete ? Color.green.opacity(0.2) : Color.accentColor.opacity(0.15))
+                    .fill(isComplete ? TTColor.successSoft : TTColor.brandFill)
                     .frame(width: stepCircleSize, height: stepCircleSize)
                 if isComplete {
                     Image(systemName: "checkmark")
-                        .font(.caption.bold())
-                        .foregroundStyle(.green)
+                        .font(TTFont.caption.weight(.bold))
+                        .foregroundStyle(TTColor.success)
                         .accessibilityHidden(true)
                 } else {
                     Text("\(stepNumber)")
-                        .font(.subheadline.bold())
+                        .font(TTFont.numericSmall)
+                        .foregroundStyle(TTColor.inkOnBrand)
                         .accessibilityHidden(true)
                 }
             }

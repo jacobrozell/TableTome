@@ -33,11 +33,13 @@ struct AppSearchDestinationView: View {
                 AppSearchResultDetailView(result: result, gameSystemId: gameSystemId, ruleSections: ruleSections)
             }
         case .gettingStarted, .editionMigration:
-            let steps = result.kind == .gettingStarted ? gettingStartedSteps : editionMigrationSteps
-            if let step = steps.first(where: { $0.id == result.referenceId }) {
+            let steps = (result.kind == .gettingStarted ? gettingStartedSteps : editionMigrationSteps)
+                .sorted { $0.order < $1.order }
+            if let index = steps.firstIndex(where: { $0.id == result.referenceId }) {
                 GuideStepDetailView(
                     gameSystemId: gameSystemId,
-                    step: step,
+                    steps: steps,
+                    index: index,
                     ruleSections: ruleSections
                 )
             } else {

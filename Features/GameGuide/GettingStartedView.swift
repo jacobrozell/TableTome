@@ -4,181 +4,180 @@ import TabletomeDomain
 struct GettingStartedView: View {
     let gameSystem: GameSystem
 
+    @State private var readSteps: Set<String> = []
+    @ScaledMetric(relativeTo: .body) private var circleSize: CGFloat = 28
+
     private var sortedSteps: [GuideStep] {
         gameSystem.gettingStartedSteps.sorted { $0.order < $1.order }
     }
 
+    private var capabilities: PlayCapabilities {
+        GameSystemPlayContext.context(for: gameSystem.id).capabilities
+    }
+
     var body: some View {
-        List {
-            if gameSystem.id == "wh40k-10e-cp" {
-                Section {
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                if capabilities.usesPatrolFormatRules {
                     combatPatrolFirstGameSection
+                    sampleRow(
+                        value: CombatPatrolSampleTurnLink(),
+                        title: String(localized: "Preview a Turn"),
+                        subtitle: String(localized: "~2 minutes — each battle phase, dice, and scoring"),
+                        identifier: "guide.gettingStarted.combatPatrolSampleTurn"
+                    )
                 }
 
-                Section {
-                    NavigationLink(value: CombatPatrolSampleTurnLink()) {
-                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                            Label(String(localized: "Preview a Turn"), systemImage: "play.circle")
-                                .font(.headline)
-                            Text(String(localized: "~2 minutes — each battle phase, dice, and scoring"))
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                        .contentShape(Rectangle())
-                    }
-                    .accessibilityIdentifier("guide.gettingStarted.combatPatrolSampleTurn")
-                }
-            }
-
-            if gameSystem.id == "wh40k-11e" {
-                Section {
+                if capabilities.deploymentChecklistStyle == .wh40k {
                     Wh40k11eWhatYouNeedCard()
+                    sampleRow(
+                        value: Wh40k11eSampleTurnLink(),
+                        title: String(localized: "Preview a 40k Turn"),
+                        subtitle: String(localized: "~3 minutes — Command through Fight with 11e rules"),
+                        identifier: "guide.gettingStarted.wh40k11eSampleTurn"
+                    )
                 }
 
-                Section {
-                    NavigationLink(value: Wh40k11eSampleTurnLink()) {
-                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                            Label(String(localized: "Preview a 40k Turn"), systemImage: "play.circle")
-                                .font(.headline)
-                            Text(String(localized: "~3 minutes — Command through Fight with 11e rules"))
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                        .contentShape(Rectangle())
-                    }
-                    .accessibilityIdentifier("guide.gettingStarted.wh40k11eSampleTurn")
-                }
-            }
-
-            if gameSystem.id == "aos-spearhead" {
-                Section {
-                    WhatYouNeedCard()
+                if capabilities.showsBattleTacticDecks {
+                    sampleRow(
+                        value: SampleTurnLink(),
+                        title: String(localized: "Preview a Spearhead Turn"),
+                        subtitle: String(localized: "2-minute walkthrough"),
+                        identifier: "guide.gettingStarted.sampleTurn"
+                    )
                 }
 
-                Section {
-                    NavigationLink(value: SampleTurnLink()) {
-                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                            Label(String(localized: "Preview a Spearhead Turn"), systemImage: "play.circle")
-                                .font(.headline)
-                            Text(String(localized: "~2 minutes — movement, shooting, dice, and scoring"))
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                        .contentShape(Rectangle())
-                    }
-                    .accessibilityIdentifier("guide.gettingStarted.sampleTurn")
-                }
-            }
-
-            if gameSystem.id == GameSystemId.scTmg.rawValue {
-                Section {
+                if gameSystem.id == GameSystemId.scTmg.rawValue {
                     ScWhatYouNeedCard()
                 }
-            }
 
-            Section {
-                ForEach(Array(sortedSteps.enumerated()), id: \.element.id) { index, step in
-                    NavigationLink(value: GuideStepLink(gameSystemId: gameSystem.id, stepId: step.id)) {
-                        GuideStepCard(
-                            stepNumber: index + 1,
-                            title: step.title,
-                            summary: step.summary,
-                            isComplete: false,
-                            showsDisclosureIndicator: false,
-                            accessibilityId: "guide.step.\(step.id)"
-                        )
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .contentShape(Rectangle())
-                    }
-                    .accessibilityIdentifier("guide.step.\(step.id)")
-                }
-            } footer: {
-                Text(
-                    gameSystem.id == "wh40k-10e-cp"
-                        ? String(localized: "Follow the numbered path above, then read topics in any order.")
-                        : String(localized: "Read in any order — reference topics, not a checklist.")
-                )
-                .font(.callout)
-            }
+                TTSectionHeader(String(localized: "Your First Game"))
+                timeline
 
-            if ReleaseSurface.showsGuidedMatch(for: gameSystem.id) {
-                Section {
+                if ReleaseSurface.showsGuidedMatch(for: gameSystem.id) {
                     NavigationLink(value: GuidedMatchLink(gameSystemId: GameSystemId(resolving: gameSystem.id))) {
-                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                            Label(String(localized: "Continue to Guided Match"), systemImage: "flag.checkered")
-                                .font(.headline)
-                            Text(guidedMatchContinueDetail)
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                        .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                        .contentShape(Rectangle())
+                        Text(String(localized: "Start a Battle"))
+                            .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(.ttPrimary)
                     .accessibilityIdentifier("guide.gettingStarted.continueGuidedMatch")
-                } footer: {
-                    Text(String(localized: "When you're ready to pick armies and walk through setup at the table."))
                 }
             }
+            .padding(DesignTokens.Spacing.md)
+            .readableContentWidth()
         }
-        .listStyle(.insetGrouped)
-        .readableContentWidth()
+        .ttScreenBackground()
+        .tabBarScrollInset()
         .navigationTitle(String(localized: "Getting Started"))
         .accessibilityIdentifier("guide.stepList")
+        .onAppear {
+            readSteps = GuideProgressStore.readStepIds(gameSystemId: gameSystem.id)
+        }
+    }
+
+    private var timeline: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            ForEach(Array(sortedSteps.enumerated()), id: \.element.id) { index, step in
+                NavigationLink(value: GuideStepLink(gameSystemId: gameSystem.id, stepId: step.id)) {
+                    timelineRow(index: index, step: step)
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("guide.step.\(step.id)")
+            }
+        }
+    }
+
+    private func timelineRow(index: Int, step: GuideStep) -> some View {
+        let isLast = index == sortedSteps.count - 1
+        let isRead = readSteps.contains(step.id)
+        return HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
+            VStack(spacing: 0) {
+                stepCircle(number: index + 1, isRead: isRead)
+                if !isLast {
+                    Rectangle()
+                        .fill(TTColor.stroke)
+                        .frame(width: 2)
+                        .frame(maxHeight: .infinity)
+                }
+            }
+            .frame(width: circleSize)
+
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xxs) {
+                Text(step.title)
+                    .font(TTFont.headline)
+                    .foregroundStyle(TTColor.inkPrimary)
+                Text(step.summary)
+                    .font(TTFont.subheadline)
+                    .foregroundStyle(TTColor.inkSecondary)
+                    .lineLimit(2)
+            }
+            .padding(.bottom, DesignTokens.Spacing.md)
+            Spacer(minLength: 0)
+        }
+        .frame(minHeight: 64, alignment: .top)
+        .contentShape(Rectangle())
+    }
+
+    private func stepCircle(number: Int, isRead: Bool) -> some View {
+        ZStack {
+            Circle().fill(isRead ? TTColor.successSoft : TTColor.brandFill)
+            if isRead {
+                Image(systemName: "checkmark")
+                    .font(TTFont.caption.weight(.bold))
+                    .foregroundStyle(TTColor.success)
+            } else {
+                Text("\(number)")
+                    .font(TTFont.numericSmall)
+                    .foregroundStyle(TTColor.inkOnBrand)
+            }
+        }
+        .frame(width: circleSize, height: circleSize)
+        .accessibilityHidden(true)
+    }
+
+    private func sampleRow<T: Hashable>(
+        value: T,
+        title: String,
+        subtitle: String,
+        identifier: String
+    ) -> some View {
+        TTCard(padding: 0) {
+            NavigationLink(value: value) {
+                TTRow(title: title, subtitle: subtitle, systemImage: "play.circle")
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier(identifier)
+        }
     }
 
     private var combatPatrolFirstGameSection: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Label(String(localized: "Your first game"), systemImage: "map")
-                .font(.headline)
-
+            TTSectionHeader(String(localized: "Your first game"))
             CombatPatrolWhatYouNeedCard()
-
             if let firstStep = sortedSteps.first {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    TappableGuidePathStep(
-                        number: 1,
-                        title: String(localized: "Read the topics below"),
-                        detail: firstStep.summary,
-                        destination: GuideStepLink(gameSystemId: gameSystem.id, stepId: firstStep.id),
-                        accessibilityId: "guide.combatPatrol.path.firstTopic"
-                    )
-                    TappableGuidePathStep(
-                        number: 2,
-                        title: String(localized: "Missions Reference"),
-                        detail: String(localized: "Deployment maps and mission rules from your box."),
-                        destination: CombatPatrolMissionsLink(gameSystemId: gameSystem.id),
-                        accessibilityId: "guide.combatPatrol.path.missions"
-                    )
-                    GuidePathInfoStep(
-                        number: 3,
-                        title: String(localized: "Guided Match"),
-                        detail: String(
-                            localized: "Use Continue to Guided Match below — then Use Starter Matchup."
-                        ),
-                        accessibilityId: "guide.combatPatrol.path.guidedMatch"
-                    )
-                }
+                TappableGuidePathStep(
+                    number: 1,
+                    title: String(localized: "Read the topics below"),
+                    detail: firstStep.summary,
+                    destination: GuideStepLink(gameSystemId: gameSystem.id, stepId: firstStep.id),
+                    accessibilityId: "guide.combatPatrol.path.firstTopic"
+                )
+                TappableGuidePathStep(
+                    number: 2,
+                    title: String(localized: "Missions Reference"),
+                    detail: String(localized: "Deployment maps and mission rules from your box."),
+                    destination: CombatPatrolMissionsLink(gameSystemId: gameSystem.id),
+                    accessibilityId: "guide.combatPatrol.path.missions"
+                )
+                GuidePathInfoStep(
+                    number: 3,
+                    title: String(localized: "Guided Match"),
+                    detail: String(
+                        localized: "Use Start a Battle below — then Use Starter Matchup."
+                    ),
+                    accessibilityId: "guide.combatPatrol.path.guidedMatch"
+                )
             }
-        }
-        .accentHighlightCard()
-    }
-
-    private var guidedMatchContinueDetail: String {
-        switch gameSystem.id {
-        case GameSystemId.aosSpearhead.rawValue:
-            String(localized: "Use Starter Matchup to fill both starter armies automatically.")
-        case GameSystemId.wh40k10eCp.rawValue:
-            String(localized: "Starter matchup, setup steps, and battle tracker")
-        case GameSystemId.wh40k11e.rawValue:
-            String(localized: "Armageddon starter matchup and setup steps")
-        case GameSystemId.scTmg.rawValue:
-            String(localized: "Raynor vs Kerrigan Founders Edition matchup")
-        default:
-            String(localized: "Interactive setup and battle tracker")
         }
     }
 }

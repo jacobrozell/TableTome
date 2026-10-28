@@ -131,10 +131,11 @@ struct GuideStepDestinationView: View {
 
     var body: some View {
         Group {
-            if let gameSystem, let step = resolvedStep(in: gameSystem) {
+            if let gameSystem, let located = locatedStep(in: gameSystem) {
                 GuideStepDetailView(
                     gameSystemId: gameSystemId,
-                    step: step,
+                    steps: located.steps,
+                    index: located.index,
                     ruleSections: gameSystem.ruleSections
                 )
             } else if let errorMessage {
@@ -153,8 +154,15 @@ struct GuideStepDestinationView: View {
     }
 
     private func resolvedStep(in gameSystem: GameSystem) -> GuideStep? {
-        gameSystem.gettingStartedSteps.first { $0.id == stepId }
-            ?? gameSystem.editionMigrationSteps.first { $0.id == stepId }
+        locatedStep(in: gameSystem)?.step
+    }
+
+    private func locatedStep(in gameSystem: GameSystem) -> (steps: [GuideStep], index: Int, step: GuideStep)? {
+        let gettingStarted = gameSystem.gettingStartedSteps.sorted { $0.order < $1.order }
+        let migration = gameSystem.editionMigrationSteps.sorted { $0.order < $1.order }
+        let steps = gettingStarted.contains { $0.id == stepId } ? gettingStarted : migration
+        guard let index = steps.firstIndex(where: { $0.id == stepId }) else { return nil }
+        return (steps, index, steps[index])
     }
 
     private func load() async {

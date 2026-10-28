@@ -220,7 +220,8 @@ struct RootTabView: View {
     private func logOnboardingCompleted(_ completion: OnboardingCompletion) {
         var metadata: [String: String] = [
             "skipped": "false",
-            "completionType": completionTypeLabel(completion)
+            "completionType": completionTypeLabel(completion),
+            "pagesViewed": String(OnboardingSessionAnalytics.furthestPageIndex)
         ]
         switch completion {
         case .exploreApp:

@@ -26,6 +26,19 @@ struct OnboardingGameHighlight: Identifiable {
     let startsGuidedMatch: Bool
 }
 
+enum OnboardingIllustration {
+    case crest
+    case phaseRail
+    case scoreboard
+}
+
+struct OnboardingWelcomePage: Identifiable {
+    let id: Int
+    let title: String
+    let body: String
+    let illustration: OnboardingIllustration
+}
+
 enum OnboardingContent {
     static let gameHighlights: [OnboardingGameHighlight] = [
         OnboardingGameHighlight(
@@ -243,6 +256,33 @@ enum OnboardingContent {
             symbol: "gearshape",
             title: String(localized: "Settings"),
             body: String(localized: "Appearance, data backup, replay the app tour, and support links")
+        )
+    ]
+
+    static let welcomePages: [OnboardingWelcomePage] = [
+        OnboardingWelcomePage(
+            id: 0,
+            title: String(localized: "Your Spearhead battles, guided."),
+            body: String(
+                localized: "Set up, play, and score with your starter box. Works fully offline."
+            ),
+            illustration: .crest
+        ),
+        OnboardingWelcomePage(
+            id: 1,
+            title: String(localized: "Every phase, one tap at a time."),
+            body: String(
+                localized: "See the abilities you can use right now. You roll the dice; we keep score."
+            ),
+            illustration: .phaseRail
+        ),
+        OnboardingWelcomePage(
+            id: 2,
+            title: String(localized: "Ready for your first battle?"),
+            body: String(
+                localized: "Use the starter matchup, or pick any of the Spearhead armies."
+            ),
+            illustration: .scoreboard
         )
     ]
 

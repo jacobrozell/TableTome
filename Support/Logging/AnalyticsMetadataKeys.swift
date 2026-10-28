@@ -22,6 +22,7 @@ enum AnalyticsMetadataKeys {
         "onboardingChoice",
         "wh40kVariant",
         "completionType",
+        "pagesViewed",
         "source"
     ]
 

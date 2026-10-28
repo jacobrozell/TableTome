@@ -18,6 +18,14 @@ struct OnboardingView: View {
     private var showsMoreGamesCue: Bool { visibleGames.count > 2 }
 
     var body: some View {
+        if visibleGames.count == 1, let game = visibleGames.first {
+            OnboardingPagedWelcome(mode: mode, game: game, onComplete: complete)
+        } else {
+            chooser
+        }
+    }
+
+    private var chooser: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: wideLayout ? .leading : .center, spacing: DesignTokens.Spacing.lg) {
@@ -62,7 +70,7 @@ struct OnboardingView: View {
     private var brandMark: some View {
         ZStack {
             Circle()
-                .fill(Color.accentColor.opacity(0.14))
+                .fill(TTColor.brandSoft)
                 .frame(width: heroDiameter, height: heroDiameter)
             BrandCrest(size: heroDiameter * 0.72)
         }
@@ -72,7 +80,7 @@ struct OnboardingView: View {
     private func headerText(alignment: TextAlignment) -> some View {
         VStack(spacing: 8) {
             Text(String(localized: "What box do you have?"))
-                .font(wideLayout ? .title.weight(.bold) : .largeTitle.weight(.bold))
+                .font(wideLayout ? TTFont.title : TTFont.display)
                 .multilineTextAlignment(alignment)
                 .accessibilityAddTraits(.isHeader)
 
@@ -110,7 +118,7 @@ struct OnboardingView: View {
             }
         } label: {
             HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
-                BoxProductThumbnail(style: BoxProductThumbnailStyle(gameSystemId: game.id))
+                TTIconTile(systemImage: game.symbol)
 
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                     HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
@@ -158,7 +166,7 @@ struct OnboardingView: View {
                     HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
                         Image(systemName: item.symbol)
                             .font(.title3)
-                            .foregroundStyle(Color.accentOnSurface)
+                            .foregroundStyle(TTColor.brand)
                             .frame(width: DesignTokens.minTouchTarget, height: DesignTokens.minTouchTarget)
                             .accessibilityHidden(true)
                         VStack(alignment: .leading, spacing: 4) {
@@ -185,7 +193,7 @@ struct OnboardingView: View {
         Button(String(localized: "I'll pick later")) {
             complete(.exploreApp)
         }
-        .buttonStyle(.bordered)
+        .buttonStyle(.ttSecondary)
         .controlSize(largeText ? .regular : .large)
         .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
         .accessibilityIdentifier("onboarding.exploreApp")
@@ -194,7 +202,7 @@ struct OnboardingView: View {
     }
 
     private var onboardingBackground: some View {
-        Color(.systemBackground)
+        TTColor.canvas
     }
 
     private func complete(_ completion: OnboardingCompletion) {

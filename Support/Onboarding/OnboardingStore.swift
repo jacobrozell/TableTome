@@ -26,6 +26,12 @@ enum OnboardingStore: Sendable {
     }
 }
 
+/// Furthest welcome page reached in the current presentation. Read when logging completion.
+@MainActor
+enum OnboardingSessionAnalytics {
+    static var furthestPageIndex: Int = 0
+}
+
 enum OnboardingPresentationMode: Sendable {
     case firstLaunch
     case replay

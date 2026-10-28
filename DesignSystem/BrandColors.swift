@@ -12,6 +12,6 @@ extension View {
     /// fill, so hierarchical SF Symbols can disappear without an explicit contrast color.
     func prominentButtonLabelStyle() -> some View {
         symbolRenderingMode(.monochrome)
-            .foregroundStyle(.white)
+            .foregroundStyle(TTColor.inkOnBrand)
     }
 }

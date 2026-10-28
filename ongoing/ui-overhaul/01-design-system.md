@@ -319,7 +319,7 @@ private struct TTElevationModifier: ViewModifier {
 
 ### Acceptance (DS-04)
 - [ ] Before/after screenshots of Play home, Spearhead guide, battle tracker Turn tab, Rules section detail show the new surfaces with no layout shift > 2 pt.
-- [ ] `hardcoded_colors` count drops (yellow/orange/green in this file removed).
+- [x] `hardcoded_colors` count drops (yellow/orange/green in this file removed). Ratchet metric itself lands in DS-09.
 
 ---
 
@@ -391,8 +391,8 @@ public extension ButtonStyle where Self == TTPrimaryButtonStyle {
 4. **Do not** mass-replace the 46 `.borderedProminent` usages in this WP. Each screen WP replaces the ones in its files. QA-03 catches leftovers.
 
 ### Acceptance (DS-05)
-- [ ] Gallery shows all styles: normal, pressed, disabled, small, light/dark, AX3.
-- [ ] Dark mode primary button label contrast ≥ 4.5:1 (it's 7.9:1 by construction).
+- [ ] Gallery shows all styles: normal, pressed, disabled, small, light/dark, AX3. (Styles compile; gallery is DS-08.)
+- [x] Dark mode primary button label contrast ≥ 4.5:1 (it's 7.9:1 by construction: `inkOnBrand` on `brandFill`).
 
 ---
 

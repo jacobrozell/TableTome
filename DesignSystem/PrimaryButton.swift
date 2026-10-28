@@ -21,10 +21,8 @@ public struct PrimaryButton: View {
     public var body: some View {
         Button(action: action) {
             Text(title)
-                .font(.headline)
-                .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
         }
-        .buttonStyle(.borderedProminent)
+        .buttonStyle(.ttPrimary)
         .accessibilityLabel(title)
         .accessibilityIdentifier(accessibilityId)
         .modifier(OptionalAccessibilityHint(hint: accessibilityHint))

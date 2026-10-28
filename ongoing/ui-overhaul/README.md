@@ -206,24 +206,24 @@ Legend: ⬜ not started · 🟨 in progress · ✅ merged · ⏸ blocked. **Deps
 | GM-02 | Armies step (matchup card, starter matchup) | GM-01 | [05](05-guided-match-setup.md) | 🟨 |
 | GM-03 | Army picker (faction grid → army cards) | GM-02, GG-04 | [05](05-guided-match-setup.md) | 🟨 |
 | GM-04 | Setup steps (checklist + step detail) | GM-01 | [05](05-guided-match-setup.md) | 🟨 |
-| BT-00 | **Turn/round flow correctness (Domain, verify the suspected bug first)** | — | [06](06-battle-tracker.md) | ⬜ |
-| BT-01 | Battle screen skeleton (Spearhead path behind capability) | GM-01, SH-04, BT-00 | [06](06-battle-tracker.md) | ⬜ |
-| BT-02 | Scoreboard header | BT-01 | [06](06-battle-tracker.md) | ⬜ |
-| BT-03 | Phase rail | BT-01 | [06](06-battle-tracker.md) | ⬜ |
-| BT-04 | Primary action bar (driven by `BattleFlowGuide`) | BT-01 | [06](06-battle-tracker.md) | ⬜ |
-| BT-05 | "Now" panel (phase abilities) | BT-03 | [06](06-battle-tracker.md) | ⬜ |
-| BT-06 | Deployment + round-start interstitials | BT-04 | [06](06-battle-tracker.md) | ⬜ |
-| BT-07 | Turn handoff interstitial ("Pass to Gold") | BT-04 | [06](06-battle-tracker.md) | ⬜ |
-| BT-08 | Score sheet (VP entry) | BT-02 | [06](06-battle-tracker.md) | ⬜ |
-| BT-09 | Units panel (both armies' health) | BT-01, DS-07 | [06](06-battle-tracker.md) | ⬜ |
+| BT-00 | **Turn/round flow correctness (Domain, verify the suspected bug first)** | — | [06](06-battle-tracker.md) | ✅ |
+| BT-01 | Battle screen skeleton (Spearhead path behind capability) | GM-01, SH-04, BT-00 | [06](06-battle-tracker.md) | 🟨 |
+| BT-02 | Scoreboard header | BT-01 | [06](06-battle-tracker.md) | 🟨 |
+| BT-03 | Phase rail | BT-01 | [06](06-battle-tracker.md) | 🟨 |
+| BT-04 | Primary action bar (driven by `BattleFlowGuide`) | BT-01 | [06](06-battle-tracker.md) | 🟨 |
+| BT-05 | "Now" panel (phase abilities) | BT-03 | [06](06-battle-tracker.md) | 🟨 |
+| BT-06 | Deployment + round-start interstitials | BT-04 | [06](06-battle-tracker.md) | 🟨 |
+| BT-07 | Turn handoff interstitial ("Pass to Gold") | BT-04 | [06](06-battle-tracker.md) | 🟨 |
+| BT-08 | Score sheet (VP entry) | BT-02 | [06](06-battle-tracker.md) | 🟨 |
+| BT-09 | Units panel (both armies' health) | BT-01, DS-07 | [06](06-battle-tracker.md) | 🟨 |
 | BT-10 | Combat panel entry + resolver sheet wiring | BT-01, UF-02 | [06](06-battle-tracker.md) | ⬜ |
 | BT-11 | Notices → toasts / coach consolidation | BT-05, SH-04 | [06](06-battle-tracker.md) | ⬜ |
-| BT-12 | Phone landscape + iPad layouts | BT-02..BT-10 | [06](06-battle-tracker.md) | ⬜ |
-| BT-13 | Tracker menu (reset, rules, glossary, rosters) | BT-01 | [06](06-battle-tracker.md) | ⬜ |
-| UF-01 | Unit focus sheet (warscroll style) | DS-07, BT-09 | [07](07-unit-focus-and-combat.md) | ⬜ |
+| BT-12 | Phone landscape + iPad layouts | BT-02..BT-10 | [06](06-battle-tracker.md) | 🟨 |
+| BT-13 | Tracker menu (reset, rules, glossary, rosters) | BT-01 | [06](06-battle-tracker.md) | 🟨 |
+| UF-01 | Unit focus sheet (warscroll style) | DS-07, BT-09 | [07](07-unit-focus-and-combat.md) | 🟨 |
 | UF-02 | Combat resolver visual pass | DS-07 | [07](07-unit-focus-and-combat.md) | ⬜ |
 | UF-03 | Dice entry + results presentation | UF-02 | [07](07-unit-focus-and-combat.md) | ⬜ |
-| VH-01 | Victory screen | BT-02 | [08](08-victory-and-history.md) | ⬜ |
+| VH-01 | Victory screen | BT-02 | [08](08-victory-and-history.md) | 🟨 |
 | VH-02 | Match history list | DS-07 | [08](08-victory-and-history.md) | 🟨 |
 | VH-03 | Match detail + timeline | VH-02 | [08](08-victory-and-history.md) | 🟨 |
 | RR-01 | Rules home (browse) | SC-01, SH-03 | [09](09-rules-reference.md) | 🟨 |

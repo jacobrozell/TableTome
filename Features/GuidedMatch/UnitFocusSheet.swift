@@ -23,6 +23,7 @@ struct UnitFocusSheet: View {
     let effectiveHealthPerModel: Int
     let hasHealthOverride: Bool
     let isActivePlayerUnit: Bool
+    var isPlayerOne: Bool = true
     let preferredWeaponId: String?
     var defenderUnit: SpearheadUnit?
     let onWoundsChange: (Int) -> Void
@@ -46,6 +47,7 @@ struct UnitFocusSheet: View {
         effectiveHealthPerModel: Int,
         hasHealthOverride: Bool,
         isActivePlayerUnit: Bool,
+        isPlayerOne: Bool = true,
         preferredWeaponId: String?,
         defenderUnit: SpearheadUnit? = nil,
         onWoundsChange: @escaping (Int) -> Void,
@@ -64,6 +66,7 @@ struct UnitFocusSheet: View {
         self.effectiveHealthPerModel = effectiveHealthPerModel
         self.hasHealthOverride = hasHealthOverride
         self.isActivePlayerUnit = isActivePlayerUnit
+        self.isPlayerOne = isPlayerOne
         self.preferredWeaponId = preferredWeaponId
         self.defenderUnit = defenderUnit
         self.onWoundsChange = onWoundsChange
@@ -137,9 +140,6 @@ struct UnitFocusSheet: View {
                     woundsSection
                     if unit.hasWarscroll {
                         statsSection
-                        if unit.health != nil {
-                            healthTrustSection
-                        }
                     }
                     if !unit.weapons.isEmpty {
                         weaponsSection
@@ -148,12 +148,19 @@ struct UnitFocusSheet: View {
                         abilitiesSection
                     }
                     sourceLabel
+                    if unit.health != nil {
+                        DisclosureGroup(String(localized: "Health override")) {
+                            healthTrustSection
+                        }
+                        .font(TTFont.subheadline)
+                        .tint(TTColor.brand)
+                    }
                 }
                 .padding(DesignTokens.Spacing.md)
                 .padding(.bottom, DesignTokens.Spacing.lg)
             }
-            .background(Color(.systemGroupedBackground))
-            .navigationTitle(unit.name)
+            .ttScreenBackground()
+            .navigationTitle("")
             .navigationBarTitleDisplayMode(.inline)
             .alert(String(localized: "Copied"), isPresented: $copiedStatReport) {
                 Button(String(localized: "OK"), role: .cancel) {}
@@ -169,8 +176,10 @@ struct UnitFocusSheet: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     if unit.hasWarscroll || !unit.abilities.isEmpty {
-                        Button(unitDetailTitle) {
+                        Button {
                             showsFullWarscroll = true
+                        } label: {
+                            Image(systemName: "doc.text.magnifyingglass")
                         }
                         .accessibilityIdentifier("unitFocus.warscroll.\(unit.id)")
                         .accessibilityLabel(unitDetailTitle)
@@ -180,18 +189,15 @@ struct UnitFocusSheet: View {
             }
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 if showsCombatTools, !isActivePlayerUnit, !evaluableWeapons.isEmpty {
-                    PrimaryButton(
-                        title: String(localized: "Set as defender"),
-                        accessibilityId: "unitFocus.setDefender.\(unit.id)",
-                        accessibilityHint: String(
-                            localized: "Uses this unit as the defender in the combat resolver."
-                        )
-                    ) {
+                    Button(String(localized: "Set as Defender")) {
                         onSetAsDefender()
                     }
-                    .padding(DesignTokens.Spacing.md)
-                    .background(Color(.systemBackground))
-                    .overlay(alignment: .top) { Divider() }
+                    .buttonStyle(.ttSecondary)
+                    .accessibilityIdentifier("unitFocus.setDefender.\(unit.id)")
+                    .accessibilityHint(String(
+                        localized: "Uses this unit as the defender in the combat resolver."
+                    ))
+                    .barChromeBackground()
                 }
             }
             .navigationDestination(isPresented: $showsFullWarscroll) {
@@ -207,108 +213,91 @@ struct UnitFocusSheet: View {
     private var headerSection: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
             HStack(spacing: DesignTokens.Spacing.sm) {
-                Text(playerName)
-                    .font(.subheadline.weight(.semibold))
+                TTPlayerToken(isPlayerOne: isPlayerOne, size: 28, isActive: isActivePlayerUnit)
+                Text("\(playerName) · \(army.name)")
+                    .font(TTFont.subheadline)
+                    .foregroundStyle(TTColor.inkSecondary)
+                    .lineLimit(1)
+                Spacer(minLength: 0)
                 if isActivePlayerUnit {
-                    Text(String(localized: "Active"))
-                        .font(.caption2.weight(.bold))
-                        .padding(.horizontal, DesignTokens.Spacing.sm)
-                        .padding(.vertical, 2)
-                        .background(Color.accentColor.opacity(0.15), in: Capsule())
-                        .foregroundStyle(Color.accentOnSurface)
+                    TTBadge(String(localized: "Active"), tone: .player(isPlayerOne), style: .solid)
                 }
             }
-            Text(army.name)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+            Text(unit.name)
+                .font(TTFont.title)
+                .foregroundStyle(TTColor.inkPrimary)
             if !unit.keywords.isEmpty {
                 Text(unit.keywords.joined(separator: " · "))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .ttEyebrow()
             }
             if let notes = unit.notes {
                 Text(notes)
-                    .font(.caption)
-                    .foregroundStyle(.tertiary)
+                    .font(TTFont.footnote)
+                    .foregroundStyle(TTColor.inkTertiary)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .overlay(alignment: .top) {
+            Rectangle()
+                .fill(TTColor.player(isPlayerOne))
+                .frame(height: 4)
+                .padding(.horizontal, -DesignTokens.Spacing.md)
+                .offset(y: -DesignTokens.Spacing.md)
+        }
     }
 
     private var woundsSection: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
             Text(String(localized: "Wounds"))
-                .font(.subheadline.weight(.semibold))
-
-            HStack(alignment: .center, spacing: DesignTokens.Spacing.md) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(String(localized: "\(woundsRemaining)/\(woundCapacity)"))
-                        .font(.title2.weight(.bold))
-                    if woundsRemaining == 0 {
-                        Text(String(localized: "Destroyed"))
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(.red)
-                    }
-                }
-                Spacer(minLength: 0)
-                Stepper(
-                    String(localized: "\(woundsRemaining)"),
-                    value: Binding(
-                        get: { woundsRemaining },
-                        set: { onWoundsChange($0) }
-                    ),
-                    in: 0...woundCapacity
-                )
-                .labelsHidden()
-                .accessibilityLabel(String(localized: "\(unit.name) wounds remaining"))
-                .accessibilityValue(String(localized: "\(woundsRemaining)"))
-                .accessibilityHint(String(localized: "Adjusts remaining wounds for this unit."))
-                .accessibilityIdentifier("unitFocus.wounds.\(army.id).\(unit.id)")
+                .ttEyebrow()
+            if woundsRemaining == 0 {
+                TTBadge(String(localized: "Destroyed"), tone: .danger, style: .solid)
             }
-
-            ArmyHealthProgressBar(
+            TTCounter(
+                value: Binding(get: { woundsRemaining }, set: onWoundsChange),
+                range: 0...max(woundCapacity, 0),
+                label: String(localized: "\(unit.name) wounds remaining"),
+                tone: .player(isPlayerOne),
+                size: .large,
+                valueFormatter: { "\($0) / \(woundCapacity)" }
+            )
+            .accessibilityIdentifier("unitFocus.wounds.\(army.id).\(unit.id)")
+            TTProgressBar(
                 fraction: woundCapacity > 0 ? Double(woundsRemaining) / Double(woundCapacity) : 0,
-                isCritical: woundsRemaining > 0 && Double(woundsRemaining) / Double(max(woundCapacity, 1)) <= 0.35
+                tone: woundsRemaining > 0 && Double(woundsRemaining) / Double(max(woundCapacity, 1)) <= 0.35
+                    ? .danger
+                    : .player(isPlayerOne)
             )
         }
-        .padding(DesignTokens.Spacing.md)
-        .background(Color(.secondarySystemGroupedBackground), in: CardSurface.shape(radius: DesignTokens.Radius.nested))
+        .surfaceCard()
     }
 
     private var statsSection: some View {
-        HStack(spacing: DesignTokens.Spacing.lg) {
-            if let move = unit.move {
-                focusStat(label: String(localized: "Move"), value: move)
-            }
-            if let save = unit.save {
-                focusStat(label: String(localized: "Save"), value: "\(save)+")
-            }
-            if let health = unit.health {
-                focusStat(
-                    label: String(localized: "Health"),
-                    value: hasHealthOverride ? "\(effectiveHealthPerModel)*" : "\(health)"
-                )
-            }
-            if let control = unit.control {
-                focusStat(label: String(localized: "Control"), value: "\(control)")
-            }
-        }
-        .font(.caption)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(DesignTokens.Spacing.md)
-        .background(Color(.tertiarySystemFill), in: CardSurface.shape(radius: DesignTokens.Radius.inset))
+        TTStatStrip(stats: focusStats)
     }
 
-    private func focusStat(label: String, value: String) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(label)
-                .foregroundStyle(.secondary)
-            Text(value)
-                .font(.subheadline.bold())
+    private var focusStats: [TTStat] {
+        var stats: [TTStat] = []
+        if let move = unit.move {
+            stats.append(TTStat(label: String(localized: "Move"), value: move))
         }
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(label) \(value)")
+        if let save = unit.save {
+            stats.append(TTStat(label: String(localized: "Save"), value: "\(save)+"))
+        }
+        if let health = unit.health {
+            stats.append(
+                TTStat(
+                    label: String(localized: "Health"),
+                    value: hasHealthOverride ? "\(effectiveHealthPerModel)" : "\(health)",
+                    isModified: hasHealthOverride
+                )
+            )
+        }
+        if let control = unit.control {
+            stats.append(TTStat(label: String(localized: "Control"), value: "\(control)"))
+        }
+        return stats
     }
 
     private var weaponsSection: some View {
@@ -337,8 +326,7 @@ struct UnitFocusSheet: View {
                                 .font(.caption2.weight(.bold))
                                 .padding(.horizontal, DesignTokens.Spacing.sm)
                                 .padding(.vertical, 2)
-                                .background(Color.accentColor.opacity(0.15), in: Capsule())
-                                .foregroundStyle(Color.accentOnSurface)
+                                .foregroundStyle(TTColor.brand)
                         }
                     }
                     if let loadout = WarscrollStatSummary.weaponLoadoutLabel(
@@ -387,13 +375,13 @@ struct UnitFocusSheet: View {
         }
         .padding(DesignTokens.Spacing.md)
         .background(
-            isPreferred ? Color.accentColor.opacity(0.08) : Color(.tertiarySystemFill),
+            isPreferred ? TTColor.brandSoft : TTColor.sunken,
             in: CardSurface.shape(radius: DesignTokens.Radius.inset)
         )
         .overlay {
             if isPreferred {
                 CardSurface.shape(radius: DesignTokens.Radius.inset)
-                    .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
+                    .strokeBorder(TTColor.brand, lineWidth: 1)
             }
         }
     }
@@ -473,7 +461,6 @@ struct UnitFocusSheet: View {
             .accessibilityIdentifier("unitFocus.reportStat.\(unit.id)")
         }
         .padding(DesignTokens.Spacing.md)
-        .background(Color(.secondarySystemGroupedBackground), in: CardSurface.shape(radius: DesignTokens.Radius.nested))
     }
 
     private func copyStatReport() {

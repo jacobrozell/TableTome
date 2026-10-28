@@ -25,6 +25,7 @@ extension BattlePhaseTrackerView {
                 effectiveHealthPerModel: effectiveHealth,
                 hasHealthOverride: hasOverride,
                 isActivePlayerUnit: viewModel.isActivePlayerArmy(army.id),
+                isPlayerOne: army.id == viewModel.playerOneArmy?.id,
                 preferredWeaponId: selection.preferredWeaponId,
                 defenderUnit: combatViewModel.selectedDefenderUnit,
                 onWoundsChange: { viewModel.setUnitWounds(key: woundKey, remaining: $0) },

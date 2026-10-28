@@ -153,6 +153,8 @@ Three regions: top scoreboard + phase rail spanning the width; left column (≤ 
 
 ## BT-00: Turn and round flow correctness (Domain, verify first)
 
+**Verified on this branch:** the suspected stuck-round bug is already fixed. `completedTurnsThisRound` records each finished turn. `BattleFlowGuide` hands off after the first End of Turn, returns `.startNextRound` after the second, and returns `.battleComplete` only after both turns of the last round. `SpearheadBattleViewModel.completePhasedRoundTurnPhase` performs that handoff. Do not add `firstTurnPlayerIsOneThisRound`.
+
 > **Suspected bug, confirm before coding.** For Spearhead, `BattleFlowGuide.currentStep` never returns `.startNextRound`. At `.endOfTurn`, `completePhasedRoundTurnPhase(.endOfTurn)` only toggles the active player and resets to Hero. `battleRound` changes only through the round `Stepper` in `BattleTrackerControlPanel`, and that panel is **hidden** when `showsSlimTurnTab` is true, which is the Spearhead playbook path. Also, `battleComplete` triggers at the **first** end of turn in round 4, before the second player has played.
 >
 > **Verify:** run with `-skip_onboarding -open_guided_match -open_battle_tracker`, complete deployment and the round opener, then tap through both players' turns to End of Turn twice. If the round shows **2** afterwards, the logic exists somewhere this audit missed. Then **skip BT-00** and write down where it lives. If the round stays at 1, do BT-00.

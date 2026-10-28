@@ -124,7 +124,7 @@ public struct MatchVictoryScreen: View {
                     ScrollView {
                         victoryContent
                     }
-                    .background(Color(.systemGroupedBackground))
+                    .background(TTColor.canvas)
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
@@ -143,6 +143,7 @@ public struct MatchVictoryScreen: View {
             guard mode == .interactive else { return }
             runCelebrateAnimation()
         }
+        .ttHaptic(.victory, trigger: mode == .interactive)
         .sheet(isPresented: $showsAdjustScore) {
             adjustScoreSheet
         }
@@ -161,8 +162,7 @@ public struct MatchVictoryScreen: View {
                 headlineSymbol: headlineSymbol,
                 headlineSymbolColor: headlineSymbolColor,
                 celebrateScale: celebrateScale,
-                isDraw: isDraw,
-                winnerName: winnerName,
+                subtitle: subtitle,
                 voiceOverSummary: voiceOverSummary
             )
             MatchVictoryScoreboardSection(
@@ -187,7 +187,7 @@ public struct MatchVictoryScreen: View {
         .frame(maxWidth: .infinity)
         .background {
             if mode == .readOnly {
-                Color(.secondarySystemBackground)
+                TTColor.surface
             }
         }
         .clipShape(RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
@@ -237,7 +237,9 @@ public struct MatchVictoryScreen: View {
         if presentation.status == .abandoned {
             return String(localized: "Match Saved")
         }
-        return isDraw ? String(localized: "Draw") : String(localized: "Victory")
+        if isDraw { return String(localized: "It's a draw") }
+        if let winnerName { return String(localized: "\(winnerName) wins") }
+        return String(localized: "Victory")
     }
 
     private var headlineSymbol: String {
@@ -252,9 +254,19 @@ public struct MatchVictoryScreen: View {
 
     private var headlineSymbolColor: Color {
         if presentation.status == .abandoned {
-            return .orange
+            return TTColor.warning
         }
-        return .accentColor
+        if winner == .playerOne { return TTColor.playerOne }
+        if winner == .playerTwo { return TTColor.playerTwo }
+        return TTColor.brand
+    }
+
+    private var subtitle: String {
+        let army = winner == .playerTwo ? presentation.playerTwoArmyLabel : presentation.playerOneArmyLabel
+        if isDraw {
+            return presentation.durationLabel
+        }
+        return "\(army) · \(presentation.durationLabel)"
     }
 
     private var winnerName: String? {
@@ -284,8 +296,8 @@ public struct MatchVictoryScreen: View {
 
     private func runCelebrateAnimation() {
         guard !reduceMotion, presentation.status == .completed, !isDraw else { return }
-        celebrateScale = 0.85
-        withAnimation(.spring(response: 0.35, dampingFraction: 0.6)) {
+        celebrateScale = reduceMotion ? 1 : 0.6
+        withAnimation(TTMotion.emphasis(reduceMotion: reduceMotion)) {
             celebrateScale = 1
         }
     }

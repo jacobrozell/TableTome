@@ -227,4 +227,47 @@ final class BattleFlowGuideTests: XCTestCase {
 
         XCTAssertEqual(step?.kind, .startNextRound(1))
     }
+
+    func testSpearheadEndOfFirstTurnHandsOffToSecondPlayer() {
+        var tracker = readySpearheadTracker(round: 1)
+        tracker.currentPhase = .endOfTurn
+        tracker.completedTurnsThisRound = [true]
+        tracker.activePlayerIsOne = false
+
+        let step = BattleFlowGuide.currentStep(
+            matchState: GuidedMatchState(),
+            trackerState: tracker
+        )
+
+        XCTAssertEqual(step?.kind, .turnPhase(.endOfTurn))
+    }
+
+    func testSpearheadBattleCompletesOnlyAfterSecondTurnOfRoundFour() {
+        var tracker = readySpearheadTracker(round: 4)
+        tracker.currentPhase = .endOfTurn
+        tracker.completedTurnsThisRound = [true]
+
+        let handoff = BattleFlowGuide.currentStep(
+            matchState: GuidedMatchState(),
+            trackerState: tracker
+        )
+        XCTAssertEqual(handoff?.kind, .turnPhase(.endOfTurn))
+
+        tracker.completedTurnsThisRound = [true, false]
+        let complete = BattleFlowGuide.currentStep(
+            matchState: GuidedMatchState(),
+            trackerState: tracker
+        )
+        XCTAssertEqual(complete?.kind, .battleComplete)
+    }
+
+    private func readySpearheadTracker(round: Int) -> BattleTrackerState {
+        var tracker = BattleTrackerState()
+        tracker.completedDeploymentSteps = Set(DeploymentChecklistStep.allCases.map(\.rawValue))
+        tracker.completedRoundChecklistSteps = [
+            "round-\(round)": Set(BattleRoundChecklistStep.allCases.map(\.rawValue))
+        ]
+        tracker.battleRound = round
+        return tracker
+    }
 }

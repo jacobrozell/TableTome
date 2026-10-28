@@ -67,8 +67,8 @@ final class TTRichTextParserTests: XCTestCase {
     func testMixedLineFallsBackToParagraphSoTextIsKept() {
         let source = "Read this first.\n1. Then this, but the block is mixed."
         let blocks = TTRichTextParser.blocks(from: source)
-        let words = words(in: blocks)
-        XCTAssertEqual(words, words(in: source))
+        let parsedWords = words(in: blocks)
+        XCTAssertEqual(parsedWords, words(in: source))
     }
 
     func testSpearheadSamplesDoNotDropWords() {

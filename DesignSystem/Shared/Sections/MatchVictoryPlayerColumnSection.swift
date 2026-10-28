@@ -10,39 +10,32 @@ struct MatchVictoryPlayerColumnSection: View {
 
     var body: some View {
         VStack(spacing: DesignTokens.Spacing.sm) {
-            Text(name.uppercased())
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(isWinner || highlightTie ? Color.primary : .secondary)
-
-            Text(army)
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
-
+            HStack(spacing: DesignTokens.Spacing.xs) {
+                TTPlayerToken(isPlayerOne: isPlayerOne, size: 22)
+                Text(name)
+                    .font(TTFont.headline)
+                    .foregroundStyle(TTColor.inkPrimary)
+                    .lineLimit(1)
+            }
             Text("\(victoryPoints)")
-                .font(isWinner || highlightTie ? .largeTitle.bold() : .title2)
-                .foregroundStyle(isWinner || highlightTie ? Color.primary : .secondary)
-                .accessibilityLabel(
-                    String(localized: "\(victoryPoints) victory points")
-                )
-
+                .font(TTFont.numericHero)
+                .foregroundStyle(isWinner || highlightTie ? TTColor.player(isPlayerOne) : TTColor.inkSecondary)
+                .accessibilityLabel(String(localized: "\(victoryPoints) victory points"))
+            Text(army)
+                .font(TTFont.footnote)
+                .foregroundStyle(TTColor.inkSecondary)
+                .multilineTextAlignment(.center)
             if isWinner {
-                Label(String(localized: "Winner"), systemImage: "star.fill")
-                    .font(.caption.weight(.bold))
-                    .foregroundStyle(Color.accentColor)
+                TTBadge(String(localized: "Winner"), tone: .brand, style: .solid, systemImage: "crown.fill")
             }
         }
         .frame(maxWidth: .infinity)
-        .padding(DesignTokens.Spacing.md)
-        .background(
-            (isWinner || highlightTie ? Color.accentColor.opacity(0.12) : Color(.secondarySystemBackground)),
-            in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
-        )
-        .overlay {
+        .surfaceCard()
+        .overlay(alignment: .top) {
             if isWinner || highlightTie {
-                RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
-                    .strokeBorder(Color.accentColor, lineWidth: 2)
+                Rectangle()
+                    .fill(highlightTie ? TTColor.brandFill : TTColor.player(isPlayerOne))
+                    .frame(height: 4)
             }
         }
         .accessibilityIdentifier(

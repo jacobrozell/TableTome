@@ -9,18 +9,29 @@ struct SpearheadBattleView: View {
     @State var resolverContext: InlineResolverContext?
     @State private var showsRoundOpener = false
     @State private var showsVictoryScreen = false
-    @State private var showsVictoryPointsSheet = false
+    @State var showsVictoryPointsSheet = false
+    @State var showsUnitsSheet = false
+    @State var showsTurnHandoff = false
+    @State var showsRoundPicker = false
+    @State var showsResetConfirmation = false
+    @State var primaryActionLocked = false
+    @State var primaryTapCount = 0
+    @State var turnStartPlayerOneVP = 0
+    @State var turnStartPlayerTwoVP = 0
+    #if DEBUG
+    @AppStorage(BattleScreenFeatureFlag.legacyDefaultsKey) var forcesLegacyBattleScreen = false
+    #endif
     @State private var damageUndoNotice: DamageUndoNotice?
     @State private var victoryPlayerOneVP = 0
     @State private var victoryPlayerTwoVP = 0
-    @State private var dismissedBattleCompleteGuide = false
+    @State var dismissedBattleCompleteGuide = false
     @State private var showsHeroRoundOneNotice = false
     @State var unitFocusSelection: UnitFocusSelection?
     @State var movementAction: MovementAction = .normal
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.dynamicTypeSize) var dynamicTypeSize
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     let onMatchStateChange: (() -> Void)?
@@ -52,7 +63,7 @@ struct SpearheadBattleView: View {
         )
     }
 
-    private var layoutContext: TabletomeLayoutContext {
+    var layoutContext: TabletomeLayoutContext {
         TabletomeLayout.context(
             horizontalSizeClass: horizontalSizeClass,
             verticalSizeClass: verticalSizeClass
@@ -67,44 +78,15 @@ struct SpearheadBattleView: View {
         layoutContext == .phoneLandscape && !dynamicTypeSize.needsLayoutAdaptation
     }
 
-    var body: some View {
-        battleLayout
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .onAppear {
-            checkRoundOpener()
-            presentHeroRoundOneNudgeIfNeeded()
-        }
-        .onChange(of: viewModel.trackerState.battleRound) { _, _ in
-            checkRoundOpener()
-        }
-        .onChange(of: viewModel.trackerState.currentPhase) { _, phase in
-            if phase == .hero {
-                presentHeroRoundOneNudgeIfNeeded()
-            } else {
-                showsHeroRoundOneNotice = false
-            }
-        }
-        .onChange(of: viewModel.roundOpenerIsIncomplete) { _, incomplete in
-            if incomplete {
-                showsRoundOpener = true
-            }
-        }
-        .fullScreenCover(isPresented: $showsVictoryScreen) {
-            victoryScreen
-        }
-        .sheet(isPresented: $showsVictoryPointsSheet) {
-            SpearheadVictoryPointsSheet(viewModel: viewModel)
-        }
-        .modifier(
-            UnitFocusPresentationModifier(
-                selection: $unitFocusSelection,
-                usesFullScreen: usesUnitFocusFullScreenPresentation
-            ) {
-                unitFocusSheet
-            }
-        )
-        .accessibilityIdentifier("spearheadBattle.screen")
+    var usesNewBattleScreen: Bool {
+        #if DEBUG
+        !forcesLegacyBattleScreen
+        #else
+        true
+        #endif
     }
+
+    var body: some View { battleChrome }
 
     @ViewBuilder
     private var battleLayout: some View {
@@ -229,7 +211,7 @@ struct SpearheadBattleView: View {
     }
 
     @ViewBuilder
-    private var damageUndoBanner: some View {
+    var damageUndoBanner: some View {
         BattleTrackerDamageUndoSection(
             notice: damageUndoNotice,
             reduceMotion: reduceMotion,
@@ -313,7 +295,7 @@ struct SpearheadBattleView: View {
     // MARK: - Phase Playbook
 
     @ViewBuilder
-    private var phasePlaybook: some View {
+    var phasePlaybook: some View {
         SpearheadPhasePlaybook(
             viewModel: viewModel,
             onAdvance: viewModel.advanceTurnOrPhase
@@ -334,7 +316,7 @@ struct SpearheadBattleView: View {
     }
 
     @ViewBuilder
-    private var heroRoundOneNotice: some View {
+    var heroRoundOneNotice: some View {
         BattleTrackerHeroRoundOneSection(
             isVisible: showsHeroRoundOneNotice,
             onDismiss: {
@@ -347,7 +329,7 @@ struct SpearheadBattleView: View {
     }
 
     @ViewBuilder
-    private var startOfRoundHelper: some View {
+    var startOfRoundHelper: some View {
         BattleTrackerStartOfRoundHelperSection(
             isVisible: viewModel.needsStartOfRoundAbilitiesPrompt
                 && !viewModel.startOfRoundAbilities.isEmpty,
@@ -398,7 +380,7 @@ struct SpearheadBattleView: View {
     // MARK: - Reinforcements
 
     @ViewBuilder
-    private var reinforcementCallBanner: some View {
+    var reinforcementCallBanner: some View {
         if let prompt = viewModel.pendingReinforcementCall {
             BattleTrackerReinforcementCallBanner(
                 prompt: prompt,
@@ -408,7 +390,7 @@ struct SpearheadBattleView: View {
     }
 
     @ViewBuilder
-    private var reinforcementsSection: some View {
+    var reinforcementsSection: some View {
         if viewModel.showsReinforcementsTracking {
             SpearheadReinforcementsSection(
                 playerOneName: viewModel.playerOneName,
@@ -425,7 +407,7 @@ struct SpearheadBattleView: View {
     // MARK: - Your Units Section
 
     @ViewBuilder
-    private var yourUnitsSection: some View {
+    var yourUnitsSection: some View {
         SpearheadUnitSection(
             title: String(localized: "Your Units"),
             units: viewModel.yourUnits,
@@ -458,7 +440,7 @@ struct SpearheadBattleView: View {
     // MARK: - Opponent Units Section
 
     @ViewBuilder
-    private var opponentUnitsSection: some View {
+    var opponentUnitsSection: some View {
         SpearheadUnitSection(
             title: String(localized: "Opponent Units"),
             units: viewModel.opponentUnits,
@@ -556,6 +538,82 @@ struct SpearheadBattleView: View {
 // MARK: - Victory
 
 extension SpearheadBattleView {
+    var battleChrome: some View {
+        Group {
+            if usesNewBattleScreen {
+                battleScreen
+            } else {
+                battleLayout
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .onAppear {
+            checkRoundOpener()
+            presentHeroRoundOneNudgeIfNeeded()
+            captureTurnStartVP()
+        }
+        .onChange(of: viewModel.trackerState.activePlayerIsOne) { _, _ in
+            captureTurnStartVP()
+        }
+        .sheet(isPresented: $showsUnitsSheet) {
+            NavigationStack {
+                ScrollView {
+                    VStack(spacing: DesignTokens.Spacing.md) {
+                        yourUnitsSection
+                        opponentUnitsSection
+                    }
+                    .padding(DesignTokens.Spacing.md)
+                }
+                .navigationTitle(String(localized: "Units"))
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button(String(localized: "Done")) { showsUnitsSheet = false }
+                    }
+                }
+            }
+            .presentationDetents([.medium, .large])
+            .presentationBackground(TTColor.canvas)
+            .accessibilityIdentifier("battleTracker.unitsSheet")
+        }
+        .sheet(isPresented: $showsRoundPicker) {
+            roundPickerSheet
+        }
+        .fullScreenCover(isPresented: $showsTurnHandoff) {
+            turnHandoffCover
+        }
+        .onChange(of: viewModel.trackerState.battleRound) { _, _ in
+            checkRoundOpener()
+        }
+        .onChange(of: viewModel.trackerState.currentPhase) { _, phase in
+            if phase == .hero {
+                presentHeroRoundOneNudgeIfNeeded()
+            } else {
+                showsHeroRoundOneNotice = false
+            }
+        }
+        .onChange(of: viewModel.roundOpenerIsIncomplete) { _, incomplete in
+            if incomplete {
+                showsRoundOpener = true
+            }
+        }
+        .fullScreenCover(isPresented: $showsVictoryScreen) {
+            victoryScreen
+        }
+        .sheet(isPresented: $showsVictoryPointsSheet) {
+            SpearheadVictoryPointsSheet(viewModel: viewModel)
+        }
+        .modifier(
+            UnitFocusPresentationModifier(
+                selection: $unitFocusSelection,
+                usesFullScreen: usesUnitFocusFullScreenPresentation
+            ) {
+                unitFocusSheet
+            }
+        )
+        .accessibilityIdentifier("spearheadBattle.screen")
+    }
+
     var victoryScreen: some View {
         MatchVictoryScreen(
             presentation: MatchVictoryPresentation(

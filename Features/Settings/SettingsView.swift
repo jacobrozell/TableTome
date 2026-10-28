@@ -10,6 +10,9 @@ struct SettingsView: View {
     @Environment(\.requestReview) private var requestReview
     @AppStorage(AppearanceStore.storageKey) private var appearanceRaw = ThemePreference.system.rawValue
     @AppStorage("diceInputMode") private var diceInputModeRaw = DiceInputMode.physical.rawValue
+    #if DEBUG
+    @AppStorage(BattleScreenFeatureFlag.legacyDefaultsKey) private var forcesLegacyBattleScreen = false
+    #endif
     @State private var showsOnboarding = false
     @State private var showsAcknowledgements = false
 
@@ -419,6 +422,8 @@ struct SettingsView: View {
             ) {
                 TTComponentGallery()
             }
+            Toggle(String(localized: "Legacy battle screen"), isOn: $forcesLegacyBattleScreen)
+                .accessibilityIdentifier("settings.debug.legacyBattleScreen")
             actionRow(
                 title: String(localized: "Reset onboarding"),
                 systemImage: "arrow.counterclockwise",

@@ -180,6 +180,32 @@ extension SpearheadBattleViewModel {
         onMatchStateChange?()
     }
 
+    func setDeploymentStep(_ step: DeploymentChecklistStep, complete: Bool) {
+        if complete {
+            trackerState.completedDeploymentSteps.insert(step.rawValue)
+        } else {
+            trackerState.completedDeploymentSteps.remove(step.rawValue)
+        }
+        persist()
+    }
+
+    func resetTracker() {
+        trackerState = BattleTrackerState(
+            activePlayerIsOne: trackerState.activePlayerIsOne,
+            currentPhase: playContext.playEngine.initialPhase()
+        )
+        persist()
+        onMatchStateChange?()
+    }
+
+    func setBattleRound(_ round: Int) {
+        trackerState.battleRound = playContext.playEngine.clampBattleRound(round)
+        trackerState.completedTurnsThisRound = []
+        trackerEngine.afterBattleRoundChange(trackerState: &trackerState)
+        persist()
+        onMatchStateChange?()
+    }
+
     func setRoundChecklistStep(_ step: BattleRoundChecklistStep, complete: Bool) {
         let key = BattleRoundChecklist.storageKey(round: trackerState.battleRound)
         var steps = trackerState.completedRoundChecklistSteps[key] ?? []
@@ -259,6 +285,8 @@ extension SpearheadBattleViewModel {
     func completeCurrentGuideStep() {
         guard let step = currentGuideStep else { return }
         switch step.kind {
+        case .deployment(let deploymentStep):
+            setDeploymentStep(deploymentStep, complete: true)
         case .roundOpener(let openerStep):
             if openerStep == .firstTurnOrPriority, matchState.firstTurnIsPlayerOne == nil {
                 return

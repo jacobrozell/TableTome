@@ -4,20 +4,33 @@ import TabletomeDomain
 /// Phase-specific guidance card with context and smart advance control.
 struct SpearheadPhasePlaybook: View {
     @ObservedObject var viewModel: SpearheadBattleViewModel
+    var showsOwnChrome: Bool = true
     let onAdvance: () -> Void
 
     private var phase: BattleTurnPhase { viewModel.trackerState.currentPhase }
     private var round: Int { viewModel.trackerState.battleRound }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            headerRow
-            bodyText
-            advanceButton
+        if showsOwnChrome {
+            playbookStack
+                .surfaceCard()
+                .accessibilityElement(children: .contain)
+                .accessibilityIdentifier("spearheadBattle.phasePlaybook")
+        } else {
+            playbookStack
         }
-        .surfaceCard()
-        .accessibilityElement(children: .contain)
-        .accessibilityIdentifier("spearheadBattle.phasePlaybook")
+    }
+
+    private var playbookStack: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            if showsOwnChrome {
+                headerRow
+            }
+            bodyText
+            if showsOwnChrome {
+                advanceButton
+            }
+        }
     }
 
     @ViewBuilder

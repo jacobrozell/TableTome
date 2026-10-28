@@ -142,6 +142,10 @@ Accessibility: `battleTracker.phoneLandscapeSplit`, `battleTracker.pinnedWarscro
 - Set defender: `unitFocus.setDefender.{unitId}`
 - Full warscroll: `unitFocus.warscroll.{unitId}`
 
+## Round model (Spearhead)
+
+A Spearhead round is the first player's turn plus the second player's turn. `BattleTrackerState.completedTurnsThisRound` records which players have finished End of Turn. `BattleFlowGuide.currentStep` hands off while that set has one player, returns `.startNextRound` after both turns when rounds remain, and returns `.battleComplete` only after both turns of the last round. `SpearheadBattleViewModel.completePhasedRoundTurnPhase` toggles the active player on the first End of Turn and leaves the round in place on the second. `advanceBattleRound()` clears the set and opens the next round's opener. The manual round stepper is only the battle menu escape hatch.
+
 ## Verification
 
 | Field | Value |

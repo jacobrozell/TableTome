@@ -6,27 +6,14 @@ struct MatchVictoryInteractiveActionsSection: View {
     let onDone: () -> Void
 
     var body: some View {
-        Button(String(localized: "Adjust score")) {
-            onAdjustScore()
-        }
-        .font(.callout.weight(.semibold))
-        .frame(minHeight: DesignTokens.minTouchTarget)
-        .accessibilityIdentifier("matchVictory.adjustScore")
-
-        HStack(spacing: DesignTokens.Spacing.md) {
-            Button(String(localized: "Rematch")) {
-                onRematch()
-            }
-            .buttonStyle(.bordered)
-            .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
+        Button(String(localized: "Rematch"), action: onRematch)
+            .buttonStyle(.ttPrimary)
             .accessibilityIdentifier("matchVictory.rematch")
-
-            PrimaryButton(
-                title: String(localized: "Done"),
-                accessibilityId: "matchVictory.done"
-            ) {
-                onDone()
-            }
-        }
+        Button(String(localized: "Save & Finish"), action: onDone)
+            .buttonStyle(.ttSecondary)
+            .accessibilityIdentifier("matchVictory.done")
+        Button(String(localized: "Adjust final score"), action: onAdjustScore)
+            .buttonStyle(.ttTertiary)
+            .accessibilityIdentifier("matchVictory.adjustScore")
     }
 }

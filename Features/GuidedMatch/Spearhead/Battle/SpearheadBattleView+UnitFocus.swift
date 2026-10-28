@@ -26,6 +26,7 @@ extension SpearheadBattleView {
                 effectiveHealthPerModel: viewModel.effectiveHealthPerModel(for: army.id, unit: unit),
                 hasHealthOverride: viewModel.healthPerModelOverride(for: woundKey) != nil,
                 isActivePlayerUnit: viewModel.isActivePlayerArmy(army.id),
+                isPlayerOne: army.id == viewModel.playerOneArmy?.id,
                 preferredWeaponId: selection.preferredWeaponId,
                 defenderUnit: defenderUnit(for: selection),
                 onWoundsChange: { viewModel.setUnitWounds(key: woundKey, remaining: $0) },

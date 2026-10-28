@@ -1,6 +1,6 @@
 # Tabletome 1.0 UI overhaul: master plan
 
-**Status:** Planned, not started
+**Status:** In progress (design system and app shell landed; screen WPs open)
 **Created:** 2026-10-28
 **Owner:** Jacob (product) · implementing agents (execution)
 **Release target:** 1.0.0 App Store (Spearhead-only battle tracker)
@@ -176,20 +176,20 @@ Legend: ⬜ not started · 🟨 in progress · ✅ merged · ⏸ blocked. **Deps
 | DS-04 | Re-skin existing surface modifiers (`surfaceCard`, `accentHighlightCard`, …) | DS-01..03 | [01](01-design-system.md) | 🟨 |
 | DS-05 | Button styles + `PrimaryButton` re-skin | DS-01..03 | [01](01-design-system.md) | 🟨 |
 | DS-06 | Motion + haptics (`TTMotion`, `TTHaptics`) | — | [01](01-design-system.md) | 🟨 |
-| DS-07 | Core components (badge, section header, row, icon tile, counter, stat strip, weapon table, progress bar, notice, empty state, player token) | DS-04, DS-05, DS-06 | [01](01-design-system.md) | ⬜ |
-| DS-08 | Preview matrix + component gallery (debug-only screen) | DS-07 | [01](01-design-system.md) | ⬜ |
-| DS-09 | `hardcoded_colors` ratchet metric | DS-01 | [01](01-design-system.md) | ⬜ |
-| DS-10 | Merge Hobby palette into theme | DS-01 | [01](01-design-system.md) | ⬜ |
+| DS-07 | Core components (badge, section header, row, icon tile, counter, stat strip, weapon table, progress bar, notice, empty state, player token) | DS-04, DS-05, DS-06 | [01](01-design-system.md) | 🟨 |
+| DS-08 | Preview matrix + component gallery (debug-only screen) | DS-07 | [01](01-design-system.md) | 🟨 |
+| DS-09 | `hardcoded_colors` ratchet metric | DS-01 | [01](01-design-system.md) | ✅ |
+| DS-10 | Merge Hobby palette into theme | DS-01 | [01](01-design-system.md) | 🟨 |
 
 ### Phase 2: App shell
 
 | WP | Title | Deps | File | Status |
 |----|-------|------|------|--------|
-| SH-01 | Global appearance bootstrap (nav bar fonts, tab bar tint, window background) | DS-01, DS-02 | [02](02-app-shell.md) | ⬜ |
-| SH-02 | Tab order + icons (Play · Rules · Models · Settings) | SH-01 | [02](02-app-shell.md) | ⬜ |
-| SH-03 | Screen background + list styling modifiers (`ttScreenBackground`, `ttList`) | DS-04 | [02](02-app-shell.md) | ⬜ |
-| SH-04 | Toast host (single notification system) | DS-07 | [02](02-app-shell.md) | ⬜ |
-| SH-05 | Launch screen + loading / error shells | DS-07 | [02](02-app-shell.md) | ⬜ |
+| SH-01 | Global appearance bootstrap (nav bar fonts, tab bar tint, window background) | DS-01, DS-02 | [02](02-app-shell.md) | 🟨 |
+| SH-02 | Tab order + icons (Play · Rules · Models · Settings) | SH-01 | [02](02-app-shell.md) | 🟨 |
+| SH-03 | Screen background + list styling modifiers (`ttScreenBackground`, `ttList`) | DS-04 | [02](02-app-shell.md) | 🟨 |
+| SH-04 | Toast host (single notification system) | DS-07 | [02](02-app-shell.md) | 🟨 |
+| SH-05 | Launch screen + loading / error shells | DS-07 | [02](02-app-shell.md) | 🟨 |
 
 ### Phase 3: Screens
 

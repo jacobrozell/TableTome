@@ -16,7 +16,7 @@ struct StatTile: View {
     var body: some View {
         VStack(spacing: 4) {
             Text("\(value)")
-                .font(.system(.title2, design: .serif).weight(.semibold))
+                .font(TTFont.numericMedium)
                 .foregroundStyle(accent ? Color(hex: palette.gold) : .primary)
                 .minimumScaleFactor(dynamicTypeSize.needsLayoutAdaptation ? 1 : 0.85)
                 .lineLimit(1)

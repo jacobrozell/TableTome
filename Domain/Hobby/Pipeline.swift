@@ -18,15 +18,17 @@ public struct PipelineStage: Hashable, Sendable, Codable, Identifiable {
 /// (`MiniMuster/js/core/constants.js`).
 public enum DefaultPipeline {
     public static let stages: [PipelineStage] = [
-        .init(key: "Unassembled", hex: "#4a4d57"),
+        // Stage colors are data, tuned so each swatch is at least 3:1 against
+        // both the light canvas (#fffdf8) and the dark surface (#161d2b).
+        .init(key: "Unassembled", hex: "#787d8c"),
         .init(key: "Assembled",   hex: "#6366f1"),
-        .init(key: "Magnetising", hex: "#0ea5e9"),
-        .init(key: "Magnetised",  hex: "#06b6d4"),
-        .init(key: "Primed",      hex: "#f97316"),
-        .init(key: "Base Coated", hex: "#eab308"),
-        .init(key: "Detailed",    hex: "#84cc16"),
+        .init(key: "Magnetising", hex: "#0b85bc"),
+        .init(key: "Magnetised",  hex: "#04889f"),
+        .init(key: "Primed",      hex: "#d15905"),
+        .init(key: "Base Coated", hex: "#9e7905"),
+        .init(key: "Detailed",    hex: "#598a0f"),
         .init(key: "Based",       hex: "#16a34a"),
-        .init(key: "Done",        hex: "#22c55e"),
+        .init(key: "Done",        hex: "#199044"),
     ]
 }
 

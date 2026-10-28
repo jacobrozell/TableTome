@@ -52,14 +52,25 @@ public extension View {
     }
 
     /// Bar material behind status / hub chrome rows, bleeding to the horizontal screen edges.
+    @ViewBuilder
     func barChromeBackground(
         horizontalPadding: CGFloat = DesignTokens.Spacing.md,
         verticalPadding: CGFloat = DesignTokens.Spacing.sm
     ) -> some View {
-        padding(.horizontal, horizontalPadding)
+        let chrome = padding(.horizontal, horizontalPadding)
             .padding(.vertical, verticalPadding)
             .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-            .background(.bar, ignoresSafeAreaEdges: .horizontal)
+        if #available(iOS 26.0, *) {
+            chrome.background(.bar, ignoresSafeAreaEdges: .horizontal)
+        } else {
+            chrome
+                .background(TTColor.surface.opacity(0.92), ignoresSafeAreaEdges: .horizontal)
+                .overlay(alignment: .bottom) {
+                    Rectangle()
+                        .fill(TTColor.stroke)
+                        .frame(height: 1)
+                }
+        }
     }
 
     /// Breathing room above the phase dock when it is pinned below scroll content.

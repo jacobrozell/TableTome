@@ -17,11 +17,12 @@ private struct SurfaceCardModifier: ViewModifier {
             .frame(maxWidth: .infinity, alignment: .leading)
             .background {
                 CardSurface.shape(radius: radius)
-                    .fill(Color(.secondarySystemBackground))
+                    .fill(TTColor.surface)
                 CardSurface.shape(radius: radius)
-                    .strokeBorder(Color(.separator).opacity(0.5), lineWidth: 0.5)
+                    .strokeBorder(TTColor.stroke, lineWidth: 1)
             }
             .clipShape(CardSurface.shape(radius: radius))
+            .ttElevation(.card)
     }
 }
 
@@ -40,14 +41,17 @@ public extension View {
     }
 
     /// Soft accent-tinted card used on Play home banners and new-player guidance.
-    func accentHighlightCard(radius: CGFloat = DesignTokens.Radius.card) -> some View {
+    func accentHighlightCard(
+        tone: TTTone = .brand,
+        radius: CGFloat = DesignTokens.Radius.card
+    ) -> some View {
         padding(DesignTokens.Spacing.md)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background {
                 CardSurface.shape(radius: radius)
-                    .fill(Color.accentColor.opacity(0.10))
+                    .fill(tone.soft)
                 CardSurface.shape(radius: radius)
-                    .strokeBorder(Color.accentColor.opacity(0.35), lineWidth: 1)
+                    .strokeBorder(tone.foreground.opacity(0.35), lineWidth: 1)
             }
             .clipShape(CardSurface.shape(radius: radius))
     }
@@ -58,11 +62,12 @@ public extension View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .background {
                 CardSurface.shape(radius: DesignTokens.Radius.card)
-                    .fill(Color(.secondarySystemBackground))
+                    .fill(TTColor.raised)
                 CardSurface.shape(radius: DesignTokens.Radius.card)
-                    .strokeBorder(Color(.separator).opacity(0.35), lineWidth: 0.5)
+                    .strokeBorder(TTColor.stroke, lineWidth: 1)
             }
             .clipShape(CardSurface.shape(radius: DesignTokens.Radius.card))
+            .ttElevation(.card)
     }
 
     /// Embeds a self-drawn card in a `List` row without grouped-list corner clipping.
@@ -100,10 +105,10 @@ struct ProgressBadge: View {
             .padding(.horizontal, DesignTokens.Spacing.sm)
             .padding(.vertical, 3)
             .background(
-                isComplete ? Color.green.opacity(0.15) : Color(.tertiarySystemFill),
+                isComplete ? TTColor.successSoft : TTColor.sunken,
                 in: Capsule()
             )
-            .foregroundStyle(isComplete ? Color.green : Color.secondary)
+            .foregroundStyle(isComplete ? TTColor.success : TTColor.inkSecondary)
     }
 }
 
@@ -115,12 +120,11 @@ struct SectionHeader: View {
         HStack(spacing: DesignTokens.Spacing.xs) {
             if let systemImage {
                 Image(systemName: systemImage)
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(TTColor.inkTertiary)
+                    .accessibilityHidden(true)
             }
             Text(title)
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .ttEyebrow()
         }
         .accessibilityAddTraits(.isHeader)
     }
@@ -133,12 +137,12 @@ struct IntroCallout: View {
     var body: some View {
         Label {
             Text(text)
-                .font(.callout)
-                .foregroundStyle(.secondary)
+                .font(TTFont.callout)
+                .foregroundStyle(TTColor.inkSecondary)
                 .fixedSize(horizontal: false, vertical: true)
         } icon: {
             Image(systemName: systemImage)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(TTColor.brand)
         }
         .surfaceCard()
     }
@@ -151,7 +155,7 @@ struct DamageSummaryCard: View {
     var body: some View {
         HStack(spacing: DesignTokens.Spacing.sm) {
             Image(systemName: damage > 0 ? "bolt.fill" : "shield.fill")
-                .foregroundStyle(damage > 0 ? .orange : .green)
+                .foregroundStyle(damage > 0 ? TTColor.danger : TTColor.success)
                 .accessibilityHidden(true)
             Text(
                 damage > 0
@@ -162,9 +166,8 @@ struct DamageSummaryCard: View {
             Spacer()
             if damage > 0 {
                 Text("\(damage)")
-                    .font(.title2.bold())
-                    .monospacedDigit()
-                    .foregroundStyle(.orange)
+                    .font(TTFont.numericLarge)
+                    .foregroundStyle(TTColor.danger)
                     .contentTransition(.numericText())
             }
         }
@@ -184,12 +187,16 @@ struct ReferenceLinkRow: View {
 
     var body: some View {
         HStack(spacing: DesignTokens.Spacing.sm) {
-            Label(title, systemImage: systemImage)
-                .font(.subheadline.weight(.medium))
+            Image(systemName: systemImage)
+                .foregroundStyle(TTColor.brand)
+                .accessibilityHidden(true)
+            Text(title)
+                .font(TTFont.subheadline)
+                .foregroundStyle(TTColor.inkPrimary)
             Spacer(minLength: 0)
             Image(systemName: "chevron.right")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.tertiary)
+                .font(TTFont.caption)
+                .foregroundStyle(TTColor.inkTertiary)
                 .accessibilityHidden(true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -212,11 +219,10 @@ struct ReferenceLinksGroup<Content: View>: View {
 struct MatchupVersusBadge: View {
     var body: some View {
         Text(String(localized: "VS"))
-            .font(.caption.weight(.bold))
-            .foregroundStyle(.secondary)
+            .ttEyebrow()
             .padding(.horizontal, DesignTokens.Spacing.sm)
             .padding(.vertical, DesignTokens.Spacing.xs)
-            .background(Color(.tertiarySystemFill), in: Capsule())
+            .background(TTColor.sunken, in: Capsule())
             .frame(maxWidth: .infinity)
             .accessibilityHidden(true)
     }
@@ -227,7 +233,12 @@ struct TipsCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            SectionHeader(title: String(localized: "Tips"), systemImage: "lightbulb.fill")
+            HStack(spacing: DesignTokens.Spacing.xs) {
+                Image(systemName: "lightbulb.fill")
+                    .foregroundStyle(TTColor.warning)
+                    .accessibilityHidden(true)
+                SectionHeader(title: String(localized: "Tips"))
+            }
             ForEach(tips, id: \.self) { tip in
                 Text(tip)
                     .font(.callout)
@@ -239,9 +250,9 @@ struct TipsCard: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background {
             CardSurface.shape(radius: DesignTokens.Radius.card)
-                .fill(Color.yellow.opacity(0.07))
+                .fill(TTTone.warning.soft)
             CardSurface.shape(radius: DesignTokens.Radius.card)
-                .strokeBorder(Color.yellow.opacity(0.30), lineWidth: 0.5)
+                .strokeBorder(TTColor.warning.opacity(0.35), lineWidth: 1)
         }
         .clipShape(CardSurface.shape(radius: DesignTokens.Radius.card))
     }

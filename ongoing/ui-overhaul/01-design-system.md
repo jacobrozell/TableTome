@@ -170,9 +170,9 @@ extension Color {
 Add the line `marketing-screenshots/overhaul/`.
 
 ### Acceptance (DS-01)
-- [ ] `TTColor.swift` compiles. Every token appears in the `TTColorGallery` preview (DS-08) in light and dark.
-- [ ] Accent assets updated. A system `Toggle` in Settings shows copper in both modes.
-- [ ] No existing call site changed except `accentOnSurface`'s implementation.
+- [x] `TTColor.swift` compiles. Gallery preview of every token is DS-08 (`TTColorGallery`), still open.
+- [ ] Accent assets updated. A system `Toggle` in Settings shows copper in both modes. (Assets updated to `brandFill`; not screenshotted.)
+- [x] No existing call site changed except `accentOnSurface`'s implementation.
 
 ---
 

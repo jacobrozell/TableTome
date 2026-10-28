@@ -40,6 +40,7 @@ build/
 
 # Marketing screenshot captures (scripts and framed output are tracked separately)
 marketing-screenshots/raw/
+marketing-screenshots/overhaul/
 marketing-screenshots/ipad/raw/
 marketing-screenshots/framed/
 

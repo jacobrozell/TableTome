@@ -25,6 +25,7 @@ struct SpearheadUnitSection: View {
     let onSetWounds: (String, Int) -> Void
     let onApplyDamage: (String, String, Int, CombatBatchLogContext?) -> Void
     let onOpenUnitFocus: (String, String) -> Void
+    var embedsInlineResolver: Bool = true
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
@@ -100,7 +101,9 @@ struct SpearheadUnitSection: View {
             currentPhase: currentPhase,
             isActivePlayer: isActivePlayer,
             hasActed: unitHasActed(unitKey),
-            resolverContext: resolverContext?.attackerKey == unitKey ? resolverContext : nil,
+            resolverContext: embedsInlineResolver && resolverContext?.attackerKey == unitKey
+                ? resolverContext
+                : nil,
             opponentUnits: defenderUnits,
             opponentArmy: defenderArmy,
             opponentWoundsRemaining: woundsRemaining,

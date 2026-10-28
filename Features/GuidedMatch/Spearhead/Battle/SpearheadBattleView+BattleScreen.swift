@@ -28,11 +28,14 @@ extension SpearheadBattleView {
                 isPrimaryEnabled: primaryIsEnabled && !primaryActionLocked,
                 onPrimary: performPrimaryAction,
                 onUnits: { showsUnitsSheet = true },
-                onDice: { showsUnitsSheet = true }
+                onDice: {
+                    seedCombatContextIfNeeded()
+                    showsCombatSheet = true
+                }
             )
         } sidePanel: {
-            yourUnitsSection
-            opponentUnitsSection
+            yourUnitsSection(embedsResolver: false)
+            opponentUnitsSection(embedsResolver: false)
         }
         .ttScreenBackground()
         .overlay(alignment: .topTrailing) {
@@ -76,6 +79,20 @@ extension SpearheadBattleView {
     private var battleNowContent: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             damageUndoBanner
+            if showsBattleCoach {
+                TTNotice(
+                    title: String(localized: "How battle works"),
+                    message: String(
+                        localized: "Tap the big button to move through each phase. Score from the top bar."
+                    ),
+                    systemImage: "sparkles",
+                    tone: .brand,
+                    onDismiss: {
+                        NewPlayerTipsStore.markBattleTrackerCoachSeen()
+                        showsBattleCoach = false
+                    }
+                )
+            }
             if isDeploymentMoment {
                 BattleDeploymentPanel(viewModel: viewModel)
             } else if viewModel.roundOpenerIsIncomplete {
@@ -98,9 +115,6 @@ extension SpearheadBattleView {
             }
             SpearheadPhasePlaybook(viewModel: viewModel, showsOwnChrome: false, onAdvance: {})
             phaseHelpers
-            battleTacticCommandGuideSection
-            heroRoundOneNotice
-            startOfRoundHelper
             reinforcementCallBanner
             reinforcementsSection
         }
@@ -216,6 +230,105 @@ extension SpearheadBattleView {
             },
             onBack: { showsTurnHandoff = false }
         )
+    }
+
+    var combatSheet: some View {
+        NavigationStack {
+            ScrollView {
+                combatSheetBody
+                    .padding(DesignTokens.Spacing.md)
+            }
+            .ttScreenBackground()
+            .navigationTitle(String(localized: "Resolve Attack"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(String(localized: "Close")) { showsCombatSheet = false }
+                }
+            }
+        }
+        .presentationDetents([.large])
+        .presentationBackground(TTColor.canvas)
+        .accessibilityIdentifier("battleTracker.combatSheet")
+    }
+
+    @ViewBuilder
+    private var combatSheetBody: some View {
+        if let context = resolverContext,
+           let attacker = unit(forKey: context.attackerKey) {
+            SpearheadInlineResolver(
+                context: context,
+                gameSystemId: viewModel.gameSystemId,
+                attackerUnit: attacker.unit,
+                defenderUnits: viewModel.opponentUnits,
+                defenderArmy: viewModel.opponentArmy,
+                defenderWoundsRemaining: viewModel.trackerState.unitWoundsRemaining,
+                playerOneArmyId: viewModel.playerOneArmy?.id,
+                playerTwoArmyId: viewModel.playerTwoArmy?.id,
+                activePlayerIsOne: viewModel.trackerState.activePlayerIsOne,
+                attackerPlayerName: viewModel.activePlayerName,
+                defenderPlayerName: viewModel.trackerState.activePlayerIsOne
+                    ? viewModel.playerTwoName
+                    : viewModel.playerOneName,
+                onSelectTarget: { defenderKey in
+                    guard var current = resolverContext else { return }
+                    current.defenderKey = defenderKey
+                    resolverContext = current
+                },
+                onSelectWeapon: { weaponId in
+                    guard let current = resolverContext else { return }
+                    resolverContext = InlineResolverContext(
+                        attackerKey: current.attackerKey,
+                        weaponId: weaponId,
+                        defenderKey: current.defenderKey
+                    )
+                },
+                onApplyDamage: { damage, log in
+                    guard let current = resolverContext, let defenderKey = current.defenderKey else { return }
+                    handleApplyDamage(
+                        defenderKey: defenderKey,
+                        attackerKey: current.attackerKey,
+                        damage: damage,
+                        batchLog: log
+                    )
+                },
+                onCancel: {
+                    resolverContext = nil
+                    showsCombatSheet = false
+                }
+            )
+        } else {
+            TTEmptyState(
+                title: String(localized: "No unit selected"),
+                message: String(localized: "Open Units and choose a weapon to resolve an attack."),
+                systemImage: "dice"
+            )
+        }
+    }
+
+    func seedCombatContextIfNeeded() {
+        guard resolverContext == nil, let army = viewModel.activeArmy else { return }
+        let unit = army.units.first { candidate in
+            let key = UnitWoundTracker.unitKey(armyId: army.id, unitId: candidate.id)
+            let capacity = viewModel.woundCapacity(for: army.id, unit: candidate)
+            let remaining = viewModel.trackerState.unitWoundsRemaining[key] ?? capacity
+            return remaining > 0
+        } ?? army.units.first
+        guard let unit, let weapon = unit.weapons.first else { return }
+        resolverContext = InlineResolverContext(
+            attackerKey: "\(army.id):\(unit.id)",
+            weaponId: weapon.id,
+            defenderKey: nil
+        )
+    }
+
+    private func unit(forKey key: String) -> (army: SpearheadArmy, unit: SpearheadUnit)? {
+        let parts = key.split(separator: ":").map(String.init)
+        guard parts.count == 2 else { return nil }
+        let armies = [viewModel.playerOneArmy, viewModel.playerTwoArmy].compactMap { $0 }
+        guard let army = armies.first(where: { $0.id == parts[0] }),
+              let unit = army.units.first(where: { $0.id == parts[1] }) else { return nil }
+        return (army, unit)
     }
 
     func captureTurnStartVP() {

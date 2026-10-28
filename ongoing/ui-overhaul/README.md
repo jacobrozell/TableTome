@@ -216,13 +216,13 @@ Legend: ⬜ not started · 🟨 in progress · ✅ merged · ⏸ blocked. **Deps
 | BT-07 | Turn handoff interstitial ("Pass to Gold") | BT-04 | [06](06-battle-tracker.md) | 🟨 |
 | BT-08 | Score sheet (VP entry) | BT-02 | [06](06-battle-tracker.md) | 🟨 |
 | BT-09 | Units panel (both armies' health) | BT-01, DS-07 | [06](06-battle-tracker.md) | 🟨 |
-| BT-10 | Combat panel entry + resolver sheet wiring | BT-01, UF-02 | [06](06-battle-tracker.md) | ⬜ |
-| BT-11 | Notices → toasts / coach consolidation | BT-05, SH-04 | [06](06-battle-tracker.md) | ⬜ |
+| BT-10 | Combat panel entry + resolver sheet wiring | BT-01, UF-02 | [06](06-battle-tracker.md) | 🟨 |
+| BT-11 | Notices → toasts / coach consolidation | BT-05, SH-04 | [06](06-battle-tracker.md) | 🟨 |
 | BT-12 | Phone landscape + iPad layouts | BT-02..BT-10 | [06](06-battle-tracker.md) | 🟨 |
 | BT-13 | Tracker menu (reset, rules, glossary, rosters) | BT-01 | [06](06-battle-tracker.md) | 🟨 |
 | UF-01 | Unit focus sheet (warscroll style) | DS-07, BT-09 | [07](07-unit-focus-and-combat.md) | 🟨 |
-| UF-02 | Combat resolver visual pass | DS-07 | [07](07-unit-focus-and-combat.md) | ⬜ |
-| UF-03 | Dice entry + results presentation | UF-02 | [07](07-unit-focus-and-combat.md) | ⬜ |
+| UF-02 | Combat resolver visual pass | DS-07 | [07](07-unit-focus-and-combat.md) | 🟨 |
+| UF-03 | Dice entry + results presentation | UF-02 | [07](07-unit-focus-and-combat.md) | 🟨 |
 | VH-01 | Victory screen | BT-02 | [08](08-victory-and-history.md) | 🟨 |
 | VH-02 | Match history list | DS-07 | [08](08-victory-and-history.md) | 🟨 |
 | VH-03 | Match detail + timeline | VH-02 | [08](08-victory-and-history.md) | 🟨 |

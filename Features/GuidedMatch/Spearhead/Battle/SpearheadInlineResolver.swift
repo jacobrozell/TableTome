@@ -145,11 +145,12 @@ struct SpearheadInlineResolver: View {
             HStack {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                     Text("\(attackerUnit.name) → \(String(localized: "Select target"))")
-                        .font(.subheadline.weight(.semibold))
+                        .font(TTFont.headline)
+                        .foregroundStyle(TTColor.inkPrimary)
                     if let targetPickerWeaponSummary {
                         Text(targetPickerWeaponSummary)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .font(TTFont.footnote)
+                            .foregroundStyle(TTColor.inkSecondary)
                     }
                 }
                 Spacer()

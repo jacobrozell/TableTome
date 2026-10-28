@@ -1,16 +1,28 @@
 import SwiftUI
 import TabletomeDomain
 
-struct DiceInputModePicker: View {
-  @Binding var mode: DiceInputMode
+extension DiceInputMode: Identifiable {
+    public var id: String { rawValue }
+}
 
-  var body: some View {
-    Picker(String(localized: "Dice input"), selection: $mode) {
-      Text(String(localized: "Physical dice")).tag(DiceInputMode.physical)
-      Text(String(localized: "Roll in app")).tag(DiceInputMode.simulated)
+struct DiceInputModePicker: View {
+    @Binding var mode: DiceInputMode
+
+    var body: some View {
+        TTSegmentedControl(
+            selection: $mode,
+            options: Array(DiceInputMode.allCases),
+            title: { diceTitle($0) },
+            systemImage: { $0 == .physical ? "hand.raised" : "dice" }
+        )
+        .accessibilityIdentifier("diceRoller.inputMode")
+        .accessibilityHint(String(localized: "Choose physical dice or simulated rolls"))
     }
-    .pickerStyle(.segmented)
-    .accessibilityIdentifier("diceRoller.inputMode")
-    .accessibilityHint(String(localized: "Choose physical dice or simulated rolls"))
-  }
+
+    private func diceTitle(_ mode: DiceInputMode) -> String {
+        switch mode {
+        case .physical: String(localized: "Real dice")
+        case .simulated: String(localized: "Roll in app")
+        }
+    }
 }

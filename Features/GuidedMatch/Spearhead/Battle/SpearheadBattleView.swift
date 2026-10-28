@@ -14,6 +14,8 @@ struct SpearheadBattleView: View {
     @State var showsTurnHandoff = false
     @State var showsRoundPicker = false
     @State var showsResetConfirmation = false
+    @State var showsCombatSheet = false
+    @State var showsBattleCoach = !NewPlayerTipsStore.hasSeenBattleTrackerCoach
     @State var primaryActionLocked = false
     @State var primaryTapCount = 0
     @State var turnStartPlayerOneVP = 0
@@ -136,7 +138,7 @@ struct SpearheadBattleView: View {
 
                 ScrollView {
                     VStack(spacing: DesignTokens.phoneLandscapeSectionSpacing) {
-                        opponentUnitsSection
+                        opponentUnitsSection()
                     }
                     .padding(.horizontal, DesignTokens.phoneLandscapeHorizontalPadding)
                     .padding(.vertical, DesignTokens.Spacing.sm)
@@ -162,9 +164,9 @@ struct SpearheadBattleView: View {
         roundOpenerIfNeeded
         reinforcementCallBanner
         reinforcementsSection
-        yourUnitsSection
+        yourUnitsSection()
         if includeOpponentUnits {
-            opponentUnitsSection
+            opponentUnitsSection()
         }
     }
 
@@ -190,7 +192,7 @@ struct SpearheadBattleView: View {
                         roundOpenerIfNeeded
                         reinforcementCallBanner
                         reinforcementsSection
-                        yourUnitsSection
+                        yourUnitsSection()
                     }
                     .padding(DesignTokens.Spacing.md)
                 }
@@ -200,7 +202,7 @@ struct SpearheadBattleView: View {
 
                 ScrollView {
                     VStack(spacing: DesignTokens.Spacing.md) {
-                        opponentUnitsSection
+                        opponentUnitsSection()
                     }
                     .padding(DesignTokens.Spacing.md)
                 }
@@ -407,7 +409,7 @@ struct SpearheadBattleView: View {
     // MARK: - Your Units Section
 
     @ViewBuilder
-    var yourUnitsSection: some View {
+    func yourUnitsSection(embedsResolver: Bool = true) -> some View {
         SpearheadUnitSection(
             title: String(localized: "Your Units"),
             units: viewModel.yourUnits,
@@ -433,14 +435,15 @@ struct SpearheadBattleView: View {
             onApplyDamage: handleApplyDamage,
             onOpenUnitFocus: { armyId, unitId in
                 presentUnitFocus(armyId: armyId, unitId: unitId)
-            }
+            },
+            embedsInlineResolver: embedsResolver
         )
     }
 
     // MARK: - Opponent Units Section
 
     @ViewBuilder
-    var opponentUnitsSection: some View {
+    func opponentUnitsSection(embedsResolver: Bool = true) -> some View {
         SpearheadUnitSection(
             title: String(localized: "Opponent Units"),
             units: viewModel.opponentUnits,
@@ -466,7 +469,8 @@ struct SpearheadBattleView: View {
             onApplyDamage: handleApplyDamage,
             onOpenUnitFocus: { armyId, unitId in
                 presentUnitFocus(armyId: armyId, unitId: unitId)
-            }
+            },
+            embedsInlineResolver: embedsResolver
         )
     }
 
@@ -501,9 +505,12 @@ struct SpearheadBattleView: View {
             weaponId: weaponId,
             defenderKey: existingDefender
         )
+        if usesNewBattleScreen {
+            showsCombatSheet = true
+        }
     }
 
-    private func handleApplyDamage(
+    func handleApplyDamage(
         defenderKey: String,
         attackerKey: String,
         damage: Int,
@@ -524,6 +531,7 @@ struct SpearheadBattleView: View {
 
         viewModel.markAttackerActed(attackerKey: attackerKey)
         resolverContext = nil
+        showsCombatSheet = false
 
         withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) {
             if let nextKey = viewModel.nextUnactedCombatUnitKey() {
@@ -555,12 +563,15 @@ extension SpearheadBattleView {
         .onChange(of: viewModel.trackerState.activePlayerIsOne) { _, _ in
             captureTurnStartVP()
         }
+        .sheet(isPresented: $showsCombatSheet) {
+            combatSheet
+        }
         .sheet(isPresented: $showsUnitsSheet) {
             NavigationStack {
                 ScrollView {
                     VStack(spacing: DesignTokens.Spacing.md) {
-                        yourUnitsSection
-                        opponentUnitsSection
+                        yourUnitsSection(embedsResolver: false)
+                        opponentUnitsSection(embedsResolver: false)
                     }
                     .padding(DesignTokens.Spacing.md)
                 }

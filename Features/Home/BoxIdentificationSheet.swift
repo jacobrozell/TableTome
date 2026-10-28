@@ -119,6 +119,19 @@ struct BoxIdentificationSheet: View {
     }
 
     var body: some View {
+        Group {
+            if ReleaseSurface.singleVisibleGameSystemId() != nil {
+                SpearheadBoxCheckContent()
+            } else {
+                multiGameTree
+            }
+        }
+        .presentationDetents([.medium, .large])
+        .presentationDragIndicator(.visible)
+        .presentationBackground(TTColor.canvas)
+    }
+
+    private var multiGameTree: some View {
         NavigationStack {
             Form {
                 BoxIdentificationStepContent(
@@ -236,5 +249,64 @@ struct BoxIdentificationSheet: View {
         default:
             break
         }
+    }
+}
+
+private struct SpearheadBoxCheckContent: View {
+    @Environment(\.dismiss) private var dismiss
+    @Environment(AppRouter.self) private var router
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            TTSheetHeader(title: String(localized: "Is this a Spearhead box?"), tone: .brand) {
+                dismiss()
+            }
+            Text(String(localized: "Look for these on your box:"))
+                .font(TTFont.body)
+                .foregroundStyle(TTColor.inkPrimary)
+                .padding(.horizontal, DesignTokens.Spacing.md)
+            VStack(spacing: 0) {
+                TTRow(
+                    title: String(localized: "\"Spearhead\" on the front"),
+                    systemImage: "shield.lefthalf.filled",
+                    accessory: .none
+                )
+                TTRow(
+                    title: String(localized: "A deck of battle tactic cards"),
+                    systemImage: "rectangle.stack",
+                    accessory: .none
+                )
+                TTRow(
+                    title: String(localized: "A double-sided realm board"),
+                    subtitle: String(localized: "In the battlefield pack"),
+                    systemImage: "map",
+                    accessory: .none
+                )
+            }
+            .accessibilityElement(children: .contain)
+            Button(String(localized: "Yes, Start a Battle")) {
+                let gameSystemId = ReleaseSurface.singleVisibleGameSystemId()
+                dismiss()
+                if let gameSystemId {
+                    router.openGuidedMatch(gameSystemId: gameSystemId)
+                }
+            }
+            .buttonStyle(.ttPrimary)
+            .padding(.horizontal, DesignTokens.Spacing.md)
+            .accessibilityIdentifier("boxHelper.startBattle")
+            Button(String(localized: "Browse armies to find yours")) {
+                dismiss()
+                router.learnPath.append(SpearheadArmiesBrowseLink())
+            }
+            .buttonStyle(.ttTertiary)
+            .padding(.horizontal, DesignTokens.Spacing.md)
+            .accessibilityIdentifier("boxHelper.browseArmies")
+            Text(String(localized: "Different box? Tabletome currently supports Spearhead only."))
+                .font(TTFont.footnote)
+                .foregroundStyle(TTColor.inkTertiary)
+                .padding(.horizontal, DesignTokens.Spacing.md)
+            Spacer(minLength: 0)
+        }
+        .background(TTColor.canvas)
     }
 }

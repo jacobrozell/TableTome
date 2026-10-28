@@ -2,16 +2,23 @@ import SwiftUI
 
 public enum DesignTokens {
     public enum Spacing {
+        public static let xxs: CGFloat = 2
         public static let xs: CGFloat = 4
         public static let sm: CGFloat = 8
         public static let md: CGFloat = 16
         public static let lg: CGFloat = 24
         public static let xl: CGFloat = 32
+        public static let xxl: CGFloat = 48
+        /// Padding inside dense cards such as ability rows. The only sanctioned non-4pt spacing.
+        public static let cardInner: CGFloat = 14
     }
 
     public enum Radius {
+        public static let xs: CGFloat = 6
         public static let sm: CGFloat = 8
         public static let md: CGFloat = 12
+        public static let xl: CGFloat = 24
+        public static let pill: CGFloat = 999
         /// Default corner radius for `surfaceCard` and `accentHighlightCard`.
         public static let lg: CGFloat = 16
 
@@ -21,6 +28,15 @@ public enum DesignTokens {
         public static let nested: CGFloat = md
         /// Small stat badges and chips inside nested rows.
         public static let inset: CGFloat = sm
+    }
+
+    public enum Size {
+        public static let iconTile: CGFloat = 36
+        public static let iconTileLarge: CGFloat = 48
+        public static let playerToken: CGFloat = 28
+        public static let actionBarHeight: CGFloat = 64
+        public static let scoreboardHeight: CGFloat = 64
+        public static let phaseRailHeight: CGFloat = 44
     }
 
     public static let minTouchTarget: CGFloat = 44

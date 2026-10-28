@@ -55,6 +55,10 @@ public struct TTCounter: View {
             Stepper(label, value: $value, in: range)
         }
         .ttHaptic(lastDelta > 0 ? .scoreUp : .scoreDown, trigger: hapticToken)
+        .onDisappear {
+            repeatTask?.cancel()
+            repeatTask = nil
+        }
     }
 
     private var buttonSide: CGFloat { size == .large ? 56 : 44 }

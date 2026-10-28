@@ -15,6 +15,7 @@ struct DiceCoachingHint: View {
                 onDismiss: { dismissed = true }
             )
             .accessibilityLabel(hint.text)
+            .onChange(of: hint) { dismissed = false }
         }
     }
 }

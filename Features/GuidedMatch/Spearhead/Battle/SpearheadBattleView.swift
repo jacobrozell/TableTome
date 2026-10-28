@@ -586,6 +586,7 @@ extension SpearheadBattleView {
     }
 
     func presentVictoryScreen() {
+        unitFocusSelection = nil
         victoryPlayerOneVP = viewModel.trackerState.playerOneVictoryPoints
         victoryPlayerTwoVP = viewModel.trackerState.playerTwoVictoryPoints
         dismissedBattleCompleteGuide = true

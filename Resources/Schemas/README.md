@@ -3,7 +3,7 @@
 Versioned JSON Schemas that define the contract for Tabletome's bundled game
 content. They make "add a new edition / box set" a **data** operation gated by
 a machine check — not a Swift edit. See
-[`FutureIdeas/ArchitectureRefactorMasterPlan.md`](../../FutureIdeas/ArchitectureRefactorMasterPlan.md)
+[`specs/ArchitectureRefactorMasterPlan.md`](../../specs/ArchitectureRefactorMasterPlan.md)
 (Component D, Phase 0/4).
 
 | Schema | Describes | Lives in |

@@ -1,6 +1,6 @@
 # Players Hub Spec
 
-**Status:** Draft spec (no ship date)  
+**Status:** Implemented — gated: on in Debug, Release needs `-enable_players_hub` or full surface  
 **Last updated:** 2026-07-01  
 **Scope:** Spearhead-first; extensible to other `gameSystemId`s post-1.0  
 **Audience:** Jacob + Chris household play; generalizes to 2–8 local players on one device
@@ -447,7 +447,7 @@ No ship date until behavior locks and `ReleaseSurface.showsPlayersHub` is enable
 | Field | Value |
 |-------|-------|
 | Target release | TBD (post Spearhead 1.0) |
-| Last verified | — (not implemented) |
+| Last verified | 2026-10-27 — `PlayerProfileStoreTests`, `JSONMatchHistoryRepositoryTests.testFilterByProfileId`; manual Jacob/Chris playtest pending |
 | Code paths | `Features/PlayersHub/`, `Data/Players/`, `Domain/Models/PlayerProfile.swift`, GM archive + army picker |
 | Tests | Profile CRUD, owned army union from box set, history filter by profile id, coaching policy by experience level, legacy record name fallback |
 | Manual | Jacob owns Skaven, Chris owns Stormcast → GM pre-fills → complete game → both profiles show 1 game |

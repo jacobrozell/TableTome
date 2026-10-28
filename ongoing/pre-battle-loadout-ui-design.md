@@ -1,6 +1,6 @@
 # Pre-Battle Loadout UI — Design
 
-**Status:** Draft  
+**Status:** Superseded — implemented by [`unit-info-and-loadout-fix-plan.md`](unit-info-and-loadout-fix-plan.md)  
 **Last updated:** 2026-07-01  
 **Problem:** Loadout choices (regiment ability, enhancement) are buried in setup steps and don't visibly affect battle.
 

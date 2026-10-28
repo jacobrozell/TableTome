@@ -336,5 +336,5 @@ After each phase, update:
 | Field | Value |
 |-------|-------|
 | Target release | v0.2 |
-| Last verified | 2026-06-17 |
+| Last verified | 2026-10-27 — inline phone title; hub switcher superseded by `TabBarChrome` + compact status bar |
 | Code paths | `DesignSystem/ReadableContentWidth.swift`, `Features/GuidedMatch/`, `DesignSystem/UnitAbilityCard.swift` |

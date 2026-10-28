@@ -1,6 +1,6 @@
 # Unit Info & Pre-Battle Loadout — Fix Plan
 
-**Status:** Active  
+**Status:** Complete (2026-07-01) — cosmetic setup-hub lock and keyword glossary left open  
 **Last updated:** 2026-07-01  
 **Scope:** Better unit cells with keywords, full unit detail popup, pre-battle loadout confirmation, auto-apply enhancement effects
 

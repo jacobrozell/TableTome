@@ -26,6 +26,18 @@ targets:
   Tabletome:
     type: application
     platform: iOS
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CFBundleURLTypes:
+          - CFBundleURLName: com.jacobrozell.tabletome
+            CFBundleURLSchemes:
+              - tabletome
+        NSBonjourServices:
+          - _tabletome-match._tcp
+          - _tabletome-match._udp
     sources:
       - path: App
       - path: Features
@@ -88,8 +100,6 @@ targets:
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         INFOPLIST_KEY_NSLocalNetworkUsageDescription: "Tabletome uses the local network to sync match state between two nearby devices."
-        INFOPLIST_KEY_NSBonjourServices:
-          - _tabletome-match._tcp
         GENERATE_INFOPLIST_FILE: YES
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor

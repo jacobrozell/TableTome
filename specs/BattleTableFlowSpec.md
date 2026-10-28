@@ -147,6 +147,7 @@ Accessibility: `battleTracker.phoneLandscapeSplit`, `battleTracker.pinnedWarscro
 | Field | Value |
 |-------|-------|
 | Target release | v0.3 (Phases A–E) |
-| Last verified | 2026-06-19 |
+| Last verified | 2026-10-27 |
+| UI tests | `Tests/UI/GuidedMatchResumeUITests.swift` — Play → Return to battle lands on the embedded battle tracker |
 | Code paths | `Features/GuidedMatch/BattleTrackerPhaseDock.swift`, `Features/GuidedMatch/BattlePhaseTrackerView+PhaseDock.swift`, `Features/GuidedMatch/UnitFocusSheet.swift`, `Features/CombatRoll/BatchCombatResolverSection.swift`, `Support/PlayContinuationResolver.swift`, `DesignSystem/GuidedMatchHubChrome.swift`, `Support/TabBarChrome.swift`, `Support/TabBarAccessibilityBridge.swift`, `App/RootTabView.swift`, `Domain/UseCases/BattleTrackerStore.swift` |
 | Resume contract | A battle is resumable only when `BattleTrackerState.hasBattleProgress` is true (not on tracker open alone). `MatchSessionStore` timestamps are recorded when progress is saved. Play continuation prefers the game system with battle progress, then onboarding choice, then active context. |

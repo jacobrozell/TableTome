@@ -396,7 +396,7 @@ private struct ArmyOptionRow: View {
             Spacer()
             if isSelected {
                 Image(systemName: "checkmark.circle.fill")
-                    .foregroundStyle(Color.accentColor)
+                    .foregroundStyle(Color.accentOnSurface)
                     .accessibilityHidden(true)
             }
         }

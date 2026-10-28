@@ -19,6 +19,8 @@ final class GuidedMatchViewModel: ObservableObject {
     let logger: any AppLogger
     var hasLoggedMatchStarted = false
     var hasArchivedCurrentVictory = false
+    var archivedVictoryRecordId: UUID?
+    var archivedVictoryLog: [MatchLogEvent] = []
 
     init(
         gameSystemId: GameSystemId = .default,
@@ -339,12 +341,15 @@ final class GuidedMatchViewModel: ObservableObject {
         status: MatchArchiveStatus,
         playerOneVictoryPoints: Int,
         playerTwoVictoryPoints: Int,
-        repository: any MatchHistoryRepository
+        repository: any MatchHistoryRepository,
+        recordId: UUID = UUID(),
+        preservedLog: [MatchLogEvent]? = nil
     ) async throws {
         guard let catalog else { return }
         let tracker = BattleTrackerStore.load(gameSystemId: gameSystemId)
         let record = MatchArchiveBuilder.buildRecord(
             from: MatchArchiveInput(
+                id: recordId,
                 gameSystemId: gameSystemId.rawValue,
                 gameSystemName: GameSystemRulesLabels.displayName(gameSystemId: gameSystemId),
                 matchState: matchState,
@@ -357,10 +362,8 @@ final class GuidedMatchViewModel: ObservableObject {
                 playerTwoVictoryPoints: playerTwoVictoryPoints
             )
         )
-        try await repository.archive(
-            record: record,
-            log: MatchLogRecorder.drainForArchive(gameSystemId: gameSystemId, status: status)
-        )
+        let log = preservedLog ?? MatchLogRecorder.drainForArchive(gameSystemId: gameSystemId, status: status)
+        try await repository.archive(record: record, log: log)
     }
 
     func finishMatch(

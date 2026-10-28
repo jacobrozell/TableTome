@@ -6,9 +6,9 @@ Metadata: [`status.md`](status.md) · Expanded: [`release_checklist.md`](release
 
 ## 1.0.0 TestFlight scope
 
-- [ ] **Release surface defaults** — Spearhead + 40k 11e + Combat Patrol (10e) + **Paints**; no Lists/StarCraft/Q&A
-- [ ] **Tab bar** — Models (Collection), Play, Rules, Settings
-- [ ] **Core flows** — Getting Started all three systems; Guided Match; match history; offline smoke
+- [x] **Release surface defaults** — Spearhead play + Collection + Paints. 40k, Combat Patrol, StarCraft, Lists, and Rules Q&A stay gated (locked 28 Oct 2026)
+- [ ] **Tab bar** — Models, Play, Rules, Settings
+- [ ] **Core flows** — Spearhead Getting Started and Guided Match; match history; offline smoke
 - [ ] **Quality** — VoiceOver; AXXXL; iPhone Pro Max landscape Models stack nav
 - [ ] **Settings legal links** — GitHub Pages open (privacy updated 2026-06-29)
 

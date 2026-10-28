@@ -2,7 +2,9 @@
 
 Task-oriented lookup: **where to change code** and which spec governs behavior.
 
-**Last updated:** 2026-07-01
+**Last updated:** 2026-10-28
+
+1.0 work is Spearhead play plus the existing collection and paints. Gate changes go in `Support/ReleaseSurface.swift` first. Do not ungate 40k, Combat Patrol, or StarCraft while editing the files below.
 
 ---
 

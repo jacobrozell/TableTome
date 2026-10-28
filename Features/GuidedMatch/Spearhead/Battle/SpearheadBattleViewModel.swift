@@ -193,7 +193,19 @@ final class SpearheadBattleViewModel: ObservableObject {
         syncVictoryPointTotalsFromByRound()
         syncAutoCompletions()
         persist()
-        _ = reason
+        recordBattleLog(
+            kind: .victoryPointsChanged,
+            payload: MatchLogEventPayload(
+                round: trackerState.battleRound,
+                playerIsOne: playerIsOne,
+                playerName: playerIsOne ? playerOneName : playerTwoName,
+                delta: delta,
+                newTotal: playerIsOne
+                    ? trackerState.playerOneVictoryPoints
+                    : trackerState.playerTwoVictoryPoints,
+                pointsReason: reason
+            )
+        )
     }
 
     func setRoundVictoryPoints(round: Int, playerIsOne: Bool, value: Int) {

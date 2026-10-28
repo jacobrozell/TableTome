@@ -1,11 +1,11 @@
 # TestFlight — 1.0.0 (11)
 
-**Branch:** `release/1.0.0` · **Scope:** Spearhead + 40k 11e + Combat Patrol (10e) + **Paints inventory**
+**Branch:** `release/1.0.0` · **Scope note (28 Oct 2026):** later notes in this file mention 40k and Combat Patrol. The locked 1.0 surface is Spearhead play, collection, and paints. See [status.md](status.md).
 
 ## What to test
 
-- **Play** — chooser, Guided Match, match history save (or alert on failure)
-- **Rules** — browse + search for all three systems
+- **Play** — Spearhead only: Getting Started, Guided Match, match history save (or alert on failure)
+- **Rules** — Spearhead browse and search only. 40k and Combat Patrol stay hidden.
 - **Models** — Collection + **Paints** sidebar; add paint with catalog autocomplete; refresh colours in Settings → Models & Data
 - **Settings → Suggest something** — category picker, Mail draft, copy fallback banner
 - **Offline** — Play + Rules error states use warning triangle (not Wi‑Fi icon)

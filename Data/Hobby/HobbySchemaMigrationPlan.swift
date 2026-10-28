@@ -1,6 +1,6 @@
 import SwiftData
 
-/// Post-1.0 SwiftData migration plan scaffold. Pre-release builds wipe incompatible stores instead.
+/// SwiftData migration plan scaffold. Not attached to the container. A failed open keeps the store on disk.
 enum HobbySchemaMigrationPlan: SchemaMigrationPlan {
     static var schemas: [any VersionedSchema.Type] {
         [HobbySchemaV1.self]

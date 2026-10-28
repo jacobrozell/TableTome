@@ -122,7 +122,7 @@ final class CombatSimulatorTrustTests: XCTestCase {
 
     func testRendAppliedToSave() {
         var parameters = TrustFixture.successfulHit.parameters
-        parameters.rend = -1
+        parameters.rend = 1
         parameters.saveTarget = 4
         let result = CombatRollSimulator.rollAndEvaluate(
             parameters: parameters,
@@ -132,9 +132,9 @@ final class CombatSimulatorTrustTests: XCTestCase {
         XCTAssertTrue(result.evaluation.steps.first { $0.id == "save" }?.outcome == .failure)
     }
 
-    func testPositiveRendImprovesSave() {
+    func testNegativeRendImprovesSave() {
         let input = AttackRollInput(
-            hitTarget: 4, woundTarget: 4, saveTarget: 4, rend: 1, damage: 2,
+            hitTarget: 4, woundTarget: 4, saveTarget: 4, rend: -1, damage: 2,
             hitRoll: 4, woundRoll: 4, saveRoll: 3
         )
         XCTAssertEqual(CombatRollEngine.evaluate(input).damageDealt, 0)

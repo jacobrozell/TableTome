@@ -9,20 +9,28 @@ Plans and projects **in implementation** — approved, specced, and actively bei
 | Ship blockers / release train | [`docs/release/`](../docs/release/) |
 | Shipped behavior | [`specs/`](../specs/) + [`docs/feature-inventory.md`](../docs/feature-inventory.md) |
 
-**Last updated:** 2026-10-27
+**Last updated:** 2026-10-28
+
+**Do this:** Spearhead guided play for someone who has the box and has not played. Collection and paints stay as they are. Do not ungate other modes.
 
 ## Active
 
 | Plan | Doc | Status | Notes |
 |------|-----|--------|-------|
-| **Spearhead flawless Guided Match** | [`spearhead-flawless-guided-match-plan.md`](spearhead-flawless-guided-match-plan.md) | **Active — P0** | Master plan: Spearhead-owned GM module, setup + battle + combat for new players |
-| Players Hub | [`specs/features/PlayersHubSpec.md`](../specs/features/PlayersHubSpec.md) | **Implemented — gated** | On in Debug; Release via `-enable_players_hub`. Manual Jacob/Chris playtest before ungating |
-| Combat Patrol catalog | [`combat-patrol-catalog-expansion.md`](combat-patrol-catalog-expansion.md) | **In progress** | 6/23 patrols in picker; P1 rosters added, unit JSON next |
-| Guided Match UI redesign | [`guided-match-ui-redesign.md`](guided-match-ui-redesign.md) | **In progress** | Phase 1 complete; single-surface battle |
-| SwiftUI view extraction | [`swiftui-view-extraction-plan.md`](swiftui-view-extraction-plan.md) | **Incremental** | Phases 0–7 named targets done; remaining `@ViewBuilder`s (mostly Spearhead battle UI) on touch via the Cursor rule |
-| WH40k 11e launch | [`docs/game-modes/wh40k-11e/launch-plan.md`](../docs/game-modes/wh40k-11e/launch-plan.md) | In progress | Phase 1 rules shipped; Phase 2 guided match in flight |
-| Unified app port | [`FutureIdeas/UnifiedAppPortLog.md`](../FutureIdeas/UnifiedAppPortLog.md) | In progress | Living MiniMuster→Tabletome port tracker |
-| Gated features QA | [`docs/release/gated-features-testing.md`](../docs/release/gated-features-testing.md) | CP shipped — manual QA pending | StarCraft, Rules Q&A before ungate |
+| **1.0.0 review fixes** | [`1.0.0-review-fixes.md`](1.0.0-review-fixes.md) | **Fixes in** | Ship blockers from Bugbot, architecture, code smells, and tests are fixed. Retest still open. |
+| **Spearhead flawless Guided Match** | [`spearhead-flawless-guided-match-plan.md`](spearhead-flawless-guided-match-plan.md) | **Active — P0** | The only product work: setup, battle, combat, victory, resume |
+| Guided Match UI redesign | [`guided-match-ui-redesign.md`](guided-match-ui-redesign.md) | **In progress** | Phase 1 complete; single-surface battle. Stay inside Spearhead. |
+| SwiftUI view extraction | [`swiftui-view-extraction-plan.md`](swiftui-view-extraction-plan.md) | **Incremental** | Only when already editing those views. Not a feature. |
+
+## Parked — not this release
+
+| Plan | Doc | Status | Notes |
+|------|-----|--------|-------|
+| Players Hub | [`specs/features/PlayersHubSpec.md`](../specs/features/PlayersHubSpec.md) | **Implemented — gated** | On in Debug; Release via `-enable_players_hub` |
+| Combat Patrol catalog | [`combat-patrol-catalog-expansion.md`](combat-patrol-catalog-expansion.md) | **Parked** | Stays gated. Resume after Spearhead is submitted. |
+| WH40k 11e launch | [`docs/game-modes/wh40k-11e/launch-plan.md`](../docs/game-modes/wh40k-11e/launch-plan.md) | **Parked** | The launch plan’s “ship 11e” decision is superseded. |
+| Unified app port | [`FutureIdeas/UnifiedAppPortLog.md`](../FutureIdeas/UnifiedAppPortLog.md) | **Parked** | MiniMuster port tracker. Not 1.0. |
+| Gated features QA | [`docs/release/gated-features-testing.md`](../docs/release/gated-features-testing.md) | **Parked** | 40k, Combat Patrol, StarCraft, Lists, Rules Q&A |
 
 ## See also
 

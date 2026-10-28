@@ -91,13 +91,13 @@ See [`setup.md`](setup.md) for the full list.
 
 ## Gated feature manual QA
 
-Before ungating Lists, Paints, StarCraft, or Rules Q&A:
+Before ungating 40k, Combat Patrol, StarCraft, Lists, or Rules Q&A:
 
 1. Run with `-enable_full_product_surface`
 2. Complete the matching section in [`docs/release/gated-features-testing.md`](../release/gated-features-testing.md)
 3. Update [`docs/feature-inventory.md`](../feature-inventory.md)
 
-Combat Patrol ships in 1.0 — manual sign-off tracked in the same doc §3.
+None of those modes ship in 1.0. Paints already ship. Do not ungate as part of Spearhead work.
 
 ---
 

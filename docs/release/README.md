@@ -2,7 +2,7 @@
 
 Index for TestFlight and App Store delivery. Current state: [`status.md`](status.md).
 
-**Last updated:** 2026-06-29
+**Last updated:** 2026-10-28
 
 ---
 
@@ -25,11 +25,11 @@ Index for TestFlight and App Store delivery. Current state: [`status.md`](status
 
 **Ships without launch arguments:**
 
-- Tabs: Models (Collection), Play, Rules, Settings
-- Game systems: AoS Spearhead, 40k 11e, Combat Patrol (10e rules)
-- Play: Guided Match, battle tracker, match history, combat resolver
+- Tabs: Models (Collection + paints), Play, Rules, Settings
+- Play: Age of Sigmar Spearhead only — Guided Match, battle tracker, match history, combat resolver
+- Rules: Spearhead only
 
-**Gated** until post-1.0 sign-off: Lists, Paints, StarCraft TMG, Rules Q&A.
+**Gated** until a later release: 40k 11e, Combat Patrol, StarCraft TMG, Lists, Rules Q&A.
 
 Dogfood everything gated: `-enable_full_product_surface` in Run scheme.
 

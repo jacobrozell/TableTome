@@ -105,6 +105,15 @@ extension SpearheadBattleViewModel {
         if previous != phase {
             trackerEngine.afterPhaseChange(from: previous, trackerState: &trackerState)
             clearReinforcementCallPromptIfLeavingMovement(from: previous, to: phase)
+            recordBattleLog(
+                kind: .phaseChanged,
+                payload: MatchLogEventPayload(
+                    round: trackerState.battleRound,
+                    phaseId: phase.rawValue,
+                    playerIsOne: trackerState.activePlayerIsOne,
+                    playerName: activePlayerName
+                )
+            )
         }
         persist()
     }
@@ -136,6 +145,15 @@ extension SpearheadBattleViewModel {
             if trackerState.completedTurnsThisRound.count < 2 {
                 trackerState.activePlayerIsOne.toggle()
                 trackerState.currentPhase = playContext.playEngine.turnStartPhase()
+                recordBattleLog(
+                    kind: .activePlayerChanged,
+                    payload: MatchLogEventPayload(
+                        round: trackerState.battleRound,
+                        phaseId: trackerState.currentPhase.rawValue,
+                        playerIsOne: trackerState.activePlayerIsOne,
+                        playerName: activePlayerName
+                    )
+                )
                 persist()
             } else {
                 persist()
@@ -150,6 +168,10 @@ extension SpearheadBattleViewModel {
         trackerState.battleRound += 1
         trackerState.completedTurnsThisRound = []
         trackerEngine.afterBattleRoundChange(trackerState: &trackerState)
+        recordBattleLog(
+            kind: .roundAdvanced,
+            payload: MatchLogEventPayload(round: trackerState.battleRound)
+        )
         if playContext.capabilities.showsBattleTacticDecks {
             matchState.firstTurnIsPlayerOne = nil
             MatchSetupStore.save(matchState, gameSystemId: gameSystemId)
@@ -255,6 +277,11 @@ extension SpearheadBattleViewModel {
         default:
             break
         }
+    }
+
+    func recordBattleLog(kind: MatchLogEventKind, payload: MatchLogEventPayload) {
+        guard ReleaseSurface.showsMatchHistory else { return }
+        MatchLogRecorder.record(gameSystemId: gameSystemId, kind: kind, payload: payload)
     }
 
     func setFinalVictoryPoints(playerOne: Int, playerTwo: Int) {

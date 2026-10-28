@@ -79,6 +79,27 @@ enum PaintStore {
         }
     }
 
+    /// Legacy rows gain `usesCustomSwatch == false` on upgrade. If the stored
+    /// colour already differs from the catalog, keep it instead of treating it
+    /// as an automatic swatch.
+    @discardableResult
+    static func backfillCustomSwatchesIfNeeded(in ctx: ModelContext) -> Int {
+        let paints = (try? ctx.fetch(FetchDescriptor<HobbyPaint>())) ?? []
+        var marked = 0
+        for paint in paints where !paint.usesCustomSwatch {
+            guard PaintSwatchResolver.inferUsesCustom(
+                storedHex: paint.swatchHex,
+                name: paint.name,
+                brand: paint.brand,
+                type: paint.type
+            ) else { continue }
+            paint.usesCustomSwatch = true
+            marked += 1
+        }
+        if marked > 0 { try? ctx.save() }
+        return marked
+    }
+
     /// Re-apply catalog swatches for paints that are not using a custom colour.
     @discardableResult
     static func refreshCatalogColors(in ctx: ModelContext) -> Int {

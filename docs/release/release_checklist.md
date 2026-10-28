@@ -4,19 +4,20 @@
 
 ## Scope smoke (release surface defaults)
 
-- [ ] Home chooser shows **Spearhead**, **40k 11e**, and **Combat Patrol (10th Edition rules)** — not StarCraft or full 10e matched play
+Locked 28 Oct 2026. No launch arguments.
+
+- [ ] Home shows **Spearhead only** — no 40k, Combat Patrol, StarCraft, or full 10e
 - [ ] Tab bar: **Models**, **Play**, **Rules**, **Settings** (no Lists tab)
-- [ ] Models tab: **Collection** only (no Paints segment)
-- [ ] Rules tab: reference browser (not Rules Q&A assistant)
-- [ ] Onboarding game picker matches visible systems
+- [ ] Models tab: **Collection and Paints**
+- [ ] Rules tab: Spearhead reference browser (not Rules Q&A)
+- [ ] Onboarding is the Spearhead path only
 
 ## Core flows
 
 - [ ] Spearhead Getting Started — all steps on iPhone and iPad
-- [ ] 40k 11e Getting Started / Guided Match — starter armies load; Preview a 40k Turn walkthrough
-- [ ] Combat Patrol Getting Started / Guided Match — copy states **10th Edition rules**; SM vs Tyranids starter matchup
-- [ ] Rules browser — search + category filter for Spearhead, 11e, and Combat Patrol
-- [ ] Models — add army, backlog, basic collection flow
+- [ ] Spearhead Guided Match — box, setup, battle, victory, resume
+- [ ] Rules browser — Spearhead search + glossary
+- [ ] Models — add army, backlog, paints
 - [ ] Match history — record and reopen from Play
 - [ ] Offline — airplane mode smoke on Play + Rules
 
@@ -37,7 +38,7 @@
 - [ ] Bump `CURRENT_PROJECT_VERSION` in `project.yml`
 - [ ] `xcodegen generate` if `project.yml` changed
 - [ ] Archive + upload to App Store Connect
-- [ ] TestFlight release notes mention Spearhead, 40k 11e, and Combat Patrol (10th Edition rules)
+- [ ] TestFlight release notes mention Spearhead, collection, and paints — not 40k or Combat Patrol
 
 ## Telemetry (Release)
 
@@ -49,4 +50,4 @@
 
 ## After 1.0.0 (gated features)
 
-Do **not** ungate Lists, Paints, StarCraft, or Rules Q&A until the matching section in [gated-features-testing.md](gated-features-testing.md) is signed off. Combat Patrol ships in 1.0 — full 10e matched play is not planned.
+Do **not** ungate 40k, Combat Patrol, StarCraft, Lists, or Rules Q&A until the matching section in [gated-features-testing.md](gated-features-testing.md) is signed off. Paints already ship. Full 10e matched play is not planned.

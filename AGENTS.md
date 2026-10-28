@@ -2,13 +2,31 @@
 
 Start here for Cursor agents and automated contributors. Human onboarding: [`CONTRIBUTING.md`](CONTRIBUTING.md) + [`docs/development/setup.md`](docs/development/setup.md).
 
-**Last updated:** 2026-07-01
+**Last updated:** 2026-10-28
 
 ---
 
+## Where we are
+
+**TestFlight, not the App Store.** Branch `release/1.0.0`. Repo version **1.0.0 (11)** in `project.yml`. Upload of build 11 is still an open item in [`docs/release/todo.md`](docs/release/todo.md).
+
+**1.0 promise:** Age of Sigmar **Spearhead** guided play — box, setup, battle, victory, resume — plus **Models** (collection and paints). The Rules tab is Spearhead only. Settings stays.
+
+**Work on this:** the Spearhead path in [`ongoing/spearhead-flawless-guided-match-plan.md`](ongoing/spearhead-flawless-guided-match-plan.md). A stranger should finish a Spearhead game with the box and the app, without the core rules for turn order.
+
+**Do not do this in 1.0:**
+
+- Ungate 40k 11e, Combat Patrol, StarCraft, Lists (Muster), or Rules Q&A
+- Grow paints, add a list builder, or start another game mode
+- Treat Players Hub as shipped — it is on in Debug only (`-enable_players_hub` in Release)
+
+Code already hides the gated modes. [`Support/ReleaseSurface.swift`](Support/ReleaseSurface.swift) is the switch. Dogfood with `-enable_full_product_surface`. Hide unfinished UI there. Do not delete bundled JSON.
+
+**When docs disagree, trust this order:** `ReleaseSurface.swift`, then [`docs/release/status.md`](docs/release/status.md), then [`docs/feature-inventory.md`](docs/feature-inventory.md). Older TestFlight notes (builds 6–10, and parts of build 11), [`FutureIdeas/`](FutureIdeas/), and the 40k launch plan describe earlier scope. They are not the current surface. Parked rows in [`ongoing/README.md`](ongoing/README.md) are not tasks.
+
 ## 1.0.0 release surface (read first)
 
-**Shipped:** Spearhead / AoS only for play, guided match, rules, settings guides. **Models is not game-system gated.**
+**Shipped:** Spearhead play, rules, and settings guides, plus Models (collection and paints). **Gated for 1.0:** 40k, Combat Patrol, StarCraft, Lists, Rules Q&A. Do not ungate them in this release.
 
 | Doc | Purpose |
 |-----|---------|

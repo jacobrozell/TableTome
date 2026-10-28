@@ -61,7 +61,7 @@ Before ungating 40k, Combat Patrol, StarCraft, Lists, or Rules Q&A, complete the
 |-------|-------|
 | Target release | 1.0.0 |
 | Distribution phase | TestFlight → App Review |
-| Last verified | 2026-07-01 |
+| Last verified | 2026-10-28 |
 | Branch | release/1.0.0 |
 | Code paths | `Support/ReleaseSurface.swift` |
 | Release status doc | `docs/release/status.md` |

@@ -95,6 +95,7 @@ struct RootTabView: View {
                 }
             }
             AppearancePreferenceStorage.migrateFromHobbyConfigurationIfNeeded(modelContext)
+            PaintStore.backfillCustomSwatchesIfNeeded(in: modelContext)
         }
         .onChange(of: router.selectedTab) { oldTab, newTab in
             guard oldTab != newTab else { return }

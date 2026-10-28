@@ -1,8 +1,8 @@
 # TestFlight — 1.0.0 (6)
 
-> **Superseded by [testflight-1.0.0-build-8.md](testflight-1.0.0-build-8.md)** — kept for history.
+> **Historical.** Current 1.0 is Spearhead play, collection, and paints — see [status.md](status.md).
 
-**Branch:** `release/1.0.0` · **Scope:** Spearhead + 40k 11e + Combat Patrol (10e rules)
+**Branch:** `release/1.0.0` · **Scope at the time:** Spearhead + 40k 11e + Combat Patrol (10e rules)
 
 ## What to test
 

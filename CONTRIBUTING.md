@@ -29,7 +29,7 @@ Full code map: [`docs/development/code-map.md`](docs/development/code-map.md)
 1. **Spec-first:** No user-visible behavior without an authoritative spec in `specs/`.
 2. **Test-first for domain:** Pure logic and ViewModels get unit tests before UI polish.
 3. **Regenerate Xcode project:** Run `xcodegen generate` after `project.yml` changes. Do not commit `.xcodeproj`.
-4. **Release surface:** Gate unfinished UI via `Support/ReleaseSurface.swift` — hide, don't delete. Current target: **1.0.0 TestFlight** ([docs/release/status.md](docs/release/status.md)).
+4. **Release surface:** Gate unfinished UI via `Support/ReleaseSurface.swift` — hide, don't delete. **1.0 is Spearhead play, collection, and paints.** Do not ungate 40k, Combat Patrol, StarCraft, Lists, or Rules Q&A. See [AGENTS.md](AGENTS.md).
 5. **Accessibility:** VoiceOver labels, 44pt targets, Dynamic Type on all new controls.
 6. **Localization:** User-facing strings via `String(localized:)` / `Localizable.xcstrings`.
 7. **Analytics:** No PII in logs. Follow [`docs/development/playbooks/add-analytics-event.md`](docs/development/playbooks/add-analytics-event.md).

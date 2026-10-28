@@ -1,6 +1,8 @@
 # Tabletome — game mode product scope
 
-**Last updated:** 2026-06-26
+**Last updated:** 2026-10-28
+
+**1.0 store surface (locked):** Spearhead guided play, plus Models (collection and paints). 40k 11e, Combat Patrol, and StarCraft stay gated in this binary. Combat Patrol is a later release in this same app, not 1.0.
 
 This is the intended support matrix for play modes. **Edition** and **format** are different axes — Combat Patrol is a **10th Edition format**, not “40k lite 11e.”
 
@@ -10,7 +12,7 @@ This is the intended support matrix for play modes. **Edition** and **format** a
 
 | Franchise | Mode | `GameSystemId` | Rules | Release today |
 |-----------|------|----------------|-------|---------------|
-| **Age of Sigmar** | Spearhead | `aos-spearhead` | AoS 4e Spearhead (starter boxes) | ✅ **1.0.0 shipped** |
+| **Age of Sigmar** | Spearhead | `aos-spearhead` | AoS 4e Spearhead (starter boxes) | ✅ **1.0.0 play surface** |
 | **Age of Sigmar** | Full / standard | — (future) | Battletomes, matched play | 📋 Planned |
 | **Warhammer 40,000** | Full 11th Edition | `wh40k-11e` | 11e core — Armageddon, Battleforces, matched play | 🔒 Gated (post-1.0) |
 | **Warhammer 40,000** | Combat Patrol | `wh40k-10e-cp` | **10th Edition** patrol format (box-set missions) | 🔒 Gated (post-1.0) |

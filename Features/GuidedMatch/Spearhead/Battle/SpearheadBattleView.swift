@@ -301,7 +301,7 @@ struct SpearheadBattleView: View {
         guard !dismissedBattleCompleteGuide, viewModel.currentGuideStep != nil else { return false }
         if let step = viewModel.currentGuideStep {
             switch step.kind {
-            case .deployment, .scSetup, .wh40kSetup, .cpSetup:
+            case .deployment, .scSetup, .wh40kSetup, .cpSetup, .turnPhase:
                 return false
             default:
                 break

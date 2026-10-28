@@ -35,14 +35,12 @@ What the **default release** build actually exposes (no launch args). Keep listi
 | Surface | Reality | Listing must NOT imply |
 |---------|---------|------------------------|
 | **Tabs** | Models, Play, Rules, Settings (4) | a Lists/army-builder tab |
-| **Game systems** | Spearhead, 40k 11e, Combat Patrol 10e (3) | StarCraft, full 10e matched play |
+| **Game systems** | Spearhead only | 40k 11e, Combat Patrol, StarCraft, full 10e matched play |
 | **Spearhead** | 48 armies / 24 factions selectable; 1 built-in starter matchup | — |
-| **40k 11e** | 6 fully-rostered armies (Armageddon + Battleforces); 1 starter matchup | "build any list / any faction" — **no list editor in 1.0** |
-| **Combat Patrol** | All 23 patrol boxes w/ datasheets; 6 missions; 1 starter matchup | that it's 11e |
 | **Rules tab** | Section browse + filter + text **search** + glossary | a full warscroll/unit search index (that's the gated `AppSearchView`) |
 | **Models** | Collection CRUD + painting-stage pipeline + **Paints inventory** + CSV backup | — |
 
-**Gated, do not mention:** Army Lists (Muster), StarCraft TMG, Rules Q&A assistant.
+**Gated, do not mention:** 40k 11e, Combat Patrol, StarCraft TMG, Army Lists (Muster), Rules Q&A assistant.
 
 ---
 
@@ -89,21 +87,18 @@ Learn and play at the table
 Editable without a new build.
 
 ```
-Offline companion for Age of Sigmar Spearhead, Warhammer 40,000 11th Edition, and all 23 Combat Patrol boxes. Guided setup, phase tracker, rules reference — no account.
+Offline companion for Age of Sigmar Spearhead. Guided setup, phase tracker, rules lookup, and a model and paint shelf — no account.
 ```
-
-(168 characters)
 
 ---
 
 ## Description
 
 ```
-Tabletome is an offline companion for Warhammer tabletop games — built for the table, not the bookshelf. Pick your starter box, follow step-by-step setup, look up rules mid-game, and track every turn without an account or internet connection.
+Tabletome is an offline companion for Age of Sigmar Spearhead — built for the table, not the bookshelf. Open your starter box, follow step-by-step setup, look up rules mid-game, and track every turn without an account or internet connection.
 
 NOT SURE WHERE TO START
-• "What did you buy?" picker matches your box to the right guide
-• Box identifier and wrong-guide warnings keep new players on track
+• Getting Started walks a first Spearhead game
 • Preview a Turn — watch a full round play out before your first game
 
 WHAT'S IN 1.0
@@ -113,22 +108,11 @@ Age of Sigmar: Spearhead
 • 48 ready-to-play armies across 24 factions in Guided Match
 • Phase-by-phase battle tracker with combat tools and Unit Focus
 
-Warhammer 40,000 — 11th Edition
-• Full 11e guide with Armageddon and Battleforce starter armies
-• Guided Match setup, deployment checklist, and battle tracker
-• Combat resolver for hit, wound, and save rolls at the table
-
-Warhammer 40,000 — Combat Patrol (10th Edition rules)
-• All 23 current Combat Patrol boxes with full unit datasheets
-• Patrol missions, enhancements, and a dedicated battle tracker
-• Not the same as 11th Edition full 40k — pick the guide that matches your box
-
 ALWAYS WITH YOU AT THE TABLE
 • Rules reference — browse, filter, and search with glossary links
 • Unit Focus — stats, weapons, and wound tracking one tap away
 • Match history — pick up where you left off
-• Models — track armies and painting progress between games
-• Optional nearby sync — pass match state between two devices on the same Wi‑Fi (peer-to-peer; nothing uploaded to a server)
+• Models — track armies, painting progress, and paints between games
 
 BUILT FOR PRIVACY
 • Works fully offline after install — guides, rules, and play tools
@@ -137,10 +121,10 @@ BUILT FOR PRIVACY
 • Your collection, match history, and game state stay on your device
 
 HOW TO START
-1. Open Play and choose the game that matches your starter box
+1. Open Play and start Spearhead
 2. Follow Getting Started or jump into Guided Match
 3. Use Rules anytime for quick lookups
-4. Track miniatures in Models between games
+4. Track miniatures and paints in Models between games
 
 NOT AFFILIATED
 Tabletome is an unofficial fan-made companion. Not affiliated with, endorsed by, or sponsored by Games Workshop Limited. Warhammer, Age of Sigmar, Warhammer 40,000, Spearhead, Combat Patrol, and all associated names are trademarks of Games Workshop Limited. Rules content is original explanation written for learning and play — not reproduced from official publications.
@@ -151,11 +135,9 @@ Tabletome is an unofficial fan-made companion. Not affiliated with, endorsed by,
 Use if you want a tighter listing above the fold.
 
 ```
-Offline Warhammer companion for Spearhead, 40k 11th Edition, and Combat Patrol (10th Edition patrol rules).
+Offline companion for Age of Sigmar Spearhead.
 
-Guided setup, phase tracker, combat resolver, rules search, and miniature collection — all on your device, no account required.
-
-Pick the guide that matches your starter box. Combat Patrol uses 10th Edition patrol rules; full 40k uses 11th Edition.
+Guided setup, phase tracker, combat resolver, rules lookup, and a model and paint shelf — all on your device, no account required.
 
 Unofficial fan app — not affiliated with Games Workshop.
 ```
@@ -167,10 +149,8 @@ Unofficial fan app — not affiliated with Games Workshop.
 Comma-separated, no spaces after commas. Use single tokens where possible — Apple auto-combines keyword-field words (and the app name) into phrases, so splitting "combat patrol" → `combat,patrol` saves a character and still matches the phrase. Don't repeat the app name ("Tabletome") or stopwords ("of", "the").
 
 ```
-warhammer,40k,wh40k,aos,sigmar,spearhead,combat,patrol,wargame,miniatures,tabletop,rules,tracker
+warhammer,aos,sigmar,spearhead,wargame,miniatures,painting,tabletop,rules,tracker
 ```
-
-(96 characters — yields combos like "age of sigmar", "combat patrol", "battle tracker", "warhammer 40k")
 
 **Alternates to swap in:** `painting`, `roster`, `dice`, `turn`, `phase`, `guided`, `40000`
 
@@ -182,11 +162,9 @@ warhammer,40k,wh40k,aos,sigmar,spearhead,combat,patrol,wargame,miniatures,tablet
 Initial release.
 
 • Age of Sigmar: Spearhead — Getting Started, Guided Match, battle tracker, and combat tools
-• Warhammer 40,000 11th Edition — starter armies, deployment checklist, combat resolver
-• Combat Patrol — 10th Edition patrol rules, missions, and battle tracker (separate from 11e)
 • Rules reference with search and glossary
-• Models collection for armies and paint progress
-• Match history and optional nearby device sync
+• Models collection and paints
+• Match history
 • iPhone and iPad — light and dark mode, VoiceOver, Dynamic Type
 • Anonymous diagnostics in Release builds (Firebase Analytics + Crashlytics; no PII) — see Privacy Policy
 ```
@@ -248,19 +226,17 @@ Not required — no login, no server, no paywall.
 ### Notes for reviewer
 
 ```
-Tabletome is an offline fan companion for Warhammer tabletop games (Age of Sigmar: Spearhead, Warhammer 40,000 11th Edition, and Combat Patrol using 10th Edition patrol rules).
+Tabletome is an offline fan companion for Age of Sigmar Spearhead, plus a model collection and paint shelf.
 
 No login or network is required for core features. To test:
 1. Launch the app — complete or skip onboarding.
-2. Play tab → tap "Age of Sigmar: Spearhead" → open Getting Started or Guided Match.
+2. Play tab → start Spearhead Getting Started or Guided Match.
 3. Guided Match → Use Starter Matchup → Battle tab for phase tracker and combat resolver.
 4. Rules tab → search for a term (e.g. "rend" or "pile-in").
-5. Models tab → Load sample data to view collection UI.
+5. Models tab → Load sample data, then open Paints.
 6. Settings → Privacy / Support open Safari to GitHub Pages; About section shows GW disclaimer.
 
-Combat Patrol is a separate game mode from 11th Edition full 40k — Play → Warhammer 40,000 sub-picker → Combat Patrol.
-
-Optional nearby match sync: Play → Guided Match → sync icon; uses local Wi‑Fi/Bluetooth peer-to-peer only when both players opt in. iOS may prompt for local network permission.
+Play shows Spearhead only. Other game modes are not in this build.
 
 Release builds include Google Firebase Analytics and Crashlytics (allowlisted events, no army names or player PII). Debug builds from Xcode typically do not send telemetry. Privacy Policy URL describes diagnostics.
 
@@ -275,9 +251,8 @@ Full shot list: [`screenshot-script.md`](screenshot-script.md).
 
 **Rules for App Store assets:**
 - No Games Workshop box art, logos, or trademarked product photography
-- No gated tabs (Lists/Muster) or StarCraft in 1.0 shots — **Paints** (Models segment) is OK
+- No 40k, Combat Patrol, StarCraft, or Lists in 1.0 shots. Collection and paints are in.
 - Frame 4 must show combat resolver — not "coming soon"
-- Label Combat Patrol frames as 10th Edition if shown
 
 ### Recommended 6.7" iPhone set (8 frames)
 
@@ -287,7 +262,7 @@ Full shot list: [`screenshot-script.md`](screenshot-script.md).
 4. Battle tracker Combat — *Phase coaching and combat tools at the table*
 5. Unit Focus — *Stats, weapons, and wounds — one tap away*
 6. Rules search — *Look up rules without leaving the game*
-7. 40k 11e guide — *Full 40k — 11th Edition ready*
+7. Models paints — *Paints live with the collection*
 8. Models collection — *Track miniatures between games*
 
 ### iPad
@@ -335,13 +310,12 @@ Same narrative order; capture split views for Guided Match, battle tracker, and 
 ## TestFlight — Beta App Description
 
 ```
-Tabletome is an offline Warhammer tabletop companion — Spearhead, 40k 11th Edition, and Combat Patrol (10th Edition patrol rules).
+Tabletome is an offline companion for Age of Sigmar Spearhead, plus a model collection and paint shelf.
 
 In this build:
-• Guided Match with starter armies and battle phase tracker
-• Combat resolver, rules search, and unit reference
-• Models collection and match history
-• Optional nearby sync between two devices
+• Guided Match with starter armies and a battle phase tracker
+• Combat resolver, rules lookup, and unit reference
+• Models collection, paints, and match history
 
 Please report crashes, VoiceOver issues, and any rules wording that feels wrong. Not affiliated with Games Workshop.
 ```
@@ -353,18 +327,16 @@ Please report crashes, VoiceOver issues, and any rules wording that feels wrong.
 See also [`testflight-1.0.0-build-11.md`](testflight-1.0.0-build-11.md).
 
 ```
-Thanks for testing Tabletome 1.0.0 (11)!
+Thanks for testing Tabletome 1.0.0!
 
 Please try:
-1. First launch — onboarding game picker; confirm Spearhead, Combat Patrol, and 40k 11e are visible (no StarCraft).
-2. Spearhead — Getting Started steps + Guided Match with starter matchup + Battle tab.
-3. 40k 11e — guide, Guided Match (Armageddon), combat resolver on Battle tab.
-4. Combat Patrol — confirm copy says 10th Edition rules; SM vs Tyranids starter matchup.
-5. Rules — search + category filter for each active game system.
-6. Models — add army or load sample data.
-7. Offline — airplane mode on Play + Rules.
-8. iPad — split layouts for Collection and Guided Match.
-9. Accessibility — VoiceOver on Play/Rules; Dynamic Type at AXXXL on step detail.
+1. First launch — Spearhead only. 40k, Combat Patrol, and StarCraft should not appear.
+2. Spearhead — Getting Started, Guided Match with the starter matchup, Battle tab through victory, then leave and resume.
+3. Rules — search a Spearhead term (for example "rend").
+4. Models — load sample data, then open Paints.
+5. Offline — airplane mode on Play and Rules.
+6. iPad — split layouts for Collection and Guided Match.
+7. Accessibility — VoiceOver on Play and Rules; Dynamic Type at AXXXL on a step.
 
 Release builds send anonymous usage and crash diagnostics (Firebase) — no personal content from your collection.
 

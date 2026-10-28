@@ -12,6 +12,8 @@ globs:
 
 **Start every session:** read [`AGENTS.md`](../../AGENTS.md) and [`docs/development/code-map.md`](../../docs/development/code-map.md).
 
+**1.0 (locked 28 Oct 2026):** Spearhead guided play, collection, and paints. 40k, Combat Patrol, StarCraft, Lists, and Rules Q&A stay gated in `Support/ReleaseSurface.swift`. Do not ungate them. Do not grow paints. Active work is [`ongoing/spearhead-flawless-guided-match-plan.md`](../../ongoing/spearhead-flawless-guided-match-plan.md). If an older doc says those modes ship, it is stale.
+
 ## Documentation
 
 | Need | Path |

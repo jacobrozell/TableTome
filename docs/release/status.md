@@ -9,27 +9,31 @@
 
 ## 1.0.0 scope
 
-Shipped in TestFlight **without launch arguments**:
+Locked 28 Oct 2026. Code is [`Support/ReleaseSurface.swift`](../../Support/ReleaseSurface.swift).
 
-- **Tabs:** Models (Collection only), Play, Rules, Settings
-- **Game systems:** Age of Sigmar Spearhead, Warhammer 40,000 11th Edition, **Combat Patrol (10th Edition rules)**
-- **Play:** Guided Match, battle tracker, match history, combat resolver (Spearhead + 11e + CP 10e)
+Shipped **without launch arguments**:
 
-Gated until after 1.0.0 polish (see [ReleaseSurfaceSpec.md](../../specs/ReleaseSurfaceSpec.md)):
+- **Play:** Age of Sigmar Spearhead only — Guided Match, battle tracker, victory, resume, match history, Spearhead combat resolver
+- **Rules:** Spearhead rules and glossary
+- **Models:** Collection and paints (not game-system gated)
+- **Tabs:** Models, Play, Rules, Settings
 
-- Lists (Muster), Paints, StarCraft TMG, Rules Q&A assistant
+Gated until a later release (dogfood with `-enable_full_product_surface`):
 
-**Not planned:** Full 10th Edition matched play — see [PRODUCT_SCOPE.md](../game-modes/PRODUCT_SCOPE.md).
+- Warhammer 40,000 11th Edition, Combat Patrol, StarCraft TMG
+- Lists (Muster), Rules Q&A, Players Hub (on in Debug only)
 
-**QA:** Combat Patrol manual pass — [gated-features-testing.md](gated-features-testing.md) §3 (content ships; sign-off pending).
+**Not planned:** Full 10th Edition matched play — see [PRODUCT_SCOPE.md](../game-modes/PRODUCT_SCOPE.md). Combat Patrol is a later Tabletome release, not 1.0.
+
+**Work now:** Spearhead guided play in [`ongoing/spearhead-flawless-guided-match-plan.md`](../../ongoing/spearhead-flawless-guided-match-plan.md). Do not ungate other modes. Do not grow paints. Agent entry: [`AGENTS.md`](../../AGENTS.md).
+
+**QA:** Spearhead path only for this submit. Gated modes stay in [gated-features-testing.md](gated-features-testing.md).
 
 **Telemetry:** Firebase Analytics + Crashlytics in Release/TestFlight (allowlisted events; privacy policy updated 2026-06-29). See [firebase-analytics.md](firebase-analytics.md).
 
 ## Dogfood / internal builds
 
-Add `-enable_full_product_surface` in **Edit Scheme → Run → Arguments** to unlock Lists, Paints, StarCraft, Rules Q&A, etc.
-
-`-enable_combat_patrol` is a no-op when CP is already in release defaults (kept for older test schemes).
+Add `-enable_full_product_surface` in **Edit Scheme → Run → Arguments** to unlock 40k, Combat Patrol, StarCraft, Lists, and Rules Q&A. Paints already ship.
 
 ## Related docs
 

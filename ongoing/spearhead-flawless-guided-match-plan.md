@@ -1,9 +1,9 @@
 # Spearhead flawless Guided Match — master plan
 
-**Status:** Active — implementation backlog  
-**Last updated:** 2026-07-01  
+**Status:** Active — the only product work for 1.0  
+**Last updated:** 2026-10-28  
 **Audience:** Jacob and anyone who bought a Spearhead box, has never played a wargame, and wants the phone to feel like a friend at the table — not a rules encyclopedia.  
-**Scope:** Age of Sigmar Spearhead only for **v1.0.0**. All other game modes gated via `ReleaseSurface` — ship post-1.0. See [`docs/release/1.0.0-release-surface.md`](../docs/release/1.0.0-release-surface.md).
+**Scope:** Age of Sigmar Spearhead guided play for **v1.0.0**, plus the collection and paints that already ship. Do not grow paints. Do not ungate 40k, Combat Patrol, StarCraft, Lists, or Rules Q&A. See [`AGENTS.md`](../AGENTS.md).
 
 **Related docs**
 

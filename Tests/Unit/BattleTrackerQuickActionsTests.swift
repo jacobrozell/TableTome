@@ -67,8 +67,14 @@ final class BattleTrackerQuickActionsTests: XCTestCase {
             shootInCombatEligibleCount: 0,
             activePlayerName: "Alex"
         )
-        XCTAssertTrue(actions.contains { $0.id == "shooting-units" })
-        XCTAssertTrue(actions.contains { $0.id == "resolve-combat" })
-        XCTAssertFalse(actions.contains { $0.id == "shooting-reminder" })
+        if ReleaseSurface.showsCombatResolver(for: "wh40k-11e") {
+            XCTAssertTrue(actions.contains { $0.id == "shooting-units" })
+            XCTAssertTrue(actions.contains { $0.id == "resolve-combat" })
+            XCTAssertFalse(actions.contains { $0.id == "shooting-reminder" })
+        } else {
+            XCTAssertFalse(actions.contains { $0.id == "shooting-units" })
+            XCTAssertFalse(actions.contains { $0.id == "resolve-combat" })
+            XCTAssertTrue(actions.contains { $0.id == "shooting-reminder" })
+        }
     }
 }

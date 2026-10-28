@@ -49,14 +49,34 @@ final class PlayContinuationResolverTests: XCTestCase {
         XCTAssertNil(PlayContinuationResolver.current())
     }
 
-    func testOpenGuideWhenChoiceRecordedAndGuideNotOpenedForNonGuidedMatchGame() {
+    func testGatedCombatPatrolChoiceDoesNotReplaceSpearheadHome() {
         let combatPatrolId = GameSystemId.wh40k10eCp.rawValue
         FirstSessionStore.recordOnboardingChoice(gameSystemId: combatPatrolId)
 
-        let continuation = PlayContinuationResolver.current()
+        if ReleaseSurface.isPlayHomeGameSystemVisible(combatPatrolId) {
+            XCTAssertEqual(PlayContinuationResolver.current()?.gameSystemId, combatPatrolId)
+            return
+        }
+        XCTAssertNil(PlayContinuationResolver.current())
+    }
 
-        XCTAssertEqual(continuation?.destination, .gameGuide)
-        XCTAssertEqual(continuation?.gameSystemId, combatPatrolId)
+    func testGatedCombatPatrolProgressDoesNotResumeOnPlayHome() {
+        let combatPatrolId = GameSystemId.wh40k10eCp.rawValue
+        var state = GuidedMatchState()
+        state.playerOne.armyId = "space-marines"
+        state.playerTwo.armyId = "tyranids"
+        MatchSetupStore.save(state, gameSystemId: combatPatrolId)
+        var tracker = BattleTrackerStore.load(gameSystemId: combatPatrolId)
+        tracker.battleRound = 2
+        tracker.currentPhase = .shooting
+        BattleTrackerStore.save(tracker, gameSystemId: combatPatrolId)
+
+        let continuation = PlayContinuationResolver.current()
+        if ReleaseSurface.isPlayHomeGameSystemVisible(combatPatrolId) {
+            XCTAssertEqual(continuation?.gameSystemId, combatPatrolId)
+        } else {
+            XCTAssertNil(continuation)
+        }
     }
 
     func testResumeGuidedMatchTakesPriorityOverOpenGuide() {

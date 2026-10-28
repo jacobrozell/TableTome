@@ -1,6 +1,6 @@
 # App Store Screenshot Script — 1.0.0
 
-Shot list and capture workflow for **TestFlight / App Store** marketing. Scope matches [status.md](status.md): Spearhead + 40k 11e + Combat Patrol (10e rules), Models / Play / Rules / Settings.
+Shot list and capture workflow for **TestFlight / App Store** marketing. Scope matches [status.md](status.md): Spearhead play, collection, and paints. Do not shoot 40k or Combat Patrol for this submit.
 
 **Deliverable matrix:** 8 frames × 4 variants = **32 captures**
 
@@ -17,7 +17,7 @@ Apple accepts 6.7″ iPhone and 12.9″/13″ iPad sizes; the simulators above m
 
 ## Pre-flight
 
-1. **Release build** (or Run scheme with **no** `-enable_full_product_surface`). Confirm Play shows Spearhead, 40k 11e, and Combat Patrol (via 40k sub-picker or All games).
+1. **Release build** (or Run scheme with **no** `-enable_full_product_surface`). Confirm Play shows Spearhead only. Models shows Collection and Paints.
 2. **Fresh-ish state:** delete app from simulator, or Settings → Reset guide progress + clear match history if re-shooting battle frames.
 3. **Dynamic Type:** Settings → **Default** (not AXXXL). Screenshots should look like a typical user.
 4. **Locale:** English (U.S.) unless localizing separately.
@@ -75,13 +75,13 @@ Each frame includes a **caption** (App Store overlay text), **setup**, and **idi
 
 **Caption:** *From starter box to first battle*
 
-**Why:** Shows welcome copy, new-player chooser, and both shipped game systems in one glance.
+**Why:** Shows the Spearhead start path. One game on the home.
 
 **Setup**
 
 1. Launch with `-skip_onboarding` + theme arg.
 2. Play tab → ensure **Welcome** + **New to wargaming?** chooser visible (not a “Continue” card from an in-progress match).
-3. Scroll so **All games** lists Spearhead and Warhammer 40,000 with taglines; both rows visible.
+3. Confirm there is no 40k, Combat Patrol, or StarCraft row.
 
 **Idiom**
 
@@ -203,19 +203,18 @@ Each frame includes a **caption** (App Store overlay text), **setup**, and **idi
 
 ---
 
-### Frame 7 — Warhammer 40,000 11e guide
+### Frame 7 — Models paints
 
-**Caption:** *Full 40k — 11th Edition ready*
+**Caption:** *Paints live with the collection*
 
-**Why:** Second shipped system; **New edition** badge if visible in release surface.
+**Why:** Paints ship in 1.0. 40k and Combat Patrol do not — do not capture those guides.
 
 **Setup**
 
-1. Play → **Warhammer 40,000** row → **Start here** card.
-2. Frame **New to Warhammer 40,000** track (steps 1–3) and **What's New in 11e** link if badge shows.
-3. Avoid Combat Patrol as the focal point for this frame — use the 11e guide path. CP has its own guide row via the 40k sub-picker.
+1. Models tab → **Paints**.
+2. Show the inventory with at least one catalog swatch, not an empty state.
 
-**Identifier:** `guide.wh40k.gettingStarted`, `home.gameSystem.wh40k-11e`
+**Identifier:** paints inventory in Models
 
 ---
 
@@ -223,7 +222,7 @@ Each frame includes a **caption** (App Store overlay text), **setup**, and **idi
 
 **Caption:** *Track miniatures between games*
 
-**Why:** Shows hobby pillar without gated Paints segment.
+**Why:** Collection ships beside Spearhead play.
 
 **Setup**
 
@@ -326,7 +325,7 @@ Store outputs under `marketing-screenshots/raw/` and `marketing-screenshots/ipad
 
 - [ ] No gated tabs (Lists, Paints) visible in tab bar
 - [ ] No StarCraft row in All games (1.0.0 release surface)
-- [ ] Combat Patrol visible only when framing CP assets — not accidental in 11e-only shots
+- [ ] No 40k or Combat Patrol frames in the 1.0 set
 - [ ] No “coming soon” or empty resolver states in Frame 4
 - [ ] Dark mode: semantic colors readable (cards, secondary text)
 - [ ] iPad Frame 8: split view populated, not empty sidebar

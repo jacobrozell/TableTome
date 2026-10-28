@@ -2,7 +2,9 @@
 
 Hub for humans and agents. Repo entry point: [`README.md`](../README.md) · Agent quick start: [`AGENTS.md`](../AGENTS.md).
 
-**Last updated:** 2026-06-29
+**Last updated:** 2026-10-28
+
+**Where we are:** TestFlight 1.0.0 (build 11). Spearhead guided play, collection, and paints. Other modes stay gated. Start at [`AGENTS.md`](../AGENTS.md). If a doc disagrees, trust `Support/ReleaseSurface.swift`, then [`release/status.md`](release/status.md).
 
 ---
 
@@ -28,7 +30,9 @@ Hub for humans and agents. Repo entry point: [`README.md`](../README.md) · Agen
 | [../specs/ReleaseSurfaceSpec.md](../specs/ReleaseSurfaceSpec.md) | Feature gating contract |
 | [game-modes/](game-modes/) | Per-mode verification, content, launch plans |
 
-**Conflict order:** ArchitectureSpec → system specs → feature specs → feature-inventory → brainstorm.
+**Conflict order for behavior:** ArchitectureSpec → system specs → feature specs → feature-inventory → brainstorm.
+
+**Conflict order for what ships:** `Support/ReleaseSurface.swift` → [`release/status.md`](release/status.md) → feature-inventory. TestFlight notes before build 11, `FutureIdeas/`, and mode launch plans lose.
 
 ---
 

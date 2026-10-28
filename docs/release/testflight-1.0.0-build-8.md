@@ -1,6 +1,8 @@
 # TestFlight — 1.0.0 (8)
 
-**Branch:** `release/1.0.0` · **Scope:** Spearhead + 40k 11e + Combat Patrol (10e rules)
+**Branch:** `release/1.0.0` · **Historical.** This note describes an older scope. Current 1.0 is Spearhead play, collection, and paints — see [status.md](status.md).
+
+**Scope at the time:** Spearhead + 40k 11e + Combat Patrol (10e rules)
 
 ## What to test
 

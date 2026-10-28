@@ -2,7 +2,7 @@
 
 Non-authoritative backlog. Promote sections to `specs/` as behavior locks.
 
-**Status:** Approved direction (2026-06-17)
+**Status:** Parked 28 Oct 2026. 1.0 does not ship 11e. Decision 1 below is superseded: 11e stays behind `-enable_full_product_surface` until Spearhead is submitted and players ask.
 
 **Launch:** Armageddon in stores Saturday **June 20, 2026**. Core rules PDF already published on Warhammer Community.
 

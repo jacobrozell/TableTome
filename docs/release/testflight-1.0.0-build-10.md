@@ -1,8 +1,8 @@
 # TestFlight — 1.0.0 (10)
 
-> **Superseded by** [`testflight-1.0.0-build-11.md`](testflight-1.0.0-build-11.md) — Paints tab + feedback form.
+> **Superseded.** Current 1.0 is Spearhead play, collection, and paints — see [status.md](status.md). This note’s 40k and Combat Patrol scope is historical.
 
-**Branch:** `release/1.0.0` · **Scope:** Spearhead + 40k 11e + Combat Patrol (10e rules)
+**Branch:** `release/1.0.0` · **Scope at the time:** Spearhead + 40k 11e + Combat Patrol (10e rules)
 
 ## What to test
 

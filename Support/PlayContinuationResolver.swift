@@ -27,6 +27,7 @@ enum PlayContinuationResolver {
             return resume
         }
         if let choice = FirstSessionStore.onboardingChoice,
+           ReleaseSurface.isPlayHomeGameSystemVisible(choice),
            !FirstSessionStore.hasOpenedGuidedMatch,
            !FirstSessionStore.hasOpenedGameGuide {
             if ReleaseSurface.showsGuidedMatch(for: choice) {
@@ -65,7 +66,7 @@ enum PlayContinuationResolver {
         if let choice = FirstSessionStore.onboardingChoice {
             ids.insert(choice)
         }
-        return Array(ids)
+        return ids.filter { ReleaseSurface.isPlayHomeGameSystemVisible($0) }
     }
 
     private static func resumeScore(

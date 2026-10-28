@@ -1,5 +1,7 @@
 # Reviewer-Readiness Handoff — Tabletome
 
+> **Stale on scope (28 Oct 2026).** 1.0 is Spearhead play, collection, and paints. 40k does not ship. Start at [`AGENTS.md`](../AGENTS.md) and [`docs/release/status.md`](../docs/release/status.md). The checklist below is a June 2026 snapshot.
+
 Handoff for continuing **App Store reviewer-readiness** before promoting 1.0.0 from TestFlight to App Review. Pairs with [AppStoreReviewAudit.md](AppStoreReviewAudit.md).
 
 > Last updated: 2026-06-22 · Stage: TestFlight (1.0.0 build 5) · branch `release/1.0.0`

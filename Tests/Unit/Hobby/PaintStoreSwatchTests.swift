@@ -161,6 +161,34 @@ final class PaintStoreSwatchTests: XCTestCase {
         XCTAssertEqual(PaintStore.linkedUnitCount(source: "", armies: [first, second]), 0)
     }
 
+    func testBackfillKeepsLegacyCustomColour() throws {
+        context.insert(
+            HobbyPaint(
+                name: "Custom Mix", type: "Base", swatchHex: "#ff00ff",
+                usesCustomSwatch: false, qty: 1
+            )
+        )
+        context.insert(
+            HobbyPaint(
+                name: "Kantor Blue", type: "Base", swatchHex: "#002158",
+                usesCustomSwatch: false, qty: 1, brand: "Citadel"
+            )
+        )
+        try context.save()
+
+        XCTAssertEqual(PaintStore.backfillCustomSwatchesIfNeeded(in: context), 1)
+
+        let paints = try context.fetch(FetchDescriptor<HobbyPaint>())
+        let custom = try XCTUnwrap(paints.first { $0.name == "Custom Mix" })
+        let kantor = try XCTUnwrap(paints.first { $0.name == "Kantor Blue" })
+        XCTAssertTrue(custom.usesCustomSwatch)
+        XCTAssertEqual(custom.swatchHex, "#ff00ff")
+        XCTAssertFalse(kantor.usesCustomSwatch)
+
+        XCTAssertEqual(PaintStore.refreshCatalogColors(in: context), 0)
+        XCTAssertEqual(custom.swatchHex, "#ff00ff")
+    }
+
     func testRefreshCatalogColorsUpdatesStaleSwatches() throws {
         context.insert(
             HobbyPaint(

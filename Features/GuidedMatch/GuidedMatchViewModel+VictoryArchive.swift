@@ -9,15 +9,25 @@ extension GuidedMatchViewModel {
         playerOneVictoryPoints: Int,
         playerTwoVictoryPoints: Int
     ) async {
-        guard !hasArchivedCurrentVictory else { return }
         guard ReleaseSurface.showsMatchHistory else { return }
+        guard catalog != nil else { return }
+        let isScoreUpdate = hasArchivedCurrentVictory
+        let recordId = archivedVictoryRecordId ?? UUID()
         do {
+            let log = isScoreUpdate
+                ? archivedVictoryLog
+                : MatchLogRecorder.drainForArchive(gameSystemId: gameSystemId, status: .completed)
             try await archiveCurrentMatch(
                 status: .completed,
                 playerOneVictoryPoints: playerOneVictoryPoints,
                 playerTwoVictoryPoints: playerTwoVictoryPoints,
-                repository: repository
+                repository: repository,
+                recordId: recordId,
+                preservedLog: log
             )
+            archivedVictoryRecordId = recordId
+            archivedVictoryLog = log
+            guard !isScoreUpdate else { return }
             if gameSystemId == .aosSpearhead, let profileStore {
                 try? await profileStore.recordRematchPreferences(
                     playerOneProfileId: matchState.playerOne.profileId,
@@ -81,5 +91,7 @@ extension GuidedMatchViewModel {
 
     func clearVictoryArchiveState() {
         hasArchivedCurrentVictory = false
+        archivedVictoryRecordId = nil
+        archivedVictoryLog = []
     }
 }

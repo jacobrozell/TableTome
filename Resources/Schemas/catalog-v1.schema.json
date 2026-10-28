@@ -33,7 +33,7 @@
         "alliance": { "type": "string" },
         "armies": {
           "type": "array",
-          "minItems": 1,
+          "description": "Box armies for this faction. Empty when the faction is listed but no box roster is bundled yet. Tests require the full faction index (for example 23 Warhammer 40,000 factions) even when only some have battleforces.",
           "items": { "$ref": "#/definitions/army" }
         }
       }

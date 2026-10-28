@@ -139,15 +139,6 @@ struct MatchStepArmyOptionsSection: View {
     }
 
     private var emptyArmyOptionsMessage: String {
-        switch viewModel.gameSystemId {
-        case .wh40k11e:
-            String(localized: "See your Munitorum Field Manual and box datasheets for detachment options.")
-        case .wh40k10eCp:
-            String(localized: "Choose from the options below — defaults are marked Recommended.")
-        case .scTmg:
-            String(localized: "Founders Edition armies ship as fixed lists — no extra options to pick.")
-        default:
-            String(localized: "See your faction's free Spearhead download for regiment and enhancement options.")
-        }
+        GameSystemPlayContext.context(for: viewModel.gameSystemId).copy.emptyLoadoutOptionsMessage
     }
 }

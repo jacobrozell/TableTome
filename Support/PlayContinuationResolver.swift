@@ -234,78 +234,22 @@ enum PlayContinuationResolver {
     }
 
     private static func openGuideButtonTitle(for gameSystemId: String) -> String {
-        switch gameSystemId {
-        case GameSystemId.aosSpearhead.rawValue:
-            return String(localized: "Open Spearhead guide")
-        case GameSystemId.wh40k10eCp.rawValue:
-            return String(localized: "Open Combat Patrol guide")
-        case GameSystemId.wh40k11e.rawValue:
-            return String(localized: "Open Warhammer 40,000 guide")
-        case GameSystemId.scTmg.rawValue:
-            return String(localized: "Open StarCraft guide")
-        default:
-            return String(localized: "Open game guide")
-        }
+        GameSystemRegistry.bundled.copy(for: gameSystemId)?.openGuideButtonTitle
+            ?? String(localized: "Open game guide")
     }
 
     private static func resumeGuidedMatchButtonTitle(for gameSystemId: GameSystemId) -> String {
-        switch gameSystemId {
-        case .aosSpearhead:
-            return String(localized: "Resume Spearhead match")
-        case .wh40k10eCp:
-            return String(localized: "Resume Combat Patrol match")
-        case .wh40k11e:
-            return String(localized: "Resume Warhammer 40,000 match")
-        case .scTmg:
-            return String(localized: "Resume StarCraft match")
-        }
+        GameSystemPlayContext.context(for: gameSystemId).copy.resumeMatchButtonTitle
     }
 
     private static func startGuidedMatchMessage(for gameSystemId: String, gameName: String) -> String {
-        switch gameSystemId {
-        case GameSystemId.aosSpearhead.rawValue:
-            return String(
-                localized: """
-                Tap below to open Guided Match. Use Starter Matchup to load both armies from your box, then follow setup step by step.
-                """
-            )
-        case GameSystemId.wh40k10eCp.rawValue:
-            return String(
-                localized: """
-                Tap below to open \(gameName) Guided Match — choose armies, run setup, then track your battle at the table.
-                """
-            )
-        case GameSystemId.wh40k11e.rawValue:
-            return String(
-                localized: """
-                Tap below to open \(gameName) Guided Match — setup steps and a battle tracker for your first game.
-                """
-            )
-        case GameSystemId.scTmg.rawValue:
-            return String(
-                localized: """
-                Tap below to open \(gameName) Guided Match — starter matchup, setup, and turn tracking.
-                """
-            )
-        default:
-            return String(
-                localized: """
-                Tap below to open Guided Match for \(gameName).
-                """
-            )
+        if let message = GameSystemRegistry.bundled.copy(for: gameSystemId)?.startGuidedMatchMessage {
+            return message
         }
+        return String(localized: "Tap below to open Guided Match for \(gameName).")
     }
 
     private static func startGuidedMatchButtonTitle(for gameSystemId: GameSystemId) -> String {
-        switch gameSystemId {
-        case .aosSpearhead:
-            return String(localized: "Start Spearhead match")
-        case .wh40k10eCp:
-            return String(localized: "Start Combat Patrol match")
-        case .wh40k11e:
-            return String(localized: "Start Warhammer 40,000 match")
-        case .scTmg:
-            return String(localized: "Start StarCraft match")
-        }
+        GameSystemPlayContext.context(for: gameSystemId).copy.startGuidedMatchButtonTitle
     }
 }

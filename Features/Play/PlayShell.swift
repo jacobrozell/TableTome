@@ -51,7 +51,7 @@ struct PlayShell: View {
                     onVictoryPresented: onVictoryPresented
                 )
             case .phasedRound:
-                if gameSystemId.isSpearhead {
+                if GameSystemPlayContext.context(for: gameSystemId).capabilities.showsBattleTacticDecks {
                     SpearheadBattleView(
                         gameSystemId: gameSystemId,
                         matchState: matchState,

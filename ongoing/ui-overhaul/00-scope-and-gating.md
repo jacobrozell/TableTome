@@ -19,9 +19,9 @@ Do this phase **first**, because it removes whole branches of UI from the 1.0 su
 4. Re-run both scripts. Both must exit 0.
 
 ### Acceptance
-- [ ] `Scripts/check_architecture_debt.sh` exits 0 with `switch_gameSystemId ≤ 21`.
-- [ ] `python3 Scripts/validate_content.py` exits 0.
-- [ ] Unit tests pass.
+- [x] `Scripts/check_architecture_debt.sh` exits 0 with `switch_gameSystemId ≤ 21`.
+- [x] `python3 Scripts/validate_content.py` exits 0.
+- [x] Unit tests pass.
 
 ---
 

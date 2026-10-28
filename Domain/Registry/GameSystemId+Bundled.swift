@@ -45,7 +45,22 @@ extension GameSystemId {
                     ),
                     displayName: String(localized: "Age of Sigmar Spearhead"),
                     searchPickerLabel: String(localized: "Age of Sigmar: Spearhead"),
-                    catalogLoadFailureMessage: String(localized: "Spearhead armies could not be loaded.")
+                    catalogLoadFailureMessage: String(localized: "Spearhead armies could not be loaded."),
+                    openGuideButtonTitle: String(localized: "Open Spearhead guide"),
+                    resumeMatchButtonTitle: String(localized: "Resume Spearhead match"),
+                    startGuidedMatchMessage: String(
+                        localized: """
+                        Tap below to open Guided Match. \
+                        Use Starter Matchup to load both armies from your box, then follow setup step by step.
+                        """
+                    ),
+                    startGuidedMatchButtonTitle: String(localized: "Start Spearhead match"),
+                    emptyLoadoutOptionsMessage: String(
+                        localized: "See your faction's free Spearhead download for regiment and enhancement options."
+                    ),
+                    setupStepsDetail: String(
+                        localized: "army pick, attacker roll, abilities, deployment, and battle"
+                    )
                 ),
                 victoryPointsScoring: .spearheadDefault,
                 catalogBundleName: "spearhead-catalog-v1",
@@ -93,7 +108,21 @@ extension GameSystemId {
                     ),
                     displayName: String(localized: "Warhammer 40,000"),
                     searchPickerLabel: String(localized: "Warhammer 40,000: 11th Edition"),
-                    catalogLoadFailureMessage: String(localized: "40k armies could not be loaded.")
+                    catalogLoadFailureMessage: String(localized: "40k armies could not be loaded."),
+                    openGuideButtonTitle: String(localized: "Open Warhammer 40,000 guide"),
+                    resumeMatchButtonTitle: String(localized: "Resume Warhammer 40,000 match"),
+                    startGuidedMatchMessage: String(
+                        localized: """
+                        Tap below to open Warhammer 40,000 Guided Match — setup steps and a battle tracker for your first game.
+                        """
+                    ),
+                    startGuidedMatchButtonTitle: String(localized: "Start Warhammer 40,000 match"),
+                    emptyLoadoutOptionsMessage: String(
+                        localized: "See your Munitorum Field Manual and box datasheets for detachment options."
+                    ),
+                    setupStepsDetail: String(
+                        localized: "army pick, attacker roll, dispositions, deployment, and battle"
+                    )
                 ),
                 victoryPointsScoring: .wh40k11e,
                 catalogBundleName: "wh40k-catalog-v1",
@@ -139,7 +168,22 @@ extension GameSystemId {
                     ),
                     displayName: String(localized: "Warhammer 40,000: Combat Patrol"),
                     searchPickerLabel: String(localized: "Combat Patrol (10th Edition rules)"),
-                    catalogLoadFailureMessage: String(localized: "Combat Patrol armies could not be loaded.")
+                    catalogLoadFailureMessage: String(localized: "Combat Patrol armies could not be loaded."),
+                    openGuideButtonTitle: String(localized: "Open Combat Patrol guide"),
+                    resumeMatchButtonTitle: String(localized: "Resume Combat Patrol match"),
+                    startGuidedMatchMessage: String(
+                        localized: """
+                        Tap below to open Warhammer 40,000: Combat Patrol Guided Match — \
+                        choose armies, run setup, then track your battle at the table.
+                        """
+                    ),
+                    startGuidedMatchButtonTitle: String(localized: "Start Combat Patrol match"),
+                    emptyLoadoutOptionsMessage: String(
+                        localized: "Choose from the options below — defaults are marked Recommended."
+                    ),
+                    setupStepsDetail: String(
+                        localized: "patrol, mission, formations, deployment, and battle"
+                    )
                 ),
                 victoryPointsScoring: .combatPatrol,
                 catalogBundleName: "combat-patrol-catalog-v1",
@@ -184,7 +228,21 @@ extension GameSystemId {
                     ),
                     displayName: String(localized: "StarCraft: Tabletop Miniatures Game"),
                     searchPickerLabel: String(localized: "StarCraft: Tabletop Miniatures Game"),
-                    catalogLoadFailureMessage: String(localized: "StarCraft armies could not be loaded.")
+                    catalogLoadFailureMessage: String(localized: "StarCraft armies could not be loaded."),
+                    openGuideButtonTitle: String(localized: "Open StarCraft guide"),
+                    resumeMatchButtonTitle: String(localized: "Resume StarCraft match"),
+                    startGuidedMatchMessage: String(
+                        localized: """
+                        Tap below to open StarCraft: Tabletop Miniatures Game Guided Match — starter matchup, setup, and turn tracking.
+                        """
+                    ),
+                    startGuidedMatchButtonTitle: String(localized: "Start StarCraft match"),
+                    emptyLoadoutOptionsMessage: String(
+                        localized: "Founders Edition armies ship as fixed lists — no extra options to pick."
+                    ),
+                    setupStepsDetail: String(
+                        localized: "armies, mission setup, battlefield, attacker, and battle"
+                    )
                 ),
                 victoryPointsScoring: .scTmg,
                 catalogBundleName: "sc-tmg-catalog-v1",

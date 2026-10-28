@@ -70,6 +70,12 @@ run_metric "battlerules_or_probes" 0 "BattleRules / is<System> identity probes" 
 # Phase 2 target: capability flags grouped, system-named flags removed.
 # PlayCapabilities+Grouped.swift is the sanctioned shim that maps these flags
 # to closed enums — it is excluded so new *feature* usage is still caught.
+# UI overhaul: theme tokens only (ongoing/ui-overhaul/README.md rule G1).
+run_metric "hardcoded_colors"     129  "hard-coded SwiftUI/UIKit colors outside DesignSystem/Theme" \
+  'Color\.(red|orange|green|blue|yellow|purple|pink|gray|mint|teal)\b|foregroundStyle\(\.(red|orange|green|blue|yellow|purple|pink|gray)\)|Color\(\.(secondarySystemBackground|tertiarySystemFill|systemBackground|secondarySystemGroupedBackground|systemGroupedBackground|secondarySystemFill|tertiarySystemBackground|quaternarySystemFill)\)' \
+  "Features DesignSystem Support App" \
+  '^(Features/(Bench|Muster)|DesignSystem/(Hobby|Theme))/'
+
 run_metric "system_named_caps"      0  "system-named capability flags" \
   'usesWh40k1[01]eCombatRollEngine|shows(Wh40k|ScTmg)DeploymentChecklist|showsCombatPatrolMode' \
   "Domain" \

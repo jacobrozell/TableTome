@@ -1,6 +1,6 @@
 # Tabletome 1.0 UI overhaul: master plan
 
-**Status:** In progress (design system and app shell landed; screen WPs open)
+**Status:** In progress (design system, shell, onboarding, and Play home landed; later screens open)
 **Created:** 2026-10-28
 **Owner:** Jacob (product) · implementing agents (execution)
 **Release target:** 1.0.0 App Store (Spearhead-only battle tracker)
@@ -195,9 +195,9 @@ Legend: ⬜ not started · 🟨 in progress · ✅ merged · ⏸ blocked. **Deps
 
 | WP | Title | Deps | File | Status |
 |----|-------|------|------|--------|
-| ON-01 | Onboarding: Spearhead welcome | SC-01, SH-03 | [03](03-onboarding-and-play-home.md) | ⬜ |
-| PH-01 | Play home: hero card + journey + recent | SC-01, SH-03 | [03](03-onboarding-and-play-home.md) | ⬜ |
-| PH-02 | "Which box do I have?" sheet | PH-01 | [03](03-onboarding-and-play-home.md) | ⬜ |
+| ON-01 | Onboarding: Spearhead welcome | SC-01, SH-03 | [03](03-onboarding-and-play-home.md) | 🟨 |
+| PH-01 | Play home: hero card + journey + recent | SC-01, SH-03 | [03](03-onboarding-and-play-home.md) | 🟨 |
+| PH-02 | "Which box do I have?" sheet | PH-01 | [03](03-onboarding-and-play-home.md) | 🟨 |
 | GG-01 | Spearhead guide hub (GameSystemDetailView) | PH-01 | [04](04-spearhead-guide.md) | ⬜ |
 | GG-02 | Getting Started list + step detail | GG-01 | [04](04-spearhead-guide.md) | ⬜ |
 | GG-03 | Sample turn walkthrough (paged) | GG-01 | [04](04-spearhead-guide.md) | ⬜ |

@@ -1,3 +1,4 @@
+import StoreKit
 import SwiftUI
 import TabletomeDomain
 import TabletomeHobbyData
@@ -6,8 +7,11 @@ struct SettingsView: View {
     @Environment(AppRouter.self) private var router
     @EnvironmentObject private var dependencies: AppDependencies
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.requestReview) private var requestReview
     @AppStorage(AppearanceStore.storageKey) private var appearanceRaw = ThemePreference.system.rawValue
+    @AppStorage("diceInputMode") private var diceInputModeRaw = DiceInputMode.physical.rawValue
     @State private var showsOnboarding = false
+    @State private var showsAcknowledgements = false
 
     private var themePreference: Binding<ThemePreference> {
         Binding(
@@ -16,286 +20,54 @@ struct SettingsView: View {
         )
     }
 
+    private var themeSelection: Binding<SettingsThemeOption> {
+        Binding(
+            get: { SettingsThemeOption(rawValue: appearanceRaw) ?? .system },
+            set: { themePreference.wrappedValue = ThemePreference(rawValue: $0.rawValue) ?? .system }
+        )
+    }
+
+    private var diceValueTitle: String {
+        (SettingsDiceOption(rawValue: diceInputModeRaw) ?? .physical).title
+    }
+
+    private var aboutTagline: String {
+        if ReleaseSurface.singleVisibleGameSystemId() != nil {
+            return String(localized: "Offline Spearhead companion")
+        }
+        if ReleaseSurface.showsMusterTab {
+            return String(localized: "Offline tabletop companion — play, rules, collection, and lists.")
+        }
+        return String(localized: "Offline tabletop companion — play, rules, and model tracking.")
+    }
+
     var body: some View {
         List {
-            #if DEBUG
-            Section {
-                NavigationLink {
-                    TTComponentGallery()
-                } label: {
-                    Text(String(localized: "Design System Gallery"))
-                }
-                .accessibilityIdentifier("settings.debug.gallery")
-            } header: {
-                Text(String(localized: "Debug"))
+            appCardSection
+            if ReleaseSurface.singleVisibleGameSystemId() == nil {
+                newHereSection
             }
-            #endif
-            Section {
-                HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
-                    BrandCrest(size: 56)
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                        Text(
-                            ReleaseSurface.showsMusterTab
-                                ? String(localized: "Offline tabletop companion — play, rules, collection, and lists.")
-                                : String(localized: "Offline tabletop companion — play, rules, and model tracking.")
-                        )
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                        Text(String(localized: """
-                            Unofficial fan-made companion. Not affiliated with, endorsed, or sponsored by Games Workshop. \
-                            Warhammer, Age of Sigmar, Warhammer 40,000, Spearhead, Combat Patrol, and all associated names, \
-                            logos, and images are trademarks of Games Workshop Limited. Rules content is original explanation \
-                            written for learning and play, not reproduced from official publications.
-                            """))
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                }
-                .padding(.vertical, DesignTokens.Spacing.xs)
-                .accessibilityElement(children: .combine)
-            } header: {
-                Text(String(localized: "About"))
-            }
-
-            Section {
-                Text(
-                    String(
-                        localized: """
-                        New to Spearhead? Start on the Play tab. We'll guide your first battle.
-                        """
-                    )
-                )
-                .font(.callout)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
-
-                if ReleaseSurface.isGameSystemIdVisible(OnboardingCompletion.combatPatrolGameSystemId) {
-                    Button {
-                        router.openGameGuide(
-                            gameSystemId: OnboardingCompletion.combatPatrolGameSystemId
-                        )
-                    } label: {
-                        Label(String(localized: "Open Combat Patrol guide (10th Edition)"), systemImage: "play.circle")
-                            .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                    }
-                    .accessibilityIdentifier("settings.openCombatPatrolGuide")
-                    .accessibilityHint(
-                        String(localized: "Opens the Combat Patrol game guide — 10th Edition patrol rules, not 11th Edition.")
-                    )
-                }
-
-                Button {
-                    router.openGameGuide(
-                        gameSystemId: OnboardingCompletion.spearheadGameSystemId
-                    )
-                } label: {
-                    Label(String(localized: "Open Spearhead guide"), systemImage: "shield.lefthalf.filled")
-                        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                }
-                .accessibilityIdentifier("settings.openSpearheadGuide")
-                .accessibilityHint(String(localized: "Opens the Spearhead game guide on the Play tab."))
-
-                if ReleaseSurface.isGameSystemIdVisible(OnboardingCompletion.wh40k11eGameSystemId) {
-                    Button {
-                        router.openGameGuide(
-                            gameSystemId: OnboardingCompletion.wh40k11eGameSystemId
-                        )
-                    } label: {
-                        Label(String(localized: "Open Warhammer 40,000 guide (11th Edition)"), systemImage: "scope")
-                            .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                    }
-                    .accessibilityIdentifier("settings.openWh40k11eGuide")
-                    .accessibilityHint(
-                        String(localized: "Opens the 11th Edition guide — Battleforce, Armageddon, and matched play.")
-                    )
-                }
-
-                if ReleaseSurface.isGameSystemIdVisible(OnboardingCompletion.scTmgGameSystemId) {
-                    Button {
-                        router.openGameGuide(
-                            gameSystemId: OnboardingCompletion.scTmgGameSystemId
-                        )
-                    } label: {
-                        Label(String(localized: "Open StarCraft guide"), systemImage: "gamecontroller.fill")
-                            .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                    }
-                    .accessibilityIdentifier("settings.openStarCraftGuide")
-                    .accessibilityHint(
-                        String(localized: "Opens the StarCraft: The Miniatures Game guide on the Play tab.")
-                    )
-                }
-            } header: {
-                Text(String(localized: "New here?"))
-            } footer: {
-                Text(String(localized: "Replay the app tour anytime under App Tour below."))
-            }
-
-            Section(String(localized: "Dice Roller")) {
-                Text(
-                    String(
-                        localized: """
-                        Simulated dice use your device's secure random number generator. For casual play. \
-                        Roll physical dice at the table — use the battle tracker in Guided Match for in-app dice when needed.
-                        """
-                    )
-                )
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
-            }
-
-            Section(String(localized: "Appearance")) {
-                Picker(String(localized: "Theme"), selection: themePreference) {
-                    ForEach(ThemePreference.allCases, id: \.self) { preference in
-                        Text(AppearanceStore.localizedLabel(for: preference)).tag(preference)
-                    }
-                }
-                .accessibilityIdentifier("settings.appearance")
-                .accessibilityHint(String(localized: "Changes app color scheme"))
-                .onChange(of: appearanceRaw) { _, newValue in
-                    AppearancePreferenceStorage.syncToHobbyConfiguration(modelContext)
-                    dependencies.logger.info(
-                        .settings,
-                        eventName: "settings_theme_changed",
-                        message: "Theme preference changed.",
-                        metadata: ["appearanceMode": newValue]
-                    )
-                    AnalyticsUserContext.sync()
-                }
-            }
-
+            playSection
+            appearanceSection
             if ReleaseSurface.showsBenchTab {
-                Section {
-                    NavigationLink {
-                        HobbySettingsScreen()
-                    } label: {
-                        Label(
-                            ReleaseSurface.showsMusterTab
-                                ? String(localized: "Collection & Lists")
-                                : String(localized: "Models & Data"),
-                            systemImage: "tray.full"
-                        )
-                            .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                    }
-                    .accessibilityIdentifier("settings.hobby")
-                    .accessibilityHint(
-                        ReleaseSurface.showsMusterTab
-                            ? String(localized: "Import, export, pipeline stages, and Muster catalog settings")
-                            : String(localized: "Import, export, and painting pipeline settings")
-                    )
-                } header: {
-                    Text(String(localized: "Collection & Data"))
-                } footer: {
-                    Text(
-                        ReleaseSurface.showsMusterTab
-                            ? String(localized: "Data backup, painting pipeline, and army list defaults.")
-                            : String(localized: "Data backup and painting pipeline.")
-                    )
-                }
+                modelsSection
             }
-
             if ReleaseSurface.showsPlayersHub {
-                Section {
-                    NavigationLink {
-                        PlayersHubListView(viewModel: dependencies.makePlayersHubListViewModel())
-                            .navigationDestination(for: PlayerDetailLink.self) { link in
-                                PlayerDetailView(viewModel: dependencies.makePlayerDetailViewModel(profileId: link.profileId))
-                                    .navigationDestination(for: MatchHistoryDetailLink.self) { detailLink in
-                                        MatchHistoryDetailView(
-                                            recordId: detailLink.recordId,
-                                            viewModel: dependencies.makeMatchHistoryViewModel()
-                                        )
-                                    }
-                            }
-                    } label: {
-                        Label(String(localized: "Players"), systemImage: "person.2")
-                            .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                    }
-                    .accessibilityIdentifier("settings.playersHub")
-                } header: {
-                    Text(String(localized: "Players"))
-                } footer: {
-                    Text(
-                        String(
-                            localized: """
-                            Profiles stay on this device. Match history links when you pick a player in Guided Match.
-                            """
-                        )
-                    )
-                }
+                playersSection
             }
-
-            Section(String(localized: "App Tour")) {
-                Button {
-                    showsOnboarding = true
-                } label: {
-                    Label(String(localized: "View App Tour"), systemImage: "book.pages")
-                        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                }
-                .accessibilityIdentifier("settings.viewOnboarding")
-                .accessibilityHint(String(localized: "Replays the first-launch welcome tour"))
-
-                Button {
-                    NewPlayerTipsStore.resetAll()
-                } label: {
-                    Label(String(localized: "Replay Battle Tracker Tips"), systemImage: "sparkles")
-                        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                }
-                .accessibilityIdentifier("settings.replayBattleTrackerTips")
-                .accessibilityHint(String(localized: "Shows first-battle coach, combat roll help, and expanded guided match setup again"))
-            }
-
-            Section(String(localized: "Support & Legal")) {
-                NavigationLink {
-                    FeedbackFormView()
-                } label: {
-                    Label(String(localized: "Suggest something"), systemImage: "lightbulb")
-                        .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                }
-                .accessibilityIdentifier("settings.feedbackForm")
-                .accessibilityHint(
-                    String(localized: "Send paint, content, or improvement suggestions by email")
-                )
-
-                settingsLink(
-                    title: String(localized: "Privacy Policy"),
-                    systemImage: "hand.raised",
-                    destination: AppLinks.privacy,
-                    identifier: "settings.privacy",
-                    hint: String(localized: "Opens privacy policy in Safari")
-                )
-                settingsLink(
-                    title: String(localized: "Support"),
-                    systemImage: "lifepreserver",
-                    destination: AppLinks.support,
-                    identifier: "settings.support",
-                    hint: String(localized: "Opens support page in Safari")
-                )
-                settingsLink(
-                    title: String(localized: "Accessibility Statement"),
-                    systemImage: "accessibility",
-                    destination: AppLinks.accessibility,
-                    identifier: "settings.accessibility",
-                    hint: String(localized: "Opens accessibility statement in Safari")
-                )
-                settingsLink(
-                    title: String(localized: "Source Code"),
-                    systemImage: "chevron.left.forwardslash.chevron.right",
-                    destination: AppLinks.sourceRepository,
-                    identifier: "settings.sourceCode",
-                    hint: String(localized: "Opens project repository in Safari")
-                )
-            }
-
-            Section {
-                LabeledContent(String(localized: "Version"), value: appVersion)
-                LabeledContent(String(localized: "Build"), value: appBuild)
-            }
+            supportSection
+            legalSection
+            #if DEBUG
+            debugSection
+            #endif
         }
-        .listStyle(.insetGrouped)
+        .ttGroupedList()
+        .textCase(nil)
         .tabBarScrollInset()
         .navigationTitle(String(localized: "Settings"))
+        .navigationDestination(isPresented: $showsAcknowledgements) {
+            AcknowledgementsView()
+        }
         .fullScreenCover(isPresented: $showsOnboarding) {
             OnboardingView(mode: .replay) { completion in
                 showsOnboarding = false
@@ -312,6 +84,361 @@ struct SettingsView: View {
             }
         }
     }
+
+    private var appCardSection: some View {
+        Section {
+            AdaptiveHStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
+                BrandCrest(size: 56)
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                    Text(String(localized: "Tabletome"))
+                        .font(TTFont.title)
+                        .foregroundStyle(TTColor.inkPrimary)
+                    Text(String(localized: "Version \(Bundle.main.appVersion)"))
+                        .font(TTFont.footnote)
+                        .foregroundStyle(TTColor.inkSecondary)
+                    Text(aboutTagline)
+                        .font(TTFont.footnote)
+                        .foregroundStyle(TTColor.inkSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            .accessibilityElement(children: .combine)
+            .surfaceCard()
+            .listHeroCardRow()
+        }
+    }
+
+    private var newHereSection: some View {
+        Section {
+            Text(
+                String(
+                    localized: """
+                    New to Spearhead? Start on the Play tab. We'll guide your first battle.
+                    """
+                )
+            )
+            .font(TTFont.callout)
+            .foregroundStyle(TTColor.inkSecondary)
+            .fixedSize(horizontal: false, vertical: true)
+            .ttListRow()
+
+            if ReleaseSurface.isGameSystemIdVisible(OnboardingCompletion.combatPatrolGameSystemId) {
+                actionRow(
+                    title: String(localized: "Open Combat Patrol guide (10th Edition)"),
+                    systemImage: "play.circle",
+                    identifier: "settings.openCombatPatrolGuide",
+                    hint: String(
+                        localized: "Opens the Combat Patrol game guide — 10th Edition patrol rules, not 11th Edition."
+                    ),
+                    accessory: .chevron
+                ) {
+                    router.openGameGuide(gameSystemId: OnboardingCompletion.combatPatrolGameSystemId)
+                }
+            }
+
+            actionRow(
+                title: String(localized: "Open Spearhead guide"),
+                systemImage: "shield.lefthalf.filled",
+                identifier: "settings.openSpearheadGuide",
+                hint: String(localized: "Opens the Spearhead game guide on the Play tab."),
+                accessory: .chevron
+            ) {
+                router.openGameGuide(gameSystemId: OnboardingCompletion.spearheadGameSystemId)
+            }
+
+            if ReleaseSurface.isGameSystemIdVisible(OnboardingCompletion.wh40k11eGameSystemId) {
+                actionRow(
+                    title: String(localized: "Open Warhammer 40,000 guide (11th Edition)"),
+                    systemImage: "scope",
+                    identifier: "settings.openWh40k11eGuide",
+                    hint: String(
+                        localized: "Opens the 11th Edition guide — Battleforce, Armageddon, and matched play."
+                    ),
+                    accessory: .chevron
+                ) {
+                    router.openGameGuide(gameSystemId: OnboardingCompletion.wh40k11eGameSystemId)
+                }
+            }
+
+            if ReleaseSurface.isGameSystemIdVisible(OnboardingCompletion.scTmgGameSystemId) {
+                actionRow(
+                    title: String(localized: "Open StarCraft guide"),
+                    systemImage: "gamecontroller.fill",
+                    identifier: "settings.openStarCraftGuide",
+                    hint: String(localized: "Opens the StarCraft: The Miniatures Game guide on the Play tab."),
+                    accessory: .chevron
+                ) {
+                    router.openGameGuide(gameSystemId: OnboardingCompletion.scTmgGameSystemId)
+                }
+            }
+        } header: {
+            TTSectionHeader(String(localized: "New here?"))
+        } footer: {
+            Text(String(localized: "Replay the app tour anytime in Play."))
+                .font(TTFont.footnote)
+                .foregroundStyle(TTColor.inkSecondary)
+        }
+    }
+
+    private var playSection: some View {
+        Section {
+            navigationRow(
+                title: String(localized: "Dice input"),
+                systemImage: "dice.fill",
+                identifier: "settings.diceInput",
+                hint: String(localized: "Chooses real dice or in-app rolls"),
+                accessory: .value(diceValueTitle)
+            ) {
+                DiceInputSettingsView(diceInputModeRaw: $diceInputModeRaw)
+            }
+
+            actionRow(
+                title: String(localized: "Replay Battle Tracker Tips"),
+                systemImage: "sparkles",
+                identifier: "settings.replayBattleTrackerTips",
+                hint: String(
+                    localized: "Shows first-battle coach, combat roll help, and expanded guided match setup again"
+                )
+            ) {
+                NewPlayerTipsStore.resetAll()
+            }
+
+            actionRow(
+                title: String(localized: "View App Tour"),
+                systemImage: "book.pages",
+                identifier: "settings.viewOnboarding",
+                hint: String(localized: "Replays the first-launch welcome tour")
+            ) {
+                showsOnboarding = true
+            }
+        } header: {
+            TTSectionHeader(String(localized: "Play"))
+        }
+    }
+
+    private var appearanceSection: some View {
+        Section {
+            AdaptiveHStack(alignment: .center, spacing: DesignTokens.Spacing.sm) {
+                HStack(spacing: DesignTokens.Spacing.sm) {
+                    TTIconTile(systemImage: "circle.lefthalf.filled")
+                    Text(String(localized: "Theme"))
+                        .font(TTFont.headline)
+                        .foregroundStyle(TTColor.inkPrimary)
+                        .fixedSize()
+                }
+                .accessibilityHidden(true)
+                TTSegmentedControl(
+                    selection: themeSelection,
+                    options: SettingsThemeOption.allCases,
+                    title: \.title
+                )
+                .accessibilityIdentifier("settings.appearance")
+                .accessibilityLabel(String(localized: "Theme"))
+                .accessibilityHint(String(localized: "Changes app color scheme"))
+                .onChange(of: appearanceRaw) { _, newValue in
+                    AppearancePreferenceStorage.syncToHobbyConfiguration(modelContext)
+                    dependencies.logger.info(
+                        .settings,
+                        eventName: "settings_theme_changed",
+                        message: "Theme preference changed.",
+                        metadata: ["appearanceMode": newValue]
+                    )
+                    AnalyticsUserContext.sync()
+                }
+            }
+            .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+            .ttListRow()
+        } header: {
+            TTSectionHeader(String(localized: "Appearance"))
+        }
+    }
+
+    private var modelsSection: some View {
+        Section {
+            navigationRow(
+                title: ReleaseSurface.showsMusterTab
+                    ? String(localized: "Collection & Lists")
+                    : String(localized: "Collection & Data"),
+                systemImage: "tray.full",
+                identifier: "settings.hobby",
+                hint: ReleaseSurface.showsMusterTab
+                    ? String(localized: "Import, export, pipeline stages, and Muster catalog settings")
+                    : String(localized: "Import, export, and painting pipeline settings")
+            ) {
+                HobbySettingsScreen()
+            }
+        } header: {
+            TTSectionHeader(String(localized: "Models"))
+        } footer: {
+            Text(
+                ReleaseSurface.showsMusterTab
+                    ? String(localized: "Data backup, painting pipeline, and army list defaults.")
+                    : String(localized: "Data backup and painting pipeline.")
+            )
+            .font(TTFont.footnote)
+            .foregroundStyle(TTColor.inkSecondary)
+        }
+    }
+
+    private var playersSection: some View {
+        Section {
+            navigationRow(
+                title: String(localized: "Players"),
+                systemImage: "person.2",
+                identifier: "settings.playersHub",
+                hint: String(
+                    localized: """
+                    Profiles stay on this device. Match history links when you pick a player in Guided Match.
+                    """
+                )
+            ) {
+                PlayersHubListView(viewModel: dependencies.makePlayersHubListViewModel())
+                    .navigationDestination(for: PlayerDetailLink.self) { link in
+                        PlayerDetailView(
+                            viewModel: dependencies.makePlayerDetailViewModel(profileId: link.profileId)
+                        )
+                        .navigationDestination(for: MatchHistoryDetailLink.self) { detailLink in
+                            MatchHistoryDetailView(
+                                recordId: detailLink.recordId,
+                                viewModel: dependencies.makeMatchHistoryViewModel()
+                            )
+                        }
+                    }
+            }
+        } header: {
+            TTSectionHeader(String(localized: "Players"))
+        } footer: {
+            Text(
+                String(
+                    localized: """
+                    Profiles stay on this device. Match history links when you pick a player in Guided Match.
+                    """
+                )
+            )
+            .font(TTFont.footnote)
+            .foregroundStyle(TTColor.inkSecondary)
+        }
+    }
+
+    private var supportSection: some View {
+        Section {
+            externalRow(
+                title: String(localized: "Help & support"),
+                systemImage: "questionmark.circle",
+                url: AppLinks.support,
+                identifier: "settings.support",
+                hint: String(localized: "Opens support page in Safari")
+            )
+            externalRow(
+                title: String(localized: "Send feedback"),
+                systemImage: "envelope",
+                url: AppLinks.sourceRepository.appending(path: "issues"),
+                identifier: "settings.sendFeedback",
+                hint: String(localized: "Opens GitHub issues in Safari")
+            )
+            navigationRow(
+                title: String(localized: "Suggest something"),
+                systemImage: "lightbulb",
+                identifier: "settings.feedbackForm",
+                hint: String(localized: "Send paint, content, or improvement suggestions by email")
+            ) {
+                FeedbackFormView()
+            }
+            actionRow(
+                title: String(localized: "Rate Tabletome"),
+                systemImage: "star",
+                identifier: "settings.rate",
+                hint: String(localized: "Asks for an App Store review")
+            ) {
+                requestReview()
+            }
+            externalRow(
+                title: String(localized: "Source Code"),
+                systemImage: "chevron.left.forwardslash.chevron.right",
+                url: AppLinks.sourceRepository,
+                identifier: "settings.sourceCode",
+                hint: String(localized: "Opens project repository in Safari")
+            )
+        } header: {
+            TTSectionHeader(String(localized: "Support"))
+        }
+    }
+
+    private var legalSection: some View {
+        Section {
+            navigationRow(
+                title: String(localized: "Privacy Policy"),
+                systemImage: "lock",
+                identifier: "settings.privacy",
+                hint: String(localized: "Opens the privacy policy")
+            ) {
+                PrivacyPolicyView()
+            }
+            navigationRow(
+                title: String(localized: "Accessibility"),
+                systemImage: "accessibility",
+                identifier: "settings.accessibility",
+                hint: String(localized: "Opens the accessibility statement")
+            ) {
+                AccessibilityView()
+            }
+            navigationRow(
+                title: String(localized: "Acknowledgements & Trademarks"),
+                systemImage: "paragraphsign",
+                identifier: "settings.acknowledgements",
+                hint: String(localized: "Opens acknowledgements and trademarks")
+            ) {
+                AcknowledgementsView()
+            }
+        } header: {
+            TTSectionHeader(String(localized: "Legal"))
+        } footer: {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                Text(String(localized: "Unofficial fan-made companion.\nNot affiliated with Games Workshop."))
+                    .font(TTFont.footnote)
+                    .foregroundStyle(TTColor.inkSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                Button(String(localized: "More")) {
+                    showsAcknowledgements = true
+                }
+                .buttonStyle(.ttTertiary)
+                .accessibilityIdentifier("settings.disclaimer.more")
+                .accessibilityHint(String(localized: "Opens acknowledgements and trademarks"))
+            }
+        }
+    }
+
+    #if DEBUG
+    private var debugSection: some View {
+        Section {
+            navigationRow(
+                title: String(localized: "Design System Gallery"),
+                systemImage: "square.grid.2x2",
+                identifier: "settings.debug.gallery",
+                hint: String(localized: "Opens the design system gallery")
+            ) {
+                TTComponentGallery()
+            }
+            actionRow(
+                title: String(localized: "Reset onboarding"),
+                systemImage: "arrow.counterclockwise",
+                identifier: "settings.debug.resetOnboarding",
+                hint: String(localized: "Clears the app tour so it shows again on next launch")
+            ) {
+                resetOnboarding()
+            }
+        } header: {
+            TTSectionHeader(String(localized: "Debug"))
+        }
+    }
+
+    private func resetOnboarding() {
+        OnboardingStore.clearPersistedState()
+        let configuration = HobbyConfig.current(modelContext)
+        configuration.hasSeenOnboarding = false
+        try? modelContext.save()
+    }
+    #endif
 
     private func logSettingsOnboardingCompleted(_ completion: OnboardingCompletion) {
         var metadata: [String: String] = [
@@ -335,30 +462,141 @@ struct SettingsView: View {
             metadata: metadata
         )
     }
+}
 
-    private var appVersion: String {
-        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "—"
+@MainActor
+@ViewBuilder
+private func navigationRow<Destination: View>(
+    title: String,
+    systemImage: String,
+    identifier: String,
+    hint: String,
+    accessory: TTRowAccessory = .chevron,
+    @ViewBuilder destination: () -> Destination
+) -> some View {
+    NavigationLink {
+        destination()
+    } label: {
+        TTRow(title: title, systemImage: systemImage, accessory: accessory)
+    }
+    .navigationLinkIndicatorVisibility(accessory == .chevron ? .hidden : .visible)
+    .accessibilityIdentifier(identifier)
+    .accessibilityHint(hint)
+    .ttListRow()
+}
+
+@MainActor
+private func externalRow(
+    title: String,
+    systemImage: String,
+    url: URL,
+    identifier: String,
+    hint: String
+) -> some View {
+    Link(destination: url) {
+        TTRow(title: title, systemImage: systemImage, accessory: .external)
+    }
+    .buttonStyle(.plain)
+    .accessibilityIdentifier(identifier)
+    .accessibilityHint(hint)
+    .ttListRow()
+}
+
+@MainActor
+private func actionRow(
+    title: String,
+    systemImage: String,
+    identifier: String,
+    hint: String,
+    accessory: TTRowAccessory = .none,
+    action: @escaping () -> Void
+) -> some View {
+    Button(action: action) {
+        TTRow(title: title, systemImage: systemImage, accessory: accessory)
+            .contentShape(Rectangle())
+    }
+    .buttonStyle(.plain)
+    .accessibilityIdentifier(identifier)
+    .accessibilityHint(hint)
+    .ttListRow()
+}
+
+private enum SettingsThemeOption: String, CaseIterable, Identifiable {
+    case system
+    case light
+    case dark
+
+    var id: String { rawValue }
+
+    var title: String {
+        AppearanceStore.localizedLabel(for: ThemePreference(rawValue: rawValue) ?? .system)
+    }
+}
+
+private enum SettingsDiceOption: String, CaseIterable, Identifiable {
+    case physical
+    case simulated
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .physical:
+            String(localized: "Real dice")
+        case .simulated:
+            String(localized: "In-app")
+        }
+    }
+}
+
+private struct DiceInputSettingsView: View {
+    @Binding var diceInputModeRaw: String
+
+    private var selection: Binding<SettingsDiceOption> {
+        Binding(
+            get: { SettingsDiceOption(rawValue: diceInputModeRaw) ?? .physical },
+            set: { diceInputModeRaw = $0.rawValue }
+        )
     }
 
-    private var appBuild: String {
-        Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "—"
-    }
-
-    @ViewBuilder
-    private func settingsLink(
-        title: String,
-        systemImage: String,
-        destination: URL?,
-        identifier: String,
-        hint: String
-    ) -> some View {
-        if let destination {
-            Link(destination: destination) {
-                Label(title, systemImage: systemImage)
-                    .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                Text(String(localized: "Dice input"))
+                    .font(TTFont.title)
+                    .foregroundStyle(TTColor.inkPrimary)
+                TTSegmentedControl(
+                    selection: selection,
+                    options: SettingsDiceOption.allCases,
+                    title: \.title
+                )
+                .accessibilityIdentifier("settings.diceInput.mode")
+                .accessibilityLabel(String(localized: "Dice input"))
+                .accessibilityHint(String(localized: "Choose real dice or in-app rolls"))
+                Text(
+                    String(
+                        localized: """
+                        Simulated dice use your device's secure random number generator. For casual play.
+                        """
+                    )
+                )
+                .font(TTFont.footnote)
+                .foregroundStyle(TTColor.inkSecondary)
+                .fixedSize(horizontal: false, vertical: true)
             }
-            .accessibilityIdentifier(identifier)
-            .accessibilityHint(hint)
+            .readableContentWidth()
+            .padding(DesignTokens.Spacing.md)
+        }
+        .ttScreenBackground()
+        .navigationTitle(String(localized: "Dice input"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+#Preview("Dice input") {
+    TTPreviewMatrix {
+        NavigationStack {
+            DiceInputSettingsView(diceInputModeRaw: .constant(SettingsDiceOption.physical.rawValue))
         }
     }
 }

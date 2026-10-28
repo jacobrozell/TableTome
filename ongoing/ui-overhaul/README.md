@@ -233,8 +233,8 @@ Legend: ⬜ not started · 🟨 in progress · ✅ merged · ⏸ blocked. **Deps
 | MD-02 | Models: army detail | MD-01 | [10](10-models-collection.md) | ⬜ |
 | MD-03 | Models: unit detail + photo | MD-02 | [10](10-models-collection.md) | ⬜ |
 | MD-04 | Models: sheets (add army / unit, filters, intro) | MD-01 | [10](10-models-collection.md) | ⬜ |
-| ST-01 | Settings | SH-03 | [11](11-settings.md) | ⬜ |
-| ST-02 | About / legal / app info | ST-01 | [11](11-settings.md) | ⬜ |
+| ST-01 | Settings | SH-03 | [11](11-settings.md) | 🟨 |
+| ST-02 | About / legal / app info | ST-01 | [11](11-settings.md) | 🟨 |
 
 ### Phase 4: Quality and release
 

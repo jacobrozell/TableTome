@@ -356,7 +356,8 @@ extension SpearheadBattleView {
             activePlayerIsOne: activeIsOne,
             activePlayerName: viewModel.activePlayerName,
             otherPlayerName: activeIsOne ? viewModel.playerTwoName : viewModel.playerOneName,
-            nextPhase: viewModel.playContext.playEngine.nextMainPhase(after: viewModel.trackerState.currentPhase)
+            nextPhase: viewModel.playContext.playEngine.nextMainPhase(after: viewModel.trackerState.currentPhase),
+            handsOff: viewModel.endsTurnWithHandoff
         )
     }
 
@@ -385,10 +386,10 @@ extension SpearheadBattleView {
             if ReleaseSurface.showsMatchHistory { presentVictoryScreen() }
             dismissedBattleCompleteGuide = true
         case .turnPhase(.endOfTurn):
-            if viewModel.canAdvanceBattleRound || viewModel.isBattleComplete {
-                viewModel.completeCurrentGuideStep()
-            } else {
+            if viewModel.endsTurnWithHandoff {
                 showsTurnHandoff = true
+            } else {
+                viewModel.completeCurrentGuideStep()
             }
         default:
             viewModel.completeCurrentGuideStep()

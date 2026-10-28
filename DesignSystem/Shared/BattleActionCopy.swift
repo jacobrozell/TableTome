@@ -14,7 +14,8 @@ enum BattleActionCopy {
         activePlayerIsOne: Bool,
         activePlayerName: String,
         otherPlayerName: String,
-        nextPhase: BattleTurnPhase?
+        nextPhase: BattleTurnPhase?,
+        handsOff: Bool = true
     ) -> BattleActionPresentation {
         switch step?.kind {
         case .deployment(let deploymentStep):
@@ -31,7 +32,7 @@ enum BattleActionCopy {
             }
             return brand(String(localized: "Next"))
         case .turnPhase(let phase):
-            if phase == .endOfTurn {
+            if phase == .endOfTurn, handsOff {
                 return BattleActionPresentation(
                     title: String(localized: "Pass to \(otherPlayerName)"),
                     systemImage: "arrow.left.arrow.right",
@@ -39,6 +40,9 @@ enum BattleActionCopy {
                     playerIsOne: !activePlayerIsOne,
                     usesCompleteIdentifier: false
                 )
+            }
+            if phase == .endOfTurn {
+                return brand(String(localized: "End Turn"))
             }
             if nextPhase == .endOfTurn {
                 return brand(String(localized: "End Turn"))

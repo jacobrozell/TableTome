@@ -50,6 +50,18 @@ final class SpearheadBattleViewModelPhaseFlowTests: XCTestCase {
         XCTAssertFalse(viewModel.canAdvanceBattleRound)
     }
 
+    func testSecondPlayerEndOfTurnFinishesTheRoundInsteadOfHandingBack() {
+        let viewModel = makeViewModel(activePlayerIsOne: false, completedTurns: [true])
+        completeRoundOpener(for: viewModel, round: 1)
+        XCTAssertFalse(viewModel.endsTurnWithHandoff)
+        XCTAssertFalse(viewModel.canAdvanceBattleRound)
+
+        viewModel.completeCurrentGuideStep()
+
+        XCTAssertEqual(viewModel.trackerState.completedTurnsThisRound.count, 2)
+        XCTAssertEqual(viewModel.currentGuideStep?.kind, .startNextRound(1))
+    }
+
     func testBothTurnsCompleteEnablesNextRound() {
         let viewModel = makeViewModel(activePlayerIsOne: false, completedTurns: [true])
 

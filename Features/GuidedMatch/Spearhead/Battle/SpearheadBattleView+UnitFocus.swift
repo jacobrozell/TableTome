@@ -52,7 +52,7 @@ extension SpearheadBattleView {
                     )
                 },
                 onSetAsDefender: {
-                    unitFocusSelection = nil
+                    assignCombatDefender(armyId: selection.armyId, unitId: selection.unitId)
                 }
             )
         } else {
@@ -72,6 +72,22 @@ extension SpearheadBattleView {
             unitId: unitId,
             preferredWeaponId: preferredWeaponId
         )
+    }
+
+    func assignCombatDefender(armyId: String, unitId: String) {
+        let defenderKey = "\(armyId):\(unitId)"
+        seedCombatContextIfNeeded()
+        if let current = resolverContext {
+            resolverContext = InlineResolverContext(
+                attackerKey: current.attackerKey,
+                weaponId: current.weaponId,
+                defenderKey: defenderKey
+            )
+        }
+        unitFocusSelection = nil
+        if usesNewBattleScreen, resolverContext != nil {
+            showsCombatSheet = true
+        }
     }
 
     func commitUnitFocusCombat(

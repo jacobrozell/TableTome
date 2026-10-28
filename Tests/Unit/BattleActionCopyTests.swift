@@ -35,6 +35,17 @@ final class BattleActionCopyTests: XCTestCase {
         XCTAssertEqual(pass.title, "Pass to Gold")
         XCTAssertTrue(pass.usesPlayerStyle)
         XCTAssertFalse(pass.playerIsOne)
+
+        let finish = BattleActionCopy.presentation(
+            step: step(.turnPhase(.endOfTurn), title: "t", action: "a"),
+            activePlayerIsOne: false,
+            activePlayerName: "Gold",
+            otherPlayerName: "Azure",
+            nextPhase: nil,
+            handsOff: false
+        )
+        XCTAssertEqual(finish.title, "End Turn")
+        XCTAssertFalse(finish.usesPlayerStyle)
     }
 
     func testBattleCompleteUsesResultsIdentifier() {

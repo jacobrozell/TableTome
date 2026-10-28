@@ -30,6 +30,14 @@ extension SpearheadBattleViewModel {
         !isTurnFlowBlocked && nextPhaseTitle != nil
     }
 
+    /// The active player is finishing the first turn of the round, so the next step is a handoff.
+    /// The second turn is not in `completedTurnsThisRound` yet, so round-advance stays false until they confirm.
+    var endsTurnWithHandoff: Bool {
+        guard trackerState.currentPhase == .endOfTurn else { return false }
+        let opponent = !trackerState.activePlayerIsOne
+        return !trackerState.completedTurnsThisRound.contains(opponent)
+    }
+
     var canPassToNextPlayerThisRound: Bool {
         guard !roundOpenerIsIncomplete else { return false }
         guard trackerState.currentPhase == .endOfTurn else { return false }

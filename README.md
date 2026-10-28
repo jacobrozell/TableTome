@@ -4,7 +4,7 @@ Offline-first iOS reference and rules companion for Warhammer tabletop games —
 
 **Status:** TestFlight 1.0.0 (build 11) · **Branch:** `release/1.0.0` · [Release status](docs/release/status.md)
 
-**Shipped in 1.0:** Age of Sigmar **Spearhead** (play, guided match, rules) plus **Models** (collection + paints). 40k, Combat Patrol, StarCraft, Lists, and Rules Q&A are bundled but gated — see [1.0.0 release surface](docs/release/1.0.0-release-surface.md) and [release surface spec](specs/ReleaseSurfaceSpec.md).
+**Shipped in 1.0:** Age of Sigmar **Spearhead** (play, guided match, rules) plus **Models** (collection + paints). 40k, Combat Patrol, StarCraft, Lists, Rules Q&A, and Players Hub are bundled but gated (Players Hub is on in Debug only) — see [release status](docs/release/status.md) and [release surface spec](specs/ReleaseSurfaceSpec.md).
 
 **Agents:** start at [`AGENTS.md`](AGENTS.md)
 
@@ -22,6 +22,7 @@ Offline-first iOS reference and rules companion for Warhammer tabletop games —
 | **Match history** | Local match log |
 | **Getting Started** | GW-aligned walkthroughs per game system |
 | **Settings & legal** | GitHub Pages privacy/support/accessibility |
+| **Backup & links** | Local backup `tabletome-backup-*.json`; `tabletome://` deep links |
 | **Telemetry** | Firebase Analytics + Crashlytics (Release, allowlisted events) |
 
 Full inventory: [`docs/feature-inventory.md`](docs/feature-inventory.md)

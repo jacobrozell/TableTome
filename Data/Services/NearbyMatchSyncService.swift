@@ -80,7 +80,11 @@ public final class NearbyMatchSyncService: NSObject, ObservableObject, @unchecke
         let normalized = code.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
         guard normalized.count == 4 else {
             let message = String(localized: "Enter the 4-character code from the host device.")
-            reportUserError(message, logMessage: "Join rejected — code length \(normalized.count)")
+            reportUserError(
+                message,
+                logMessage: "Join rejected — code length \(normalized.count)",
+                errorCode: "invalidJoinCode"
+            )
             return
         }
         hostCode = normalized
@@ -146,7 +150,11 @@ public final class NearbyMatchSyncService: NSObject, ObservableObject, @unchecke
     public func applyPasteCode(_ pasted: String) -> Bool {
         switch MatchSyncCodec.decodePasteCode(pasted) {
         case let .failure(error):
-            reportUserError(error.localizedMessage, logMessage: "Paste import failed — \(error.logDescription)")
+            reportUserError(
+                error.localizedMessage,
+                logMessage: "Paste import failed — \(error.logDescription)",
+                errorCode: analyticsErrorCode(error)
+            )
             return false
         case let .success(snapshot):
             if let applyError = MatchSyncCodec.apply(
@@ -155,7 +163,11 @@ public final class NearbyMatchSyncService: NSObject, ObservableObject, @unchecke
                 notifyUI: true,
                 source: "paste"
             ) {
-                reportUserError(applyError.localizedMessage, logMessage: "Paste import rejected — \(applyError.logDescription)")
+                reportUserError(
+                    applyError.localizedMessage,
+                    logMessage: "Paste import rejected — \(applyError.logDescription)",
+                    errorCode: analyticsErrorCode(applyError)
+                )
                 return false
             }
             setStatus(String(localized: "Match imported from paste code."))
@@ -174,7 +186,11 @@ public final class NearbyMatchSyncService: NSObject, ObservableObject, @unchecke
         case let .success(code):
             return code
         case let .failure(error):
-            reportUserError(error.localizedMessage, logMessage: "Export paste code failed — \(error.logDescription)")
+            reportUserError(
+                error.localizedMessage,
+                logMessage: "Export paste code failed — \(error.logDescription)",
+                errorCode: analyticsErrorCode(error)
+            )
             return nil
         }
     }
@@ -200,7 +216,8 @@ public final class NearbyMatchSyncService: NSObject, ObservableObject, @unchecke
         case let .failure(error):
             reportUserError(
                 String(localized: "Could not prepare match state to send."),
-                logMessage: "Broadcast encode failed — \(error.logDescription)"
+                logMessage: "Broadcast encode failed — \(error.logDescription)",
+                errorCode: analyticsErrorCode(error)
             )
         case let .success(data):
             do {
@@ -215,6 +232,7 @@ public final class NearbyMatchSyncService: NSObject, ObservableObject, @unchecke
                 reportUserError(
                     String(localized: "Sync send failed. Try stopping and re-hosting."),
                     logMessage: "Broadcast send failed peers=\(session.connectedPeers.count)",
+                    errorCode: "sendFailed",
                     error: error
                 )
             }
@@ -231,7 +249,8 @@ public final class NearbyMatchSyncService: NSObject, ObservableObject, @unchecke
         ) {
             reportUserError(
                 error.localizedMessage,
-                logMessage: "Remote apply rejected peer=\(peerName) — \(error.logDescription)"
+                logMessage: "Remote apply rejected peer=\(peerName) — \(error.logDescription)",
+                errorCode: analyticsErrorCode(error)
             )
             return
         }
@@ -272,10 +291,15 @@ public final class NearbyMatchSyncService: NSObject, ObservableObject, @unchecke
     }
 
     @MainActor
-    private func reportUserError(_ message: String, logMessage: String, error: Error? = nil) {
+    private func reportUserError(
+        _ message: String,
+        logMessage: String,
+        errorCode: String,
+        error: Error? = nil
+    ) {
         setStatus(message)
         MatchSyncLogger.sessionError(logMessage, error: error)
-        logSyncFailure(logMessage: logMessage)
+        logSyncFailure(errorCode: errorCode, logMessage: logMessage)
     }
 
     @MainActor
@@ -284,7 +308,19 @@ public final class NearbyMatchSyncService: NSObject, ObservableObject, @unchecke
     }
 
     @MainActor
-    private func logSyncFailure(logMessage: String) {
+    private func analyticsErrorCode(_ error: MatchSyncCodecError) -> String {
+        error.logDescription
+    }
+
+    private func analyticsErrorCode(_ error: MatchSyncApplyError) -> String {
+        switch error {
+        case .incompatibleSchema: "incompatibleSchema"
+        case .wrongGameSystem: "wrongGameSystem"
+        }
+    }
+
+    @MainActor
+    private func logSyncFailure(errorCode: String, logMessage: String) {
         var metadata: [String: String] = [
             "gameSystemId": syncGameSystemId,
             "source": "nearby"
@@ -304,7 +340,7 @@ public final class NearbyMatchSyncService: NSObject, ObservableObject, @unchecke
         } else {
             metadata["operation"] = "sync"
         }
-        metadata["errorCode"] = String(logMessage.suffix(100))
+        metadata["errorCode"] = errorCode
         logAnalytics(eventName: "match_sync_failed", metadata: metadata)
     }
 
@@ -354,6 +390,7 @@ extension NearbyMatchSyncService: MCNearbyServiceAdvertiserDelegate {
             reportUserError(
                 String(localized: "Could not start hosting. Check local network permission and try again."),
                 logMessage: "Advertiser failed to start",
+                errorCode: "advertiserFailed",
                 error: error
             )
             stop()
@@ -394,6 +431,7 @@ extension NearbyMatchSyncService: MCNearbyServiceBrowserDelegate {
             reportUserError(
                 String(localized: "Could not search for host. Check local network permission and try again."),
                 logMessage: "Browser failed to start",
+                errorCode: "browserFailed",
                 error: error
             )
             stop()
@@ -448,7 +486,8 @@ extension NearbyMatchSyncService: MCSessionDelegate {
             case let .failure(error):
                 reportUserError(
                     String(localized: "Received unreadable sync data from \(name)."),
-                    logMessage: "Wire receive failed peer=\(name) bytes=\(data.count) — \(error.logDescription)"
+                    logMessage: "Wire receive failed peer=\(name) bytes=\(data.count) — \(error.logDescription)",
+                    errorCode: analyticsErrorCode(error)
                 )
             case let .success(snapshot):
                 applyRemoteSnapshot(snapshot, peerName: name)

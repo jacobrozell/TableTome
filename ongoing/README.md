@@ -18,7 +18,7 @@ Plans and projects **in implementation** — approved, specced, and actively bei
 | Plan | Doc | Status | Notes |
 |------|-----|--------|-------|
 | **1.0 UI overhaul** | [`ui-overhaul/README.md`](ui-overhaul/README.md) | **In progress** | Spearhead-only 1.0, Tome & Table design system, battle screen rebuild |
-| **1.0.0 review fixes** | [`1.0.0-review-fixes.md`](1.0.0-review-fixes.md) | **Fixes in** | Ship blockers from Bugbot, architecture, code smells, and tests are fixed. Retest still open. |
+| **1.0.0 review fixes** | [`1.0.0-review-fixes.md`](1.0.0-review-fixes.md) | **Fixes in** | Release-branch blockers are fixed. UI overhaul review (`feature/uioverhaul` vs `release/1.0.0`) is in progress. |
 | **Spearhead flawless Guided Match** | [`spearhead-flawless-guided-match-plan.md`](spearhead-flawless-guided-match-plan.md) | **Active — P0** | Setup, battle, combat, victory, resume. Stay inside Spearhead. |
 | Guided Match UI redesign | [`guided-match-ui-redesign.md`](guided-match-ui-redesign.md) | **Superseded by UI overhaul** | Phase 1 complete; further chrome work is in `ui-overhaul/`. |
 | SwiftUI view extraction | [`swiftui-view-extraction-plan.md`](swiftui-view-extraction-plan.md) | **Incremental** | Only when already editing those views. Not a feature. |

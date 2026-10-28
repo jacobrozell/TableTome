@@ -1,5 +1,6 @@
 import XCTest
 @testable import Tabletome
+import TabletomeData
 
 final class FirebaseLogSinkTests: XCTestCase {
     func testAnalyticsSinkSkipsWhenCollectionDisabled() {
@@ -42,5 +43,24 @@ final class FirebaseLogSinkTests: XCTestCase {
             metadata: metadata,
             correlationId: nil
         )
+    }
+}
+
+final class NearbyMatchSyncAnalyticsTests: XCTestCase {
+    @MainActor
+    func testSyncFailureAnalyticsUsesStableCodes() {
+        let service = NearbyMatchSyncService()
+        var codes: [String] = []
+        service.analyticsHandler = { event, metadata in
+            if event == "match_sync_failed", let code = metadata["errorCode"] {
+                codes.append(code)
+            }
+        }
+
+        service.startJoining(code: "AB")
+        _ = service.applyPasteCode("not-a-code")
+
+        XCTAssertEqual(codes, ["invalidJoinCode", "missingPrefix"])
+        XCTAssertFalse(codes.joined().contains("peer="))
     }
 }

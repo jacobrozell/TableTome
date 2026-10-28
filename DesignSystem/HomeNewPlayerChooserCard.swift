@@ -10,7 +10,7 @@ struct HomeNewPlayerChooserCard: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Label(String(localized: "What did you buy?"), systemImage: "shippingbox.fill")
                 .font(.headline)
-                .foregroundStyle(Color.accentOnSurface)
+                .foregroundStyle(TTColor.brand)
 
             Text(
                 String(
@@ -38,7 +38,7 @@ struct HomeNewPlayerChooserCard: View {
                     .font(.subheadline.weight(.semibold))
                     .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
             }
-            .buttonStyle(.bordered)
+            .buttonStyle(.ttSecondary)
             .accessibilityIdentifier("home.chooser.boxHelper")
 
             wh40kChooserRows
@@ -122,7 +122,7 @@ struct HomeNewPlayerChooserCard: View {
                     .font(.subheadline.weight(.medium))
                     .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
             }
-            .buttonStyle(.bordered)
+            .buttonStyle(.ttSecondary)
             .accessibilityIdentifier("home.chooser.spearhead.openGuide")
         }
         .accessibilityElement(children: .contain)

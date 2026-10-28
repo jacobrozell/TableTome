@@ -82,7 +82,11 @@ final class AppRouter {
         )
         AnalyticsFeatureUsage.recordGameGuideOpened(gameSystemId: gameSystemId)
         selectedTab = .learn
-        learnPath = NavigationPath([gameSystemId])
+        if ReleaseSurface.singleVisibleGameSystemId() == gameSystemId {
+            learnPath = NavigationPath()
+        } else {
+            learnPath = NavigationPath([gameSystemId])
+        }
     }
 
     func openRulesSearch(gameSystemId: String, query: String) {

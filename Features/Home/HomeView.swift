@@ -72,47 +72,12 @@ struct HomeView: View {
                     action: { Task { await viewModel.load() } }
                 )
                 .asyncContentShell()
-            } else {
-                List {
-                    if !viewModel.gameSystems.isEmpty {
-                        if let heroPresentation {
-                            Section {
-                                switch heroPresentation {
-                                case .continuation(let continuation):
-                                    HomeContinueCard(continuation: continuation)
-                                case .chooser:
-                                    HomeNewPlayerChooserCard()
-                                }
-                            }
-                        }
-
-                        if ReleaseSurface.showsPlayersHub {
-                            Section {
-                                HomePlayersHubCard()
-                            }
-                        }
-                    }
-
-                    if showsAllGamesList {
-                        Section {
-                            ForEach(viewModel.gameSystems) { system in
-                                NavigationLink(value: system.id) {
-                                    gameSystemRow(system)
-                                }
-                                .accessibilityIdentifier("home.gameSystem.\(system.id)")
-                            }
-                        } header: {
-                            Text(allGamesSectionHeader)
-                        } footer: {
-                            if let allGamesSectionFooter {
-                                Text(allGamesSectionFooter)
-                            }
-                        }
-                    }
+            } else if viewModel.gameSystems.count == 1, let system = viewModel.gameSystems.first {
+                SingleGameHomeView(gameSystem: system) {
+                    await viewModel.load()
                 }
-                .listStyle(.insetGrouped)
-                .tabBarScrollInset()
-                .accessibilityIdentifier("home.gameSystemList")
+            } else {
+                multiGameList
             }
         }
         .navigationTitle(String(localized: "Play"))
@@ -131,7 +96,7 @@ struct HomeView: View {
                     .accessibilityHint(String(localized: "Household players, owned armies, and match stats"))
                 }
             }
-            if ReleaseSurface.showsMatchHistory, showsMatchHistoryToolbar {
+            if ReleaseSurface.showsMatchHistory, showsMatchHistoryToolbar, viewModel.gameSystems.count != 1 {
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink(value: MatchHistoryLink()) {
                         Label(String(localized: "History"), systemImage: "clock.arrow.circlepath")
@@ -179,40 +144,55 @@ struct HomeView: View {
         .refreshable { await viewModel.load() }
     }
 
-    private func gameSystemRow(_ system: GameSystem) -> some View {
-        HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
-            Image(systemName: GameSystemSymbol.systemImage(for: system.id))
-                .font(.title2)
-                .foregroundStyle(Color.accentOnSurface)
-                .symbolRenderingMode(.hierarchical)
-                .frame(width: DesignTokens.minTouchTarget, height: DesignTokens.minTouchTarget)
-                .accessibilityHidden(true)
-
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
-                    Text(system.name)
-                        .font(.headline)
-                    if system.id == GameSystemId.wh40k10eCp.rawValue {
-                        GuideBadge(style: .custom(String(localized: "10th Edition")))
-                    } else if ReleaseSurface.showsNewEditionBadge(for: system.id) {
-                        NewEditionBadge()
+    private var multiGameList: some View {
+        List {
+            if !viewModel.gameSystems.isEmpty {
+                if let heroPresentation {
+                    Section {
+                        switch heroPresentation {
+                        case .continuation(let continuation):
+                            HomeContinueCard(continuation: continuation)
+                        case .chooser:
+                            HomeNewPlayerChooserCard()
+                        }
                     }
                 }
-                Text(newcomerTagline(for: system))
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                if let footnote = editionFootnote(for: system) {
-                    Text(footnote)
-                        .font(.caption)
-                        .foregroundStyle(.tertiary)
+
+                if ReleaseSurface.showsPlayersHub {
+                    Section {
+                        HomePlayersHubCard()
+                    }
                 }
-                Text(system.edition)
-                    .font(.caption)
-                    .foregroundStyle(.tertiary)
+            }
+
+            if showsAllGamesList {
+                Section {
+                    ForEach(viewModel.gameSystems) { system in
+                        NavigationLink(value: system.id) {
+                            gameSystemRow(system)
+                        }
+                        .accessibilityIdentifier("home.gameSystem.\(system.id)")
+                    }
+                } header: {
+                    TTSectionHeader(allGamesSectionHeader)
+                } footer: {
+                    if let allGamesSectionFooter {
+                        Text(allGamesSectionFooter)
+                    }
+                }
             }
         }
-        .padding(.vertical, DesignTokens.Spacing.xs)
-        .contentShape(Rectangle())
+        .ttCardList()
+        .tabBarScrollInset()
+        .accessibilityIdentifier("home.gameSystemList")
+    }
+
+    private func gameSystemRow(_ system: GameSystem) -> some View {
+        TTRow(
+            title: system.name,
+            subtitle: newcomerTagline(for: system),
+            systemImage: GameSystemSymbol.systemImage(for: system.id)
+        )
         .accessibilityElement(children: .combine)
         .accessibilityLabel(homeRowAccessibilityLabel(for: system))
     }

@@ -28,6 +28,17 @@ final class AppRouterNavigationTests: XCTestCase {
         XCTAssertEqual(router.learnPath.count, 1)
     }
 
+    func testOpenGameGuidePopsToRootWhenSingleGame() {
+        let router = AppRouter()
+        router.openGuidedMatch(gameSystemId: "aos-spearhead")
+        XCTAssertEqual(router.learnPath.count, 1)
+
+        router.openGameGuide(gameSystemId: "aos-spearhead")
+
+        XCTAssertEqual(router.selectedTab, .learn)
+        XCTAssertEqual(router.learnPath.count, 0)
+    }
+
     func testOpenRulesSearchQueuesQueryAndSwitchesTab() {
         let router = AppRouter()
 

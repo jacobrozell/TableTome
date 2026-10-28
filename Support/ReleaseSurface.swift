@@ -169,6 +169,14 @@ public enum ReleaseSurface {
         return liveReleaseGameSystemIds.contains(gameSystemId)
     }
 
+    /// Non-nil when exactly one game system is visible (1.0: Spearhead). Home renders that system's hub directly.
+    public static func singleVisibleGameSystemId(
+        registry: GameSystemRegistry = .bundled(withBoxSetsFrom: .main)
+    ) -> String? {
+        let ids = GameSystemId.allCases.map(\.rawValue).filter { isGameSystemIdVisible($0, registry: registry) }
+        return ids.count == 1 ? ids[0] : nil
+    }
+
     public static func isPlayHomeGameSystemVisible(
         _ system: GameSystem,
         registry: GameSystemRegistry = .bundled(withBoxSetsFrom: .main)

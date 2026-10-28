@@ -25,6 +25,7 @@ public struct TTCard<Content: View>: View {
 }
 
 public struct TTHeroCard<Actions: View>: View {
+    private let eyebrow: String?
     private let title: String
     private let subtitle: String?
     private let systemImage: String?
@@ -32,12 +33,14 @@ public struct TTHeroCard<Actions: View>: View {
     private let actions: Actions
 
     public init(
+        eyebrow: String? = nil,
         title: String,
         subtitle: String? = nil,
         systemImage: String? = nil,
         tone: TTTone = .brand,
         @ViewBuilder actions: () -> Actions
     ) {
+        self.eyebrow = eyebrow
         self.title = title
         self.subtitle = subtitle
         self.systemImage = systemImage
@@ -51,6 +54,9 @@ public struct TTHeroCard<Actions: View>: View {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                     if let systemImage {
                         TTIconTile(systemImage: systemImage, tone: tone, size: DesignTokens.Size.iconTileLarge)
+                    }
+                    if let eyebrow {
+                        Text(eyebrow).ttEyebrow()
                     }
                     Text(title)
                         .font(TTFont.title)
@@ -84,8 +90,20 @@ public struct TTHeroCard<Actions: View>: View {
 }
 
 public extension TTHeroCard where Actions == EmptyView {
-    init(title: String, subtitle: String? = nil, systemImage: String? = nil, tone: TTTone = .brand) {
-        self.init(title: title, subtitle: subtitle, systemImage: systemImage, tone: tone) { EmptyView() }
+    init(
+        eyebrow: String? = nil,
+        title: String,
+        subtitle: String? = nil,
+        systemImage: String? = nil,
+        tone: TTTone = .brand
+    ) {
+        self.init(
+            eyebrow: eyebrow,
+            title: title,
+            subtitle: subtitle,
+            systemImage: systemImage,
+            tone: tone
+        ) { EmptyView() }
     }
 }
 

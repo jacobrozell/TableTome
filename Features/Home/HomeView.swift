@@ -230,7 +230,7 @@ struct HomeView: View {
 
     private func newcomerTagline(for system: GameSystem) -> String {
         if system.id == "aos-spearhead" {
-            return String(localized: "Fantasy starter box — box says Spearhead")
+            return String(localized: "Your Spearhead starter box")
         }
         if system.id == "wh40k-11e" {
             return String(localized: "11th Edition — Armageddon box or your own lists")
@@ -246,7 +246,7 @@ struct HomeView: View {
 
     private func editionFootnote(for system: GameSystem) -> String? {
         if system.id == "aos-spearhead" {
-            return String(localized: "Starter-box format — realm boards and battle tactics from your set")
+            return nil
         }
         if system.id == "wh40k-10e-cp" {
             return String(localized: "Uses 10th Edition Combat Patrol rules")

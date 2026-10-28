@@ -50,8 +50,7 @@ struct SettingsView: View {
                 Text(
                     String(
                         localized: """
-                        Open the Play tab and use the chooser at the top. Pick your starter box, follow Getting Started, \
-                        then run Guided Match at the table.
+                        New to Spearhead? Start on the Play tab. We'll guide your first battle.
                         """
                     )
                 )

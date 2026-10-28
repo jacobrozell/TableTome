@@ -164,7 +164,7 @@ Legend: ⬜ not started · 🟨 in progress · ✅ merged · ⏸ blocked. **Deps
 |----|-------|------|------|--------|
 | SC-00 | Get guardrails green (ratchet `switch_gameSystemId` 23→≤21, content-lint empty 40k faction) | — | [00](00-scope-and-gating.md) | ✅ |
 | SC-01 | Gate 40k 11e + Combat Patrol for 1.0 (Spearhead-only release) | SC-00 | [00](00-scope-and-gating.md) | 🟨 |
-| SC-02 | Remove multi-game copy from Spearhead-only surfaces | SC-01 | [00](00-scope-and-gating.md) | ⬜ |
+| SC-02 | Remove multi-game copy from Spearhead-only surfaces | SC-01 | [00](00-scope-and-gating.md) | ✅ |
 
 ### Phase 1: Design system foundation (must finish before any screen WP)
 

@@ -32,10 +32,10 @@ enum OnboardingContent {
             id: OnboardingCompletion.spearheadGameSystemId,
             symbol: "shield.lefthalf.filled",
             name: String(localized: "Age of Sigmar: Spearhead"),
-            edition: String(localized: "Fantasy starter-box battles"),
+            edition: String(localized: "Fast, small-army battles"),
             blurb: String(
                 localized: """
-                If you own an Age of Sigmar Spearhead box — short rules, small armies, guided setup in about 90 minutes.
+                Have a Spearhead box? We'll walk you through setup and every phase of your first battle.
                 """
             ),
             showsNewBadge: false,

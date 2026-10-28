@@ -112,5 +112,5 @@ Do this phase **first**, because it removes whole branches of UI from the 1.0 su
 
 ### Acceptance
 
-- [ ] No user-visible string in the Release Spearhead path mentions 40k, Combat Patrol, StarCraft, or editions other than in Settings' trademark disclaimer.
-- [ ] Full-surface build still shows the original multi-game copy.
+- [x] No user-visible string in the Release Spearhead path mentions 40k, Combat Patrol, StarCraft, or editions other than in Settings' trademark disclaimer. Spearhead onboarding, Play tagline, and Settings intro rewritten. Remaining hits are behind `isGameSystemIdVisible` / a non-Spearhead row (gated). Rules picker already hides when `gameSystems.count` is 1.
+- [x] Full-surface build still shows the original multi-game copy. (40k, Combat Patrol, and StarCraft highlight blurbs were not edited.)

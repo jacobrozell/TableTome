@@ -171,7 +171,7 @@ Legend: ⬜ not started · 🟨 in progress · ✅ merged · ⏸ blocked. **Deps
 | WP | Title | Deps | File | Status |
 |----|-------|------|------|--------|
 | DS-01 | Theme colors (`TTColor`) + asset catalog accent update | — | [01](01-design-system.md) | 🟨 |
-| DS-02 | Typography tokens (`TTFont`) | DS-01 | [01](01-design-system.md) | ⬜ |
+| DS-02 | Typography tokens (`TTFont`) | DS-01 | [01](01-design-system.md) | 🟨 |
 | DS-03 | Spacing / radius / elevation tokens (extend `DesignTokens`) | DS-01 | [01](01-design-system.md) | ⬜ |
 | DS-04 | Re-skin existing surface modifiers (`surfaceCard`, `accentHighlightCard`, …) | DS-01..03 | [01](01-design-system.md) | ⬜ |
 | DS-05 | Button styles + `PrimaryButton` re-skin | DS-01..03 | [01](01-design-system.md) | ⬜ |

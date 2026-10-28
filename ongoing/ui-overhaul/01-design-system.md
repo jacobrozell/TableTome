@@ -241,7 +241,7 @@ Rules:
 - Multi-line body text gets `.lineSpacing(2)` in rules detail and guide steps only (RR-02, GG-02).
 
 ### Acceptance (DS-02)
-- [ ] `TTFont.swift` compiles. `TTTypeGallery` preview (DS-08) shows every style at default and AX3.
+- [x] `TTFont.swift` compiles. `TTTypeGallery` preview (DS-08) is still open.
 
 ---
 

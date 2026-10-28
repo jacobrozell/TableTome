@@ -69,8 +69,16 @@ private struct AdaptiveEmptyStateLayout: ViewModifier {
 extension View {
     /// Centers loading spinners and error empty states inside navigation stacks.
     func asyncContentShell() -> some View {
-        frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            .background(Color(.systemBackground))
+        VStack(spacing: DesignTokens.Spacing.md) {
+            BrandCrest(size: 64)
+                .modifier(CrestBreathing())
+                .accessibilityHidden(true)
+            self
+        }
+        .font(TTFont.callout)
+        .foregroundStyle(TTColor.inkSecondary)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        .background(TTColor.canvas.ignoresSafeArea())
     }
 
     /// Menu-style form pickers often fail to open from sheets (especially inside `NavigationSplitView`).
@@ -101,6 +109,22 @@ extension View {
     /// Top margin + standard form editor chrome for NavigationStack sheets.
     func formEditorScreenChrome() -> some View {
         formEditorTopContentMargin()
+    }
+}
+
+private struct CrestBreathing: ViewModifier {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var dim = false
+
+    func body(content: Content) -> some View {
+        content
+            .opacity(reduceMotion ? 0.6 : (dim ? 0.35 : 0.6))
+            .onAppear {
+                guard !reduceMotion else { return }
+                withAnimation(.easeInOut(duration: 1.4).repeatForever(autoreverses: true)) {
+                    dim = true
+                }
+            }
     }
 }
 

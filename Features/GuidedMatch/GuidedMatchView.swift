@@ -14,7 +14,7 @@ struct GuidedMatchView: View {
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.dynamicTypeSize) var dynamicTypeSize
     @Environment(\.accessibilityReduceMotion) var reduceMotion
     @Environment(\.dismiss) var dismiss
     @Environment(AppRouter.self) var router
@@ -228,10 +228,7 @@ struct GuidedMatchView: View {
     }
 
     var guidedMatchNavigationTitle: String {
-        if usesPhoneLandscapeBattleImmersion {
-            return ""
-        }
-        if !usesPadSplitNavigation, !isHubChromeCollapsed {
+        if usesPhoneLandscapeBattleImmersion || hidesGuidedMatchHubChromeWhenEmbedded {
             return ""
         }
         return GameSystemRulesLabels.guidedMatchTitle(gameSystemId: gameSystemId)

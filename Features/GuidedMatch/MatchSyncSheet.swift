@@ -18,11 +18,11 @@ struct MatchSyncSheet: View {
             Form {
                 if syncService.isLiveSyncActive {
                     Section {
-                        Label(
+                        TTBadge(
                             String(localized: "Live sync active"),
+                            tone: .success,
                             systemImage: "checkmark.circle.fill"
                         )
-                        .foregroundStyle(.green)
                         .accessibilityIdentifier("matchSync.liveActive")
                     }
                 }
@@ -43,6 +43,7 @@ struct MatchSyncSheet: View {
                     Button(String(localized: "Host match")) {
                         syncService.startHosting()
                     }
+                    .buttonStyle(.ttPrimary)
                     .accessibilityIdentifier("matchSync.host")
 
                     TextField(String(localized: "Join code"), text: $joinCode)
@@ -59,18 +60,19 @@ struct MatchSyncSheet: View {
                     Button(String(localized: "Join match")) {
                         syncService.startJoining(code: joinCode)
                     }
+                    .buttonStyle(.ttSecondary)
                     .disabled(joinCode.count != 4)
                     .accessibilityIdentifier("matchSync.join")
 
                     if case .hosting(let code) = syncService.role {
                         LabeledContent(String(localized: "Your code"), value: code)
-                            .font(.title2.monospaced().bold())
+                            .font(TTFont.numericMedium)
                     }
 
                     if let status = syncService.statusMessage {
                         Text(status)
                             .font(.caption)
-                            .foregroundStyle(statusIsError ? .red : .secondary)
+                            .foregroundStyle(statusIsError ? TTColor.danger : TTColor.inkSecondary)
                             .accessibilityIdentifier("matchSync.status")
                     }
 
@@ -116,6 +118,7 @@ struct MatchSyncSheet: View {
                     }
                 }
             }
+            .ttGroupedList()
             .navigationTitle(String(localized: "Sync Match"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

@@ -10,9 +10,11 @@ extension GuidedMatchView {
         NavigationSplitView(columnVisibility: $splitColumnVisibility) {
             NavigationStack {
                 List(selection: $selectedDestination) {
-                    guidedMatchSections(catalog: catalog, useSplitSelection: true)
+                    padSidebar(catalog: catalog)
                 }
                 .listStyle(.sidebar)
+                .scrollContentBackground(.hidden)
+                .background(TTColor.surface)
                 .navigationTitle(guidedMatchNavigationTitle)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar { padSidebarToolbar }
@@ -98,6 +100,75 @@ extension GuidedMatchView {
     }
 
     @ViewBuilder
+    func padSidebar(catalog: SpearheadCatalog) -> some View {
+        Section(String(localized: "Match")) {
+            padPlayerRow(
+                isPlayerOne: true,
+                selection: viewModel.matchState.playerOne,
+                catalog: catalog,
+                destination: .playerOne
+            )
+            padPlayerRow(
+                isPlayerOne: false,
+                selection: viewModel.matchState.playerTwo,
+                catalog: catalog,
+                destination: .playerTwo
+            )
+        }
+        Section(String(localized: "Setup")) {
+            ForEach(viewModel.sortedMatchSteps) { step in
+                let done = viewModel.matchState.completedStepIds.contains(step.id)
+                Label {
+                    Text(step.title)
+                        .font(TTFont.callout)
+                        .foregroundStyle(done ? TTColor.inkSecondary : TTColor.inkPrimary)
+                } icon: {
+                    Image(systemName: done ? "checkmark.circle.fill" : "circle")
+                        .foregroundStyle(done ? TTColor.success : TTColor.stroke)
+                }
+                .tag(GuidedMatchDestination.step(step.id))
+                .accessibilityIdentifier("guidedMatch.setupStep.\(step.id)")
+            }
+        }
+        Section(String(localized: "Battle")) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xxs) {
+                Text(String(localized: "Battle"))
+                    .font(TTFont.headline)
+                if let summary = battleTrackerSummaryLine() {
+                    Text(summary)
+                        .font(TTFont.caption)
+                        .foregroundStyle(TTColor.inkSecondary)
+                }
+            }
+            .tag(GuidedMatchDestination.battleTracker)
+            .accessibilityIdentifier("guidedMatch.battleTracker")
+        }
+    }
+
+    private func padPlayerRow(
+        isPlayerOne: Bool,
+        selection: PlayerArmySelection,
+        catalog: SpearheadCatalog,
+        destination: GuidedMatchDestination
+    ) -> some View {
+        HStack(spacing: DesignTokens.Spacing.sm) {
+            TTPlayerToken(isPlayerOne: isPlayerOne, size: 28)
+            Text(
+                playerSummary(
+                    selection: selection,
+                    catalog: catalog,
+                    fallback: isPlayerOne ? String(localized: "Player 1") : String(localized: "Player 2")
+                )
+            )
+            .font(TTFont.callout)
+            .foregroundStyle(TTColor.inkPrimary)
+            .lineLimit(2)
+        }
+        .tag(destination)
+        .accessibilityIdentifier(isPlayerOne ? "guidedMatch.playerOne" : "guidedMatch.playerTwo")
+    }
+
+    @ViewBuilder
     func guidedMatchDetail(catalog: SpearheadCatalog) -> some View {
         if let selectedDestination {
             guidedMatchScreen(
@@ -115,9 +186,17 @@ extension GuidedMatchView {
     func guidedMatchPadWelcome(catalog: SpearheadCatalog) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-                guidedMatchPlaceholder(
+                TTEmptyState(
                     title: String(localized: "Start here"),
-                    message: padWelcomeMessage
+                    message: padWelcomeMessage,
+                    systemImage: "flag.checkered",
+                    primary: viewModel.matchState.hasBothArmies
+                        ? nil
+                        : (String(localized: "Use Starter Matchup"), {
+                            useStarterMatchup(navigateToSetup: false)
+                            selectedDestination = spearheadPadDetailDestination ?? .battleTracker
+                        }),
+                    primaryAccessibilityIdentifier: "guidedMatch.starterMatchup.detail"
                 )
 
                 if !viewModel.matchState.hasBothArmies {
@@ -136,14 +215,6 @@ extension GuidedMatchView {
     @ViewBuilder
     private func starterMatchupPadActions(catalog: SpearheadCatalog) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Button(String(localized: "Use Starter Matchup")) {
-                useStarterMatchup(navigateToSetup: false)
-                selectedDestination = spearheadPadDetailDestination ?? .battleTracker
-            }
-            .buttonStyle(.borderedProminent)
-            .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-            .accessibilityIdentifier("guidedMatch.starterMatchup.detail")
-
             DisclosureGroup(String(localized: "We brought our own lists")) {
                 VStack(spacing: DesignTokens.Spacing.sm) {
                     Button {

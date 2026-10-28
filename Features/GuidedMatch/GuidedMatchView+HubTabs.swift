@@ -208,3 +208,152 @@ extension GuidedMatchView {
         )
     }
 }
+
+struct GuidedMatchStageHeader: View {
+    @Binding var selection: GuidedMatchHubTab
+    let visibleTabs: [GuidedMatchHubTab]
+    let hasBothArmies: Bool
+    let setupComplete: Bool
+    var locksArmiesTab: Bool = false
+    var setupCompleted: Int = 0
+    var setupTotal: Int = 0
+
+    @State private var lockedTabAttempt: GuidedMatchHubTab?
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+            HStack(alignment: .top, spacing: 0) {
+                ForEach(Array(visibleTabs.enumerated()), id: \.element.id) { index, tab in
+                    if index > 0 {
+                        Rectangle()
+                            .fill(TTColor.stroke)
+                            .frame(height: 2)
+                            .frame(maxWidth: .infinity)
+                            .padding(.top, 15)
+                    }
+                    node(tab)
+                }
+            }
+            .accessibilityIdentifier("guidedMatch.hubTabs")
+            if let lockedTabAttempt {
+                Text(lockedTabAttempt.lockedMessage(hasBothArmies: hasBothArmies))
+                    .font(TTFont.caption)
+                    .foregroundStyle(TTColor.warning)
+                    .accessibilityIdentifier("guidedMatch.hubTabs.lockedNotice")
+            }
+        }
+        .padding(.horizontal, DesignTokens.Spacing.md)
+        .padding(.vertical, DesignTokens.Spacing.sm)
+        .frame(minHeight: 64)
+        .barChromeBackground()
+    }
+
+    private func node(_ tab: GuidedMatchHubTab) -> some View {
+        let locked = tab.isLocked(
+            hasBothArmies: hasBothArmies,
+            setupComplete: setupComplete,
+            locksArmiesTab: locksArmiesTab
+        )
+        let selected = selection == tab
+        return Button {
+            if locked {
+                lockedTabAttempt = tab
+            } else {
+                lockedTabAttempt = nil
+                selection = tab
+            }
+        } label: {
+            VStack(spacing: DesignTokens.Spacing.xxs) {
+                nodeMark(tab, selected: selected)
+                Text(label(for: tab))
+                    .font(tab == .setup ? TTFont.numericSmall : TTFont.caption)
+                    .foregroundStyle(selected ? TTColor.inkPrimary : TTColor.inkSecondary)
+                    .lineLimit(1)
+            }
+            .frame(minWidth: 72)
+            .opacity(locked ? 0.4 : 1)
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(selected ? .isSelected : [])
+        .accessibilityHint(tab.guidedMatchAccessibilityHint(locksArmiesTab: locksArmiesTab, setupComplete: setupComplete))
+        .accessibilityIdentifier("guidedMatch.hubTab.\(tab.rawValue)")
+    }
+
+    private func label(for tab: GuidedMatchHubTab) -> String {
+        if tab == .setup, setupTotal > 0, !setupComplete {
+            return String(localized: "Setup \(setupCompleted)/\(setupTotal)")
+        }
+        return tab.title
+    }
+
+    @ViewBuilder
+    private func nodeMark(_ tab: GuidedMatchHubTab, selected: Bool) -> some View {
+        let done = isDone(tab)
+        ZStack {
+            Circle()
+                .strokeBorder(done ? TTColor.success : (selected ? TTColor.brandFill : TTColor.stroke), lineWidth: 2)
+                .frame(width: 28, height: 28)
+            if done {
+                Circle().fill(TTColor.success).frame(width: 28, height: 28)
+                Image(systemName: "checkmark")
+                    .font(TTFont.caption.weight(.bold))
+                    .foregroundStyle(TTColor.inkOnPlayer)
+            } else if selected {
+                Circle().fill(TTColor.brandFill).frame(width: 12, height: 12)
+            }
+        }
+        .accessibilityHidden(true)
+    }
+
+    private func isDone(_ tab: GuidedMatchHubTab) -> Bool {
+        switch tab {
+        case .armies: hasBothArmies && selection != .armies
+        case .setup: setupComplete && selection == .battle
+        case .battle: false
+        }
+    }
+}
+
+extension GuidedMatchHubTab {
+    func isLocked(hasBothArmies: Bool, setupComplete: Bool, locksArmiesTab: Bool) -> Bool {
+        switch self {
+        case .armies: locksArmiesTab
+        case .setup: !hasBothArmies
+        case .battle: !hasBothArmies || !setupComplete
+        }
+    }
+
+    func lockedMessage(hasBothArmies: Bool) -> String {
+        switch self {
+        case .armies:
+            String(localized: "Army selection is locked while a battle is in progress. Reset the match to change armies.")
+        case .setup:
+            String(localized: "Choose both armies first — use Starter Matchup or pick each player below.")
+        case .battle:
+            if !hasBothArmies {
+                String(localized: "Choose both armies before opening the battle tracker.")
+            } else {
+                String(localized: "Finish the remaining setup steps on the Setup tab first.")
+            }
+        }
+    }
+
+    func guidedMatchAccessibilityHint(locksArmiesTab: Bool, setupComplete: Bool) -> String {
+        switch self {
+        case .armies:
+            if locksArmiesTab {
+                String(localized: "Army selection is locked once a battle is in progress. Reset the match to change armies.")
+            } else {
+                String(localized: "Before the battle: pick both player armies or use starter matchup.")
+            }
+        case .setup:
+            String(localized: "Mission, deployment, and pre-battle steps. Unlocks after both armies are chosen.")
+        case .battle:
+            if setupComplete {
+                String(localized: "Turn phases, scoring, and unit health at the table.")
+            } else {
+                String(localized: "Unlocks after setup steps are complete.")
+            }
+        }
+    }
+}

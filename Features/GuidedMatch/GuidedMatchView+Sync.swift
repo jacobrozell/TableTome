@@ -41,21 +41,34 @@ extension GuidedMatchView {
 
     @ToolbarContentBuilder
     var matchSyncToolbar: some ToolbarContent {
-        matchHistoryToolbarItems
-        if shouldShowMatchSyncToolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    showsMatchSync = true
-                } label: {
-                    Label(String(localized: "Nearby sync"), systemImage: "arrow.triangle.2.circlepath")
+        ToolbarItem(placement: .topBarTrailing) {
+            Menu {
+                if shouldShowMatchSyncToolbar {
+                    Button {
+                        showsMatchSync = true
+                    } label: {
+                        Label(String(localized: "Sync with Nearby Device"), systemImage: "arrow.triangle.2.circlepath")
+                    }
+                    .accessibilityIdentifier("guidedMatch.sync")
                 }
-                .accessibilityIdentifier("guidedMatch.sync")
-                .accessibilityHint(
-                    String(
-                        localized: "Share match state with your opponent on the same Wi-Fi or Bluetooth. Optional."
-                    )
-                )
+                if ReleaseSurface.showsMatchHistory, showsMatchHistoryToolbar {
+                    Button {
+                        showsMatchHistory = true
+                    } label: {
+                        Label(String(localized: "Match History"), systemImage: "clock.arrow.circlepath")
+                    }
+                    .accessibilityIdentifier("guidedMatch.history")
+                }
+                Divider()
+                Button(String(localized: "Reset Match…"), role: .destructive) {
+                    showsResetConfirmation = true
+                }
+                .accessibilityIdentifier("guidedMatch.reset")
+            } label: {
+                Image(systemName: "ellipsis.circle")
             }
+            .accessibilityLabel(String(localized: "Match menu"))
+            .accessibilityIdentifier("guidedMatch.menu")
         }
     }
 

@@ -93,71 +93,29 @@ extension GuidedMatchView {
     }
 
     @ViewBuilder
-    func guidedMatchHubChrome(catalog: SpearheadCatalog) -> some View {
+    func guidedMatchHubChrome(catalog _: SpearheadCatalog) -> some View {
         if !hidesGuidedMatchHubChromeWhenEmbedded {
-            if isHubChromeCollapsed {
-                GuidedMatchCollapsedHubChrome(summary: hubChromeSummaryLine(catalog: catalog)) {
-                    withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) {
-                        isHubChromeCollapsed = false
-                    }
-                }
+            if dynamicTypeSize.needsLayoutAdaptation {
+                GuidedMatchHubTabBar(
+                    selection: $hubTab,
+                    visibleTabs: visibleHubTabs,
+                    hasBothArmies: viewModel.matchState.hasBothArmies,
+                    setupComplete: setupIsComplete,
+                    locksArmiesTab: hasResumableBattleSession
+                )
+                .padding(.horizontal, DesignTokens.Spacing.md)
+                .padding(.vertical, DesignTokens.Spacing.sm)
+                .barChromeBackground()
             } else {
-                VStack(spacing: 0) {
-                    HStack(alignment: .top, spacing: DesignTokens.Spacing.xs) {
-                        GuidedMatchStatusBar(
-                            playerOneSummary: playerSummary(
-                                selection: viewModel.matchState.playerOne,
-                                catalog: catalog,
-                                fallback: String(localized: "Player 1")
-                            ),
-                            playerTwoSummary: playerSummary(
-                                selection: viewModel.matchState.playerTwo,
-                                catalog: catalog,
-                                fallback: String(localized: "Player 2")
-                            ),
-                            hasBothArmies: viewModel.matchState.hasBothArmies,
-                            setupCompleted: viewModel.setupProgress.completed,
-                            setupTotal: viewModel.setupProgress.total,
-                            nextStepTitle: viewModel.nextIncompleteStep?.title,
-                            setupComplete: setupIsComplete,
-                            activeHubTab: hubTab,
-                            battleTrackerSummary: battleTrackerSummaryLine(),
-                            compactMode: usesCompactHubStatusBar
-                        )
-                        .id(hubTrackerTick)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-
-                        ChromeCollapseInlineButton(
-                            accessibilityLabel: String(localized: "Hide match summary"),
-                            accessibilityIdentifier: "guidedMatch.hubChromeCollapseInline",
-                            onCollapse: {
-                                withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) {
-                                    isHubChromeCollapsed = true
-                                }
-                            }
-                        )
-                    }
-                    .barChromeBackground()
-
-                    if !showsEmbeddedBattleTracker {
-                        GuidedMatchHubTabBar(
-                            selection: $hubTab,
-                            visibleTabs: visibleHubTabs,
-                            hasBothArmies: viewModel.matchState.hasBothArmies,
-                            setupComplete: setupIsComplete,
-                            locksArmiesTab: hasResumableBattleSession
-                        )
-                        .padding(.horizontal, DesignTokens.Spacing.md)
-                        .padding(.vertical, DesignTokens.Spacing.sm)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(.bar)
-                    }
-                }
-                .overlay(alignment: .bottom) {
-                    if showsEmbeddedBattleTracker {
-                        Divider()
-                    }
-                }
+                GuidedMatchStageHeader(
+                    selection: $hubTab,
+                    visibleTabs: visibleHubTabs,
+                    hasBothArmies: viewModel.matchState.hasBothArmies,
+                    setupComplete: setupIsComplete,
+                    locksArmiesTab: hasResumableBattleSession,
+                    setupCompleted: viewModel.setupProgress.completed,
+                    setupTotal: viewModel.setupProgress.total
+                )
             }
         }
     }
@@ -243,9 +201,8 @@ extension GuidedMatchView {
                     }
                 )
             }
-            resetSectionView
         }
-        .listStyle(.insetGrouped)
+        .ttGroupedList()
         .tabBarScrollInset(
             additionalBottom: hubTab == .setup ? DesignTokens.guidedMatchSetupScrollExtraInset : 0
         )

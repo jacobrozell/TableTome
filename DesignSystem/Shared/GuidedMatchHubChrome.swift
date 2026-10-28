@@ -153,52 +153,15 @@ struct GuidedMatchHubTabBar: View {
     }
 
     private func lockedTabMessage(for tab: GuidedMatchHubTab) -> String {
-        switch tab {
-        case .armies:
-            String(localized: "Army selection is locked while a battle is in progress. Reset the match to change armies.")
-        case .setup:
-            String(localized: "Choose both armies first — use Starter Matchup or pick each player below.")
-        case .battle:
-            if !hasBothArmies {
-                String(localized: "Choose both armies before opening the battle tracker.")
-            } else {
-                String(localized: "Finish the remaining setup steps on the Setup tab first.")
-            }
-        }
+        tab.lockedMessage(hasBothArmies: hasBothArmies)
     }
 
     private func accessibilityHint(for tab: GuidedMatchHubTab) -> String {
-        switch tab {
-        case .armies:
-            if locksArmiesTab {
-                String(localized: "Army selection is locked once a battle is in progress. Reset the match to change armies.")
-            } else {
-                String(
-                    localized: "Before the battle: pick both player armies or use starter matchup."
-                )
-            }
-        case .setup:
-            String(
-                localized: "Mission, deployment, and pre-battle steps. Unlocks after both armies are chosen."
-            )
-        case .battle:
-            if setupComplete {
-                String(localized: "Turn phases, scoring, and unit health at the table.")
-            } else {
-                String(localized: "Unlocks after setup steps are complete.")
-            }
-        }
+        tab.guidedMatchAccessibilityHint(locksArmiesTab: locksArmiesTab, setupComplete: setupComplete)
     }
 
     private func isDisabled(_ tab: GuidedMatchHubTab) -> Bool {
-        switch tab {
-        case .armies:
-            locksArmiesTab
-        case .setup:
-            !hasBothArmies
-        case .battle:
-            !hasBothArmies || !setupComplete
-        }
+        tab.isLocked(hasBothArmies: hasBothArmies, setupComplete: setupComplete, locksArmiesTab: locksArmiesTab)
     }
 }
 

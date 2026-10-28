@@ -154,6 +154,19 @@ final class ReleaseSurfaceTests: XCTestCase {
         XCTAssertFalse(ReleaseSurface.isPlayHomeGameSystemVisible(GameSystemId.wh40k10eCp.rawValue))
     }
 
+    func testHiddenActiveGameFallsBackToSpearhead() {
+        UserDefaults.standard.set(
+            GameSystemId.wh40k11e.rawValue,
+            forKey: ActiveGameContextPersistence.storageKey
+        )
+        defer { ActiveGameContextPersistence.resetForTests() }
+        XCTAssertEqual(
+            ActiveGameContextPersistence.gameSystemId,
+            GameSystemRulesLabels.defaultGameSystemId
+        )
+        XCTAssertEqual(GameSystemRulesLabels.defaultGameSystemId, GameSystemId.aosSpearhead.rawValue)
+    }
+
     func testSpearheadDisallowsSimulatedDice() {
         XCTAssertFalse(ReleaseSurface.allowsSimulatedDice(for: .aosSpearhead))
         XCTAssertTrue(ReleaseSurface.allowsSimulatedDice(for: .wh40k11e))

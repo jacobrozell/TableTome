@@ -89,7 +89,8 @@ extension GameSystemId {
                     combatRollEngineKind: .wh40k11e,
                     deploymentChecklistStyle: .wh40k,
                     ruleCategories: [.core, .glossary],
-                    showsNewEditionBadge: true
+                    showsNewEditionBadge: true,
+                    requiresFullSurfaceFlag: true
                 ),
                 copy: GameSystemCopy(
                     shortLabel: String(localized: "40k"),
@@ -149,7 +150,8 @@ extension GameSystemId {
                     showsVictoryPoints: true,
                     combatRollEngineKind: .wh40k10eCombatPatrol,
                     scoringRuleSectionId: "cp-scoring",
-                    ruleCategories: [.core, .combatPatrol, .glossary]
+                    ruleCategories: [.core, .combatPatrol, .glossary],
+                    requiresFullSurfaceFlag: true
                 ),
                 copy: GameSystemCopy(
                     shortLabel: String(localized: "CP"),

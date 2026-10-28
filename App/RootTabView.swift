@@ -210,8 +210,10 @@ struct RootTabView: View {
         case .exploreApp:
             break
         case .openGuidedMatch(let gameSystemId):
+            guard ReleaseSurface.isGameSystemIdVisible(gameSystemId) else { return }
             router.openGuidedMatch(gameSystemId: gameSystemId)
         case .openGameGuide(let gameSystemId):
+            guard ReleaseSurface.isGameSystemIdVisible(gameSystemId) else { return }
             router.openGameGuide(gameSystemId: gameSystemId)
         }
     }

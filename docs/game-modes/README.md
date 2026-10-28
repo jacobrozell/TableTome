@@ -8,8 +8,8 @@ Authoritative specs stay in [`specs/`](../../specs/). This folder collects **mod
 |------|----------------|----------------|--------|--------|
 | Age of Sigmar — Spearhead | `aos-spearhead` | AoS 4e Spearhead | **Shipped** | [aos-spearhead/](aos-spearhead/) |
 | Age of Sigmar — full / standard | — | Battletomes, matched play | **Planned** | [aos-standard/](aos-standard/) |
-| Warhammer 40,000 — 11th Edition | `wh40k-11e` | 11e full game | **Shipped** | [wh40k-11e/](wh40k-11e/) |
-| Warhammer 40,000 — Combat Patrol | `wh40k-10e-cp` | **10th Edition** patrol format | **Shipped** | [combat-patrol/](combat-patrol/) |
+| Warhammer 40,000 — 11th Edition | `wh40k-11e` | 11e full game | 🔒 Gated (post-1.0) | [wh40k-11e/](wh40k-11e/) |
+| Warhammer 40,000 — Combat Patrol | `wh40k-10e-cp` | **10th Edition** patrol format | 🔒 Gated (post-1.0) | [combat-patrol/](combat-patrol/) |
 | Warhammer 40,000 — 10th Edition (full) | — | Matched play, points lists | **Not planned** | [wh40k-10e/](wh40k-10e/) |
 | StarCraft: The Miniatures Game | `sc-tmg` | SC TMG | Gated | (spec in `FutureIdeas/`) |
 

@@ -83,10 +83,10 @@ Do this phase **first**, because it removes whole branches of UI from the 1.0 su
 
 ### Acceptance
 
-- [ ] Fresh install, no args: onboarding shows only Spearhead content; Play home has no 40k/CP rows; Rules has no game picker; Settings has no 40k/CP guide links.
-- [ ] Upgrade install with `active_game_system_id = wh40k-11e` and an in-progress 40k match: app opens on Spearhead, and no continuation card points at 40k.
-- [ ] `-enable_full_product_surface`: 40k 11e, Combat Patrol, and StarCraft all visible, and the 40k + CP guided match can start.
-- [ ] Unit tests pass, ratchet passes (no new raw id literals in `Features/`: the test file is outside the ratchet paths).
+- [x] Fresh install, no args: onboarding shows only Spearhead content; Play home has no 40k/CP rows; Rules has no game picker; Settings has no 40k/CP guide links. (ReleaseSurfaceTests: default visible ids, play home, guided match, combat resolver, settings links stay behind `isGameSystemIdVisible`.)
+- [x] Upgrade install with `active_game_system_id = wh40k-11e` and an in-progress 40k match: app opens on Spearhead, and no continuation card points at 40k. (`testHiddenActiveGameFallsBackToSpearhead`; continuation candidates drop hidden ids.)
+- [ ] `-enable_full_product_surface`: 40k 11e, Combat Patrol, and StarCraft all visible, and the 40k + CP guided match can start. (Code path is `fullSurfaceEnabled`; not launched in this session.)
+- [x] Unit tests pass, ratchet passes (no new raw id literals in `Features/`: the test file is outside the ratchet paths).
 
 ---
 

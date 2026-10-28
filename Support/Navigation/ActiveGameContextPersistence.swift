@@ -7,8 +7,11 @@ enum ActiveGameContextPersistence: Sendable {
 
     static var gameSystemId: String {
         get {
-            UserDefaults.standard.string(forKey: storageKey)
+            let stored = UserDefaults.standard.string(forKey: storageKey)
                 ?? GameSystemRulesLabels.defaultGameSystemId
+            return ReleaseSurface.isGameSystemIdVisible(stored)
+                ? stored
+                : GameSystemRulesLabels.defaultGameSystemId
         }
         set {
             UserDefaults.standard.set(newValue, forKey: storageKey)

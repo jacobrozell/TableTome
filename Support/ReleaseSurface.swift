@@ -73,6 +73,7 @@ public enum ReleaseSurface {
     /// Combat Patrol (10th Edition rules) — internal / post-1.0 unless explicitly enabled.
     public static var showsCombatPatrol: Bool {
         fullSurfaceEnabled
+            || manifestAvailableSystemIds.contains(GameSystemId.wh40k10eCp.rawValue)
             || ProcessInfo.processInfo.arguments.contains("-enable_combat_patrol")
     }
 
@@ -110,7 +111,7 @@ public enum ReleaseSurface {
 
     // MARK: Play features
 
-    public static var shows40kEditions: Bool { true }
+    public static var shows40kEditions: Bool { fullSurfaceEnabled }
     public static var showsRollEvaluator: Bool { true }
     public static var showsRulesAssistant: Bool { fullSurfaceEnabled }
     public static var showsMatchHistory: Bool { true }

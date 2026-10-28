@@ -1,5 +1,6 @@
 import XCTest
 @testable import Tabletome
+@testable import TabletomeDomain
 
 final class ActiveGameContextPersistenceTests: XCTestCase {
     override func tearDown() {
@@ -8,7 +9,10 @@ final class ActiveGameContextPersistenceTests: XCTestCase {
     }
 
     func testPersistsActiveGameSystemId() {
-        ActiveGameContextPersistence.gameSystemId = "wh40k-10e-cp"
-        XCTAssertEqual(ActiveGameContextPersistence.gameSystemId, "wh40k-10e-cp")
+        ActiveGameContextPersistence.gameSystemId = GameSystemId.aosSpearhead.rawValue
+        XCTAssertEqual(
+            ActiveGameContextPersistence.gameSystemId,
+            GameSystemId.aosSpearhead.rawValue
+        )
     }
 }

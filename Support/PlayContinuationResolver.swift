@@ -61,12 +61,17 @@ enum PlayContinuationResolver {
     }
 
     private static func candidateGameSystemIds(activeGameSystemId: String) -> [String] {
-        var ids = Set(GameSystemId.allCases.map(\.rawValue))
-        ids.insert(activeGameSystemId)
-        if let choice = FirstSessionStore.onboardingChoice {
+        var ids = Set(
+            GameSystemId.allCases.map(\.rawValue).filter { ReleaseSurface.isGameSystemIdVisible($0) }
+        )
+        if ReleaseSurface.isGameSystemIdVisible(activeGameSystemId) {
+            ids.insert(activeGameSystemId)
+        }
+        if let choice = FirstSessionStore.onboardingChoice,
+           ReleaseSurface.isGameSystemIdVisible(choice) {
             ids.insert(choice)
         }
-        return ids.filter { ReleaseSurface.isPlayHomeGameSystemVisible($0) }
+        return Array(ids)
     }
 
     private static func resumeScore(
@@ -170,8 +175,9 @@ enum PlayContinuationResolver {
         )
     }
 
-    private static func openGuide(for gameSystemId: String) -> PlayContinuation {
-        PlayContinuation(
+    private static func openGuide(for gameSystemId: String) -> PlayContinuation? {
+        guard ReleaseSurface.isGameSystemIdVisible(gameSystemId) else { return nil }
+        return PlayContinuation(
             gameSystemId: gameSystemId,
             destination: .gameGuide,
             title: String(localized: "Continue your path"),

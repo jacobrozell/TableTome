@@ -68,4 +68,5 @@ Before ungating 40k, Combat Patrol, StarCraft, Lists, or Rules Q&A, complete the
 | Agent map | `docs/release/1.0.0-release-surface.md` |
 | Gated features testing | `docs/release/gated-features-testing.md` |
 | Product scope | `docs/game-modes/PRODUCT_SCOPE.md` |
-| Unit tests | `Tests/Unit/ReleaseSurfaceTests.swift` — release defaults = Spearhead only |
+| Unit tests | `Tests/Unit/ReleaseSurfaceTests.swift` — release defaults = Spearhead only; a stored `wh40k-11e` active game falls back to Spearhead |
+| Full-surface flag | `requiresFullSurfaceFlag` on 40k 11e, Combat Patrol, and StarCraft. Combat Patrol stays visible when `-enable_full_product_surface` or `-enable_combat_patrol` is set |

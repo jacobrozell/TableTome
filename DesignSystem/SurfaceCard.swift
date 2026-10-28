@@ -86,9 +86,7 @@ public extension View {
 
     /// Plain list with side margins so floating cards keep visible corners on every edge.
     func floatingCardListStyle() -> some View {
-        listStyle(.plain)
-            .contentMargins(.horizontal, DesignTokens.Spacing.md, for: .scrollContent)
-            .contentMargins(.top, DesignTokens.Spacing.xs, for: .scrollContent)
+        ttCardList()
     }
 }
 
@@ -99,16 +97,11 @@ struct ProgressBadge: View {
     private var isComplete: Bool { total > 0 && done >= total }
 
     var body: some View {
-        Text("\(done)/\(total)")
-            .font(.caption.weight(.semibold))
-            .monospacedDigit()
-            .padding(.horizontal, DesignTokens.Spacing.sm)
-            .padding(.vertical, 3)
-            .background(
-                isComplete ? TTColor.successSoft : TTColor.sunken,
-                in: Capsule()
-            )
-            .foregroundStyle(isComplete ? TTColor.success : TTColor.inkSecondary)
+        TTBadge(
+            "\(done)/\(total)",
+            tone: isComplete ? .success : .neutral,
+            style: .soft
+        )
     }
 }
 
@@ -117,16 +110,7 @@ struct SectionHeader: View {
     var systemImage: String?
 
     var body: some View {
-        HStack(spacing: DesignTokens.Spacing.xs) {
-            if let systemImage {
-                Image(systemName: systemImage)
-                    .foregroundStyle(TTColor.inkTertiary)
-                    .accessibilityHidden(true)
-            }
-            Text(title)
-                .ttEyebrow()
-        }
-        .accessibilityAddTraits(.isHeader)
+        TTSectionHeader(title, systemImage: systemImage)
     }
 }
 
@@ -186,22 +170,8 @@ struct ReferenceLinkRow: View {
     let systemImage: String
 
     var body: some View {
-        HStack(spacing: DesignTokens.Spacing.sm) {
-            Image(systemName: systemImage)
-                .foregroundStyle(TTColor.brand)
-                .accessibilityHidden(true)
-            Text(title)
-                .font(TTFont.subheadline)
-                .foregroundStyle(TTColor.inkPrimary)
-            Spacer(minLength: 0)
-            Image(systemName: "chevron.right")
-                .font(TTFont.caption)
-                .foregroundStyle(TTColor.inkTertiary)
-                .accessibilityHidden(true)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(DesignTokens.Spacing.md)
-        .frame(minHeight: DesignTokens.minTouchTarget)
+        TTRow(title: title, systemImage: systemImage, accessory: .chevron)
+            .padding(.horizontal, DesignTokens.Spacing.md)
     }
 }
 

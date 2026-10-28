@@ -33,12 +33,7 @@ struct GuideBadge: View {
     }
 
     var body: some View {
-        Text(label)
-            .font(.caption2.weight(.bold))
-            .foregroundStyle(Color.accentOnSurface)
-            .padding(.horizontal, 6)
-            .padding(.vertical, 2)
-            .background(Color.accentColor.opacity(0.14), in: Capsule())
+        TTBadge(label, tone: .brand, style: .soft)
             .accessibilityLabel(accessibilityLabel)
     }
 }

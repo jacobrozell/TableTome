@@ -204,28 +204,13 @@ struct ArmyHealthProgressBar: View {
     var isCritical: Bool = false
 
     var body: some View {
-        GeometryReader { geometry in
-            ZStack(alignment: .leading) {
-                Capsule()
-                    .fill(Color(.tertiarySystemFill))
-                Capsule()
-                    .fill(barColor)
-                    .frame(width: geometry.size.width * max(0, min(1, fraction)))
-            }
-        }
-        .frame(height: 8)
+        TTProgressBar(
+            fraction: fraction,
+            tone: isCritical ? .warning : .brand,
+            height: 8,
+            criticalThreshold: isCritical ? nil : 0.35
+        )
         .accessibilityLabel(String(localized: "Army wounds remaining"))
-        .accessibilityValue(String(localized: "\(Int(fraction * 100)) percent"))
-    }
-
-    private var barColor: Color {
-        if fraction <= 0 {
-            return .red.opacity(0.45)
-        }
-        if isCritical {
-            return .orange.opacity(0.85)
-        }
-        return Color.accentColor.opacity(0.8)
     }
 }
 

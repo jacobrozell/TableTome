@@ -41,33 +41,16 @@ public struct EmptyStateView: View {
     }
 
     private var content: some View {
-        VStack(spacing: DesignTokens.Spacing.md) {
-            if let systemImage {
-                Image(systemName: systemImage)
-                    .font(.largeTitle)
-                    .foregroundStyle(.secondary)
-                    .symbolRenderingMode(.hierarchical)
-                    .accessibilityHidden(true)
-            }
-            Text(title)
-                .font(.title2.bold())
-                .multilineTextAlignment(.center)
-            Text(message)
-                .font(.body)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-            if let actionTitle, let action {
-                PrimaryButton(
-                    title: actionTitle,
-                    accessibilityId: "emptyState.retry",
-                    accessibilityHint: String(localized: "Tries loading this content again."),
-                    action: action
-                )
-                .padding(.top, DesignTokens.Spacing.sm)
-            }
-        }
+        TTEmptyState(
+            title: title,
+            message: message,
+            systemImage: systemImage ?? "tray",
+            primary: actionTitle.flatMap { title in
+                action.map { run in (title, run) }
+            },
+            primaryAccessibilityIdentifier: "emptyState.retry"
+        )
         .padding(DesignTokens.Spacing.lg)
         .frame(maxWidth: .infinity, maxHeight: shouldScroll ? nil : .infinity)
-        .accessibilityElement(children: .contain)
     }
 }

@@ -1,14 +1,12 @@
 import SwiftUI
 
 /// Semantic tone for tinted cards, badges, and buttons.
-public enum TTTone: Equatable {
-    case brand
-    case playerOne
-    case playerTwo
-    case success
-    case warning
-    case danger
-    case neutral
+public enum TTTone: Equatable, Sendable {
+    case neutral, brand, playerOne, playerTwo, success, warning, danger
+
+    public static func player(_ isPlayerOne: Bool) -> TTTone {
+        isPlayerOne ? .playerOne : .playerTwo
+    }
 
     public var foreground: Color {
         switch self {
@@ -22,7 +20,9 @@ public enum TTTone: Equatable {
         }
     }
 
-    public var fill: Color {
+    public var fill: Color { solid }
+
+    public var solid: Color {
         switch self {
         case .brand: TTColor.brandFill
         case .playerOne: TTColor.playerOne
@@ -30,7 +30,15 @@ public enum TTTone: Equatable {
         case .success: TTColor.success
         case .warning: TTColor.warning
         case .danger: TTColor.danger
-        case .neutral: TTColor.sunken
+        case .neutral: TTColor.inkTertiary
+        }
+    }
+
+    public var onSolid: Color {
+        switch self {
+        case .brand: TTColor.inkOnBrand
+        case .playerOne, .playerTwo: TTColor.inkOnPlayer
+        case .success, .warning, .danger, .neutral: TTColor.inkOnPlayer
         }
     }
 

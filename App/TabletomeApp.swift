@@ -4,6 +4,8 @@ import TabletomeHobbyData
 
 @main
 struct TabletomeApp: App {
+    init() { TTAppearance.apply() }
+
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @StateObject private var dependencies = AppDependencies()
     @State private var router = AppRouter()
@@ -14,6 +16,8 @@ struct TabletomeApp: App {
     var body: some Scene {
         WindowGroup {
             RootTabView()
+                .tint(TTColor.brandFill)
+                .background(TTColor.canvas.ignoresSafeArea())
                 .environmentObject(dependencies)
                 .environment(router)
                 .environment(hobbyBanner)

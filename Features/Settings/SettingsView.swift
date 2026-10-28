@@ -18,6 +18,18 @@ struct SettingsView: View {
 
     var body: some View {
         List {
+            #if DEBUG
+            Section {
+                NavigationLink {
+                    TTComponentGallery()
+                } label: {
+                    Text(String(localized: "Design System Gallery"))
+                }
+                .accessibilityIdentifier("settings.debug.gallery")
+            } header: {
+                Text(String(localized: "Debug"))
+            }
+            #endif
             Section {
                 HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
                     BrandCrest(size: 56)

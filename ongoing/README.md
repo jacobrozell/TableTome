@@ -9,12 +9,13 @@ Plans and projects **in implementation** — approved, specced, and actively bei
 | Ship blockers / release train | [`docs/release/`](../docs/release/) |
 | Shipped behavior | [`specs/`](../specs/) + [`docs/feature-inventory.md`](../docs/feature-inventory.md) |
 
-**Last updated:** 2026-06-28
+**Last updated:** 2026-10-28
 
 ## Active
 
 | Plan | Doc | Status | Notes |
 |------|-----|--------|-------|
+| **1.0 UI overhaul** | [`ui-overhaul/README.md`](ui-overhaul/README.md) | **Planned** | Spearhead-only 1.0, "Tome & Table" design system, battle screen rebuild; 50+ work packages for agents |
 | Combat Patrol catalog | [`combat-patrol-catalog-expansion.md`](combat-patrol-catalog-expansion.md) | **In progress** | 6/23 patrols in picker; P1 rosters added, unit JSON next |
 | New player first launch | [`FutureIdeas/NewPlayerFirstLaunchPlan.md`](../FutureIdeas/NewPlayerFirstLaunchPlan.md) | **Complete** | P0–P2 checklist done |
 | WH40k 11e launch | [`docs/game-modes/wh40k-11e/launch-plan.md`](../docs/game-modes/wh40k-11e/launch-plan.md) | In progress | Phase 1 rules shipped; Phase 2 guided match in flight |

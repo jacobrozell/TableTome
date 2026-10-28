@@ -77,6 +77,16 @@ private struct PlayNavigationDestinationsModifier: ViewModifier {
             .navigationDestination(for: ArmyRosterLink.self) { link in
                 ArmyRosterDestinationView(gameSystemId: link.gameSystemId, armyId: link.armyId)
             }
+            .navigationDestination(for: SpearheadArmiesBrowseLink.self) { link in
+                SpearheadArmiesBrowseView(gameSystemId: link.gameSystemId)
+            }
+            .navigationDestination(for: UnitWarscrollLink.self) { link in
+                UnitWarscrollDestinationView(
+                    gameSystemId: link.gameSystemId,
+                    armyId: link.armyId,
+                    unitId: link.unitId
+                )
+            }
             .navigationDestination(for: CombatPatrolMissionsLink.self) { link in
                 CombatPatrolMissionsDestinationView(gameSystemId: link.gameSystemId)
             }
@@ -114,6 +124,16 @@ private struct GuidedMatchNestedNavigationDestinationsModifier: ViewModifier {
             }
             .navigationDestination(for: ArmyRosterLink.self) { link in
                 ArmyRosterDestinationView(gameSystemId: link.gameSystemId, armyId: link.armyId)
+            }
+            .navigationDestination(for: SpearheadArmiesBrowseLink.self) { link in
+                SpearheadArmiesBrowseView(gameSystemId: link.gameSystemId)
+            }
+            .navigationDestination(for: UnitWarscrollLink.self) { link in
+                UnitWarscrollDestinationView(
+                    gameSystemId: link.gameSystemId,
+                    armyId: link.armyId,
+                    unitId: link.unitId
+                )
             }
             .navigationDestination(for: CombatResolverLink.self) { link in
                 CombatResolverDestinationView(link: link)
@@ -438,6 +458,7 @@ struct ArmyRosterDestinationView: View {
 
     @EnvironmentObject private var dependencies: AppDependencies
     @State private var army: SpearheadArmy?
+    @State private var factionName: String?
     @State private var ruleSections: [RuleSection]?
     @State private var errorMessage: String?
 
@@ -446,6 +467,7 @@ struct ArmyRosterDestinationView: View {
             if let army, let ruleSections {
                 ArmyRosterView(
                     army: army,
+                    factionName: factionName,
                     ruleSections: ruleSections,
                     gameSystemId: gameSystemId,
                     featuredArmies: featuredArmies
@@ -476,12 +498,66 @@ struct ArmyRosterDestinationView: View {
             let catalog = try await dependencies.catalogRepository(
                 for: GameSystemId(resolving: gameSystemId)
             ).loadCatalog()
-            army = catalog.factions.flatMap(\.armies).first { $0.id == armyId }
+            let match = catalog.factions.compactMap { faction -> (SpearheadFaction, SpearheadArmy)? in
+                guard let army = faction.armies.first(where: { $0.id == armyId }) else { return nil }
+                return (faction, army)
+            }.first
+            army = match?.1
+            factionName = match?.0.name
             if army == nil {
                 errorMessage = String(localized: "This army roster could not be loaded.")
             }
         } catch {
             errorMessage = String(localized: "This army roster could not be loaded.")
+        }
+    }
+}
+
+struct UnitWarscrollDestinationView: View {
+    let gameSystemId: String
+    let armyId: String
+    let unitId: String
+
+    @EnvironmentObject private var dependencies: AppDependencies
+    @State private var unit: SpearheadUnit?
+    @State private var errorMessage: String?
+
+    var body: some View {
+        Group {
+            if let unit {
+                WarscrollReferenceView(armyId: armyId, unit: unit)
+            } else if let errorMessage {
+                EmptyStateView(
+                    title: String(localized: "Warscroll unavailable"),
+                    message: errorMessage,
+                    systemImage: "exclamationmark.triangle"
+                )
+                .asyncContentShell()
+            } else {
+                ProgressView(String(localized: "Loading warscroll…"))
+                    .asyncContentShell()
+            }
+        }
+        .navigationTitle(unit?.name ?? "")
+        .navigationBarTitleDisplayMode(.inline)
+        .task { await load() }
+    }
+
+    private func load() async {
+        do {
+            let catalog = try await dependencies.catalogRepository(
+                for: GameSystemId(resolving: gameSystemId)
+            ).loadCatalog()
+            unit = catalog.factions
+                .flatMap(\.armies)
+                .first { $0.id == armyId }?
+                .units
+                .first { $0.id == unitId }
+            if unit == nil {
+                errorMessage = String(localized: "This warscroll could not be loaded.")
+            }
+        } catch {
+            errorMessage = String(localized: "This warscroll could not be loaded.")
         }
     }
 }

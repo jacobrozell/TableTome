@@ -3,17 +3,20 @@ import TabletomeDomain
 
 struct ArmyRosterView: View {
     let army: SpearheadArmy
+    var factionName: String?
     let ruleSections: [RuleSection]
     var gameSystemId: GameSystemId = .default
     var featuredArmies: GuidedMatchFeaturedArmies = GuidedMatchFeaturedArmies.resolved(for: .default)
 
     init(
         army: SpearheadArmy,
+        factionName: String? = nil,
         ruleSections: [RuleSection],
         gameSystemId: GameSystemId = .default,
         featuredArmies: GuidedMatchFeaturedArmies = GuidedMatchFeaturedArmies.resolved(for: .default)
     ) {
         self.army = army
+        self.factionName = factionName
         self.ruleSections = ruleSections
         self.gameSystemId = gameSystemId
         self.featuredArmies = featuredArmies
@@ -21,12 +24,14 @@ struct ArmyRosterView: View {
 
     init(
         army: SpearheadArmy,
+        factionName: String? = nil,
         ruleSections: [RuleSection],
         gameSystemId: String,
         featuredArmies: GuidedMatchFeaturedArmies = GuidedMatchFeaturedArmies.resolved(for: .default)
     ) {
         self.init(
             army: army,
+            factionName: factionName,
             ruleSections: ruleSections,
             gameSystemId: GameSystemId(resolving: gameSystemId),
             featuredArmies: featuredArmies
@@ -60,7 +65,7 @@ struct ArmyRosterView: View {
         case .wh40k11e, .wh40k10eCp:
             String(localized: "Official rules link")
         default:
-            String(localized: "GW Spearhead PDF")
+            String(localized: "Official PDF")
         }
     }
 
@@ -76,14 +81,15 @@ struct ArmyRosterView: View {
                     Link(destination: url) {
                         Label(officialRulesLabel, systemImage: "arrow.up.right.square")
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .frame(minHeight: DesignTokens.minTouchTarget)
                     }
+                    .buttonStyle(.ttTertiary)
                     .accessibilityIdentifier("warscroll.officialRules.\(army.id)")
                 }
             }
             .readableContentWidth()
             .padding(DesignTokens.Spacing.md)
         }
+        .ttScreenBackground()
         .navigationTitle(army.name)
         .navigationBarTitleDisplayMode(.inline)
         .accessibilityIdentifier("warscroll.roster.\(army.id)")
@@ -91,50 +97,67 @@ struct ArmyRosterView: View {
 
     private var overviewSection: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            Text(army.general)
-                .font(.title3.bold())
-            Text(army.tagline)
-                .font(.callout)
-                .foregroundStyle(.secondary)
+            if let factionName {
+                Text(factionName).ttEyebrow()
+            }
+            Text(army.name)
+                .font(TTFont.title)
+                .foregroundStyle(TTColor.inkPrimary)
+            TTKeyValueRow(String(localized: "General"), value: army.general)
+            TTKeyValueRow(String(localized: "Units"), value: "\(army.unitCount)")
             Text(army.playstyle)
-                .font(.body)
+                .font(TTFont.callout)
+                .foregroundStyle(TTColor.inkSecondary)
                 .fixedSize(horizontal: false, vertical: true)
             if featuredArmies.isFeatured(army.id) {
-                Label(featuredArmies.starterSetBadge, systemImage: "star.fill")
-                    .font(.caption.weight(.medium))
-                    .foregroundStyle(.orange)
+                TTBadge(featuredArmies.starterSetBadge, tone: .brand, style: .soft)
             }
         }
     }
 
     private func battleTraitsSection(title: String) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            Text(title)
-                .font(.headline)
+            TTSectionHeader(title)
             ForEach(army.battleTraits) { trait in
-                ArmyRuleOptionCard(option: trait, isSelected: false)
+                ArmyRuleOptionCard(option: trait, isSelected: false, gameSystemId: gameSystemId.rawValue)
             }
         }
     }
 
     private var unitsSection: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Text(unitsSectionTitle)
-                .font(.headline)
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            TTSectionHeader(unitsSectionTitle)
             if army.units.isEmpty {
                 Text(emptyUnitsMessage)
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
+                    .font(TTFont.callout)
+                    .foregroundStyle(TTColor.inkSecondary)
             } else {
-                ForEach(army.units) { unit in
-                    UnitWarscrollCard(
-                        army: army,
-                        unit: unit,
-                        ruleSections: ruleSections,
-                        gameSystemId: gameSystemId
-                    )
+                TTCard(padding: 0) {
+                    VStack(spacing: 0) {
+                        ForEach(army.units) { unit in
+                            NavigationLink(value: UnitWarscrollLink(
+                                gameSystemId: gameSystemId.rawValue,
+                                armyId: army.id,
+                                unitId: unit.id
+                            )) {
+                                unitRow(unit)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
                 }
             }
         }
+    }
+
+    private func unitRow(_ unit: SpearheadUnit) -> some View {
+        let isHero = unit.keywords.contains { $0.localizedCaseInsensitiveContains("hero") }
+        let count = unit.modelCount ?? 1
+        return TTRow(
+            title: unit.name,
+            subtitle: unit.keywords.joined(separator: " · "),
+            badge: isHero ? TTBadge(String(localized: "Hero"), tone: .brand, style: .soft) : nil,
+            accessory: count > 1 ? .value("×\(count)") : .chevron
+        )
     }
 }

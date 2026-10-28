@@ -12,29 +12,32 @@ struct UnitAbilityCard: View {
     var showsEmbeddedCombatTools: Bool = false
     var onResolveAttack: (() -> Void)?
 
+    @State private var showsFlavor = false
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            phaseBanner
-
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                Text(phaseUsageLabel).ttEyebrow()
                 HStack(alignment: .top) {
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                        Text(ability.source.uppercased())
-                            .font(.caption2.weight(.semibold))
-                            .foregroundStyle(.secondary)
-                        Text(ability.name)
-                            .font(.headline)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
+                    Text(ability.name)
+                        .font(TTFont.headline)
+                        .foregroundStyle(TTColor.inkPrimary)
+                        .fixedSize(horizontal: false, vertical: true)
                     Spacer(minLength: DesignTokens.Spacing.sm)
-                    kindIcon
+                    badgeRow
                 }
 
                 if let flavor = ability.flavor, !flavor.isEmpty {
-                    Text(flavor)
-                        .font(.callout.italic())
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
+                    Button(showsFlavor ? String(localized: "Less") : String(localized: "More")) {
+                        showsFlavor.toggle()
+                    }
+                    .buttonStyle(.ttTertiary)
+                    if showsFlavor {
+                        Text(flavor)
+                            .font(TTFont.callout.italic())
+                            .foregroundStyle(TTColor.inkSecondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
                 }
 
                 if let declare = ability.declare, !declare.isEmpty {
@@ -51,7 +54,7 @@ struct UnitAbilityCard: View {
                             .font(.subheadline.weight(.semibold))
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.ttSecondary)
                     .frame(minHeight: DesignTokens.minTouchTarget)
                     .accessibilityIdentifier("battleTracker.resolveAttack.\(ability.id)")
                 }
@@ -64,7 +67,7 @@ struct UnitAbilityCard: View {
                     Button(isUsed ? String(localized: "Used this battle") : String(localized: "Mark as used")) {
                         onMarkUsed()
                     }
-                    .buttonStyle(.bordered)
+                    .buttonStyle(.ttSecondary)
                     .disabled(isUsed)
                     .frame(minHeight: DesignTokens.minTouchTarget)
                     .accessibilityIdentifier("battleTracker.markUsed.\(ability.id)")
@@ -72,12 +75,12 @@ struct UnitAbilityCard: View {
             }
             .padding(DesignTokens.Spacing.md)
         }
-        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
-        .overlay(
-            RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
-                .strokeBorder(Color.accentColor.opacity(0.25), lineWidth: 1)
-        )
-        .opacity(isUsed ? 0.55 : 1)
+        .background(TTColor.surface, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous)
+                .strokeBorder(TTColor.stroke, lineWidth: 1)
+        }
+        .opacity(isUsed ? 0.7 : 1)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(accessibilitySummary)
         .accessibilityValue(accessibilityStatus)
@@ -126,9 +129,39 @@ struct UnitAbilityCard: View {
             Label(String(localized: "Combat Resolver"), systemImage: "dice.fill")
                 .font(.caption.weight(.semibold))
         }
-        .buttonStyle(.bordered)
+        .buttonStyle(.ttTertiary)
         .frame(minHeight: DesignTokens.minTouchTarget)
         .accessibilityIdentifier("battleTracker.rollTools.\(ability.id)")
+    }
+
+    private var phaseUsageLabel: String {
+        let phases = ability.phases.map(\.title).joined(separator: " · ")
+        return "\(phases) · \(usageTitle)"
+    }
+
+    private var usageTitle: String {
+        switch ability.usageLimit {
+        case .passive: String(localized: "Passive")
+        case .eachTurn: String(localized: "Each turn")
+        case .eachPhase: String(localized: "Each phase")
+        case .oncePerBattle: String(localized: "Once per battle")
+        case .oncePerPhase: String(localized: "Once per phase")
+        case .reaction: String(localized: "Reaction")
+        }
+    }
+
+    private var badgeRow: some View {
+        VStack(alignment: .trailing, spacing: DesignTokens.Spacing.xxs) {
+            if ability.usageLimit == .oncePerBattle {
+                TTBadge(String(localized: "Once per battle"), tone: .neutral, style: .outline)
+            }
+            if ability.isPassive {
+                TTBadge(String(localized: "Passive"), tone: .neutral, style: .soft)
+            }
+            if isUsed {
+                TTBadge(String(localized: "Used"), tone: .neutral, style: .soft, systemImage: "checkmark")
+            }
+        }
     }
 
     private var phaseBanner: some View {
@@ -146,11 +179,16 @@ struct UnitAbilityCard: View {
                     .font(.caption2)
             }
         }
-        .foregroundStyle(Color.accentOnSurface)
+        .foregroundStyle(TTColor.brand)
         .padding(.horizontal, DesignTokens.Spacing.md)
         .padding(.vertical, DesignTokens.Spacing.sm)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.accentColor.opacity(0.12), in: UnevenRoundedRectangle(topLeadingRadius: DesignTokens.Radius.md, topTrailingRadius: DesignTokens.Radius.md))
+        .background(TTColor.brandSoft, in: UnevenRoundedRectangle(
+            topLeadingRadius: DesignTokens.Radius.md,
+            bottomLeadingRadius: 0,
+            bottomTrailingRadius: 0,
+            topTrailingRadius: DesignTokens.Radius.md
+        ))
     }
 
     private var displayPhase: BattleTurnPhase {
@@ -188,16 +226,18 @@ struct UnitAbilityCard: View {
     private var kindIcon: some View {
         Image(systemName: phaseIcon)
             .font(.title3)
-            .foregroundStyle(Color.accentColor)
+            .foregroundStyle(TTColor.brand)
             .accessibilityHidden(true)
     }
 
     private func labeledBlock(title: String, body: String) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
             Text(title)
-                .font(.subheadline.bold())
+                .font(TTFont.caption.weight(.semibold))
+                .foregroundStyle(TTColor.inkSecondary)
             Text(body)
-                .font(.subheadline)
+                .font(TTFont.body)
+                .foregroundStyle(TTColor.inkPrimary)
                 .fixedSize(horizontal: false, vertical: true)
         }
     }

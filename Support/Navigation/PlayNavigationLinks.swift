@@ -42,6 +42,12 @@ struct ArmyRosterLink: Hashable {
     let armyId: String
 }
 
+struct UnitWarscrollLink: Hashable {
+    let gameSystemId: String
+    let armyId: String
+    let unitId: String
+}
+
 struct GuideStepLink: Hashable {
     let gameSystemId: String
     let stepId: String

@@ -1,8 +1,6 @@
 import SwiftUI
 import TabletomeDomain
 
-struct SpearheadArmiesBrowseLink: Hashable {}
-
 struct SingleGameHomeView: View {
     @EnvironmentObject private var dependencies: AppDependencies
     @Environment(AppRouter.self) private var router
@@ -38,9 +36,6 @@ struct SingleGameHomeView: View {
         .ttScreenBackground()
         .tabBarScrollInset()
         .accessibilityIdentifier("home.singleGame")
-        .navigationDestination(for: SpearheadArmiesBrowseLink.self) { _ in
-            SpearheadArmiesBrowseView(gameSystemId: gameSystem.id)
-        }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 NavigationLink(value: MatchHistoryLink()) {
@@ -123,9 +118,7 @@ struct SingleGameHomeView: View {
             TTSectionHeader(String(localized: "Armies & Tools"))
             TTCard(padding: 0) {
                 VStack(spacing: 0) {
-                    NavigationLink {
-                        SpearheadArmiesBrowseView(gameSystemId: gameSystem.id)
-                    } label: {
+                    NavigationLink(value: SpearheadArmiesBrowseLink(gameSystemId: gameSystem.id)) {
                         TTRow(
                             title: String(localized: "Spearhead Armies"),
                             subtitle: String(localized: "Warscrolls for every army"),
@@ -179,33 +172,5 @@ struct SingleGameHomeView: View {
             limit: 3,
             gameSystemId: gameSystem.id
         )) ?? []
-    }
-}
-
-struct SpearheadArmiesBrowseView: View {
-    @EnvironmentObject private var dependencies: AppDependencies
-    let gameSystemId: String
-
-    @State private var rows: [GameGuideFeaturedArmyRow] = []
-
-    var body: some View {
-        List(rows) { row in
-            NavigationLink(value: ArmyRosterLink(gameSystemId: gameSystemId, armyId: row.army.id)) {
-                TTRow(title: row.army.name, subtitle: row.factionName, systemImage: "shield.lefthalf.filled")
-            }
-        }
-        .ttGroupedList()
-        .navigationTitle(String(localized: "Spearhead Armies"))
-        .task { await load() }
-    }
-
-    private func load() async {
-        let id = GameSystemId(resolving: gameSystemId)
-        guard let catalog = try? await dependencies.catalogRepository(for: id).loadCatalog() else { return }
-        let featured = dependencies.gameSystemRegistry.featuredArmies(for: id)?.armyIds ?? []
-        let mapped = catalog.factions.flatMap { faction in
-            faction.armies.map { GameGuideFeaturedArmyRow(factionName: faction.name, army: $0) }
-        }
-        rows = featured.isEmpty ? mapped : mapped.filter { featured.contains($0.army.id) }
     }
 }

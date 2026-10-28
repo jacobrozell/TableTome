@@ -34,16 +34,12 @@ public struct ArmyRuleOptionCard: View {
                 )
             }
         }
-        .padding(DesignTokens.Spacing.sm)
         .frame(minHeight: DesignTokens.minTouchTarget, alignment: .top)
-        .background(
-            isSelected ? Color.accentColor.opacity(0.08) : Color(.tertiarySystemFill).opacity(0.5),
-            in: CardSurface.shape(radius: DesignTokens.Radius.nested)
-        )
-        .overlay(
-            CardSurface.shape(radius: DesignTokens.Radius.nested)
-                .strokeBorder(isSelected ? Color.accentColor.opacity(0.35) : Color.clear, lineWidth: 1)
-        )
+        .surfaceCard(padding: DesignTokens.Spacing.sm)
+        .overlay {
+            RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous)
+                .strokeBorder(isSelected ? TTColor.brand : .clear, lineWidth: 1.5)
+        }
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(option.name). \(option.summary)")
     }
@@ -52,27 +48,27 @@ public struct ArmyRuleOptionCard: View {
         HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                 Text(option.name)
-                    .font(.subheadline.bold())
+                    .font(TTFont.headline)
                 if let timing = option.timing {
                     Text(timing)
                         .font(.caption2)
                         .foregroundStyle(.tertiary)
                 }
                 Text(option.summary)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .font(TTFont.callout)
+                    .foregroundStyle(TTColor.inkSecondary)
                     .fixedSize(horizontal: false, vertical: true)
                 if let hint = option.newPlayerHint {
                     Label(hint, systemImage: "lightbulb.fill")
                         .font(.caption)
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(TTColor.warning)
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
             Spacer(minLength: 0)
             if isSelected {
                 Image(systemName: "checkmark.circle.fill")
-                    .foregroundStyle(Color.accentColor)
+                    .foregroundStyle(TTColor.brand)
                     .accessibilityHidden(true)
             }
         }

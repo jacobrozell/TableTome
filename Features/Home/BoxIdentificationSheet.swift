@@ -296,7 +296,9 @@ private struct SpearheadBoxCheckContent: View {
             .accessibilityIdentifier("boxHelper.startBattle")
             Button(String(localized: "Browse armies to find yours")) {
                 dismiss()
-                router.learnPath.append(SpearheadArmiesBrowseLink())
+                if let gameSystemId = ReleaseSurface.singleVisibleGameSystemId() {
+                    router.learnPath.append(SpearheadArmiesBrowseLink(gameSystemId: gameSystemId))
+                }
             }
             .buttonStyle(.ttTertiary)
             .padding(.horizontal, DesignTokens.Spacing.md)

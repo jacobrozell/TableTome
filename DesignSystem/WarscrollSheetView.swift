@@ -51,9 +51,8 @@ struct WarscrollReferenceView: View {
                         .scaledToFit()
                         .frame(maxWidth: .infinity)
                         .accessibilityLabel(unit.name)
-                } else {
-                    WarscrollTextReference(unit: unit)
                 }
+                WarscrollTextReference(unit: unit)
             }
             .padding(DesignTokens.Spacing.md)
         }
@@ -85,69 +84,65 @@ private struct WarscrollTextReference: View {
     let unit: SpearheadUnit
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            if let profile = unitDefensiveProfile.nilIfEmpty {
-                labeledSection(String(localized: "Unit"), text: profile)
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            if !unit.keywords.isEmpty {
+                Text(unit.keywords.joined(separator: " · "))
+                    .ttEyebrow()
             }
-
+            Text(unit.name)
+                .font(TTFont.title)
+                .foregroundStyle(TTColor.inkPrimary)
+            if let notes = unit.notes, !notes.isEmpty {
+                Text(notes)
+                    .font(TTFont.footnote)
+                    .foregroundStyle(TTColor.inkTertiary)
+            }
+            let stats = unitReferenceStats(unit)
+            if !stats.isEmpty {
+                TTStatStrip(stats: stats)
+            }
             if !unit.weapons.isEmpty {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    Text(String(localized: "Weapons"))
-                        .font(.subheadline.bold())
-                    ForEach(unit.weapons) { weapon in
-                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                            Text(weapon.name)
-                                .font(.subheadline.weight(.semibold))
-                            Text(WarscrollStatSummary.weaponCombatProfile(weapon))
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                            if let ability = weapon.ability, !ability.isEmpty {
-                                Text(ability)
-                                    .font(.caption2)
-                                    .foregroundStyle(.tertiary)
-                            }
-                        }
-                        .padding(DesignTokens.Spacing.sm)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
+                TTSectionHeader(String(localized: "Weapons"))
+                TTWeaponTable(weapons: unit.weapons)
+            }
+            if !unit.abilities.isEmpty {
+                TTSectionHeader(String(localized: "Abilities"))
+                ForEach(unit.abilities) { ability in
+                    UnitAbilityCard(
+                        ability: ability,
+                        phase: ability.phases.first ?? .hero,
+                        isUsed: false,
+                        onMarkUsed: nil
+                    )
+                }
+            }
+            if !unit.keywords.isEmpty {
+                TTSectionHeader(String(localized: "Keywords"))
+                TTFlowLayout {
+                    ForEach(unit.keywords, id: \.self) { keyword in
+                        TTBadge(keyword, tone: .neutral, style: .soft)
                     }
                 }
             }
-
-            if !unit.keywords.isEmpty {
-                labeledSection(String(localized: "Keywords"), text: unit.keywords.joined(separator: " · "))
-            }
-
-            Text(sheetImageMissingHint)
-                .font(.caption)
-                .foregroundStyle(.tertiary)
-                .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
-
-    private var unitDefensiveProfile: String {
-        WarscrollStatSummary.unitDefensiveProfile(unit)
-    }
-
-    private var sheetImageMissingHint: String {
-        String(localized: "Official rules card image isn't bundled for this unit. Showing stats from the app.")
-    }
-
-    private func labeledSection(_ title: String, text: String) -> some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-            Text(title)
-                .font(.subheadline.bold())
-            Text(text)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
-        }
-    }
 }
 
-private extension String {
-    var nilIfEmpty: String? {
-        isEmpty ? nil : self
+func unitReferenceStats(_ unit: SpearheadUnit) -> [TTStat] {
+    var stats: [TTStat] = []
+    if let move = unit.move {
+        stats.append(TTStat(label: String(localized: "Move"), value: move))
     }
+    if let save = unit.save {
+        stats.append(TTStat(label: String(localized: "Save"), value: "\(save)+"))
+    }
+    if let health = unit.health {
+        stats.append(TTStat(label: String(localized: "Health"), value: "\(health)"))
+    }
+    if let control = unit.control {
+        stats.append(TTStat(label: String(localized: "Control"), value: "\(control)"))
+    }
+    return stats
 }
+

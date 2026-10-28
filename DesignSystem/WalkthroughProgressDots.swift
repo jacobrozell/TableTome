@@ -20,3 +20,21 @@ struct WalkthroughProgressDots: View {
         .accessibilityLabel(String(localized: "Step \(current + 1) of \(total)"))
     }
 }
+
+/// Equal-width story segments for the sample-turn walkthrough.
+struct WalkthroughProgressSegments: View {
+    let current: Int
+    let total: Int
+
+    var body: some View {
+        HStack(spacing: 4) {
+            ForEach(0..<total, id: \.self) { index in
+                Capsule()
+                    .fill(index <= current ? TTColor.brandFill : TTColor.stroke)
+                    .frame(height: 4)
+            }
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(String(localized: "Step \(current + 1) of \(total)"))
+    }
+}

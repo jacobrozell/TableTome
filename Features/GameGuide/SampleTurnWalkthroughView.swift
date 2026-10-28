@@ -4,237 +4,215 @@ import TabletomeDomain
 /// Short, self-contained Spearhead walkthrough of one turn's phases — no match state required.
 struct SampleTurnWalkthroughView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.dismiss) private var dismiss
     @Environment(AppRouter.self) private var router
     @State private var step = 0
-    @State private var showsCombatPrimer = true
-    @State private var showsWargamePrimer = !NewPlayerTipsStore.hasDismissedWargamePrimer
+    @State private var includesPrimer = !NewPlayerTipsStore.hasDismissedWargamePrimer
 
-    private struct WalkthroughStep {
+    private struct Page {
         let title: String
-        let shortLabel: String
+        let headline: String
         let detail: String
         let systemImage: String
         let showsCombatPrimer: Bool
     }
 
-    private let steps: [WalkthroughStep] = [
-        WalkthroughStep(
-            title: String(localized: "Movement Phase"),
-            shortLabel: String(localized: "Move"),
+    private var pages: [Page] {
+        var items = phasePages
+        if includesPrimer {
+            items.insert(primerPage, at: 0)
+        }
+        return items
+    }
+
+    private var primerPage: Page {
+        Page(
+            title: String(localized: "Before you start"),
+            headline: String(localized: "Never played a wargame?"),
             detail: String(
-                localized: """
-                The active player moves their units up to each unit's Move value (in inches). \
-                Units must stay in coherency — models in the same unit stay within 1\" of each other.
-                """
+                localized: "Two players move miniatures and roll physical dice. The phone tracks phases and score."
             ),
-            systemImage: "figure.walk",
-            showsCombatPrimer: false
-        ),
-        WalkthroughStep(
-            title: String(localized: "Shooting Phase"),
-            shortLabel: String(localized: "Shoot"),
-            detail: String(
-                localized: """
-                Pick a unit that can shoot, choose an enemy in range, and roll dice at the table — \
-                one D6 per attack for hits, then wounds. In a real game you measure range to the closest part of the target.
-                """
-            ),
-            systemImage: "scope",
-            showsCombatPrimer: false
-        ),
-        WalkthroughStep(
-            title: String(localized: "Resolve the Rolls"),
-            shortLabel: String(localized: "Dice"),
-            detail: String(
-                localized: """
-                Enter the dice you rolled into Resolve Combat in the battle tracker. \
-                The app walks through hits, wounds, saves, wards, and damage — you only need ordinary D6 dice.
-                """
-            ),
-            systemImage: "dice.fill",
-            showsCombatPrimer: true
-        ),
-        WalkthroughStep(
-            title: String(localized: "End of Turn — Score"),
-            shortLabel: String(localized: "Score"),
-            detail: String(
-                localized: """
-                Before passing the phone, add victory points for objectives you hold and battle tactics you completed. \
-                Then your opponent's turn begins with their Hero phase.
-                """
-            ),
-            systemImage: "star.circle.fill",
+            systemImage: "questionmark.circle",
             showsCombatPrimer: false
         )
-    ]
+    }
+
+    private var phasePages: [Page] {
+        [
+            Page(
+                title: String(localized: "Movement Phase"),
+                headline: String(localized: "Move your units"),
+                detail: String(
+                    localized: "Move each unit up to its Move value, in inches. Models in a unit stay within 1\" of each other."
+                ),
+                systemImage: "figure.walk",
+                showsCombatPrimer: false
+            ),
+            Page(
+                title: String(localized: "Shooting Phase"),
+                headline: String(localized: "Shoot at enemies"),
+                detail: String(
+                    localized: "Pick a unit that can shoot and an enemy in range. Roll one D6 per attack for hits, then wounds."
+                ),
+                systemImage: "scope",
+                showsCombatPrimer: false
+            ),
+            Page(
+                title: String(localized: "Resolve the Rolls"),
+                headline: String(localized: "Roll and resolve"),
+                detail: String(
+                    localized: "Enter the dice you rolled. The app walks through hits, wounds, saves, and damage."
+                ),
+                systemImage: "dice.fill",
+                showsCombatPrimer: true
+            ),
+            Page(
+                title: String(localized: "Charge Phase"),
+                headline: String(localized: "Charge into combat"),
+                detail: String(
+                    localized: "Declare a charge against a nearby enemy and roll 2D6. You need enough distance to reach them."
+                ),
+                systemImage: "figure.run",
+                showsCombatPrimer: false
+            ),
+            Page(
+                title: String(localized: "Combat Phase"),
+                headline: String(localized: "Fight it out"),
+                detail: String(
+                    localized: "Units in combat pile in and fight. The unit that charged usually strikes first."
+                ),
+                systemImage: "figure.fencing",
+                showsCombatPrimer: false
+            ),
+            Page(
+                title: String(localized: "End of Turn"),
+                headline: String(localized: "Score and pass"),
+                detail: String(
+                    localized: "Add victory points for objectives and battle tactics, then pass the phone. Your opponent starts with the Hero phase."
+                ),
+                systemImage: "star.circle.fill",
+                showsCombatPrimer: false
+            )
+        ]
+    }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-                if showsWargamePrimer {
-                    WargamePrimerCard {
-                        NewPlayerTipsStore.dismissWargamePrimer()
-                        showsWargamePrimer = false
+        VStack(spacing: DesignTokens.Spacing.lg) {
+            WalkthroughProgressSegments(current: step, total: pages.count)
+                .padding(.horizontal, DesignTokens.Spacing.md)
+                .padding(.top, DesignTokens.Spacing.sm)
+
+            Group {
+                if reduceMotion {
+                    pageView(pages[step], index: step)
+                } else {
+                    TabView(selection: $step) {
+                        ForEach(Array(pages.enumerated()), id: \.offset) { index, page in
+                            pageView(page, index: index)
+                                .tag(index)
+                        }
                     }
+                    .tabViewStyle(.page(indexDisplayMode: .never))
                 }
-                header
-                phaseStrip
-                stepCard
-
-                if steps[step].showsCombatPrimer {
-                    CombatSequencePrimer(
-                        isExpanded: $showsCombatPrimer,
-                        showsDismissButton: false,
-                        onDismiss: {}
-                    )
-                }
-
-                GlossaryChipsRow(text: steps[step].detail)
-                if ReleaseSurface.showsRulesAssistant {
-                    Button {
-                        router.openRulesSearch(
-                            gameSystemId: GameSystemId.aosSpearhead.rawValue,
-                            query: steps[step].title
-                        )
-                    } label: {
-                        Label(String(localized: "Look this up in Rules Search"), systemImage: "magnifyingglass")
-                            .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget, alignment: .leading)
-                    }
-                    .buttonStyle(.bordered)
-                    .accessibilityIdentifier("sampleTurn.rulesSearch")
-                }
-
-                navigationButtons
             }
-            .readableContentWidth()
-            .padding(DesignTokens.Spacing.md)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            controls
+                .padding(.horizontal, DesignTokens.Spacing.md)
+                .padding(.bottom, DesignTokens.Spacing.sm)
         }
-        .tabBarScrollInset()
-        .navigationTitle(String(localized: "Preview a Spearhead Turn"))
+        .ttScreenBackground()
+        .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "xmark")
+                        .frame(width: 44, height: 44)
+                }
+                .accessibilityLabel(String(localized: "Close"))
+                .accessibilityIdentifier("sampleTurn.close")
+            }
+        }
         .accessibilityIdentifier("sampleTurn.screen")
-    }
-
-    private var header: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            Label(String(localized: "How a Spearhead turn works"), systemImage: "play.circle.fill")
-                .font(.headline)
-                .foregroundStyle(Color.accentOnSurface)
-            Text(
-                String(
-                    localized: """
-                    A quick tour of one player's turn. At the table you'll move miniatures and roll physical dice — \
-                    Tabletome tracks phases and helps with combat math.
-                    """
-                )
-            )
-            .font(.callout)
-            .foregroundStyle(.secondary)
-            .fixedSize(horizontal: false, vertical: true)
+        .onChange(of: step) { _, newValue in
+            if includesPrimer, newValue >= 1 {
+                NewPlayerTipsStore.dismissWargamePrimer()
+            }
+            let page = pages[newValue]
+            AccessibilityNotification.Announcement(
+                String(localized: "Step \(newValue + 1) of \(pages.count), \(page.headline)")
+            ).post()
         }
     }
 
-    private var phaseStrip: some View {
-        AdaptiveHorizontalChipRow {
-            ForEach(Array(steps.enumerated()), id: \.offset) { index, item in
-                if index > 0, !dynamicTypeSize.needsLayoutAdaptation {
-                    Image(systemName: "chevron.right")
-                        .font(.caption2.weight(.bold))
-                        .foregroundStyle(.tertiary)
-                        .accessibilityHidden(true)
+    private func pageView(_ page: Page, index: Int) -> some View {
+        ScrollView {
+            VStack(spacing: DesignTokens.Spacing.lg) {
+                TTIconTile(systemImage: page.systemImage, tone: .brand, size: 120)
+                VStack(spacing: DesignTokens.Spacing.sm) {
+                    Text(page.title).ttEyebrow()
+                    Text(page.headline)
+                        .font(TTFont.display)
+                        .foregroundStyle(TTColor.inkPrimary)
+                        .multilineTextAlignment(.center)
+                    Text(page.detail)
+                        .font(TTFont.body)
+                        .foregroundStyle(TTColor.inkSecondary)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: 420)
                 }
-                Text(item.shortLabel)
-                    .font(.caption.weight(index == step ? .bold : .regular))
-                    .padding(.horizontal, DesignTokens.Spacing.sm)
-                    .padding(.vertical, DesignTokens.Spacing.xs)
-                    .background(
-                        index == step ? Color.accentColor.opacity(0.18) : Color(.tertiarySystemFill),
-                        in: Capsule()
+                if page.showsCombatPrimer {
+                    TTNotice(
+                        title: String(localized: "Combat sequence"),
+                        message: String(
+                            localized: "Hit, wound, save, ward, then damage. You roll the dice; the app does the counting."
+                        ),
+                        systemImage: "dice.fill",
+                        tone: .brand
                     )
-                    .foregroundStyle(index == step ? Color.accentColor : Color.secondary)
-            }
-        }
-        .accessibilityHidden(true)
-    }
-
-    @ScaledMetric(relativeTo: .title2) private var stepIconSize: CGFloat = 44
-
-    private var stepCard: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            HStack {
-                WalkthroughProgressDots(current: step, total: steps.count)
-                Spacer()
-            }
-
-            Label {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                    Text(steps[step].title)
-                        .font(.title3.weight(.semibold))
-                    Text(steps[step].detail)
-                        .font(.body)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
                 }
-            } icon: {
-                Image(systemName: steps[step].systemImage)
-                    .font(.title2)
-                    .foregroundStyle(Color.accentOnSurface)
-                    .symbolRenderingMode(.hierarchical)
-                    .frame(width: stepIconSize, height: stepIconSize)
+                GlossaryChipsRow(text: page.detail)
             }
+            .frame(maxWidth: .infinity)
+            .padding(DesignTokens.Spacing.md)
+            .readableContentWidth()
         }
-        .accentHighlightCard()
-        .accessibilityElement(children: .combine)
-        .accessibilityIdentifier("sampleTurn.step.\(step)")
-        .animation(reduceMotion ? nil : .easeInOut(duration: 0.2), value: step)
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("sampleTurn.step.\(index)")
     }
 
-    private var navigationButtons: some View {
-        VStack(spacing: DesignTokens.Spacing.md) {
-            HStack(spacing: DesignTokens.Spacing.sm) {
-                if step > 0 {
-                    Button(String(localized: "Back")) {
-                        withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) { step -= 1 }
-                    }
-                    .buttonStyle(.bordered)
-                    .frame(minHeight: DesignTokens.minTouchTarget)
+    private var controls: some View {
+        HStack(spacing: DesignTokens.Spacing.sm) {
+            if step > 0 {
+                Button(String(localized: "Back")) { go(to: step - 1) }
+                    .buttonStyle(.ttSecondary)
                     .accessibilityIdentifier("sampleTurn.back")
-                }
-                Spacer()
-                if step < steps.count - 1 {
-                    Button(String(localized: "Next")) {
-                        withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) { step += 1 }
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .frame(minHeight: DesignTokens.minTouchTarget)
+            }
+            if step < pages.count - 1 {
+                Button(String(localized: "Next")) { go(to: step + 1) }
+                    .buttonStyle(.ttPrimary)
                     .accessibilityIdentifier("sampleTurn.next")
+            } else {
+                Button(String(localized: "Replay")) { go(to: 0) }
+                    .buttonStyle(.ttSecondary)
+                    .accessibilityIdentifier("sampleTurn.replay")
+                Button(String(localized: "Start a Battle")) {
+                    router.openGuidedMatch(gameSystemId: GameSystemId.aosSpearhead.rawValue)
                 }
+                .buttonStyle(.ttPrimary)
+                .accessibilityIdentifier("sampleTurn.openGuidedMatch")
             }
+        }
+    }
 
-            if step == steps.count - 1 {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    Text(
-                        String(
-                            localized: "You're ready to set up a real match. Open Guided Match and tap Use Starter Matchup."
-                        )
-                    )
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-
-                    Button {
-                        router.openGuidedMatch(gameSystemId: GameSystemId.aosSpearhead.rawValue)
-                    } label: {
-                        Label(String(localized: "Open Guided Match"), systemImage: "flag.checkered")
-                            .font(.headline)
-                            .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-                            .prominentButtonLabelStyle()
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .accessibilityIdentifier("sampleTurn.openGuidedMatch")
-                }
-            }
+    private func go(to next: Int) {
+        if reduceMotion {
+            step = next
+        } else {
+            withAnimation(TTMotion.standard(reduceMotion: false)) { step = next }
         }
     }
 }

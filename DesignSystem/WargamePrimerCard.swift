@@ -9,7 +9,7 @@ struct WargamePrimerCard: View {
             HStack(spacing: DesignTokens.Spacing.sm) {
                 Label(String(localized: "New to wargames?"), systemImage: "questionmark.circle.fill")
                     .font(.headline)
-                    .foregroundStyle(Color.accentOnSurface)
+                    .foregroundStyle(TTColor.brand)
                 Spacer(minLength: 0)
                 Button(action: onDismiss) {
                     Image(systemName: "xmark.circle.fill")
@@ -39,7 +39,7 @@ struct WargamePrimerCard: View {
             }
 
             Button(String(localized: "Got it — show me the turn"), action: onDismiss)
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.ttPrimary)
                 .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
                 .accessibilityIdentifier("wargamePrimer.continue")
         }
@@ -55,7 +55,7 @@ struct WargamePrimerCard: View {
                 .fixedSize(horizontal: false, vertical: true)
         } icon: {
             Image(systemName: symbol)
-                .foregroundStyle(Color.accentOnSurface)
+                .foregroundStyle(TTColor.brand)
                 .symbolRenderingMode(.hierarchical)
         }
     }

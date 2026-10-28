@@ -226,9 +226,9 @@ Legend: ⬜ not started · 🟨 in progress · ✅ merged · ⏸ blocked. **Deps
 | VH-01 | Victory screen | BT-02 | [08](08-victory-and-history.md) | ⬜ |
 | VH-02 | Match history list | DS-07 | [08](08-victory-and-history.md) | 🟨 |
 | VH-03 | Match detail + timeline | VH-02 | [08](08-victory-and-history.md) | 🟨 |
-| RR-01 | Rules home (browse) | SC-01, SH-03 | [09](09-rules-reference.md) | ⬜ |
-| RR-02 | Rule section detail (readable typography) | RR-01 | [09](09-rules-reference.md) | ⬜ |
-| RR-03 | Glossary sheet + inline glossary chips | RR-02 | [09](09-rules-reference.md) | ⬜ |
+| RR-01 | Rules home (browse) | SC-01, SH-03 | [09](09-rules-reference.md) | 🟨 |
+| RR-02 | Rule section detail (readable typography) | RR-01 | [09](09-rules-reference.md) | 🟨 |
+| RR-03 | Glossary sheet + inline glossary chips | RR-02 | [09](09-rules-reference.md) | 🟨 |
 | MD-01 | Models: collection home | DS-10, SH-03 | [10](10-models-collection.md) | ⬜ |
 | MD-02 | Models: army detail | MD-01 | [10](10-models-collection.md) | ⬜ |
 | MD-03 | Models: unit detail + photo | MD-02 | [10](10-models-collection.md) | ⬜ |

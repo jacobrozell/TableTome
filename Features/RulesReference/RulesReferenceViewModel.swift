@@ -26,8 +26,44 @@ final class RulesReferenceViewModel: ObservableObject {
         GameSystemId(resolving: selectedGameSystemId)
     }
 
+    /// Rules-content keys from `rules-v1.json`. Not game-system ids.
+    static let quickReferenceSectionIds = [
+        "combat-sequence",
+        "turn-structure",
+        "spearhead-scoring",
+        "glossary-objective-control"
+    ]
+
     var showsGameSystemPicker: Bool {
         gameSystems.count > 1
+    }
+
+    var quickReferenceSections: [RuleSection] {
+        Self.quickReferenceSectionIds.compactMap { id in
+            sections.first { $0.id == id }
+        }
+    }
+
+    var showsQuickReference: Bool {
+        searchText.isEmpty && selectedCategory == nil && quickReferenceSections.count >= 2
+    }
+
+    var browseGroups: [RulesBrowseGroup] {
+        let filtered = filteredSections
+        var categories: [RuleSectionCategory] = []
+        if let selectedCategory {
+            categories = [selectedCategory]
+        } else {
+            categories = GameSystemRulesLabels.availableCategories(gameSystemId: selectedGameSystemId)
+            for section in filtered where !categories.contains(section.category) {
+                categories.append(section.category)
+            }
+        }
+        return categories.compactMap { category in
+            let rows = filtered.filter { $0.category == category }
+            guard !rows.isEmpty else { return nil }
+            return RulesBrowseGroup(category: category, sections: rows)
+        }
     }
 
     var filteredSections: [RuleSection] {
@@ -84,4 +120,11 @@ final class RulesReferenceViewModel: ObservableObject {
         selectedCategory = nil
         searchText = ""
     }
+}
+
+struct RulesBrowseGroup: Identifiable, Equatable {
+    let category: RuleSectionCategory
+    let sections: [RuleSection]
+
+    var id: RuleSectionCategory { category }
 }

@@ -19,8 +19,8 @@ struct InlineGlossaryText: View {
     let text: String
     var gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId
     var ruleSections: [RuleSection] = []
-    var font: Font = .callout
-    var foregroundStyle: Color = .secondary
+    var font: Font = TTFont.callout
+    var foregroundStyle: Color = TTColor.inkSecondary
 
     @EnvironmentObject private var glossaryNavigation: GlossaryNavigationState
 
@@ -34,8 +34,6 @@ struct InlineGlossaryText: View {
 
     var body: some View {
         Text(attributedText)
-            .font(font)
-            .foregroundStyle(foregroundStyle)
             .environment(\.openURL, OpenURLAction(handler: handleURL))
             .inlineGlossaryAccessibilityActions(segments: segments, gameSystemId: gameSystemId) { link in
                 glossaryNavigation.open(link)
@@ -47,12 +45,16 @@ struct InlineGlossaryText: View {
         for segment in segments {
             switch segment {
             case .plain(let value):
-                output.append(AttributedString(value))
+                var plain = AttributedString(value)
+                plain.font = font
+                plain.foregroundColor = foregroundStyle
+                output.append(plain)
             case .linked(let value, let entryId):
                 var linked = AttributedString(value)
+                linked.font = font
                 linked.link = GlossaryEntryLink(gameSystemId: gameSystemId, entryId: entryId).inlineURL
-                linked.underlineStyle = .single
-                linked.foregroundColor = Color.accentColor
+                linked.underlineStyle = Text.LineStyle(pattern: .dot, color: TTColor.brand)
+                linked.foregroundColor = TTColor.brand
                 output.append(linked)
             }
         }
@@ -81,16 +83,24 @@ struct GlossaryChip: View {
                 GlossaryEntryLink(gameSystemId: gameSystemId, entryId: entry.id)
             )
         } label: {
-            Text(entry.term)
-                .font(.caption2.weight(.semibold))
-                .foregroundStyle(Color.accentOnSurface)
-                .adaptiveLineLimit(2)
-                .padding(.horizontal, DesignTokens.Spacing.sm)
-                .padding(.vertical, 4)
-                .background(Color.accentColor.opacity(0.12), in: Capsule())
+            HStack(spacing: DesignTokens.Spacing.xxs) {
+                Image(systemName: "character.book.closed")
+                    .font(TTFont.caption)
+                    .foregroundStyle(TTColor.brand)
+                    .accessibilityHidden(true)
+                Text(entry.term)
+                    .font(TTFont.subheadline.weight(.medium))
+                    .foregroundStyle(TTColor.brand)
+                    .multilineTextAlignment(.leading)
+                    .adaptiveLineLimit(2)
+            }
+            .padding(.horizontal, DesignTokens.Spacing.sm)
+            .frame(minHeight: 32)
+            .background(TTColor.brandSoft, in: Capsule())
+            .frame(minHeight: DesignTokens.minTouchTarget)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .minimumTouchTarget()
         .accessibilityLabel(entry.term)
         .accessibilityHint(String(localized: "Opens the glossary definition for this term."))
         .accessibilityIdentifier("glossary.chip.\(entry.id)")
@@ -103,8 +113,6 @@ struct GlossaryChipsRow: View {
     var gameSystemId: String = GameSystemRulesLabels.defaultGameSystemId
     var ruleSections: [RuleSection] = []
 
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
-
     private var entries: [RulesGlossaryEntry] {
         RulesGlossaryCatalog.entriesReferenced(
             in: text,
@@ -113,42 +121,33 @@ struct GlossaryChipsRow: View {
         )
     }
 
+    private var chipFlow: some View {
+        TTFlowLayout(spacing: DesignTokens.Spacing.sm) {
+            ForEach(entries) { entry in
+                GlossaryChip(
+                    entry: entry,
+                    gameSystemId: gameSystemId,
+                    ruleSections: ruleSections
+                )
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
     var body: some View {
         if !entries.isEmpty {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                 if let label {
                     Text(label)
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.secondary)
-                }
-                if dynamicTypeSize.needsLayoutAdaptation {
-                    LazyVGrid(
-                        columns: [GridItem(.adaptive(minimum: 120), spacing: DesignTokens.Spacing.sm)],
-                        alignment: .leading,
-                        spacing: DesignTokens.Spacing.sm
-                    ) {
-                        ForEach(entries) { entry in
-                            GlossaryChip(
-                                entry: entry,
-                                gameSystemId: gameSystemId,
-                                ruleSections: ruleSections
-                            )
-                        }
-                    }
-                    .accessibilityLabel(label ?? String(localized: "Key terms"))
+                        .font(TTFont.caption.weight(.semibold))
+                        .foregroundStyle(TTColor.inkSecondary)
+                        .accessibilityHidden(true)
+                    chipFlow
+                        .accessibilityElement(children: .contain)
+                        .accessibilityLabel(label)
                 } else {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: DesignTokens.Spacing.sm) {
-                            ForEach(entries) { entry in
-                                GlossaryChip(
-                                    entry: entry,
-                                    gameSystemId: gameSystemId,
-                                    ruleSections: ruleSections
-                                )
-                            }
-                        }
-                    }
-                    .accessibilityLabel(label ?? String(localized: "Key terms"))
+                    chipFlow
+                        .accessibilityElement(children: .contain)
                 }
             }
         }
@@ -172,5 +171,14 @@ private extension View {
                 }
             )
         }
+    }
+}
+
+#Preview("GlossaryChip") {
+    TTPreviewMatrix {
+        GlossaryChip(
+            entry: RulesGlossaryEntry(id: "rend", term: "Rend", definition: "Rend makes saves harder.")
+        )
+        .environmentObject(GlossaryNavigationState())
     }
 }

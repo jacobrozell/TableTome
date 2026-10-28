@@ -16,47 +16,96 @@ struct GlossaryEntrySheetView: View {
         NavigationStack {
             Group {
                 if let entry {
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                            Text(entry.definition)
-                                .font(.body)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .accessibilityIdentifier("glossary.sheetContent.\(entry.id)")
-
-                            GlossaryChipsRow(
-                                text: entry.definition,
-                                gameSystemId: link.gameSystemId,
-                                ruleSections: ruleSections
-                            )
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(DesignTokens.Spacing.md)
-                    }
+                    loaded(entry)
                 } else if let errorMessage {
-                    ContentUnavailableView(
-                        String(localized: "Term unavailable"),
-                        systemImage: "exclamationmark.triangle",
-                        description: Text(errorMessage)
+                    TTEmptyState(
+                        title: String(localized: "Term unavailable"),
+                        message: errorMessage,
+                        systemImage: "exclamationmark.triangle"
                     )
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     ProgressView(String(localized: "Loading term…"))
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .accessibilityLabel(String(localized: "Loading term"))
                 }
             }
-            .navigationTitle(entry?.term ?? String(localized: "Glossary"))
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(String(localized: "Done")) {
-                        dismiss()
-                    }
-                    .accessibilityIdentifier("glossary.sheetDone")
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .background(TTColor.canvas)
+            .toolbar(.hidden, for: .navigationBar)
+            .navigationDestination(for: RuleSectionLink.self) { destination in
+                if let section = ruleSections.first(where: { $0.id == destination.sectionId }) {
+                    RuleSectionDetailView(
+                        section: section,
+                        allSections: ruleSections,
+                        gameSystemId: destination.gameSystemId
+                    )
                 }
             }
         }
-        .presentationDetents([.medium, .large])
+        .presentationDetents([.fraction(0.4), .large])
         .presentationDragIndicator(.visible)
+        .presentationBackground(TTColor.canvas)
         .task(id: link.id) { await load() }
+    }
+
+    private func loaded(_ entry: RulesGlossaryEntry) -> some View {
+        VStack(spacing: 0) {
+            TTSheetHeader(title: entry.term, onClose: { dismiss() })
+                .accessibilityIdentifier("glossary.sheetDone")
+                .background(TTColor.canvas)
+            ScrollView {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    TTRichText(entry.definition)
+                        .accessibilityIdentifier("glossary.sheetContent.\(entry.id)")
+
+                    GlossaryChipsRow(
+                        text: entry.definition,
+                        gameSystemId: link.gameSystemId,
+                        ruleSections: ruleSections
+                    )
+
+                    if let related = relatedSection(for: entry) {
+                        NavigationLink(
+                            value: RuleSectionLink(
+                                gameSystemId: link.gameSystemId,
+                                sectionId: related.id
+                            )
+                        ) {
+                            TTRow(
+                                title: String(localized: "Related rule"),
+                                subtitle: related.title,
+                                systemImage: "doc.text"
+                            )
+                            .padding(.horizontal, DesignTokens.Spacing.md)
+                            .padding(.vertical, DesignTokens.Spacing.xs)
+                        }
+                        .buttonStyle(.plain)
+                        .surfaceCard(padding: 0)
+                        .accessibilityHint(String(localized: "Opens the related rule section."))
+                        .accessibilityIdentifier("glossary.relatedRule.\(related.id)")
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .readableContentWidth()
+                .padding(DesignTokens.Spacing.md)
+            }
+        }
+    }
+
+    /// Matches a loaded rule section when the glossary entry id is that section, or the
+    /// `glossary-` content id used in rules-v1.json (for example `contest` → `glossary-contest`).
+    private func relatedSection(for entry: RulesGlossaryEntry) -> RuleSection? {
+        if let match = ruleSections.first(where: { $0.id == entry.id }) {
+            return match
+        }
+        let glossarySectionId = "glossary-\(entry.id)"
+        if let match = ruleSections.first(where: { $0.id == glossarySectionId }) {
+            return match
+        }
+        return ruleSections.first {
+            $0.title.compare(entry.term, options: .caseInsensitive) == .orderedSame
+        }
     }
 
     private func load() async {

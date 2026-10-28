@@ -8,8 +8,8 @@ struct SpearheadRulesComparisonCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Label(String(localized: "Which Age of Sigmar rules?"), systemImage: "arrow.left.arrow.right")
-                .font(compact ? .subheadline.weight(.semibold) : .headline)
-                .foregroundStyle(Color.accentOnSurface)
+                .font(compact ? TTFont.subheadline.weight(.semibold) : TTFont.headline)
+                .foregroundStyle(TTColor.brand)
 
             comparisonColumn(
                 title: String(localized: "Spearhead — this guide"),
@@ -31,8 +31,8 @@ struct SpearheadRulesComparisonCard: View {
                         """
                     )
                 )
-                .font(.caption)
-                .foregroundStyle(.tertiary)
+                .font(TTFont.caption)
+                .foregroundStyle(TTColor.inkTertiary)
                 .fixedSize(horizontal: false, vertical: true)
             }
         }
@@ -61,20 +61,27 @@ struct SpearheadRulesComparisonCard: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
             HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
                 Text(title)
-                    .font(.subheadline.weight(.semibold))
+                    .font(TTFont.subheadline.weight(.semibold))
+                    .foregroundStyle(TTColor.inkPrimary)
                 GuideBadge(style: .custom(badge))
             }
             ForEach(Array(points.enumerated()), id: \.offset) { _, point in
                 HStack(alignment: .top, spacing: DesignTokens.Spacing.xs) {
                     Text("•")
-                        .font(.caption.weight(.bold))
-                        .foregroundStyle(.secondary)
+                        .font(TTFont.caption.weight(.bold))
+                        .foregroundStyle(TTColor.inkSecondary)
                     Text(point)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .font(TTFont.caption)
+                        .foregroundStyle(TTColor.inkSecondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
         }
+    }
+}
+
+#Preview("SpearheadRulesComparisonCard") {
+    TTPreviewMatrix {
+        SpearheadRulesComparisonCard()
     }
 }

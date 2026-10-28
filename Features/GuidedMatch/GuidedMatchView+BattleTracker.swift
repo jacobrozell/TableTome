@@ -24,6 +24,7 @@ extension GuidedMatchView {
                 profiles: profiles,
                 primaryProfileId: primaryId,
                 profileSlotLabel: String(localized: "Player 1"),
+                isPlayerOne: true,
                 onSave: viewModel.updatePlayerOne
             )
         case .playerTwo:
@@ -41,6 +42,7 @@ extension GuidedMatchView {
                 opponentArmyId: viewModel.matchState.playerOne.armyId.isEmpty
                     ? nil
                     : viewModel.matchState.playerOne.armyId,
+                isPlayerOne: false,
                 onSave: viewModel.updatePlayerTwo
             )
         case .battleTracker:

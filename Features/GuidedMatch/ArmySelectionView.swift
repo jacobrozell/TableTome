@@ -13,16 +13,19 @@ struct ArmySelectionView: View {
     var primaryProfileId: UUID?
     var profileSlotLabel: String = ""
     var opponentArmyId: String?
+    var isPlayerOne: Bool = false
     let onSave: (PlayerArmySelection) -> Void
 
-    @State private var playerName: String
-    @State private var selectedProfileId: UUID?
-    @State private var selectedFactionId: String
-    @State private var selectedArmyId: String
-    @State private var showsAllCatalogArmies = false
+    @State var playerName: String
+    @State var selectedProfileId: UUID?
+    @State var selectedFactionId: String
+    @State var selectedArmyId: String
+    @State var showsAllCatalogArmies = false
+    @State var armySearchText = ""
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) var dynamicTypeSize
 
-    private var enablesProfilePicker: Bool {
+    var enablesProfilePicker: Bool {
         ReleaseSurface.showsPlayersHub && !profiles.isEmpty
     }
 
@@ -38,6 +41,7 @@ struct ArmySelectionView: View {
         primaryProfileId: UUID? = nil,
         profileSlotLabel: String = "",
         opponentArmyId: String? = nil,
+        isPlayerOne: Bool = false,
         onSave: @escaping (PlayerArmySelection) -> Void
     ) {
         self.title = title
@@ -51,6 +55,7 @@ struct ArmySelectionView: View {
         self.primaryProfileId = primaryProfileId
         self.profileSlotLabel = profileSlotLabel
         self.opponentArmyId = opponentArmyId
+        self.isPlayerOne = isPlayerOne
         self.onSave = onSave
         _playerName = State(initialValue: selection.playerName)
         _selectedProfileId = State(initialValue: selection.profileId)
@@ -70,6 +75,7 @@ struct ArmySelectionView: View {
         primaryProfileId: UUID? = nil,
         profileSlotLabel: String = "",
         opponentArmyId: String? = nil,
+        isPlayerOne: Bool = false,
         onSave: @escaping (PlayerArmySelection) -> Void
     ) {
         self.init(
@@ -84,16 +90,13 @@ struct ArmySelectionView: View {
             primaryProfileId: primaryProfileId,
             profileSlotLabel: profileSlotLabel,
             opponentArmyId: opponentArmyId,
+            isPlayerOne: isPlayerOne,
             onSave: onSave
         )
     }
 
     private var playContext: GameSystemPlayContext {
         GameSystemPlayContext.context(for: gameSystemId)
-    }
-
-    private var selectedFaction: SpearheadFaction? {
-        factions.first { $0.id == selectedFactionId }
     }
 
     private var selectedProfile: PlayerProfile? {
@@ -106,250 +109,102 @@ struct ArmySelectionView: View {
         return OwnedArmyResolver.ownedArmyIds(for: selectedProfile)
     }
 
-    private var sortedArmies: [SpearheadArmy] {
-        let base = selectedFaction?.armies.sorted { lhs, rhs in
+    var body: some View {
+        factionPickList
+            .navigationDestination(for: FactionPickLink.self) { link in
+                armyPickLevel(factionId: link.factionId)
+            }
+            .searchable(
+                text: $armySearchText,
+                prompt: String(localized: "Search factions or armies")
+            )
+            .ttScreenBackground()
+            .overlay(alignment: .top) {
+                Rectangle()
+                    .fill(TTColor.player(isPlayerOne))
+                    .frame(height: 4)
+                    .ignoresSafeArea(edges: .horizontal)
+            }
+            .navigationTitle(title)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(id: "guidedMatch.saveArmy", placement: .confirmationAction) {
+                    Button(dismissesOnSave ? String(localized: "Done") : String(localized: "Save")) {
+                        saveArmy()
+                    }
+                    .fontWeight(.semibold)
+                    .disabled(selectedFactionId.isEmpty || selectedArmyId.isEmpty)
+                    .accessibilityIdentifier("guidedMatch.saveArmy")
+                }
+                .hidingToolbarGlassBackgroundIfAvailable()
+            }
+    }
+
+    func saveArmy() {
+        var updated = selection
+        updated.playerName = playerName.trimmingCharacters(in: .whitespacesAndNewlines)
+        if updated.playerName.isEmpty {
+            updated.playerName = title
+        }
+        updated.profileId = selectedProfileId
+        updated.factionId = selectedFactionId
+        updated.armyId = selectedArmyId
+        updated.regimentAbilityId = nil
+        updated.enhancementId = nil
+        updated.secondaryObjectiveId = nil
+        onSave(updated)
+        if dismissesOnSave {
+            dismiss()
+        }
+    }
+
+    var trimmedArmySearch: String {
+        armySearchText.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    func factionMatches(_ faction: SpearheadFaction) -> Bool {
+        faction.name.localizedCaseInsensitiveContains(trimmedArmySearch)
+    }
+
+    func armyMatches(_ army: SpearheadArmy) -> Bool {
+        army.name.localizedCaseInsensitiveContains(trimmedArmySearch)
+            || army.general.localizedCaseInsensitiveContains(trimmedArmySearch)
+    }
+
+    func armies(for faction: SpearheadFaction) -> [SpearheadArmy] {
+        let base = faction.armies.sorted { lhs, rhs in
             let leftFeatured = featuredArmies.isFeatured(lhs.id)
             let rightFeatured = featuredArmies.isFeatured(rhs.id)
             if leftFeatured != rightFeatured { return leftFeatured && !rightFeatured }
             return lhs.name < rhs.name
-        } ?? []
+        }
         guard enablesProfilePicker, !ownedArmyIds.isEmpty, !showsAllCatalogArmies else { return base }
-        let filtered = OwnedArmyResolver.filtersArmies(base, ownedIds: ownedArmyIds)
-        return filtered.owned
+        return OwnedArmyResolver.filtersArmies(base, ownedIds: ownedArmyIds).owned
     }
 
-    private var hiddenCatalogArmies: [SpearheadArmy] {
-        guard enablesProfilePicker, !ownedArmyIds.isEmpty, let faction = selectedFaction else { return [] }
+    func hiddenArmies(for faction: SpearheadFaction) -> [SpearheadArmy] {
+        guard enablesProfilePicker, !ownedArmyIds.isEmpty else { return [] }
         let base = faction.armies.sorted { $0.name < $1.name }
         return OwnedArmyResolver.filtersArmies(base, ownedIds: ownedArmyIds).other
     }
 
-    var body: some View {
-        Form {
-            if enablesProfilePicker {
-                PlayerProfilePicker(
-                    profiles: profiles,
-                    primaryProfileId: primaryProfileId,
-                    selectedProfileId: $selectedProfileId,
-                    guestName: $playerName,
-                    slotLabel: profileSlotLabel.isEmpty ? String(localized: "Player") : profileSlotLabel
-                )
-                .onChange(of: selectedProfileId) { _, newValue in
-                    if let newValue, let profile = profiles.first(where: { $0.id == newValue }) {
-                        playerName = profile.displayName
-                        showsAllCatalogArmies = false
-                        applyPreferredArmy(for: profile)
-                    }
-                }
-            } else {
-                Section(String(localized: "Player Name")) {
-                    TextField(String(localized: "Name"), text: $playerName)
-                        .textInputAutocapitalization(.words)
-                        .accessibilityIdentifier("guidedMatch.playerNameField")
-                }
-            }
-
-            Section(String(localized: "Faction")) {
-                Picker(String(localized: "Faction"), selection: $selectedFactionId) {
-                    Text(String(localized: "Select a faction")).tag("")
-                    ForEach(factions) { faction in
-                        Text(faction.name).tag(faction.id)
-                    }
-                }
-                .pickerStyle(.navigationLink)
-                .accessibilityIdentifier("guidedMatch.factionPicker")
-                .onChange(of: selectedFactionId) { _, newValue in
-                    guard let faction = factions.first(where: { $0.id == newValue }) else {
-                        selectedArmyId = ""
-                        return
-                    }
-                    if !faction.armies.contains(where: { $0.id == selectedArmyId }) {
-                        selectedArmyId = faction.armies.first?.id ?? ""
-                    }
-                }
-            }
-
-            if let faction = selectedFaction, !sortedArmies.isEmpty {
-                armyListSection(
-                    armies: sortedArmies,
-                    faction: faction,
-                    header: ownedArmyIds.isEmpty || showsAllCatalogArmies
-                        ? armiesSectionHeader(for: faction)
-                        : String(localized: "Your armies")
-                )
-            }
-
-            if enablesProfilePicker, !hiddenCatalogArmies.isEmpty {
-                Section {
-                    DisclosureGroup(String(localized: "All Spearhead armies"), isExpanded: $showsAllCatalogArmies) {
-                        ForEach(hiddenCatalogArmies) { army in
-                            armyButton(army)
-                        }
-                    }
-                } footer: {
-                    Text(String(localized: "Mark armies you own in Players to see them here first."))
-                }
-            } else if enablesProfilePicker, ownedArmyIds.isEmpty, selectedFaction != nil {
-                Section {} footer: {
-                    Text(String(localized: "Mark armies you own in Players to filter this list."))
-                }
-            }
-
-            if let army = sortedArmies.first(where: { $0.id == selectedArmyId }) {
-                Section(String(localized: "Army Details")) {
-                    LabeledContent(String(localized: "General"), value: army.general)
-                    LabeledContent(String(localized: "Units"), value: "\(army.unitCount)")
-                    Text(army.tagline)
-                        .font(.callout)
-                        .foregroundStyle(.secondary)
-                }
-
-                if !army.roster.isEmpty {
-                    Section(String(localized: "Roster")) {
-                        ForEach(army.roster, id: \.self) { unit in
-                            Text(unit)
-                        }
-                    }
-                }
-
-                if let battleTraitName = army.battleTraitName, !army.battleTraits.isEmpty {
-                    Section(battleTraitName) {
-                        ForEach(army.battleTraits) { trait in
-                            ArmyRuleOptionCard(option: trait, isSelected: false)
-                        }
-                    }
-                }
-
-                if let urlString = army.officialRulesURL, let url = URL(string: urlString) {
-                    Section(String(localized: "Official Rules")) {
-                        Link(destination: url) {
-                            Label(officialRulesLinkTitle, systemImage: "arrow.up.right.square")
-                                .frame(minHeight: DesignTokens.minTouchTarget)
-                        }
-                        .accessibilityIdentifier("guidedMatch.officialRules.\(army.id)")
-                    }
-                }
-
-                if showsUnitReference(for: army) {
-                    Section(String(localized: "Reference")) {
-                        NavigationLink(value: ArmyRosterLink(
-                            gameSystemId: gameSystemId.rawValue,
-                            armyId: army.id
-                        )) {
-                            Label(unitReferenceLabel, systemImage: "doc.richtext")
-                                .frame(minHeight: DesignTokens.minTouchTarget)
-                        }
-                        .accessibilityIdentifier("guidedMatch.unitReference.\(army.id)")
-                    }
-                }
-            }
-        }
-        .formEditorTopContentMargin()
-        .navigationTitle(title)
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(id: "guidedMatch.saveArmy", placement: .confirmationAction) {
-                Button(dismissesOnSave ? String(localized: "Done") : String(localized: "Save")) {
-                    var updated = selection
-                    updated.playerName = playerName.trimmingCharacters(in: .whitespacesAndNewlines)
-                    if updated.playerName.isEmpty {
-                        updated.playerName = title
-                    }
-                    updated.profileId = selectedProfileId
-                    updated.factionId = selectedFactionId
-                    updated.armyId = selectedArmyId
-                    updated.regimentAbilityId = nil
-                    updated.enhancementId = nil
-                    updated.secondaryObjectiveId = nil
-                    onSave(updated)
-                    if dismissesOnSave {
-                        dismiss()
-                    }
-                }
-                .fontWeight(.semibold)
-                .disabled(selectedFactionId.isEmpty || selectedArmyId.isEmpty)
-                .accessibilityIdentifier("guidedMatch.saveArmy")
-            }
-            .hidingToolbarGlassBackgroundIfAvailable()
-        }
+    func select(army: SpearheadArmy, faction: SpearheadFaction) {
+        selectedFactionId = faction.id
+        selectedArmyId = army.id
     }
 
-    private func armyListSection(armies: [SpearheadArmy], faction: SpearheadFaction, header: String) -> some View {
-        Section {
-            ForEach(armies) { army in
-                armyButton(army)
-            }
-        } header: {
-            Text(header)
-        } footer: {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                if gameSystemId != .scTmg {
-                    Text(
-                        String(
-                            localized: """
-                            Badges show how much rules help is built in: army list, full setup options, or \
-                            in-battle ability reminders.
-                            """
-                        )
-                    )
-                }
-                if let army = armies.first(where: { $0.id == selectedArmyId }) {
-                    Text(army.playstyle)
-                }
-            }
-        }
-    }
-
-    private func armyButton(_ army: SpearheadArmy) -> some View {
-        Button {
-            selectedArmyId = army.id
-        } label: {
-            ArmyOptionRow(
-                army: army,
-                isSelected: army.id == selectedArmyId,
-                featuredArmies: featuredArmies,
-                gameSystemId: gameSystemId
-            )
-        }
-        .buttonStyle(.plain)
-        .accessibilityAddTraits(army.id == selectedArmyId ? .isSelected : [])
-        .accessibilityIdentifier("guidedMatch.army.\(army.id)")
-    }
-
-    private var officialRulesLinkTitle: String {
-        switch gameSystemId {
-        case .scTmg:
-            String(localized: "StarCraft TMG Rules")
-        case .wh40k11e, .wh40k10eCp:
-            String(localized: "Official Rules PDF")
-        case .aosSpearhead:
-            String(localized: "GW Spearhead PDF")
-        }
-    }
-
-    private func armiesSectionHeader(for faction: SpearheadFaction) -> String {
-        switch gameSystemId {
-        case .scTmg:
-            String(localized: "\(faction.name) Armies")
-        case .wh40k11e, .wh40k10eCp:
-            String(localized: "\(faction.name) Combat Patrols")
-        case .aosSpearhead:
-            String(localized: "\(faction.name) Spearheads")
-        }
-    }
-
-    private var unitReferenceLabel: String {
+    var unitReferenceLabel: String {
         playContext.unitReferenceLinkTitle
     }
 
-    private func showsUnitReference(for army: SpearheadArmy) -> Bool {
+    func showsUnitReference(for army: SpearheadArmy) -> Bool {
         if playContext.usesGuidedBattleTracker {
             return !army.units.isEmpty
         }
         return army.units.contains(where: \.hasWarscroll)
     }
 
-    private func applyPreferredArmy(for profile: PlayerProfile) {
+    func applyPreferredArmy(for profile: PlayerProfile) {
         if let opponentArmyId, !opponentArmyId.isEmpty,
            let preferredId = profile.guidedMatchPreferences.preferredArmyIdByOpponentArmyId[opponentArmyId],
            let faction = factions.first(where: { $0.armies.contains(where: { $0.id == preferredId }) }) {
@@ -362,73 +217,6 @@ struct ArmySelectionView: View {
            let faction = factions.first(where: { $0.armies.contains(where: { $0.id == armyId }) }) {
             selectedFactionId = faction.id
             selectedArmyId = armyId
-        }
-    }
-}
-
-private struct ArmyOptionRow: View {
-    let army: SpearheadArmy
-    let isSelected: Bool
-    let featuredArmies: GuidedMatchFeaturedArmies
-    var gameSystemId: GameSystemId = .default
-
-    var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                HStack(spacing: DesignTokens.Spacing.sm) {
-                    Text(army.name)
-                        .font(.headline)
-                        .foregroundStyle(.primary)
-                    if featuredArmies.isFeatured(army.id) {
-                        Text(String(localized: "Starter Set"))
-                            .font(.caption2.weight(.semibold))
-                            .padding(.horizontal, DesignTokens.Spacing.sm)
-                            .padding(.vertical, 2)
-                            .background(Color.accentColor.opacity(0.15), in: Capsule())
-                            .foregroundStyle(Color.accentOnSurface)
-                    }
-                }
-                Text(army.general)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                ContentCoverageBadge(coverage: army.contentCoverage, gameSystemId: gameSystemId)
-            }
-            Spacer()
-            if isSelected {
-                Image(systemName: "checkmark.circle.fill")
-                    .foregroundStyle(Color.accentOnSurface)
-                    .accessibilityHidden(true)
-            }
-        }
-        .frame(minHeight: DesignTokens.minTouchTarget)
-        .contentShape(Rectangle())
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel(
-            "\(army.name), general \(army.general), \(army.contentCoverage.playerFacingTitle(gameSystemId: gameSystemId.rawValue))"
-        )
-        .accessibilityHint(isSelected ? "Selected" : "Select this army")
-    }
-}
-
-private struct ContentCoverageBadge: View {
-    let coverage: SpearheadContentCoverage
-    var gameSystemId: GameSystemId = .default
-
-    private var playContext: GameSystemPlayContext {
-        GameSystemPlayContext.context(for: gameSystemId)
-    }
-
-    var body: some View {
-        if playContext.capabilities.showsActivationBar {
-            EmptyView()
-        } else {
-            Label(coverage.playerFacingTitle(gameSystemId: gameSystemId.rawValue), systemImage: coverage.systemImage)
-                .font(.caption2.weight(.medium))
-                .padding(.horizontal, DesignTokens.Spacing.sm)
-                .padding(.vertical, 2)
-                .background(coverage >= .battleTracker ? Color.green.opacity(0.15) : Color(.tertiarySystemFill), in: Capsule())
-                .foregroundStyle(coverage >= .warscrolls ? .orange : coverage >= .battleTracker ? .green : .secondary)
-                .accessibilityLabel(String(localized: "Content: \(coverage.playerFacingTitle(gameSystemId: gameSystemId.rawValue))"))
         }
     }
 }

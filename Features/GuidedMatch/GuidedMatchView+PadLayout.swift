@@ -222,6 +222,7 @@ extension GuidedMatchView {
                     } label: {
                         PlayerArmyRow(
                             label: String(localized: "Player 1"),
+                            isPlayerOne: true,
                             selection: viewModel.matchState.playerOne,
                             catalog: catalog
                         )
@@ -234,6 +235,7 @@ extension GuidedMatchView {
                     } label: {
                         PlayerArmyRow(
                             label: String(localized: "Player 2"),
+                            isPlayerOne: false,
                             selection: viewModel.matchState.playerTwo,
                             catalog: catalog
                         )

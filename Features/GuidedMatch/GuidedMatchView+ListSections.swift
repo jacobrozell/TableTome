@@ -116,8 +116,11 @@ extension GuidedMatchView {
             boxSets: spearheadBoxSets,
             selectedBoxId: $selectedSpearheadBoxId,
             onUseStarterMatchup: { useStarterMatchup() },
+            onContinueToSetup: { hubTab = .setup },
             featuredArmies: featuredArmies,
-            matchupSummary: viewModel.matchupSummary
+            matchupSummary: viewModel.matchupSummary,
+            catalog: viewModel.catalog,
+            hasBothArmies: viewModel.matchState.hasBothArmies
         )
     }
 

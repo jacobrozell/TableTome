@@ -12,6 +12,7 @@ struct PlayerSidebarRow: View {
     var body: some View {
         PlayerArmyRow(
             label: label,
+            isPlayerOne: destination == .playerOne,
             selection: selection,
             catalog: catalog,
             profile: profile,
@@ -51,94 +52,41 @@ struct PlayersSection: View {
         return householdProfiles.first { $0.id == profileId }
     }
 
-    private var showsPlayerRows: Bool {
-        showsOwnListsSection || viewModel.matchState.hasBothArmies
-    }
-
     var body: some View {
         Section {
             if useSplitSelection {
-                DisclosureGroup(
-                    isExpanded: Binding(
-                        get: { showsOwnListsSection || viewModel.matchState.hasBothArmies },
-                        set: { showsOwnListsSection = $0 }
-                    )
-                ) {
-                    PlayerSidebarRow(
-                        label: String(localized: "Player 1"),
-                        selection: viewModel.matchState.playerOne,
-                        catalog: catalog,
-                        profile: profile(for: viewModel.matchState.playerOne),
-                        isPrimaryProfile: viewModel.matchState.playerOne.profileId == primaryProfileId,
-                        destination: .playerOne
-                    )
-                    PlayerSidebarRow(
-                        label: String(localized: "Player 2"),
-                        selection: viewModel.matchState.playerTwo,
-                        catalog: catalog,
-                        profile: profile(for: viewModel.matchState.playerTwo),
-                        isPrimaryProfile: viewModel.matchState.playerTwo.profileId == primaryProfileId,
-                        destination: .playerTwo
-                    )
-                } label: {
-                    Text(String(localized: "We brought our own lists"))
-                        .font(.subheadline.weight(.semibold))
-                }
+                PlayerSidebarRow(
+                    label: String(localized: "Player 1"),
+                    selection: viewModel.matchState.playerOne,
+                    catalog: catalog,
+                    profile: profile(for: viewModel.matchState.playerOne),
+                    isPrimaryProfile: viewModel.matchState.playerOne.profileId == primaryProfileId,
+                    destination: .playerOne
+                )
+                PlayerSidebarRow(
+                    label: String(localized: "Player 2"),
+                    selection: viewModel.matchState.playerTwo,
+                    catalog: catalog,
+                    profile: profile(for: viewModel.matchState.playerTwo),
+                    isPrimaryProfile: viewModel.matchState.playerTwo.profileId == primaryProfileId,
+                    destination: .playerTwo
+                )
             } else {
-                ownListsToggleRow
-
-                if showsPlayerRows {
-                    playerOneLink
-                    playerTwoLink
-                }
+                playerOneLink
+                playerTwoLink
             }
+        } header: {
+            TTSectionHeader(String(localized: "Or Pick Your Own"))
         } footer: {
-            if !viewModel.matchState.hasBothArmies {
-                Text(
-                    String(
-                        localized: "Optional — most beginners tap Use Starter Matchup above to load both armies."
-                    )
-                )
-            } else {
-                Text(
-                    String(
-                        localized: "Armies are set. Open the Setup tab for mission, deployment, and battlefield steps."
-                    )
-                )
-            }
+            Text(String(localized: "Pick any Spearhead army for each player."))
         }
-    }
-
-    private var ownListsToggleRow: some View {
-        Button {
-            withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) {
-                showsOwnListsSection.toggle()
-            }
-        } label: {
-            HStack {
-                Text(String(localized: "We brought our own lists"))
-                    .font(.subheadline.weight(.semibold))
-                Spacer()
-                Image(systemName: showsPlayerRows ? "chevron.up" : "chevron.down")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.secondary)
-            }
-            .frame(minHeight: DesignTokens.minTouchTarget)
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .accessibilityIdentifier("guidedMatch.ownLists.toggle")
-        .accessibilityHint(
-            showsPlayerRows
-                ? String(localized: "Hides manual army picker rows.")
-                : String(localized: "Shows army picker rows for each player.")
-        )
     }
 
     private var playerOneLink: some View {
         NavigationLink(value: GuidedMatchDestination.playerOne) {
             PlayerArmyRow(
                 label: String(localized: "Player 1"),
+                isPlayerOne: true,
                 selection: viewModel.matchState.playerOne,
                 catalog: catalog,
                 profile: profile(for: viewModel.matchState.playerOne),
@@ -155,6 +103,7 @@ struct PlayersSection: View {
         NavigationLink(value: GuidedMatchDestination.playerTwo) {
             PlayerArmyRow(
                 label: String(localized: "Player 2"),
+                isPlayerOne: false,
                 selection: viewModel.matchState.playerTwo,
                 catalog: catalog,
                 profile: profile(for: viewModel.matchState.playerTwo),
@@ -167,5 +116,4 @@ struct PlayersSection: View {
         .accessibilityIdentifier("guidedMatch.playerTwo")
     }
 
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 }

@@ -58,26 +58,6 @@ struct StarterMatchupHandoffSection: View {
     let onDismiss: () -> Void
 
     var body: some View {
-        if showsStarterMatchupHandoff,
-           !dismissedStarterMatchupHandoff,
-           let summary = matchupSummary {
-            Section {
-                StarterMatchupHandoffBanner(
-                    matchupSummary: summary,
-                    nextStepTitle: nextStepTitle,
-                    attackerLabel: attackerLabel,
-                    usesSpearheadCopy: usesSpearheadCopy,
-                    onDismiss: onDismiss
-                )
-                .listHeroCardRow()
-
-                if let profileAssignNote {
-                    Text(profileAssignNote)
-                        .font(.callout)
-                        .foregroundStyle(.secondary)
-                        .listHeroCardRow()
-                }
-            }
-        }
+        EmptyView()
     }
 }

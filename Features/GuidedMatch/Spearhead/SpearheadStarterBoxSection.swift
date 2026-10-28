@@ -10,6 +10,7 @@ enum SpearheadStarterBoxStorage {
 struct SpearheadStarterBoxSection: View {
     let boxSets: [BoxSet]
     @Binding var selectedBoxId: String
+    let catalog: SpearheadCatalog?
     let onUseStarterMatchup: () -> Void
 
     private var selectedBox: BoxSet? {
@@ -25,75 +26,57 @@ struct SpearheadStarterBoxSection: View {
                     }
                 }
                 .accessibilityIdentifier("guidedMatch.starterBoxPicker")
-            } else if let box = selectedBox {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                    Text(String(localized: "Which starter box do you have?"))
-                        .font(.subheadline.weight(.semibold))
-                    Text(box.starterMatchupTitle)
-                        .font(.headline)
-                    if let badge = box.starterSetBadge, !badge.isEmpty {
-                        Text(badge)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .accessibilityElement(children: .combine)
-                .accessibilityIdentifier("guidedMatch.starterBoxPicker")
             }
-
             if let box = selectedBox {
-                starterMatchupButton(for: box)
+                starterHero(for: box)
+                    .listHeroCardRow()
             }
-        } header: {
-            Text(String(localized: "Starter Set"))
-        } footer: {
-            Text(
-                String(
-                    localized: """
-                    Pick the box you bought, then tap Use Starter Matchup. \
-                    Have a different Spearhead box? Expand Choose armies below.
-                    """
-                )
-            )
         }
     }
 
-    private func starterMatchupButton(for box: BoxSet) -> some View {
-        Button(action: onUseStarterMatchup) {
+    private func starterHero(for box: BoxSet) -> some View {
+        TTHeroCard(
+            eyebrow: String(localized: "STARTER SET"),
+            title: box.starterMatchupTitle,
+            subtitle: box.starterSetDescription
+        ) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                Label {
-                    Text(box.starterMatchupTitle)
-                        .font(.headline)
-                        .multilineTextAlignment(.leading)
-                } icon: {
-                    Image(systemName: "flag.2.crossed.fill")
-                        .foregroundStyle(Color.accentOnSurface)
-                }
-                if let description = box.starterSetDescription, !description.isEmpty {
-                    Text(description)
-                        .font(.callout)
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.leading)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                Text(String(localized: "Use Starter Matchup"))
-                    .font(.subheadline.weight(.semibold))
-                    .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-                    .prominentButtonLabelStyle()
-                    .background(Color.accentColor, in: CardSurface.shape(radius: DesignTokens.Radius.nested))
+                armyLine(isPlayerOne: true, selection: box.playerOne)
+                MatchupVersusBadge()
+                armyLine(isPlayerOne: false, selection: box.playerTwo)
+                Button(String(localized: "Use Starter Matchup"), action: onUseStarterMatchup)
+                    .buttonStyle(.ttPrimary)
+                    .accessibilityIdentifier("guidedMatch.starterMatchup")
+                    .accessibilityLabel(
+                        String(localized: "Use Starter Matchup, \(box.starterMatchupTitle)")
+                    )
+                    .accessibilityHint(
+                        String(
+                            localized: "Fills both armies, recommended picks, and defaults attacker to Player 1 — change on Setup if your roll differed."
+                        )
+                    )
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .buttonStyle(.plain)
-        .accessibilityIdentifier("guidedMatch.starterMatchup")
-        .accessibilityLabel(
-            String(localized: "Use Starter Matchup, \(box.starterMatchupTitle)")
-        )
-        .accessibilityHint(
-            String(
-                localized: "Fills both armies, recommended picks, and defaults attacker to Player 1 — change on Setup if your roll differed."
-            )
-        )
+    }
+
+    private func armyLine(isPlayerOne: Bool, selection: BoxSetArmySelection) -> some View {
+        HStack(spacing: DesignTokens.Spacing.sm) {
+            TTPlayerToken(isPlayerOne: isPlayerOne, size: 28)
+            Text(armyName(selection))
+                .font(TTFont.callout)
+                .foregroundStyle(TTColor.inkPrimary)
+                .lineLimit(2)
+        }
+    }
+
+    private func armyName(_ selection: BoxSetArmySelection) -> String {
+        guard let catalog,
+              let faction = catalog.factions.first(where: { $0.id == selection.factionId }),
+              let army = faction.armies.first(where: { $0.id == selection.armyId }) else {
+            return selection.playerName?.isEmpty == false
+                ? (selection.playerName ?? "")
+                : String(localized: "Starter army")
+        }
+        return army.name
     }
 }

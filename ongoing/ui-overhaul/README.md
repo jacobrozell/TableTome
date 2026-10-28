@@ -203,7 +203,7 @@ Legend: ⬜ not started · 🟨 in progress · ✅ merged · ⏸ blocked. **Deps
 | GG-03 | Sample turn walkthrough (paged) | GG-01 | [04](04-spearhead-guide.md) | 🟨 |
 | GG-04 | Army roster + warscroll reference | DS-07 | [04](04-spearhead-guide.md) | 🟨 |
 | GM-01 | Guided Match container: stepper header replaces hub segmented control | SH-03 | [05](05-guided-match-setup.md) | 🟨 |
-| GM-02 | Armies step (matchup card, starter matchup) | GM-01 | [05](05-guided-match-setup.md) | ⬜ |
+| GM-02 | Armies step (matchup card, starter matchup) | GM-01 | [05](05-guided-match-setup.md) | 🟨 |
 | GM-03 | Army picker (faction grid → army cards) | GM-02, GG-04 | [05](05-guided-match-setup.md) | ⬜ |
 | GM-04 | Setup steps (checklist + step detail) | GM-01 | [05](05-guided-match-setup.md) | ⬜ |
 | BT-00 | **Turn/round flow correctness (Domain, verify the suspected bug first)** | — | [06](06-battle-tracker.md) | ⬜ |

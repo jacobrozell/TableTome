@@ -15,6 +15,7 @@ struct GuidedMatchView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
+    @Environment(BannerCenter.self) var banners
     @Environment(\.accessibilityReduceMotion) var reduceMotion
     @Environment(\.dismiss) var dismiss
     @Environment(AppRouter.self) var router
@@ -249,14 +250,11 @@ struct GuidedMatchView: View {
 
 struct PlayerArmyRow: View {
     let label: String
+    var isPlayerOne: Bool = true
     let selection: PlayerArmySelection
     let catalog: SpearheadCatalog
     var profile: PlayerProfile?
     var isPrimaryProfile: Bool = false
-
-    private var hasArmySelected: Bool {
-        !selection.factionId.isEmpty && !selection.armyId.isEmpty
-    }
 
     private var displayName: String {
         selection.playerName.isEmpty ? label : selection.playerName
@@ -264,37 +262,26 @@ struct PlayerArmyRow: View {
 
     var body: some View {
         HStack(spacing: DesignTokens.Spacing.md) {
-            if let profile {
-                PlayerAvatarView(
-                    name: profile.displayName,
-                    accentColorName: profile.accentColorName,
-                    size: 40
-                )
-            } else {
-                PlayerAvatarView(name: displayName, size: 40)
-            }
-
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+            TTPlayerToken(isPlayerOne: isPlayerOne, size: 32)
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xxs) {
                 HStack(spacing: DesignTokens.Spacing.sm) {
                     Text(displayName)
-                        .font(.headline)
+                        .font(TTFont.headline)
+                        .foregroundStyle(TTColor.inkPrimary)
                     if isPrimaryProfile {
-                        PlayerBadge(title: String(localized: "Me"), style: .accent)
-                    }
-                    if hasArmySelected {
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.caption)
-                            .foregroundStyle(Color.accentColor)
-                            .accessibilityHidden(true)
+                        TTBadge(String(localized: "Me"), tone: .brand)
                     }
                 }
                 Text(armySubtitle)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
+                    .font(TTFont.callout)
+                    .foregroundStyle(TTColor.inkSecondary)
+                    .lineLimit(2)
             }
-
             Spacer(minLength: 0)
+            Image(systemName: "chevron.right")
+                .font(TTFont.caption)
+                .foregroundStyle(TTColor.inkTertiary)
+                .accessibilityHidden(true)
         }
         .frame(minHeight: DesignTokens.minTouchTarget, alignment: .leading)
         .contentShape(Rectangle())
@@ -303,9 +290,9 @@ struct PlayerArmyRow: View {
     private var armySubtitle: String {
         guard let faction = catalog.factions.first(where: { $0.id == selection.factionId }),
               let army = faction.armies.first(where: { $0.id == selection.armyId }) else {
-            return String(localized: "Tap to choose faction and army")
+            return String(localized: "Choose an army")
         }
-        return "\(faction.name) — \(army.name)"
+        return "\(faction.name) · \(army.name)"
     }
 }
 

@@ -8,36 +8,37 @@ struct MatchupSection: View {
     let boxSets: [BoxSet]
     @Binding var selectedBoxId: String
     let onUseStarterMatchup: () -> Void
+    let onContinueToSetup: () -> Void
     let featuredArmies: GuidedMatchFeaturedArmies
     let matchupSummary: String?
+    let catalog: SpearheadCatalog?
+    let hasBothArmies: Bool
 
     var body: some View {
         Group {
-            if gameSystemId == .aosSpearhead, showsSpearheadArmyPicker {
+            if hasBothArmies, let summary = matchupSummary {
+                Section {
+                    TTHeroCard(eyebrow: String(localized: "TODAY'S MATCH"), title: summary) {
+                        Button(String(localized: "Continue to Setup"), action: onContinueToSetup)
+                            .buttonStyle(.ttSecondary)
+                            .accessibilityIdentifier("guidedMatch.continueToSetup")
+                    }
+                    .accessibilityIdentifier("guidedMatch.matchupSummary")
+                    .listHeroCardRow()
+                }
+            } else if gameSystemId == .aosSpearhead, showsSpearheadArmyPicker {
                 SpearheadStarterBoxSection(
                     boxSets: boxSets,
                     selectedBoxId: $selectedBoxId,
+                    catalog: catalog,
                     onUseStarterMatchup: onUseStarterMatchup
                 )
             } else if showsSpearheadArmyPicker {
                 LegacyMatchupSection(
                     featuredArmies: featuredArmies,
+                    catalog: catalog,
                     onUseStarterMatchup: onUseStarterMatchup
                 )
-            }
-
-            if let summary = matchupSummary {
-                Section(String(localized: "Today's Match")) {
-                    Label {
-                        Text(summary)
-                            .font(.subheadline.weight(.medium))
-                            .fixedSize(horizontal: false, vertical: true)
-                    } icon: {
-                        Image(systemName: "person.2.fill")
-                            .foregroundStyle(.secondary)
-                    }
-                    .accessibilityIdentifier("guidedMatch.matchupSummary")
-                }
             }
         }
     }
@@ -45,47 +46,52 @@ struct MatchupSection: View {
 
 private struct LegacyMatchupSection: View {
     let featuredArmies: GuidedMatchFeaturedArmies
+    let catalog: SpearheadCatalog?
     let onUseStarterMatchup: () -> Void
 
     var body: some View {
         Section {
-            Button(action: onUseStarterMatchup) {
+            TTHeroCard(
+                eyebrow: String(localized: "STARTER SET"),
+                title: featuredArmies.starterMatchupTitle,
+                subtitle: featuredArmies.starterSetDescription
+            ) {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    Label {
-                        Text(featuredArmies.starterMatchupTitle)
-                            .font(.headline)
-                            .multilineTextAlignment(.leading)
-                    } icon: {
-                        Image(systemName: "flag.2.crossed.fill")
-                            .foregroundStyle(Color.accentOnSurface)
-                    }
-                    Text(featuredArmies.starterSetDescription)
-                        .font(.callout)
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.leading)
-                        .fixedSize(horizontal: false, vertical: true)
-                    Text(String(localized: "Use Starter Matchup"))
-                        .font(.subheadline.weight(.semibold))
-                        .frame(maxWidth: .infinity, minHeight: DesignTokens.minTouchTarget)
-                        .prominentButtonLabelStyle()
-                        .background(Color.accentColor, in: CardSurface.shape(radius: DesignTokens.Radius.nested))
+                    armyLine(isPlayerOne: true, selection: featuredArmies.featuredConfig.playerOne)
+                    MatchupVersusBadge()
+                    armyLine(isPlayerOne: false, selection: featuredArmies.featuredConfig.playerTwo)
+                    Button(String(localized: "Use Starter Matchup"), action: onUseStarterMatchup)
+                        .buttonStyle(.ttPrimary)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .buttonStyle(.plain)
+            .listHeroCardRow()
             .accessibilityIdentifier("guidedMatch.starterMatchup")
             .accessibilityLabel(
-                String(
-                    localized: "Use Starter Matchup, \(featuredArmies.starterMatchupTitle)"
-                )
+                String(localized: "Use Starter Matchup, \(featuredArmies.starterMatchupTitle)")
             )
             .accessibilityHint(
                 String(
                     localized: "Fills both armies, recommended picks, and defaults attacker to Player 1 — change on Setup if your roll differed."
                 )
             )
-        } header: {
-            Text(String(localized: "Starter Set"))
         }
+    }
+
+    private func armyLine(isPlayerOne: Bool, selection: StarterArmySelection) -> some View {
+        HStack(spacing: DesignTokens.Spacing.sm) {
+            TTPlayerToken(isPlayerOne: isPlayerOne, size: 28)
+            Text(armyName(selection))
+                .font(TTFont.callout)
+                .foregroundStyle(TTColor.inkPrimary)
+        }
+    }
+
+    private func armyName(_ selection: StarterArmySelection) -> String {
+        guard let catalog,
+              let faction = catalog.factions.first(where: { $0.id == selection.factionId }),
+              let army = faction.armies.first(where: { $0.id == selection.armyId }) else {
+            return selection.playerName.isEmpty ? String(localized: "Starter army") : selection.playerName
+        }
+        return army.name
     }
 }

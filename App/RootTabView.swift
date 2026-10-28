@@ -20,12 +20,16 @@ struct RootTabView: View {
         @Bindable var router = router
 
         TabView(selection: $router.selectedTab) {
+            playTab
+
+            rulesTab
+
             if ReleaseSurface.showsBenchTab {
                 BenchTab()
                     .tabItem {
                         TabBarItemLabel(
                             title: String(localized: "Models"),
-                            systemImage: "paintbrush",
+                            systemImage: "shield.lefthalf.filled",
                             identifier: "tab.bench",
                             accessibilityLabel: String(localized: "Models, track miniatures and paints")
                         )
@@ -38,7 +42,7 @@ struct RootTabView: View {
                     .tabItem {
                         TabBarItemLabel(
                             title: String(localized: "Lists"),
-                            systemImage: "flag.checkered",
+                            systemImage: "list.bullet.rectangle",
                             identifier: "tab.muster",
                             accessibilityLabel: String(localized: "Army lists, build rosters")
                         )
@@ -46,17 +50,13 @@ struct RootTabView: View {
                     .tag(AppTab.muster)
             }
 
-            playTab
-
-            rulesTab
-
             NavigationStack {
                 SettingsView()
             }
             .tabItem {
                 TabBarItemLabel(
                     title: String(localized: "Settings"),
-                    systemImage: "gearshape.fill",
+                    systemImage: "gearshape",
                     identifier: "tab.settings",
                     accessibilityLabel: String(localized: "Settings, appearance and app tour")
                 )
@@ -143,7 +143,7 @@ struct RootTabView: View {
         .tabItem {
             TabBarItemLabel(
                 title: String(localized: "Play"),
-                systemImage: "play.circle.fill",
+                systemImage: "flag.checkered",
                 identifier: "tab.play",
                 accessibilityLabel: playTabAccessibilityLabel
             )
@@ -176,7 +176,7 @@ struct RootTabView: View {
         .tabItem {
             TabBarItemLabel(
                 title: String(localized: "Rules"),
-                systemImage: ReleaseSurface.showsRulesAssistant ? "magnifyingglass" : "doc.text.fill",
+                systemImage: ReleaseSurface.showsRulesAssistant ? "magnifyingglass" : "book.closed",
                 identifier: ReleaseSurface.showsRulesAssistant ? "tab.rulesSearch" : "tab.rules",
                 accessibilityLabel: ReleaseSurface.showsRulesAssistant
                     ? String(localized: "Rules Search, look up rules for your game")
@@ -187,11 +187,10 @@ struct RootTabView: View {
     }
 
     private var tabBarItemIdentifiers: [String] {
-        var identifiers: [String] = []
+        var identifiers: [String] = ["tab.play"]
+        identifiers.append(ReleaseSurface.showsRulesAssistant ? "tab.rulesSearch" : "tab.rules")
         if ReleaseSurface.showsBenchTab { identifiers.append("tab.bench") }
         if ReleaseSurface.showsMusterTab { identifiers.append("tab.muster") }
-        identifiers.append("tab.play")
-        identifiers.append(ReleaseSurface.showsRulesAssistant ? "tab.rulesSearch" : "tab.rules")
         identifiers.append("tab.settings")
         return identifiers
     }

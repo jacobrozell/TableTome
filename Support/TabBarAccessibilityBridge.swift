@@ -128,6 +128,10 @@ struct TabBarSelectionBridge: UIViewControllerRepresentable {
 
         private static func tabIndex(for tab: AppTab) -> Int {
             var index = 0
+            if tab == .learn { return index }
+            index += 1
+            if tab == .search { return index }
+            index += 1
             if ReleaseSurface.showsBenchTab {
                 if tab == .bench { return index }
                 index += 1
@@ -136,10 +140,6 @@ struct TabBarSelectionBridge: UIViewControllerRepresentable {
                 if tab == .muster { return index }
                 index += 1
             }
-            if tab == .learn { return index }
-            index += 1
-            if tab == .search { return index }
-            index += 1
             return index
         }
 

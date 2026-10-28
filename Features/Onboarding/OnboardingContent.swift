@@ -215,32 +215,32 @@ enum OnboardingContent {
 
     static let tabTourItems: [OnboardingTabTourItem] = [
         OnboardingTabTourItem(
-            id: "bench",
-            symbol: "paintbrush",
-            title: String(localized: "Models"),
-            body: ""
-        ),
-        OnboardingTabTourItem(
-            id: "muster",
-            symbol: "flag.checkered",
-            title: String(localized: "Lists"),
-            body: String(localized: "Optional — build point lists and compare them to models you own")
-        ),
-        OnboardingTabTourItem(
             id: "learn",
-            symbol: "play.circle.fill",
+            symbol: "flag.checkered",
             title: String(localized: "Play"),
             body: String(localized: "Start here — game guides, Guided Match, Getting Started, and match history")
         ),
         OnboardingTabTourItem(
             id: "rules",
-            symbol: "magnifyingglass",
+            symbol: "book.closed",
             title: String(localized: "Rules"),
             body: String(localized: "Look up rules, units, and glossary terms for your selected game")
         ),
         OnboardingTabTourItem(
+            id: "bench",
+            symbol: "shield.lefthalf.filled",
+            title: String(localized: "Models"),
+            body: ""
+        ),
+        OnboardingTabTourItem(
+            id: "muster",
+            symbol: "list.bullet.rectangle",
+            title: String(localized: "Lists"),
+            body: String(localized: "Optional — build point lists and compare them to models you own")
+        ),
+        OnboardingTabTourItem(
             id: "settings",
-            symbol: "gearshape.fill",
+            symbol: "gearshape",
             title: String(localized: "Settings"),
             body: String(localized: "Appearance, data backup, replay the app tour, and support links")
         )

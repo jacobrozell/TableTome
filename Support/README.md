@@ -87,6 +87,7 @@ Doc: [`docs/release/firebase-analytics.md`](../docs/release/firebase-analytics.m
 | Path | Role |
 |------|------|
 | `AppLinks.swift` | GitHub Pages privacy/support URLs |
+| `Hobby/Banner.swift` | Queued bottom toasts (`BannerCenter`). Top safe-area inset is retired. |
 | `Hobby/AppDeepLink.swift` | URL scheme handling |
 | `Hobby/UndoService.swift`, `WidgetUpdater.swift` | Hobby data helpers |
 

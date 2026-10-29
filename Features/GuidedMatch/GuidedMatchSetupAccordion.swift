@@ -12,15 +12,18 @@ struct SetupAccordion: View {
 
     var body: some View {
         ScrollViewReader { proxy in
-            ScrollView {
-                VStack(spacing: DesignTokens.Spacing.sm) {
-                    ForEach(Array(viewModel.sortedMatchSteps.enumerated()), id: \.element.id) { index, step in
-                        stepRow(step, number: index + 1)
-                            .id(step.id)
+            VStack(spacing: 0) {
+                ScrollView {
+                    VStack(spacing: DesignTokens.Spacing.sm) {
+                        ForEach(Array(viewModel.sortedMatchSteps.enumerated()), id: \.element.id) { index, step in
+                            stepRow(step, number: index + 1)
+                                .id(step.id)
+                        }
                     }
+                    .readableContentWidth()
+                    .padding(DesignTokens.Spacing.md)
                 }
-                .readableContentWidth()
-                .padding(DesignTokens.Spacing.md)
+                progressBar
             }
             .onChange(of: viewModel.setupProgress.completed) { previous, completed in
                 guard completed > previous else { return }
@@ -44,9 +47,6 @@ struct SetupAccordion: View {
         }
         .ttHaptic(.phaseAdvanced, trigger: viewModel.setupProgress.completed)
         .ttScreenBackground()
-        .safeAreaInset(edge: .bottom) {
-            progressBar
-        }
     }
 
     private var progressBar: some View {

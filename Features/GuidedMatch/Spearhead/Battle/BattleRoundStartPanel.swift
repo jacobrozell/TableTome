@@ -16,7 +16,7 @@ struct BattleRoundStartPanel: View {
                 Text(step.detail(round: round))
                     .font(TTFont.body)
                     .foregroundStyle(TTColor.inkSecondary)
-                    .lineLimit(3)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             if viewModel.focusedRoundOpenerStep == .firstTurnOrPriority {
                 firstPlayerButtons

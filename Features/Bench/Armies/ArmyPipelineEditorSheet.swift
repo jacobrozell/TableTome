@@ -108,7 +108,6 @@ struct ArmyPipelineEditorSheet: View {
                 }
             }
             .formEditorScreenChrome()
-            .tabBarScrollInset()
             .readableContentWidth()
             .navigationTitle(String(localized: "Army pipeline"))
             .navigationBarTitleDisplayMode(.inline)

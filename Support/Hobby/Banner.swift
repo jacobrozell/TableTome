@@ -72,8 +72,14 @@ final class BannerCenter {
 
 private struct BannerModifier: ViewModifier {
     @Environment(BannerCenter.self) private var banner
+    @Environment(TabBarChrome.self) private var tabBarChrome
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.toastBottomInset) private var toastBottomInset
+
+    private var toastBottomPadding: CGFloat {
+        let tabLift = tabBarChrome.isHidden ? 0 : DesignTokens.tabBarToastBottomInset
+        return DesignTokens.Spacing.md + toastBottomInset + tabLift
+    }
 
     func body(content: Content) -> some View {
         content
@@ -88,7 +94,7 @@ private struct BannerModifier: ViewModifier {
                         onDismiss: { banner.dismiss() }
                     )
                     .padding(.horizontal, DesignTokens.Spacing.md)
-                    .padding(.bottom, DesignTokens.Spacing.md + toastBottomInset)
+                    .padding(.bottom, toastBottomPadding)
                     .gesture(
                         DragGesture(minimumDistance: 12).onEnded { value in
                             if value.translation.height > 24 { banner.dismiss() }

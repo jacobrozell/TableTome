@@ -81,6 +81,7 @@ struct HomeView: View {
             }
         }
         .navigationTitle(String(localized: "Play"))
+        .navigationBarTitleDisplayMode(viewModel.gameSystems.count == 1 ? .inline : .large)
         .navigationDestination(for: String.self) { systemId in
             GameSystemDetailView(gameSystemId: systemId)
         }

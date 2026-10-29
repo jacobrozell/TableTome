@@ -22,8 +22,25 @@ struct GuideStepDetailView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+        VStack(spacing: 0) {
+            ScrollView {
+                stepContent
+            }
+            stepNavigation
+        }
+        .ttScreenBackground()
+        .navigationTitle("")
+        .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            GuideProgressStore.markRead(stepId: step.id, gameSystemId: gameSystemId)
+        }
+        .onChange(of: index) { _, _ in
+            GuideProgressStore.markRead(stepId: step.id, gameSystemId: gameSystemId)
+        }
+    }
+
+    private var stepContent: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                 Text(String(localized: "Step \(index + 1) of \(steps.count)"))
                     .ttEyebrow()
                 Text(step.title)
@@ -81,39 +98,30 @@ struct GuideStepDetailView: View {
             }
             .readableContentWidth()
             .padding(DesignTokens.Spacing.md)
-        }
-        .ttScreenBackground()
-        .navigationTitle("")
-        .navigationBarTitleDisplayMode(.inline)
-        .safeAreaInset(edge: .bottom) {
-            HStack(spacing: DesignTokens.Spacing.sm) {
-                if index > 0 {
-                    Button(String(localized: "Previous")) { index -= 1 }
-                        .buttonStyle(.ttSecondary)
-                        .accessibilityIdentifier("guide.stepDetail.previous")
-                }
-                if index < steps.count - 1 {
-                    Button(String(localized: "Next Step")) { index += 1 }
-                        .buttonStyle(.ttPrimary)
-                        .accessibilityIdentifier("guide.stepDetail.next")
-                } else if ReleaseSurface.showsGuidedMatch(for: gameSystemId) {
-                    NavigationLink(value: GuidedMatchLink(gameSystemId: GameSystemId(resolving: gameSystemId))) {
-                        Text(String(localized: "Start a Battle"))
-                            .frame(maxWidth: .infinity)
-                    }
+    }
+
+    private var stepNavigation: some View {
+        HStack(spacing: DesignTokens.Spacing.sm) {
+            if index > 0 {
+                Button(String(localized: "Previous")) { index -= 1 }
+                    .buttonStyle(.ttSecondary)
+                    .accessibilityIdentifier("guide.stepDetail.previous")
+            }
+            if index < steps.count - 1 {
+                Button(String(localized: "Next Step")) { index += 1 }
                     .buttonStyle(.ttPrimary)
                     .accessibilityIdentifier("guide.stepDetail.next")
+            } else if ReleaseSurface.showsGuidedMatch(for: gameSystemId) {
+                NavigationLink(value: GuidedMatchLink(gameSystemId: GameSystemId(resolving: gameSystemId))) {
+                    Text(String(localized: "Start a Battle"))
+                        .frame(maxWidth: .infinity)
                 }
+                .buttonStyle(.ttPrimary)
+                .accessibilityIdentifier("guide.stepDetail.next")
             }
-            .padding(DesignTokens.Spacing.md)
-            .background(TTColor.canvas)
         }
-        .onAppear {
-            GuideProgressStore.markRead(stepId: step.id, gameSystemId: gameSystemId)
-        }
-        .onChange(of: index) { _, _ in
-            GuideProgressStore.markRead(stepId: step.id, gameSystemId: gameSystemId)
-        }
+        .padding(DesignTokens.Spacing.md)
+        .background(TTColor.canvas)
     }
 
     private func paragraphs(_ body: String) -> some View {

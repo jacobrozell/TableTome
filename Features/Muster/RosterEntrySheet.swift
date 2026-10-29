@@ -93,7 +93,6 @@ struct RosterEntrySheet: View {
                     }
                 }
             }
-            .tabBarScrollInset()
             .readableContentWidth()
             .navigationTitle(String(localized: "Edit unit"))
             .navigationBarTitleDisplayMode(.inline)

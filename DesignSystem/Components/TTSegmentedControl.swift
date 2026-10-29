@@ -48,6 +48,8 @@ public struct TTSegmentedControl<T: Hashable & Identifiable>: View {
                             Image(systemName: systemImage(option))
                         }
                         Text(title(option))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.75)
                     }
                     .font(TTFont.buttonSmall)
                     .foregroundStyle(TTColor.inkPrimary)

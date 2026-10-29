@@ -108,7 +108,7 @@ struct RulesReferenceView: View {
             placement: .navigationBarDrawer(displayMode: .always),
             prompt: GameSystemRulesLabels.rulesSearchPrompt(gameSystemId: viewModel.selectedGameSystemId)
         )
-        .tabBarScrollInset()
+        .tabBarScrollInset(additionalBottom: DesignTokens.Spacing.xxl) // first rows otherwise sit under the tab bar
         .accessibilityIdentifier("rules.sectionList")
     }
 

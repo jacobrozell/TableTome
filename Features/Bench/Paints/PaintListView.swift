@@ -159,7 +159,7 @@ struct PaintListView: View {
                     .tabBarScrollInset()
             } else {
                 list.listStyle(.insetGrouped)
-                    .tabBarScrollInset()
+                    .tabBarScrollInset(additionalBottom: DesignTokens.Spacing.xxl)
             }
         }
     }
@@ -210,6 +210,7 @@ struct PaintListView: View {
             }
             .padding(.vertical)
         }
+        .tabBarScrollInset(additionalBottom: DesignTokens.Spacing.xxl)
     }
 
     private func linkedUnitCount(for paint: HobbyPaint) -> Int {

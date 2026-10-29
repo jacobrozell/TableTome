@@ -72,16 +72,18 @@ public struct TTHeroCard<Actions: View>: View {
             }
             actions
         }
-        .padding(DesignTokens.Spacing.lg)
+        .padding(DesignTokens.Spacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background {
             RoundedRectangle(cornerRadius: DesignTokens.Radius.xl, style: .continuous)
                 .fill(TTColor.surface)
             RoundedRectangle(cornerRadius: DesignTokens.Radius.xl, style: .continuous)
                 .strokeBorder(TTColor.stroke, lineWidth: 1)
-            BrandCrest(size: 120)
-                .opacity(0.15)
+            Image(systemName: "book.closed.fill")
+                .font(.system(size: 96))
+                .foregroundStyle(TTColor.brand.opacity(0.10))
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                .offset(x: 12, y: -8)
                 .accessibilityHidden(true)
         }
         .clipShape(RoundedRectangle(cornerRadius: DesignTokens.Radius.xl, style: .continuous))

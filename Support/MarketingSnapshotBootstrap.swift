@@ -107,6 +107,11 @@ enum MarketingSnapshotBootstrap {
         if let tab = forcedSnapshotTab {
             router.selectedTab = tab
         }
+
+        if value(following: snapshotTab) == "paints" {
+            router.selectedTab = .bench
+            router.hobbyTab = .paints
+        }
     }
 
     /// Re-applies tab selection after navigation settles (iPad tab bar highlight desync).

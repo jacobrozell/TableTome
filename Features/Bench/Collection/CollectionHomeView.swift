@@ -159,7 +159,7 @@ struct CollectionHomeView: View {
         } else {
             List { armyListSections(vis: vis, padSidebar: false) }
                 .ttGroupedList()
-                .tabBarScrollInset()
+                .tabBarScrollInset(additionalBottom: DesignTokens.Spacing.xxl)
         }
     }
 
@@ -290,17 +290,14 @@ struct CollectionHomeView: View {
     }
 
     @ToolbarContentBuilder private var toolbarContent: some ToolbarContent {
-        ToolbarItem(placement: .topBarLeading) {
-            Button(String(localized: "Undo"), systemImage: "arrow.uturn.backward") {
-                if let msg = undo.undo(in: context) { banner.show(msg) }
+        if undo.canUndo {
+            ToolbarItem(placement: .topBarLeading) {
+                Button(String(localized: "Undo"), systemImage: "arrow.uturn.backward") {
+                    if let msg = undo.undo(in: context) { banner.show(msg) }
+                }
+                .accessibilityLabel(String(localized: "Undo"))
+                .accessibilityHint(String(localized: "Reverts the last action"))
             }
-            .disabled(!undo.canUndo)
-            .accessibilityLabel(String(localized: "Undo"))
-            .accessibilityHint(
-                undo.canUndo
-                    ? String(localized: "Reverts the last action")
-                    : String(localized: "No actions to undo")
-            )
         }
         ToolbarItem(placement: .topBarTrailing) {
             NavigationLink(value: CollectionRoute.overview) {

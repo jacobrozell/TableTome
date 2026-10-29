@@ -53,8 +53,12 @@ public enum DesignTokens {
     /// Tighter section spacing in landscape to preserve vertical space.
     public static let battleTrackerLandscapeSectionSpacing: CGFloat = 16
 
-    /// Scroll content inset so the last rows clear the floating tab bar on iPhone.
-    public static let tabBarScrollBottomInset: CGFloat = 104
+    /// Small lift so the last row clears the floating tab bar.
+    /// The bar already insets the safe area; a full bar height leaves a blank band and clips the next row.
+    public static let tabBarScrollBottomInset: CGFloat = 12
+
+    /// Extra lift for a bottom toast. The floating tab bar draws over the safe area, so 16pt of padding lands on the pill.
+    public static let tabBarToastBottomInset: CGFloat = 64
 
     /// Extra scroll inset on Guided Match Setup when inline step controls sit above the tab bar.
     public static let guidedMatchSetupScrollExtraInset: CGFloat = 48

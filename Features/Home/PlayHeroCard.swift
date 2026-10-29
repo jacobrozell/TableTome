@@ -16,7 +16,7 @@ struct PlayHeroCard: View {
 
     var body: some View {
         TTHeroCard(eyebrow: gameSystem.name, title: title, subtitle: subtitle) {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 if showsScoreboard {
                     scoreboard
                     Text(phaseLine)
@@ -46,20 +46,16 @@ struct PlayHeroCard: View {
                 }
             }
         }
-        .onAppear(perform: reload)
         .onReceive(NotificationCenter.default.publisher(for: .firstSessionStoreDidChange)) { _ in
             refreshToken += 1
-            reload()
         }
         .onReceive(NotificationCenter.default.publisher(for: .matchSyncStateDidChange)) { _ in
             refreshToken += 1
-            reload()
         }
         .task(id: refreshToken) { await loadSetupProgress() }
         .sheet(isPresented: $showsBoxHelper) {
             BoxIdentificationSheet()
         }
-        .id(refreshToken)
     }
 
     private var continuation: PlayContinuation? {
@@ -78,8 +74,13 @@ struct PlayHeroCard: View {
     private var showsSetupProgress: Bool { setupInProgress }
     private var showsBoxHelperButton: Bool { continuation == nil && !hasMatchHistory }
 
+    private var setupIsComplete: Bool {
+        setupTotal > 0 && setupCompleted >= setupTotal
+    }
+
     private var title: String {
         if battleInProgress { return String(localized: "Battle in progress") }
+        if setupIsComplete { return String(localized: "Ready to battle") }
         if setupInProgress { return String(localized: "Finish setting up") }
         if hasMatchHistory { return String(localized: "Ready for another battle?") }
         return String(localized: "Your first battle")
@@ -90,13 +91,12 @@ struct PlayHeroCard: View {
         if let lastRecord, hasMatchHistory {
             return lastBattleDetail(lastRecord)
         }
-        return String(
-            localized: "We'll guide setup and every phase. About 90 minutes with your starter box."
-        )
+        return String(localized: "Setup and every phase, about 90 minutes.")
     }
 
     private var primaryTitle: String {
         if battleInProgress { return String(localized: "Resume Battle") }
+        if setupIsComplete { return String(localized: "Start Battle") }
         if setupInProgress { return String(localized: "Continue Setup") }
         return String(localized: "Start a Battle")
     }
@@ -147,15 +147,11 @@ struct PlayHeroCard: View {
         if let continuation, continuation.destination == .guidedMatch {
             router.openGuidedMatch(
                 gameSystemId: gameSystem.id,
-                opensBattleTab: continuation.opensBattleTab
+                opensBattleTab: continuation.opensBattleTab || setupIsComplete
             )
         } else {
             router.openGuidedMatch(gameSystemId: gameSystem.id)
         }
-    }
-
-    private func reload() {
-        refreshToken += 1
     }
 
     private func loadSetupProgress() async {

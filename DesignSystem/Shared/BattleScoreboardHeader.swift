@@ -67,7 +67,8 @@ struct BattleScoreboardHeader: View {
                 Text(side.armyName)
                     .font(TTFont.caption)
                     .foregroundStyle(TTColor.inkSecondary)
-                    .lineLimit(1)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
                 if side.isUnderdog {
                     TTBadge(
                         String(localized: "Underdog"),

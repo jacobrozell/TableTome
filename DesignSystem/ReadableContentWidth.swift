@@ -37,15 +37,14 @@ public extension View {
         modifier(ReadableContentWidthModifier())
     }
 
-    /// Extra bottom margin on scrollable content so it is not hidden behind the tab bar.
+    /// Small bottom pad so the last row is not flush with the floating tab bar.
+    /// A full bar-height pad stacks on the tab bar safe area and leaves a blank band.
     @ViewBuilder
     func tabBarScrollInset(enabled: Bool = true, additionalBottom: CGFloat = 0) -> some View {
         if enabled {
-            contentMargins(
-                .bottom,
-                DesignTokens.tabBarScrollBottomInset + additionalBottom,
-                for: .scrollContent
-            )
+            ttBottomScrollEdge()
+                .padding(.bottom, DesignTokens.tabBarScrollBottomInset + additionalBottom)
+                .background(TTColor.canvas)
         } else {
             self
         }

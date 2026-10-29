@@ -54,7 +54,6 @@ struct MusterIntroSheet: View {
                 .padding()
                 .readableContentWidth()
             }
-            .tabBarScrollInset()
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {

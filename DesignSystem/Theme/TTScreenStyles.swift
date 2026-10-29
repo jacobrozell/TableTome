@@ -22,6 +22,7 @@ public extension View {
             .background(TTColor.canvas.ignoresSafeArea())
             .listRowSeparatorTint(TTColor.stroke)
             .environment(\.defaultMinListRowHeight, 52)
+            .ttBottomScrollEdge()
     }
 
     func ttCardList() -> some View {
@@ -34,5 +35,15 @@ public extension View {
 
     func ttListRow() -> some View {
         listRowBackground(TTColor.surface)
+    }
+
+    /// Keeps the last visible line from showing through the floating tab bar.
+    @ViewBuilder
+    func ttBottomScrollEdge() -> some View {
+        if #available(iOS 26.0, *) {
+            scrollEdgeEffectStyle(.hard, for: .bottom)
+        } else {
+            self
+        }
     }
 }

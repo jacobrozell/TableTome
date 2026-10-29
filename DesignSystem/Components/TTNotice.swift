@@ -93,7 +93,8 @@ public struct TTToast: View {
             Text(message)
                 .font(TTFont.subheadline)
                 .foregroundStyle(TTColor.inkPrimary)
-                .lineLimit(1)
+                .lineLimit(2)
+                .fixedSize(horizontal: false, vertical: true)
             if let actionTitle, let action {
                 Button(actionTitle, action: action)
                     .buttonStyle(.ttTertiary)

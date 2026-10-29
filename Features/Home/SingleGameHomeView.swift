@@ -15,7 +15,7 @@ struct SingleGameHomeView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 PlayHeroCard(
                     gameSystem: gameSystem,
                     hasMatchHistory: !recent.isEmpty,
@@ -30,7 +30,7 @@ struct SingleGameHomeView: View {
                 RecentBattlesSection(records: recent)
             }
             .padding(.horizontal, DesignTokens.Spacing.md)
-            .padding(.vertical, DesignTokens.Spacing.sm)
+            .padding(.top, DesignTokens.Spacing.sm)
             .readableContentWidth()
         }
         .ttScreenBackground()

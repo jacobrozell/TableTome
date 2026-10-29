@@ -140,7 +140,7 @@ struct PlayerBadge: View {
     private var backgroundColor: Color {
         switch style {
         case .accent: Color.accentColor.opacity(0.15)
-        case .neutral: Color(.tertiarySystemFill)
+        case .neutral: TTColor.sunken
         }
     }
 

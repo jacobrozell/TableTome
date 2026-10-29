@@ -86,6 +86,6 @@ struct PreBattleLoadoutReviewCard: View {
         }
         .padding(DesignTokens.Spacing.sm)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.tertiarySystemFill).opacity(0.55), in: CardSurface.shape(radius: DesignTokens.Radius.nested))
+        .background(TTColor.sunken.opacity(0.55), in: CardSurface.shape(radius: DesignTokens.Radius.nested))
     }
 }

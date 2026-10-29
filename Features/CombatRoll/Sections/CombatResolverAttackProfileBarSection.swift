@@ -44,7 +44,7 @@ struct CombatResolverAttackProfileBarSection: View {
                 }
             }
             .padding(DesignTokens.Spacing.sm)
-            .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
+            .background(TTColor.sunken, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
             .onAppear { onSyncMultiAttack() }
         }
     }

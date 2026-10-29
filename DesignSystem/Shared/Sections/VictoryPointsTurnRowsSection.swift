@@ -55,7 +55,7 @@ struct VictoryPointsTurnRowsSection: View {
         }
         .padding(DesignTokens.Spacing.sm)
         .background(
-            isCurrentRound ? Color.accentColor.opacity(0.08) : Color(.tertiarySystemFill),
+            isCurrentRound ? Color.accentColor.opacity(0.08) : TTColor.sunken,
             in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
         )
     }

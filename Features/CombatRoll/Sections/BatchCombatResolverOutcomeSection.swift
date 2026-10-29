@@ -31,7 +31,7 @@ struct BatchCombatResolverOutcomeSection: View {
             .padding(DesignTokens.Spacing.md)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
-                evaluation.totalDamage > 0 ? Color.orange.opacity(0.12) : Color(.tertiarySystemFill),
+                evaluation.totalDamage > 0 ? TTColor.warningSoft : TTColor.sunken,
                 in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
             )
 

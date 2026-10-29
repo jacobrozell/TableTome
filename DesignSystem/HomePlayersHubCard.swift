@@ -36,7 +36,7 @@ struct HomePlayersHubCard: View {
                             )
                             .overlay {
                                 Circle()
-                                    .strokeBorder(Color(.systemBackground), lineWidth: 2)
+                                    .strokeBorder(TTColor.canvas, lineWidth: 2)
                             }
                         }
                     }

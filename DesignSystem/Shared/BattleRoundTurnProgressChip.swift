@@ -36,7 +36,7 @@ struct BattleRoundTurnProgressChip: View {
         }
         .padding(.horizontal, DesignTokens.Spacing.sm)
         .padding(.vertical, DesignTokens.Spacing.xs)
-        .background(Color(.tertiarySystemFill), in: Capsule())
+        .background(TTColor.sunken, in: Capsule())
         .accessibilityElement(children: .combine)
         .accessibilityLabel(accessibilitySummary)
     }

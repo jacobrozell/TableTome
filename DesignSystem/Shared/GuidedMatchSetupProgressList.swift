@@ -11,7 +11,7 @@ struct GuidedMatchSetupProgressList: View {
             ForEach(steps) { step in
                 HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
                     Image(systemName: completedStepIds.contains(step.id) ? "checkmark.circle.fill" : "circle")
-                        .foregroundStyle(completedStepIds.contains(step.id) ? Color.green : Color.secondary)
+                        .foregroundStyle(completedStepIds.contains(step.id) ? TTColor.success : Color.secondary)
                         .font(.caption)
                         .accessibilityHidden(true)
                     Text(step.title)

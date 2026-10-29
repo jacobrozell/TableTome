@@ -28,7 +28,7 @@ struct BattleTrackerPinnedWarscrollPanel: View {
             .padding(DesignTokens.Spacing.sm)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .background(Color(.secondarySystemGroupedBackground), in: CardSurface.shape(radius: DesignTokens.Radius.card))
+        .background(TTColor.surface, in: CardSurface.shape(radius: DesignTokens.Radius.card))
         .accessibilityElement(children: .contain)
         .accessibilityLabel(
             GameSystemPlayContext(gameSystemId: gameSystemId)
@@ -128,7 +128,7 @@ struct BattleTrackerPinnedWarscrollPanel: View {
                 }
                 .padding(DesignTokens.Spacing.xs)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color(.tertiarySystemFill), in: CardSurface.shape(radius: DesignTokens.Radius.inset))
+                .background(TTColor.sunken, in: CardSurface.shape(radius: DesignTokens.Radius.inset))
             }
         }
     }

@@ -19,7 +19,7 @@ struct PhaseChip: View {
                 .minimumScaleFactor(dynamicTypeSize.needsLayoutAdaptation ? 1 : 0.8)
                 .padding(.horizontal, DesignTokens.Spacing.sm)
                 .padding(.vertical, DesignTokens.Spacing.xs)
-                .background(isSelected ? Color.accentColor : Color(.tertiarySystemFill), in: Capsule())
+                .background(isSelected ? Color.accentColor : TTColor.sunken, in: Capsule())
                 .foregroundStyle(isSelected ? Color.white : Color.primary)
         }
         .buttonStyle(.plain)

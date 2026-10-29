@@ -131,7 +131,7 @@ struct BatchCombatResolverInputsSection: View {
                 .foregroundStyle(.secondary)
                 .padding(DesignTokens.Spacing.sm)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
+                .background(TTColor.sunken, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
             }
 
             Button(String(localized: "Clear and start over")) {

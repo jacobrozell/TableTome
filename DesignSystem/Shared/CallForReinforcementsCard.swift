@@ -132,7 +132,7 @@ struct CallForReinforcementsCard: View {
             }
         }
         .padding(DesignTokens.Spacing.sm)
-        .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .background(TTColor.sunken, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
         .accessibilityLabel(
             String(localized: "\(unit.name), \(onTable ? "on table" : "in reserve")")
         )

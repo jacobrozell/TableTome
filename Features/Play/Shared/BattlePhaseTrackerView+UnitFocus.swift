@@ -118,14 +118,14 @@ struct UnitFocusPresentationModifier<Presented: View>: ViewModifier {
         if usesFullScreen {
             content.fullScreenCover(item: $selection) { _ in
                 presented()
-                    .presentationBackground(Color(.systemGroupedBackground))
+                    .presentationBackground(TTColor.canvas)
             }
         } else {
             content.sheet(item: $selection) { _ in
                 presented()
                     .presentationDetents([.large])
                     .presentationDragIndicator(.visible)
-                    .presentationBackground(Color(.systemGroupedBackground))
+                    .presentationBackground(TTColor.canvas)
             }
         }
     }

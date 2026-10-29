@@ -52,12 +52,12 @@ struct CombatResolverSetupGate: View {
                 }
                 .padding(DesignTokens.Spacing.md)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+                .background(TTColor.sunken, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
             }
         }
         .padding(DesignTokens.Spacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .background(TTColor.surface, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
         .accessibilityIdentifier("\(accessibilityPrefix).setupGate")
     }
 
@@ -157,7 +157,7 @@ struct CombatResolverAttackContextCard: View {
                 if let defenderWoundsRemaining, let defender {
                     Text(defenderWoundsLabel(defender: defender, remaining: defenderWoundsRemaining))
                         .font(.caption2.weight(.semibold))
-                        .foregroundStyle(defenderWoundsRemaining > 0 ? Color.orange : .secondary)
+                        .foregroundStyle(defenderWoundsRemaining > 0 ? TTColor.warning : .secondary)
                 }
                 if let defenderPlayerName {
                     Text(defenderPlayerName)
@@ -215,7 +215,7 @@ struct CombatResolverAttackContextCard: View {
             .padding(DesignTokens.Spacing.sm)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
-                isSelected ? Color.accentColor.opacity(0.15) : Color(.tertiarySystemFill),
+                isSelected ? Color.accentColor.opacity(0.15) : TTColor.sunken,
                 in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
             )
             .frame(minHeight: DesignTokens.minTouchTarget)
@@ -276,7 +276,7 @@ struct CombatResolverAttackContextCard: View {
         Text(label)
             .padding(.horizontal, DesignTokens.Spacing.sm)
             .padding(.vertical, DesignTokens.Spacing.xs)
-            .background(Color(.tertiarySystemFill), in: Capsule())
+            .background(TTColor.sunken, in: Capsule())
     }
 
     @ViewBuilder
@@ -401,7 +401,7 @@ struct CombatBatchStepRow: View {
         .padding(DesignTokens.Spacing.sm)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
-            isActive ? Color.accentColor.opacity(0.1) : Color(.tertiarySystemFill),
+            isActive ? Color.accentColor.opacity(0.1) : TTColor.sunken,
             in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
         )
         .overlay {

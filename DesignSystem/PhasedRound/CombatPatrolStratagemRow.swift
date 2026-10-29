@@ -23,8 +23,8 @@ struct CombatPatrolStratagemRow: View {
                                 .font(.caption2.weight(.bold))
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
-                                .background(Color.orange.opacity(0.15), in: Capsule())
-                                .foregroundStyle(.orange)
+                                .background(TTColor.warningSoft, in: Capsule())
+                                .foregroundStyle(TTColor.warning)
                         }
                     }
                     Text("\(stratagem.cpCost)CP — \(stratagem.summary)")

@@ -21,7 +21,7 @@ struct VictoryPointsTotalColumnSection: View {
                 if scoreLeaderIsPlayerOne == isPlayerOne {
                     Image(systemName: "crown.fill")
                         .font(.caption2)
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(TTColor.warning)
                         .accessibilityLabel(String(localized: "Leading"))
                 }
             }

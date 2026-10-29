@@ -52,7 +52,7 @@ struct SeizingInitiativeCallout: View {
     var body: some View {
         HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
             Image(systemName: "info.circle.fill")
-                .foregroundStyle(Color.orange)
+                .foregroundStyle(TTColor.warning)
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 4) {
                 Text(String(localized: "Seizing initiative"))
@@ -72,7 +72,7 @@ struct SeizingInitiativeCallout: View {
         }
         .padding(DesignTokens.Spacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .background(TTColor.warningSoft, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
         .accessibilityIdentifier("battleTracker.seizingInitiative")
     }
 }

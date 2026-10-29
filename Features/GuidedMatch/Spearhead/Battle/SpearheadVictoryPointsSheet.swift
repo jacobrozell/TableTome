@@ -47,7 +47,7 @@ struct SpearheadVictoryPointsSheet: View {
                         let name = underdogIsPlayerOne ? viewModel.playerOneName : viewModel.playerTwoName
                         HStack(spacing: DesignTokens.Spacing.sm) {
                             Image(systemName: "arrow.down.circle.fill")
-                                .foregroundStyle(.orange)
+                                .foregroundStyle(TTColor.warning)
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(String(localized: "Underdog this round"))
                                     .font(.caption.weight(.semibold))
@@ -58,13 +58,13 @@ struct SpearheadVictoryPointsSheet: View {
                             Spacer(minLength: 0)
                         }
                         .padding(DesignTokens.Spacing.sm)
-                        .background(Color.orange.opacity(0.08), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
+                        .background(TTColor.warningSoft, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
                     }
                 }
                 .padding(DesignTokens.Spacing.md)
                 .readableContentWidth()
             }
-            .background(Color(.systemGroupedBackground))
+            .background(TTColor.canvas)
             .navigationTitle(String(localized: "Victory Points"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

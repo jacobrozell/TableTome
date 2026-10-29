@@ -72,11 +72,11 @@ struct Wh40kDeploymentChecklistCard: View {
                     .fixedSize(horizontal: false, vertical: true)
                 } icon: {
                     Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(TTColor.warning)
                 }
                 .padding(DesignTokens.Spacing.sm)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
+                .background(TTColor.warningSoft, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
                 .accessibilityIdentifier("guidedMatch.wh40kDeployment.reservesReminder")
             }
 

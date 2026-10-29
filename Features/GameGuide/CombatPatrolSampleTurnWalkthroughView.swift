@@ -145,7 +145,7 @@ struct CombatPatrolSampleTurnWalkthroughView: View {
                     .padding(.horizontal, DesignTokens.Spacing.sm)
                     .padding(.vertical, DesignTokens.Spacing.xs)
                     .background(
-                        index == step ? Color.accentColor.opacity(0.18) : Color(.tertiarySystemFill),
+                        index == step ? Color.accentColor.opacity(0.18) : TTColor.sunken,
                         in: Capsule()
                     )
                     .foregroundStyle(index == step ? Color.accentColor : Color.secondary)

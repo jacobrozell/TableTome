@@ -54,7 +54,7 @@ struct PlayerProfilePicker: View {
                     Spacer(minLength: 0)
                 }
                 .padding(DesignTokens.Spacing.sm)
-                .background(Color(.tertiarySystemFill), in: CardSurface.shape(radius: DesignTokens.Radius.inset))
+                .background(TTColor.sunken, in: CardSurface.shape(radius: DesignTokens.Radius.inset))
             }
         } header: {
             Text(slotLabel.isEmpty ? String(localized: "Who is playing?") : slotLabel)
@@ -99,7 +99,7 @@ struct PlayerProfilePicker: View {
             .padding(.horizontal, DesignTokens.Spacing.xs)
             .padding(.vertical, DesignTokens.Spacing.sm)
             .background(
-                isSelected ? Color.accentColor.opacity(0.1) : Color(.tertiarySystemFill),
+                isSelected ? Color.accentColor.opacity(0.1) : TTColor.sunken,
                 in: CardSurface.shape(radius: DesignTokens.Radius.nested)
             )
         }
@@ -115,7 +115,7 @@ struct PlayerProfilePicker: View {
             VStack(spacing: DesignTokens.Spacing.xs) {
                 ZStack {
                     Circle()
-                        .fill(Color(.tertiarySystemFill))
+                        .fill(TTColor.sunken)
                         .frame(width: 44, height: 44)
                     Image(systemName: "person.crop.circle.badge.questionmark")
                         .font(.title3)
@@ -137,7 +137,7 @@ struct PlayerProfilePicker: View {
             .padding(.horizontal, DesignTokens.Spacing.xs)
             .padding(.vertical, DesignTokens.Spacing.sm)
             .background(
-                isGuest ? Color.accentColor.opacity(0.1) : Color(.tertiarySystemFill),
+                isGuest ? Color.accentColor.opacity(0.1) : TTColor.sunken,
                 in: CardSurface.shape(radius: DesignTokens.Radius.nested)
             )
         }

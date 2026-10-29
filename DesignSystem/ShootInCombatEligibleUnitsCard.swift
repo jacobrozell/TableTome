@@ -54,7 +54,7 @@ struct ShootInCombatEligibleUnitsCard: View {
     private func rowLabel(unit: SpearheadUnit, weaponNames: String) -> some View {
         HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
             Image(systemName: "scope")
-                .foregroundStyle(Color.orange)
+                .foregroundStyle(TTColor.warning)
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
                 Text(unit.name)

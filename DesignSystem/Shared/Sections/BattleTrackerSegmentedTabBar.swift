@@ -14,7 +14,7 @@ struct BattleTrackerSegmentedTabBar: View {
             }
         }
         .padding(2)
-        .background(Color(.secondarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
+        .background(TTColor.sunken, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
         .accessibilityElement(children: .contain)
     }
 
@@ -31,7 +31,7 @@ struct BattleTrackerSegmentedTabBar: View {
                 .padding(.vertical, usesCompactTabBar ? DesignTokens.Spacing.xs : DesignTokens.Spacing.sm)
                 .foregroundStyle(isSelected ? Color.primary : Color.secondary)
                 .background(
-                    isSelected ? Color(.systemBackground) : Color.clear,
+                    isSelected ? TTColor.canvas : Color.clear,
                     in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm - 2)
                 )
         }

@@ -40,7 +40,7 @@ struct BatchCombatResolverFlowPillsSection: View {
             .padding(.horizontal, DesignTokens.Spacing.sm)
             .padding(.vertical, DesignTokens.Spacing.xs)
             .background(
-                isActive ? Color.accentColor.opacity(0.2) : (isDone ? Color.accentColor.opacity(0.12) : Color(.tertiarySystemFill)),
+                isActive ? Color.accentColor.opacity(0.2) : (isDone ? Color.accentColor.opacity(0.12) : TTColor.sunken),
                 in: Capsule()
             )
             .foregroundStyle(isActive ? Color.accentColor : .secondary)

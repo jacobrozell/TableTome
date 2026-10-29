@@ -23,7 +23,7 @@ struct PhaseGuidanceBar: View {
             HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
                 Image(systemName: "lightbulb.fill")
                     .font(.caption)
-                    .foregroundStyle(.yellow)
+                    .foregroundStyle(TTColor.warning)
                     .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                     Text(phase.title)
@@ -75,7 +75,7 @@ struct PhaseGuidanceBar: View {
         }
         .padding(DesignTokens.Spacing.sm)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.tertiarySystemFill), in: CardSurface.shape(radius: DesignTokens.Radius.nested))
+        .background(TTColor.sunken, in: CardSurface.shape(radius: DesignTokens.Radius.nested))
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("battleTracker.phaseGuidance.\(phase.id)")
     }

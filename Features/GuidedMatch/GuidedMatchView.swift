@@ -86,7 +86,7 @@ struct GuidedMatchView: View {
                 if let catalog = viewModel.catalog {
                     regularLayout(catalog: catalog)
                 } else {
-                    Color(.systemBackground)
+                    TTColor.canvas
                 }
             } else {
                 compactLayout(catalog: viewModel.catalog)

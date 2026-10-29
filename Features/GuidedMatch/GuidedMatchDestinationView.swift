@@ -49,7 +49,7 @@ private struct GuidedMatchDestinationContent: View {
             )
 
             if ruleSections == nil {
-                Color(.systemBackground)
+                TTColor.canvas
                     .ignoresSafeArea()
 
                 if let errorMessage {
@@ -71,7 +71,7 @@ private struct GuidedMatchDestinationContent: View {
         .toolbar(hidesOuterNavigationBar ? .hidden : .visible, for: .navigationBar)
         .toolbarBackground(hidesOuterNavigationBar ? .hidden : .automatic, for: .navigationBar)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .background(Color(.systemBackground))
+        .background(TTColor.canvas)
         .task { await load() }
     }
 

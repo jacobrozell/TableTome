@@ -113,7 +113,7 @@ struct MatchupWeaponSelectionSection: View {
         .padding(DesignTokens.Spacing.sm)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
-            isSelected ? Color.accentColor.opacity(0.12) : Color(.tertiarySystemFill),
+            isSelected ? Color.accentColor.opacity(0.12) : TTColor.sunken,
             in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
         )
         .overlay {

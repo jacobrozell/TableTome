@@ -26,8 +26,8 @@ struct UnitWoundTrackerRow: View {
                             .font(.caption2.weight(.bold))
                             .padding(.horizontal, DesignTokens.Spacing.sm)
                             .padding(.vertical, 2)
-                            .background(Color.red.opacity(0.15), in: Capsule())
-                            .foregroundStyle(.red)
+                            .background(TTColor.dangerSoft, in: Capsule())
+                            .foregroundStyle(TTColor.danger)
                     }
                 }
                 Text(

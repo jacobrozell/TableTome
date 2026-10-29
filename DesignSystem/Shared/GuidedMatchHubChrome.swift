@@ -93,7 +93,7 @@ struct GuidedMatchHubTabBar: View {
             if let lockedTabAttempt {
                 Text(lockedTabMessage(for: lockedTabAttempt))
                     .font(.caption)
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(TTColor.warning)
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityIdentifier("guidedMatch.hubTabs.lockedNotice")
             }
@@ -142,7 +142,7 @@ struct GuidedMatchHubTabBar: View {
                 .font(.caption.weight(.semibold))
                 .padding(.horizontal, DesignTokens.Spacing.md)
                 .padding(.vertical, DesignTokens.Spacing.sm)
-                .background(isSelected ? Color.accentColor.opacity(0.15) : Color(.tertiarySystemFill))
+                .background(isSelected ? Color.accentColor.opacity(0.15) : TTColor.sunken)
                 .foregroundStyle(isSelected ? Color.accentOnSurface : .primary)
                 .clipShape(Capsule())
         }

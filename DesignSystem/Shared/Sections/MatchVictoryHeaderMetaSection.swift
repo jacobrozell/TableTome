@@ -17,10 +17,10 @@ struct MatchVictoryHeaderMetaSection: View {
             if status == .abandoned {
                 Text(String(localized: "Abandoned"))
                     .font(.caption2.weight(.semibold))
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(TTColor.warning)
                     .padding(.horizontal, DesignTokens.Spacing.sm)
                     .padding(.vertical, DesignTokens.Spacing.xs)
-                    .background(Color.orange.opacity(0.12), in: Capsule())
+                    .background(TTColor.warningSoft, in: Capsule())
             }
 
             Spacer()

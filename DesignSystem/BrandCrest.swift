@@ -42,7 +42,7 @@ private enum BundleAppIcon {
 
 #Preview {
     ZStack {
-        Color(.systemBackground).ignoresSafeArea()
+        TTColor.canvas.ignoresSafeArea()
         BrandCrest()
     }
 }

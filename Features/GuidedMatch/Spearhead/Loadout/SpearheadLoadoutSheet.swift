@@ -99,7 +99,7 @@ struct SpearheadLoadoutSheet: View {
                 .font(.headline)
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(bothComplete ? Color.green : Color.accentColor)
+                .background(bothComplete ? TTColor.success : Color.accentColor)
                 .foregroundStyle(.white)
                 .clipShape(CardSurface.shape(radius: DesignTokens.Radius.nested))
             }
@@ -115,7 +115,7 @@ struct SpearheadLoadoutSheet: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
             Text("Loadout Ready")
                 .font(.headline)
-                .foregroundStyle(.green)
+                .foregroundStyle(TTColor.success)
 
             HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
                 playerSummaryColumn(
@@ -187,7 +187,7 @@ struct LoadoutOptionCard: View {
 
                     if isSelected {
                         Image(systemName: "checkmark.circle.fill")
-                            .foregroundStyle(.green)
+                            .foregroundStyle(TTColor.success)
                     }
                 }
 
@@ -199,18 +199,18 @@ struct LoadoutOptionCard: View {
                 if let hint = option.newPlayerHint {
                     Label(hint, systemImage: "lightbulb.fill")
                         .font(.caption)
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(TTColor.warning)
                 }
             }
             .padding(DesignTokens.Spacing.sm)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
-                isSelected ? Color.green.opacity(0.1) : Color(.tertiarySystemFill).opacity(0.5),
+                isSelected ? TTColor.successSoft : TTColor.sunken.opacity(0.5),
                 in: CardSurface.shape(radius: DesignTokens.Radius.nested)
             )
             .overlay(
                 CardSurface.shape(radius: DesignTokens.Radius.nested)
-                    .strokeBorder(isSelected ? Color.green : Color.clear, lineWidth: 2)
+                    .strokeBorder(isSelected ? TTColor.success : Color.clear, lineWidth: 2)
             )
         }
         .buttonStyle(.plain)

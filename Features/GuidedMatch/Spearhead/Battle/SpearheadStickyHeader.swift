@@ -156,7 +156,7 @@ struct SpearheadStickyHeader: View {
         .padding(.horizontal, DesignTokens.Spacing.sm)
         .padding(.vertical, 3)
         .background(
-            isActive ? Color.accentColor.opacity(0.15) : Color(.tertiarySystemFill),
+            isActive ? Color.accentColor.opacity(0.15) : TTColor.sunken,
             in: RoundedRectangle(cornerRadius: DesignTokens.Radius.nested, style: .continuous)
         )
         .foregroundStyle(isActive ? Color.accentOnSurface : Color.primary)

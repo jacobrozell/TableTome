@@ -229,7 +229,7 @@ struct SpearheadInlineResolver: View {
                     .foregroundStyle(.tertiary)
             }
             .padding(DesignTokens.Spacing.sm)
-            .background(Color(.tertiarySystemFill), in: CardSurface.shape(radius: DesignTokens.Radius.nested))
+            .background(TTColor.sunken, in: CardSurface.shape(radius: DesignTokens.Radius.nested))
         }
         .buttonStyle(.plain)
     }

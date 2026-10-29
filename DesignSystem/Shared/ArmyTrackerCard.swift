@@ -71,7 +71,7 @@ struct ArmyTrackerCard: View {
         }
         .padding(usesCompactSidebar ? DesignTokens.Spacing.sm : DesignTokens.Spacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .background(TTColor.surface, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
         .accessibilityIdentifier("battleTracker.armyTracker")
     }
 
@@ -178,7 +178,7 @@ struct ArmyHealthPanel: View {
         }
         .padding(usesCompactSidebar ? DesignTokens.Spacing.xs : DesignTokens.Spacing.sm)
         .background(
-            isActivePlayer ? Color.accentColor.opacity(0.06) : Color(.tertiarySystemFill).opacity(0.35),
+            isActivePlayer ? Color.accentColor.opacity(0.06) : TTColor.sunken.opacity(0.35),
             in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
         )
         .overlay {
@@ -252,7 +252,7 @@ struct ArmyUnitHealthRow: View {
                             if unit.isDestroyed {
                                 Text(String(localized: "Destroyed"))
                                     .font(.caption2.weight(.bold))
-                                    .foregroundStyle(.red)
+                                    .foregroundStyle(TTColor.danger)
                             }
                         }
                         Text(String(localized: "\(unit.woundsRemaining)/\(unit.woundCapacity) wounds"))

@@ -231,7 +231,7 @@ struct BattleTacticsReferenceView: View {
                 }
                 .padding(DesignTokens.Spacing.sm)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
+                .background(TTColor.sunken, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
             }
         }
         .surfaceCard()
@@ -254,7 +254,7 @@ private struct SpearheadCardDeckGuideCard: View {
         }
         .padding(DesignTokens.Spacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .background(TTColor.surface, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
     }
 
     private func deckDetailRow(label: String, value: String) -> some View {

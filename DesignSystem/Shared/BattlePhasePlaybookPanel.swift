@@ -137,7 +137,7 @@ struct BattlePhasePlaybookPanel: View {
             }
             .padding(DesignTokens.Spacing.sm)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
+            .background(TTColor.surface, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
         } else {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                 if !abilities.isEmpty {

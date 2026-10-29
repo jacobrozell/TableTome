@@ -54,7 +54,7 @@ struct VariableAttacksRollCard: View {
         }
         .padding(DesignTokens.Spacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+        .background(TTColor.surface, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
         .accessibilityElement(children: .contain)
     }
 

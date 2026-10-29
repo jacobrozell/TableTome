@@ -304,7 +304,7 @@ These findings drive the WPs. Agents should be able to point to the finding a ch
 ## 9. Definition of done for the whole overhaul
 
 - [ ] All WPs in §6 are ✅.
-- [ ] `hardcoded_colors` ratchet budget ≤ **10** (from baseline 91), all remaining in gated features.
+- [x] `hardcoded_colors` ratchet budget ≤ **10** (from baseline 91). Budget is 0.
 - [ ] Every 1.0 screen passes the QA-02 matrix (iPhone SE, iPhone 17 Pro portrait/landscape, iPad 13" portrait/landscape × light/dark × default/AX3).
 - [ ] A first-time user can go from install to the **first phase of Round 1** in ≤ 8 taps using the starter matchup (measured in QA-01).
 - [ ] VoiceOver can complete a full Spearhead turn (Hero → End of Turn → handoff) without sighted help.

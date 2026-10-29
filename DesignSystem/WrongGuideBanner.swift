@@ -11,7 +11,7 @@ struct WrongGuideBanner: View {
             HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .font(.title3)
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(TTColor.warning)
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                     Text(alert.title)
                         .font(.subheadline.weight(.semibold))

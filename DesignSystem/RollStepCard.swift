@@ -51,7 +51,7 @@ private struct CombatOutcomeBannerCardStyle: ViewModifier {
             content
                 .padding(DesignTokens.Spacing.md)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
+                .background(TTColor.sunken, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md))
         } else {
             content.surfaceCard()
         }

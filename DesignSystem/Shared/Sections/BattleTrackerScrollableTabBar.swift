@@ -35,7 +35,7 @@ struct BattleTrackerScrollableTabBar: View {
                 .padding(.horizontal, DesignTokens.Spacing.sm)
                 .padding(.vertical, DesignTokens.Spacing.xs)
                 .background(
-                    isSelected ? Color.accentColor : Color(.tertiarySystemFill),
+                    isSelected ? Color.accentColor : TTColor.sunken,
                     in: Capsule()
                 )
                 .foregroundStyle(isSelected ? Color.white : Color.primary)

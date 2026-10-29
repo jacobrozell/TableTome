@@ -71,7 +71,7 @@ struct SpearheadUnitRow: View {
         .overlay {
             if isDefending {
                 CardSurface.shape(radius: DesignTokens.Radius.nested)
-                    .stroke(Color.orange, lineWidth: 2)
+                    .stroke(TTColor.warning, lineWidth: 2)
             }
         }
         .accessibilityElement(children: .contain)
@@ -100,7 +100,7 @@ struct SpearheadUnitRow: View {
                             if hasActed && !isDestroyed {
                                 Image(systemName: "checkmark.circle.fill")
                                     .font(.caption)
-                                    .foregroundStyle(.green)
+                                    .foregroundStyle(TTColor.success)
                                     .accessibilityLabel(String(localized: "Acted this phase"))
                             }
                         }
@@ -318,18 +318,18 @@ struct SpearheadUnitRow: View {
     private func keywordStyle(for keyword: String) -> (background: Color, foreground: Color) {
         let lower = keyword.lowercased()
         if lower.contains("ward") {
-            return (Color.purple.opacity(0.2), Color.purple)
+            return (TTColor.brandSoft, TTColor.brand)
         }
         if lower == "hero" {
-            return (Color.yellow.opacity(0.2), Color.orange)
+            return (TTColor.warningSoft, TTColor.warning)
         }
         if lower == "wizard" || lower == "priest" {
-            return (Color.blue.opacity(0.2), Color.blue)
+            return (TTColor.playerOneSoft, TTColor.playerOne)
         }
         if lower == "monster" {
-            return (Color.red.opacity(0.2), Color.red)
+            return (TTColor.dangerSoft, TTColor.danger)
         }
-        return (Color(.tertiarySystemFill), Color.secondary)
+        return (TTColor.sunken, Color.secondary)
     }
 
     // MARK: - Expanded Content
@@ -363,7 +363,7 @@ struct SpearheadUnitRow: View {
             .font(.subheadline)
             .frame(maxWidth: .infinity)
             .padding(.vertical, DesignTokens.Spacing.sm)
-            .background(Color(.tertiarySystemFill), in: CardSurface.shape(radius: DesignTokens.Radius.inset))
+            .background(TTColor.sunken, in: CardSurface.shape(radius: DesignTokens.Radius.inset))
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier("spearheadBattle.unitRow.unitFocus")
@@ -412,7 +412,7 @@ struct SpearheadUnitRow: View {
         }
         .frame(minWidth: 50)
         .padding(.vertical, DesignTokens.Spacing.xs)
-        .background(Color(.tertiarySystemFill), in: CardSurface.shape(radius: DesignTokens.Radius.inset))
+        .background(TTColor.sunken, in: CardSurface.shape(radius: DesignTokens.Radius.inset))
     }
 
     @ViewBuilder

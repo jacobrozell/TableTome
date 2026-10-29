@@ -104,7 +104,7 @@ struct CombatSequencePrimer: View {
                 .foregroundStyle(.primary)
         }
         .padding(DesignTokens.Spacing.sm)
-        .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
+        .background(TTColor.sunken, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm))
         .accessibilityIdentifier("battleTracker.combatPrimer")
     }
 

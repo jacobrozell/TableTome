@@ -123,7 +123,7 @@ private struct UnitFocusUnavailableFallback: View {
                 description: Text(String(localized: "This unit could not be loaded. Try again from the unit list."))
             )
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color(.systemGroupedBackground))
+            .background(TTColor.canvas)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(String(localized: "Done")) {

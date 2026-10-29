@@ -19,7 +19,7 @@ struct PlayerDetailHeroSection: View {
                         Image(systemName: "star.circle.fill")
                             .font(.title3)
                             .symbolRenderingMode(.palette)
-                            .foregroundStyle(.yellow, Color(.systemBackground))
+                            .foregroundStyle(TTColor.playerTwo, TTColor.canvas)
                             .offset(x: 4, y: 4)
                             .accessibilityLabel(String(localized: "Primary player on this device"))
                     }

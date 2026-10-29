@@ -122,7 +122,7 @@ struct CombatPatrolMissionPickerCard: View {
             .background(
                 isSelected
                     ? Color.accentColor.opacity(0.08)
-                    : Color(.secondarySystemGroupedBackground),
+                    : TTColor.surface,
                 in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md)
             )
         }

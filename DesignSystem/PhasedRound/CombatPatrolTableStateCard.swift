@@ -142,7 +142,7 @@ struct CombatPatrolTableStateCard: View {
                             .background(
                                 securedObjectiveIds.contains(marker)
                                     ? Color.accentColor.opacity(0.2)
-                                    : Color(.tertiarySystemFill),
+                                    : TTColor.sunken,
                                 in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
                             )
                     }
@@ -168,8 +168,8 @@ struct CombatPatrolTableStateCard: View {
                             .frame(minWidth: 32, minHeight: DesignTokens.minTouchTarget)
                             .background(
                                 intelRecoveredObjectiveIds.contains(marker)
-                                    ? Color.orange.opacity(0.2)
-                                    : Color(.tertiarySystemFill),
+                                    ? TTColor.warningSoft
+                                    : TTColor.sunken,
                                 in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm)
                             )
                     }
@@ -216,7 +216,7 @@ struct CombatPatrolTableStateCard: View {
                                 .font(.caption2.weight(.semibold))
                                 .padding(.horizontal, 4)
                                 .padding(.vertical, 1)
-                                .background(Color.orange.opacity(0.15), in: Capsule())
+                                .background(TTColor.warningSoft, in: Capsule())
                         }
                     }
                     Text("\(stratagem.cpCost)CP — \(stratagem.summary)")

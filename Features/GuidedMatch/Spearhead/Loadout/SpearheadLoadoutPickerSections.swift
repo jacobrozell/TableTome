@@ -68,7 +68,7 @@ struct SpearheadLoadoutProgressIndicator: View {
         }
         .padding(.horizontal, DesignTokens.Spacing.sm)
         .padding(.vertical, 4)
-        .background(Color(.tertiarySystemFill), in: Capsule())
+        .background(TTColor.sunken, in: Capsule())
     }
 }
 

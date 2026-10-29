@@ -4,7 +4,7 @@
 |-------|-------|
 | **Version** | 1.0.0 (`MARKETING_VERSION` in `project.yml`) |
 | **Phase** | **TestFlight** — not App Store production |
-| **Branch** | `release/1.0.0` |
+| **Branch** | `feature/uioverhaul` |
 | **Build** | **11** (`CURRENT_PROJECT_VERSION` in `project.yml`) — [TestFlight notes](testflight-1.0.0-build-11.md) |
 
 ## 1.0.0 scope
@@ -25,7 +25,7 @@ Gated until a later release (dogfood with `-enable_full_product_surface`):
 
 **Not planned:** Full 10th Edition matched play — see [PRODUCT_SCOPE.md](../game-modes/PRODUCT_SCOPE.md). Combat Patrol is a later Tabletome release, not 1.0.
 
-**Work now:** Spearhead guided play in [`ongoing/spearhead-flawless-guided-match-plan.md`](../../ongoing/spearhead-flawless-guided-match-plan.md). Do not ungate other modes. Do not grow paints. Agent entry: [`AGENTS.md`](../../AGENTS.md).
+**Work now:** the UI overhaul in [`ongoing/ui-overhaul/README.md`](../../ongoing/ui-overhaul/README.md). The next TestFlight is a new build after that tracker. Stay inside Spearhead. Do not ungate other modes. Do not grow paints. Agent entry: [`AGENTS.md`](../../AGENTS.md).
 
 **QA:** Spearhead path only for this submit. Gated modes stay in [gated-features-testing.md](gated-features-testing.md).
 
